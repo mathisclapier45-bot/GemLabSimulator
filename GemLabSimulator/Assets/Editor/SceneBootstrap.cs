@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -26,7 +29,7 @@ public static class SceneBootstrap
         var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
 
         var light = GameObject.Find("Directional Light");
-        if (light != null) Object.DestroyImmediate(light);
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
 
         var cam = Camera.main;
         cam.orthographic = true;
@@ -54,8 +57,8 @@ public static class SceneBootstrap
         wallsGO.transform.SetParent(gridGO.transform);
         var wallsTilemap = wallsGO.GetComponent<Tilemap>();
 
-        var floorTile = GetOrCreateTile("floor_placeholder", new Color(0.55f, 0.5f, 0.42f), new Color(0.5f, 0.45f, 0.38f));
-        var wallTile = GetOrCreateTile("wall_placeholder", new Color(0.32f, 0.3f, 0.34f), new Color(0.18f, 0.17f, 0.2f));
+        var floorTile = GetOrCreateTile("floor_pixel", FloorPixel);
+        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
 
         for (var x = RoomMinX; x <= RoomMaxX; x++)
         {
@@ -71,7 +74,7 @@ public static class SceneBootstrap
             }
         }
 
-        var playerSprite = GetOrCreatePlaceholderSprite("player_placeholder", new Color(0.85f, 0.3f, 0.6f), new Color(0.4f, 0.1f, 0.25f));
+        var playerSprite = GetOrCreatePixelSprite("player_pixel", PlayerPattern, PlayerPalette);
 
         var player = new GameObject("Player");
         player.tag = "Player";
@@ -95,7 +98,7 @@ public static class SceneBootstrap
         var follow = cam.gameObject.AddComponent<CameraFollow>();
         follow.SetTarget(player.transform);
 
-        var mailboxSprite = GetOrCreatePlaceholderSprite("mailbox_placeholder", new Color(0.85f, 0.75f, 0.2f), new Color(0.5f, 0.4f, 0.1f));
+        var mailboxSprite = GetOrCreatePixelSprite("mailbox_pixel", MailboxPattern, MailboxPalette);
         var mailbox = new GameObject("Mailbox");
         var mailboxSr = mailbox.AddComponent<SpriteRenderer>();
         mailboxSr.sprite = mailboxSprite;
@@ -114,11 +117,11 @@ public static class SceneBootstrap
             poolProp.GetArrayElementAtIndex(i).objectReferenceValue = gemPool[i];
         so.ApplyModifiedProperties();
 
-        CreateExaminationStation("Loupe", ExaminationTool.MeasurementType.Hardness, new Vector3(9, 2, 0f), new Color(0.3f, 0.7f, 0.75f));
-        CreateExaminationStation("Refractometre", ExaminationTool.MeasurementType.RefractiveIndex, new Vector3(12, 2, 0f), new Color(0.35f, 0.55f, 0.85f));
-        CreateExaminationStation("BalanceHydrostatique", ExaminationTool.MeasurementType.Density, new Vector3(15, 2, 0f), new Color(0.6f, 0.45f, 0.8f));
-        CreateExaminationStation("Dichroscope", ExaminationTool.MeasurementType.Pleochroism, new Vector3(18, 2, 0f), new Color(0.75f, 0.4f, 0.55f));
-        CreateExaminationStation("LampeUV", ExaminationTool.MeasurementType.Fluorescence, new Vector3(10, -2.5f, 0f), new Color(0.55f, 0.3f, 0.85f));
+        CreateExaminationStation("Loupe", ExaminationTool.MeasurementType.Hardness, new Vector3(9, 2, 0f));
+        CreateExaminationStation("Refractometre", ExaminationTool.MeasurementType.RefractiveIndex, new Vector3(12, 2, 0f));
+        CreateExaminationStation("BalanceHydrostatique", ExaminationTool.MeasurementType.Density, new Vector3(15, 2, 0f));
+        CreateExaminationStation("Dichroscope", ExaminationTool.MeasurementType.Pleochroism, new Vector3(18, 2, 0f));
+        CreateExaminationStation("LampeUV", ExaminationTool.MeasurementType.Fluorescence, new Vector3(10, -2.5f, 0f));
 
         CreateDirector(new Vector3(14, -2, 0f));
         CreateUI();
@@ -135,9 +138,9 @@ public static class SceneBootstrap
         Debug.Log("Home scene created at Assets/Scenes/Home.unity");
     }
 
-    private static void CreateExaminationStation(string toolName, ExaminationTool.MeasurementType measurementType, Vector3 position, Color color)
+    private static void CreateExaminationStation(string toolName, ExaminationTool.MeasurementType measurementType, Vector3 position)
     {
-        var sprite = GetOrCreatePlaceholderSprite($"{toolName.ToLowerInvariant()}_placeholder", color, color * 0.6f);
+        var sprite = GetToolSprite(toolName);
 
         var station = new GameObject(toolName);
         var stationSr = station.AddComponent<SpriteRenderer>();
@@ -159,7 +162,7 @@ public static class SceneBootstrap
 
     private static void CreateDirector(Vector3 position)
     {
-        var sprite = GetOrCreatePlaceholderSprite("directeur_placeholder", new Color(0.85f, 0.85f, 0.9f), new Color(0.3f, 0.3f, 0.35f));
+        var sprite = GetOrCreatePixelSprite("directeur_pixel", DirectorPattern, DirectorPalette);
 
         var director = new GameObject("Directeur");
         var sr = director.AddComponent<SpriteRenderer>();
@@ -168,11 +171,11 @@ public static class SceneBootstrap
 
         var col = director.AddComponent<BoxCollider2D>();
         col.isTrigger = true;
-        col.size = new Vector2(1.4f, 1.4f);
+        col.size = new Vector2(1.2f, 1.2f);
 
         director.AddComponent<DirectorNPC>();
         director.transform.position = position;
-        director.transform.localScale = new Vector3(1.3f, 1.3f, 1f);
+        director.transform.localScale = new Vector3(1.15f, 1.15f, 1f);
     }
 
     private static readonly string[] ReportSpeciesOptions =
@@ -415,13 +418,13 @@ public static class SceneBootstrap
         return gem;
     }
 
-    private static Tile GetOrCreateTile(string name, Color fillColor, Color outlineColor)
+    private static Tile GetOrCreateTile(string name, Func<int, int, Color> pixelFunc)
     {
         var tilePath = $"Assets/Art/Tilesets/{name}.asset";
         var existingTile = AssetDatabase.LoadAssetAtPath<Tile>(tilePath);
         if (existingTile != null) return existingTile;
 
-        var sprite = GetOrCreatePlaceholderSprite(name, fillColor, outlineColor);
+        var sprite = GetOrCreateProceduralSprite(name, pixelFunc, 32);
         var tile = ScriptableObject.CreateInstance<Tile>();
         tile.sprite = sprite;
 
@@ -430,28 +433,79 @@ public static class SceneBootstrap
         return tile;
     }
 
-    private static Sprite GetOrCreatePlaceholderSprite(string name, Color fillColor, Color outlineColor)
+    // ----- Pixel art generation -----
+
+    private static string Row(params object[] parts)
+    {
+        var sb = new StringBuilder();
+        for (var i = 0; i < parts.Length; i += 2)
+        {
+            var count = (int)parts[i];
+            var c = (char)parts[i + 1];
+            sb.Append(c, count);
+        }
+        return sb.ToString();
+    }
+
+    private static Sprite GetOrCreatePixelSprite(string name, string[] pattern, Dictionary<char, Color> palette)
     {
         var spritePath = $"Assets/Art/Sprites/{name}.png";
         var existing = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
         if (existing != null) return existing;
 
-        const int size = 16;
+        var tex = BuildPixelArtTexture(pattern, palette, 2);
+        Directory.CreateDirectory("Assets/Art/Sprites");
+        File.WriteAllBytes(spritePath, tex.EncodeToPNG());
+        UnityEngine.Object.DestroyImmediate(tex);
+
+        return ImportSprite(spritePath);
+    }
+
+    private static Sprite GetOrCreateProceduralSprite(string name, Func<int, int, Color> pixelFunc, int size)
+    {
+        var spritePath = $"Assets/Art/Sprites/{name}.png";
+        var existing = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
+        if (existing != null) return existing;
+
         var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
-        for (var x = 0; x < size; x++)
-        {
-            for (var y = 0; y < size; y++)
-            {
-                var isEdge = x == 0 || y == 0 || x == size - 1 || y == size - 1;
-                tex.SetPixel(x, y, isEdge ? outlineColor : fillColor);
-            }
-        }
+        for (var y = 0; y < size; y++)
+            for (var x = 0; x < size; x++)
+                tex.SetPixel(x, y, pixelFunc(x, y));
         tex.Apply();
 
         Directory.CreateDirectory("Assets/Art/Sprites");
         File.WriteAllBytes(spritePath, tex.EncodeToPNG());
-        Object.DestroyImmediate(tex);
+        UnityEngine.Object.DestroyImmediate(tex);
 
+        return ImportSprite(spritePath);
+    }
+
+    private static Texture2D BuildPixelArtTexture(string[] pattern, IReadOnlyDictionary<char, Color> palette, int scale)
+    {
+        var srcSize = pattern.Length;
+        var outSize = srcSize * scale;
+        var tex = new Texture2D(outSize, outSize, TextureFormat.RGBA32, false);
+
+        for (var y = 0; y < srcSize; y++)
+        {
+            var row = pattern[y];
+            for (var x = 0; x < srcSize; x++)
+            {
+                var c = palette.TryGetValue(row[x], out var col) ? col : Color.clear;
+                var texX = x * scale;
+                var texY = (srcSize - 1 - y) * scale;
+                for (var oy = 0; oy < scale; oy++)
+                    for (var ox = 0; ox < scale; ox++)
+                        tex.SetPixel(texX + ox, texY + oy, c);
+            }
+        }
+
+        tex.Apply();
+        return tex;
+    }
+
+    private static Sprite ImportSprite(string spritePath)
+    {
         AssetDatabase.ImportAsset(spritePath, ImportAssetOptions.ForceUpdate);
 
         var importer = (TextureImporter)AssetImporter.GetAtPath(spritePath);
@@ -465,4 +519,267 @@ public static class SceneBootstrap
 
         return AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
     }
+
+    private static Color WallPixel(int x, int y)
+    {
+        var brick = new Color(0.28f, 0.27f, 0.30f);
+        var brickDark = new Color(0.23f, 0.22f, 0.25f);
+        var mortar = new Color(0.16f, 0.15f, 0.17f);
+
+        var rowBrick = y / 8;
+        var offset = rowBrick % 2 == 0 ? 0 : 8;
+        var mortarLine = y % 8 == 7 || (x + offset) % 16 == 15;
+        if (mortarLine) return mortar;
+        return (x / 4 + y / 4) % 2 == 0 ? brick : brickDark;
+    }
+
+    private static Color FloorPixel(int x, int y)
+    {
+        var plankA = new Color(0.58f, 0.45f, 0.32f);
+        var plankB = new Color(0.54f, 0.42f, 0.29f);
+        var lineColor = new Color(0.40f, 0.31f, 0.21f);
+
+        var plankRow = y / 8;
+        if (y % 8 == 7) return lineColor;
+        var baseColor = plankRow % 2 == 0 ? plankA : plankB;
+        var grain = (x + plankRow * 5) % 11 == 0;
+        return grain ? plankB : baseColor;
+    }
+
+    private static Sprite GetToolSprite(string toolName)
+    {
+        switch (toolName)
+        {
+            case "Loupe": return GetOrCreatePixelSprite("loupe_pixel", LoupePattern, LoupePalette);
+            case "Refractometre": return GetOrCreatePixelSprite("refractometre_pixel", RefractometrePattern, RefractometrePalette);
+            case "BalanceHydrostatique": return GetOrCreatePixelSprite("balance_pixel", BalancePattern, BalancePalette);
+            case "Dichroscope": return GetOrCreatePixelSprite("dichroscope_pixel", DichroscopePattern, DichroscopePalette);
+            case "LampeUV": return GetOrCreatePixelSprite("lampeuv_pixel", LampeUVPattern, LampeUVPalette);
+            default: return GetOrCreatePixelSprite("loupe_pixel", LoupePattern, LoupePalette);
+        }
+    }
+
+    // ----- Sprite patterns (16x16 logical pixels, upscaled 2x) -----
+
+    private static readonly string[] PlayerPattern =
+    {
+        Row(16, '.'),
+        Row(3, '.', 8, 'H', 5, '.'),
+        Row(2, '.', 12, 'H', 2, '.'),
+        Row(2, '.', 2, 'H', 8, 'S', 2, 'H', 2, '.'),
+        Row(2, '.', 1, 'H', 10, 'S', 1, 'H', 2, '.'),
+        Row(2, '.', 1, 'H', 3, 'S', 1, 'E', 2, 'S', 1, 'E', 3, 'S', 1, 'H', 2, '.'),
+        Row(2, '.', 1, 'H', 10, 'S', 1, 'H', 2, '.'),
+        Row(3, '.', 10, 'S', 3, '.'),
+        Row(4, '.', 8, 'C', 4, '.'),
+        Row(3, '.', 10, 'C', 3, '.'),
+        Row(3, '.', 1, 'D', 8, 'C', 1, 'D', 3, '.'),
+        Row(3, '.', 1, 'D', 8, 'C', 1, 'D', 3, '.'),
+        Row(3, '.', 10, 'C', 3, '.'),
+        Row(4, '.', 3, 'C', 2, '.', 3, 'C', 4, '.'),
+        Row(4, '.', 3, 'B', 2, '.', 3, 'B', 4, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> PlayerPalette = new Dictionary<char, Color>
+    {
+        { 'H', new Color(0.22f, 0.15f, 0.10f) },
+        { 'S', new Color(0.91f, 0.72f, 0.56f) },
+        { 'E', new Color(0.10f, 0.10f, 0.10f) },
+        { 'C', new Color(0.95f, 0.95f, 0.95f) },
+        { 'D', new Color(0.78f, 0.78f, 0.80f) },
+        { 'B', new Color(0.16f, 0.16f, 0.18f) },
+    };
+
+    private static readonly string[] DirectorPattern =
+    {
+        Row(16, '.'),
+        Row(3, '.', 8, 'H', 5, '.'),
+        Row(2, '.', 12, 'H', 2, '.'),
+        Row(2, '.', 2, 'H', 8, 'S', 2, 'H', 2, '.'),
+        Row(2, '.', 1, 'H', 10, 'S', 1, 'H', 2, '.'),
+        Row(2, '.', 1, 'H', 3, 'S', 1, 'E', 2, 'S', 1, 'E', 3, 'S', 1, 'H', 2, '.'),
+        Row(2, '.', 1, 'H', 10, 'S', 1, 'H', 2, '.'),
+        Row(3, '.', 10, 'S', 3, '.'),
+        Row(4, '.', 8, 'C', 4, '.'),
+        Row(3, '.', 4, 'C', 2, 'T', 4, 'C', 3, '.'),
+        Row(3, '.', 1, 'D', 3, 'C', 2, 'T', 3, 'C', 1, 'D', 3, '.'),
+        Row(3, '.', 1, 'D', 3, 'C', 2, 'T', 3, 'C', 1, 'D', 3, '.'),
+        Row(3, '.', 4, 'C', 2, 'T', 4, 'C', 3, '.'),
+        Row(4, '.', 3, 'C', 2, '.', 3, 'C', 4, '.'),
+        Row(4, '.', 3, 'B', 2, '.', 3, 'B', 4, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> DirectorPalette = new Dictionary<char, Color>
+    {
+        { 'H', new Color(0.78f, 0.78f, 0.80f) },
+        { 'S', new Color(0.91f, 0.72f, 0.56f) },
+        { 'E', new Color(0.10f, 0.10f, 0.10f) },
+        { 'C', new Color(0.17f, 0.19f, 0.22f) },
+        { 'D', new Color(0.10f, 0.11f, 0.13f) },
+        { 'T', new Color(0.63f, 0.16f, 0.16f) },
+        { 'B', new Color(0.16f, 0.16f, 0.18f) },
+    };
+
+    private static readonly string[] MailboxPattern =
+    {
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(5, '.', 6, 'R', 5, '.'),
+        Row(4, '.', 8, 'R', 4, '.'),
+        Row(3, '.', 10, 'R', 3, '.'),
+        Row(2, '.', 12, 'R', 2, '.'),
+        Row(2, '.', 12, 'R', 2, '.'),
+        Row(2, '.', 12, 'r', 2, '.'),
+        Row(3, '.', 10, 'r', 3, '.'),
+        Row(6, '.', 4, 'P', 6, '.'),
+        Row(6, '.', 4, 'P', 6, '.'),
+        Row(6, '.', 4, 'P', 6, '.'),
+        Row(6, '.', 4, 'P', 6, '.'),
+        Row(6, '.', 4, 'P', 6, '.'),
+        Row(5, '.', 6, 'P', 5, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> MailboxPalette = new Dictionary<char, Color>
+    {
+        { 'R', new Color(0.71f, 0.20f, 0.16f) },
+        { 'r', new Color(0.52f, 0.15f, 0.12f) },
+        { 'P', new Color(0.42f, 0.42f, 0.44f) },
+    };
+
+    private static readonly string[] LoupePattern =
+    {
+        Row(16, '.'),
+        Row(4, '.', 6, 'R', 6, '.'),
+        Row(3, '.', 1, 'R', 6, 'L', 1, 'R', 5, '.'),
+        Row(2, '.', 1, 'R', 8, 'L', 1, 'R', 4, '.'),
+        Row(2, '.', 1, 'R', 8, 'L', 1, 'R', 4, '.'),
+        Row(2, '.', 1, 'R', 8, 'L', 1, 'R', 4, '.'),
+        Row(2, '.', 1, 'R', 8, 'L', 1, 'R', 4, '.'),
+        Row(3, '.', 1, 'R', 8, 'L', 1, 'R', 3, '.'),
+        Row(4, '.', 1, 'R', 6, 'L', 1, 'R', 4, '.'),
+        Row(5, '.', 8, 'R', 3, '.'),
+        Row(7, '.', 2, 'R', 7, '.'),
+        Row(8, '.', 2, 'H', 6, '.'),
+        Row(9, '.', 2, 'H', 5, '.'),
+        Row(10, '.', 2, 'H', 4, '.'),
+        Row(11, '.', 2, 'H', 3, '.'),
+        Row(12, '.', 2, 'H', 2, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> LoupePalette = new Dictionary<char, Color>
+    {
+        { 'R', new Color(0.30f, 0.30f, 0.33f) },
+        { 'L', new Color(0.75f, 0.92f, 0.93f) },
+        { 'H', new Color(0.42f, 0.29f, 0.18f) },
+    };
+
+    private static readonly string[] RefractometrePattern =
+    {
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(4, '.', 8, 'G', 4, '.'),
+        Row(4, '.', 8, 'B', 4, '.'),
+        Row(3, '.', 10, 'B', 3, '.'),
+        Row(3, '.', 10, 'B', 3, '.'),
+        Row(2, '.', 12, 'B', 2, '.'),
+        Row(2, '.', 12, 'B', 2, '.'),
+        Row(2, '.', 12, 'B', 2, '.'),
+        Row(2, '.', 12, 'K', 2, '.'),
+        Row(1, '.', 14, 'K', 1, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> RefractometrePalette = new Dictionary<char, Color>
+    {
+        { 'G', new Color(0.56f, 0.82f, 0.88f) },
+        { 'B', new Color(0.23f, 0.29f, 0.36f) },
+        { 'K', new Color(0.08f, 0.08f, 0.09f) },
+    };
+
+    private static readonly string[] BalancePattern =
+    {
+        Row(16, '.'),
+        Row(7, '.', 2, 'S', 7, '.'),
+        Row(7, '.', 2, 'S', 7, '.'),
+        Row(3, '.', 10, 'S', 3, '.'),
+        Row(2, '.', 2, 'P', 6, '.', 2, 'P', 4, '.'),
+        Row(2, '.', 2, 'P', 6, '.', 2, 'P', 4, '.'),
+        Row(3, '.', 2, 'P', 6, '.', 2, 'P', 3, '.'),
+        Row(7, '.', 2, 'S', 7, '.'),
+        Row(7, '.', 2, 'S', 7, '.'),
+        Row(7, '.', 2, 'S', 7, '.'),
+        Row(7, '.', 2, 'S', 7, '.'),
+        Row(6, '.', 4, 'S', 6, '.'),
+        Row(4, '.', 8, 'K', 4, '.'),
+        Row(4, '.', 8, 'K', 4, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> BalancePalette = new Dictionary<char, Color>
+    {
+        { 'S', new Color(0.60f, 0.63f, 0.66f) },
+        { 'P', new Color(0.42f, 0.44f, 0.47f) },
+        { 'K', new Color(0.10f, 0.10f, 0.11f) },
+    };
+
+    private static readonly string[] DichroscopePattern =
+    {
+        Row(16, '.'),
+        Row(6, '.', 4, 'D', 6, '.'),
+        Row(5, '.', 6, 'D', 5, '.'),
+        Row(5, '.', 2, 'L', 2, 'D', 2, 'L', 5, '.'),
+        Row(5, '.', 6, 'D', 5, '.'),
+        Row(5, '.', 6, 'D', 5, '.'),
+        Row(5, '.', 6, 'D', 5, '.'),
+        Row(5, '.', 6, 'D', 5, '.'),
+        Row(6, '.', 4, 'D', 6, '.'),
+        Row(6, '.', 4, 'D', 6, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> DichroscopePalette = new Dictionary<char, Color>
+    {
+        { 'D', new Color(0.54f, 0.29f, 0.41f) },
+        { 'L', new Color(0.88f, 0.63f, 0.75f) },
+    };
+
+    private static readonly string[] LampeUVPattern =
+    {
+        Row(16, '.'),
+        Row(6, '.', 4, 'U', 6, '.'),
+        Row(5, '.', 2, 'U', 2, 'u', 2, 'U', 5, '.'),
+        Row(5, '.', 6, 'U', 5, '.'),
+        Row(6, '.', 4, 'U', 6, '.'),
+        Row(7, '.', 2, 'B', 7, '.'),
+        Row(7, '.', 2, 'B', 7, '.'),
+        Row(6, '.', 4, 'B', 6, '.'),
+        Row(6, '.', 4, 'B', 6, '.'),
+        Row(5, '.', 6, 'B', 5, '.'),
+        Row(4, '.', 8, 'B', 4, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> LampeUVPalette = new Dictionary<char, Color>
+    {
+        { 'U', new Color(0.60f, 0.31f, 0.88f) },
+        { 'u', new Color(0.79f, 0.56f, 1.00f) },
+        { 'B', new Color(0.23f, 0.23f, 0.23f) },
+    };
 }
