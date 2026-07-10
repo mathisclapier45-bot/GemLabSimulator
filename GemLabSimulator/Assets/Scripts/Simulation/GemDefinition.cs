@@ -11,6 +11,11 @@ public class GemDefinition : ScriptableObject
     public float density;
     public float hardness;
 
+    [Header("Propriétés optiques qualitatives")]
+    public bool pleochroic;
+    [TextArea] public string pleochroicDescription;
+    [TextArea] public string fluorescenceDescription;
+
     [Header("Économie")]
     public int baseValue;
 }

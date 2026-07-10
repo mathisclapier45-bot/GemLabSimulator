@@ -6,7 +6,9 @@ public class ExaminationTool : MonoBehaviour
     {
         RefractiveIndex,
         Density,
-        Hardness
+        Hardness,
+        Pleochroism,
+        Fluorescence
     }
 
     [SerializeField] private string toolName;
@@ -36,31 +38,68 @@ public class ExaminationTool : MonoBehaviour
 
         if (!playerGemHolder.HasGem)
         {
-            Debug.Log($"{toolName} : aucune gemme à examiner.");
+            ToolFeedbackUI.Instance.ShowMessage($"{toolName} : aucune gemme à examiner.");
             return;
         }
 
         var gem = playerGemHolder.CurrentGem;
-        string label;
-        float value;
 
+        switch (measurementType)
+        {
+            case MeasurementType.Pleochroism:
+                RevealQualitative(gem, "Pléochroïsme",
+                    gem.pleochroic ? gem.pleochroicDescription : "Aucun pléochroïsme visible.");
+                break;
+            case MeasurementType.Fluorescence:
+                RevealQualitative(gem, "Fluorescence UV", gem.fluorescenceDescription);
+                break;
+            default:
+                StartNumericMeasurement(gem);
+                break;
+        }
+    }
+
+    private void RevealQualitative(GemDefinition gem, string label, string description)
+    {
+        playerGemHolder.RecordObservation(measurementType.ToString());
+        ToolFeedbackUI.Instance.ShowMessage($"{toolName} — {label} : {description}");
+    }
+
+    private void StartNumericMeasurement(GemDefinition gem)
+    {
+        string label;
+        float trueValue;
         switch (measurementType)
         {
             case MeasurementType.RefractiveIndex:
                 label = "Indice de réfraction";
-                value = gem.refractiveIndex;
+                trueValue = gem.refractiveIndex;
                 break;
             case MeasurementType.Density:
                 label = "Densité";
-                value = gem.density;
+                trueValue = gem.density;
                 break;
             default:
                 label = "Dureté";
-                value = gem.hardness;
+                trueValue = gem.hardness;
                 break;
         }
 
-        playerGemHolder.RecordMeasurement(measurementType.ToString());
-        Debug.Log($"{toolName} sur {gem.displayName} : {label} ≈ {value}");
+        var holder = playerGemHolder;
+        var propertyKey = measurementType.ToString();
+
+        MeasurementMinigameUI.Instance.Open(toolName, precision =>
+        {
+            float error;
+            if (precision >= 1f) error = 0f;
+            else if (precision >= 0.6f) error = trueValue * Random.Range(-0.03f, 0.03f);
+            else error = trueValue * Random.Range(-0.12f, 0.12f);
+
+            var measured = trueValue + error;
+            holder.RecordMeasurement(propertyKey, measured);
+
+            var tierLabel = precision >= 1f ? "Parfait" : precision >= 0.6f ? "Bonne lecture" : "Lecture imprécise";
+            ToolFeedbackUI.Instance.ShowMessage($"{toolName} — {label} ≈ {measured:F3} ({tierLabel})");
+        });
     }
 }

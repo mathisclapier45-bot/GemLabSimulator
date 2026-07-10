@@ -26,7 +26,7 @@ public class DirectorNPC : MonoBehaviour
 
         if (!playerGemHolder.HasGem)
         {
-            Debug.Log("Le directeur : \"Revenez me voir avec une gemme à faire valider.\"");
+            ToolFeedbackUI.Instance.ShowMessage("Le directeur : \"Revenez me voir avec une gemme à faire valider.\"");
             return;
         }
 

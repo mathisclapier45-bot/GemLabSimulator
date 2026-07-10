@@ -26,11 +26,15 @@ public class ReportUIController : MonoBehaviour
         var gem = holder.CurrentGem;
         var measured = new List<string>();
         if (holder.HasMeasured(ExaminationTool.MeasurementType.Hardness.ToString()))
-            measured.Add($"Dureté ≈ {gem.hardness}");
+            measured.Add($"Dureté ≈ {holder.GetMeasuredValue(ExaminationTool.MeasurementType.Hardness.ToString()):F2}");
         if (holder.HasMeasured(ExaminationTool.MeasurementType.RefractiveIndex.ToString()))
-            measured.Add($"Indice de réfraction ≈ {gem.refractiveIndex}");
+            measured.Add($"Indice de réfraction ≈ {holder.GetMeasuredValue(ExaminationTool.MeasurementType.RefractiveIndex.ToString()):F3}");
         if (holder.HasMeasured(ExaminationTool.MeasurementType.Density.ToString()))
-            measured.Add($"Densité ≈ {gem.density}");
+            measured.Add($"Densité ≈ {holder.GetMeasuredValue(ExaminationTool.MeasurementType.Density.ToString()):F2}");
+        if (holder.HasObserved(ExaminationTool.MeasurementType.Pleochroism.ToString()))
+            measured.Add(gem.pleochroic ? $"Pléochroïsme : {gem.pleochroicDescription}" : "Pléochroïsme : aucun");
+        if (holder.HasObserved(ExaminationTool.MeasurementType.Fluorescence.ToString()))
+            measured.Add($"Fluorescence : {gem.fluorescenceDescription}");
 
         measurementsText.text = measured.Count > 0
             ? "Mesures relevées :\n" + string.Join("\n", measured)

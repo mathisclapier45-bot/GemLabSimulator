@@ -106,14 +106,19 @@ public static class SceneBootstrap
         var mailboxScript = mailbox.AddComponent<Mailbox>();
         mailbox.transform.position = new Vector3(DividerX - 2, RoomMinY + 1, 0f);
 
-        var exampleGem = GetOrCreateExampleGem();
+        var gemPool = GetOrCreateGemPool();
         var so = new SerializedObject(mailboxScript);
-        so.FindProperty("gemToDeliver").objectReferenceValue = exampleGem;
+        var poolProp = so.FindProperty("gemPool");
+        poolProp.arraySize = gemPool.Length;
+        for (var i = 0; i < gemPool.Length; i++)
+            poolProp.GetArrayElementAtIndex(i).objectReferenceValue = gemPool[i];
         so.ApplyModifiedProperties();
 
-        CreateExaminationStation("Loupe", ExaminationTool.MeasurementType.Hardness, new Vector3(10, 2, 0f), new Color(0.3f, 0.7f, 0.75f));
-        CreateExaminationStation("Refractometre", ExaminationTool.MeasurementType.RefractiveIndex, new Vector3(14, 2, 0f), new Color(0.35f, 0.55f, 0.85f));
-        CreateExaminationStation("BalanceHydrostatique", ExaminationTool.MeasurementType.Density, new Vector3(18, 2, 0f), new Color(0.6f, 0.45f, 0.8f));
+        CreateExaminationStation("Loupe", ExaminationTool.MeasurementType.Hardness, new Vector3(9, 2, 0f), new Color(0.3f, 0.7f, 0.75f));
+        CreateExaminationStation("Refractometre", ExaminationTool.MeasurementType.RefractiveIndex, new Vector3(12, 2, 0f), new Color(0.35f, 0.55f, 0.85f));
+        CreateExaminationStation("BalanceHydrostatique", ExaminationTool.MeasurementType.Density, new Vector3(15, 2, 0f), new Color(0.6f, 0.45f, 0.8f));
+        CreateExaminationStation("Dichroscope", ExaminationTool.MeasurementType.Pleochroism, new Vector3(18, 2, 0f), new Color(0.75f, 0.4f, 0.55f));
+        CreateExaminationStation("LampeUV", ExaminationTool.MeasurementType.Fluorescence, new Vector3(10, -2.5f, 0f), new Color(0.55f, 0.3f, 0.85f));
 
         CreateDirector(new Vector3(14, -2, 0f));
         CreateUI();
@@ -238,6 +243,73 @@ public static class SceneBootstrap
         ctrlSo.FindProperty("measurementsText").objectReferenceValue = measurementsGO.GetComponent<Text>();
         ctrlSo.FindProperty("resultText").objectReferenceValue = resultGO.GetComponent<Text>();
         ctrlSo.ApplyModifiedProperties();
+
+        var feedbackGO = CreateUIText("ToolFeedback", canvasGO.transform, "",
+            new Vector2(0, 20), new Vector2(700, 40), 18, TextAnchor.LowerCenter, new Color(0.95f, 0.95f, 0.8f));
+        var feedbackRect = feedbackGO.GetComponent<RectTransform>();
+        feedbackRect.anchorMin = new Vector2(0.5f, 0f);
+        feedbackRect.anchorMax = new Vector2(0.5f, 0f);
+        feedbackRect.pivot = new Vector2(0.5f, 0f);
+        var toolFeedback = feedbackGO.AddComponent<ToolFeedbackUI>();
+        var feedbackSo = new SerializedObject(toolFeedback);
+        feedbackSo.FindProperty("feedbackText").objectReferenceValue = feedbackGO.GetComponent<Text>();
+        feedbackSo.ApplyModifiedProperties();
+
+        CreateMeasurementMinigameUI(canvasGO.transform);
+    }
+
+    private static void CreateMeasurementMinigameUI(Transform canvasTransform)
+    {
+        var panelGO = new GameObject("MinigamePanel", typeof(RectTransform), typeof(Image));
+        panelGO.transform.SetParent(canvasTransform, false);
+        var panelRect = panelGO.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        panelRect.pivot = new Vector2(0.5f, 0.5f);
+        panelRect.sizeDelta = new Vector2(440, 160);
+        panelRect.anchoredPosition = Vector2.zero;
+        panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.95f);
+        panelGO.SetActive(false);
+
+        var instructionGO = CreateUIText("Instruction", panelGO.transform, "",
+            new Vector2(0, -16), new Vector2(400, 40), 16, TextAnchor.UpperCenter, Color.white);
+
+        var trackGO = new GameObject("Track", typeof(RectTransform), typeof(Image));
+        trackGO.transform.SetParent(panelGO.transform, false);
+        var trackRect = trackGO.GetComponent<RectTransform>();
+        trackRect.anchorMin = new Vector2(0.5f, 0.5f);
+        trackRect.anchorMax = new Vector2(0.5f, 0.5f);
+        trackRect.pivot = new Vector2(0.5f, 0.5f);
+        trackRect.anchoredPosition = new Vector2(0, -30);
+        trackRect.sizeDelta = new Vector2(360, 20);
+        trackGO.GetComponent<Image>().color = new Color(0.2f, 0.2f, 0.24f, 1f);
+
+        var targetZoneGO = new GameObject("TargetZone", typeof(RectTransform), typeof(Image));
+        targetZoneGO.transform.SetParent(trackGO.transform, false);
+        var targetRect = targetZoneGO.GetComponent<RectTransform>();
+        targetRect.anchorMin = new Vector2(0.5f, 0.5f);
+        targetRect.anchorMax = new Vector2(0.5f, 0.5f);
+        targetRect.pivot = new Vector2(0.5f, 0.5f);
+        targetRect.sizeDelta = new Vector2(60, 20);
+        targetZoneGO.GetComponent<Image>().color = new Color(0.35f, 0.75f, 0.4f, 0.7f);
+
+        var needleGO = new GameObject("Needle", typeof(RectTransform), typeof(Image));
+        needleGO.transform.SetParent(trackGO.transform, false);
+        var needleRect = needleGO.GetComponent<RectTransform>();
+        needleRect.anchorMin = new Vector2(0.5f, 0.5f);
+        needleRect.anchorMax = new Vector2(0.5f, 0.5f);
+        needleRect.pivot = new Vector2(0.5f, 0.5f);
+        needleRect.sizeDelta = new Vector2(6, 28);
+        needleGO.GetComponent<Image>().color = Color.white;
+
+        var minigame = canvasTransform.gameObject.AddComponent<MeasurementMinigameUI>();
+        var so = new SerializedObject(minigame);
+        so.FindProperty("panel").objectReferenceValue = panelGO;
+        so.FindProperty("track").objectReferenceValue = trackRect;
+        so.FindProperty("needle").objectReferenceValue = needleRect;
+        so.FindProperty("targetZone").objectReferenceValue = targetRect;
+        so.FindProperty("instructionText").objectReferenceValue = instructionGO.GetComponent<Text>();
+        so.ApplyModifiedProperties();
     }
 
     private static GameObject CreateUIText(string name, Transform parent, string text, Vector2 anchoredPosition,
@@ -284,22 +356,62 @@ public static class SceneBootstrap
         return go;
     }
 
-    private static GemDefinition GetOrCreateExampleGem()
+    private static GemDefinition[] GetOrCreateGemPool()
     {
-        const string path = "Assets/Data/Gems/Quartz.asset";
-        var existing = AssetDatabase.LoadAssetAtPath<GemDefinition>(path);
-        if (existing != null) return existing;
+        return new[]
+        {
+            GetOrCreateGem("Quartz", "Quartz",
+                "Un cristal de quartz incolore, courant, envoyé pour un premier examen.",
+                1.544f, 2.65f, 7f, false, "",
+                "Aucune fluorescence notable sous UV.", 15),
+            GetOrCreateGem("Corindon_Rubis", "Corindon (Rubis)",
+                "Un corindon rouge intense, envoyé pour confirmer s'il s'agit d'un rubis naturel.",
+                1.766f, 4.00f, 9f, true, "Rouge / Orangé-rouge selon l'axe d'observation",
+                "Fluorescence rouge vif sous UV longue onde (indicateur classique du rubis).", 150),
+            GetOrCreateGem("Spinelle", "Spinelle",
+                "Une pierre rouge vif, historiquement souvent confondue avec le rubis.",
+                1.715f, 3.60f, 8f, false, "",
+                "Fluorescence rouge, souvent plus terne que le rubis, sous UV longue onde.", 45),
+            GetOrCreateGem("Grenat", "Grenat",
+                "Un grenat rouge sombre, à ne pas confondre avec un rubis ou un spinelle.",
+                1.79f, 4.05f, 7.5f, false, "",
+                "Aucune fluorescence sous UV (caractéristique du grenat).", 25),
+            GetOrCreateGem("Verre", "Verre",
+                "Un verre imitant l'apparence d'une pierre précieuse rouge.",
+                1.50f, 2.50f, 5.5f, false, "",
+                "Fluorescence variable ou absente, souvent avec des bulles visibles à la loupe.", 5)
+        };
+    }
 
-        var gem = ScriptableObject.CreateInstance<GemDefinition>();
-        gem.displayName = "Quartz";
-        gem.description = "Un cristal de quartz incolore, courant, envoyé pour un premier examen.";
-        gem.refractiveIndex = 1.544f;
-        gem.density = 2.65f;
-        gem.hardness = 7f;
-        gem.baseValue = 15;
+    private static GemDefinition GetOrCreateGem(string assetName, string displayName, string description,
+        float refractiveIndex, float density, float hardness, bool pleochroic, string pleochroicDescription,
+        string fluorescenceDescription, int baseValue)
+    {
+        var path = $"Assets/Data/Gems/{assetName}.asset";
+        var gem = AssetDatabase.LoadAssetAtPath<GemDefinition>(path);
+        var isNew = gem == null;
+        if (isNew) gem = ScriptableObject.CreateInstance<GemDefinition>();
 
-        Directory.CreateDirectory("Assets/Data/Gems");
-        AssetDatabase.CreateAsset(gem, path);
+        gem.displayName = displayName;
+        gem.description = description;
+        gem.refractiveIndex = refractiveIndex;
+        gem.density = density;
+        gem.hardness = hardness;
+        gem.pleochroic = pleochroic;
+        gem.pleochroicDescription = pleochroicDescription;
+        gem.fluorescenceDescription = fluorescenceDescription;
+        gem.baseValue = baseValue;
+
+        if (isNew)
+        {
+            Directory.CreateDirectory("Assets/Data/Gems");
+            AssetDatabase.CreateAsset(gem, path);
+        }
+        else
+        {
+            EditorUtility.SetDirty(gem);
+        }
+
         return gem;
     }
 

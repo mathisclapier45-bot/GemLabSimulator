@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Spinelle
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Spinelle
+  description: Une pierre rouge vif, historiquement souvent confondue avec le rubis.
+  refractiveIndex: 1.715
+  density: 3.6
+  hardness: 8
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceDescription: Fluorescence rouge, souvent plus terne que le rubis, sous
+    UV longue onde.
+  baseValue: 45

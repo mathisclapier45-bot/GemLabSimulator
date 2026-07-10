@@ -2,10 +2,9 @@ using UnityEngine;
 
 public class Mailbox : MonoBehaviour
 {
-    [SerializeField] private GemDefinition gemToDeliver;
+    [SerializeField] private GemDefinition[] gemPool;
 
     private bool playerInRange;
-    private bool delivered;
     private PlayerGemHolder playerGemHolder;
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -25,11 +24,18 @@ public class Mailbox : MonoBehaviour
 
     private void Update()
     {
-        if (!playerInRange || delivered || gemToDeliver == null) return;
-        if (!Input.GetKeyDown(KeyCode.E)) return;
+        if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
-        playerGemHolder.ReceiveGem(gemToDeliver);
-        delivered = true;
-        Debug.Log("Boîte aux lettres : courrier récupéré.");
+        if (playerGemHolder.HasGem)
+        {
+            ToolFeedbackUI.Instance.ShowMessage("Boîte aux lettres : vous avez déjà une gemme à traiter.");
+            return;
+        }
+
+        if (gemPool == null || gemPool.Length == 0) return;
+
+        var gem = gemPool[Random.Range(0, gemPool.Length)];
+        playerGemHolder.ReceiveGem(gem);
+        ToolFeedbackUI.Instance.ShowMessage($"Boîte aux lettres : vous avez reçu \"{gem.displayName}\".");
     }
 }
