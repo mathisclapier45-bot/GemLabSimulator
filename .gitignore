@@ -1,0 +1,49 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]serSettings/
+[Mm]emoryCaptures/
+
+# Unity Package Manager
+GemLabSimulator/Packages/packages-lock.json
+
+# Visual Studio / Rider / VS Code cache
+.vs/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity crash logs
+sysinfo.txt
+*.stackdump
+
+# Builds
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# macOS
+.DS_Store
+
+# Claude Code local settings (machine-specific)
+.claude/settings.local.json
+
+# Asset meta backups (keep .meta files tracked, ignore backups)
+*.meta.bak
