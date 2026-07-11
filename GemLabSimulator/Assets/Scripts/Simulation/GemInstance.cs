@@ -1,27 +1,15 @@
 using System.Collections.Generic;
-using UnityEngine;
 
-public class PlayerGemHolder : MonoBehaviour
+public class GemInstance
 {
-    public GemDefinition CurrentGem { get; private set; }
-    public bool HasGem => CurrentGem != null;
+    public GemDefinition Definition { get; }
 
     private readonly Dictionary<string, float> measuredValues = new Dictionary<string, float>();
     private readonly HashSet<string> observedProperties = new HashSet<string>();
 
-    public void ReceiveGem(GemDefinition gem)
+    public GemInstance(GemDefinition definition)
     {
-        CurrentGem = gem;
-        measuredValues.Clear();
-        observedProperties.Clear();
-        Debug.Log($"Gemme reçue : {gem.displayName}");
-    }
-
-    public void ClearGem()
-    {
-        CurrentGem = null;
-        measuredValues.Clear();
-        observedProperties.Clear();
+        Definition = definition;
     }
 
     public void RecordMeasurement(string propertyKey, float value)

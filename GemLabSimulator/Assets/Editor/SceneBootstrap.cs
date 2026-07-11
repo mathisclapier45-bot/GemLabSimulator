@@ -91,7 +91,7 @@ public static class SceneBootstrap
         col.size = new Vector2(0.8f, 0.8f);
 
         player.AddComponent<PlayerController>();
-        player.AddComponent<PlayerGemHolder>();
+        player.AddComponent<PlayerInventory>();
         player.AddComponent<PlayerWallet>();
         player.transform.position = Vector3.zero;
 
@@ -196,6 +196,7 @@ public static class SceneBootstrap
 
         var player = GameObject.FindWithTag("Player");
         var wallet = player.GetComponent<PlayerWallet>();
+        var inventory = player.GetComponent<PlayerInventory>();
 
         var moneyGO = CreateUIText("MoneyText", canvasGO.transform, "Argent : 0€",
             new Vector2(20, -20), new Vector2(300, 30), 24, TextAnchor.UpperLeft, Color.white);
@@ -204,6 +205,9 @@ public static class SceneBootstrap
         hudSo.FindProperty("moneyText").objectReferenceValue = moneyGO.GetComponent<Text>();
         hudSo.FindProperty("wallet").objectReferenceValue = wallet;
         hudSo.ApplyModifiedProperties();
+
+        CreateUIText("InventoryHint", canvasGO.transform, "Tab : Inventaire",
+            new Vector2(20, -50), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
 
         var panelGO = new GameObject("ReportPanel", typeof(RectTransform), typeof(Image));
         panelGO.transform.SetParent(canvasGO.transform, false);
@@ -259,6 +263,40 @@ public static class SceneBootstrap
         feedbackSo.ApplyModifiedProperties();
 
         CreateMeasurementMinigameUI(canvasGO.transform);
+        CreateInventoryUI(canvasGO.transform, inventory);
+    }
+
+    private static void CreateInventoryUI(Transform canvasTransform, PlayerInventory inventory)
+    {
+        var panelGO = new GameObject("InventoryPanel", typeof(RectTransform), typeof(Image));
+        panelGO.transform.SetParent(canvasTransform, false);
+        var panelRect = panelGO.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(1f, 0.5f);
+        panelRect.anchorMax = new Vector2(1f, 0.5f);
+        panelRect.pivot = new Vector2(1f, 0.5f);
+        panelRect.sizeDelta = new Vector2(400, 280);
+        panelRect.anchoredPosition = new Vector2(-20, 0);
+        panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.95f);
+        panelGO.SetActive(false);
+
+        CreateUIText("Title", panelGO.transform, "Inventaire",
+            new Vector2(0, -16), new Vector2(360, 30), 20, TextAnchor.UpperCenter, Color.white);
+
+        var slotsGO = new GameObject("Slots", typeof(RectTransform));
+        slotsGO.transform.SetParent(panelGO.transform, false);
+        var slotsRect = slotsGO.GetComponent<RectTransform>();
+        slotsRect.anchorMin = new Vector2(0.5f, 1f);
+        slotsRect.anchorMax = new Vector2(0.5f, 1f);
+        slotsRect.pivot = new Vector2(0.5f, 1f);
+        slotsRect.anchoredPosition = new Vector2(0, -56);
+        slotsRect.sizeDelta = new Vector2(360, 210);
+
+        var inventoryUI = canvasTransform.gameObject.AddComponent<InventoryUI>();
+        var so = new SerializedObject(inventoryUI);
+        so.FindProperty("inventory").objectReferenceValue = inventory;
+        so.FindProperty("panel").objectReferenceValue = panelGO;
+        so.FindProperty("slotsContainer").objectReferenceValue = slotsRect;
+        so.ApplyModifiedProperties();
     }
 
     private static void CreateMeasurementMinigameUI(Transform canvasTransform)

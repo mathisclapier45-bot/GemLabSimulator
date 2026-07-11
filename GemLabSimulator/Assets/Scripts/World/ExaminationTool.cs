@@ -15,57 +15,58 @@ public class ExaminationTool : MonoBehaviour
     [SerializeField] private MeasurementType measurementType;
 
     private bool playerInRange;
-    private PlayerGemHolder playerGemHolder;
+    private PlayerInventory playerInventory;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        var holder = other.GetComponent<PlayerGemHolder>();
-        if (holder == null) return;
-        playerGemHolder = holder;
+        var inventory = other.GetComponent<PlayerInventory>();
+        if (inventory == null) return;
+        playerInventory = inventory;
         playerInRange = true;
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.GetComponent<PlayerGemHolder>() != playerGemHolder) return;
+        if (other.GetComponent<PlayerInventory>() != playerInventory) return;
         playerInRange = false;
-        playerGemHolder = null;
+        playerInventory = null;
     }
 
     private void Update()
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
-        if (!playerGemHolder.HasGem)
+        var gemInstance = playerInventory.SelectedGem;
+        if (gemInstance == null)
         {
-            ToolFeedbackUI.Instance.ShowMessage($"{toolName} : aucune gemme à examiner.");
+            ToolFeedbackUI.Instance.ShowMessage($"{toolName} : aucune gemme sélectionnée (Tab pour l'inventaire).");
             return;
         }
 
-        var gem = playerGemHolder.CurrentGem;
+        var gem = gemInstance.Definition;
 
         switch (measurementType)
         {
             case MeasurementType.Pleochroism:
-                RevealQualitative(gem, "Pléochroïsme",
+                RevealQualitative(gemInstance, gem, "Pléochroïsme",
                     gem.pleochroic ? gem.pleochroicDescription : "Aucun pléochroïsme visible.");
                 break;
             case MeasurementType.Fluorescence:
-                RevealQualitative(gem, "Fluorescence UV", gem.fluorescenceDescription);
+                RevealQualitative(gemInstance, gem, "Fluorescence UV", gem.fluorescenceDescription);
                 break;
             default:
-                StartNumericMeasurement(gem);
+                StartNumericMeasurement(gemInstance, gem);
                 break;
         }
     }
 
-    private void RevealQualitative(GemDefinition gem, string label, string description)
+    private void RevealQualitative(GemInstance gemInstance, GemDefinition gem, string label, string description)
     {
-        playerGemHolder.RecordObservation(measurementType.ToString());
+        gemInstance.RecordObservation(measurementType.ToString());
         ToolFeedbackUI.Instance.ShowMessage($"{toolName} — {label} : {description}");
     }
 
-    private void StartNumericMeasurement(GemDefinition gem)
+    private void StartNumericMeasurement(GemInstance gemInstance, GemDefinition gem)
     {
         string label;
         float trueValue;
@@ -85,7 +86,6 @@ public class ExaminationTool : MonoBehaviour
                 break;
         }
 
-        var holder = playerGemHolder;
         var propertyKey = measurementType.ToString();
 
         MeasurementMinigameUI.Instance.Open(toolName, precision =>
@@ -96,7 +96,7 @@ public class ExaminationTool : MonoBehaviour
             else error = trueValue * Random.Range(-0.12f, 0.12f);
 
             var measured = trueValue + error;
-            holder.RecordMeasurement(propertyKey, measured);
+            gemInstance.RecordMeasurement(propertyKey, measured);
 
             var tierLabel = precision >= 1f ? "Parfait" : precision >= 0.6f ? "Bonne lecture" : "Lecture imprécise";
             ToolFeedbackUI.Instance.ShowMessage($"{toolName} — {label} ≈ {measured:F3} ({tierLabel})");

@@ -3,33 +3,33 @@ using UnityEngine;
 public class DirectorNPC : MonoBehaviour
 {
     private bool playerInRange;
-    private PlayerGemHolder playerGemHolder;
+    private PlayerInventory playerInventory;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        var holder = other.GetComponent<PlayerGemHolder>();
-        if (holder == null) return;
-        playerGemHolder = holder;
+        var inventory = other.GetComponent<PlayerInventory>();
+        if (inventory == null) return;
+        playerInventory = inventory;
         playerInRange = true;
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.GetComponent<PlayerGemHolder>() != playerGemHolder) return;
+        if (other.GetComponent<PlayerInventory>() != playerInventory) return;
         playerInRange = false;
-        playerGemHolder = null;
+        playerInventory = null;
     }
 
     private void Update()
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
-        if (!playerGemHolder.HasGem)
+        if (playerInventory.SelectedGem == null)
         {
-            ToolFeedbackUI.Instance.ShowMessage("Le directeur : \"Revenez me voir avec une gemme à faire valider.\"");
+            ToolFeedbackUI.Instance.ShowMessage("Le directeur : \"Revenez avec une gemme sélectionnée (Tab pour l'inventaire).\"");
             return;
         }
 
-        ReportUIController.Instance.Open(playerGemHolder);
+        ReportUIController.Instance.Open(playerInventory);
     }
 }
