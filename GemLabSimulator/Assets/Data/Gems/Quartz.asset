@@ -18,7 +18,16 @@ MonoBehaviour:
   refractiveIndex: 1.544
   density: 2.65
   hardness: 7
+  sizeMm: 7
+  weightCarats: 1.8
   pleochroic: 0
   pleochroicDescription: 
-  fluorescenceDescription: Aucune fluorescence notable sous UV.
+  fluorescenceLongWave: Aucune fluorescence notable sous UV longue onde.
+  fluorescenceShortWave: Aucune fluorescence notable sous UV courte onde.
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  inclusions: "G\xE9n\xE9ralement tr\xE8s propre, parfois inclusions fluides ou en
+    plumes."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale visible en lumi\xE8re convergente."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re (incolore)."
   baseValue: 15

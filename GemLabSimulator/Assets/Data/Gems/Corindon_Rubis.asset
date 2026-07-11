@@ -18,8 +18,17 @@ MonoBehaviour:
   refractiveIndex: 1.766
   density: 4
   hardness: 9
+  sizeMm: 6.5
+  weightCarats: 1.4
   pleochroic: 1
-  pleochroicDescription: "Rouge / Orang\xE9-rouge selon l'axe d'observation"
-  fluorescenceDescription: Fluorescence rouge vif sous UV longue onde (indicateur
-    classique du rubis).
+  pleochroicDescription: "Rouge / Orang\xE9-rouge selon l'axe d'observation."
+  fluorescenceLongWave: Fluorescence rouge vif sous UV longue onde (indicateur classique
+    du rubis).
+  fluorescenceShortWave: Fluorescence rouge plus faible sous UV courte onde.
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  absorptionSpectrum: Raies d'absorption du chrome visibles dans le rouge, spectre
+    typique du rubis.
+  inclusions: Soie de rutile (inclusions aciculaires), parfois halos autour de cristaux.
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."
+  chelseaFilterReaction: "R\xE9action rouge vif sous filtre Chelsea (due au chrome)."
   baseValue: 150

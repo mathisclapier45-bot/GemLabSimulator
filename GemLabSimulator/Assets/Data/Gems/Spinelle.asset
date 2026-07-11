@@ -17,8 +17,17 @@ MonoBehaviour:
   refractiveIndex: 1.715
   density: 3.6
   hardness: 8
+  sizeMm: 6
+  weightCarats: 1.2
   pleochroic: 0
   pleochroicDescription: 
-  fluorescenceDescription: Fluorescence rouge, souvent plus terne que le rubis, sous
+  fluorescenceLongWave: Fluorescence rouge, souvent plus terne que le rubis, sous
     UV longue onde.
+  fluorescenceShortWave: Fluorescence rouge faible sous UV courte onde.
+  opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  absorptionSpectrum: "Raies de fer/chrome faibles, spectre diff\xE9rent du rubis."
+  inclusions: "Cristaux octa\xE9driques, inclusions en \"empreintes digitales\" possibles."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
+  chelseaFilterReaction: "R\xE9action rouge \xE0 ros\xE2tre, souvent plus terne que
+    le rubis."
   baseValue: 45

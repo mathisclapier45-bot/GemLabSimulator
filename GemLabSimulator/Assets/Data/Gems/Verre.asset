@@ -17,8 +17,17 @@ MonoBehaviour:
   refractiveIndex: 1.5
   density: 2.5
   hardness: 5.5
+  sizeMm: 6.8
+  weightCarats: 1.3
   pleochroic: 0
   pleochroicDescription: 
-  fluorescenceDescription: "Fluorescence variable ou absente, souvent avec des bulles
+  fluorescenceLongWave: "Fluorescence variable ou absente, souvent avec des bulles
     visibles \xE0 la loupe."
+  fluorescenceShortWave: Fluorescence variable ou absente sous UV courte onde.
+  opticalCharacter: "Isotrope (mat\xE9riau amorphe, non cristallin)."
+  absorptionSpectrum: Spectre continu sans raies nettes, ou raies artificielles selon
+    le colorant.
+  inclusions: "Bulles rondes et stries d'\xE9coulement, signature typique du verre."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau amorphe)."
+  chelseaFilterReaction: "R\xE9action variable et non diagnostique."
   baseValue: 5

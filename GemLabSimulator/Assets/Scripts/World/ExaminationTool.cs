@@ -7,8 +7,16 @@ public class ExaminationTool : MonoBehaviour
         RefractiveIndex,
         Density,
         Hardness,
+        Size,
+        Weight,
         Pleochroism,
-        Fluorescence
+        FluorescenceLongWave,
+        FluorescenceShortWave,
+        OpticalCharacter,
+        AbsorptionSpectrum,
+        Inclusions,
+        InterferenceFigure,
+        ChelseaFilter
     }
 
     [SerializeField] private string toolName;
@@ -48,11 +56,29 @@ public class ExaminationTool : MonoBehaviour
         switch (measurementType)
         {
             case MeasurementType.Pleochroism:
-                RevealQualitative(gemInstance, gem, "Pléochroïsme",
+                RevealQualitative(gemInstance, "Pléochroïsme",
                     gem.pleochroic ? gem.pleochroicDescription : "Aucun pléochroïsme visible.");
                 break;
-            case MeasurementType.Fluorescence:
-                RevealQualitative(gemInstance, gem, "Fluorescence UV", gem.fluorescenceDescription);
+            case MeasurementType.FluorescenceLongWave:
+                RevealQualitative(gemInstance, "Fluorescence UV longues ondes", gem.fluorescenceLongWave);
+                break;
+            case MeasurementType.FluorescenceShortWave:
+                RevealQualitative(gemInstance, "Fluorescence UV courtes ondes", gem.fluorescenceShortWave);
+                break;
+            case MeasurementType.OpticalCharacter:
+                RevealQualitative(gemInstance, "Caractère optique", gem.opticalCharacter);
+                break;
+            case MeasurementType.AbsorptionSpectrum:
+                RevealQualitative(gemInstance, "Spectre d'absorption", gem.absorptionSpectrum);
+                break;
+            case MeasurementType.Inclusions:
+                RevealQualitative(gemInstance, "Inclusions", gem.inclusions);
+                break;
+            case MeasurementType.InterferenceFigure:
+                RevealQualitative(gemInstance, "Figure d'interférence", gem.interferenceFigure);
+                break;
+            case MeasurementType.ChelseaFilter:
+                RevealQualitative(gemInstance, "Réaction au filtre Chelsea", gem.chelseaFilterReaction);
                 break;
             default:
                 StartNumericMeasurement(gemInstance, gem);
@@ -60,7 +86,7 @@ public class ExaminationTool : MonoBehaviour
         }
     }
 
-    private void RevealQualitative(GemInstance gemInstance, GemDefinition gem, string label, string description)
+    private void RevealQualitative(GemInstance gemInstance, string label, string description)
     {
         gemInstance.RecordObservation(measurementType.ToString());
         ToolFeedbackUI.Instance.ShowMessage($"{toolName} — {label} : {description}");
@@ -79,6 +105,14 @@ public class ExaminationTool : MonoBehaviour
             case MeasurementType.Density:
                 label = "Densité";
                 trueValue = gem.density;
+                break;
+            case MeasurementType.Size:
+                label = "Taille (mm)";
+                trueValue = gem.sizeMm;
+                break;
+            case MeasurementType.Weight:
+                label = "Poids (ct)";
+                trueValue = gem.weightCarats;
                 break;
             default:
                 label = "Dureté";

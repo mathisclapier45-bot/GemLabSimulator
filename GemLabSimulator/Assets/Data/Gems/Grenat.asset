@@ -18,7 +18,17 @@ MonoBehaviour:
   refractiveIndex: 1.79
   density: 4.05
   hardness: 7.5
+  sizeMm: 6.3
+  weightCarats: 1.5
   pleochroic: 0
   pleochroicDescription: 
-  fluorescenceDescription: "Aucune fluorescence sous UV (caract\xE9ristique du grenat)."
+  fluorescenceLongWave: "Aucune fluorescence sous UV longue onde (caract\xE9ristique
+    du grenat)."
+  fluorescenceShortWave: Aucune fluorescence sous UV courte onde.
+  opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  absorptionSpectrum: Larges bandes d'absorption du fer, spectre typique de l'almandin.
+  inclusions: "Cristaux d'apatite ou de zircon entour\xE9s de halos, fissures internes
+    fr\xE9quentes."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
+  chelseaFilterReaction: "Aucune r\xE9action rouge notable."
   baseValue: 25
