@@ -5,6 +5,7 @@ public class GemDefinition : ScriptableObject
 {
     public string displayName;
     [TextArea] public string description;
+    public Sprite icon;
 
     [Header("Propriétés physiques")]
     public float refractiveIndex;

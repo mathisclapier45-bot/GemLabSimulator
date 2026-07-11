@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Grenat
   description: "Un grenat rouge sombre, \xE0 ne pas confondre avec un rubis ou un
     spinelle."
+  icon: {fileID: 21300000, guid: f0e3262a979ba4065aead3c17a309ac5, type: 3}
   refractiveIndex: 1.79
   density: 4.05
   hardness: 7.5

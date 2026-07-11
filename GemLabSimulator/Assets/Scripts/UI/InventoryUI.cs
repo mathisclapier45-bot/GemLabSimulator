@@ -3,13 +3,21 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
+    private const int Columns = 4;
+    private const int Rows = 3;
+    private const float SlotSize = 56f;
+    private const float SlotSpacing = 8f;
+
     [SerializeField] private GameObject panel;
     [SerializeField] private RectTransform slotsContainer;
+    [SerializeField] private GemDropZone dropZone;
+    [SerializeField] private Sprite mysteryIcon;
 
     private void Start()
     {
         if (PlayerInventory.Instance == null) return;
         PlayerInventory.Instance.OnInventoryChanged += Refresh;
+        if (dropZone != null) dropZone.TargetContainer = PlayerInventory.Instance;
         Refresh();
     }
 
@@ -33,66 +41,56 @@ public class InventoryUI : MonoBehaviour
         for (var i = slotsContainer.childCount - 1; i >= 0; i--)
             Destroy(slotsContainer.GetChild(i).gameObject);
 
-        if (inventory.Gems.Count == 0)
+        var totalSlots = Columns * Rows;
+        for (var i = 0; i < totalSlots; i++)
         {
-            CreateLabel("Aucune gemme en inventaire.", 0);
-            return;
+            var gem = i < inventory.Gems.Count ? inventory.Gems[i] : null;
+            CreateSlot(inventory, gem, i);
         }
-
-        for (var i = 0; i < inventory.Gems.Count; i++)
-            CreateSlotButton(inventory, inventory.Gems[i], i);
     }
 
-    private void CreateLabel(string text, int index)
+    private void CreateSlot(PlayerInventory inventory, GemInstance gem, int index)
     {
-        var go = new GameObject("EmptyLabel", typeof(RectTransform));
+        var col = index % Columns;
+        var row = index / Columns;
+        var x = col * (SlotSize + SlotSpacing);
+        var y = -row * (SlotSize + SlotSpacing);
+
+        var go = new GameObject($"Slot_{index}", typeof(RectTransform), typeof(Image));
         go.transform.SetParent(slotsContainer, false);
         var rect = go.GetComponent<RectTransform>();
-        rect.anchorMin = new Vector2(0.5f, 1f);
-        rect.anchorMax = new Vector2(0.5f, 1f);
-        rect.pivot = new Vector2(0.5f, 1f);
-        rect.sizeDelta = new Vector2(360, 34);
-        rect.anchoredPosition = new Vector2(0, -index * 40);
+        rect.anchorMin = new Vector2(0f, 1f);
+        rect.anchorMax = new Vector2(0f, 1f);
+        rect.pivot = new Vector2(0f, 1f);
+        rect.anchoredPosition = new Vector2(x, y);
+        rect.sizeDelta = new Vector2(SlotSize, SlotSize);
 
-        var label = go.AddComponent<Text>();
-        label.text = text;
-        label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        label.fontSize = 16;
-        label.alignment = TextAnchor.MiddleCenter;
-        label.color = new Color(0.7f, 0.7f, 0.7f);
-    }
-
-    private void CreateSlotButton(PlayerInventory inventory, GemInstance gem, int index)
-    {
-        var go = new GameObject($"Slot_{index}", typeof(RectTransform), typeof(Image), typeof(Button));
-        go.transform.SetParent(slotsContainer, false);
-        var rect = go.GetComponent<RectTransform>();
-        rect.anchorMin = new Vector2(0.5f, 1f);
-        rect.anchorMax = new Vector2(0.5f, 1f);
-        rect.pivot = new Vector2(0.5f, 1f);
-        rect.sizeDelta = new Vector2(360, 34);
-        rect.anchoredPosition = new Vector2(0, -index * 40);
-
-        var isSelected = gem == inventory.SelectedGem;
+        var isSelected = gem != null && gem == inventory.SelectedGem;
         go.GetComponent<Image>().color = isSelected
             ? new Color(0.35f, 0.55f, 0.35f, 1f)
-            : new Color(0.25f, 0.25f, 0.32f, 1f);
+            : new Color(0.20f, 0.20f, 0.24f, 1f);
 
-        var textGO = new GameObject("Label", typeof(RectTransform));
-        textGO.transform.SetParent(go.transform, false);
-        var textRect = textGO.GetComponent<RectTransform>();
-        textRect.anchorMin = Vector2.zero;
-        textRect.anchorMax = Vector2.one;
-        textRect.sizeDelta = Vector2.zero;
-        textRect.anchoredPosition = Vector2.zero;
+        if (gem == null) return;
 
-        var label = textGO.AddComponent<Text>();
-        label.text = gem.Definition.displayName + (isSelected ? "  (sélectionnée)" : "");
-        label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        label.fontSize = 16;
-        label.alignment = TextAnchor.MiddleCenter;
-        label.color = Color.white;
+        var iconGO = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+        iconGO.transform.SetParent(go.transform, false);
+        var iconRect = iconGO.GetComponent<RectTransform>();
+        iconRect.anchorMin = new Vector2(0.5f, 0.5f);
+        iconRect.anchorMax = new Vector2(0.5f, 0.5f);
+        iconRect.pivot = new Vector2(0.5f, 0.5f);
+        iconRect.sizeDelta = new Vector2(SlotSize - 12f, SlotSize - 12f);
+        iconRect.anchoredPosition = Vector2.zero;
 
-        go.GetComponent<Button>().onClick.AddListener(() => inventory.Select(gem));
+        var iconImage = iconGO.GetComponent<Image>();
+        iconImage.sprite = gem.IsIdentified ? gem.Definition.icon : mysteryIcon;
+        iconImage.preserveAspect = true;
+
+        var button = go.AddComponent<Button>();
+        button.onClick.AddListener(() => inventory.Select(gem));
+
+        var dragSource = go.AddComponent<GemDragSource>();
+        dragSource.Gem = gem;
+        dragSource.SourceContainer = inventory;
+        dragSource.SetIcon(iconImage);
     }
 }

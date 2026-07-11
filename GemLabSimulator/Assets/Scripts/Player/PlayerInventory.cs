@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInventory : MonoBehaviour
+public class PlayerInventory : MonoBehaviour, IGemContainer
 {
     public static PlayerInventory Instance { get; private set; }
 
-    private const int MaxCapacity = 5;
+    private const int MaxCapacity = 12;
 
     private readonly List<GemInstance> gems = new List<GemInstance>();
 
@@ -27,6 +27,17 @@ public class PlayerInventory : MonoBehaviour
         if (IsFull) return false;
 
         var instance = new GemInstance(definition);
+        gems.Add(instance);
+        if (SelectedGem == null) SelectedGem = instance;
+
+        OnInventoryChanged?.Invoke();
+        return true;
+    }
+
+    public bool TryAddGem(GemInstance instance)
+    {
+        if (IsFull) return false;
+
         gems.Add(instance);
         if (SelectedGem == null) SelectedGem = instance;
 

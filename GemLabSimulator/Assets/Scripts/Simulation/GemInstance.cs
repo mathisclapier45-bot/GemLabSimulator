@@ -3,6 +3,7 @@ using System.Collections.Generic;
 public class GemInstance
 {
     public GemDefinition Definition { get; }
+    public bool IsIdentified { get; private set; }
 
     private readonly Dictionary<string, float> measuredValues = new Dictionary<string, float>();
     private readonly HashSet<string> observedProperties = new HashSet<string>();
@@ -10,6 +11,11 @@ public class GemInstance
     public GemInstance(GemDefinition definition)
     {
         Definition = definition;
+    }
+
+    public void MarkIdentified()
+    {
+        IsIdentified = true;
     }
 
     public void RecordMeasurement(string propertyKey, float value)

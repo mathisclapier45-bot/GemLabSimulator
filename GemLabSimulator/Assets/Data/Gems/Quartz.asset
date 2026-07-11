@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Quartz
   description: "Un cristal de quartz incolore, courant, envoy\xE9 pour un premier
     examen."
+  icon: {fileID: 21300000, guid: 9e84c91786ffc4ba09215460d5f2a4a7, type: 3}
   refractiveIndex: 1.544
   density: 2.65
   hardness: 7

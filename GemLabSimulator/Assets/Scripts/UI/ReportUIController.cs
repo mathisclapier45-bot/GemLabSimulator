@@ -50,9 +50,13 @@ public class ReportUIController : MonoBehaviour
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ChelseaFilter.ToString()))
             measured.Add($"Filtre Chelsea : {gem.chelseaFilterReaction}");
 
+        var identityLine = gemInstance.IsIdentified
+            ? $"Gemme : {gem.displayName} (identifiée)"
+            : "Gemme sélectionnée : spécimen non identifié";
+
         measurementsText.text = measured.Count > 0
-            ? $"Gemme sélectionnée : {gem.displayName}\n\nMesures relevées :\n" + string.Join("\n", measured)
-            : $"Gemme sélectionnée : {gem.displayName}\n\nAucune mesure effectuée. Retourne examiner la gemme.";
+            ? $"{identityLine}\n\nMesures relevées :\n" + string.Join("\n", measured)
+            : $"{identityLine}\n\nAucune mesure effectuée. Retourne examiner la gemme.";
 
         panel.SetActive(true);
     }
@@ -79,9 +83,9 @@ public class ReportUIController : MonoBehaviour
         var gem = gemInstance.Definition;
         if (speciesName == gem.displayName)
         {
-            resultText.text = $"Rapport validé par le directeur ! +{gem.baseValue}€";
+            resultText.text = $"Rapport validé par le directeur ! Identifiée comme {gem.displayName}. +{gem.baseValue}€";
             currentInventory.GetComponent<PlayerWallet>()?.AddMoney(gem.baseValue);
-            currentInventory.RemoveGem(gemInstance);
+            gemInstance.MarkIdentified();
         }
         else
         {

@@ -101,12 +101,14 @@ public static class SceneBootstrap
         player.AddComponent<PlayerController>();
         player.AddComponent<PlayerInventory>();
         player.AddComponent<PlayerWallet>();
+        player.AddComponent<PlayerChest>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
         follow.SetTarget(player.transform);
 
         CreateExitDoor(new Vector3(RoomMinX + 1, RoomMinY + 1, 0f));
+        CreateChest(new Vector3(3, 2, 0f));
 
         var mailboxSprite = GetOrCreatePixelSprite("mailbox_pixel", MailboxPattern, MailboxPalette);
         var mailbox = new GameObject("Mailbox");
@@ -225,6 +227,7 @@ public static class SceneBootstrap
         player.AddComponent<PlayerController>();
         player.AddComponent<PlayerInventory>();
         player.AddComponent<PlayerWallet>();
+        player.AddComponent<PlayerChest>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -283,6 +286,23 @@ public static class SceneBootstrap
         so.FindProperty("sceneName").stringValue = "Town";
         so.FindProperty("implemented").boolValue = true;
         so.ApplyModifiedProperties();
+    }
+
+    private static void CreateChest(Vector3 position)
+    {
+        var sprite = GetOrCreatePixelSprite("chest_pixel", ChestPattern, ChestPalette);
+
+        var chest = new GameObject("Coffre");
+        var sr = chest.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        chest.transform.position = position;
+
+        var col = chest.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1.2f, 1.2f);
+
+        chest.AddComponent<ChestInteractable>();
     }
 
     private static void CreateBuilding(string label, Vector3 position, Color roof, Color wall, string targetScene, bool implemented)
@@ -476,6 +496,7 @@ public static class SceneBootstrap
         ctrlSo.ApplyModifiedProperties();
 
         CreateMeasurementMinigameUI(canvasGO.transform);
+        CreateChestUI(canvasGO.transform);
     }
 
     private static void CreateInventoryUI(Transform canvasTransform)
@@ -486,13 +507,13 @@ public static class SceneBootstrap
         panelRect.anchorMin = new Vector2(1f, 0.5f);
         panelRect.anchorMax = new Vector2(1f, 0.5f);
         panelRect.pivot = new Vector2(1f, 0.5f);
-        panelRect.sizeDelta = new Vector2(400, 280);
+        panelRect.sizeDelta = new Vector2(300, 260);
         panelRect.anchoredPosition = new Vector2(-20, 0);
         panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.95f);
         panelGO.SetActive(false);
 
         CreateUIText("Title", panelGO.transform, "Inventaire",
-            new Vector2(0, -16), new Vector2(360, 30), 20, TextAnchor.UpperCenter, Color.white);
+            new Vector2(0, -14), new Vector2(260, 26), 18, TextAnchor.UpperCenter, Color.white);
 
         var slotsGO = new GameObject("Slots", typeof(RectTransform));
         slotsGO.transform.SetParent(panelGO.transform, false);
@@ -500,13 +521,54 @@ public static class SceneBootstrap
         slotsRect.anchorMin = new Vector2(0.5f, 1f);
         slotsRect.anchorMax = new Vector2(0.5f, 1f);
         slotsRect.pivot = new Vector2(0.5f, 1f);
-        slotsRect.anchoredPosition = new Vector2(0, -56);
-        slotsRect.sizeDelta = new Vector2(360, 210);
+        slotsRect.anchoredPosition = new Vector2(0, -46);
+        slotsRect.sizeDelta = new Vector2(248, 184);
+
+        var dropZone = panelGO.AddComponent<GemDropZone>();
+
+        var mysteryIcon = GetGemIconSprite("mystery", new Color(0.42f, 0.42f, 0.45f), new Color(0.55f, 0.55f, 0.58f));
 
         var inventoryUI = canvasTransform.gameObject.AddComponent<InventoryUI>();
         var so = new SerializedObject(inventoryUI);
         so.FindProperty("panel").objectReferenceValue = panelGO;
         so.FindProperty("slotsContainer").objectReferenceValue = slotsRect;
+        so.FindProperty("dropZone").objectReferenceValue = dropZone;
+        so.FindProperty("mysteryIcon").objectReferenceValue = mysteryIcon;
+        so.ApplyModifiedProperties();
+    }
+
+    private static void CreateChestUI(Transform canvasTransform)
+    {
+        var panelGO = new GameObject("ChestPanel", typeof(RectTransform), typeof(Image));
+        panelGO.transform.SetParent(canvasTransform, false);
+        var panelRect = panelGO.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        panelRect.pivot = new Vector2(0.5f, 0.5f);
+        panelRect.sizeDelta = new Vector2(300, 260);
+        panelRect.anchoredPosition = Vector2.zero;
+        panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.95f);
+        panelGO.SetActive(false);
+
+        CreateUIText("Title", panelGO.transform, "Coffre",
+            new Vector2(0, -14), new Vector2(260, 26), 18, TextAnchor.UpperCenter, Color.white);
+
+        var slotsGO = new GameObject("Slots", typeof(RectTransform));
+        slotsGO.transform.SetParent(panelGO.transform, false);
+        var slotsRect = slotsGO.GetComponent<RectTransform>();
+        slotsRect.anchorMin = new Vector2(0.5f, 1f);
+        slotsRect.anchorMax = new Vector2(0.5f, 1f);
+        slotsRect.pivot = new Vector2(0.5f, 1f);
+        slotsRect.anchoredPosition = new Vector2(0, -46);
+        slotsRect.sizeDelta = new Vector2(248, 184);
+
+        var dropZone = panelGO.AddComponent<GemDropZone>();
+
+        var chestUI = canvasTransform.gameObject.AddComponent<ChestUI>();
+        var so = new SerializedObject(chestUI);
+        so.FindProperty("panel").objectReferenceValue = panelGO;
+        so.FindProperty("slotsContainer").objectReferenceValue = slotsRect;
+        so.FindProperty("dropZone").objectReferenceValue = dropZone;
         so.ApplyModifiedProperties();
     }
 
@@ -616,6 +678,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Quartz";
                 g.description = "Un cristal de quartz incolore, courant, envoyé pour un premier examen.";
+                g.icon = GetGemIconSprite("quartz", new Color(0.85f, 0.87f, 0.88f), new Color(0.97f, 0.98f, 0.99f));
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -636,6 +699,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Corindon (Rubis)";
                 g.description = "Un corindon rouge intense, envoyé pour confirmer s'il s'agit d'un rubis naturel.";
+                g.icon = GetGemIconSprite("corindon", new Color(0.75f, 0.12f, 0.12f), new Color(0.95f, 0.35f, 0.30f));
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -656,6 +720,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Spinelle";
                 g.description = "Une pierre rouge vif, historiquement souvent confondue avec le rubis.";
+                g.icon = GetGemIconSprite("spinelle", new Color(0.80f, 0.30f, 0.30f), new Color(0.95f, 0.55f, 0.55f));
                 g.refractiveIndex = 1.715f;
                 g.density = 3.60f;
                 g.hardness = 8f;
@@ -676,6 +741,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Grenat";
                 g.description = "Un grenat rouge sombre, à ne pas confondre avec un rubis ou un spinelle.";
+                g.icon = GetGemIconSprite("grenat", new Color(0.45f, 0.10f, 0.12f), new Color(0.65f, 0.25f, 0.20f));
                 g.refractiveIndex = 1.79f;
                 g.density = 4.05f;
                 g.hardness = 7.5f;
@@ -696,6 +762,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Verre";
                 g.description = "Un verre imitant l'apparence d'une pierre précieuse rouge.";
+                g.icon = GetGemIconSprite("verre", new Color(0.75f, 0.80f, 0.82f), new Color(0.90f, 0.93f, 0.95f));
                 g.refractiveIndex = 1.50f;
                 g.density = 2.50f;
                 g.hardness = 5.5f;
@@ -1345,5 +1412,59 @@ public static class SceneBootstrap
         { 'D', new Color(0.15f, 0.35f, 0.20f) },
         { 'P', new Color(0.62f, 0.64f, 0.68f) },
         { 'K', new Color(0.20f, 0.20f, 0.22f) },
+    };
+
+    private static readonly string[] GemIconPattern =
+    {
+        Row(16, '.'),
+        Row(6, '.', 4, 'G', 6, '.'),
+        Row(4, '.', 8, 'G', 4, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(1, '.', 14, 'G', 1, '.'),
+        Row(1, '.', 6, 'G', 2, 'F', 6, 'G', 1, '.'),
+        Row(1, '.', 14, 'G', 1, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(4, '.', 8, 'G', 4, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(6, '.', 4, 'G', 6, '.'),
+        Row(7, '.', 2, 'G', 7, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static Sprite GetGemIconSprite(string key, Color gemColor, Color facetColor)
+    {
+        var palette = new Dictionary<char, Color> { { 'G', gemColor }, { 'F', facetColor } };
+        return GetOrCreatePixelSprite($"gemicon_{key}_pixel", GemIconPattern, palette);
+    }
+
+    private static readonly string[] ChestPattern =
+    {
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(2, '.', 12, 'L', 2, '.'),
+        Row(2, '.', 12, 'L', 2, '.'),
+        Row(1, '.', 14, 'L', 1, '.'),
+        Row(1, '.', 14, 'N', 1, '.'),
+        Row(1, '.', 6, 'B', 2, 'K', 6, 'B', 1, '.'),
+        Row(1, '.', 14, 'B', 1, '.'),
+        Row(1, '.', 14, 'B', 1, '.'),
+        Row(1, '.', 14, 'B', 1, '.'),
+        Row(1, '.', 14, 'B', 1, '.'),
+        Row(2, '.', 12, 'B', 2, '.'),
+        Row(3, '.', 10, 'B', 3, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> ChestPalette = new Dictionary<char, Color>
+    {
+        { 'L', new Color(0.45f, 0.30f, 0.16f) },
+        { 'N', new Color(0.25f, 0.16f, 0.08f) },
+        { 'B', new Color(0.38f, 0.25f, 0.13f) },
+        { 'K', new Color(0.85f, 0.72f, 0.25f) },
     };
 }

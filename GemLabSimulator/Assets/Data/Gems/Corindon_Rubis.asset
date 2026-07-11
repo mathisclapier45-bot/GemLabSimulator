@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Corindon (Rubis)
   description: "Un corindon rouge intense, envoy\xE9 pour confirmer s'il s'agit d'un
     rubis naturel."
+  icon: {fileID: 21300000, guid: 2aec49384777e465e917116c13692181, type: 3}
   refractiveIndex: 1.766
   density: 4
   hardness: 9

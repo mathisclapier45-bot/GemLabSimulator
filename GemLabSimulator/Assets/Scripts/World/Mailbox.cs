@@ -36,6 +36,6 @@ public class Mailbox : MonoBehaviour
 
         var gem = gemPool[Random.Range(0, gemPool.Length)];
         playerInventory.AddGem(gem);
-        ToolFeedbackUI.Instance.ShowMessage($"Boîte aux lettres : vous avez reçu \"{gem.displayName}\".");
+        ToolFeedbackUI.Instance.ShowMessage("Boîte aux lettres : vous avez reçu un colis contenant une gemme non identifiée.");
     }
 }
