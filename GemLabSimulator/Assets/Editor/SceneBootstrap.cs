@@ -129,7 +129,7 @@ public static class SceneBootstrap
             poolProp.GetArrayElementAtIndex(i).objectReferenceValue = gemPool[i];
         so.ApplyModifiedProperties();
 
-        CreateExaminationStation("Loupe", ExaminationTool.MeasurementType.Hardness, new Vector3(9, 2, 0f));
+        CreateExaminationStation("Loupe", ExaminationTool.MeasurementType.VisualExamination, new Vector3(9, 2, 0f));
         CreateExaminationStation("Refractometre", ExaminationTool.MeasurementType.RefractiveIndex, new Vector3(11.5f, 2, 0f));
         CreateExaminationStation("BalanceHydrostatique", ExaminationTool.MeasurementType.Density, new Vector3(14, 2, 0f));
         CreateExaminationStation("Dichroscope", ExaminationTool.MeasurementType.Pleochroism, new Vector3(16.5f, 2, 0f));
@@ -141,7 +141,7 @@ public static class SceneBootstrap
         CreateExaminationStation("UVLongues", ExaminationTool.MeasurementType.FluorescenceLongWave, new Vector3(12, -2, 0f));
         CreateExaminationStation("UVCourtes", ExaminationTool.MeasurementType.FluorescenceShortWave, new Vector3(15, -2, 0f));
         CreateExaminationStation("FiltreChelsea", ExaminationTool.MeasurementType.ChelseaFilter, new Vector3(18, -2, 0f));
-        CreateExaminationStation("Micrometre", ExaminationTool.MeasurementType.Size, new Vector3(21, -2, 0f));
+        CreateExaminationStation("Micrometre", ExaminationTool.MeasurementType.Dimensions, new Vector3(21, -2, 0f));
         CreateExaminationStation("BalanceCarat", ExaminationTool.MeasurementType.Weight, new Vector3(24, -2, 0f));
 
         CreateDirector(new Vector3(26, 0, 0f));
@@ -466,7 +466,7 @@ public static class SceneBootstrap
         const float buttonHeight = 34f;
         const float colGap = 10f;
         const float rowGap = 6f;
-        const float buttonsStartY = -328f;
+        const float buttonsStartY = -388f;
         var totalRows = Mathf.CeilToInt(ReportSpeciesOptions.Length / 2f);
         var buttonsEndY = buttonsStartY - (totalRows - 1) * (buttonHeight + rowGap) - buttonHeight;
         var panelHeight = -buttonsEndY + 110f;
@@ -480,7 +480,7 @@ public static class SceneBootstrap
             new Vector2(0, -18), new Vector2(440, 28), 20, TextAnchor.UpperCenter, Color.white);
 
         var measurementsGO = CreateUIText("Measurements", panelGO.transform, "",
-            new Vector2(0, -52), new Vector2(440, 260), 13, TextAnchor.UpperCenter, new Color(0.8f, 0.8f, 0.8f));
+            new Vector2(0, -52), new Vector2(440, 320), 12, TextAnchor.UpperCenter, new Color(0.8f, 0.8f, 0.8f));
 
         for (var i = 0; i < ReportSpeciesOptions.Length; i++)
         {
@@ -728,8 +728,15 @@ public static class SceneBootstrap
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
-                g.sizeMm = 7.0f;
+                g.lengthMm = 7.5f;
+                g.widthMm = 5.8f;
+                g.depthMm = 3.9f;
                 g.weightCarats = 1.8f;
+                g.luster = "Vitreux";
+                g.color = "Incolore";
+                g.shape = "Ovale";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
                 g.pleochroic = false;
                 g.pleochroicDescription = "";
                 g.fluorescenceLongWave = "Aucune fluorescence notable sous UV longue onde.";
@@ -740,6 +747,12 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Figure d'interférence uniaxiale visible en lumière convergente.";
                 g.chelseaFilterReaction = "Aucune réaction particulière (incolore).";
                 g.baseValue = 15;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil", rarityWeight = 50, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Madagascar", rarityWeight = 30, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "États-Unis", rarityWeight = 20, valueMultiplier = 0.9f },
+                };
             }),
             BuildGem("Corindon_Rubis", g =>
             {
@@ -749,8 +762,15 @@ public static class SceneBootstrap
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
-                g.sizeMm = 6.5f;
+                g.lengthMm = 6.8f;
+                g.widthMm = 5.9f;
+                g.depthMm = 4.2f;
                 g.weightCarats = 1.4f;
+                g.luster = "Vitreux à sub-adamantin";
+                g.color = "Rouge";
+                g.shape = "Coussin";
+                g.cutStyle = "Mixte";
+                g.transparency = "Transparent";
                 g.pleochroic = true;
                 g.pleochroicDescription = "Rouge / Orangé-rouge selon l'axe d'observation.";
                 g.fluorescenceLongWave = "Fluorescence rouge vif sous UV longue onde (indicateur classique du rubis).";
@@ -761,6 +781,15 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Figure d'interférence uniaxiale nette.";
                 g.chelseaFilterReaction = "Réaction rouge vif sous filtre Chelsea (due au chrome).";
                 g.baseValue = 150;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Birmanie (Mogok)", rarityWeight = 10, valueMultiplier = 3.0f,
+                        inclusionOverride = "Soie de rutile fine et dense (\"soie birmane\"), fluorescence rouge marquée — signature du gisement de Mogok." },
+                    new GemOrigin { name = "Mozambique", rarityWeight = 45, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Thaïlande (Chanthaburi)", rarityWeight = 25, valueMultiplier = 0.8f,
+                        inclusionOverride = "Peu d'inclusions, souvent chauffé, soie généralement absente ou résorbée." },
+                    new GemOrigin { name = "Sri Lanka", rarityWeight = 20, valueMultiplier = 1.3f },
+                };
             }),
             BuildGem("Spinelle", g =>
             {
@@ -770,8 +799,15 @@ public static class SceneBootstrap
                 g.refractiveIndex = 1.715f;
                 g.density = 3.60f;
                 g.hardness = 8f;
-                g.sizeMm = 6.0f;
+                g.lengthMm = 6.0f;
+                g.widthMm = 6.0f;
+                g.depthMm = 3.9f;
                 g.weightCarats = 1.2f;
+                g.luster = "Vitreux";
+                g.color = "Rouge";
+                g.shape = "Rond";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
                 g.pleochroic = false;
                 g.pleochroicDescription = "";
                 g.fluorescenceLongWave = "Fluorescence rouge, souvent plus terne que le rubis, sous UV longue onde.";
@@ -782,6 +818,13 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
                 g.chelseaFilterReaction = "Réaction rouge à rosâtre, souvent plus terne que le rubis.";
                 g.baseValue = 45;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Birmanie", rarityWeight = 20, valueMultiplier = 1.8f,
+                        inclusionOverride = "Spinelle rouge vif associé aux gisements de Mogok, historiquement appelé \"Balas Ruby\"." },
+                    new GemOrigin { name = "Tanzanie", rarityWeight = 40, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Sri Lanka", rarityWeight = 40, valueMultiplier = 1.1f },
+                };
             }),
             BuildGem("Grenat", g =>
             {
@@ -791,8 +834,15 @@ public static class SceneBootstrap
                 g.refractiveIndex = 1.79f;
                 g.density = 4.05f;
                 g.hardness = 7.5f;
-                g.sizeMm = 6.3f;
+                g.lengthMm = 8.0f;
+                g.widthMm = 5.2f;
+                g.depthMm = 3.6f;
                 g.weightCarats = 1.5f;
+                g.luster = "Vitreux";
+                g.color = "Rouge sombre / brun-rouge";
+                g.shape = "Poire";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
                 g.pleochroic = false;
                 g.pleochroicDescription = "";
                 g.fluorescenceLongWave = "Aucune fluorescence sous UV longue onde (caractéristique du grenat).";
@@ -803,6 +853,12 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
                 g.chelseaFilterReaction = "Aucune réaction rouge notable.";
                 g.baseValue = 25;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Inde", rarityWeight = 40, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "Madagascar", rarityWeight = 35, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "États-Unis (Idaho)", rarityWeight = 25, valueMultiplier = 1.0f },
+                };
             }),
             BuildGem("Verre", g =>
             {
@@ -812,8 +868,15 @@ public static class SceneBootstrap
                 g.refractiveIndex = 1.50f;
                 g.density = 2.50f;
                 g.hardness = 5.5f;
-                g.sizeMm = 6.8f;
+                g.lengthMm = 6.8f;
+                g.widthMm = 6.8f;
+                g.depthMm = 4.4f;
                 g.weightCarats = 1.3f;
+                g.luster = "Vitreux";
+                g.color = "Rouge";
+                g.shape = "Rond";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
                 g.pleochroic = false;
                 g.pleochroicDescription = "";
                 g.fluorescenceLongWave = "Fluorescence variable ou absente, souvent avec des bulles visibles à la loupe.";
@@ -824,6 +887,10 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Aucune figure d'interférence (matériau amorphe).";
                 g.chelseaFilterReaction = "Réaction variable et non diagnostique.";
                 g.baseValue = 5;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Fabrication industrielle", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
             }),
             BuildGem("Peridot", g =>
             {
@@ -833,8 +900,15 @@ public static class SceneBootstrap
                 g.refractiveIndex = 1.67f;
                 g.density = 3.34f;
                 g.hardness = 6.5f;
-                g.sizeMm = 6.5f;
+                g.lengthMm = 8.5f;
+                g.widthMm = 6.0f;
+                g.depthMm = 4.0f;
                 g.weightCarats = 1.3f;
+                g.luster = "Vitreux, légèrement gras";
+                g.color = "Vert olive";
+                g.shape = "Rectangle à pans coupés";
+                g.cutStyle = "À degrés";
+                g.transparency = "Transparent";
                 g.pleochroic = true;
                 g.pleochroicDescription = "Jaune-vert / Vert selon l'axe d'observation (faible).";
                 g.fluorescenceLongWave = "Aucune fluorescence sous UV longue onde.";
@@ -845,6 +919,13 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Figure d'interférence biaxiale.";
                 g.chelseaFilterReaction = "Aucune réaction particulière.";
                 g.baseValue = 35;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Pakistan (vallée de Kashmir/Sopat)", rarityWeight = 20, valueMultiplier = 1.6f,
+                        inclusionOverride = "Cristaux de belle taille et couleur intense, gisement réputé de la vallée de Kashmir." },
+                    new GemOrigin { name = "États-Unis (Arizona)", rarityWeight = 40, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "Myanmar", rarityWeight = 40, valueMultiplier = 1.0f },
+                };
             }),
             BuildGem("Spinelle_Bleu", g =>
             {
@@ -854,8 +935,15 @@ public static class SceneBootstrap
                 g.refractiveIndex = 1.715f;
                 g.density = 3.61f;
                 g.hardness = 8f;
-                g.sizeMm = 6.0f;
+                g.lengthMm = 6.3f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.8f;
                 g.weightCarats = 1.2f;
+                g.luster = "Vitreux";
+                g.color = "Bleu";
+                g.shape = "Coussin";
+                g.cutStyle = "Mixte";
+                g.transparency = "Transparent";
                 g.pleochroic = false;
                 g.pleochroicDescription = "";
                 g.fluorescenceLongWave = "Généralement inerte, parfois faible réaction rougeâtre en présence de traces de chrome.";
@@ -866,6 +954,13 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
                 g.chelseaFilterReaction = "Réaction rouge marquée sous filtre Chelsea si coloré au cobalt — signe distinctif face au saphir.";
                 g.baseValue = 90;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Sri Lanka", rarityWeight = 40, valueMultiplier = 1.2f },
+                    new GemOrigin { name = "Tanzanie", rarityWeight = 30, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Vietnam", rarityWeight = 30, valueMultiplier = 1.3f,
+                        inclusionOverride = "Spinelle bleu coloré au cobalt, gisement vietnamien réputé pour cette teinte intense." },
+                };
             }),
             BuildGem("Saphir_Bleu", g =>
             {
@@ -875,8 +970,15 @@ public static class SceneBootstrap
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
-                g.sizeMm = 6.5f;
+                g.lengthMm = 7.2f;
+                g.widthMm = 5.6f;
+                g.depthMm = 4.0f;
                 g.weightCarats = 1.4f;
+                g.luster = "Vitreux à sub-adamantin";
+                g.color = "Bleu";
+                g.shape = "Ovale";
+                g.cutStyle = "Mixte";
+                g.transparency = "Transparent";
                 g.pleochroic = true;
                 g.pleochroicDescription = "Bleu / Bleu-vert selon l'axe d'observation (marqué).";
                 g.fluorescenceLongWave = "Généralement inerte sous UV longue onde (le fer inhibe la fluorescence).";
@@ -887,6 +989,15 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Figure d'interférence uniaxiale nette.";
                 g.chelseaFilterReaction = "Aucune réaction rouge (contrairement au spinelle bleu au cobalt).";
                 g.baseValue = 140;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Cachemire (Kashmir)", rarityWeight = 5, valueMultiplier = 4.0f,
+                        inclusionOverride = "Couleur bleu velouté intense caractéristique ; gisement de Kashmir aujourd'hui quasiment épuisé, extrêmement recherché." },
+                    new GemOrigin { name = "Sri Lanka (Ceylan)", rarityWeight = 35, valueMultiplier = 1.4f },
+                    new GemOrigin { name = "Madagascar", rarityWeight = 35, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Australie", rarityWeight = 25, valueMultiplier = 0.7f,
+                        inclusionOverride = "Zonation de couleur marquée, teinte souvent trop sombre à contre-jour." },
+                };
             }),
             BuildGem("Zircon", g =>
             {
@@ -896,8 +1007,15 @@ public static class SceneBootstrap
                 g.refractiveIndex = 1.95f;
                 g.density = 4.65f;
                 g.hardness = 7.5f;
-                g.sizeMm = 6.0f;
+                g.lengthMm = 5.8f;
+                g.widthMm = 5.8f;
+                g.depthMm = 4.5f;
                 g.weightCarats = 1.6f;
+                g.luster = "Adamantin à sub-adamantin";
+                g.color = "Bleu";
+                g.shape = "Carré";
+                g.cutStyle = "Princesse";
+                g.transparency = "Transparent";
                 g.pleochroic = true;
                 g.pleochroicDescription = "Dichroïsme faible à modéré selon la teinte.";
                 g.fluorescenceLongWave = "Fluorescence jaunâtre faible possible selon l'origine.";
@@ -908,6 +1026,12 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Figure d'interférence uniaxiale.";
                 g.chelseaFilterReaction = "Aucune réaction particulière.";
                 g.baseValue = 30;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Cambodge (Ratanakiri)", rarityWeight = 60, valueMultiplier = 1.0f,
+                        inclusionOverride = "Source classique du zircon bleu chauffé, généralement propre à l'œil nu." },
+                    new GemOrigin { name = "Sri Lanka", rarityWeight = 40, valueMultiplier = 1.1f },
+                };
             }),
             BuildGem("Diamant", g =>
             {
@@ -917,8 +1041,15 @@ public static class SceneBootstrap
                 g.refractiveIndex = 2.417f;
                 g.density = 3.52f;
                 g.hardness = 10f;
-                g.sizeMm = 5.5f;
+                g.lengthMm = 5.5f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.4f;
                 g.weightCarats = 0.9f;
+                g.luster = "Adamantin";
+                g.color = "Incolore";
+                g.shape = "Rond";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
                 g.pleochroic = false;
                 g.pleochroicDescription = "";
                 g.fluorescenceLongWave = "Fluorescence bleue fréquente sous UV longue onde (variable selon les spécimens).";
@@ -929,6 +1060,14 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
                 g.chelseaFilterReaction = "Aucune réaction particulière.";
                 g.baseValue = 500;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Botswana", rarityWeight = 35, valueMultiplier = 1.2f },
+                    new GemOrigin { name = "Russie", rarityWeight = 30, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Canada", rarityWeight = 20, valueMultiplier = 1.3f,
+                        inclusionOverride = "Extraction réputée pour sa traçabilité éthique et sa haute pureté." },
+                    new GemOrigin { name = "Afrique du Sud", rarityWeight = 15, valueMultiplier = 1.1f },
+                };
             }),
             BuildGem("Amethyste", g =>
             {
@@ -938,8 +1077,15 @@ public static class SceneBootstrap
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
-                g.sizeMm = 7.0f;
+                g.lengthMm = 9.0f;
+                g.widthMm = 6.0f;
+                g.depthMm = 4.0f;
                 g.weightCarats = 1.7f;
+                g.luster = "Vitreux";
+                g.color = "Violet";
+                g.shape = "Poire";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
                 g.pleochroic = true;
                 g.pleochroicDescription = "Violet / Rougeâtre-violet selon l'axe d'observation (faible).";
                 g.fluorescenceLongWave = "Aucune fluorescence notable sous UV longue onde.";
@@ -950,6 +1096,13 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Figure d'interférence uniaxiale visible en lumière convergente.";
                 g.chelseaFilterReaction = "Aucune réaction particulière.";
                 g.baseValue = 20;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil", rarityWeight = 45, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "Uruguay", rarityWeight = 25, valueMultiplier = 1.2f,
+                        inclusionOverride = "Couleur violette profonde et uniforme, très recherchée." },
+                    new GemOrigin { name = "Zambie", rarityWeight = 30, valueMultiplier = 1.1f },
+                };
             }),
             BuildGem("Grenat_Spessartite", g =>
             {
@@ -959,8 +1112,15 @@ public static class SceneBootstrap
                 g.refractiveIndex = 1.80f;
                 g.density = 4.15f;
                 g.hardness = 7.5f;
-                g.sizeMm = 6.2f;
+                g.lengthMm = 9.5f;
+                g.widthMm = 5.0f;
+                g.depthMm = 3.3f;
                 g.weightCarats = 1.5f;
+                g.luster = "Vitreux à résineux";
+                g.color = "Orange";
+                g.shape = "Marquise";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
                 g.pleochroic = false;
                 g.pleochroicDescription = "";
                 g.fluorescenceLongWave = "Généralement inerte sous UV longue onde.";
@@ -971,6 +1131,13 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
                 g.chelseaFilterReaction = "Aucune réaction rouge notable.";
                 g.baseValue = 55;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Namibie", rarityWeight = 40, valueMultiplier = 1.3f,
+                        inclusionOverride = "Teinte orangée vive typique du \"grenat mandarine\" namibien, très recherchée." },
+                    new GemOrigin { name = "Nigeria", rarityWeight = 35, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Madagascar", rarityWeight = 25, valueMultiplier = 0.9f },
+                };
             }),
             BuildGem("Emeraude", g =>
             {
@@ -980,8 +1147,15 @@ public static class SceneBootstrap
                 g.refractiveIndex = 1.580f;
                 g.density = 2.72f;
                 g.hardness = 7.7f;
-                g.sizeMm = 6.5f;
+                g.lengthMm = 8.2f;
+                g.widthMm = 6.2f;
+                g.depthMm = 4.5f;
                 g.weightCarats = 1.3f;
+                g.luster = "Vitreux";
+                g.color = "Vert";
+                g.shape = "Rectangle à pans coupés";
+                g.cutStyle = "Émeraude (à degrés)";
+                g.transparency = "Transparent";
                 g.pleochroic = true;
                 g.pleochroicDescription = "Bleu-vert / Jaune-vert selon l'axe d'observation (marqué).";
                 g.fluorescenceLongWave = "Généralement inerte sous UV longue onde (les émeraudes naturelles contiennent du fer).";
@@ -992,6 +1166,14 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Figure d'interférence uniaxiale.";
                 g.chelseaFilterReaction = "Réaction faible ou nulle (contrairement à de nombreuses imitations et synthèses, qui réagissent rouge vif).";
                 g.baseValue = 180;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Colombie (Muzo/Chivor)", rarityWeight = 25, valueMultiplier = 2.5f,
+                        inclusionOverride = "Inclusions triphasées (liquide, gaz, cristal de halite) en \"jardin\" — signature classique des émeraudes colombiennes." },
+                    new GemOrigin { name = "Zambie", rarityWeight = 35, valueMultiplier = 1.2f },
+                    new GemOrigin { name = "Brésil", rarityWeight = 25, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "Afghanistan (Panjshir)", rarityWeight = 15, valueMultiplier = 1.5f },
+                };
             }),
         };
     }

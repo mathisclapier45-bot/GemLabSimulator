@@ -18,8 +18,15 @@ MonoBehaviour:
   refractiveIndex: 1.715
   density: 3.6
   hardness: 8
-  sizeMm: 6
+  lengthMm: 6
+  widthMm: 6
+  depthMm: 3.9
   weightCarats: 1.2
+  luster: Vitreux
+  color: Rouge
+  shape: Rond
+  cutStyle: Brillant
+  transparency: Transparent
   pleochroic: 0
   pleochroicDescription: 
   fluorescenceLongWave: Fluorescence rouge, souvent plus terne que le rubis, sous
@@ -32,3 +39,17 @@ MonoBehaviour:
   chelseaFilterReaction: "R\xE9action rouge \xE0 ros\xE2tre, souvent plus terne que
     le rubis."
   baseValue: 45
+  origins:
+  - name: Birmanie
+    rarityWeight: 20
+    valueMultiplier: 1.8
+    inclusionOverride: "Spinelle rouge vif associ\xE9 aux gisements de Mogok, historiquement
+      appel\xE9 \"Balas Ruby\"."
+  - name: Tanzanie
+    rarityWeight: 40
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Sri Lanka
+    rarityWeight: 40
+    valueMultiplier: 1.1
+    inclusionOverride: 

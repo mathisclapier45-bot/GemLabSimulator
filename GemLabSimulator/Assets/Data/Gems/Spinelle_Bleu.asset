@@ -18,8 +18,15 @@ MonoBehaviour:
   refractiveIndex: 1.715
   density: 3.61
   hardness: 8
-  sizeMm: 6
+  lengthMm: 6.3
+  widthMm: 5.5
+  depthMm: 3.8
   weightCarats: 1.2
+  luster: Vitreux
+  color: Bleu
+  shape: Coussin
+  cutStyle: Mixte
+  transparency: Transparent
   pleochroic: 0
   pleochroicDescription: 
   fluorescenceLongWave: "G\xE9n\xE9ralement inerte, parfois faible r\xE9action rouge\xE2tre
@@ -33,3 +40,17 @@ MonoBehaviour:
   chelseaFilterReaction: "R\xE9action rouge marqu\xE9e sous filtre Chelsea si color\xE9
     au cobalt \u2014 signe distinctif face au saphir."
   baseValue: 90
+  origins:
+  - name: Sri Lanka
+    rarityWeight: 40
+    valueMultiplier: 1.2
+    inclusionOverride: 
+  - name: Tanzanie
+    rarityWeight: 30
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Vietnam
+    rarityWeight: 30
+    valueMultiplier: 1.3
+    inclusionOverride: "Spinelle bleu color\xE9 au cobalt, gisement vietnamien r\xE9put\xE9
+      pour cette teinte intense."

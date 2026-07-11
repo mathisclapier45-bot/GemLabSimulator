@@ -19,8 +19,15 @@ MonoBehaviour:
   refractiveIndex: 1.544
   density: 2.65
   hardness: 7
-  sizeMm: 7
+  lengthMm: 7.5
+  widthMm: 5.8
+  depthMm: 3.9
   weightCarats: 1.8
+  luster: Vitreux
+  color: Incolore
+  shape: Ovale
+  cutStyle: Brillant
+  transparency: Transparent
   pleochroic: 0
   pleochroicDescription: 
   fluorescenceLongWave: Aucune fluorescence notable sous UV longue onde.
@@ -32,3 +39,16 @@ MonoBehaviour:
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale visible en lumi\xE8re convergente."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re (incolore)."
   baseValue: 15
+  origins:
+  - name: "Br\xE9sil"
+    rarityWeight: 50
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Madagascar
+    rarityWeight: 30
+    valueMultiplier: 1.1
+    inclusionOverride: 
+  - name: "\xC9tats-Unis"
+    rarityWeight: 20
+    valueMultiplier: 0.9
+    inclusionOverride: 

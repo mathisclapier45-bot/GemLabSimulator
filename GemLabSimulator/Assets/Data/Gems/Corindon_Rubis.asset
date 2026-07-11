@@ -19,8 +19,15 @@ MonoBehaviour:
   refractiveIndex: 1.766
   density: 4
   hardness: 9
-  sizeMm: 6.5
+  lengthMm: 6.8
+  widthMm: 5.9
+  depthMm: 4.2
   weightCarats: 1.4
+  luster: "Vitreux \xE0 sub-adamantin"
+  color: Rouge
+  shape: Coussin
+  cutStyle: Mixte
+  transparency: Transparent
   pleochroic: 1
   pleochroicDescription: "Rouge / Orang\xE9-rouge selon l'axe d'observation."
   fluorescenceLongWave: Fluorescence rouge vif sous UV longue onde (indicateur classique
@@ -33,3 +40,22 @@ MonoBehaviour:
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."
   chelseaFilterReaction: "R\xE9action rouge vif sous filtre Chelsea (due au chrome)."
   baseValue: 150
+  origins:
+  - name: Birmanie (Mogok)
+    rarityWeight: 10
+    valueMultiplier: 3
+    inclusionOverride: "Soie de rutile fine et dense (\"soie birmane\"), fluorescence
+      rouge marqu\xE9e \u2014 signature du gisement de Mogok."
+  - name: Mozambique
+    rarityWeight: 45
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: "Tha\xEFlande (Chanthaburi)"
+    rarityWeight: 25
+    valueMultiplier: 0.8
+    inclusionOverride: "Peu d'inclusions, souvent chauff\xE9, soie g\xE9n\xE9ralement
+      absente ou r\xE9sorb\xE9e."
+  - name: Sri Lanka
+    rarityWeight: 20
+    valueMultiplier: 1.3
+    inclusionOverride: 

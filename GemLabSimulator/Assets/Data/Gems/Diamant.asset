@@ -19,8 +19,15 @@ MonoBehaviour:
   refractiveIndex: 2.417
   density: 3.52
   hardness: 10
-  sizeMm: 5.5
+  lengthMm: 5.5
+  widthMm: 5.5
+  depthMm: 3.4
   weightCarats: 0.9
+  luster: Adamantin
+  color: Incolore
+  shape: Rond
+  cutStyle: Brillant
+  transparency: Transparent
   pleochroic: 0
   pleochroicDescription: 
   fluorescenceLongWave: "Fluorescence bleue fr\xE9quente sous UV longue onde (variable
@@ -34,3 +41,21 @@ MonoBehaviour:
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
   baseValue: 500
+  origins:
+  - name: Botswana
+    rarityWeight: 35
+    valueMultiplier: 1.2
+    inclusionOverride: 
+  - name: Russie
+    rarityWeight: 30
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Canada
+    rarityWeight: 20
+    valueMultiplier: 1.3
+    inclusionOverride: "Extraction r\xE9put\xE9e pour sa tra\xE7abilit\xE9 \xE9thique
+      et sa haute puret\xE9."
+  - name: Afrique du Sud
+    rarityWeight: 15
+    valueMultiplier: 1.1
+    inclusionOverride: 

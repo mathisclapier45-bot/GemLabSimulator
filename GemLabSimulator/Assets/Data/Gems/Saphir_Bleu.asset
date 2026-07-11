@@ -19,8 +19,15 @@ MonoBehaviour:
   refractiveIndex: 1.766
   density: 4
   hardness: 9
-  sizeMm: 6.5
+  lengthMm: 7.2
+  widthMm: 5.6
+  depthMm: 4
   weightCarats: 1.4
+  luster: "Vitreux \xE0 sub-adamantin"
+  color: Bleu
+  shape: Ovale
+  cutStyle: Mixte
+  transparency: Transparent
   pleochroic: 1
   pleochroicDescription: "Bleu / Bleu-vert selon l'axe d'observation (marqu\xE9)."
   fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde (le fer inhibe
@@ -34,3 +41,22 @@ MonoBehaviour:
   chelseaFilterReaction: "Aucune r\xE9action rouge (contrairement au spinelle bleu
     au cobalt)."
   baseValue: 140
+  origins:
+  - name: Cachemire (Kashmir)
+    rarityWeight: 5
+    valueMultiplier: 4
+    inclusionOverride: "Couleur bleu velout\xE9 intense caract\xE9ristique ; gisement
+      de Kashmir aujourd'hui quasiment \xE9puis\xE9, extr\xEAmement recherch\xE9."
+  - name: Sri Lanka (Ceylan)
+    rarityWeight: 35
+    valueMultiplier: 1.4
+    inclusionOverride: 
+  - name: Madagascar
+    rarityWeight: 35
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Australie
+    rarityWeight: 25
+    valueMultiplier: 0.7
+    inclusionOverride: "Zonation de couleur marqu\xE9e, teinte souvent trop sombre
+      \xE0 contre-jour."

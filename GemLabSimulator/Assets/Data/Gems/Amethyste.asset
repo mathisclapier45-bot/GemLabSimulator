@@ -18,8 +18,15 @@ MonoBehaviour:
   refractiveIndex: 1.544
   density: 2.65
   hardness: 7
-  sizeMm: 7
+  lengthMm: 9
+  widthMm: 6
+  depthMm: 4
   weightCarats: 1.7
+  luster: Vitreux
+  color: Violet
+  shape: Poire
+  cutStyle: Brillant
+  transparency: Transparent
   pleochroic: 1
   pleochroicDescription: "Violet / Rouge\xE2tre-violet selon l'axe d'observation
     (faible)."
@@ -31,3 +38,16 @@ MonoBehaviour:
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale visible en lumi\xE8re convergente."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
   baseValue: 20
+  origins:
+  - name: "Br\xE9sil"
+    rarityWeight: 45
+    valueMultiplier: 0.9
+    inclusionOverride: 
+  - name: Uruguay
+    rarityWeight: 25
+    valueMultiplier: 1.2
+    inclusionOverride: "Couleur violette profonde et uniforme, tr\xE8s recherch\xE9e."
+  - name: Zambie
+    rarityWeight: 30
+    valueMultiplier: 1.1
+    inclusionOverride: 

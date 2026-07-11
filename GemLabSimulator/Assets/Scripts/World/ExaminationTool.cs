@@ -6,8 +6,7 @@ public class ExaminationTool : MonoBehaviour
     {
         RefractiveIndex,
         Density,
-        Hardness,
-        Size,
+        Dimensions,
         Weight,
         Pleochroism,
         FluorescenceLongWave,
@@ -16,7 +15,8 @@ public class ExaminationTool : MonoBehaviour
         AbsorptionSpectrum,
         Inclusions,
         InterferenceFigure,
-        ChelseaFilter
+        ChelseaFilter,
+        VisualExamination
     }
 
     [SerializeField] private string toolName;
@@ -72,13 +72,22 @@ public class ExaminationTool : MonoBehaviour
                 RevealQualitative(gemInstance, "Spectre d'absorption", gem.absorptionSpectrum);
                 break;
             case MeasurementType.Inclusions:
-                RevealQualitative(gemInstance, "Inclusions", gem.inclusions);
+                RevealInclusions(gemInstance);
                 break;
             case MeasurementType.InterferenceFigure:
                 RevealQualitative(gemInstance, "Figure d'interférence", gem.interferenceFigure);
                 break;
             case MeasurementType.ChelseaFilter:
                 RevealQualitative(gemInstance, "Réaction au filtre Chelsea", gem.chelseaFilterReaction);
+                break;
+            case MeasurementType.VisualExamination:
+                RevealVisualExamination(gemInstance, gem);
+                break;
+            case MeasurementType.Weight:
+                RevealWeight(gemInstance, gem);
+                break;
+            case MeasurementType.Dimensions:
+                RevealDimensions(gemInstance, gem);
                 break;
             default:
                 StartNumericMeasurement(gemInstance, gem);
@@ -92,6 +101,35 @@ public class ExaminationTool : MonoBehaviour
         ToolFeedbackUI.Instance.ShowMessage($"{toolName} — {label} : {description}");
     }
 
+    private void RevealVisualExamination(GemInstance gemInstance, GemDefinition gem)
+    {
+        gemInstance.RecordObservation(measurementType.ToString());
+        ToolFeedbackUI.Instance.ShowMessage(
+            $"{toolName} — Éclat : {gem.luster} | Couleur : {gem.color} ({gemInstance.SaturationGrade}) | " +
+            $"Transparence : {gem.transparency} | Forme : {gem.shape} | Style de taille : {gem.cutStyle}");
+    }
+
+    private void RevealWeight(GemInstance gemInstance, GemDefinition gem)
+    {
+        gemInstance.RecordObservation(measurementType.ToString());
+        ToolFeedbackUI.Instance.ShowMessage($"{toolName} — Poids : {gemInstance.CaratWeight:F2} ct");
+    }
+
+    private void RevealDimensions(GemInstance gemInstance, GemDefinition gem)
+    {
+        gemInstance.RecordObservation(measurementType.ToString());
+        ToolFeedbackUI.Instance.ShowMessage(
+            $"{toolName} — Dimensions : {gemInstance.LengthMm:F1} x {gemInstance.WidthMm:F1} x {gemInstance.DepthMm:F1} mm");
+    }
+
+    private void RevealInclusions(GemInstance gemInstance)
+    {
+        gemInstance.RecordObservation(measurementType.ToString());
+        ToolFeedbackUI.Instance.ShowMessage(
+            $"{toolName} — Clarté : {gemInstance.ClarityGrade} ({gemInstance.ClarityDescription}) | " +
+            $"Inclusions : {gemInstance.InclusionDescription} | Origine probable : {gemInstance.Origin.name}");
+    }
+
     private void StartNumericMeasurement(GemInstance gemInstance, GemDefinition gem)
     {
         string label;
@@ -102,21 +140,9 @@ public class ExaminationTool : MonoBehaviour
                 label = "Indice de réfraction";
                 trueValue = gem.refractiveIndex;
                 break;
-            case MeasurementType.Density:
+            default:
                 label = "Densité";
                 trueValue = gem.density;
-                break;
-            case MeasurementType.Size:
-                label = "Taille (mm)";
-                trueValue = gem.sizeMm;
-                break;
-            case MeasurementType.Weight:
-                label = "Poids (ct)";
-                trueValue = gem.weightCarats;
-                break;
-            default:
-                label = "Dureté";
-                trueValue = gem.hardness;
                 break;
         }
 

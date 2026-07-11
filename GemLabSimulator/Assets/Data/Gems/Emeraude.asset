@@ -18,8 +18,15 @@ MonoBehaviour:
   refractiveIndex: 1.58
   density: 2.72
   hardness: 7.7
-  sizeMm: 6.5
+  lengthMm: 8.2
+  widthMm: 6.2
+  depthMm: 4.5
   weightCarats: 1.3
+  luster: Vitreux
+  color: Vert
+  shape: "Rectangle \xE0 pans coup\xE9s"
+  cutStyle: "\xC9meraude (\xE0 degr\xE9s)"
+  transparency: Transparent
   pleochroic: 1
   pleochroicDescription: "Bleu-vert / Jaune-vert selon l'axe d'observation (marqu\xE9)."
   fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde (les \xE9meraudes
@@ -34,3 +41,21 @@ MonoBehaviour:
   chelseaFilterReaction: "R\xE9action faible ou nulle (contrairement \xE0 de nombreuses
     imitations et synth\xE8ses, qui r\xE9agissent rouge vif)."
   baseValue: 180
+  origins:
+  - name: Colombie (Muzo/Chivor)
+    rarityWeight: 25
+    valueMultiplier: 2.5
+    inclusionOverride: "Inclusions triphas\xE9es (liquide, gaz, cristal de halite)
+      en \"jardin\" \u2014 signature classique des \xE9meraudes colombiennes."
+  - name: Zambie
+    rarityWeight: 35
+    valueMultiplier: 1.2
+    inclusionOverride: 
+  - name: "Br\xE9sil"
+    rarityWeight: 25
+    valueMultiplier: 0.9
+    inclusionOverride: 
+  - name: Afghanistan (Panjshir)
+    rarityWeight: 15
+    valueMultiplier: 1.5
+    inclusionOverride: 

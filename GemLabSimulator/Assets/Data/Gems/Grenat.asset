@@ -19,8 +19,15 @@ MonoBehaviour:
   refractiveIndex: 1.79
   density: 4.05
   hardness: 7.5
-  sizeMm: 6.3
+  lengthMm: 8
+  widthMm: 5.2
+  depthMm: 3.6
   weightCarats: 1.5
+  luster: Vitreux
+  color: Rouge sombre / brun-rouge
+  shape: Poire
+  cutStyle: Brillant
+  transparency: Transparent
   pleochroic: 0
   pleochroicDescription: 
   fluorescenceLongWave: "Aucune fluorescence sous UV longue onde (caract\xE9ristique
@@ -33,3 +40,16 @@ MonoBehaviour:
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "Aucune r\xE9action rouge notable."
   baseValue: 25
+  origins:
+  - name: Inde
+    rarityWeight: 40
+    valueMultiplier: 0.9
+    inclusionOverride: 
+  - name: Madagascar
+    rarityWeight: 35
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: "\xC9tats-Unis (Idaho)"
+    rarityWeight: 25
+    valueMultiplier: 1
+    inclusionOverride: 

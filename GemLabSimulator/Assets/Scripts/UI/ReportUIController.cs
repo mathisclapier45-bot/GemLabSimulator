@@ -27,12 +27,21 @@ public class ReportUIController : MonoBehaviour
         var gem = gemInstance.Definition;
         var measured = new List<string>();
 
-        AddIfMeasured(measured, gemInstance, ExaminationTool.MeasurementType.Hardness, "Dureté", "F2");
         AddIfMeasured(measured, gemInstance, ExaminationTool.MeasurementType.RefractiveIndex, "Indice de réfraction", "F3");
         AddIfMeasured(measured, gemInstance, ExaminationTool.MeasurementType.Density, "Densité", "F2");
-        AddIfMeasured(measured, gemInstance, ExaminationTool.MeasurementType.Size, "Taille", "F1", " mm");
-        AddIfMeasured(measured, gemInstance, ExaminationTool.MeasurementType.Weight, "Poids", "F2", " ct");
 
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.VisualExamination.ToString()))
+        {
+            measured.Add($"Éclat : {gem.luster}");
+            measured.Add($"Couleur : {gem.color} ({gemInstance.SaturationGrade})");
+            measured.Add($"Transparence : {gem.transparency}");
+            measured.Add($"Forme : {gem.shape}");
+            measured.Add($"Style de taille : {gem.cutStyle}");
+        }
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Dimensions.ToString()))
+            measured.Add($"Dimensions : {gemInstance.LengthMm:F1} x {gemInstance.WidthMm:F1} x {gemInstance.DepthMm:F1} mm");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Weight.ToString()))
+            measured.Add($"Poids : {gemInstance.CaratWeight:F2} ct");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Pleochroism.ToString()))
             measured.Add(gem.pleochroic ? $"Pléochroïsme : {gem.pleochroicDescription}" : "Pléochroïsme : aucun");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.FluorescenceLongWave.ToString()))
@@ -44,7 +53,11 @@ public class ReportUIController : MonoBehaviour
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.AbsorptionSpectrum.ToString()))
             measured.Add($"Spectroscope : {gem.absorptionSpectrum}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Inclusions.ToString()))
-            measured.Add($"Microscope : {gem.inclusions}");
+        {
+            measured.Add($"Clarté : {gemInstance.ClarityGrade} ({gemInstance.ClarityDescription})");
+            measured.Add($"Inclusions : {gemInstance.InclusionDescription}");
+            measured.Add($"Origine probable : {gemInstance.Origin.name}");
+        }
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.InterferenceFigure.ToString()))
             measured.Add($"Conoscope : {gem.interferenceFigure}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ChelseaFilter.ToString()))
@@ -83,8 +96,8 @@ public class ReportUIController : MonoBehaviour
         var gem = gemInstance.Definition;
         if (speciesName == gem.displayName)
         {
-            resultText.text = $"Rapport validé par le directeur ! Identifiée comme {gem.displayName}. +{gem.baseValue}€";
-            currentInventory.GetComponent<PlayerWallet>()?.AddMoney(gem.baseValue);
+            resultText.text = $"Rapport validé par le directeur ! Identifiée comme {gem.displayName}. +{gemInstance.FinalValue}€";
+            currentInventory.GetComponent<PlayerWallet>()?.AddMoney(gemInstance.FinalValue);
             gemInstance.MarkIdentified();
         }
         else

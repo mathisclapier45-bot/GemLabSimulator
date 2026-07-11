@@ -18,8 +18,15 @@ MonoBehaviour:
   refractiveIndex: 1.95
   density: 4.65
   hardness: 7.5
-  sizeMm: 6
+  lengthMm: 5.8
+  widthMm: 5.8
+  depthMm: 4.5
   weightCarats: 1.6
+  luster: "Adamantin \xE0 sub-adamantin"
+  color: Bleu
+  shape: "Carr\xE9"
+  cutStyle: Princesse
+  transparency: Transparent
   pleochroic: 1
   pleochroicDescription: "Dichro\xEFsme faible \xE0 mod\xE9r\xE9 selon la teinte."
   fluorescenceLongWave: "Fluorescence jaun\xE2tre faible possible selon l'origine."
@@ -33,3 +40,13 @@ MonoBehaviour:
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
   baseValue: 30
+  origins:
+  - name: Cambodge (Ratanakiri)
+    rarityWeight: 60
+    valueMultiplier: 1
+    inclusionOverride: "Source classique du zircon bleu chauff\xE9, g\xE9n\xE9ralement
+      propre \xE0 l'\u0153il nu."
+  - name: Sri Lanka
+    rarityWeight: 40
+    valueMultiplier: 1.1
+    inclusionOverride: 

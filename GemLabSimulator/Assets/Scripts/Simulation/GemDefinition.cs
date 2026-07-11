@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewGem", menuName = "GemLab/Gem Definition")]
@@ -11,8 +12,17 @@ public class GemDefinition : ScriptableObject
     public float refractiveIndex;
     public float density;
     public float hardness;
-    public float sizeMm;
+    public float lengthMm;
+    public float widthMm;
+    public float depthMm;
     public float weightCarats;
+
+    [Header("Examen visuel (loupe)")]
+    public string luster;
+    public string color;
+    public string shape;
+    public string cutStyle;
+    public string transparency;
 
     [Header("Propriétés optiques qualitatives")]
     public bool pleochroic;
@@ -27,4 +37,7 @@ public class GemDefinition : ScriptableObject
 
     [Header("Économie")]
     public int baseValue;
+
+    [Header("Origines possibles")]
+    public List<GemOrigin> origins = new List<GemOrigin>();
 }

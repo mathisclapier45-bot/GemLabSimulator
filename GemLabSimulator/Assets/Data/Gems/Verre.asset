@@ -18,8 +18,15 @@ MonoBehaviour:
   refractiveIndex: 1.5
   density: 2.5
   hardness: 5.5
-  sizeMm: 6.8
+  lengthMm: 6.8
+  widthMm: 6.8
+  depthMm: 4.4
   weightCarats: 1.3
+  luster: Vitreux
+  color: Rouge
+  shape: Rond
+  cutStyle: Brillant
+  transparency: Transparent
   pleochroic: 0
   pleochroicDescription: 
   fluorescenceLongWave: "Fluorescence variable ou absente, souvent avec des bulles
@@ -32,3 +39,8 @@ MonoBehaviour:
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau amorphe)."
   chelseaFilterReaction: "R\xE9action variable et non diagnostique."
   baseValue: 5
+  origins:
+  - name: Fabrication industrielle
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 
