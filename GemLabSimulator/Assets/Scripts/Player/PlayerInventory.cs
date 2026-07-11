@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerInventory : MonoBehaviour
 {
+    public static PlayerInventory Instance { get; private set; }
+
     private const int MaxCapacity = 5;
 
     private readonly List<GemInstance> gems = new List<GemInstance>();
@@ -13,6 +15,12 @@ public class PlayerInventory : MonoBehaviour
     public bool IsFull => gems.Count >= MaxCapacity;
 
     public event Action OnInventoryChanged;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this) return;
+        Instance = this;
+    }
 
     public bool AddGem(GemDefinition definition)
     {

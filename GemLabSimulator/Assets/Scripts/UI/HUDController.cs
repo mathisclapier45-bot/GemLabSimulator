@@ -4,17 +4,18 @@ using UnityEngine.UI;
 public class HUDController : MonoBehaviour
 {
     [SerializeField] private Text moneyText;
-    [SerializeField] private PlayerWallet wallet;
 
-    private void OnEnable()
+    private void Start()
     {
-        wallet.OnMoneyChanged += UpdateText;
-        UpdateText(wallet.Money);
+        if (PlayerWallet.Instance == null) return;
+        PlayerWallet.Instance.OnMoneyChanged += UpdateText;
+        UpdateText(PlayerWallet.Instance.Money);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        wallet.OnMoneyChanged -= UpdateText;
+        if (PlayerWallet.Instance != null)
+            PlayerWallet.Instance.OnMoneyChanged -= UpdateText;
     }
 
     private void UpdateText(int amount)

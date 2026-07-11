@@ -23,6 +23,11 @@ public static class SceneBootstrap
     private const int DoorGapY1 = -1;
     private const int DoorGapY2 = 0;
 
+    private const int TownMinX = -20;
+    private const int TownMaxX = 20;
+    private const int TownMinY = -14;
+    private const int TownMaxY = 14;
+
     [MenuItem("GemLab/Setup Home Scene")]
     public static void CreateHomeScene()
     {
@@ -74,6 +79,9 @@ public static class SceneBootstrap
             }
         }
 
+        var spawnGO = new GameObject("SpawnPoint");
+        spawnGO.transform.position = Vector3.zero;
+
         var playerSprite = GetOrCreatePixelSprite("player_pixel", PlayerPattern, PlayerPalette);
 
         var player = new GameObject("Player");
@@ -93,10 +101,12 @@ public static class SceneBootstrap
         player.AddComponent<PlayerController>();
         player.AddComponent<PlayerInventory>();
         player.AddComponent<PlayerWallet>();
-        player.transform.position = Vector3.zero;
+        player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
         follow.SetTarget(player.transform);
+
+        CreateExitDoor(new Vector3(RoomMinX + 1, RoomMinY + 1, 0f));
 
         var mailboxSprite = GetOrCreatePixelSprite("mailbox_pixel", MailboxPattern, MailboxPalette);
         var mailbox = new GameObject("Mailbox");
@@ -124,18 +134,213 @@ public static class SceneBootstrap
         CreateExaminationStation("LampeUV", ExaminationTool.MeasurementType.Fluorescence, new Vector3(10, -2.5f, 0f));
 
         CreateDirector(new Vector3(14, -2, 0f));
-        CreateUI();
+        CreateUI(true);
 
         Directory.CreateDirectory("Assets/Scenes");
         EditorSceneManager.SaveScene(scene, "Assets/Scenes/Home.unity");
-
-        EditorBuildSettings.scenes = new[]
-        {
-            new EditorBuildSettingsScene("Assets/Scenes/Home.unity", true)
-        };
+        AddSceneToBuildSettings("Assets/Scenes/Home.unity");
 
         AssetDatabase.SaveAssets();
         Debug.Log("Home scene created at Assets/Scenes/Home.unity");
+    }
+
+    [MenuItem("GemLab/Setup Town Scene")]
+    public static void CreateTownScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+
+        var light = GameObject.Find("Directional Light");
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
+
+        var cam = Camera.main;
+        cam.orthographic = true;
+        cam.orthographicSize = 6f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.55f, 0.72f, 0.88f);
+        cam.transform.position = new Vector3(0f, 0f, -10f);
+
+        var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
+        pixelPerfect.assetsPPU = PixelsPerUnit;
+        pixelPerfect.refResolutionX = 384;
+        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.upscaleRT = true;
+        pixelPerfect.pixelSnapping = true;
+        pixelPerfect.cropFrameX = true;
+        pixelPerfect.cropFrameY = true;
+
+        var gridGO = new GameObject("Grid", typeof(Grid));
+
+        var groundGO = new GameObject("Ground", typeof(Tilemap), typeof(TilemapRenderer));
+        groundGO.transform.SetParent(gridGO.transform);
+        var groundTilemap = groundGO.GetComponent<Tilemap>();
+
+        var boundaryGO = new GameObject("Boundary", typeof(Tilemap), typeof(TilemapRenderer), typeof(TilemapCollider2D));
+        boundaryGO.transform.SetParent(gridGO.transform);
+        var boundaryTilemap = boundaryGO.GetComponent<Tilemap>();
+
+        var grassTile = GetOrCreateTile("grass_pixel", GrassPixel);
+        var hedgeTile = GetOrCreateTile("hedge_pixel", HedgePixel);
+
+        for (var x = TownMinX; x <= TownMaxX; x++)
+        {
+            for (var y = TownMinY; y <= TownMaxY; y++)
+            {
+                var isPerimeter = x == TownMinX || x == TownMaxX || y == TownMinY || y == TownMaxY;
+                var cell = new Vector3Int(x, y, 0);
+                if (isPerimeter)
+                    boundaryTilemap.SetTile(cell, hedgeTile);
+                else
+                    groundTilemap.SetTile(cell, grassTile);
+            }
+        }
+
+        var spawnGO = new GameObject("SpawnPoint");
+        spawnGO.transform.position = new Vector3(-16, 4, 0f);
+
+        var playerSprite = GetOrCreatePixelSprite("player_pixel", PlayerPattern, PlayerPalette);
+
+        var player = new GameObject("Player");
+        player.tag = "Player";
+        var sr = player.AddComponent<SpriteRenderer>();
+        sr.sprite = playerSprite;
+        sr.sortingOrder = 5;
+
+        var rb = player.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        var col = player.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.8f, 0.8f);
+
+        player.AddComponent<PlayerController>();
+        player.AddComponent<PlayerInventory>();
+        player.AddComponent<PlayerWallet>();
+        player.transform.position = spawnGO.transform.position;
+
+        var follow = cam.gameObject.AddComponent<CameraFollow>();
+        follow.SetTarget(player.transform);
+
+        CreateBuilding("Maison & Bureau de Gemmologie", new Vector3(-16, 8, 0f),
+            new Color(0.65f, 0.22f, 0.18f), new Color(0.85f, 0.78f, 0.62f), "Home", true);
+        CreateBuilding("Laboratoire de Gemmologie", new Vector3(-8, 8, 0f),
+            new Color(0.30f, 0.45f, 0.55f), new Color(0.75f, 0.78f, 0.80f), "", false);
+        CreateBuilding("Atelier Lapidaire", new Vector3(0, 8, 0f),
+            new Color(0.45f, 0.40f, 0.35f), new Color(0.65f, 0.60f, 0.55f), "", false);
+        CreateBuilding("Musee", new Vector3(8, 8, 0f),
+            new Color(0.75f, 0.72f, 0.60f), new Color(0.92f, 0.90f, 0.85f), "", false);
+        CreateBuilding("Quartier des Diamantaires", new Vector3(16, 8, 0f),
+            new Color(0.25f, 0.30f, 0.55f), new Color(0.70f, 0.75f, 0.90f), "", false);
+        CreateBuilding("Marche aux Pierres", new Vector3(-12, -6, 0f),
+            new Color(0.65f, 0.42f, 0.18f), new Color(0.88f, 0.70f, 0.45f), "", false);
+        CreateBuilding("Le Manoir", new Vector3(12, -6, 0f),
+            new Color(0.35f, 0.18f, 0.42f), new Color(0.70f, 0.60f, 0.75f), "", false);
+        CreateTunnelEntrance(new Vector3(0, -11, 0f));
+
+        CreateUI(false);
+
+        Directory.CreateDirectory("Assets/Scenes");
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/Town.unity");
+        AddSceneToBuildSettings("Assets/Scenes/Town.unity");
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("Town scene created at Assets/Scenes/Town.unity");
+    }
+
+    private static void AddSceneToBuildSettings(string path)
+    {
+        var scenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
+        scenes.RemoveAll(s => s.path == path);
+        scenes.Add(new EditorBuildSettingsScene(path, true));
+        EditorBuildSettings.scenes = scenes.ToArray();
+    }
+
+    private static void CreateExitDoor(Vector3 position)
+    {
+        var sprite = GetOrCreatePixelSprite("exitdoor_pixel", DoorPattern, DoorPalette);
+
+        var door = new GameObject("Sortie");
+        var sr = door.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        door.transform.position = position;
+
+        var col = door.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1f, 1f);
+
+        var trigger = door.AddComponent<DoorTrigger>();
+        var so = new SerializedObject(trigger);
+        so.FindProperty("sceneName").stringValue = "Town";
+        so.FindProperty("implemented").boolValue = true;
+        so.ApplyModifiedProperties();
+    }
+
+    private static void CreateBuilding(string label, Vector3 position, Color roof, Color wall, string targetScene, bool implemented)
+    {
+        var key = label.Replace(" ", "").Replace("&", "").ToLowerInvariant();
+        var sprite = GetBuildingSprite(key, roof, wall);
+
+        var go = new GameObject(label);
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+        go.transform.localScale = new Vector3(2f, 2f, 1f);
+
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1f, 0.6f);
+        col.offset = new Vector2(0f, -0.5f);
+
+        var door = go.AddComponent<DoorTrigger>();
+        var so = new SerializedObject(door);
+        so.FindProperty("sceneName").stringValue = targetScene;
+        so.FindProperty("implemented").boolValue = implemented;
+        so.FindProperty("lockedMessage").stringValue = $"{label} : ce lieu n'est pas encore accessible.";
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel(label, position + new Vector3(0, 1.3f, 0));
+    }
+
+    private static void CreateTunnelEntrance(Vector3 position)
+    {
+        var sprite = GetOrCreatePixelSprite("tunnel_pixel", TunnelPattern, TunnelPalette);
+
+        var go = new GameObject("Le Tunnel");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+        go.transform.localScale = new Vector3(2f, 2f, 1f);
+
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1f, 0.6f);
+        col.offset = new Vector2(0f, -0.3f);
+
+        var door = go.AddComponent<DoorTrigger>();
+        var so = new SerializedObject(door);
+        so.FindProperty("sceneName").stringValue = "";
+        so.FindProperty("implemented").boolValue = false;
+        so.FindProperty("lockedMessage").stringValue = "Le Tunnel : un marchand mystérieux rôderait ici... pas encore accessible.";
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel("Le Tunnel", position + new Vector3(0, 1.3f, 0));
+    }
+
+    private static void CreateBuildingLabel(string text, Vector3 position)
+    {
+        var go = new GameObject("Label", typeof(TextMesh));
+        go.transform.position = position;
+        var tm = go.GetComponent<TextMesh>();
+        tm.text = text;
+        tm.characterSize = 0.1f;
+        tm.fontSize = 48;
+        tm.anchor = TextAnchor.LowerCenter;
+        tm.alignment = TextAlignment.Center;
+        tm.color = Color.white;
+        go.GetComponent<MeshRenderer>().sortingOrder = 6;
     }
 
     private static void CreateExaminationStation(string toolName, ExaminationTool.MeasurementType measurementType, Vector3 position)
@@ -183,7 +388,7 @@ public static class SceneBootstrap
         "Quartz", "Corindon (Rubis)", "Spinelle", "Grenat", "Verre"
     };
 
-    private static void CreateUI()
+    private static void CreateUI(bool includeExaminationUI)
     {
         var canvasGO = new GameObject("Canvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
         var canvas = canvasGO.GetComponent<Canvas>();
@@ -194,20 +399,30 @@ public static class SceneBootstrap
 
         new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
 
-        var player = GameObject.FindWithTag("Player");
-        var wallet = player.GetComponent<PlayerWallet>();
-        var inventory = player.GetComponent<PlayerInventory>();
-
         var moneyGO = CreateUIText("MoneyText", canvasGO.transform, "Argent : 0€",
             new Vector2(20, -20), new Vector2(300, 30), 24, TextAnchor.UpperLeft, Color.white);
-        var hud = moneyGO.AddComponent<HUDController>();
-        var hudSo = new SerializedObject(hud);
+        moneyGO.AddComponent<HUDController>();
+        var hudSo = new SerializedObject(moneyGO.GetComponent<HUDController>());
         hudSo.FindProperty("moneyText").objectReferenceValue = moneyGO.GetComponent<Text>();
-        hudSo.FindProperty("wallet").objectReferenceValue = wallet;
         hudSo.ApplyModifiedProperties();
 
         CreateUIText("InventoryHint", canvasGO.transform, "Tab : Inventaire",
             new Vector2(20, -50), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
+
+        var feedbackGO = CreateUIText("ToolFeedback", canvasGO.transform, "",
+            new Vector2(0, 20), new Vector2(700, 40), 18, TextAnchor.LowerCenter, new Color(0.95f, 0.95f, 0.8f));
+        var feedbackRect = feedbackGO.GetComponent<RectTransform>();
+        feedbackRect.anchorMin = new Vector2(0.5f, 0f);
+        feedbackRect.anchorMax = new Vector2(0.5f, 0f);
+        feedbackRect.pivot = new Vector2(0.5f, 0f);
+        var toolFeedback = feedbackGO.AddComponent<ToolFeedbackUI>();
+        var feedbackSo = new SerializedObject(toolFeedback);
+        feedbackSo.FindProperty("feedbackText").objectReferenceValue = feedbackGO.GetComponent<Text>();
+        feedbackSo.ApplyModifiedProperties();
+
+        CreateInventoryUI(canvasGO.transform);
+
+        if (!includeExaminationUI) return;
 
         var panelGO = new GameObject("ReportPanel", typeof(RectTransform), typeof(Image));
         panelGO.transform.SetParent(canvasGO.transform, false);
@@ -251,22 +466,10 @@ public static class SceneBootstrap
         ctrlSo.FindProperty("resultText").objectReferenceValue = resultGO.GetComponent<Text>();
         ctrlSo.ApplyModifiedProperties();
 
-        var feedbackGO = CreateUIText("ToolFeedback", canvasGO.transform, "",
-            new Vector2(0, 20), new Vector2(700, 40), 18, TextAnchor.LowerCenter, new Color(0.95f, 0.95f, 0.8f));
-        var feedbackRect = feedbackGO.GetComponent<RectTransform>();
-        feedbackRect.anchorMin = new Vector2(0.5f, 0f);
-        feedbackRect.anchorMax = new Vector2(0.5f, 0f);
-        feedbackRect.pivot = new Vector2(0.5f, 0f);
-        var toolFeedback = feedbackGO.AddComponent<ToolFeedbackUI>();
-        var feedbackSo = new SerializedObject(toolFeedback);
-        feedbackSo.FindProperty("feedbackText").objectReferenceValue = feedbackGO.GetComponent<Text>();
-        feedbackSo.ApplyModifiedProperties();
-
         CreateMeasurementMinigameUI(canvasGO.transform);
-        CreateInventoryUI(canvasGO.transform, inventory);
     }
 
-    private static void CreateInventoryUI(Transform canvasTransform, PlayerInventory inventory)
+    private static void CreateInventoryUI(Transform canvasTransform)
     {
         var panelGO = new GameObject("InventoryPanel", typeof(RectTransform), typeof(Image));
         panelGO.transform.SetParent(canvasTransform, false);
@@ -293,7 +496,6 @@ public static class SceneBootstrap
 
         var inventoryUI = canvasTransform.gameObject.AddComponent<InventoryUI>();
         var so = new SerializedObject(inventoryUI);
-        so.FindProperty("inventory").objectReferenceValue = inventory;
         so.FindProperty("panel").objectReferenceValue = panelGO;
         so.FindProperty("slotsContainer").objectReferenceValue = slotsRect;
         so.ApplyModifiedProperties();
@@ -597,6 +799,38 @@ public static class SceneBootstrap
         }
     }
 
+    private static Color GrassPixel(int x, int y)
+    {
+        var grassA = new Color(0.29f, 0.47f, 0.27f);
+        var grassB = new Color(0.26f, 0.43f, 0.24f);
+        var speck = new Color(0.34f, 0.52f, 0.30f);
+
+        var noise = (x * 7 + y * 13) % 17;
+        if (noise == 0) return speck;
+        return (x / 4 + y / 4) % 2 == 0 ? grassA : grassB;
+    }
+
+    private static Color HedgePixel(int x, int y)
+    {
+        var leafA = new Color(0.16f, 0.32f, 0.16f);
+        var leafB = new Color(0.13f, 0.27f, 0.13f);
+        var noise = (x * 5 + y * 11) % 13;
+        return noise < 3 ? leafB : leafA;
+    }
+
+    private static Sprite GetBuildingSprite(string key, Color roof, Color wall)
+    {
+        var palette = new Dictionary<char, Color>
+        {
+            { 'R', roof },
+            { 'W', wall },
+            { 'N', new Color(0.25f, 0.35f, 0.55f) },
+            { 'O', new Color(0.36f, 0.24f, 0.14f) },
+            { 'F', new Color(0.20f, 0.20f, 0.22f) },
+        };
+        return GetOrCreatePixelSprite($"building_{key}_pixel", BuildingPattern, palette);
+    }
+
     // ----- Sprite patterns (16x16 logical pixels, upscaled 2x) -----
 
     private static readonly string[] PlayerPattern =
@@ -819,5 +1053,77 @@ public static class SceneBootstrap
         { 'U', new Color(0.60f, 0.31f, 0.88f) },
         { 'u', new Color(0.79f, 0.56f, 1.00f) },
         { 'B', new Color(0.23f, 0.23f, 0.23f) },
+    };
+
+    private static readonly string[] BuildingPattern =
+    {
+        Row(16, '.'),
+        Row(7, '.', 2, 'R', 7, '.'),
+        Row(6, '.', 4, 'R', 6, '.'),
+        Row(5, '.', 6, 'R', 5, '.'),
+        Row(4, '.', 8, 'R', 4, '.'),
+        Row(3, '.', 10, 'R', 3, '.'),
+        Row(2, '.', 12, 'W', 2, '.'),
+        Row(2, '.', 12, 'W', 2, '.'),
+        Row(2, '.', 5, 'W', 2, 'N', 5, 'W', 2, '.'),
+        Row(2, '.', 5, 'W', 2, 'N', 5, 'W', 2, '.'),
+        Row(2, '.', 12, 'W', 2, '.'),
+        Row(2, '.', 4, 'W', 4, 'O', 4, 'W', 2, '.'),
+        Row(2, '.', 4, 'W', 4, 'O', 4, 'W', 2, '.'),
+        Row(2, '.', 4, 'W', 4, 'O', 4, 'W', 2, '.'),
+        Row(1, '.', 14, 'F', 1, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly string[] TunnelPattern =
+    {
+        Row(16, '.'),
+        Row(5, '.', 6, 'C', 5, '.'),
+        Row(4, '.', 8, 'C', 4, '.'),
+        Row(3, '.', 10, 'C', 3, '.'),
+        Row(2, '.', 12, 'C', 2, '.'),
+        Row(2, '.', 3, 'C', 6, 'K', 3, 'C', 2, '.'),
+        Row(2, '.', 3, 'C', 6, 'K', 3, 'C', 2, '.'),
+        Row(2, '.', 3, 'C', 6, 'K', 3, 'C', 2, '.'),
+        Row(2, '.', 3, 'C', 6, 'K', 3, 'C', 2, '.'),
+        Row(2, '.', 3, 'C', 6, 'K', 3, 'C', 2, '.'),
+        Row(2, '.', 3, 'C', 6, 'K', 3, 'C', 2, '.'),
+        Row(2, '.', 12, 'C', 2, '.'),
+        Row(1, '.', 14, 'C', 1, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> TunnelPalette = new Dictionary<char, Color>
+    {
+        { 'C', new Color(0.30f, 0.26f, 0.22f) },
+        { 'K', new Color(0.03f, 0.03f, 0.04f) },
+    };
+
+    private static readonly string[] DoorPattern =
+    {
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(4, '.', 8, 'O', 4, '.'),
+        Row(3, '.', 10, 'O', 3, '.'),
+        Row(3, '.', 10, 'O', 3, '.'),
+        Row(3, '.', 10, 'O', 3, '.'),
+        Row(3, '.', 10, 'O', 3, '.'),
+        Row(3, '.', 10, 'O', 3, '.'),
+        Row(3, '.', 10, 'O', 3, '.'),
+        Row(3, '.', 10, 'O', 3, '.'),
+        Row(3, '.', 10, 'O', 3, '.'),
+        Row(3, '.', 4, 'O', 2, 'K', 4, 'O', 3, '.'),
+        Row(3, '.', 10, 'O', 3, '.'),
+        Row(3, '.', 10, 'O', 3, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> DoorPalette = new Dictionary<char, Color>
+    {
+        { 'O', new Color(0.42f, 0.28f, 0.16f) },
+        { 'K', new Color(0.85f, 0.72f, 0.25f) },
     };
 }

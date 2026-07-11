@@ -3,19 +3,20 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
-    [SerializeField] private PlayerInventory inventory;
     [SerializeField] private GameObject panel;
     [SerializeField] private RectTransform slotsContainer;
 
-    private void OnEnable()
+    private void Start()
     {
-        inventory.OnInventoryChanged += Refresh;
+        if (PlayerInventory.Instance == null) return;
+        PlayerInventory.Instance.OnInventoryChanged += Refresh;
         Refresh();
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        inventory.OnInventoryChanged -= Refresh;
+        if (PlayerInventory.Instance != null)
+            PlayerInventory.Instance.OnInventoryChanged -= Refresh;
     }
 
     private void Update()
@@ -26,6 +27,9 @@ public class InventoryUI : MonoBehaviour
 
     private void Refresh()
     {
+        var inventory = PlayerInventory.Instance;
+        if (inventory == null) return;
+
         for (var i = slotsContainer.childCount - 1; i >= 0; i--)
             Destroy(slotsContainer.GetChild(i).gameObject);
 
@@ -36,7 +40,7 @@ public class InventoryUI : MonoBehaviour
         }
 
         for (var i = 0; i < inventory.Gems.Count; i++)
-            CreateSlotButton(inventory.Gems[i], i);
+            CreateSlotButton(inventory, inventory.Gems[i], i);
     }
 
     private void CreateLabel(string text, int index)
@@ -58,7 +62,7 @@ public class InventoryUI : MonoBehaviour
         label.color = new Color(0.7f, 0.7f, 0.7f);
     }
 
-    private void CreateSlotButton(GemInstance gem, int index)
+    private void CreateSlotButton(PlayerInventory inventory, GemInstance gem, int index)
     {
         var go = new GameObject($"Slot_{index}", typeof(RectTransform), typeof(Image), typeof(Button));
         go.transform.SetParent(slotsContainer, false);
