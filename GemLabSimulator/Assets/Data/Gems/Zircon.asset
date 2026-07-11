@@ -33,8 +33,17 @@ MonoBehaviour:
   fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
   opticalCharacter: "Anisotrope, uniaxial \u2014 bir\xE9fringence tr\xE8s \xE9lev\xE9e
     provoquant un d\xE9doublement visible des ar\xEAtes des facettes arri\xE8re."
-  absorptionSpectrum: "Nombreuses raies fines d'absorption (li\xE9es \xE0 des traces
-    d'uranium), spectre tr\xE8s caract\xE9ristique du zircon."
+  absorptionSpectrum: "Nombreuses raies fines d'absorption, li\xE9es \xE0 des traces
+    d'\xE9l\xE9ments radioactifs."
+  spectrumLines:
+  - wavelengthNm: 653
+    widthNm: 6
+  - wavelengthNm: 620
+    widthNm: 8
+  - wavelengthNm: 590
+    widthNm: 8
+  - wavelengthNm: 560
+    widthNm: 8
   inclusions: "G\xE9n\xE9ralement propre ; d\xE9doublement net des facettes du pavillon
     visible \xE0 la loupe."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
@@ -44,8 +53,8 @@ MonoBehaviour:
   - name: Cambodge (Ratanakiri)
     rarityWeight: 60
     valueMultiplier: 1
-    inclusionOverride: "Source classique du zircon bleu chauff\xE9, g\xE9n\xE9ralement
-      propre \xE0 l'\u0153il nu."
+    inclusionOverride: "Gisement alluvial classique pour cette teinte obtenue par
+      traitement thermique, g\xE9n\xE9ralement propre \xE0 l'\u0153il nu."
   - name: Sri Lanka
     rarityWeight: 40
     valueMultiplier: 1.1

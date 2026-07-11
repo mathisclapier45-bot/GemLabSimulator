@@ -32,9 +32,15 @@ MonoBehaviour:
   fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
   fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
   opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
-  absorptionSpectrum: "Bandes d'absorption du mangan\xE8se, spectre diff\xE9rent
-    de l'almandin."
-  inclusions: Inclusions similaires aux autres grenats, fissures internes possibles.
+  absorptionSpectrum: "Bandes d'absorption du mangan\xE8se."
+  spectrumLines:
+  - wavelengthNm: 412
+    widthNm: 10
+  - wavelengthNm: 460
+    widthNm: 15
+  - wavelengthNm: 485
+    widthNm: 15
+  inclusions: "Fissures internes possibles, g\xE9n\xE9ralement peu abondantes."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "Aucune r\xE9action rouge notable."
   baseValue: 55
@@ -42,8 +48,8 @@ MonoBehaviour:
   - name: Namibie
     rarityWeight: 40
     valueMultiplier: 1.3
-    inclusionOverride: "Teinte orang\xE9e vive typique du \"grenat mandarine\" namibien,
-      tr\xE8s recherch\xE9e."
+    inclusionOverride: "Teinte orang\xE9e vive et intense, tr\xE8s recherch\xE9e
+      sur le march\xE9."
   - name: Nigeria
     rarityWeight: 35
     valueMultiplier: 1

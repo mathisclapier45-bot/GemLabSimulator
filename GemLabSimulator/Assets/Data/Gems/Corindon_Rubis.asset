@@ -30,12 +30,19 @@ MonoBehaviour:
   transparency: Transparent
   pleochroic: 1
   pleochroicDescription: "Rouge / Orang\xE9-rouge selon l'axe d'observation."
-  fluorescenceLongWave: Fluorescence rouge vif sous UV longue onde (indicateur classique
-    du rubis).
+  fluorescenceLongWave: Fluorescence rouge vif sous UV longue onde.
   fluorescenceShortWave: Fluorescence rouge plus faible sous UV courte onde.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
-  absorptionSpectrum: Raies d'absorption du chrome visibles dans le rouge, spectre
-    typique du rubis.
+  absorptionSpectrum: Raies d'absorption du chrome visibles dans le rouge.
+  spectrumLines:
+  - wavelengthNm: 694
+    widthNm: 6
+  - wavelengthNm: 668
+    widthNm: 8
+  - wavelengthNm: 620
+    widthNm: 12
+  - wavelengthNm: 560
+    widthNm: 40
   inclusions: Soie de rutile (inclusions aciculaires), parfois halos autour de cristaux.
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."
   chelseaFilterReaction: "R\xE9action rouge vif sous filtre Chelsea (due au chrome)."

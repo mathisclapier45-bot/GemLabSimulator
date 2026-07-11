@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Grenat_Hessonite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Grenat Hessonite
+  description: "Un grenat brun-orang\xE9 (\"cinnamon stone\"), \xE0 ne pas confondre
+    avec la spessartite."
+  icon: {fileID: 21300000, guid: b781a3d1d568b4a579567582b4a253b4, type: 3}
+  refractiveIndex: 1.74
+  density: 3.68
+  hardness: 6.75
+  lengthMm: 7
+  widthMm: 5.5
+  depthMm: 3.7
+  weightCarats: 1.4
+  luster: "Vitreux \xE0 r\xE9sineux"
+  color: "Brun-orang\xE9 (cannelle)"
+  shape: Coussin
+  cutStyle: Mixte
+  transparency: Transparent
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
+  fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
+  opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  absorptionSpectrum: "Bandes d'absorption du fer et du mangan\xE8se."
+  spectrumLines:
+  - wavelengthNm: 420
+    widthNm: 40
+  inclusions: "Aspect interne \"m\xE9lasse\" (treacle) caract\xE9ristique, tourbillons
+    de croissance visibles au microscope."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  baseValue: 40
+  origins:
+  - name: Sri Lanka
+    rarityWeight: 50
+    valueMultiplier: 1.2
+    inclusionOverride: Gisement historique, extraction alluviale traditionnelle.
+  - name: Canada
+    rarityWeight: 25
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Madagascar
+    rarityWeight: 25
+    valueMultiplier: 0.9
+    inclusionOverride: 

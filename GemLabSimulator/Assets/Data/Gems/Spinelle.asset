@@ -29,22 +29,28 @@ MonoBehaviour:
   transparency: Transparent
   pleochroic: 0
   pleochroicDescription: 
-  fluorescenceLongWave: Fluorescence rouge, souvent plus terne que le rubis, sous
-    UV longue onde.
+  fluorescenceLongWave: "Fluorescence rouge, d'intensit\xE9 mod\xE9r\xE9e, sous UV
+    longue onde."
   fluorescenceShortWave: Fluorescence rouge faible sous UV courte onde.
   opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
-  absorptionSpectrum: "Raies de fer/chrome faibles, spectre diff\xE9rent du rubis."
+  absorptionSpectrum: Raies de fer/chrome faibles.
+  spectrumLines:
+  - wavelengthNm: 685
+    widthNm: 6
+  - wavelengthNm: 675
+    widthNm: 6
+  - wavelengthNm: 550
+    widthNm: 35
   inclusions: "Cristaux octa\xE9driques, inclusions en \"empreintes digitales\" possibles."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
-  chelseaFilterReaction: "R\xE9action rouge \xE0 ros\xE2tre, souvent plus terne que
-    le rubis."
+  chelseaFilterReaction: "R\xE9action rouge \xE0 ros\xE2tre, d'intensit\xE9 mod\xE9r\xE9e."
   baseValue: 45
   origins:
   - name: Birmanie
     rarityWeight: 20
     valueMultiplier: 1.8
-    inclusionOverride: "Spinelle rouge vif associ\xE9 aux gisements de Mogok, historiquement
-      appel\xE9 \"Balas Ruby\"."
+    inclusionOverride: "Cristaux octa\xE9driques nets, couleur rouge vif associ\xE9e
+      aux gisements de la r\xE9gion de Mogok."
   - name: Tanzanie
     rarityWeight: 40
     valueMultiplier: 1

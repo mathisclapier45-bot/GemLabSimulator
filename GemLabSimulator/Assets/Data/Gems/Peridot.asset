@@ -32,10 +32,16 @@ MonoBehaviour:
   fluorescenceLongWave: Aucune fluorescence sous UV longue onde.
   fluorescenceShortWave: Aucune fluorescence sous UV courte onde.
   opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
-  absorptionSpectrum: "Triplet d'absorption du fer dans le bleu, spectre caract\xE9ristique
-    du p\xE9ridot."
-  inclusions: "Inclusions en \"n\xE9nuphar\" (lily pad) autour de cristaux, caract\xE9ristiques
-    du p\xE9ridot."
+  absorptionSpectrum: Triplet d'absorption du fer dans le bleu.
+  spectrumLines:
+  - wavelengthNm: 453
+    widthNm: 10
+  - wavelengthNm: 473
+    widthNm: 10
+  - wavelengthNm: 493
+    widthNm: 10
+  inclusions: "Petites fractures disco\xEFdes en forme de disque autour de cristaux
+    inclus."
   interferenceFigure: "Figure d'interf\xE9rence biaxiale."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
   baseValue: 35

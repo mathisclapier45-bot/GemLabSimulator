@@ -55,6 +55,9 @@ public class ExaminationTool : MonoBehaviour
 
         switch (measurementType)
         {
+            case MeasurementType.RefractiveIndex when gem.refractiveIndex > 1.81f:
+                RevealOverTheLimit(gemInstance);
+                break;
             case MeasurementType.Pleochroism:
                 RevealQualitative(gemInstance, "Pléochroïsme",
                     gem.pleochroic ? gem.pleochroicDescription : "Aucun pléochroïsme visible.");
@@ -70,6 +73,7 @@ public class ExaminationTool : MonoBehaviour
                 break;
             case MeasurementType.AbsorptionSpectrum:
                 RevealQualitative(gemInstance, "Spectre d'absorption", gem.absorptionSpectrum);
+                SpectrumUI.Instance?.Show(gem);
                 break;
             case MeasurementType.Inclusions:
                 RevealInclusions(gemInstance);
@@ -120,6 +124,12 @@ public class ExaminationTool : MonoBehaviour
         gemInstance.RecordObservation(measurementType.ToString());
         ToolFeedbackUI.Instance.ShowMessage(
             $"{toolName} — Dimensions : {gemInstance.LengthMm:F1} x {gemInstance.WidthMm:F1} x {gemInstance.DepthMm:F1} mm");
+    }
+
+    private void RevealOverTheLimit(GemInstance gemInstance)
+    {
+        gemInstance.RecordObservation("RefractiveIndexOTL");
+        ToolFeedbackUI.Instance.ShowMessage($"{toolName} — Indice de réfraction : OTL (hors limite du prisme, IR > 1.81)");
     }
 
     private void RevealInclusions(GemInstance gemInstance)

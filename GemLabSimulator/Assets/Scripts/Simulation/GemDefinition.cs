@@ -31,6 +31,7 @@ public class GemDefinition : ScriptableObject
     [TextArea] public string fluorescenceShortWave;
     [TextArea] public string opticalCharacter;
     [TextArea] public string absorptionSpectrum;
+    public List<SpectrumLine> spectrumLines = new List<SpectrumLine>();
     [TextArea] public string inclusions;
     [TextArea] public string interferenceFigure;
     [TextArea] public string chelseaFilterReaction;

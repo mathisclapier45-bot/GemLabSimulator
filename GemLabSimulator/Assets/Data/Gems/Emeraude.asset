@@ -29,12 +29,17 @@ MonoBehaviour:
   transparency: Transparent
   pleochroic: 1
   pleochroicDescription: "Bleu-vert / Jaune-vert selon l'axe d'observation (marqu\xE9)."
-  fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde (les \xE9meraudes
-    naturelles contiennent du fer)."
+  fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
   fluorescenceShortWave: Inerte sous UV courte onde.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
-  absorptionSpectrum: "Doublet d'absorption du chrome dans le rouge, spectre caract\xE9ristique
-    de l'\xE9meraude."
+  absorptionSpectrum: Doublet d'absorption du chrome dans le rouge.
+  spectrumLines:
+  - wavelengthNm: 683
+    widthNm: 6
+  - wavelengthNm: 662
+    widthNm: 8
+  - wavelengthNm: 637
+    widthNm: 8
   inclusions: "Inclusions en \"jardin\" (fissures et inclusions multiphases), tr\xE8s
     caract\xE9ristiques."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
@@ -46,7 +51,7 @@ MonoBehaviour:
     rarityWeight: 25
     valueMultiplier: 2.5
     inclusionOverride: "Inclusions triphas\xE9es (liquide, gaz, cristal de halite)
-      en \"jardin\" \u2014 signature classique des \xE9meraudes colombiennes."
+      en \"jardin\"."
   - name: Zambie
     rarityWeight: 35
     valueMultiplier: 1.2

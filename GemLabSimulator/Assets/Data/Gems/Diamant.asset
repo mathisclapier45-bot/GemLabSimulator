@@ -36,8 +36,11 @@ MonoBehaviour:
   opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
   absorptionSpectrum: "Spectre variable selon le type ; raies dans le violet possibles
     (s\xE9rie Cape)."
-  inclusions: "\xC9clat adamantin caract\xE9ristique ; inclusions cristallines sombres
-    possibles."
+  spectrumLines:
+  - wavelengthNm: 415
+    widthNm: 10
+  inclusions: "Inclusions cristallines sombres possibles, g\xE9n\xE9ralement peu
+    abondantes."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
   baseValue: 500

@@ -34,12 +34,17 @@ MonoBehaviour:
     la fluorescence)."
   fluorescenceShortWave: Inerte sous UV courte onde.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
-  absorptionSpectrum: "Triplet d'absorption du fer vers 450 nm, caract\xE9ristique
-    du saphir bleu."
+  absorptionSpectrum: Triplet d'absorption du fer vers 450 nm.
+  spectrumLines:
+  - wavelengthNm: 450
+    widthNm: 6
+  - wavelengthNm: 460
+    widthNm: 6
+  - wavelengthNm: 470
+    widthNm: 6
   inclusions: Soie de rutile, zonation de couleur en bandes hexagonales.
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."
-  chelseaFilterReaction: "Aucune r\xE9action rouge (contrairement au spinelle bleu
-    au cobalt)."
+  chelseaFilterReaction: "Aucune r\xE9action rouge."
   baseValue: 140
   origins:
   - name: Cachemire (Kashmir)

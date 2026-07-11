@@ -34,7 +34,8 @@ MonoBehaviour:
   fluorescenceShortWave: Aucune fluorescence notable sous UV courte onde.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
-  inclusions: "Zonation de couleur en bandes (\"tiger stripes\"), typique de l'am\xE9thyste."
+  spectrumLines: []
+  inclusions: "Zonation de couleur en bandes parall\xE8les."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale visible en lumi\xE8re convergente."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
   baseValue: 20

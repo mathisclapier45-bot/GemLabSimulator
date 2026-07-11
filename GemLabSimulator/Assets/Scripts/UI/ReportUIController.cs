@@ -28,6 +28,8 @@ public class ReportUIController : MonoBehaviour
         var measured = new List<string>();
 
         AddIfMeasured(measured, gemInstance, ExaminationTool.MeasurementType.RefractiveIndex, "Indice de réfraction", "F3");
+        if (gemInstance.HasObserved("RefractiveIndexOTL"))
+            measured.Add("Indice de réfraction : OTL (hors limite du prisme, IR > 1.81)");
         AddIfMeasured(measured, gemInstance, ExaminationTool.MeasurementType.Density, "Densité", "F2");
 
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.VisualExamination.ToString()))
