@@ -64,6 +64,14 @@ public class ReportUIController : MonoBehaviour
             measured.Add($"Conoscope : {gem.interferenceFigure}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ChelseaFilter.ToString()))
             measured.Add($"Filtre Chelsea : {gem.chelseaFilterReaction}");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Treatment.ToString()))
+            measured.Add($"Traitement (FTIR) : {gemInstance.TreatmentGrade}");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Authenticity.ToString()))
+            measured.Add($"Authenticité (Raman) : {gemInstance.AuthenticityGrade}");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ConfirmedOrigin.ToString()))
+            measured.Add($"Origine confirmée (UV-Vis-NIR) : {gemInstance.Origin.name}");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.GrowthStructure.ToString()))
+            measured.Add($"Structure de croissance (MEB) : {gemInstance.GrowthStructureDescription}");
 
         var identityLine = gemInstance.IsIdentified
             ? $"Gemme : {gem.displayName} (identifiée)"

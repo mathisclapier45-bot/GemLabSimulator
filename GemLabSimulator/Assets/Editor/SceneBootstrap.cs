@@ -236,7 +236,7 @@ public static class SceneBootstrap
         CreateBuilding("Maison & Bureau de Gemmologie", new Vector3(-16, 8, 0f),
             new Color(0.65f, 0.22f, 0.18f), new Color(0.85f, 0.78f, 0.62f), "Home", true);
         CreateBuilding("Laboratoire de Gemmologie", new Vector3(-8, 8, 0f),
-            new Color(0.30f, 0.45f, 0.55f), new Color(0.75f, 0.78f, 0.80f), "", false);
+            new Color(0.30f, 0.45f, 0.55f), new Color(0.75f, 0.78f, 0.80f), "Laboratoire", true);
         CreateBuilding("Atelier Lapidaire", new Vector3(0, 8, 0f),
             new Color(0.45f, 0.40f, 0.35f), new Color(0.65f, 0.60f, 0.55f), "", false);
         CreateBuilding("Musee", new Vector3(8, 8, 0f),
@@ -257,6 +257,105 @@ public static class SceneBootstrap
 
         AssetDatabase.SaveAssets();
         Debug.Log("Town scene created at Assets/Scenes/Town.unity");
+    }
+
+    private const int LabMinX = -10;
+    private const int LabMaxX = 10;
+    private const int LabMinY = -6;
+    private const int LabMaxY = 6;
+
+    [MenuItem("GemLab/Setup Laboratory Scene")]
+    public static void CreateLaboratoryScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+
+        var light = GameObject.Find("Directional Light");
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
+
+        var cam = Camera.main;
+        cam.orthographic = true;
+        cam.orthographicSize = 5f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.09f, 0.10f, 0.14f);
+        cam.transform.position = new Vector3(0f, 0f, -10f);
+
+        var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
+        pixelPerfect.assetsPPU = PixelsPerUnit;
+        pixelPerfect.refResolutionX = 384;
+        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.upscaleRT = true;
+        pixelPerfect.pixelSnapping = true;
+        pixelPerfect.cropFrameX = true;
+        pixelPerfect.cropFrameY = true;
+
+        var gridGO = new GameObject("Grid", typeof(Grid));
+
+        var groundGO = new GameObject("Ground", typeof(Tilemap), typeof(TilemapRenderer));
+        groundGO.transform.SetParent(gridGO.transform);
+        var groundTilemap = groundGO.GetComponent<Tilemap>();
+
+        var wallsGO = new GameObject("Walls", typeof(Tilemap), typeof(TilemapRenderer), typeof(TilemapCollider2D));
+        wallsGO.transform.SetParent(gridGO.transform);
+        var wallsTilemap = wallsGO.GetComponent<Tilemap>();
+
+        var floorTile = GetOrCreateTile("labfloor_pixel", LabFloorPixel);
+        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
+
+        for (var x = LabMinX; x <= LabMaxX; x++)
+        {
+            for (var y = LabMinY; y <= LabMaxY; y++)
+            {
+                var isPerimeter = x == LabMinX || x == LabMaxX || y == LabMinY || y == LabMaxY;
+                var cell = new Vector3Int(x, y, 0);
+                if (isPerimeter)
+                    wallsTilemap.SetTile(cell, wallTile);
+                else
+                    groundTilemap.SetTile(cell, floorTile);
+            }
+        }
+
+        var spawnGO = new GameObject("SpawnPoint");
+        spawnGO.transform.position = new Vector3(0, LabMinY + 2, 0f);
+
+        var playerSprite = GetOrCreatePixelSprite("player_pixel", PlayerPattern, PlayerPalette);
+        var player = new GameObject("Player");
+        player.tag = "Player";
+        var sr = player.AddComponent<SpriteRenderer>();
+        sr.sprite = playerSprite;
+        sr.sortingOrder = 5;
+
+        var rb = player.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        var col = player.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.8f, 0.8f);
+
+        player.AddComponent<PlayerController>();
+        player.AddComponent<PlayerInventory>();
+        player.AddComponent<PlayerWallet>();
+        player.AddComponent<PlayerChest>();
+        player.transform.position = spawnGO.transform.position;
+
+        var follow = cam.gameObject.AddComponent<CameraFollow>();
+        follow.SetTarget(player.transform);
+
+        CreateExitDoor(new Vector3(0, LabMinY + 1, 0f));
+
+        CreateExaminationStation("FTIR", ExaminationTool.MeasurementType.Treatment, new Vector3(-5, 2, 0f));
+        CreateExaminationStation("Raman", ExaminationTool.MeasurementType.Authenticity, new Vector3(0, 2, 0f));
+        CreateExaminationStation("UVVisNIR", ExaminationTool.MeasurementType.ConfirmedOrigin, new Vector3(5, 2, 0f));
+        CreateExaminationStation("MEB", ExaminationTool.MeasurementType.GrowthStructure, new Vector3(0, -2, 0f));
+
+        CreateUI(false);
+
+        Directory.CreateDirectory("Assets/Scenes");
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/Laboratoire.unity");
+        AddSceneToBuildSettings("Assets/Scenes/Laboratoire.unity");
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("Laboratory scene created at Assets/Scenes/Laboratoire.unity");
     }
 
     private static void AddSceneToBuildSettings(string path)
@@ -1559,6 +1658,17 @@ public static class SceneBootstrap
         return grain ? plankB : baseColor;
     }
 
+    private static Color LabFloorPixel(int x, int y)
+    {
+        var tileA = new Color(0.24f, 0.26f, 0.30f);
+        var tileB = new Color(0.21f, 0.23f, 0.27f);
+        var line = new Color(0.14f, 0.15f, 0.18f);
+
+        var isLine = x % 8 == 0 || y % 8 == 0;
+        if (isLine) return line;
+        return (x / 8 + y / 8) % 2 == 0 ? tileA : tileB;
+    }
+
     private static Sprite GetToolSprite(string toolName)
     {
         switch (toolName)
@@ -1576,6 +1686,10 @@ public static class SceneBootstrap
             case "FiltreChelsea": return GetOrCreatePixelSprite("chelsea_pixel", LoupePattern, ChelseaPalette);
             case "Micrometre": return GetOrCreatePixelSprite("micrometre_pixel", MicrometrePattern, MicrometrePalette);
             case "BalanceCarat": return GetOrCreatePixelSprite("balancecarat_pixel", BalanceCaratPattern, BalanceCaratPalette);
+            case "FTIR": return GetOrCreatePixelSprite("ftir_pixel", RefractometrePattern, FTIRPalette);
+            case "Raman": return GetOrCreatePixelSprite("raman_pixel", DichroscopePattern, RamanPalette);
+            case "UVVisNIR": return GetOrCreatePixelSprite("uvvisnir_pixel", BalanceCaratPattern, UVVisNIRPalette);
+            case "MEB": return GetOrCreatePixelSprite("meb_pixel", MicroscopePattern, MEBPalette);
             default: return GetOrCreatePixelSprite("loupe_pixel", LoupePattern, LoupePalette);
         }
     }
@@ -2093,5 +2207,32 @@ public static class SceneBootstrap
         { 'N', new Color(0.25f, 0.16f, 0.08f) },
         { 'B', new Color(0.38f, 0.25f, 0.13f) },
         { 'K', new Color(0.85f, 0.72f, 0.25f) },
+    };
+
+    private static readonly Dictionary<char, Color> FTIRPalette = new Dictionary<char, Color>
+    {
+        { 'G', new Color(0.90f, 0.45f, 0.18f) },
+        { 'B', new Color(0.32f, 0.16f, 0.13f) },
+        { 'K', new Color(0.08f, 0.08f, 0.09f) },
+    };
+
+    private static readonly Dictionary<char, Color> RamanPalette = new Dictionary<char, Color>
+    {
+        { 'D', new Color(0.30f, 0.14f, 0.14f) },
+        { 'L', new Color(0.95f, 0.15f, 0.15f) },
+    };
+
+    private static readonly Dictionary<char, Color> UVVisNIRPalette = new Dictionary<char, Color>
+    {
+        { 'D', new Color(0.38f, 0.20f, 0.78f) },
+        { 'P', new Color(0.55f, 0.60f, 0.72f) },
+        { 'K', new Color(0.15f, 0.15f, 0.18f) },
+    };
+
+    private static readonly Dictionary<char, Color> MEBPalette = new Dictionary<char, Color>
+    {
+        { 'E', new Color(0.72f, 0.76f, 0.84f) },
+        { 'B', new Color(0.20f, 0.25f, 0.35f) },
+        { 'K', new Color(0.08f, 0.08f, 0.09f) },
     };
 }

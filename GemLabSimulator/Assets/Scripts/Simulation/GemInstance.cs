@@ -15,6 +15,12 @@ public class GemInstance
     public float LengthMm { get; }
     public float WidthMm { get; }
     public float DepthMm { get; }
+    public string TreatmentGrade { get; }
+    public string TreatmentDescription { get; }
+    public bool IsSynthetic { get; }
+    public string AuthenticityGrade { get; }
+    public string AuthenticityDescription { get; }
+    public string GrowthStructureDescription { get; }
     public int FinalValue { get; }
 
     private readonly Dictionary<string, float> measuredValues = new Dictionary<string, float>();
@@ -47,8 +53,22 @@ public class GemInstance
         DepthMm = definition.depthMm * dimensionFactor;
 
         var sizeValueMultiplier = Mathf.Pow(sizeFactor, 1.5f);
+
+        var treatment = GemGrading.PickWeighted(GemGrading.TreatmentGrades);
+        TreatmentGrade = treatment.Name;
+        TreatmentDescription = treatment.Description;
+
+        var authenticity = GemGrading.PickWeighted(GemGrading.AuthenticityGrades);
+        AuthenticityGrade = authenticity.Name;
+        AuthenticityDescription = authenticity.Description;
+        IsSynthetic = authenticity.Name == "Synthétique";
+        GrowthStructureDescription = IsSynthetic
+            ? "Zones de croissance régulières, motifs anguleux ou courbes concentriques artificielles, typiques d'une croissance accélérée en laboratoire."
+            : "Zones de croissance irrégulières et courbes, typiques d'une cristallisation naturelle lente.";
+
         FinalValue = Mathf.RoundToInt(
-            definition.baseValue * Origin.valueMultiplier * saturation.Multiplier * clarity.Multiplier * sizeValueMultiplier);
+            definition.baseValue * Origin.valueMultiplier * saturation.Multiplier * clarity.Multiplier *
+            sizeValueMultiplier * treatment.Multiplier * authenticity.Multiplier);
     }
 
     public void MarkIdentified()

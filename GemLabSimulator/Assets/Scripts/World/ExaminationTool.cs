@@ -16,7 +16,11 @@ public class ExaminationTool : MonoBehaviour
         Inclusions,
         InterferenceFigure,
         ChelseaFilter,
-        VisualExamination
+        VisualExamination,
+        Treatment,
+        Authenticity,
+        ConfirmedOrigin,
+        GrowthStructure
     }
 
     [SerializeField] private string toolName;
@@ -92,6 +96,20 @@ public class ExaminationTool : MonoBehaviour
                 break;
             case MeasurementType.Dimensions:
                 RevealDimensions(gemInstance, gem);
+                break;
+            case MeasurementType.Treatment:
+                RevealQualitative(gemInstance, "Traitement détecté",
+                    $"{gemInstance.TreatmentGrade} — {gemInstance.TreatmentDescription}");
+                break;
+            case MeasurementType.Authenticity:
+                RevealQualitative(gemInstance, "Authenticité",
+                    $"{gemInstance.AuthenticityGrade} — {gemInstance.AuthenticityDescription}");
+                break;
+            case MeasurementType.ConfirmedOrigin:
+                RevealQualitative(gemInstance, "Origine confirmée (analyse des éléments traces)", gemInstance.Origin.name);
+                break;
+            case MeasurementType.GrowthStructure:
+                RevealQualitative(gemInstance, "Structure de croissance", gemInstance.GrowthStructureDescription);
                 break;
             default:
                 StartNumericMeasurement(gemInstance, gem);

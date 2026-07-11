@@ -28,6 +28,28 @@ public static class GemGrading
         new Grade { Name = "Loupe clean", Weight = 15f, Multiplier = 1.8f, Description = "Aucune inclusion visible même à la loupe (10x)." },
     };
 
+    public static readonly Grade[] TreatmentGrades =
+    {
+        new Grade { Name = "Non traité", Weight = 45f, Multiplier = 1.0f,
+            Description = "Aucune trace de traitement détectée." },
+        new Grade { Name = "Chauffé", Weight = 25f, Multiplier = 0.65f,
+            Description = "Indices de traitement thermique : halos de tension autour d'inclusions, résidus fondus." },
+        new Grade { Name = "Fracture comblée", Weight = 12f, Multiplier = 0.3f,
+            Description = "Fractures comblées par une substance vitreuse ou résineuse, détectées en infrarouge." },
+        new Grade { Name = "Huilé / imprégné", Weight = 10f, Multiplier = 0.5f,
+            Description = "Présence d'huile ou de résine dans des fissures de surface, signature infrarouge caractéristique." },
+        new Grade { Name = "Irradié", Weight = 8f, Multiplier = 0.55f,
+            Description = "Signature spectrale compatible avec une irradiation artificielle." },
+    };
+
+    public static readonly Grade[] AuthenticityGrades =
+    {
+        new Grade { Name = "Naturelle", Weight = 92f, Multiplier = 1.0f,
+            Description = "Signature Raman cohérente avec une croissance naturelle." },
+        new Grade { Name = "Synthétique", Weight = 8f, Multiplier = 0.08f,
+            Description = "Signature Raman et structure de croissance typiques d'une synthèse en laboratoire." },
+    };
+
     public static Grade PickWeighted(Grade[] grades)
     {
         var total = 0f;
