@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Zircon
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Zircon
+  description: Un zircon bleu, souvent confondu avec le saphir ou le spinelle bleu.
+  icon: {fileID: 21300000, guid: 13dc5bb0783584b13bac15ea4616efc9, type: 3}
+  refractiveIndex: 1.95
+  density: 4.65
+  hardness: 7.5
+  sizeMm: 6
+  weightCarats: 1.6
+  pleochroic: 1
+  pleochroicDescription: "Dichro\xEFsme faible \xE0 mod\xE9r\xE9 selon la teinte."
+  fluorescenceLongWave: "Fluorescence jaun\xE2tre faible possible selon l'origine."
+  fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
+  opticalCharacter: "Anisotrope, uniaxial \u2014 bir\xE9fringence tr\xE8s \xE9lev\xE9e
+    provoquant un d\xE9doublement visible des ar\xEAtes des facettes arri\xE8re."
+  absorptionSpectrum: "Nombreuses raies fines d'absorption (li\xE9es \xE0 des traces
+    d'uranium), spectre tr\xE8s caract\xE9ristique du zircon."
+  inclusions: "G\xE9n\xE9ralement propre ; d\xE9doublement net des facettes du pavillon
+    visible \xE0 la loupe."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  baseValue: 30

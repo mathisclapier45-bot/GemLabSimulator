@@ -414,7 +414,9 @@ public static class SceneBootstrap
 
     private static readonly string[] ReportSpeciesOptions =
     {
-        "Quartz", "Corindon (Rubis)", "Spinelle", "Grenat", "Verre"
+        "Quartz", "Corindon (Rubis)", "Spinelle", "Grenat", "Verre",
+        "Péridot", "Spinelle Bleu", "Saphir Bleu", "Zircon", "Diamant",
+        "Améthyste", "Grenat Spessartite", "Émeraude"
     };
 
     private static void CreateUI(bool includeExaminationUI)
@@ -449,6 +451,7 @@ public static class SceneBootstrap
         feedbackSo.FindProperty("feedbackText").objectReferenceValue = feedbackGO.GetComponent<Text>();
         feedbackSo.ApplyModifiedProperties();
 
+        CreateGemTooltipUI(canvasGO.transform);
         CreateInventoryUI(canvasGO.transform);
 
         if (!includeExaminationUI) return;
@@ -459,7 +462,16 @@ public static class SceneBootstrap
         panelRect.anchorMin = new Vector2(0.5f, 0.5f);
         panelRect.anchorMax = new Vector2(0.5f, 0.5f);
         panelRect.pivot = new Vector2(0.5f, 0.5f);
-        panelRect.sizeDelta = new Vector2(480, 620);
+        const float buttonWidth = 195f;
+        const float buttonHeight = 34f;
+        const float colGap = 10f;
+        const float rowGap = 6f;
+        const float buttonsStartY = -328f;
+        var totalRows = Mathf.CeilToInt(ReportSpeciesOptions.Length / 2f);
+        var buttonsEndY = buttonsStartY - (totalRows - 1) * (buttonHeight + rowGap) - buttonHeight;
+        var panelHeight = -buttonsEndY + 110f;
+
+        panelRect.sizeDelta = new Vector2(480, panelHeight);
         panelRect.anchoredPosition = Vector2.zero;
         panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.95f);
         panelGO.SetActive(false);
@@ -472,9 +484,12 @@ public static class SceneBootstrap
 
         for (var i = 0; i < ReportSpeciesOptions.Length; i++)
         {
-            var y = -328 - i * 40;
-            var buttonGO = CreateUIButton($"Option_{ReportSpeciesOptions[i]}", panelGO.transform, ReportSpeciesOptions[i],
-                new Vector2(0, y), new Vector2(400, 32));
+            var col = i % 2;
+            var row = i / 2;
+            var x = col == 0 ? -(buttonWidth + colGap) / 2f : (buttonWidth + colGap) / 2f;
+            var y = buttonsStartY - row * (buttonHeight + rowGap);
+            var buttonGO = CreateUIButton($"Option_{i}", panelGO.transform, ReportSpeciesOptions[i],
+                new Vector2(x, y), new Vector2(buttonWidth, buttonHeight), 12);
             var option = buttonGO.AddComponent<ReportOptionButton>();
             var optSo = new SerializedObject(option);
             optSo.FindProperty("speciesName").stringValue = ReportSpeciesOptions[i];
@@ -482,10 +497,10 @@ public static class SceneBootstrap
         }
 
         var resultGO = CreateUIText("Result", panelGO.transform, "",
-            new Vector2(0, -536), new Vector2(440, 32), 15, TextAnchor.UpperCenter, new Color(0.9f, 0.85f, 0.3f));
+            new Vector2(0, buttonsEndY - 26f), new Vector2(440, 32), 15, TextAnchor.UpperCenter, new Color(0.9f, 0.85f, 0.3f));
 
         var closeButtonGO = CreateUIButton("CloseButton", panelGO.transform, "Fermer",
-            new Vector2(0, -576), new Vector2(180, 32));
+            new Vector2(0, buttonsEndY - 66f), new Vector2(180, 32));
         closeButtonGO.AddComponent<CloseReportButton>();
 
         var controller = canvasGO.AddComponent<ReportUIController>();
@@ -497,6 +512,37 @@ public static class SceneBootstrap
 
         CreateMeasurementMinigameUI(canvasGO.transform);
         CreateChestUI(canvasGO.transform);
+    }
+
+    private static void CreateGemTooltipUI(Transform canvasTransform)
+    {
+        var panelGO = new GameObject("GemTooltip", typeof(RectTransform), typeof(Image));
+        panelGO.transform.SetParent(canvasTransform, false);
+        var panelRect = panelGO.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(0f, 0f);
+        panelRect.anchorMax = new Vector2(0f, 0f);
+        panelRect.pivot = new Vector2(0f, 0f);
+        panelRect.sizeDelta = new Vector2(220, 30);
+        panelGO.GetComponent<Image>().color = new Color(0.05f, 0.05f, 0.06f, 0.95f);
+        panelGO.GetComponent<Image>().raycastTarget = false;
+        panelGO.SetActive(false);
+
+        var labelGO = CreateUIText("Label", panelGO.transform, "",
+            Vector2.zero, new Vector2(220, 30), 14, TextAnchor.MiddleCenter, Color.white);
+        var labelRect = labelGO.GetComponent<RectTransform>();
+        labelRect.anchorMin = Vector2.zero;
+        labelRect.anchorMax = Vector2.one;
+        labelRect.pivot = new Vector2(0.5f, 0.5f);
+        labelRect.sizeDelta = Vector2.zero;
+        labelRect.anchoredPosition = Vector2.zero;
+        labelGO.GetComponent<Text>().raycastTarget = false;
+
+        var tooltip = canvasTransform.gameObject.AddComponent<GemTooltipUI>();
+        var so = new SerializedObject(tooltip);
+        so.FindProperty("panel").objectReferenceValue = panelGO;
+        so.FindProperty("label").objectReferenceValue = labelGO.GetComponent<Text>();
+        so.FindProperty("rect").objectReferenceValue = panelRect;
+        so.ApplyModifiedProperties();
     }
 
     private static void CreateInventoryUI(Transform canvasTransform)
@@ -647,7 +693,7 @@ public static class SceneBootstrap
         return go;
     }
 
-    private static GameObject CreateUIButton(string name, Transform parent, string label, Vector2 anchoredPosition, Vector2 sizeDelta)
+    private static GameObject CreateUIButton(string name, Transform parent, string label, Vector2 anchoredPosition, Vector2 sizeDelta, int fontSize = 16)
     {
         var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
         go.transform.SetParent(parent, false);
@@ -659,7 +705,7 @@ public static class SceneBootstrap
         rect.sizeDelta = sizeDelta;
         go.GetComponent<Image>().color = new Color(0.25f, 0.25f, 0.32f, 1f);
 
-        var textGO = CreateUIText("Label", go.transform, label, Vector2.zero, sizeDelta, 16, TextAnchor.MiddleCenter, Color.white);
+        var textGO = CreateUIText("Label", go.transform, label, Vector2.zero, sizeDelta, fontSize, TextAnchor.MiddleCenter, Color.white);
         var textRect = textGO.GetComponent<RectTransform>();
         textRect.anchorMin = Vector2.zero;
         textRect.anchorMax = Vector2.one;
@@ -778,6 +824,174 @@ public static class SceneBootstrap
                 g.interferenceFigure = "Aucune figure d'interférence (matériau amorphe).";
                 g.chelseaFilterReaction = "Réaction variable et non diagnostique.";
                 g.baseValue = 5;
+            }),
+            BuildGem("Peridot", g =>
+            {
+                g.displayName = "Péridot";
+                g.description = "Un péridot vert olive, envoyé pour confirmation d'espèce.";
+                g.icon = GetGemIconSprite("peridot", new Color(0.45f, 0.65f, 0.25f), new Color(0.65f, 0.85f, 0.40f));
+                g.refractiveIndex = 1.67f;
+                g.density = 3.34f;
+                g.hardness = 6.5f;
+                g.sizeMm = 6.5f;
+                g.weightCarats = 1.3f;
+                g.pleochroic = true;
+                g.pleochroicDescription = "Jaune-vert / Vert selon l'axe d'observation (faible).";
+                g.fluorescenceLongWave = "Aucune fluorescence sous UV longue onde.";
+                g.fluorescenceShortWave = "Aucune fluorescence sous UV courte onde.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.absorptionSpectrum = "Triplet d'absorption du fer dans le bleu, spectre caractéristique du péridot.";
+                g.inclusions = "Inclusions en \"nénuphar\" (lily pad) autour de cristaux, caractéristiques du péridot.";
+                g.interferenceFigure = "Figure d'interférence biaxiale.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.baseValue = 35;
+            }),
+            BuildGem("Spinelle_Bleu", g =>
+            {
+                g.displayName = "Spinelle Bleu";
+                g.description = "Une pierre bleu vif, à distinguer du saphir et du zircon bleu.";
+                g.icon = GetGemIconSprite("spinellebleu", new Color(0.15f, 0.40f, 0.80f), new Color(0.45f, 0.65f, 0.95f));
+                g.refractiveIndex = 1.715f;
+                g.density = 3.61f;
+                g.hardness = 8f;
+                g.sizeMm = 6.0f;
+                g.weightCarats = 1.2f;
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Généralement inerte, parfois faible réaction rougeâtre en présence de traces de chrome.";
+                g.fluorescenceShortWave = "Inerte sous UV courte onde.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.absorptionSpectrum = "Bandes d'absorption du cobalt caractéristiques (trois bandes dans le rouge/orangé) si coloré au cobalt.";
+                g.inclusions = "Cristaux octaédriques, cristaux négatifs.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Réaction rouge marquée sous filtre Chelsea si coloré au cobalt — signe distinctif face au saphir.";
+                g.baseValue = 90;
+            }),
+            BuildGem("Saphir_Bleu", g =>
+            {
+                g.displayName = "Saphir Bleu";
+                g.description = "Un corindon bleu intense, envoyé pour confirmer s'il s'agit d'un saphir naturel.";
+                g.icon = GetGemIconSprite("saphirbleu", new Color(0.08f, 0.18f, 0.55f), new Color(0.30f, 0.42f, 0.78f));
+                g.refractiveIndex = 1.766f;
+                g.density = 4.00f;
+                g.hardness = 9f;
+                g.sizeMm = 6.5f;
+                g.weightCarats = 1.4f;
+                g.pleochroic = true;
+                g.pleochroicDescription = "Bleu / Bleu-vert selon l'axe d'observation (marqué).";
+                g.fluorescenceLongWave = "Généralement inerte sous UV longue onde (le fer inhibe la fluorescence).";
+                g.fluorescenceShortWave = "Inerte sous UV courte onde.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.absorptionSpectrum = "Triplet d'absorption du fer vers 450 nm, caractéristique du saphir bleu.";
+                g.inclusions = "Soie de rutile, zonation de couleur en bandes hexagonales.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale nette.";
+                g.chelseaFilterReaction = "Aucune réaction rouge (contrairement au spinelle bleu au cobalt).";
+                g.baseValue = 140;
+            }),
+            BuildGem("Zircon", g =>
+            {
+                g.displayName = "Zircon";
+                g.description = "Un zircon bleu, souvent confondu avec le saphir ou le spinelle bleu.";
+                g.icon = GetGemIconSprite("zircon", new Color(0.20f, 0.55f, 0.75f), new Color(0.45f, 0.78f, 0.92f));
+                g.refractiveIndex = 1.95f;
+                g.density = 4.65f;
+                g.hardness = 7.5f;
+                g.sizeMm = 6.0f;
+                g.weightCarats = 1.6f;
+                g.pleochroic = true;
+                g.pleochroicDescription = "Dichroïsme faible à modéré selon la teinte.";
+                g.fluorescenceLongWave = "Fluorescence jaunâtre faible possible selon l'origine.";
+                g.fluorescenceShortWave = "Généralement inerte sous UV courte onde.";
+                g.opticalCharacter = "Anisotrope, uniaxial — biréfringence très élevée provoquant un dédoublement visible des arêtes des facettes arrière.";
+                g.absorptionSpectrum = "Nombreuses raies fines d'absorption (liées à des traces d'uranium), spectre très caractéristique du zircon.";
+                g.inclusions = "Généralement propre ; dédoublement net des facettes du pavillon visible à la loupe.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.baseValue = 30;
+            }),
+            BuildGem("Diamant", g =>
+            {
+                g.displayName = "Diamant";
+                g.description = "Une pierre incolore à l'éclat exceptionnel, envoyée pour authentification.";
+                g.icon = GetGemIconSprite("diamant", new Color(0.92f, 0.94f, 0.97f), new Color(0.99f, 0.99f, 1.00f));
+                g.refractiveIndex = 2.417f;
+                g.density = 3.52f;
+                g.hardness = 10f;
+                g.sizeMm = 5.5f;
+                g.weightCarats = 0.9f;
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence bleue fréquente sous UV longue onde (variable selon les spécimens).";
+                g.fluorescenceShortWave = "Fluorescence plus faible sous UV courte onde.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.absorptionSpectrum = "Spectre variable selon le type ; raies dans le violet possibles (série Cape).";
+                g.inclusions = "Éclat adamantin caractéristique ; inclusions cristallines sombres possibles.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.baseValue = 500;
+            }),
+            BuildGem("Amethyste", g =>
+            {
+                g.displayName = "Améthyste";
+                g.description = "Un quartz violet, variété courante mais toujours appréciée.";
+                g.icon = GetGemIconSprite("amethyste", new Color(0.45f, 0.25f, 0.65f), new Color(0.68f, 0.48f, 0.85f));
+                g.refractiveIndex = 1.544f;
+                g.density = 2.65f;
+                g.hardness = 7f;
+                g.sizeMm = 7.0f;
+                g.weightCarats = 1.7f;
+                g.pleochroic = true;
+                g.pleochroicDescription = "Violet / Rougeâtre-violet selon l'axe d'observation (faible).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable sous UV longue onde.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable sous UV courte onde.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.inclusions = "Zonation de couleur en bandes (\"tiger stripes\"), typique de l'améthyste.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale visible en lumière convergente.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.baseValue = 20;
+            }),
+            BuildGem("Grenat_Spessartite", g =>
+            {
+                g.displayName = "Grenat Spessartite";
+                g.description = "Un grenat orangé vif, à ne pas confondre avec l'almandin rouge.";
+                g.icon = GetGemIconSprite("spessartite", new Color(0.85f, 0.45f, 0.15f), new Color(0.95f, 0.65f, 0.35f));
+                g.refractiveIndex = 1.80f;
+                g.density = 4.15f;
+                g.hardness = 7.5f;
+                g.sizeMm = 6.2f;
+                g.weightCarats = 1.5f;
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Généralement inerte sous UV longue onde.";
+                g.fluorescenceShortWave = "Généralement inerte sous UV courte onde.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.absorptionSpectrum = "Bandes d'absorption du manganèse, spectre différent de l'almandin.";
+                g.inclusions = "Inclusions similaires aux autres grenats, fissures internes possibles.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Aucune réaction rouge notable.";
+                g.baseValue = 55;
+            }),
+            BuildGem("Emeraude", g =>
+            {
+                g.displayName = "Émeraude";
+                g.description = "Un béryl vert intense, envoyé pour authentification.";
+                g.icon = GetGemIconSprite("emeraude", new Color(0.10f, 0.45f, 0.30f), new Color(0.30f, 0.65f, 0.45f));
+                g.refractiveIndex = 1.580f;
+                g.density = 2.72f;
+                g.hardness = 7.7f;
+                g.sizeMm = 6.5f;
+                g.weightCarats = 1.3f;
+                g.pleochroic = true;
+                g.pleochroicDescription = "Bleu-vert / Jaune-vert selon l'axe d'observation (marqué).";
+                g.fluorescenceLongWave = "Généralement inerte sous UV longue onde (les émeraudes naturelles contiennent du fer).";
+                g.fluorescenceShortWave = "Inerte sous UV courte onde.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.absorptionSpectrum = "Doublet d'absorption du chrome dans le rouge, spectre caractéristique de l'émeraude.";
+                g.inclusions = "Inclusions en \"jardin\" (fissures et inclusions multiphases), très caractéristiques.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale.";
+                g.chelseaFilterReaction = "Réaction faible ou nulle (contrairement à de nombreuses imitations et synthèses, qui réagissent rouge vif).";
+                g.baseValue = 180;
             }),
         };
     }

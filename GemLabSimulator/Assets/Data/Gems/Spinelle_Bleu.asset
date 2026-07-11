@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Spinelle_Bleu
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Spinelle Bleu
+  description: "Une pierre bleu vif, \xE0 distinguer du saphir et du zircon bleu."
+  icon: {fileID: 21300000, guid: e5876f9f02f04441086bb1395d10d665, type: 3}
+  refractiveIndex: 1.715
+  density: 3.61
+  hardness: 8
+  sizeMm: 6
+  weightCarats: 1.2
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "G\xE9n\xE9ralement inerte, parfois faible r\xE9action rouge\xE2tre
+    en pr\xE9sence de traces de chrome."
+  fluorescenceShortWave: Inerte sous UV courte onde.
+  opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  absorptionSpectrum: "Bandes d'absorption du cobalt caract\xE9ristiques (trois bandes
+    dans le rouge/orang\xE9) si color\xE9 au cobalt."
+  inclusions: "Cristaux octa\xE9driques, cristaux n\xE9gatifs."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
+  chelseaFilterReaction: "R\xE9action rouge marqu\xE9e sous filtre Chelsea si color\xE9
+    au cobalt \u2014 signe distinctif face au saphir."
+  baseValue: 90

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class GemDragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class GemDragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public static GemDragSource CurrentDrag { get; private set; }
 
@@ -52,5 +52,17 @@ public class GemDragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             dragGhost = null;
         }
         CurrentDrag = null;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (Gem == null) return;
+        var text = Gem.IsIdentified ? Gem.Definition.displayName : "(gemme non identifiée)";
+        GemTooltipUI.Instance?.Show(text, eventData.position);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        GemTooltipUI.Instance?.Hide();
     }
 }
