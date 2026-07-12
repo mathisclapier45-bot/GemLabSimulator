@@ -60,4 +60,12 @@ public class PlayerInventory : MonoBehaviour, IGemContainer
 
         OnInventoryChanged?.Invoke();
     }
+
+    public void LoadGems(List<GemInstance> restoredGems)
+    {
+        gems.Clear();
+        gems.AddRange(restoredGems);
+        SelectedGem = gems.Count > 0 ? gems[0] : null;
+        OnInventoryChanged?.Invoke();
+    }
 }

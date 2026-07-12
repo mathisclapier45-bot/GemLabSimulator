@@ -35,4 +35,11 @@ public class PlayerChest : MonoBehaviour, IGemContainer
         gems.Remove(instance);
         OnChestChanged?.Invoke();
     }
+
+    public void LoadGems(List<GemInstance> restoredGems)
+    {
+        gems.Clear();
+        gems.AddRange(restoredGems);
+        OnChestChanged?.Invoke();
+    }
 }

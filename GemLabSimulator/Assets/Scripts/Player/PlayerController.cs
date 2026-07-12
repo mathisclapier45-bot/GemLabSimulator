@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float moveSpeed = 4f;
 
+    private static bool hasAttemptedLoad;
+
     private Rigidbody2D rb;
     private Vector2 moveInput;
 
@@ -23,6 +25,15 @@ public class PlayerController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         rb = GetComponent<Rigidbody2D>();
         SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void Start()
+    {
+        if (hasAttemptedLoad) return;
+        hasAttemptedLoad = true;
+
+        if (SaveSystem.HasSave())
+            SaveSystem.Load();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
