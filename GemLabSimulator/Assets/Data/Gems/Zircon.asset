@@ -48,6 +48,7 @@ MonoBehaviour:
     visible \xE0 la loupe."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 30
   origins:
   - name: Cambodge (Ratanakiri)

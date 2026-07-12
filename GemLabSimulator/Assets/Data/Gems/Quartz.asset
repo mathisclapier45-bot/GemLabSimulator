@@ -39,6 +39,7 @@ MonoBehaviour:
     plumes."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale visible en lumi\xE8re convergente."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re (incolore)."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 15
   origins:
   - name: "Br\xE9sil"

@@ -46,6 +46,7 @@ MonoBehaviour:
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "R\xE9action rouge marqu\xE9e sous filtre Chelsea si color\xE9
     au cobalt."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 90
   origins:
   - name: Sri Lanka

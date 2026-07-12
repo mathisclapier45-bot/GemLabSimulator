@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Kunzite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Kunzite
+  description: "Une pierre rose-violet p\xE2le, sensible \xE0 la lumi\xE8re prolong\xE9e
+    (risque de d\xE9coloration)."
+  icon: {fileID: 21300000, guid: cffa67795506f42bb8c969a038e13b0e, type: 3}
+  refractiveIndex: 1.665
+  density: 3.18
+  hardness: 6.75
+  lengthMm: 9
+  widthMm: 6.5
+  depthMm: 4.2
+  weightCarats: 1.6
+  luster: Vitreux
+  color: "Rose-violet p\xE2le"
+  shape: "Rectangle \xE0 pans coup\xE9s"
+  cutStyle: "\xC0 degr\xE9s"
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Rose intense / Incolore selon l'axe d'observation (marqu\xE9)."
+  fluorescenceLongWave: "Fluorescence orang\xE9e \xE0 ros\xE9e possible sous UV longue
+    onde."
+  fluorescenceShortWave: Faible ou absente sous UV courte onde.
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Clivage net dans une direction, fractures parall\xE8les possibles."
+  interferenceFigure: "Figure d'interf\xE9rence biaxiale."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 35
+  origins:
+  - name: Afghanistan (Nuristan)
+    rarityWeight: 40
+    valueMultiplier: 1.2
+    inclusionOverride: 
+  - name: "Br\xE9sil"
+    rarityWeight: 35
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: "\xC9tats-Unis (Californie)"
+    rarityWeight: 25
+    valueMultiplier: 1.1
+    inclusionOverride: "Gisement historique o\xF9 cette vari\xE9t\xE9 a \xE9t\xE9
+      identifi\xE9e pour la premi\xE8re fois."

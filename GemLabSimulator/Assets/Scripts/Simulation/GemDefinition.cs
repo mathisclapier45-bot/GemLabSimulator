@@ -35,6 +35,7 @@ public class GemDefinition : ScriptableObject
     [TextArea] public string inclusions;
     [TextArea] public string interferenceFigure;
     [TextArea] public string chelseaFilterReaction;
+    [TextArea] public string magnetism;
 
     [Header("Économie")]
     public int baseValue;

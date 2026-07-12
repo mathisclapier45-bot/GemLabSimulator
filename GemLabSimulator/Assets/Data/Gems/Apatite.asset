@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Apatite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Apatite
+  description: "Un phosphate bleu-vert, tendre et souvent confondu avec d'autres
+    pierres (d'o\xF9 son nom, du grec \"tromper\")."
+  icon: {fileID: 21300000, guid: 39de8c39b48ad4afc8c53e0eae197c2a, type: 3}
+  refractiveIndex: 1.635
+  density: 3.19
+  hardness: 5
+  lengthMm: 7
+  widthMm: 5.5
+  depthMm: 3.6
+  weightCarats: 1.1
+  luster: "Vitreux \xE0 r\xE9sineux"
+  color: Bleu-vert
+  shape: Ovale
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Bleu / Jaune-vert selon l'axe (mod\xE9r\xE9)."
+  fluorescenceLongWave: "Fluorescence jaune \xE0 mauve possible sous UV longue onde."
+  fluorescenceShortWave: Faible ou absente sous UV courte onde.
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  absorptionSpectrum: Fines raies d'absorption dans le jaune-vert.
+  spectrumLines:
+  - wavelengthNm: 512
+    widthNm: 8
+  - wavelengthNm: 490
+    widthNm: 8
+  - wavelengthNm: 465
+    widthNm: 8
+  inclusions: "Nombreuses inclusions et fractures, pierre g\xE9n\xE9ralement incluse."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 20
+  origins:
+  - name: "Br\xE9sil"
+    rarityWeight: 30
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Madagascar
+    rarityWeight: 30
+    valueMultiplier: 1.1
+    inclusionOverride: 
+  - name: Myanmar
+    rarityWeight: 20
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Mexique
+    rarityWeight: 20
+    valueMultiplier: 0.9
+    inclusionOverride: 

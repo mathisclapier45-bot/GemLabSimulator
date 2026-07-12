@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Hematite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "H\xE9matite"
+  description: "Un oxyde de fer opaque \xE0 \xE9clat m\xE9tallique, souvent taill\xE9
+    en cabochon plut\xF4t qu'\xE0 facettes."
+  icon: {fileID: 21300000, guid: ee5d8954b67bd4603bf27e642a694d3b, type: 3}
+  refractiveIndex: 2.94
+  density: 5.15
+  hardness: 6
+  lengthMm: 6
+  widthMm: 6
+  depthMm: 5
+  weightCarats: 2
+  luster: "M\xE9tallique"
+  color: "Gris-noir m\xE9tallique"
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: Opaque
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Aucune fluorescence (min\xE9ral opaque)."
+  fluorescenceShortWave: "Aucune fluorescence (min\xE9ral opaque)."
+  opticalCharacter: "Non applicable (min\xE9ral opaque \xE0 \xE9clat m\xE9tallique)."
+  absorptionSpectrum: "Non applicable (min\xE9ral opaque)."
+  spectrumLines: []
+  inclusions: "Non applicable (min\xE9ral opaque)."
+  interferenceFigure: "Non applicable (min\xE9ral opaque)."
+  chelseaFilterReaction: "Non applicable (min\xE9ral opaque)."
+  magnetism: "L\xE9g\xE8rement attir\xE9 par un aimant puissant (oxyde de fer, r\xE9action
+    bien plus faible qu'un min\xE9ral franchement ferromagn\xE9tique)."
+  baseValue: 10
+  origins:
+  - name: Angleterre
+    rarityWeight: 30
+    valueMultiplier: 1.1
+    inclusionOverride: 
+  - name: "Br\xE9sil"
+    rarityWeight: 35
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Divers gisements mondiaux
+    rarityWeight: 35
+    valueMultiplier: 0.9
+    inclusionOverride: 

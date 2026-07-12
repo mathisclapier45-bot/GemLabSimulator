@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Tanzanite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Tanzanite
+  description: "Une pierre bleu-violet, presque toujours trait\xE9e thermiquement."
+  icon: {fileID: 21300000, guid: 8f511ab2b44a04120814fa34b062c7e7, type: 3}
+  refractiveIndex: 1.695
+  density: 3.35
+  hardness: 6.5
+  lengthMm: 8
+  widthMm: 6
+  depthMm: 4
+  weightCarats: 1.4
+  luster: Vitreux
+  color: Bleu-violet
+  shape: Ovale
+  cutStyle: Mixte
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Bleu / Violet / Rouge-brun selon les trois axes (tr\xE8s
+    marqu\xE9)."
+  fluorescenceLongWave: Aucune fluorescence sous UV longue onde.
+  fluorescenceShortWave: Aucune fluorescence sous UV courte onde.
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  absorptionSpectrum: Bandes d'absorption du vanadium.
+  spectrumLines:
+  - wavelengthNm: 455
+    widthNm: 20
+  - wavelengthNm: 528
+    widthNm: 20
+  - wavelengthNm: 595
+    widthNm: 25
+  inclusions: "G\xE9n\xE9ralement propre, parfois fines inclusions aciculaires."
+  interferenceFigure: "Figure d'interf\xE9rence biaxiale."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 90
+  origins:
+  - name: Tanzanie
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: "Seul gisement connu au monde, situ\xE9 au pied du Kilimandjaro."

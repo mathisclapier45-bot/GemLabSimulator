@@ -41,6 +41,7 @@ MonoBehaviour:
     de croissance visibles au microscope."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Faible r\xE9action \xE0 l'aimant (moins de fer que l'almandin)."
   baseValue: 40
   origins:
   - name: Sri Lanka

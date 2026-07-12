@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Diopside_Chromifere
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "Diopside Chromif\xE8re"
+  description: "Un diopside vert intense color\xE9 par le chrome, souvent taill\xE9
+    en petites pierres."
+  icon: {fileID: 21300000, guid: dba5978a3467b428e8806c1d357d3d2a, type: 3}
+  refractiveIndex: 1.685
+  density: 3.29
+  hardness: 5.75
+  lengthMm: 6
+  widthMm: 4.8
+  depthMm: 3.2
+  weightCarats: 0.9
+  luster: Vitreux
+  color: Vert intense
+  shape: Rond
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Vert jaun\xE2tre / Vert bleut\xE9 selon l'axe (marqu\xE9)."
+  fluorescenceLongWave: Aucune fluorescence notable.
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  absorptionSpectrum: Bandes d'absorption du chrome.
+  spectrumLines:
+  - wavelengthNm: 505
+    widthNm: 20
+  - wavelengthNm: 690
+    widthNm: 15
+  inclusions: Fines inclusions fibreuses, parfois structure en "plumes".
+  interferenceFigure: "Figure d'interf\xE9rence biaxiale."
+  chelseaFilterReaction: "R\xE9action rouge\xE2tre possible (coloration au chrome)."
+  magnetism: "Mod\xE9r\xE9ment attir\xE9 par un aimant puissant (silicate ferromagn\xE9sien)."
+  baseValue: 30
+  origins:
+  - name: "Russie (Sib\xE9rie)"
+    rarityWeight: 50
+    valueMultiplier: 1.3
+    inclusionOverride: "Gisement sib\xE9rien classique, pierres g\xE9n\xE9ralement
+      de petite taille en raison de la saturation de couleur."
+  - name: Myanmar
+    rarityWeight: 25
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Pakistan
+    rarityWeight: 25
+    valueMultiplier: 0.9
+    inclusionOverride: 

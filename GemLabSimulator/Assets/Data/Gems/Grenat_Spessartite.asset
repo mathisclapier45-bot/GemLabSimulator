@@ -43,6 +43,7 @@ MonoBehaviour:
   inclusions: "Fissures internes possibles, g\xE9n\xE9ralement peu abondantes."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "Aucune r\xE9action rouge notable."
+  magnetism: "Attir\xE9 par un aimant puissant (fer et mangan\xE8se)."
   baseValue: 55
   origins:
   - name: Namibie

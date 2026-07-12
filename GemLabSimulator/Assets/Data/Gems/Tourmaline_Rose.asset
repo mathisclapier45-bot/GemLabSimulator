@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Tourmaline_Rose
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Tourmaline Rose
+  description: "Une tourmaline rose \xE0 rouge, vari\xE9t\xE9 appel\xE9e rubellite."
+  icon: {fileID: 21300000, guid: f87ace52c744b42468880f499a1011d9, type: 3}
+  refractiveIndex: 1.625
+  density: 3.06
+  hardness: 7.25
+  lengthMm: 8
+  widthMm: 5.5
+  depthMm: 3.7
+  weightCarats: 1.3
+  luster: Vitreux
+  color: "Rose \xE0 rouge"
+  shape: Baguette
+  cutStyle: "\xC0 degr\xE9s"
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Rose clair / Rose fonc\xE9 selon l'axe d'observation (faible
+    \xE0 mod\xE9r\xE9)."
+  fluorescenceLongWave: Aucune fluorescence notable.
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Inclusions liquides fragment\xE9es, fractures internes fr\xE9quentes."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 50
+  origins:
+  - name: "Br\xE9sil"
+    rarityWeight: 35
+    valueMultiplier: 1.2
+    inclusionOverride: 
+  - name: Afghanistan
+    rarityWeight: 25
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Madagascar
+    rarityWeight: 25
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Nigeria
+    rarityWeight: 15
+    valueMultiplier: 0.9
+    inclusionOverride: 

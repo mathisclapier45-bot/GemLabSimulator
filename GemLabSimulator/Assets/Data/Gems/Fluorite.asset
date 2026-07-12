@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Fluorite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Fluorite
+  description: "Un min\xE9ral tendre et color\xE9, dont le nom a donn\xE9 le mot
+    \"fluorescence\"."
+  icon: {fileID: 21300000, guid: b3f714ffeb42842c287ca9bb870044f5, type: 3}
+  refractiveIndex: 1.434
+  density: 3.18
+  hardness: 4
+  lengthMm: 7
+  widthMm: 5.5
+  depthMm: 3.7
+  weightCarats: 1.1
+  luster: Vitreux
+  color: Violet
+  shape: Ovale
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Fluorescence bleue \xE0 violette souvent intense sous UV
+    longue onde."
+  fluorescenceShortWave: Fluorescence variable sous UV courte onde.
+  opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Clivage parfait dans quatre directions, fractures internes fr\xE9quentes."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 15
+  origins:
+  - name: Chine
+    rarityWeight: 35
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Mexique
+    rarityWeight: 30
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Angleterre
+    rarityWeight: 20
+    valueMultiplier: 1.3
+    inclusionOverride: Gisement historique connu pour ses bandes de couleur multicolores.
+  - name: "\xC9tats-Unis"
+    rarityWeight: 15
+    valueMultiplier: 0.9
+    inclusionOverride: 

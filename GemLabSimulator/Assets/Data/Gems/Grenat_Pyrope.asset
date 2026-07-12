@@ -40,6 +40,7 @@ MonoBehaviour:
     abondants."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "Aucune r\xE9action rouge notable."
+  magnetism: "Mod\xE9r\xE9ment attir\xE9 par un aimant puissant (fer et magn\xE9sium)."
   baseValue: 30
   origins:
   - name: Afrique du Sud

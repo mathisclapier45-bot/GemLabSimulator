@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Iolite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Iolite
+  description: "Une pierre bleu-violet \xE0 fort pl\xE9ochro\xEFsme, parfois appel\xE9e
+    pierre des Vikings."
+  icon: {fileID: 21300000, guid: 5f72f0700fc644b21babac4da694589f, type: 3}
+  refractiveIndex: 1.545
+  density: 2.61
+  hardness: 7.25
+  lengthMm: 7.5
+  widthMm: 5.8
+  depthMm: 3.8
+  weightCarats: 1.2
+  luster: Vitreux
+  color: Bleu-violet
+  shape: Ovale
+  cutStyle: Mixte
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Bleu / Violet / Jaune p\xE2le selon les trois axes (tr\xE8s
+    marqu\xE9, visible \xE0 l'\u0153il nu)."
+  fluorescenceLongWave: Aucune fluorescence notable.
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  absorptionSpectrum: Bandes d'absorption du fer.
+  spectrumLines:
+  - wavelengthNm: 435
+    widthNm: 15
+  - wavelengthNm: 585
+    widthNm: 20
+  inclusions: "Parfois de fines paillettes orient\xE9es, donnant un effet chatoyant."
+  interferenceFigure: "Figure d'interf\xE9rence biaxiale nette."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 25
+  origins:
+  - name: Inde
+    rarityWeight: 60
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Madagascar
+    rarityWeight: 25
+    valueMultiplier: 1.1
+    inclusionOverride: 
+  - name: Sri Lanka
+    rarityWeight: 15
+    valueMultiplier: 1
+    inclusionOverride: 

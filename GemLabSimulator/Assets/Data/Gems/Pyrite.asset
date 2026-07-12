@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Pyrite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Pyrite
+  description: "Sulfure de fer opaque \xE0 \xE9clat m\xE9tallique dor\xE9, surnomm\xE9
+    \"or des fous\"."
+  icon: {fileID: 21300000, guid: f225a7047ca474a7ea69ec60aeaa4fe9, type: 3}
+  refractiveIndex: 1.85
+  density: 5
+  hardness: 6.25
+  lengthMm: 6
+  widthMm: 6
+  depthMm: 5
+  weightCarats: 1.8
+  luster: "M\xE9tallique"
+  color: "Jaune dor\xE9 m\xE9tallique"
+  shape: Rond
+  cutStyle: Cabochon
+  transparency: Opaque
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Aucune fluorescence (min\xE9ral opaque)."
+  fluorescenceShortWave: "Aucune fluorescence (min\xE9ral opaque)."
+  opticalCharacter: "Non applicable (min\xE9ral opaque \xE0 \xE9clat m\xE9tallique)."
+  absorptionSpectrum: "Non applicable (min\xE9ral opaque)."
+  spectrumLines: []
+  inclusions: "Non applicable (min\xE9ral opaque)."
+  interferenceFigure: "Non applicable (min\xE9ral opaque)."
+  chelseaFilterReaction: "Non applicable (min\xE9ral opaque)."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant, malgr\xE9 sa teneur en fer."
+  baseValue: 8
+  origins:
+  - name: "P\xE9rou"
+    rarityWeight: 35
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Espagne
+    rarityWeight: 35
+    valueMultiplier: 1.1
+    inclusionOverride: 
+  - name: "\xC9tats-Unis"
+    rarityWeight: 30
+    valueMultiplier: 0.9
+    inclusionOverride: 

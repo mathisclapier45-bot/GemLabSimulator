@@ -44,6 +44,7 @@ MonoBehaviour:
   inclusions: "Cristaux octa\xE9driques, inclusions en \"empreintes digitales\" possibles."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "R\xE9action rouge \xE0 ros\xE2tre, d'intensit\xE9 mod\xE9r\xE9e."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 45
   origins:
   - name: Birmanie

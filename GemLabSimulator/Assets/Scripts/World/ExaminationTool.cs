@@ -20,7 +20,8 @@ public class ExaminationTool : MonoBehaviour
         Treatment,
         Authenticity,
         ConfirmedOrigin,
-        GrowthStructure
+        GrowthStructure,
+        Magnetism
     }
 
     [SerializeField] private string toolName;
@@ -110,6 +111,9 @@ public class ExaminationTool : MonoBehaviour
                 break;
             case MeasurementType.GrowthStructure:
                 RevealQualitative(gemInstance, "Structure de croissance", gemInstance.GrowthStructureDescription);
+                break;
+            case MeasurementType.Magnetism:
+                RevealQualitative(gemInstance, "Réaction au magnétisme", gem.magnetism);
                 break;
             default:
                 StartNumericMeasurement(gemInstance, gem);

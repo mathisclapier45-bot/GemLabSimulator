@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Andalousite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Andalousite
+  description: "Une pierre \xE0 tr\xE8s fort trichro\xEFsme (vert, rouge, jaune-brun
+    selon l'angle)."
+  icon: {fileID: 21300000, guid: 531175528f8464e66b7b395f10cdfc94, type: 3}
+  refractiveIndex: 1.635
+  density: 3.17
+  hardness: 7.25
+  lengthMm: 7.5
+  widthMm: 5.8
+  depthMm: 3.9
+  weightCarats: 1.2
+  luster: Vitreux
+  color: Vert-brun
+  shape: Coussin
+  cutStyle: Mixte
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Vert / Rouge / Jaune-brun selon les trois axes (extr\xEAmement
+    marqu\xE9)."
+  fluorescenceLongWave: Aucune fluorescence notable.
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Inclusions carbon\xE9es possibles."
+  interferenceFigure: "Figure d'interf\xE9rence biaxiale."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 30
+  origins:
+  - name: "Br\xE9sil"
+    rarityWeight: 40
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Sri Lanka
+    rarityWeight: 30
+    valueMultiplier: 1.1
+    inclusionOverride: 
+  - name: Canada
+    rarityWeight: 30
+    valueMultiplier: 1
+    inclusionOverride: 

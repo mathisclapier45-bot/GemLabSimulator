@@ -43,6 +43,7 @@ MonoBehaviour:
     abondantes."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action (diamagn\xE9tique)."
   baseValue: 500
   origins:
   - name: Botswana

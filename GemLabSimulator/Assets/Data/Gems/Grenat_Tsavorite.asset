@@ -42,6 +42,7 @@ MonoBehaviour:
   inclusions: "Fibres d'amphibole, inclusions caract\xE9ristiques des gisements est-africains."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "R\xE9action rouge\xE2tre possible si color\xE9 au chrome."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant (grenat pauvre en fer)."
   baseValue: 120
   origins:
   - name: Kenya

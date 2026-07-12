@@ -45,6 +45,8 @@ MonoBehaviour:
   inclusions: Soie de rutile, zonation de couleur en bandes hexagonales.
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."
   chelseaFilterReaction: "Aucune r\xE9action rouge."
+  magnetism: "L\xE9g\xE8re r\xE9action possible avec un aimant tr\xE8s puissant (traces
+    de fer)."
   baseValue: 140
   origins:
   - name: Cachemire (Kashmir)

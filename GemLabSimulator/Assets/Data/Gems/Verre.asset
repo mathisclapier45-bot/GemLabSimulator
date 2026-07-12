@@ -39,6 +39,7 @@ MonoBehaviour:
   inclusions: "Bulles rondes et stries d'\xE9coulement, signature typique du verre."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau amorphe)."
   chelseaFilterReaction: "R\xE9action variable et non diagnostique."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 5
   origins:
   - name: Fabrication industrielle

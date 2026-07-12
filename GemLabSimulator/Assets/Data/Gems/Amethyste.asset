@@ -38,6 +38,7 @@ MonoBehaviour:
   inclusions: "Zonation de couleur en bandes parall\xE8les."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale visible en lumi\xE8re convergente."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 20
   origins:
   - name: "Br\xE9sil"

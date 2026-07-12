@@ -64,6 +64,8 @@ public class ReportUIController : MonoBehaviour
             measured.Add($"Conoscope : {gem.interferenceFigure}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ChelseaFilter.ToString()))
             measured.Add($"Filtre Chelsea : {gem.chelseaFilterReaction}");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Magnetism.ToString()))
+            measured.Add($"Aimant : {gem.magnetism}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Treatment.ToString()))
             measured.Add($"Traitement (FTIR) : {gemInstance.TreatmentGrade}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Authenticity.ToString()))

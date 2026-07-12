@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Moissanite_Synthetique
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "Moissanite Synth\xE9tique"
+  description: "Carbure de silicium synth\xE9tique, un autre simulant du diamant,
+    mais bir\xE9fringent contrairement \xE0 celui-ci."
+  icon: {fileID: 21300000, guid: 5b8d8fcd95e984c629f098d9e00327b2, type: 3}
+  refractiveIndex: 2.67
+  density: 3.21
+  hardness: 9.25
+  lengthMm: 5.8
+  widthMm: 5.8
+  depthMm: 3.6
+  weightCarats: 1
+  luster: Adamantin
+  color: Incolore
+  shape: Rond
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV."
+  fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV."
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent) \u2014 d\xE9doublement
+    des ar\xEAtes parfois visible \xE0 fort grossissement."
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "G\xE9n\xE9ralement tr\xE8s propre, inclusions m\xE9talliques rares."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 10
+  origins:
+  - name: Fabrication industrielle
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 

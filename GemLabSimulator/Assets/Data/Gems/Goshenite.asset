@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Goshenite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "Gosh\xE9nite"
+  description: "Un b\xE9ryl incolore, la vari\xE9t\xE9 la plus pure du groupe."
+  icon: {fileID: 21300000, guid: 1792448adf87f4966ba46d858fcda857, type: 3}
+  refractiveIndex: 1.577
+  density: 2.72
+  hardness: 7.75
+  lengthMm: 7.5
+  widthMm: 5.8
+  depthMm: 3.9
+  weightCarats: 1.3
+  luster: Vitreux
+  color: Incolore
+  shape: Rond
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: Aucune fluorescence notable.
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "G\xE9n\xE9ralement tr\xE8s propre."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale visible en lumi\xE8re convergente."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 15
+  origins:
+  - name: "Br\xE9sil"
+    rarityWeight: 40
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: "\xC9tats-Unis (Maine)"
+    rarityWeight: 30
+    valueMultiplier: 1.2
+    inclusionOverride: "Gisement historique ayant donn\xE9 son nom \xE0 cette vari\xE9t\xE9."
+  - name: Russie
+    rarityWeight: 30
+    valueMultiplier: 1
+    inclusionOverride: 

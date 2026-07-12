@@ -44,6 +44,7 @@ MonoBehaviour:
     inclus."
   interferenceFigure: "Figure d'interf\xE9rence biaxiale."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "L\xE9g\xE8rement attir\xE9 par un aimant puissant (teneur en fer mod\xE9r\xE9e)."
   baseValue: 35
   origins:
   - name: "Pakistan (vall\xE9e de Kashmir/Sopat)"
