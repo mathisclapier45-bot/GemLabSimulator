@@ -78,7 +78,8 @@ public class InventoryUI : MonoBehaviour
         iconRect.anchorMin = new Vector2(0.5f, 0.5f);
         iconRect.anchorMax = new Vector2(0.5f, 0.5f);
         iconRect.pivot = new Vector2(0.5f, 0.5f);
-        iconRect.sizeDelta = new Vector2(SlotSize - 12f, SlotSize - 12f);
+        var iconSize = (SlotSize - 12f) * gem.SizeScale;
+        iconRect.sizeDelta = new Vector2(iconSize, iconSize);
         iconRect.anchoredPosition = Vector2.zero;
 
         var iconImage = iconGO.GetComponent<Image>();

@@ -25,4 +25,12 @@ public class PlayerWallet : MonoBehaviour
         Money = amount;
         OnMoneyChanged?.Invoke(Money);
     }
+
+    public bool TrySpend(int amount)
+    {
+        if (Money < amount) return false;
+        Money -= amount;
+        OnMoneyChanged?.Invoke(Money);
+        return true;
+    }
 }

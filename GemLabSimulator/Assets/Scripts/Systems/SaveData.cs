@@ -5,6 +5,9 @@ using System.Collections.Generic;
 public class GemInstanceSaveData
 {
     public string definitionName;
+    public string specimenId;
+    public string clientName;
+    public bool isDonation;
     public bool isIdentified;
 
     public string originName;
@@ -38,9 +41,12 @@ public class GemInstanceSaveData
 [Serializable]
 public class SaveData
 {
+    public string saveName = "";
     public int money;
+    public int currentDay = 1;
     public List<GemInstanceSaveData> inventoryGems = new List<GemInstanceSaveData>();
     public List<GemInstanceSaveData> chestGems = new List<GemInstanceSaveData>();
+    public List<string> discoveredSpecies = new List<string>();
     public string sceneName;
     public float playerX;
     public float playerY;

@@ -3,7 +3,14 @@ using UnityEngine;
 
 public class GemInstance
 {
+    private static int nextSpecimenNumber = 1;
+    private const float DonationChance = 0.03f;
+
     public GemDefinition Definition { get; private set; }
+    public string SpecimenId { get; private set; }
+    public string ClientName { get; private set; }
+    public string DisplayId => $"{SpecimenId} — {ClientName}";
+    public bool IsDonation { get; private set; }
     public bool IsIdentified { get; private set; }
 
     public GemOrigin Origin { get; private set; }
@@ -23,14 +30,21 @@ public class GemInstance
     public string GrowthStructureDescription { get; private set; }
     public int FinalValue { get; private set; }
 
+    // Relative to the species' typical weight, clamped so icons stay legible within a fixed UI slot.
+    public float SizeScale => Mathf.Clamp(CaratWeight / Mathf.Max(Definition.weightCarats, 0.01f), 0.6f, 1.15f);
+
     private readonly Dictionary<string, float> measuredValues = new Dictionary<string, float>();
     private readonly HashSet<string> observedProperties = new HashSet<string>();
 
-    public GemInstance(GemDefinition definition)
+    public GemInstance(GemDefinition definition, GemOrigin forcedOrigin = null)
     {
         Definition = definition;
+        SpecimenId = $"id{nextSpecimenNumber:D4}";
+        nextSpecimenNumber++;
+        IsDonation = Random.value < DonationChance;
+        ClientName = IsDonation ? "Don anonyme" : ClientNames.GetRandom();
 
-        Origin = GemGrading.PickOrigin(definition.origins);
+        Origin = forcedOrigin ?? GemGrading.PickOrigin(definition.origins);
 
         var saturation = GemGrading.PickWeighted(GemGrading.SaturationGrades);
         SaturationGrade = saturation.Name;
@@ -79,9 +93,20 @@ public class GemInstance
 
     public static GemInstance FromSaveData(GemDefinition definition, GemInstanceSaveData data)
     {
+        var specimenId = string.IsNullOrEmpty(data.specimenId)
+            ? $"id{nextSpecimenNumber:D4}"
+            : data.specimenId;
+
+        var digitsOnly = new string(System.Array.FindAll(specimenId.ToCharArray(), char.IsDigit));
+        if (int.TryParse(digitsOnly, out var specimenNumber) && specimenNumber >= nextSpecimenNumber)
+            nextSpecimenNumber = specimenNumber + 1;
+
         var instance = new GemInstance
         {
             Definition = definition,
+            SpecimenId = specimenId,
+            ClientName = string.IsNullOrEmpty(data.clientName) ? ClientNames.GetRandom() : data.clientName,
+            IsDonation = data.isDonation,
             IsIdentified = data.isIdentified,
             Origin = new GemOrigin
             {
@@ -119,6 +144,9 @@ public class GemInstance
         return new GemInstanceSaveData
         {
             definitionName = Definition.name,
+            specimenId = SpecimenId,
+            clientName = ClientName,
+            isDonation = IsDonation,
             isIdentified = IsIdentified,
             originName = Origin.name,
             originValueMultiplier = Origin.valueMultiplier,

@@ -32,8 +32,7 @@ public class PlayerController : MonoBehaviour
         if (hasAttemptedLoad) return;
         hasAttemptedLoad = true;
 
-        if (SaveSystem.HasSave())
-            SaveSystem.Load();
+        SaveSystem.Load();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

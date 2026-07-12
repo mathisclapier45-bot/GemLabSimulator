@@ -57,8 +57,27 @@ public class GemDragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (Gem == null) return;
-        var text = Gem.IsIdentified ? Gem.Definition.displayName : "(gemme non identifiée)";
-        GemTooltipUI.Instance?.Show(text, eventData.position);
+        GemTooltipUI.Instance?.Show(BuildTooltipText(Gem), eventData.position);
+    }
+
+    private static string BuildTooltipText(GemInstance gem)
+    {
+        if (!gem.IsIdentified)
+            return $"(gemme non identifiée)\nN° {gem.DisplayId}";
+
+        var valueLine = gem.IsDonation
+            ? "Don — à conserver, non destiné à être renvoyé"
+            : $"Valeur estimée : {gem.FinalValue}€";
+
+        return $"{gem.Definition.displayName}  (N° {gem.DisplayId})\n" +
+               $"Origine : {gem.Origin.name}\n" +
+               $"Poids : {gem.CaratWeight:F2} ct\n" +
+               $"Dimensions : {gem.LengthMm:F1} x {gem.WidthMm:F1} x {gem.DepthMm:F1} mm\n" +
+               $"Pureté : {gem.ClarityGrade}\n" +
+               $"Saturation : {gem.SaturationGrade}\n" +
+               $"Traitement : {gem.TreatmentGrade}\n" +
+               $"Authenticité : {gem.AuthenticityGrade}\n" +
+               $"{valueLine}";
     }
 
     public void OnPointerExit(PointerEventData eventData)

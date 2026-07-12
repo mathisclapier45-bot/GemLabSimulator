@@ -28,6 +28,101 @@ public static class SceneBootstrap
     private const int TownMinY = -14;
     private const int TownMaxY = 14;
 
+    [MenuItem("GemLab/Setup Main Menu Scene")]
+    public static void CreateMainMenuScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+
+        var light = GameObject.Find("Directional Light");
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
+
+        var cam = Camera.main;
+        cam.orthographic = true;
+        cam.orthographicSize = 5;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.05f, 0.05f, 0.07f);
+
+        var canvasGO = new GameObject("Canvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+        var canvas = canvasGO.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        var scaler = canvasGO.GetComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1280, 720);
+
+        new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+
+        var titlePanelGO = new GameObject("TitleScreenPanel", typeof(RectTransform));
+        titlePanelGO.transform.SetParent(canvasGO.transform, false);
+        var titlePanelRect = titlePanelGO.GetComponent<RectTransform>();
+        titlePanelRect.anchorMin = Vector2.zero;
+        titlePanelRect.anchorMax = Vector2.one;
+        titlePanelRect.sizeDelta = Vector2.zero;
+        titlePanelRect.anchoredPosition = Vector2.zero;
+
+        var backgroundGemsGO = new GameObject("BackgroundGems", typeof(RectTransform));
+        backgroundGemsGO.transform.SetParent(titlePanelGO.transform, false);
+        var backgroundGemsRect = backgroundGemsGO.GetComponent<RectTransform>();
+        backgroundGemsRect.anchorMin = Vector2.zero;
+        backgroundGemsRect.anchorMax = Vector2.one;
+        backgroundGemsRect.sizeDelta = Vector2.zero;
+        backgroundGemsRect.anchoredPosition = Vector2.zero;
+        var backgroundGems = backgroundGemsGO.AddComponent<MenuBackgroundGems>();
+        var backgroundGemsSo = new SerializedObject(backgroundGems);
+        backgroundGemsSo.FindProperty("container").objectReferenceValue = backgroundGemsRect;
+        backgroundGemsSo.ApplyModifiedProperties();
+
+        CreateUIText("Title", titlePanelGO.transform, "GemLab Simulator",
+            new Vector2(0, -180), new Vector2(700, 70), 48, TextAnchor.UpperCenter, Color.white);
+        CreateUIText("Tagline", titlePanelGO.transform, "Un simulateur de gemmologie",
+            new Vector2(0, -250), new Vector2(700, 30), 18, TextAnchor.UpperCenter, new Color(0.75f, 0.75f, 0.75f));
+
+        var playButtonGO = CreateUIButton("PlayButton", titlePanelGO.transform, "Jouer",
+            new Vector2(0, -340), new Vector2(220, 50), 20);
+
+        var slotsPanelGO = new GameObject("SlotsPanel", typeof(RectTransform));
+        slotsPanelGO.transform.SetParent(canvasGO.transform, false);
+        var slotsPanelRect = slotsPanelGO.GetComponent<RectTransform>();
+        slotsPanelRect.anchorMin = Vector2.zero;
+        slotsPanelRect.anchorMax = Vector2.one;
+        slotsPanelRect.sizeDelta = Vector2.zero;
+        slotsPanelRect.anchoredPosition = Vector2.zero;
+        slotsPanelGO.SetActive(false);
+
+        CreateUIText("Title", slotsPanelGO.transform, "GemLab Simulator",
+            new Vector2(0, -60), new Vector2(700, 60), 40, TextAnchor.UpperCenter, Color.white);
+        CreateUIText("Subtitle", slotsPanelGO.transform, "Choisissez une sauvegarde",
+            new Vector2(0, -120), new Vector2(700, 30), 18, TextAnchor.UpperCenter, new Color(0.75f, 0.75f, 0.75f));
+
+        var slotsGO = new GameObject("Slots", typeof(RectTransform));
+        slotsGO.transform.SetParent(slotsPanelGO.transform, false);
+        var slotsRect = slotsGO.GetComponent<RectTransform>();
+        slotsRect.anchorMin = new Vector2(0.5f, 0.5f);
+        slotsRect.anchorMax = new Vector2(0.5f, 0.5f);
+        slotsRect.pivot = new Vector2(0.5f, 1f);
+        slotsRect.anchoredPosition = new Vector2(0, 180);
+        slotsRect.sizeDelta = new Vector2(560, 450);
+
+        var menuUI = canvasGO.AddComponent<MainMenuUI>();
+        var menuSo = new SerializedObject(menuUI);
+        menuSo.FindProperty("slotsContainer").objectReferenceValue = slotsRect;
+        menuSo.ApplyModifiedProperties();
+
+        var titleScreen = playButtonGO.AddComponent<TitleScreenController>();
+        var titleScreenSo = new SerializedObject(titleScreen);
+        titleScreenSo.FindProperty("titlePanel").objectReferenceValue = titlePanelGO;
+        titleScreenSo.FindProperty("slotsPanel").objectReferenceValue = slotsPanelGO;
+        titleScreenSo.ApplyModifiedProperties();
+
+        CreateMusicManager();
+
+        Directory.CreateDirectory("Assets/Scenes");
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/MainMenu.unity");
+        AddSceneToBuildSettings("Assets/Scenes/MainMenu.unity", true);
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("Main menu scene created at Assets/Scenes/MainMenu.unity");
+    }
+
     [MenuItem("GemLab/Setup Home Scene")]
     public static void CreateHomeScene()
     {
@@ -102,10 +197,17 @@ public static class SceneBootstrap
         player.AddComponent<PlayerInventory>();
         player.AddComponent<PlayerWallet>();
         player.AddComponent<PlayerChest>();
+        player.AddComponent<GemCodex>();
+        player.AddComponent<MailboxState>();
+        player.AddComponent<GameClock>();
+        player.AddComponent<ReturnToMenuController>();
+        player.AddComponent<MarketState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
         follow.SetTarget(player.transform);
+
+        CreateMusicManager();
 
         CreateExitDoor(new Vector3(RoomMinX + 1, RoomMinY + 1, 0f));
         CreateChest(new Vector3(3, 2, 0f));
@@ -119,17 +221,11 @@ public static class SceneBootstrap
         var mailboxCol = mailbox.AddComponent<BoxCollider2D>();
         mailboxCol.isTrigger = true;
         mailboxCol.size = new Vector2(1.2f, 1.2f);
-        var mailboxScript = mailbox.AddComponent<Mailbox>();
+        mailbox.AddComponent<Mailbox>();
         mailbox.transform.position = new Vector3(DividerX - 2, RoomMinY + 1, 0f);
 
         var gemPool = GetOrCreateGemPool();
         UpdateGemDatabase(gemPool);
-        var so = new SerializedObject(mailboxScript);
-        var poolProp = so.FindProperty("gemPool");
-        poolProp.arraySize = gemPool.Length;
-        for (var i = 0; i < gemPool.Length; i++)
-            poolProp.GetArrayElementAtIndex(i).objectReferenceValue = gemPool[i];
-        so.ApplyModifiedProperties();
 
         CreateExaminationStation("Loupe", ExaminationTool.MeasurementType.VisualExamination, new Vector3(9, 2, 0f));
         CreateExaminationStation("Refractometre", ExaminationTool.MeasurementType.RefractiveIndex, new Vector3(11.5f, 2, 0f));
@@ -231,10 +327,17 @@ public static class SceneBootstrap
         player.AddComponent<PlayerInventory>();
         player.AddComponent<PlayerWallet>();
         player.AddComponent<PlayerChest>();
+        player.AddComponent<GemCodex>();
+        player.AddComponent<MailboxState>();
+        player.AddComponent<GameClock>();
+        player.AddComponent<ReturnToMenuController>();
+        player.AddComponent<MarketState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
         follow.SetTarget(player.transform);
+
+        CreateMusicManager();
 
         CreateBuilding("Maison & Bureau de Gemmologie", new Vector3(-16, 8, 0f),
             new Color(0.65f, 0.22f, 0.18f), new Color(0.85f, 0.78f, 0.62f), "Home", true);
@@ -247,7 +350,8 @@ public static class SceneBootstrap
         CreateBuilding("Quartier des Diamantaires", new Vector3(16, 8, 0f),
             new Color(0.25f, 0.30f, 0.55f), new Color(0.70f, 0.75f, 0.90f), "", false);
         CreateBuilding("Marche aux Pierres", new Vector3(-12, -6, 0f),
-            new Color(0.65f, 0.42f, 0.18f), new Color(0.88f, 0.70f, 0.45f), "", false);
+            new Color(0.65f, 0.42f, 0.18f), new Color(0.88f, 0.70f, 0.45f), "Marche", true);
+
         CreateBuilding("Le Manoir", new Vector3(12, -6, 0f),
             new Color(0.35f, 0.18f, 0.42f), new Color(0.70f, 0.60f, 0.75f), "", false);
         CreateTunnelEntrance(new Vector3(0, -11, 0f));
@@ -266,6 +370,11 @@ public static class SceneBootstrap
     private const int LabMaxX = 10;
     private const int LabMinY = -6;
     private const int LabMaxY = 6;
+
+    private const int MarketMinX = -14;
+    private const int MarketMaxX = 14;
+    private const int MarketMinY = -6;
+    private const int MarketMaxY = 6;
 
     [MenuItem("GemLab/Setup Laboratory Scene")]
     public static void CreateLaboratoryScene()
@@ -339,10 +448,17 @@ public static class SceneBootstrap
         player.AddComponent<PlayerInventory>();
         player.AddComponent<PlayerWallet>();
         player.AddComponent<PlayerChest>();
+        player.AddComponent<GemCodex>();
+        player.AddComponent<MailboxState>();
+        player.AddComponent<GameClock>();
+        player.AddComponent<ReturnToMenuController>();
+        player.AddComponent<MarketState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
         follow.SetTarget(player.transform);
+
+        CreateMusicManager();
 
         CreateExitDoor(new Vector3(0, LabMinY + 1, 0f));
 
@@ -361,11 +477,116 @@ public static class SceneBootstrap
         Debug.Log("Laboratory scene created at Assets/Scenes/Laboratoire.unity");
     }
 
-    private static void AddSceneToBuildSettings(string path)
+    [MenuItem("GemLab/Setup Market Scene")]
+    public static void CreateMarketScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+
+        var light = GameObject.Find("Directional Light");
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
+
+        var cam = Camera.main;
+        cam.orthographic = true;
+        cam.orthographicSize = 6f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.12f, 0.09f, 0.07f);
+        cam.transform.position = new Vector3(0f, 0f, -10f);
+
+        var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
+        pixelPerfect.assetsPPU = PixelsPerUnit;
+        pixelPerfect.refResolutionX = 384;
+        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.upscaleRT = true;
+        pixelPerfect.pixelSnapping = true;
+        pixelPerfect.cropFrameX = true;
+        pixelPerfect.cropFrameY = true;
+
+        var gridGO = new GameObject("Grid", typeof(Grid));
+
+        var groundGO = new GameObject("Ground", typeof(Tilemap), typeof(TilemapRenderer));
+        groundGO.transform.SetParent(gridGO.transform);
+        var groundTilemap = groundGO.GetComponent<Tilemap>();
+
+        var wallsGO = new GameObject("Walls", typeof(Tilemap), typeof(TilemapRenderer), typeof(TilemapCollider2D));
+        wallsGO.transform.SetParent(gridGO.transform);
+        var wallsTilemap = wallsGO.GetComponent<Tilemap>();
+
+        var floorTile = GetOrCreateTile("labfloor_pixel", LabFloorPixel);
+        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
+
+        for (var x = MarketMinX; x <= MarketMaxX; x++)
+        {
+            for (var y = MarketMinY; y <= MarketMaxY; y++)
+            {
+                var isPerimeter = x == MarketMinX || x == MarketMaxX || y == MarketMinY || y == MarketMaxY;
+                var cell = new Vector3Int(x, y, 0);
+                if (isPerimeter)
+                    wallsTilemap.SetTile(cell, wallTile);
+                else
+                    groundTilemap.SetTile(cell, floorTile);
+            }
+        }
+
+        var spawnGO = new GameObject("SpawnPoint");
+        spawnGO.transform.position = new Vector3(0, MarketMinY + 2, 0f);
+
+        var playerSprite = GetOrCreatePixelSprite("player_pixel", PlayerPattern, PlayerPalette);
+        var player = new GameObject("Player");
+        player.tag = "Player";
+        var sr = player.AddComponent<SpriteRenderer>();
+        sr.sprite = playerSprite;
+        sr.sortingOrder = 5;
+
+        var rb = player.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        var col = player.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.8f, 0.8f);
+
+        player.AddComponent<PlayerController>();
+        player.AddComponent<PlayerInventory>();
+        player.AddComponent<PlayerWallet>();
+        player.AddComponent<PlayerChest>();
+        player.AddComponent<GemCodex>();
+        player.AddComponent<MailboxState>();
+        player.AddComponent<GameClock>();
+        player.AddComponent<ReturnToMenuController>();
+        player.AddComponent<MarketState>();
+        player.transform.position = spawnGO.transform.position;
+
+        var follow = cam.gameObject.AddComponent<CameraFollow>();
+        follow.SetTarget(player.transform);
+
+        CreateMusicManager();
+
+        CreateExitDoor(new Vector3(0, MarketMinY + 1, 0f));
+
+        BakeAllFlags();
+        CreateMarketVendorSpot(0, new Vector3(-9, 1, 0f));
+        CreateMarketVendorSpot(1, new Vector3(-3, 1, 0f));
+        CreateMarketVendorSpot(2, new Vector3(3, 1, 0f));
+        CreateMarketVendorSpot(3, new Vector3(9, 1, 0f));
+
+        CreateUI(false);
+
+        Directory.CreateDirectory("Assets/Scenes");
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/Marche.unity");
+        AddSceneToBuildSettings("Assets/Scenes/Marche.unity");
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("Market scene created at Assets/Scenes/Marche.unity");
+    }
+
+    private static void AddSceneToBuildSettings(string path, bool insertFirst = false)
     {
         var scenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
         scenes.RemoveAll(s => s.path == path);
-        scenes.Add(new EditorBuildSettingsScene(path, true));
+        if (insertFirst)
+            scenes.Insert(0, new EditorBuildSettingsScene(path, true));
+        else
+            scenes.Add(new EditorBuildSettingsScene(path, true));
         EditorBuildSettings.scenes = scenes.ToArray();
     }
 
@@ -551,6 +772,114 @@ public static class SceneBootstrap
         director.transform.localScale = new Vector3(1.15f, 1.15f, 1f);
     }
 
+    private static readonly Dictionary<char, Color>[] MerchantPalettes =
+    {
+        new Dictionary<char, Color>
+        {
+            { 'H', new Color(0.75f, 0.55f, 0.15f) },
+            { 'S', new Color(0.65f, 0.45f, 0.30f) },
+            { 'E', new Color(0.10f, 0.10f, 0.10f) },
+            { 'C', new Color(0.55f, 0.15f, 0.15f) },
+            { 'D', new Color(0.40f, 0.10f, 0.10f) },
+            { 'B', new Color(0.16f, 0.16f, 0.18f) },
+        },
+        new Dictionary<char, Color>
+        {
+            { 'H', new Color(0.20f, 0.35f, 0.55f) },
+            { 'S', new Color(0.85f, 0.68f, 0.52f) },
+            { 'E', new Color(0.10f, 0.10f, 0.10f) },
+            { 'C', new Color(0.30f, 0.50f, 0.30f) },
+            { 'D', new Color(0.20f, 0.38f, 0.20f) },
+            { 'B', new Color(0.16f, 0.16f, 0.18f) },
+        },
+        new Dictionary<char, Color>
+        {
+            { 'H', new Color(0.45f, 0.20f, 0.55f) },
+            { 'S', new Color(0.35f, 0.22f, 0.15f) },
+            { 'E', new Color(0.10f, 0.10f, 0.10f) },
+            { 'C', new Color(0.85f, 0.65f, 0.20f) },
+            { 'D', new Color(0.65f, 0.48f, 0.12f) },
+            { 'B', new Color(0.16f, 0.16f, 0.18f) },
+        },
+        new Dictionary<char, Color>
+        {
+            { 'H', new Color(0.15f, 0.15f, 0.15f) },
+            { 'S', new Color(0.92f, 0.75f, 0.60f) },
+            { 'E', new Color(0.10f, 0.10f, 0.10f) },
+            { 'C', new Color(0.20f, 0.20f, 0.50f) },
+            { 'D', new Color(0.14f, 0.14f, 0.35f) },
+            { 'B', new Color(0.16f, 0.16f, 0.18f) },
+        },
+    };
+
+    private static readonly string[] MarketTablePattern =
+    {
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(1, '.', 14, 'T', 1, '.'),
+        Row(1, '.', 14, 'T', 1, '.'),
+        Row(1, '.', 14, 'T', 1, '.'),
+        Row(1, '.', 14, 'T', 1, '.'),
+        Row(1, '.', 14, 'T', 1, '.'),
+        Row(1, '.', 14, 'N', 1, '.'),
+        Row(2, '.', 2, 'L', 8, '.', 2, 'L', 2, '.'),
+        Row(2, '.', 2, 'L', 8, '.', 2, 'L', 2, '.'),
+        Row(2, '.', 2, 'L', 8, '.', 2, 'L', 2, '.'),
+        Row(2, '.', 2, 'L', 8, '.', 2, 'L', 2, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> MarketTablePalette = new Dictionary<char, Color>
+    {
+        { 'T', new Color(0.75f, 0.35f, 0.15f) },
+        { 'N', new Color(0.45f, 0.20f, 0.08f) },
+        { 'L', new Color(0.35f, 0.22f, 0.12f) },
+    };
+
+    private static void CreateMarketVendorSpot(int vendorIndex, Vector3 position)
+    {
+        var tableSprite = GetOrCreatePixelSprite("markettable_pixel", MarketTablePattern, MarketTablePalette);
+        var tableGO = new GameObject($"MarketTable_{vendorIndex}");
+        var tableSr = tableGO.AddComponent<SpriteRenderer>();
+        tableSr.sprite = tableSprite;
+        tableSr.sortingOrder = 4;
+        tableGO.transform.position = position;
+
+        var palette = MerchantPalettes[vendorIndex % MerchantPalettes.Length];
+        var merchantSprite = GetOrCreatePixelSprite($"merchant{vendorIndex}_pixel", PlayerPattern, palette);
+        var merchantGO = new GameObject($"Merchant_{vendorIndex}");
+        var merchantSr = merchantGO.AddComponent<SpriteRenderer>();
+        merchantSr.sprite = merchantSprite;
+        merchantSr.sortingOrder = 4;
+        merchantGO.transform.position = position + new Vector3(0f, 0.6f, 0f);
+
+        var flagGO = new GameObject("Flag", typeof(SpriteRenderer));
+        flagGO.transform.SetParent(merchantGO.transform, false);
+        flagGO.transform.localPosition = new Vector3(0f, 0.9f, 0f);
+        flagGO.transform.localScale = Vector3.one * 0.5f;
+        var flagSr = flagGO.GetComponent<SpriteRenderer>();
+        flagSr.sortingOrder = 6;
+
+        var tableItemsGO = new GameObject("TableItems");
+        tableItemsGO.transform.SetParent(tableGO.transform, false);
+        tableItemsGO.transform.localPosition = new Vector3(0f, 0.15f, 0f);
+
+        var col = tableGO.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1.4f, 1.4f);
+        col.offset = new Vector2(0f, 0.3f);
+
+        var spot = tableGO.AddComponent<MarketVendorSpot>();
+        var so = new SerializedObject(spot);
+        so.FindProperty("vendorIndex").intValue = vendorIndex;
+        so.FindProperty("flagRenderer").objectReferenceValue = flagSr;
+        so.FindProperty("tableItemsRoot").objectReferenceValue = tableItemsGO.transform;
+        so.ApplyModifiedProperties();
+    }
+
     private static readonly string[] ReportSpeciesOptions =
     {
         "Quartz", "Corindon (Rubis)", "Spinelle", "Grenat Almandin", "Verre",
@@ -581,13 +910,20 @@ public static class SceneBootstrap
 
         var moneyGO = CreateUIText("MoneyText", canvasGO.transform, "Argent : 0€",
             new Vector2(20, -20), new Vector2(300, 30), 24, TextAnchor.UpperLeft, Color.white);
+        var dayGO = CreateUIText("DayText", canvasGO.transform, "Jour 1",
+            new Vector2(20, -50), new Vector2(300, 24), 16, TextAnchor.UpperLeft, new Color(0.85f, 0.85f, 0.85f));
         moneyGO.AddComponent<HUDController>();
         var hudSo = new SerializedObject(moneyGO.GetComponent<HUDController>());
         hudSo.FindProperty("moneyText").objectReferenceValue = moneyGO.GetComponent<Text>();
+        hudSo.FindProperty("dayText").objectReferenceValue = dayGO.GetComponent<Text>();
         hudSo.ApplyModifiedProperties();
 
         CreateUIText("InventoryHint", canvasGO.transform, "Tab : Inventaire",
-            new Vector2(20, -50), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
+            new Vector2(20, -76), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
+        CreateUIText("GrimoireHint", canvasGO.transform, "G : Grimoire",
+            new Vector2(20, -98), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
+        CreateUIText("MenuHint", canvasGO.transform, "Échap : Menu (sauvegarde)",
+            new Vector2(20, -120), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
 
         var feedbackGO = CreateUIText("ToolFeedback", canvasGO.transform, "",
             new Vector2(0, 20), new Vector2(700, 40), 18, TextAnchor.LowerCenter, new Color(0.95f, 0.95f, 0.8f));
@@ -602,6 +938,9 @@ public static class SceneBootstrap
 
         CreateGemTooltipUI(canvasGO.transform);
         CreateInventoryUI(canvasGO.transform);
+        CreateGrimoireUI(canvasGO.transform);
+        CreateReturnToMenuUI(canvasGO.transform);
+        CreateMarketUI(canvasGO.transform);
 
         if (!includeExaminationUI) return;
 
@@ -688,6 +1027,7 @@ public static class SceneBootstrap
         CreateMeasurementMinigameUI(canvasGO.transform);
         CreateChestUI(canvasGO.transform);
         CreateSpectrumUI(canvasGO.transform);
+        CreateMailboxUI(canvasGO.transform);
     }
 
     private static void CreateGemTooltipUI(Transform canvasTransform)
@@ -698,18 +1038,18 @@ public static class SceneBootstrap
         panelRect.anchorMin = new Vector2(0f, 0f);
         panelRect.anchorMax = new Vector2(0f, 0f);
         panelRect.pivot = new Vector2(0f, 0f);
-        panelRect.sizeDelta = new Vector2(220, 30);
+        panelRect.sizeDelta = new Vector2(240, 30);
         panelGO.GetComponent<Image>().color = new Color(0.05f, 0.05f, 0.06f, 0.95f);
         panelGO.GetComponent<Image>().raycastTarget = false;
         panelGO.SetActive(false);
 
         var labelGO = CreateUIText("Label", panelGO.transform, "",
-            Vector2.zero, new Vector2(220, 30), 14, TextAnchor.MiddleCenter, Color.white);
+            Vector2.zero, new Vector2(240, 30), 13, TextAnchor.UpperLeft, Color.white);
         var labelRect = labelGO.GetComponent<RectTransform>();
         labelRect.anchorMin = Vector2.zero;
         labelRect.anchorMax = Vector2.one;
         labelRect.pivot = new Vector2(0.5f, 0.5f);
-        labelRect.sizeDelta = Vector2.zero;
+        labelRect.sizeDelta = new Vector2(-16f, -8f);
         labelRect.anchoredPosition = Vector2.zero;
         labelGO.GetComponent<Text>().raycastTarget = false;
 
@@ -759,6 +1099,196 @@ public static class SceneBootstrap
         so.ApplyModifiedProperties();
     }
 
+    private static void CreateGrimoireUI(Transform canvasTransform)
+    {
+        const float panelWidth = 700f;
+        const float panelHeight = 560f;
+
+        var gridPanelGO = new GameObject("GrimoireGridPanel", typeof(RectTransform), typeof(Image));
+        gridPanelGO.transform.SetParent(canvasTransform, false);
+        var gridPanelRect = gridPanelGO.GetComponent<RectTransform>();
+        gridPanelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        gridPanelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        gridPanelRect.pivot = new Vector2(0.5f, 0.5f);
+        gridPanelRect.sizeDelta = new Vector2(panelWidth, panelHeight);
+        gridPanelRect.anchoredPosition = Vector2.zero;
+        gridPanelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.97f);
+        gridPanelGO.SetActive(false);
+
+        CreateUIText("Title", gridPanelGO.transform, "Grimoire des gemmes",
+            new Vector2(0, -16), new Vector2(640, 28), 20, TextAnchor.UpperCenter, Color.white);
+
+        var progressGO = CreateUIText("Progress", gridPanelGO.transform, "",
+            new Vector2(0, -46), new Vector2(640, 22), 13, TextAnchor.UpperCenter, new Color(0.75f, 0.75f, 0.75f));
+
+        var scrollViewGO = new GameObject("GridScrollView", typeof(RectTransform), typeof(Image), typeof(Mask), typeof(ScrollRect));
+        scrollViewGO.transform.SetParent(gridPanelGO.transform, false);
+        var scrollViewRect = scrollViewGO.GetComponent<RectTransform>();
+        scrollViewRect.anchorMin = new Vector2(0.5f, 1f);
+        scrollViewRect.anchorMax = new Vector2(0.5f, 1f);
+        scrollViewRect.pivot = new Vector2(0.5f, 1f);
+        scrollViewRect.anchoredPosition = new Vector2(0, -76);
+        scrollViewRect.sizeDelta = new Vector2(660, 428);
+        scrollViewGO.GetComponent<Image>().color = new Color(0.04f, 0.04f, 0.05f, 0.6f);
+        scrollViewGO.GetComponent<Mask>().showMaskGraphic = true;
+
+        var contentGO = new GameObject("Content", typeof(RectTransform));
+        contentGO.transform.SetParent(scrollViewGO.transform, false);
+        var contentRect = contentGO.GetComponent<RectTransform>();
+        contentRect.anchorMin = new Vector2(0.5f, 1f);
+        contentRect.anchorMax = new Vector2(0.5f, 1f);
+        contentRect.pivot = new Vector2(0.5f, 1f);
+        contentRect.sizeDelta = new Vector2(660, 428);
+        contentRect.anchoredPosition = Vector2.zero;
+
+        var scroll = scrollViewGO.GetComponent<ScrollRect>();
+        scroll.content = contentRect;
+        scroll.horizontal = false;
+        scroll.vertical = true;
+        scroll.movementType = ScrollRect.MovementType.Clamped;
+        scroll.scrollSensitivity = 24f;
+
+        var closeButtonGO = CreateUIButton("CloseButton", gridPanelGO.transform, "Fermer (G)",
+            new Vector2(0, -520), new Vector2(180, 32));
+        closeButtonGO.AddComponent<CloseGrimoireButton>();
+
+        var lockedIcon = GetGemIconSprite("grimoirelocked", new Color(0.30f, 0.30f, 0.34f), new Color(0.42f, 0.42f, 0.46f));
+
+        var detailPanelGO = new GameObject("GrimoireDetailPanel", typeof(RectTransform), typeof(Image));
+        detailPanelGO.transform.SetParent(canvasTransform, false);
+        var detailPanelRect = detailPanelGO.GetComponent<RectTransform>();
+        detailPanelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        detailPanelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        detailPanelRect.pivot = new Vector2(0.5f, 0.5f);
+        detailPanelRect.sizeDelta = new Vector2(panelWidth, panelHeight);
+        detailPanelRect.anchoredPosition = Vector2.zero;
+        detailPanelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.97f);
+        detailPanelGO.SetActive(false);
+
+        var detailTitleGO = CreateUIText("Title", detailPanelGO.transform, "",
+            new Vector2(0, -16), new Vector2(640, 28), 20, TextAnchor.UpperCenter, Color.white);
+
+        var spectrumBarGO = new GameObject("SpectrumBar", typeof(RectTransform), typeof(Image));
+        spectrumBarGO.transform.SetParent(detailPanelGO.transform, false);
+        var spectrumBarRect = spectrumBarGO.GetComponent<RectTransform>();
+        spectrumBarRect.anchorMin = new Vector2(0.5f, 1f);
+        spectrumBarRect.anchorMax = new Vector2(0.5f, 1f);
+        spectrumBarRect.pivot = new Vector2(0.5f, 1f);
+        spectrumBarRect.anchoredPosition = new Vector2(0, -54);
+        spectrumBarRect.sizeDelta = new Vector2(620, 34);
+        var spectrumBarImage = spectrumBarGO.GetComponent<Image>();
+        spectrumBarImage.preserveAspect = false;
+
+        CreateUIText("MinLabel", detailPanelGO.transform, "400 nm",
+            new Vector2(-310, -90), new Vector2(80, 18), 11, TextAnchor.UpperLeft, new Color(0.6f, 0.6f, 0.6f));
+        CreateUIText("MaxLabel", detailPanelGO.transform, "700 nm",
+            new Vector2(310, -90), new Vector2(80, 18), 11, TextAnchor.UpperRight, new Color(0.6f, 0.6f, 0.6f));
+
+        var detailBodyGO = CreateUIText("Body", detailPanelGO.transform, "",
+            new Vector2(0, -114), new Vector2(640, 396), 12, TextAnchor.UpperLeft, new Color(0.85f, 0.85f, 0.85f));
+
+        var backButtonGO = CreateUIButton("BackButton", detailPanelGO.transform, "Retour",
+            new Vector2(0, -520), new Vector2(180, 32));
+        backButtonGO.AddComponent<BackToGrimoireGridButton>();
+
+        var grimoire = canvasTransform.gameObject.AddComponent<GrimoireUI>();
+        var so = new SerializedObject(grimoire);
+        so.FindProperty("gridPanel").objectReferenceValue = gridPanelGO;
+        so.FindProperty("contentContainer").objectReferenceValue = contentRect;
+        so.FindProperty("progressText").objectReferenceValue = progressGO.GetComponent<Text>();
+        so.FindProperty("lockedIcon").objectReferenceValue = lockedIcon;
+        so.FindProperty("detailPanel").objectReferenceValue = detailPanelGO;
+        so.FindProperty("detailTitleText").objectReferenceValue = detailTitleGO.GetComponent<Text>();
+        so.FindProperty("detailBodyText").objectReferenceValue = detailBodyGO.GetComponent<Text>();
+        so.FindProperty("detailSpectrumImage").objectReferenceValue = spectrumBarImage;
+        so.ApplyModifiedProperties();
+    }
+
+    private static void CreateReturnToMenuUI(Transform canvasTransform)
+    {
+        var panelGO = new GameObject("ReturnToMenuPanel", typeof(RectTransform), typeof(Image));
+        panelGO.transform.SetParent(canvasTransform, false);
+        var panelRect = panelGO.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        panelRect.pivot = new Vector2(0.5f, 0.5f);
+        panelRect.sizeDelta = new Vector2(360, 160);
+        panelRect.anchoredPosition = Vector2.zero;
+        panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.97f);
+        panelGO.SetActive(false);
+
+        CreateUIText("Message", panelGO.transform, "Retour au menu ?\n(la partie sera sauvegardée)",
+            new Vector2(0, -24), new Vector2(320, 60), 16, TextAnchor.UpperCenter, Color.white);
+
+        var yesButtonGO = CreateUIButton("YesButton", panelGO.transform, "Oui",
+            new Vector2(-85, -110), new Vector2(140, 36));
+        yesButtonGO.AddComponent<ConfirmReturnToMenuButton>();
+
+        var noButtonGO = CreateUIButton("NoButton", panelGO.transform, "Non",
+            new Vector2(85, -110), new Vector2(140, 36));
+        noButtonGO.AddComponent<CancelReturnToMenuButton>();
+
+        var controller = canvasTransform.gameObject.AddComponent<ReturnToMenuUI>();
+        var returnSo = new SerializedObject(controller);
+        returnSo.FindProperty("panel").objectReferenceValue = panelGO;
+        returnSo.ApplyModifiedProperties();
+    }
+
+    private static void CreateMarketUI(Transform canvasTransform)
+    {
+        var panelGO = new GameObject("MarketPanel", typeof(RectTransform), typeof(Image));
+        panelGO.transform.SetParent(canvasTransform, false);
+        var panelRect = panelGO.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        panelRect.pivot = new Vector2(0.5f, 0.5f);
+        panelRect.sizeDelta = new Vector2(460, 380);
+        panelRect.anchoredPosition = Vector2.zero;
+        panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.97f);
+        panelGO.SetActive(false);
+
+        var titleGO = CreateUIText("Title", panelGO.transform, "",
+            new Vector2(0, -14), new Vector2(420, 26), 18, TextAnchor.UpperCenter, Color.white);
+
+        var scrollViewGO = new GameObject("MarketScrollView", typeof(RectTransform), typeof(Image), typeof(Mask), typeof(ScrollRect));
+        scrollViewGO.transform.SetParent(panelGO.transform, false);
+        var scrollViewRect = scrollViewGO.GetComponent<RectTransform>();
+        scrollViewRect.anchorMin = new Vector2(0.5f, 1f);
+        scrollViewRect.anchorMax = new Vector2(0.5f, 1f);
+        scrollViewRect.pivot = new Vector2(0.5f, 1f);
+        scrollViewRect.anchoredPosition = new Vector2(0, -50);
+        scrollViewRect.sizeDelta = new Vector2(420, 240);
+        scrollViewGO.GetComponent<Image>().color = new Color(0.04f, 0.04f, 0.05f, 0.6f);
+        scrollViewGO.GetComponent<Mask>().showMaskGraphic = true;
+
+        var contentGO = new GameObject("Content", typeof(RectTransform));
+        contentGO.transform.SetParent(scrollViewGO.transform, false);
+        var contentRect = contentGO.GetComponent<RectTransform>();
+        contentRect.anchorMin = new Vector2(0.5f, 1f);
+        contentRect.anchorMax = new Vector2(0.5f, 1f);
+        contentRect.pivot = new Vector2(0.5f, 1f);
+        contentRect.sizeDelta = new Vector2(400, 240);
+        contentRect.anchoredPosition = Vector2.zero;
+
+        var scroll = scrollViewGO.GetComponent<ScrollRect>();
+        scroll.content = contentRect;
+        scroll.horizontal = false;
+        scroll.vertical = true;
+        scroll.movementType = ScrollRect.MovementType.Clamped;
+        scroll.scrollSensitivity = 24f;
+
+        var closeButtonGO = CreateUIButton("CloseButton", panelGO.transform, "Fermer",
+            new Vector2(0, -340), new Vector2(180, 32));
+        closeButtonGO.AddComponent<CloseMarketButton>();
+
+        var marketUI = canvasTransform.gameObject.AddComponent<MarketUI>();
+        var marketSo = new SerializedObject(marketUI);
+        marketSo.FindProperty("panel").objectReferenceValue = panelGO;
+        marketSo.FindProperty("titleText").objectReferenceValue = titleGO.GetComponent<Text>();
+        marketSo.FindProperty("content").objectReferenceValue = contentRect;
+        marketSo.ApplyModifiedProperties();
+    }
+
     private static void CreateChestUI(Transform canvasTransform)
     {
         var panelGO = new GameObject("ChestPanel", typeof(RectTransform), typeof(Image));
@@ -792,6 +1322,72 @@ public static class SceneBootstrap
         so.FindProperty("slotsContainer").objectReferenceValue = slotsRect;
         so.FindProperty("dropZone").objectReferenceValue = dropZone;
         so.ApplyModifiedProperties();
+    }
+
+    private static void CreateMailboxUI(Transform canvasTransform)
+    {
+        var panelGO = new GameObject("MailboxPanel", typeof(RectTransform), typeof(Image));
+        panelGO.transform.SetParent(canvasTransform, false);
+        var panelRect = panelGO.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        panelRect.pivot = new Vector2(0.5f, 0.5f);
+        panelRect.sizeDelta = new Vector2(460, 460);
+        panelRect.anchoredPosition = Vector2.zero;
+        panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.97f);
+        panelGO.SetActive(false);
+
+        CreateUIText("Title", panelGO.transform, "Boîte aux lettres",
+            new Vector2(0, -14), new Vector2(420, 26), 18, TextAnchor.UpperCenter, Color.white);
+
+        var receiveTabGO = CreateUIButton("ReceiveTab", panelGO.transform, "Récupérer",
+            new Vector2(-105, -46), new Vector2(190, 32), 13);
+        receiveTabGO.AddComponent<MailboxReceiveTabButton>();
+
+        var sendTabGO = CreateUIButton("SendTab", panelGO.transform, "Envoyer",
+            new Vector2(105, -46), new Vector2(190, 32), 13);
+        sendTabGO.AddComponent<MailboxSendTabButton>();
+
+        var hintGO = CreateUIText("TabHint", panelGO.transform, "",
+            new Vector2(0, -84), new Vector2(420, 20), 12, TextAnchor.UpperCenter, new Color(0.7f, 0.7f, 0.7f));
+
+        var scrollViewGO = new GameObject("MailboxScrollView", typeof(RectTransform), typeof(Image), typeof(Mask), typeof(ScrollRect));
+        scrollViewGO.transform.SetParent(panelGO.transform, false);
+        var scrollViewRect = scrollViewGO.GetComponent<RectTransform>();
+        scrollViewRect.anchorMin = new Vector2(0.5f, 1f);
+        scrollViewRect.anchorMax = new Vector2(0.5f, 1f);
+        scrollViewRect.pivot = new Vector2(0.5f, 1f);
+        scrollViewRect.anchoredPosition = new Vector2(0, -108);
+        scrollViewRect.sizeDelta = new Vector2(420, 300);
+        scrollViewGO.GetComponent<Image>().color = new Color(0.04f, 0.04f, 0.05f, 0.6f);
+        scrollViewGO.GetComponent<Mask>().showMaskGraphic = true;
+
+        var contentGO = new GameObject("Content", typeof(RectTransform));
+        contentGO.transform.SetParent(scrollViewGO.transform, false);
+        var contentRect = contentGO.GetComponent<RectTransform>();
+        contentRect.anchorMin = new Vector2(0.5f, 1f);
+        contentRect.anchorMax = new Vector2(0.5f, 1f);
+        contentRect.pivot = new Vector2(0.5f, 1f);
+        contentRect.sizeDelta = new Vector2(400, 300);
+        contentRect.anchoredPosition = Vector2.zero;
+
+        var scroll = scrollViewGO.GetComponent<ScrollRect>();
+        scroll.content = contentRect;
+        scroll.horizontal = false;
+        scroll.vertical = true;
+        scroll.movementType = ScrollRect.MovementType.Clamped;
+        scroll.scrollSensitivity = 24f;
+
+        var closeButtonGO = CreateUIButton("CloseButton", panelGO.transform, "Fermer",
+            new Vector2(0, -420), new Vector2(180, 32));
+        closeButtonGO.AddComponent<CloseMailboxButton>();
+
+        var mailboxUI = canvasTransform.gameObject.AddComponent<MailboxUI>();
+        var mailboxSo = new SerializedObject(mailboxUI);
+        mailboxSo.FindProperty("panel").objectReferenceValue = panelGO;
+        mailboxSo.FindProperty("content").objectReferenceValue = contentRect;
+        mailboxSo.FindProperty("tabHintText").objectReferenceValue = hintGO.GetComponent<Text>();
+        mailboxSo.ApplyModifiedProperties();
     }
 
     private static void CreateSpectrumUI(Transform canvasTransform)
@@ -947,7 +1543,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Quartz";
                 g.description = "Un cristal de quartz incolore, courant, envoyé pour un premier examen.";
-                g.icon = GetGemIconSprite("quartz", new Color(0.85f, 0.87f, 0.88f), new Color(0.97f, 0.98f, 0.99f));
+                g.icon = GetGemIconSprite("quartz", new Color(0.85f, 0.87f, 0.88f), new Color(0.97f, 0.98f, 0.99f), "Ovale");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -983,7 +1579,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Corindon (Rubis)";
                 g.description = "Un corindon rouge intense, envoyé pour confirmer s'il s'agit d'un rubis naturel.";
-                g.icon = GetGemIconSprite("corindon", new Color(0.75f, 0.12f, 0.12f), new Color(0.95f, 0.35f, 0.30f));
+                g.icon = GetGemIconSprite("corindon", new Color(0.75f, 0.12f, 0.12f), new Color(0.95f, 0.35f, 0.30f), "Coussin");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -1028,7 +1624,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Spinelle";
                 g.description = "Une pierre rouge vif, historiquement souvent confondue avec le rubis.";
-                g.icon = GetGemIconSprite("spinelle", new Color(0.80f, 0.30f, 0.30f), new Color(0.95f, 0.55f, 0.55f));
+                g.icon = GetGemIconSprite("spinelle", new Color(0.80f, 0.30f, 0.30f), new Color(0.95f, 0.55f, 0.55f), "Rond");
                 g.refractiveIndex = 1.715f;
                 g.density = 3.60f;
                 g.hardness = 8f;
@@ -1070,7 +1666,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Grenat Almandin";
                 g.description = "Un grenat rouge sombre, à ne pas confondre avec un rubis ou un spinelle.";
-                g.icon = GetGemIconSprite("grenat", new Color(0.45f, 0.10f, 0.12f), new Color(0.65f, 0.25f, 0.20f));
+                g.icon = GetGemIconSprite("grenat", new Color(0.45f, 0.10f, 0.12f), new Color(0.65f, 0.25f, 0.20f), "Poire");
                 g.refractiveIndex = 1.815f;
                 g.density = 4.05f;
                 g.hardness = 7.5f;
@@ -1111,7 +1707,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Grenat Pyrope";
                 g.description = "Un grenat rouge profond, plus léger et de plus faible IR que l'almandin.";
-                g.icon = GetGemIconSprite("pyrope", new Color(0.55f, 0.08f, 0.10f), new Color(0.75f, 0.25f, 0.22f));
+                g.icon = GetGemIconSprite("pyrope", new Color(0.55f, 0.08f, 0.10f), new Color(0.75f, 0.25f, 0.22f), "Rond");
                 g.refractiveIndex = 1.74f;
                 g.density = 3.78f;
                 g.hardness = 7.25f;
@@ -1152,7 +1748,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Grenat Tsavorite";
                 g.description = "Un grenat vert vif, rare et recherché, à ne pas confondre avec l'émeraude ou le péridot.";
-                g.icon = GetGemIconSprite("tsavorite", new Color(0.12f, 0.55f, 0.25f), new Color(0.35f, 0.78f, 0.45f));
+                g.icon = GetGemIconSprite("tsavorite", new Color(0.12f, 0.55f, 0.25f), new Color(0.35f, 0.78f, 0.45f), "Rond");
                 g.refractiveIndex = 1.74f;
                 g.density = 3.61f;
                 g.hardness = 7.25f;
@@ -1193,7 +1789,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Grenat Hessonite";
                 g.description = "Un grenat brun-orangé (\"cinnamon stone\"), à ne pas confondre avec la spessartite.";
-                g.icon = GetGemIconSprite("hessonite", new Color(0.70f, 0.42f, 0.15f), new Color(0.85f, 0.60f, 0.35f));
+                g.icon = GetGemIconSprite("hessonite", new Color(0.70f, 0.42f, 0.15f), new Color(0.85f, 0.60f, 0.35f), "Coussin");
                 g.refractiveIndex = 1.74f;
                 g.density = 3.68f;
                 g.hardness = 6.75f;
@@ -1233,7 +1829,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Verre";
                 g.description = "Un verre imitant l'apparence d'une pierre précieuse rouge.";
-                g.icon = GetGemIconSprite("verre", new Color(0.75f, 0.80f, 0.82f), new Color(0.90f, 0.93f, 0.95f));
+                g.icon = GetGemIconSprite("verre", new Color(0.75f, 0.80f, 0.82f), new Color(0.90f, 0.93f, 0.95f), "Rond");
                 g.refractiveIndex = 1.50f;
                 g.density = 2.50f;
                 g.hardness = 5.5f;
@@ -1267,7 +1863,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Péridot";
                 g.description = "Un péridot vert olive, envoyé pour confirmation d'espèce.";
-                g.icon = GetGemIconSprite("peridot", new Color(0.45f, 0.65f, 0.25f), new Color(0.65f, 0.85f, 0.40f));
+                g.icon = GetGemIconSprite("peridot", new Color(0.45f, 0.65f, 0.25f), new Color(0.65f, 0.85f, 0.40f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.67f;
                 g.density = 3.34f;
                 g.hardness = 6.5f;
@@ -1309,7 +1905,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Spinelle Bleu";
                 g.description = "Une pierre bleu vif, à distinguer du saphir et du zircon bleu.";
-                g.icon = GetGemIconSprite("spinellebleu", new Color(0.15f, 0.40f, 0.80f), new Color(0.45f, 0.65f, 0.95f));
+                g.icon = GetGemIconSprite("spinellebleu", new Color(0.15f, 0.40f, 0.80f), new Color(0.45f, 0.65f, 0.95f), "Coussin");
                 g.refractiveIndex = 1.715f;
                 g.density = 3.61f;
                 g.hardness = 8f;
@@ -1351,7 +1947,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Saphir Bleu";
                 g.description = "Un corindon bleu intense, envoyé pour confirmer s'il s'agit d'un saphir naturel.";
-                g.icon = GetGemIconSprite("saphirbleu", new Color(0.08f, 0.18f, 0.55f), new Color(0.30f, 0.42f, 0.78f));
+                g.icon = GetGemIconSprite("saphirbleu", new Color(0.08f, 0.18f, 0.55f), new Color(0.30f, 0.42f, 0.78f), "Ovale");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -1395,7 +1991,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Zircon";
                 g.description = "Un zircon bleu, souvent confondu avec le saphir ou le spinelle bleu.";
-                g.icon = GetGemIconSprite("zircon", new Color(0.20f, 0.55f, 0.75f), new Color(0.45f, 0.78f, 0.92f));
+                g.icon = GetGemIconSprite("zircon", new Color(0.20f, 0.55f, 0.75f), new Color(0.45f, 0.78f, 0.92f), "Carré");
                 g.refractiveIndex = 1.95f;
                 g.density = 4.65f;
                 g.hardness = 7.5f;
@@ -1437,7 +2033,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Diamant";
                 g.description = "Une pierre incolore à l'éclat exceptionnel, envoyée pour authentification.";
-                g.icon = GetGemIconSprite("diamant", new Color(0.92f, 0.94f, 0.97f), new Color(0.99f, 0.99f, 1.00f));
+                g.icon = GetGemIconSprite("diamant", new Color(0.92f, 0.94f, 0.97f), new Color(0.99f, 0.99f, 1.00f), "Rond");
                 g.refractiveIndex = 2.417f;
                 g.density = 3.52f;
                 g.hardness = 10f;
@@ -1478,7 +2074,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Améthyste";
                 g.description = "Un quartz violet, variété courante mais toujours appréciée.";
-                g.icon = GetGemIconSprite("amethyste", new Color(0.45f, 0.25f, 0.65f), new Color(0.68f, 0.48f, 0.85f));
+                g.icon = GetGemIconSprite("amethyste", new Color(0.45f, 0.25f, 0.65f), new Color(0.68f, 0.48f, 0.85f), "Poire");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -1515,7 +2111,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Grenat Spessartite";
                 g.description = "Un grenat orangé vif, à ne pas confondre avec l'almandin rouge.";
-                g.icon = GetGemIconSprite("spessartite", new Color(0.85f, 0.45f, 0.15f), new Color(0.95f, 0.65f, 0.35f));
+                g.icon = GetGemIconSprite("spessartite", new Color(0.85f, 0.45f, 0.15f), new Color(0.95f, 0.65f, 0.35f), "Marquise");
                 g.refractiveIndex = 1.80f;
                 g.density = 4.15f;
                 g.hardness = 7.5f;
@@ -1557,7 +2153,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Émeraude";
                 g.description = "Un béryl vert intense, envoyé pour authentification.";
-                g.icon = GetGemIconSprite("emeraude", new Color(0.10f, 0.45f, 0.30f), new Color(0.30f, 0.65f, 0.45f));
+                g.icon = GetGemIconSprite("emeraude", new Color(0.10f, 0.45f, 0.30f), new Color(0.30f, 0.65f, 0.45f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.580f;
                 g.density = 2.72f;
                 g.hardness = 7.7f;
@@ -1600,7 +2196,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Tanzanite";
                 g.description = "Une pierre bleu-violet, presque toujours traitée thermiquement.";
-                g.icon = GetGemIconSprite("tanzanite", new Color(0.25f, 0.15f, 0.55f), new Color(0.45f, 0.35f, 0.75f));
+                g.icon = GetGemIconSprite("tanzanite", new Color(0.25f, 0.15f, 0.55f), new Color(0.45f, 0.35f, 0.75f), "Ovale");
                 g.refractiveIndex = 1.695f;
                 g.density = 3.35f;
                 g.hardness = 6.5f;
@@ -1640,7 +2236,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Iolite";
                 g.description = "Une pierre bleu-violet à fort pléochroïsme, parfois appelée pierre des Vikings.";
-                g.icon = GetGemIconSprite("iolite", new Color(0.30f, 0.30f, 0.60f), new Color(0.50f, 0.50f, 0.80f));
+                g.icon = GetGemIconSprite("iolite", new Color(0.30f, 0.30f, 0.60f), new Color(0.50f, 0.50f, 0.80f), "Ovale");
                 g.refractiveIndex = 1.545f;
                 g.density = 2.61f;
                 g.hardness = 7.25f;
@@ -1680,7 +2276,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Kunzite";
                 g.description = "Une pierre rose-violet pâle, sensible à la lumière prolongée (risque de décoloration).";
-                g.icon = GetGemIconSprite("kunzite", new Color(0.75f, 0.45f, 0.65f), new Color(0.90f, 0.65f, 0.82f));
+                g.icon = GetGemIconSprite("kunzite", new Color(0.75f, 0.45f, 0.65f), new Color(0.90f, 0.65f, 0.82f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.665f;
                 g.density = 3.18f;
                 g.hardness = 6.75f;
@@ -1717,7 +2313,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Tourmaline Rose";
                 g.description = "Une tourmaline rose à rouge, variété appelée rubellite.";
-                g.icon = GetGemIconSprite("tourmalinerose", new Color(0.80f, 0.25f, 0.45f), new Color(0.95f, 0.50f, 0.65f));
+                g.icon = GetGemIconSprite("tourmalinerose", new Color(0.80f, 0.25f, 0.45f), new Color(0.95f, 0.50f, 0.65f), "Baguette");
                 g.refractiveIndex = 1.625f;
                 g.density = 3.06f;
                 g.hardness = 7.25f;
@@ -1754,7 +2350,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Diopside Chromifère";
                 g.description = "Un diopside vert intense coloré par le chrome, souvent taillé en petites pierres.";
-                g.icon = GetGemIconSprite("diopside", new Color(0.15f, 0.55f, 0.20f), new Color(0.35f, 0.78f, 0.40f));
+                g.icon = GetGemIconSprite("diopside", new Color(0.15f, 0.55f, 0.20f), new Color(0.35f, 0.78f, 0.40f), "Rond");
                 g.refractiveIndex = 1.685f;
                 g.density = 3.29f;
                 g.hardness = 5.75f;
@@ -1795,7 +2391,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Héliodore";
                 g.description = "Un béryl jaune doré, coloré par le fer.";
-                g.icon = GetGemIconSprite("heliodore", new Color(0.85f, 0.68f, 0.15f), new Color(0.98f, 0.85f, 0.40f));
+                g.icon = GetGemIconSprite("heliodore", new Color(0.85f, 0.68f, 0.15f), new Color(0.98f, 0.85f, 0.40f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.575f;
                 g.density = 2.70f;
                 g.hardness = 7.75f;
@@ -1832,7 +2428,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Morganite";
                 g.description = "Un béryl rose, coloré par le manganèse.";
-                g.icon = GetGemIconSprite("morganite", new Color(0.85f, 0.60f, 0.65f), new Color(0.97f, 0.78f, 0.82f));
+                g.icon = GetGemIconSprite("morganite", new Color(0.85f, 0.60f, 0.65f), new Color(0.97f, 0.78f, 0.82f), "Ovale");
                 g.refractiveIndex = 1.585f;
                 g.density = 2.80f;
                 g.hardness = 7.75f;
@@ -1869,7 +2465,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Goshénite";
                 g.description = "Un béryl incolore, la variété la plus pure du groupe.";
-                g.icon = GetGemIconSprite("goshenite", new Color(0.88f, 0.90f, 0.92f), new Color(0.98f, 0.99f, 1.00f));
+                g.icon = GetGemIconSprite("goshenite", new Color(0.88f, 0.90f, 0.92f), new Color(0.98f, 0.99f, 1.00f), "Rond");
                 g.refractiveIndex = 1.577f;
                 g.density = 2.72f;
                 g.hardness = 7.75f;
@@ -1906,7 +2502,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Apatite";
                 g.description = "Un phosphate bleu-vert, tendre et souvent confondu avec d'autres pierres (d'où son nom, du grec \"tromper\").";
-                g.icon = GetGemIconSprite("apatite", new Color(0.20f, 0.60f, 0.55f), new Color(0.40f, 0.80f, 0.75f));
+                g.icon = GetGemIconSprite("apatite", new Color(0.20f, 0.60f, 0.55f), new Color(0.40f, 0.80f, 0.75f), "Ovale");
                 g.refractiveIndex = 1.635f;
                 g.density = 3.19f;
                 g.hardness = 5f;
@@ -1948,7 +2544,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Andalousite";
                 g.description = "Une pierre à très fort trichroïsme (vert, rouge, jaune-brun selon l'angle).";
-                g.icon = GetGemIconSprite("andalousite", new Color(0.45f, 0.40f, 0.20f), new Color(0.65f, 0.58f, 0.35f));
+                g.icon = GetGemIconSprite("andalousite", new Color(0.45f, 0.40f, 0.20f), new Color(0.65f, 0.58f, 0.35f), "Coussin");
                 g.refractiveIndex = 1.635f;
                 g.density = 3.17f;
                 g.hardness = 7.25f;
@@ -1984,7 +2580,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Chrysobéryl";
                 g.description = "Une pierre jaune-vert extrêmement dure, troisième minéral le plus dur après le corindon et le diamant.";
-                g.icon = GetGemIconSprite("chrysoberyl", new Color(0.65f, 0.65f, 0.20f), new Color(0.82f, 0.82f, 0.45f));
+                g.icon = GetGemIconSprite("chrysoberyl", new Color(0.65f, 0.65f, 0.20f), new Color(0.82f, 0.82f, 0.45f), "Ovale");
                 g.refractiveIndex = 1.745f;
                 g.density = 3.73f;
                 g.hardness = 8.5f;
@@ -2023,7 +2619,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Chrysobéryl Alexandrite";
                 g.description = "La variété à changement de couleur du chrysobéryl : vert sous lumière du jour, rouge sous éclairage incandescent.";
-                g.icon = GetGemIconSprite("alexandrite", new Color(0.15f, 0.45f, 0.35f), new Color(0.55f, 0.20f, 0.30f));
+                g.icon = GetGemIconSprite("alexandrite", new Color(0.15f, 0.45f, 0.35f), new Color(0.55f, 0.20f, 0.30f), "Coussin");
                 g.refractiveIndex = 1.745f;
                 g.density = 3.73f;
                 g.hardness = 8.5f;
@@ -2066,7 +2662,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "CZ";
                 g.description = "Zircone cubique : un simulant synthétique du diamant, bon marché mais très différent physiquement.";
-                g.icon = GetGemIconSprite("cz", new Color(0.85f, 0.90f, 0.95f), new Color(0.95f, 0.97f, 1.00f));
+                g.icon = GetGemIconSprite("cz", new Color(0.85f, 0.90f, 0.95f), new Color(0.95f, 0.97f, 1.00f), "Rond");
                 g.refractiveIndex = 2.16f;
                 g.density = 5.8f;
                 g.hardness = 8.25f;
@@ -2100,7 +2696,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Moissanite Synthétique";
                 g.description = "Carbure de silicium synthétique, un autre simulant du diamant, mais biréfringent contrairement à celui-ci.";
-                g.icon = GetGemIconSprite("moissanite", new Color(0.88f, 0.88f, 0.80f), new Color(0.97f, 0.97f, 0.90f));
+                g.icon = GetGemIconSprite("moissanite", new Color(0.88f, 0.88f, 0.80f), new Color(0.97f, 0.97f, 0.90f), "Rond");
                 g.refractiveIndex = 2.67f;
                 g.density = 3.21f;
                 g.hardness = 9.25f;
@@ -2134,7 +2730,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Fluorite";
                 g.description = "Un minéral tendre et coloré, dont le nom a donné le mot \"fluorescence\".";
-                g.icon = GetGemIconSprite("fluorite", new Color(0.55f, 0.30f, 0.70f), new Color(0.72f, 0.50f, 0.85f));
+                g.icon = GetGemIconSprite("fluorite", new Color(0.55f, 0.30f, 0.70f), new Color(0.72f, 0.50f, 0.85f), "Ovale");
                 g.refractiveIndex = 1.434f;
                 g.density = 3.18f;
                 g.hardness = 4f;
@@ -2172,7 +2768,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Grenat Démantoïde";
                 g.description = "Un grenat vert à très fort éclat, l'un des plus prisés de la famille des grenats.";
-                g.icon = GetGemIconSprite("demantoide", new Color(0.15f, 0.50f, 0.25f), new Color(0.35f, 0.72f, 0.42f));
+                g.icon = GetGemIconSprite("demantoide", new Color(0.15f, 0.50f, 0.25f), new Color(0.35f, 0.72f, 0.42f), "Rond");
                 g.refractiveIndex = 1.885f;
                 g.density = 3.85f;
                 g.hardness = 6.75f;
@@ -2212,7 +2808,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Hématite";
                 g.description = "Un oxyde de fer opaque à éclat métallique, souvent taillé en cabochon plutôt qu'à facettes.";
-                g.icon = GetGemIconSprite("hematite", new Color(0.25f, 0.22f, 0.22f), new Color(0.42f, 0.38f, 0.38f));
+                g.icon = GetGemIconSprite("hematite", new Color(0.25f, 0.22f, 0.22f), new Color(0.42f, 0.38f, 0.38f), "Ovale");
                 g.refractiveIndex = 2.94f;
                 g.density = 5.15f;
                 g.hardness = 6f;
@@ -2248,7 +2844,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Pezzottaite";
                 g.description = "Un béryl au césium, de couleur \"framboise\", découvert seulement en 2002 à Madagascar.";
-                g.icon = GetGemIconSprite("pezzottaite", new Color(0.75f, 0.20f, 0.35f), new Color(0.90f, 0.42f, 0.55f));
+                g.icon = GetGemIconSprite("pezzottaite", new Color(0.75f, 0.20f, 0.35f), new Color(0.90f, 0.42f, 0.55f), "Ovale");
                 g.refractiveIndex = 1.615f;
                 g.density = 3.13f;
                 g.hardness = 8f;
@@ -2284,7 +2880,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Pyrite";
                 g.description = "Sulfure de fer opaque à éclat métallique doré, surnommé \"or des fous\".";
-                g.icon = GetGemIconSprite("pyrite", new Color(0.72f, 0.62f, 0.20f), new Color(0.88f, 0.78f, 0.40f));
+                g.icon = GetGemIconSprite("pyrite", new Color(0.72f, 0.62f, 0.20f), new Color(0.88f, 0.78f, 0.40f), "Rond");
                 g.refractiveIndex = 1.85f;
                 g.density = 5.0f;
                 g.hardness = 6.25f;
@@ -2320,7 +2916,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Corindon Synthétique (Rubis)";
                 g.description = "Corindon rouge obtenu par fusion de poudre d'alumine ; identique en apparence à un rubis, sa production remonte au début du XXe siècle.";
-                g.icon = GetGemIconSprite("corindonsynthrubis", new Color(0.70f, 0.15f, 0.15f), new Color(0.88f, 0.40f, 0.35f));
+                g.icon = GetGemIconSprite("corindonsynthrubis", new Color(0.70f, 0.15f, 0.15f), new Color(0.88f, 0.40f, 0.35f), "Rond");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -2361,7 +2957,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Corindon Synthétique (Saphir)";
                 g.description = "Corindon bleu obtenu par fusion de poudre d'alumine et d'oxydes colorants ; longtemps utilisé en horlogerie et bijouterie bon marché.";
-                g.icon = GetGemIconSprite("corindonsynthsaphir", new Color(0.12f, 0.22f, 0.60f), new Color(0.35f, 0.48f, 0.82f));
+                g.icon = GetGemIconSprite("corindonsynthsaphir", new Color(0.12f, 0.22f, 0.60f), new Color(0.35f, 0.48f, 0.82f), "Ovale");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -2396,7 +2992,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Saphir Jaune";
                 g.description = "Corindon jaune, couleur due à des centres colorés ou à des traces de fer.";
-                g.icon = GetGemIconSprite("saphirjaune", new Color(0.80f, 0.68f, 0.12f), new Color(0.95f, 0.85f, 0.40f));
+                g.icon = GetGemIconSprite("saphirjaune", new Color(0.80f, 0.68f, 0.12f), new Color(0.95f, 0.85f, 0.40f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -2435,7 +3031,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Saphir Rose";
                 g.description = "Corindon rose, coloré par de faibles traces de chrome, à la frontière stylistique avec le rubis.";
-                g.icon = GetGemIconSprite("saphirrose", new Color(0.80f, 0.35f, 0.50f), new Color(0.95f, 0.62f, 0.74f));
+                g.icon = GetGemIconSprite("saphirrose", new Color(0.80f, 0.35f, 0.50f), new Color(0.95f, 0.62f, 0.74f), "Coussin");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -2475,7 +3071,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Saphir Violet";
                 g.description = "Corindon violet, couleur résultant de la combinaison de plusieurs éléments traces.";
-                g.icon = GetGemIconSprite("saphirviolet", new Color(0.45f, 0.25f, 0.65f), new Color(0.66f, 0.46f, 0.83f));
+                g.icon = GetGemIconSprite("saphirviolet", new Color(0.45f, 0.25f, 0.65f), new Color(0.66f, 0.46f, 0.83f), "Ovale");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -2510,7 +3106,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Saphir Orange";
                 g.description = "Corindon orange, teinte rare obtenue par un équilibre particulier entre plusieurs éléments traces.";
-                g.icon = GetGemIconSprite("saphirorange", new Color(0.85f, 0.45f, 0.12f), new Color(0.97f, 0.66f, 0.35f));
+                g.icon = GetGemIconSprite("saphirorange", new Color(0.85f, 0.45f, 0.12f), new Color(0.97f, 0.66f, 0.35f), "Rond");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -2545,7 +3141,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Padparadscha";
                 g.description = "Corindon rose-orangé évoquant la fleur de lotus, l'une des variétés de corindon les plus recherchées et les plus chères au monde.";
-                g.icon = GetGemIconSprite("padparadscha", new Color(0.90f, 0.50f, 0.38f), new Color(0.98f, 0.72f, 0.58f));
+                g.icon = GetGemIconSprite("padparadscha", new Color(0.90f, 0.50f, 0.38f), new Color(0.98f, 0.72f, 0.58f), "Coussin");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -2585,7 +3181,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Saphir Vert";
                 g.description = "Corindon vert, souvent formé de fines bandes alternées bleu/jaune donnant une teinte verte à l'œil nu.";
-                g.icon = GetGemIconSprite("saphirvert", new Color(0.15f, 0.50f, 0.30f), new Color(0.35f, 0.72f, 0.48f));
+                g.icon = GetGemIconSprite("saphirvert", new Color(0.15f, 0.50f, 0.30f), new Color(0.35f, 0.72f, 0.48f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -2625,7 +3221,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Saphir Incolore";
                 g.description = "Corindon dépourvu d'éléments traces colorants ; historiquement utilisé comme substitut bon marché du diamant.";
-                g.icon = GetGemIconSprite("saphirincolore", new Color(0.88f, 0.90f, 0.93f), new Color(0.98f, 0.99f, 1.00f));
+                g.icon = GetGemIconSprite("saphirincolore", new Color(0.88f, 0.90f, 0.93f), new Color(0.98f, 0.99f, 1.00f), "Rond");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -2660,7 +3256,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "YAG";
                 g.description = "Grenat d'yttrium-aluminium synthétique, un des premiers simulants de diamant utilisés en joaillerie avant l'arrivée de la zircone cubique.";
-                g.icon = GetGemIconSprite("yag", new Color(0.85f, 0.87f, 0.90f), new Color(0.96f, 0.97f, 0.99f));
+                g.icon = GetGemIconSprite("yag", new Color(0.85f, 0.87f, 0.90f), new Color(0.96f, 0.97f, 0.99f), "Rond");
                 g.refractiveIndex = 1.833f;
                 g.density = 4.57f;
                 g.hardness = 8.25f;
@@ -2695,7 +3291,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "GGG";
                 g.description = "Grenat de gadolinium-gallium synthétique, simulant de diamant à très forte densité mais relativement tendre, aujourd'hui rare en joaillerie.";
-                g.icon = GetGemIconSprite("ggg", new Color(0.80f, 0.82f, 0.86f), new Color(0.92f, 0.94f, 0.97f));
+                g.icon = GetGemIconSprite("ggg", new Color(0.80f, 0.82f, 0.86f), new Color(0.92f, 0.94f, 0.97f), "Rond");
                 g.refractiveIndex = 1.97f;
                 g.density = 7.05f;
                 g.hardness = 6.5f;
@@ -2730,7 +3326,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Grenat Malaya";
                 g.description = "Grenat de couleur orange à rose-orangé, intermédiaire entre le pyrope et la spessartite, longtemps considéré comme un rebut avant d'être reconnu comme variété à part entière.";
-                g.icon = GetGemIconSprite("grenatmalaya", new Color(0.85f, 0.45f, 0.30f), new Color(0.95f, 0.66f, 0.50f));
+                g.icon = GetGemIconSprite("grenatmalaya", new Color(0.85f, 0.45f, 0.30f), new Color(0.95f, 0.66f, 0.50f), "Coussin");
                 g.refractiveIndex = 1.755f;
                 g.density = 3.84f;
                 g.hardness = 7.25f;
@@ -2769,7 +3365,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Grenat Rhodolite";
                 g.description = "Grenat rouge-violacé (\"framboise\"), intermédiaire entre le pyrope et l'almandin.";
-                g.icon = GetGemIconSprite("grenatrhodolite", new Color(0.65f, 0.20f, 0.35f), new Color(0.83f, 0.42f, 0.55f));
+                g.icon = GetGemIconSprite("grenatrhodolite", new Color(0.65f, 0.20f, 0.35f), new Color(0.83f, 0.42f, 0.55f), "Poire");
                 g.refractiveIndex = 1.76f;
                 g.density = 3.84f;
                 g.hardness = 7.25f;
@@ -2809,7 +3405,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Citrine";
                 g.description = "Quartz jaune à orangé, dont la grande majorité du matériel commercial provient d'un traitement thermique de l'améthyste.";
-                g.icon = GetGemIconSprite("citrine", new Color(0.85f, 0.55f, 0.12f), new Color(0.97f, 0.76f, 0.35f));
+                g.icon = GetGemIconSprite("citrine", new Color(0.85f, 0.55f, 0.12f), new Color(0.97f, 0.76f, 0.35f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -2845,7 +3441,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Amétrine";
                 g.description = "Quartz bicolore montrant à la fois les teintes violette de l'améthyste et jaune-orangé de la citrine dans un même cristal, provenant presque exclusivement d'un unique gisement bolivien.";
-                g.icon = GetGemIconSprite("ametrine", new Color(0.50f, 0.35f, 0.55f), new Color(0.85f, 0.65f, 0.30f));
+                g.icon = GetGemIconSprite("ametrine", new Color(0.50f, 0.35f, 0.55f), new Color(0.85f, 0.65f, 0.30f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -2881,7 +3477,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Quartz Fumé";
                 g.description = "Quartz brun-gris, coloré par des centres colorés liés à l'aluminium activés par une irradiation naturelle de fond.";
-                g.icon = GetGemIconSprite("quartzfume", new Color(0.35f, 0.28f, 0.22f), new Color(0.53f, 0.43f, 0.33f));
+                g.icon = GetGemIconSprite("quartzfume", new Color(0.35f, 0.28f, 0.22f), new Color(0.53f, 0.43f, 0.33f), "Rond");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -2917,7 +3513,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Prasiolite";
                 g.description = "Quartz vert, rare à l'état naturel, la majeure partie du matériel commercial étant obtenue par traitement thermique d'améthyste.";
-                g.icon = GetGemIconSprite("prasiolite", new Color(0.35f, 0.60f, 0.35f), new Color(0.56f, 0.80f, 0.56f));
+                g.icon = GetGemIconSprite("prasiolite", new Color(0.35f, 0.60f, 0.35f), new Color(0.56f, 0.80f, 0.56f), "Rond");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -2952,7 +3548,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Quartz Rose";
                 g.description = "Quartz rose, souvent riche en inclusions fibreuses de rutile pouvant produire un effet d'astérisme.";
-                g.icon = GetGemIconSprite("quartzrose", new Color(0.85f, 0.55f, 0.60f), new Color(0.96f, 0.76f, 0.79f));
+                g.icon = GetGemIconSprite("quartzrose", new Color(0.85f, 0.55f, 0.60f), new Color(0.96f, 0.76f, 0.79f), "Coussin");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -2988,7 +3584,7 @@ public static class SceneBootstrap
             {
                 g.displayName = "Zoïsite";
                 g.description = "Variété de zoïsite verte à brunâtre, chimiquement apparentée à la tanzanite mais dépourvue de son célèbre coloris bleu-violet.";
-                g.icon = GetGemIconSprite("zoisite", new Color(0.25f, 0.45f, 0.30f), new Color(0.46f, 0.66f, 0.49f));
+                g.icon = GetGemIconSprite("zoisite", new Color(0.25f, 0.45f, 0.30f), new Color(0.46f, 0.66f, 0.49f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.70f;
                 g.density = 3.35f;
                 g.hardness = 6.5f;
@@ -3145,6 +3741,92 @@ public static class SceneBootstrap
         importer.SaveAndReimport();
 
         return AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
+    }
+
+    private static string[] BuildStripeFlagPattern(int[] bandHeights, bool vertical)
+    {
+        var keys = new[] { 'A', 'B', 'C', 'D', 'E' };
+        var rows = new string[16];
+
+        if (vertical)
+        {
+            var parts = new List<object>();
+            for (var i = 0; i < bandHeights.Length; i++)
+            {
+                parts.Add(bandHeights[i]);
+                parts.Add(keys[i]);
+            }
+            var rowStr = Row(parts.ToArray());
+            for (var y = 0; y < 16; y++) rows[y] = rowStr;
+        }
+        else
+        {
+            var y = 0;
+            for (var i = 0; i < bandHeights.Length; i++)
+            {
+                var rowStr = Row(16, keys[i]);
+                for (var r = 0; r < bandHeights[i] && y < 16; r++) rows[y++] = rowStr;
+            }
+        }
+
+        return rows;
+    }
+
+    private static Sprite GetOrCreateFlagSprite(MarketCountries.Country country)
+    {
+        var slug = MarketCountries.Slug(country.Name);
+        var spritePath = $"Assets/Resources/Flags/flag_{slug}_pixel.png";
+        var existing = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
+        if (existing != null) return existing;
+
+        var pattern = BuildStripeFlagPattern(country.FlagBandHeights, country.FlagVertical);
+        var keys = new[] { 'A', 'B', 'C', 'D', 'E' };
+        var palette = new Dictionary<char, Color>();
+        for (var i = 0; i < country.FlagColors.Length; i++) palette[keys[i]] = country.FlagColors[i];
+
+        var tex = BuildPixelArtTexture(pattern, palette, 2);
+        Directory.CreateDirectory("Assets/Resources/Flags");
+        File.WriteAllBytes(spritePath, tex.EncodeToPNG());
+        UnityEngine.Object.DestroyImmediate(tex);
+
+        return ImportSprite(spritePath);
+    }
+
+    private static void BakeAllFlags()
+    {
+        foreach (var country in MarketCountries.Pool)
+            GetOrCreateFlagSprite(country);
+    }
+
+    private static void CreateMusicManager()
+    {
+        var townClip = GetMusicClip("Music_Town.mp3");
+        var laboratoryClip = GetMusicClip("Music_Laboratoire.mp3");
+        var mainMenuClip = GetMusicClip("Music_MainMenu.mp3");
+
+        var go = new GameObject("MusicManager");
+        var manager = go.AddComponent<MusicManager>();
+        var so = new SerializedObject(manager);
+        so.FindProperty("townMusic").objectReferenceValue = townClip;
+        so.FindProperty("laboratoryMusic").objectReferenceValue = laboratoryClip;
+        so.FindProperty("mainMenuMusic").objectReferenceValue = mainMenuClip;
+        so.ApplyModifiedProperties();
+    }
+
+    private static AudioClip GetMusicClip(string fileName)
+    {
+        var path = $"Assets/Audio/Music/{fileName}";
+        if (!File.Exists(path)) return null;
+
+        AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
+
+        var importer = (AudioImporter)AssetImporter.GetAtPath(path);
+        var settings = importer.defaultSampleSettings;
+        settings.loadType = AudioClipLoadType.Streaming;
+        importer.defaultSampleSettings = settings;
+        importer.SaveAndReimport();
+
+        return AssetDatabase.LoadAssetAtPath<AudioClip>(path);
     }
 
     private static Color WallPixel(int x, int y)
@@ -3691,10 +4373,183 @@ public static class SceneBootstrap
         Row(16, '.'),
     };
 
-    private static Sprite GetGemIconSprite(string key, Color gemColor, Color facetColor)
+    private static readonly string[] GemRoundPattern =
     {
+        Row(16, '.'),
+        Row(5, '.', 5, 'G', 6, '.'),
+        Row(3, '.', 9, 'G', 4, '.'),
+        Row(2, '.', 11, 'G', 3, '.'),
+        Row(2, '.', 11, 'G', 3, '.'),
+        Row(1, '.', 7, 'G', 1, 'F', 5, 'G', 2, '.'),
+        Row(1, '.', 13, 'G', 2, '.'),
+        Row(1, '.', 13, 'G', 2, '.'),
+        Row(1, '.', 13, 'G', 2, '.'),
+        Row(1, '.', 13, 'G', 2, '.'),
+        Row(2, '.', 11, 'G', 3, '.'),
+        Row(2, '.', 11, 'G', 3, '.'),
+        Row(3, '.', 9, 'G', 4, '.'),
+        Row(5, '.', 5, 'G', 6, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly string[] GemOvalPattern =
+    {
+        Row(7, '.', 1, 'G', 8, '.'),
+        Row(5, '.', 5, 'G', 6, '.'),
+        Row(4, '.', 7, 'G', 5, '.'),
+        Row(3, '.', 9, 'G', 4, '.'),
+        Row(3, '.', 9, 'G', 4, '.'),
+        Row(3, '.', 5, 'G', 1, 'F', 3, 'G', 4, '.'),
+        Row(3, '.', 9, 'G', 4, '.'),
+        Row(2, '.', 11, 'G', 3, '.'),
+        Row(3, '.', 9, 'G', 4, '.'),
+        Row(3, '.', 9, 'G', 4, '.'),
+        Row(3, '.', 9, 'G', 4, '.'),
+        Row(3, '.', 9, 'G', 4, '.'),
+        Row(4, '.', 7, 'G', 5, '.'),
+        Row(5, '.', 5, 'G', 6, '.'),
+        Row(7, '.', 1, 'G', 8, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly string[] GemCushionPattern =
+    {
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(4, '.', 8, 'G', 4, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(2, '.', 6, 'G', 1, 'F', 5, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(4, '.', 8, 'G', 4, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly string[] GemPearPattern =
+    {
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(7, '.', 2, 'G', 7, '.'),
+        Row(7, '.', 2, 'G', 7, '.'),
+        Row(7, '.', 2, 'G', 7, '.'),
+        Row(6, '.', 4, 'G', 6, '.'),
+        Row(6, '.', 3, 'G', 1, 'F', 6, '.'),
+        Row(6, '.', 4, 'G', 6, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(4, '.', 8, 'G', 4, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly string[] GemMarquisePattern =
+    {
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(7, '.', 2, 'G', 7, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(4, '.', 8, 'G', 4, '.'),
+        Row(3, '.', 5, 'G', 1, 'F', 4, 'G', 3, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(4, '.', 8, 'G', 4, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(7, '.', 2, 'G', 7, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly string[] GemSquarePattern =
+    {
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 6, 'G', 1, 'F', 5, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly string[] GemBaguettePattern =
+    {
+        Row(16, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 3, 'G', 1, 'F', 2, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly string[] GemEmeraldCutPattern =
+    {
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(4, '.', 8, 'G', 4, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(2, '.', 6, 'G', 1, 'F', 5, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(2, '.', 12, 'G', 2, '.'),
+        Row(3, '.', 10, 'G', 3, '.'),
+        Row(4, '.', 8, 'G', 4, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static Sprite GetGemIconSprite(string key, Color gemColor, Color facetColor, string shape = "")
+    {
+        var pattern = shape switch
+        {
+            "Rond" => GemRoundPattern,
+            "Ovale" => GemOvalPattern,
+            "Coussin" => GemCushionPattern,
+            "Poire" => GemPearPattern,
+            "Marquise" => GemMarquisePattern,
+            "Carré" => GemSquarePattern,
+            "Baguette" => GemBaguettePattern,
+            "Rectangle à pans coupés" => GemEmeraldCutPattern,
+            _ => GemIconPattern,
+        };
+
         var palette = new Dictionary<char, Color> { { 'G', gemColor }, { 'F', facetColor } };
-        return GetOrCreatePixelSprite($"gemicon_{key}_pixel", GemIconPattern, palette);
+        return GetOrCreatePixelSprite($"gemicon_{key}_pixel", pattern, palette);
     }
 
     private static readonly string[] ChestPattern =

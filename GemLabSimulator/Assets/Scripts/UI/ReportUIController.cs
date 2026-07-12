@@ -76,8 +76,8 @@ public class ReportUIController : MonoBehaviour
             measured.Add($"Structure de croissance (MEB) : {gemInstance.GrowthStructureDescription}");
 
         var identityLine = gemInstance.IsIdentified
-            ? $"Gemme : {gem.displayName} (identifiée)"
-            : "Gemme sélectionnée : spécimen non identifié";
+            ? $"Gemme : {gem.displayName} (identifiée) — N° {gemInstance.DisplayId}"
+            : $"Gemme sélectionnée : spécimen non identifié — N° {gemInstance.DisplayId}";
 
         measurementsText.text = measured.Count > 0
             ? $"{identityLine}\n\nMesures relevées :\n" + string.Join("\n", measured)
@@ -105,12 +105,19 @@ public class ReportUIController : MonoBehaviour
         var gemInstance = currentInventory != null ? currentInventory.SelectedGem : null;
         if (gemInstance == null) return;
 
+        if (gemInstance.IsIdentified)
+        {
+            resultText.text = "Le directeur : \"Cette gemme a déjà été identifiée.\"";
+            return;
+        }
+
         var gem = gemInstance.Definition;
         if (speciesName == gem.displayName)
         {
-            resultText.text = $"Rapport validé par le directeur ! Identifiée comme {gem.displayName}. +{gemInstance.FinalValue}€";
-            currentInventory.GetComponent<PlayerWallet>()?.AddMoney(gemInstance.FinalValue);
+            resultText.text = $"Rapport validé par le directeur ! Identifiée comme {gem.displayName}. " +
+                               "Renvoyez-la à son client depuis la boîte aux lettres pour être payé.";
             gemInstance.MarkIdentified();
+            GemCodex.Instance?.MarkDiscovered(gem.name);
         }
         else
         {
