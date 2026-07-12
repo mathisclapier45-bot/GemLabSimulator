@@ -44,6 +44,7 @@ MonoBehaviour:
   chelseaFilterReaction: "R\xE9action rouge\xE2tre possible si color\xE9 au chrome."
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant (grenat pauvre en fer)."
   baseValue: 120
+  forcedSynthetic: 0
   origins:
   - name: Kenya
     rarityWeight: 40

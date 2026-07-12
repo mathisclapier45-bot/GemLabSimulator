@@ -47,6 +47,7 @@ MonoBehaviour:
     imitations et synth\xE8ses, qui r\xE9agissent rouge vif)."
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 180
+  forcedSynthetic: 0
   origins:
   - name: Colombie (Muzo/Chivor)
     rarityWeight: 25

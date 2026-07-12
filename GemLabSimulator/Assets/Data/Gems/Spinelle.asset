@@ -46,6 +46,7 @@ MonoBehaviour:
   chelseaFilterReaction: "R\xE9action rouge \xE0 ros\xE2tre, d'intensit\xE9 mod\xE9r\xE9e."
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 45
+  forcedSynthetic: 0
   origins:
   - name: Birmanie
     rarityWeight: 20

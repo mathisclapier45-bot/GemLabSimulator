@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Citrine
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Citrine
+  description: "Quartz jaune \xE0 orang\xE9, dont la grande majorit\xE9 du mat\xE9riel
+    commercial provient d'un traitement thermique de l'am\xE9thyste."
+  icon: {fileID: 21300000, guid: cb4fd54aa128f4f1d8a1c09cab7e3b32, type: 3}
+  refractiveIndex: 1.544
+  density: 2.65
+  hardness: 7
+  lengthMm: 9
+  widthMm: 6.5
+  depthMm: 4.2
+  weightCarats: 1.8
+  luster: Vitreux
+  color: "Jaune \xE0 orang\xE9"
+  shape: "Rectangle \xE0 pans coup\xE9s"
+  cutStyle: "\xC9meraude"
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Jaune p\xE2le / Jaune plus soutenu selon l'axe (faible)."
+  fluorescenceLongWave: Aucune fluorescence notable sous UV longue onde.
+  fluorescenceShortWave: Aucune fluorescence notable sous UV courte onde.
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Zonation de couleur en bandes parall\xE8les, voiles de fines fissures
+    occasionnels."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale visible en lumi\xE8re convergente."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 15
+  forcedSynthetic: 0
+  origins:
+  - name: "Br\xE9sil"
+    rarityWeight: 50
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Zambie
+    rarityWeight: 30
+    valueMultiplier: 1.1
+    inclusionOverride: 
+  - name: Madagascar
+    rarityWeight: 20
+    valueMultiplier: 1
+    inclusionOverride: 

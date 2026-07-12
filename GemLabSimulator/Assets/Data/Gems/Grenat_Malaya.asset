@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Grenat_Malaya
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Grenat Malaya
+  description: "Grenat de couleur orange \xE0 rose-orang\xE9, interm\xE9diaire entre
+    le pyrope et la spessartite, longtemps consid\xE9r\xE9 comme un rebut avant d'\xEAtre
+    reconnu comme vari\xE9t\xE9 \xE0 part enti\xE8re."
+  icon: {fileID: 21300000, guid: acf78fe57a8ad4f1dad94cc9f4553590, type: 3}
+  refractiveIndex: 1.755
+  density: 3.84
+  hardness: 7.25
+  lengthMm: 7
+  widthMm: 6
+  depthMm: 4
+  weightCarats: 1.4
+  luster: Vitreux
+  color: "Orange \xE0 rose-orang\xE9"
+  shape: Coussin
+  cutStyle: Mixte
+  transparency: Transparent
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: Aucune fluorescence sous UV longue onde.
+  fluorescenceShortWave: Aucune fluorescence sous UV courte onde.
+  opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  absorptionSpectrum: "Bandes d'absorption du fer et du mangan\xE8se combin\xE9es."
+  spectrumLines:
+  - wavelengthNm: 520
+    widthNm: 20
+  - wavelengthNm: 575
+    widthNm: 20
+  inclusions: "Cristaux d'apatite ou de zircon entour\xE9s de halos, fissures internes
+    occasionnelles."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
+  chelseaFilterReaction: "Aucune r\xE9action notable."
+  magnetism: "Mod\xE9r\xE9ment attir\xE9 par un aimant puissant (teneur en fer interm\xE9diaire)."
+  baseValue: 45
+  forcedSynthetic: 0
+  origins:
+  - name: Tanzanie
+    rarityWeight: 60
+    valueMultiplier: 1.3
+    inclusionOverride: 
+  - name: Kenya
+    rarityWeight: 40
+    valueMultiplier: 1.1
+    inclusionOverride: 

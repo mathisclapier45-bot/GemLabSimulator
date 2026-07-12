@@ -3,25 +3,25 @@ using UnityEngine;
 
 public class GemInstance
 {
-    public GemDefinition Definition { get; }
+    public GemDefinition Definition { get; private set; }
     public bool IsIdentified { get; private set; }
 
-    public GemOrigin Origin { get; }
-    public string SaturationGrade { get; }
-    public string ClarityGrade { get; }
-    public string ClarityDescription { get; }
-    public string InclusionDescription { get; }
-    public float CaratWeight { get; }
-    public float LengthMm { get; }
-    public float WidthMm { get; }
-    public float DepthMm { get; }
-    public string TreatmentGrade { get; }
-    public string TreatmentDescription { get; }
-    public bool IsSynthetic { get; }
-    public string AuthenticityGrade { get; }
-    public string AuthenticityDescription { get; }
-    public string GrowthStructureDescription { get; }
-    public int FinalValue { get; }
+    public GemOrigin Origin { get; private set; }
+    public string SaturationGrade { get; private set; }
+    public string ClarityGrade { get; private set; }
+    public string ClarityDescription { get; private set; }
+    public string InclusionDescription { get; private set; }
+    public float CaratWeight { get; private set; }
+    public float LengthMm { get; private set; }
+    public float WidthMm { get; private set; }
+    public float DepthMm { get; private set; }
+    public string TreatmentGrade { get; private set; }
+    public string TreatmentDescription { get; private set; }
+    public bool IsSynthetic { get; private set; }
+    public string AuthenticityGrade { get; private set; }
+    public string AuthenticityDescription { get; private set; }
+    public string GrowthStructureDescription { get; private set; }
+    public int FinalValue { get; private set; }
 
     private readonly Dictionary<string, float> measuredValues = new Dictionary<string, float>();
     private readonly HashSet<string> observedProperties = new HashSet<string>();
@@ -58,7 +58,9 @@ public class GemInstance
         TreatmentGrade = treatment.Name;
         TreatmentDescription = treatment.Description;
 
-        var authenticity = GemGrading.PickWeighted(GemGrading.AuthenticityGrades);
+        var authenticity = definition.forcedSynthetic
+            ? GemGrading.SyntheticGrade
+            : GemGrading.PickWeighted(GemGrading.AuthenticityGrades);
         AuthenticityGrade = authenticity.Name;
         AuthenticityDescription = authenticity.Description;
         IsSynthetic = authenticity.Name == "Synthétique";
@@ -69,6 +71,77 @@ public class GemInstance
         FinalValue = Mathf.RoundToInt(
             definition.baseValue * Origin.valueMultiplier * saturation.Multiplier * clarity.Multiplier *
             sizeValueMultiplier * treatment.Multiplier * authenticity.Multiplier);
+    }
+
+    private GemInstance()
+    {
+    }
+
+    public static GemInstance FromSaveData(GemDefinition definition, GemInstanceSaveData data)
+    {
+        var instance = new GemInstance
+        {
+            Definition = definition,
+            IsIdentified = data.isIdentified,
+            Origin = new GemOrigin
+            {
+                name = data.originName,
+                valueMultiplier = data.originValueMultiplier,
+                inclusionOverride = data.originInclusionOverride,
+            },
+            SaturationGrade = data.saturationGrade,
+            ClarityGrade = data.clarityGrade,
+            ClarityDescription = data.clarityDescription,
+            InclusionDescription = data.inclusionDescription,
+            CaratWeight = data.caratWeight,
+            LengthMm = data.lengthMm,
+            WidthMm = data.widthMm,
+            DepthMm = data.depthMm,
+            TreatmentGrade = data.treatmentGrade,
+            TreatmentDescription = data.treatmentDescription,
+            IsSynthetic = data.isSynthetic,
+            AuthenticityGrade = data.authenticityGrade,
+            AuthenticityDescription = data.authenticityDescription,
+            GrowthStructureDescription = data.growthStructureDescription,
+            FinalValue = data.finalValue,
+        };
+
+        for (var i = 0; i < data.measuredKeys.Count; i++)
+            instance.measuredValues[data.measuredKeys[i]] = data.measuredValues[i];
+        foreach (var key in data.observedKeys)
+            instance.observedProperties.Add(key);
+
+        return instance;
+    }
+
+    public GemInstanceSaveData ToSaveData()
+    {
+        return new GemInstanceSaveData
+        {
+            definitionName = Definition.name,
+            isIdentified = IsIdentified,
+            originName = Origin.name,
+            originValueMultiplier = Origin.valueMultiplier,
+            originInclusionOverride = Origin.inclusionOverride,
+            saturationGrade = SaturationGrade,
+            clarityGrade = ClarityGrade,
+            clarityDescription = ClarityDescription,
+            inclusionDescription = InclusionDescription,
+            caratWeight = CaratWeight,
+            lengthMm = LengthMm,
+            widthMm = WidthMm,
+            depthMm = DepthMm,
+            treatmentGrade = TreatmentGrade,
+            treatmentDescription = TreatmentDescription,
+            isSynthetic = IsSynthetic,
+            authenticityGrade = AuthenticityGrade,
+            authenticityDescription = AuthenticityDescription,
+            growthStructureDescription = GrowthStructureDescription,
+            finalValue = FinalValue,
+            measuredKeys = new List<string>(measuredValues.Keys),
+            measuredValues = new List<float>(measuredValues.Values),
+            observedKeys = new List<string>(observedProperties),
+        };
     }
 
     public void MarkIdentified()

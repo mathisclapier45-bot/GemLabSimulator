@@ -43,6 +43,7 @@ MonoBehaviour:
   chelseaFilterReaction: "R\xE9action rouge\xE2tre possible si color\xE9 au chrome."
   magnetism: "Attir\xE9 par un aimant puissant (grenat riche en fer)."
   baseValue: 150
+  forcedSynthetic: 0
   origins:
   - name: Russie (Monts Oural)
     rarityWeight: 30

@@ -50,6 +50,8 @@ public static class GemGrading
             Description = "Signature Raman et structure de croissance typiques d'une synthèse en laboratoire." },
     };
 
+    public static readonly Grade SyntheticGrade = AuthenticityGrades[1];
+
     public static Grade PickWeighted(Grade[] grades)
     {
         var total = 0f;

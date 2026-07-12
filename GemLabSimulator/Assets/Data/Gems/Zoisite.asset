@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Zoisite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "Zo\xEFsite"
+  description: "Vari\xE9t\xE9 de zo\xEFsite verte \xE0 brun\xE2tre, chimiquement
+    apparent\xE9e \xE0 la tanzanite mais d\xE9pourvue de son c\xE9l\xE8bre coloris
+    bleu-violet."
+  icon: {fileID: 21300000, guid: 129926ae4ddf4467ba2a53db07d83760, type: 3}
+  refractiveIndex: 1.7
+  density: 3.35
+  hardness: 6.5
+  lengthMm: 8
+  widthMm: 6.5
+  depthMm: 4.5
+  weightCarats: 1.6
+  luster: "Vitreux \xE0 r\xE9sineux"
+  color: "Vert \xE0 brun\xE2tre"
+  shape: "Rectangle \xE0 pans coup\xE9s"
+  cutStyle: "\xC0 degr\xE9s"
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Vert / Brun-jaune selon l'axe d'observation (marqu\xE9)."
+  fluorescenceLongWave: Aucune fluorescence notable sous UV longue onde.
+  fluorescenceShortWave: Aucune fluorescence notable sous UV courte onde.
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  absorptionSpectrum: "Bandes d'absorption diffuses du fer et du chrome combin\xE9es."
+  spectrumLines: []
+  inclusions: "Cristaux fins dispers\xE9s, parfois accompagn\xE9s d'inclusions fibreuses."
+  interferenceFigure: "Figure d'interf\xE9rence biaxiale."
+  chelseaFilterReaction: "Aucune r\xE9action notable."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 15
+  forcedSynthetic: 0
+  origins:
+  - name: Tanzanie
+    rarityWeight: 50
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: "Norv\xE8ge"
+    rarityWeight: 30
+    valueMultiplier: 1.1
+    inclusionOverride: 
+  - name: Autriche
+    rarityWeight: 20
+    valueMultiplier: 0.9
+    inclusionOverride: 

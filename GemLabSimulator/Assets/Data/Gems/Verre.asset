@@ -41,6 +41,7 @@ MonoBehaviour:
   chelseaFilterReaction: "R\xE9action variable et non diagnostique."
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 5
+  forcedSynthetic: 0
   origins:
   - name: Fabrication industrielle
     rarityWeight: 100

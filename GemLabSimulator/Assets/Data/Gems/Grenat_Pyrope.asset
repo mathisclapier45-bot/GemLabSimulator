@@ -42,6 +42,7 @@ MonoBehaviour:
   chelseaFilterReaction: "Aucune r\xE9action rouge notable."
   magnetism: "Mod\xE9r\xE9ment attir\xE9 par un aimant puissant (fer et magn\xE9sium)."
   baseValue: 30
+  forcedSynthetic: 0
   origins:
   - name: Afrique du Sud
     rarityWeight: 40

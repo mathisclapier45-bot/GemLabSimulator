@@ -41,6 +41,7 @@ MonoBehaviour:
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re (incolore)."
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 15
+  forcedSynthetic: 0
   origins:
   - name: "Br\xE9sil"
     rarityWeight: 50

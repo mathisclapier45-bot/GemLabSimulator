@@ -48,6 +48,7 @@ MonoBehaviour:
   magnetism: "L\xE9g\xE8re r\xE9action possible avec un aimant tr\xE8s puissant (traces
     de fer)."
   baseValue: 140
+  forcedSynthetic: 0
   origins:
   - name: Cachemire (Kashmir)
     rarityWeight: 5

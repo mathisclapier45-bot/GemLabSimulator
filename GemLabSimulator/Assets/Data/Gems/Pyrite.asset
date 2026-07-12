@@ -40,6 +40,7 @@ MonoBehaviour:
   chelseaFilterReaction: "Non applicable (min\xE9ral opaque)."
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant, malgr\xE9 sa teneur en fer."
   baseValue: 8
+  forcedSynthetic: 0
   origins:
   - name: "P\xE9rou"
     rarityWeight: 35

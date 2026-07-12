@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Saphir_Vert
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Saphir Vert
+  description: "Corindon vert, souvent form\xE9 de fines bandes altern\xE9es bleu/jaune
+    donnant une teinte verte \xE0 l'\u0153il nu."
+  icon: {fileID: 21300000, guid: 33284514bd1a3479cafde54c9ef27e56, type: 3}
+  refractiveIndex: 1.766
+  density: 4
+  hardness: 9
+  lengthMm: 7.5
+  widthMm: 6.2
+  depthMm: 4.2
+  weightCarats: 1.5
+  luster: "Vitreux \xE0 sub-adamantin"
+  color: Vert
+  shape: "Rectangle \xE0 pans coup\xE9s"
+  cutStyle: "\xC9meraude"
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Vert / Jaune-vert selon l'axe d'observation (marqu\xE9)."
+  fluorescenceLongWave: Inerte sous UV longue onde.
+  fluorescenceShortWave: Inerte sous UV courte onde.
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  absorptionSpectrum: "Bandes d'absorption combin\xE9es dans le bleu et le jaune."
+  spectrumLines:
+  - wavelengthNm: 460
+    widthNm: 20
+  - wavelengthNm: 480
+    widthNm: 20
+  inclusions: "Zonation de couleur marqu\xE9e en bandes fines altern\xE9es, fissures
+    internes fr\xE9quentes."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "L\xE9g\xE8re r\xE9action possible avec un aimant tr\xE8s puissant (traces
+    de fer)."
+  baseValue: 40
+  forcedSynthetic: 0
+  origins:
+  - name: Australie
+    rarityWeight: 50
+    valueMultiplier: 0.8
+    inclusionOverride: 
+  - name: "Tha\xEFlande"
+    rarityWeight: 30
+    valueMultiplier: 0.8
+    inclusionOverride: 
+  - name: Nigeria
+    rarityWeight: 20
+    valueMultiplier: 0.9
+    inclusionOverride: 

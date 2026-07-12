@@ -41,6 +41,7 @@ MonoBehaviour:
   magnetism: "L\xE9g\xE8rement attir\xE9 par un aimant puissant (oxyde de fer, r\xE9action
     bien plus faible qu'un min\xE9ral franchement ferromagn\xE9tique)."
   baseValue: 10
+  forcedSynthetic: 0
   origins:
   - name: Angleterre
     rarityWeight: 30

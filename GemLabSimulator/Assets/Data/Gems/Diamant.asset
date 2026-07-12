@@ -45,6 +45,7 @@ MonoBehaviour:
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
   magnetism: "Aucune r\xE9action (diamagn\xE9tique)."
   baseValue: 500
+  forcedSynthetic: 0
   origins:
   - name: Botswana
     rarityWeight: 35

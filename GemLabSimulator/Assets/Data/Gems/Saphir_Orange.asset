@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Saphir_Orange
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Saphir Orange
+  description: "Corindon orange, teinte rare obtenue par un \xE9quilibre particulier
+    entre plusieurs \xE9l\xE9ments traces."
+  icon: {fileID: 21300000, guid: 4b353db2411574c32b856383cdc263cb, type: 3}
+  refractiveIndex: 1.766
+  density: 4
+  hardness: 9
+  lengthMm: 6.5
+  widthMm: 6
+  depthMm: 3.9
+  weightCarats: 1.2
+  luster: "Vitreux \xE0 sub-adamantin"
+  color: Orange
+  shape: Rond
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Orange clair / Orang\xE9 plus soutenu selon l'axe (faible)."
+  fluorescenceLongWave: "Fluorescence orang\xE9e faible possible sous UV longue onde."
+  fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  absorptionSpectrum: Bande d'absorption diffuse dans le bleu-violet.
+  spectrumLines: []
+  inclusions: "Zonation de couleur en bandes, cristaux fins dispers\xE9s."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."
+  chelseaFilterReaction: "Aucune r\xE9action ou r\xE9action rouge\xE2tre tr\xE8s
+    faible."
+  magnetism: "L\xE9g\xE8re r\xE9action possible avec un aimant tr\xE8s puissant (traces
+    de fer)."
+  baseValue: 90
+  forcedSynthetic: 0
+  origins:
+  - name: Sri Lanka
+    rarityWeight: 50
+    valueMultiplier: 1.2
+    inclusionOverride: 
+  - name: Tanzanie
+    rarityWeight: 50
+    valueMultiplier: 0.9
+    inclusionOverride: 

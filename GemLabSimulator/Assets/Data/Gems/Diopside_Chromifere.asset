@@ -44,6 +44,7 @@ MonoBehaviour:
   chelseaFilterReaction: "R\xE9action rouge\xE2tre possible (coloration au chrome)."
   magnetism: "Mod\xE9r\xE9ment attir\xE9 par un aimant puissant (silicate ferromagn\xE9sien)."
   baseValue: 30
+  forcedSynthetic: 0
   origins:
   - name: "Russie (Sib\xE9rie)"
     rarityWeight: 50

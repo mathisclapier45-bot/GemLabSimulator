@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: YAG
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: YAG
+  description: "Grenat d'yttrium-aluminium synth\xE9tique, un des premiers simulants
+    de diamant utilis\xE9s en joaillerie avant l'arriv\xE9e de la zircone cubique."
+  icon: {fileID: 21300000, guid: 30e83d0ed77fc47dfb3a293d54f7b131, type: 3}
+  refractiveIndex: 1.833
+  density: 4.57
+  hardness: 8.25
+  lengthMm: 5.8
+  widthMm: 5.8
+  depthMm: 3.6
+  weightCarats: 1.1
+  luster: Adamantin
+  color: Incolore
+  shape: Rond
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: Fluorescence variable ou absente.
+  fluorescenceShortWave: Fluorescence variable ou absente.
+  opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "G\xE9n\xE9ralement tr\xE8s propre, bulles de gaz rondes occasionnelles."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 5
+  forcedSynthetic: 1
+  origins:
+  - name: Fabrication industrielle
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 

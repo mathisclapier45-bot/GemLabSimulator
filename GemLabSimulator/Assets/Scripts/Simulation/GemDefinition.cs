@@ -39,6 +39,7 @@ public class GemDefinition : ScriptableObject
 
     [Header("Économie")]
     public int baseValue;
+    public bool forcedSynthetic;
 
     [Header("Origines possibles")]
     public List<GemOrigin> origins = new List<GemOrigin>();

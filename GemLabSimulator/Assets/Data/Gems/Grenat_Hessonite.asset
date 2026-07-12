@@ -43,6 +43,7 @@ MonoBehaviour:
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
   magnetism: "Faible r\xE9action \xE0 l'aimant (moins de fer que l'almandin)."
   baseValue: 40
+  forcedSynthetic: 0
   origins:
   - name: Sri Lanka
     rarityWeight: 50

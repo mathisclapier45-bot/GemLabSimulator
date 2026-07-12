@@ -47,6 +47,7 @@ MonoBehaviour:
   chelseaFilterReaction: "Aucune r\xE9action rouge notable."
   magnetism: "Fortement attir\xE9 par un aimant puissant (forte teneur en fer)."
   baseValue: 25
+  forcedSynthetic: 0
   origins:
   - name: Inde
     rarityWeight: 40

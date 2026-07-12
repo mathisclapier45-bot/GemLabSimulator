@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Corindon_Synthetique_Saphir
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "Corindon Synth\xE9tique (Saphir)"
+  description: "Corindon bleu obtenu par fusion de poudre d'alumine et d'oxydes colorants
+    ; longtemps utilis\xE9 en horlogerie et bijouterie bon march\xE9."
+  icon: {fileID: 21300000, guid: 825dfac6b87dc447b8f79cdf24360a8d, type: 3}
+  refractiveIndex: 1.766
+  density: 4
+  hardness: 9
+  lengthMm: 7.2
+  widthMm: 5.6
+  depthMm: 4
+  weightCarats: 1.4
+  luster: "Vitreux \xE0 sub-adamantin"
+  color: Bleu
+  shape: Ovale
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Bleu / Bleu-violac\xE9 selon l'axe d'observation."
+  fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
+  fluorescenceShortWave: Inerte sous UV courte onde.
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  absorptionSpectrum: Bande d'absorption large et diffuse.
+  spectrumLines: []
+  inclusions: "Bulles de gaz sph\xE9riques, stries de croissance courbes et concentriques,
+    absence de toute inclusion min\xE9rale naturelle."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 4
+  forcedSynthetic: 1
+  origins:
+  - name: Fabrication industrielle (fusion de poudre)
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 

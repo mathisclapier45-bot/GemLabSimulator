@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Corindon_Synthetique_Rubis
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "Corindon Synth\xE9tique (Rubis)"
+  description: "Corindon rouge obtenu par fusion de poudre d'alumine ; identique
+    en apparence \xE0 un rubis, sa production remonte au d\xE9but du XXe si\xE8cle."
+  icon: {fileID: 21300000, guid: d8155afa91c194f4eb795515fd96c06f, type: 3}
+  refractiveIndex: 1.766
+  density: 4
+  hardness: 9
+  lengthMm: 6.8
+  widthMm: 5.9
+  depthMm: 4.2
+  weightCarats: 1.4
+  luster: "Vitreux \xE0 sub-adamantin"
+  color: Rouge
+  shape: Rond
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Rouge / Orang\xE9-rouge selon l'axe d'observation."
+  fluorescenceLongWave: Fluorescence rouge vif et uniforme sous UV longue onde.
+  fluorescenceShortWave: "Fluorescence rouge mod\xE9r\xE9e sous UV courte onde."
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  absorptionSpectrum: Raies d'absorption du chrome visibles dans le rouge.
+  spectrumLines:
+  - wavelengthNm: 694
+    widthNm: 6
+  - wavelengthNm: 668
+    widthNm: 8
+  - wavelengthNm: 620
+    widthNm: 12
+  - wavelengthNm: 560
+    widthNm: 40
+  inclusions: "Bulles de gaz sph\xE9riques ou en forme de virgule, parfois align\xE9es
+    ; stries de croissance courbes et concentriques."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."
+  chelseaFilterReaction: "R\xE9action rouge vif sous filtre Chelsea (due au chrome)."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 4
+  forcedSynthetic: 1
+  origins:
+  - name: Fabrication industrielle (fusion de poudre)
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 
