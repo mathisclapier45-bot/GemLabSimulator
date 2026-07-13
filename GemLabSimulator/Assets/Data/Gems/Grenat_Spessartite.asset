@@ -32,6 +32,9 @@ MonoBehaviour:
   fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
   fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
   opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
   absorptionSpectrum: "Bandes d'absorption du mangan\xE8se."
   spectrumLines:
   - wavelengthNm: 412
@@ -46,6 +49,7 @@ MonoBehaviour:
   magnetism: "Attir\xE9 par un aimant puissant (fer et mangan\xE8se)."
   baseValue: 55
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Namibie
     rarityWeight: 40

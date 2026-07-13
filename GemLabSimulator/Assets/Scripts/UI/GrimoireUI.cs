@@ -179,6 +179,7 @@ public class GrimoireUI : MonoBehaviour
             $"Forme : {def.shape}    Style de taille : {def.cutStyle}",
             $"Transparence : {def.transparency}",
             $"Indice de réfraction : {def.refractiveIndex:F3}",
+            $"Biréfringence : {OpticalDescriptions.BirefringenceText(def)}",
             $"Densité : {def.density:F2}",
             $"Dureté (Mohs) : {def.hardness:F2}",
             $"Caractère optique : {def.opticalCharacter}",

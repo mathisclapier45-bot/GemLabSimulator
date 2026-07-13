@@ -51,6 +51,7 @@ public static class GemGrading
     };
 
     public static readonly Grade SyntheticGrade = AuthenticityGrades[1];
+    public static readonly Grade ImpregnatedGrade = TreatmentGrades[3];
 
     public static Grade PickWeighted(Grade[] grades)
     {

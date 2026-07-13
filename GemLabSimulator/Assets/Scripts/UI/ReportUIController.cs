@@ -30,6 +30,8 @@ public class ReportUIController : MonoBehaviour
         AddIfMeasured(measured, gemInstance, ExaminationTool.MeasurementType.RefractiveIndex, "Indice de réfraction", "F3");
         if (gemInstance.HasObserved("RefractiveIndexOTL"))
             measured.Add("Indice de réfraction : OTL (hors limite du prisme, IR > 1.81)");
+        if (gemInstance.HasMeasured(ExaminationTool.MeasurementType.RefractiveIndex.ToString()) || gemInstance.HasObserved("RefractiveIndexOTL"))
+            measured.Add($"Biréfringence : {OpticalDescriptions.BirefringenceText(gem)}");
         AddIfMeasured(measured, gemInstance, ExaminationTool.MeasurementType.Density, "Densité", "F2");
 
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.VisualExamination.ToString()))
@@ -51,7 +53,7 @@ public class ReportUIController : MonoBehaviour
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.FluorescenceShortWave.ToString()))
             measured.Add($"Fluorescence UV courtes : {gem.fluorescenceShortWave}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.OpticalCharacter.ToString()))
-            measured.Add($"Polariscope : {gem.opticalCharacter}");
+            measured.Add($"Polariscope : {OpticalDescriptions.PolariscopeText(gem)}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.AbsorptionSpectrum.ToString()))
             measured.Add($"Spectroscope : {gem.absorptionSpectrum}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Inclusions.ToString()))
@@ -61,7 +63,7 @@ public class ReportUIController : MonoBehaviour
             measured.Add($"Origine probable : {gemInstance.Origin.name}");
         }
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.InterferenceFigure.ToString()))
-            measured.Add($"Conoscope : {gem.interferenceFigure}");
+            measured.Add($"Conoscope : {OpticalDescriptions.ConoscopeText(gem)}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ChelseaFilter.ToString()))
             measured.Add($"Filtre Chelsea : {gem.chelseaFilterReaction}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Magnetism.ToString()))

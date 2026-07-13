@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Orthose
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Orthose
+  description: "Feldspath potassique, dont la vari\xE9t\xE9 gemme jaune limpide est
+    principalement extraite \xE0 Madagascar."
+  icon: {fileID: 21300000, guid: a3ef552c36e0b413388133b57b6e2796, type: 3}
+  refractiveIndex: 1.522
+  density: 2.56
+  hardness: 6.25
+  lengthMm: 8
+  widthMm: 6
+  depthMm: 4
+  weightCarats: 1.5
+  luster: Vitreux
+  color: Jaune
+  shape: "Rectangle \xE0 pans coup\xE9s"
+  cutStyle: "\xC9meraude"
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Jaune p\xE2le / Jaune plus soutenu selon l'axe (faible)."
+  fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
+  fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  opticalCharacterClass: 2
+  birefringence: 0.008
+  isQuartzFamily: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "G\xE9n\xE9ralement propre, quelques plans de clivage fins."
+  interferenceFigure: Figure biaxe.
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 22
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  origins:
+  - name: Madagascar
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: "Quasi-unique gisement mondial produisant cette vari\xE9t\xE9
+      transparente jaune."

@@ -1,0 +1,39 @@
+public static class OpticalDescriptions
+{
+    public static string PolariscopeText(GemDefinition gem)
+    {
+        switch (gem.opticalCharacterClass)
+        {
+            case GemDefinition.OpticalCharacterClass.Isotropic:
+                return "Isotrope (réseau cubique ou matériau amorphe).";
+            case GemDefinition.OpticalCharacterClass.Opaque:
+                return "Non applicable (minéral opaque).";
+            default:
+                return "Anisotrope.";
+        }
+    }
+
+    public static string ConoscopeText(GemDefinition gem)
+    {
+        switch (gem.opticalCharacterClass)
+        {
+            case GemDefinition.OpticalCharacterClass.Isotropic:
+                return "Aucune figure d'interférence (gemme isotrope).";
+            case GemDefinition.OpticalCharacterClass.Opaque:
+                return "Non applicable (minéral opaque).";
+            case GemDefinition.OpticalCharacterClass.Uniaxial:
+                return gem.isQuartzFamily
+                    ? "Figure uniaxe, motif caractéristique en \"œil-de-bœuf\" (bull's eye)."
+                    : "Figure uniaxe.";
+            default:
+                return "Figure biaxe.";
+        }
+    }
+
+    public static string BirefringenceText(GemDefinition gem)
+    {
+        return gem.opticalCharacterClass == GemDefinition.OpticalCharacterClass.Opaque
+            ? "Non applicable (minéral opaque)"
+            : $"{gem.birefringence:F3}";
+    }
+}

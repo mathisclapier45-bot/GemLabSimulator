@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
   fluorescenceShortWave: Inerte sous UV courte onde.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.008
+  isQuartzFamily: 0
   absorptionSpectrum: Bande d'absorption large et diffuse.
   spectrumLines: []
   inclusions: "Bulles de gaz sph\xE9riques, stries de croissance courbes et concentriques,
@@ -42,6 +45,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 4
   forcedSynthetic: 1
+  forcedTreatment: 0
   origins:
   - name: Fabrication industrielle (fusion de poudre)
     rarityWeight: 100

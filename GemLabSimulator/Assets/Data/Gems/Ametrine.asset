@@ -34,6 +34,9 @@ MonoBehaviour:
   fluorescenceLongWave: Aucune fluorescence notable sous UV longue onde.
   fluorescenceShortWave: Aucune fluorescence notable sous UV courte onde.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.009
+  isQuartzFamily: 1
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: Zonation de couleur nette en secteurs, limite de transition parfois
@@ -43,6 +46,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 35
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Bolivie
     rarityWeight: 90

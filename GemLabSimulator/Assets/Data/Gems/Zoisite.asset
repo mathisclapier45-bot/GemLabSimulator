@@ -34,6 +34,9 @@ MonoBehaviour:
   fluorescenceLongWave: Aucune fluorescence notable sous UV longue onde.
   fluorescenceShortWave: Aucune fluorescence notable sous UV courte onde.
   opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  opticalCharacterClass: 2
+  birefringence: 0.009
+  isQuartzFamily: 0
   absorptionSpectrum: "Bandes d'absorption diffuses du fer et du chrome combin\xE9es."
   spectrumLines: []
   inclusions: "Cristaux fins dispers\xE9s, parfois accompagn\xE9s d'inclusions fibreuses."
@@ -42,6 +45,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 15
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Tanzanie
     rarityWeight: 50

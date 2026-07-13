@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV."
   fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV."
   opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
   absorptionSpectrum: Forte absorption dans le violet et le bleu, transparence dans
     le vert.
   spectrumLines:
@@ -44,6 +47,7 @@ MonoBehaviour:
   magnetism: "Attir\xE9 par un aimant puissant (grenat riche en fer)."
   baseValue: 150
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Russie (Monts Oural)
     rarityWeight: 30

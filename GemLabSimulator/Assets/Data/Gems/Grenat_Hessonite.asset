@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
   fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
   opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
   absorptionSpectrum: "Bandes d'absorption du fer et du mangan\xE8se."
   spectrumLines:
   - wavelengthNm: 420
@@ -44,6 +47,7 @@ MonoBehaviour:
   magnetism: "Faible r\xE9action \xE0 l'aimant (moins de fer que l'almandin)."
   baseValue: 40
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Sri Lanka
     rarityWeight: 50

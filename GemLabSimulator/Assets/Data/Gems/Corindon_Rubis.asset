@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: Fluorescence rouge vif sous UV longue onde.
   fluorescenceShortWave: Fluorescence rouge plus faible sous UV courte onde.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.008
+  isQuartzFamily: 0
   absorptionSpectrum: Raies d'absorption du chrome visibles dans le rouge.
   spectrumLines:
   - wavelengthNm: 694
@@ -49,6 +52,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 150
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Birmanie (Mogok)
     rarityWeight: 10

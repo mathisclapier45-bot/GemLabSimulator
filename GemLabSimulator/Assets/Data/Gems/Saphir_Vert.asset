@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: Inerte sous UV longue onde.
   fluorescenceShortWave: Inerte sous UV courte onde.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.008
+  isQuartzFamily: 0
   absorptionSpectrum: "Bandes d'absorption combin\xE9es dans le bleu et le jaune."
   spectrumLines:
   - wavelengthNm: 460
@@ -47,6 +50,7 @@ MonoBehaviour:
     de fer)."
   baseValue: 40
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Australie
     rarityWeight: 50

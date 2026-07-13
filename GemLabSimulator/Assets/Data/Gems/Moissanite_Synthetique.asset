@@ -34,6 +34,9 @@ MonoBehaviour:
   fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV."
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent) \u2014 d\xE9doublement
     des ar\xEAtes parfois visible \xE0 fort grossissement."
+  opticalCharacterClass: 1
+  birefringence: 0.043
+  isQuartzFamily: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "G\xE9n\xE9ralement tr\xE8s propre, inclusions m\xE9talliques rares."
@@ -42,6 +45,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 10
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Fabrication industrielle
     rarityWeight: 100

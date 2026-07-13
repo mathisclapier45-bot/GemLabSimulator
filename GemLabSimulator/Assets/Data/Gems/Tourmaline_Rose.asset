@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: Aucune fluorescence notable.
   fluorescenceShortWave: Aucune fluorescence notable.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.018
+  isQuartzFamily: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Inclusions liquides fragment\xE9es, fractures internes fr\xE9quentes."
@@ -41,6 +44,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 50
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: "Br\xE9sil"
     rarityWeight: 35

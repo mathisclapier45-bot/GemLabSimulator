@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Opale_De_Feu
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Opale de Feu
+  description: "Silice hydrat\xE9e amorphe de couleur orang\xE9e \xE0 rouge vif,
+    g\xE9n\xE9ralement d\xE9pourvue de jeu de couleurs."
+  icon: {fileID: 21300000, guid: 32a9c064fc0cb4af2a813520c23ff3f8, type: 3}
+  refractiveIndex: 1.43
+  density: 2
+  hardness: 6
+  lengthMm: 7.5
+  widthMm: 6
+  depthMm: 4
+  weightCarats: 1.4
+  luster: "Vitreux \xE0 r\xE9sineux"
+  color: "Orange \xE0 rouge"
+  shape: Ovale
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
+  fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
+  opticalCharacter: "Isotrope (mat\xE9riau amorphe, non cristallin)."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "G\xE9n\xE9ralement propre, parfois craquelures internes dues \xE0
+    la d\xE9shydratation."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau amorphe)."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 35
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  origins:
+  - name: Mexique
+    rarityWeight: 70
+    valueMultiplier: 1.2
+    inclusionOverride: "Gisement historique produisant les teintes orang\xE9es les
+      plus vives."
+  - name: "Br\xE9sil"
+    rarityWeight: 15
+    valueMultiplier: 0.9
+    inclusionOverride: 
+  - name: "\xC9tats-Unis"
+    rarityWeight: 15
+    valueMultiplier: 1
+    inclusionOverride: 

@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Labradorite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Labradorite
+  description: "Feldspath plagioclase montrant un jeu de lumi\xE8re iris\xE9 (labradorescence)
+    d\xFB \xE0 une structure lamellaire interne."
+  icon: {fileID: 21300000, guid: e872a8d8c0a684f29a818bf7d08bb77b, type: 3}
+  refractiveIndex: 1.563
+  density: 2.7
+  hardness: 6.25
+  lengthMm: 9
+  widthMm: 7
+  depthMm: 5
+  weightCarats: 2.4
+  luster: "Vitreux \xE0 m\xE9tallique par endroits"
+  color: "Gris \xE0 reflets bleu-vert"
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: Translucide
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
+  fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  opticalCharacterClass: 2
+  birefringence: 0.009
+  isQuartzFamily: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Fines lamelles internes responsables du jeu de lumi\xE8re iris\xE9
+    caract\xE9ristique."
+  interferenceFigure: Figure biaxe.
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 20
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  origins:
+  - name: Madagascar
+    rarityWeight: 35
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Canada
+    rarityWeight: 35
+    valueMultiplier: 1
+    inclusionOverride: "Gisement type de la p\xE9ninsule du Labrador, qui a donn\xE9
+      son nom \xE0 l'esp\xE8ce."
+  - name: Finlande
+    rarityWeight: 30
+    valueMultiplier: 1.8
+    inclusionOverride: "Jeu de lumi\xE8re exceptionnellement intense et multicolore,
+      qualit\xE9 rare recherch\xE9e."

@@ -34,6 +34,9 @@ MonoBehaviour:
     longue onde."
   fluorescenceShortWave: Fluorescence variable sous UV courte onde.
   opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Clivage parfait dans quatre directions, fractures internes fr\xE9quentes."
@@ -42,6 +45,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 15
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Chine
     rarityWeight: 35

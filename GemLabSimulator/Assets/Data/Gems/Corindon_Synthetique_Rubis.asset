@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: Fluorescence rouge vif et uniforme sous UV longue onde.
   fluorescenceShortWave: "Fluorescence rouge mod\xE9r\xE9e sous UV courte onde."
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.008
+  isQuartzFamily: 0
   absorptionSpectrum: Raies d'absorption du chrome visibles dans le rouge.
   spectrumLines:
   - wavelengthNm: 694
@@ -50,6 +53,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 4
   forcedSynthetic: 1
+  forcedTreatment: 0
   origins:
   - name: Fabrication industrielle (fusion de poudre)
     rarityWeight: 100

@@ -32,6 +32,9 @@ MonoBehaviour:
   fluorescenceLongWave: Aucune fluorescence sous UV longue onde.
   fluorescenceShortWave: Aucune fluorescence sous UV courte onde.
   opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  opticalCharacterClass: 2
+  birefringence: 0.036
+  isQuartzFamily: 0
   absorptionSpectrum: Triplet d'absorption du fer dans le bleu.
   spectrumLines:
   - wavelengthNm: 453
@@ -47,6 +50,7 @@ MonoBehaviour:
   magnetism: "L\xE9g\xE8rement attir\xE9 par un aimant puissant (teneur en fer mod\xE9r\xE9e)."
   baseValue: 35
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: "Pakistan (vall\xE9e de Kashmir/Sopat)"
     rarityWeight: 20

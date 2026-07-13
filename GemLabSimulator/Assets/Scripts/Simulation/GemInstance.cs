@@ -68,7 +68,9 @@ public class GemInstance
 
         var sizeValueMultiplier = Mathf.Pow(sizeFactor, 1.5f);
 
-        var treatment = GemGrading.PickWeighted(GemGrading.TreatmentGrades);
+        var treatment = definition.forcedTreatment
+            ? GemGrading.ImpregnatedGrade
+            : GemGrading.PickWeighted(GemGrading.TreatmentGrades);
         TreatmentGrade = treatment.Name;
         TreatmentDescription = treatment.Description;
 

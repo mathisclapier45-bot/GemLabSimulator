@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: "Aucune fluorescence (min\xE9ral opaque)."
   fluorescenceShortWave: "Aucune fluorescence (min\xE9ral opaque)."
   opticalCharacter: "Non applicable (min\xE9ral opaque \xE0 \xE9clat m\xE9tallique)."
+  opticalCharacterClass: 3
+  birefringence: 0
+  isQuartzFamily: 0
   absorptionSpectrum: "Non applicable (min\xE9ral opaque)."
   spectrumLines: []
   inclusions: "Non applicable (min\xE9ral opaque)."
@@ -42,6 +45,7 @@ MonoBehaviour:
     bien plus faible qu'un min\xE9ral franchement ferromagn\xE9tique)."
   baseValue: 10
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Angleterre
     rarityWeight: 30

@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
   opticalCharacter: "Anisotrope, uniaxial \u2014 bir\xE9fringence tr\xE8s \xE9lev\xE9e
     provoquant un d\xE9doublement visible des ar\xEAtes des facettes arri\xE8re."
+  opticalCharacterClass: 1
+  birefringence: 0.059
+  isQuartzFamily: 0
   absorptionSpectrum: "Nombreuses raies fines d'absorption, li\xE9es \xE0 des traces
     d'\xE9l\xE9ments radioactifs."
   spectrumLines:
@@ -51,6 +54,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 30
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Cambodge (Ratanakiri)
     rarityWeight: 60

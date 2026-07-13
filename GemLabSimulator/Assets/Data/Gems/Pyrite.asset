@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: "Aucune fluorescence (min\xE9ral opaque)."
   fluorescenceShortWave: "Aucune fluorescence (min\xE9ral opaque)."
   opticalCharacter: "Non applicable (min\xE9ral opaque \xE0 \xE9clat m\xE9tallique)."
+  opticalCharacterClass: 3
+  birefringence: 0
+  isQuartzFamily: 0
   absorptionSpectrum: "Non applicable (min\xE9ral opaque)."
   spectrumLines: []
   inclusions: "Non applicable (min\xE9ral opaque)."
@@ -41,6 +44,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant, malgr\xE9 sa teneur en fer."
   baseValue: 8
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: "P\xE9rou"
     rarityWeight: 35

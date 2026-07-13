@@ -34,6 +34,9 @@ MonoBehaviour:
     sous UV longue onde."
   fluorescenceShortWave: Fluorescence faible sous UV courte onde.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.008
+  isQuartzFamily: 0
   absorptionSpectrum: "Raies d'absorption fines combin\xE9es \xE0 une bande diffuse."
   spectrumLines:
   - wavelengthNm: 620
@@ -46,6 +49,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 320
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Sri Lanka
     rarityWeight: 60

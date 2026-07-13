@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Pierre_De_Lune
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Pierre de Lune
+  description: "Feldspar alcalin montrant un ph\xE9nom\xE8ne de lumi\xE8re bleut\xE9e
+    et flottante (adularescence) d\xFB \xE0 l'intercroissance de deux min\xE9raux."
+  icon: {fileID: 21300000, guid: d75e18b1bbd2545dc910c24c1331c11b, type: 3}
+  refractiveIndex: 1.525
+  density: 2.57
+  hardness: 6.25
+  lengthMm: 8
+  widthMm: 6.5
+  depthMm: 4.5
+  weightCarats: 1.8
+  luster: "Vitreux \xE0 adamantin par endroits"
+  color: "Incolore \xE0 reflets bleut\xE9s"
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: Translucide
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
+  fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  opticalCharacterClass: 2
+  birefringence: 0.006
+  isQuartzFamily: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Structure lamellaire fine en intercroissance, responsable du flott\xE9
+    lumineux bleut\xE9 caract\xE9ristique."
+  interferenceFigure: Figure biaxe.
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 25
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  origins:
+  - name: Sri Lanka
+    rarityWeight: 50
+    valueMultiplier: 1.2
+    inclusionOverride: "Flott\xE9 bleut\xE9 intense et bien centr\xE9, qualit\xE9
+      de r\xE9f\xE9rence."
+  - name: Inde
+    rarityWeight: 30
+    valueMultiplier: 0.9
+    inclusionOverride: 
+  - name: Myanmar
+    rarityWeight: 20
+    valueMultiplier: 1
+    inclusionOverride: 

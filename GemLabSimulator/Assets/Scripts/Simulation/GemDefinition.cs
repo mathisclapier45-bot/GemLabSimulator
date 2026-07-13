@@ -4,6 +4,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewGem", menuName = "GemLab/Gem Definition")]
 public class GemDefinition : ScriptableObject
 {
+    public enum OpticalCharacterClass { Isotropic, Uniaxial, Biaxial, Opaque }
+
     public string displayName;
     [TextArea] public string description;
     public Sprite icon;
@@ -30,6 +32,9 @@ public class GemDefinition : ScriptableObject
     [TextArea] public string fluorescenceLongWave;
     [TextArea] public string fluorescenceShortWave;
     [TextArea] public string opticalCharacter;
+    public OpticalCharacterClass opticalCharacterClass;
+    public float birefringence;
+    public bool isQuartzFamily;
     [TextArea] public string absorptionSpectrum;
     public List<SpectrumLine> spectrumLines = new List<SpectrumLine>();
     [TextArea] public string inclusions;
@@ -40,6 +45,7 @@ public class GemDefinition : ScriptableObject
     [Header("Économie")]
     public int baseValue;
     public bool forcedSynthetic;
+    public bool forcedTreatment;
 
     [Header("Origines possibles")]
     public List<GemOrigin> origins = new List<GemOrigin>();

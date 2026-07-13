@@ -34,6 +34,9 @@ MonoBehaviour:
     selon les sp\xE9cimens)."
   fluorescenceShortWave: Fluorescence plus faible sous UV courte onde.
   opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
   absorptionSpectrum: "Spectre variable selon le type ; raies dans le violet possibles
     (s\xE9rie Cape)."
   spectrumLines:
@@ -46,6 +49,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action (diamagn\xE9tique)."
   baseValue: 500
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Botswana
     rarityWeight: 35

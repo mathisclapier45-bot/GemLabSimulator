@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: Fluorescence rouge faible possible sous UV longue onde.
   fluorescenceShortWave: Faible ou absente sous UV courte onde.
   opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  opticalCharacterClass: 2
+  birefringence: 0.009
+  isQuartzFamily: 0
   absorptionSpectrum: Raies d'absorption du chrome.
   spectrumLines:
   - wavelengthNm: 680
@@ -48,6 +51,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 250
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Russie (Monts Oural)
     rarityWeight: 20

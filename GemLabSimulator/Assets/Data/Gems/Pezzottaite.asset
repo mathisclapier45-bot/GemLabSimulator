@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: Aucune fluorescence notable.
   fluorescenceShortWave: Aucune fluorescence notable.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.008
+  isQuartzFamily: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Cristaux macl\xE9s en \xE9toile \xE0 trois branches, structure de
@@ -42,6 +45,7 @@ MonoBehaviour:
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 60
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Madagascar
     rarityWeight: 70

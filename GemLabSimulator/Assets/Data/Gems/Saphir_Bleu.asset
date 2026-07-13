@@ -34,6 +34,9 @@ MonoBehaviour:
     la fluorescence)."
   fluorescenceShortWave: Inerte sous UV courte onde.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.008
+  isQuartzFamily: 0
   absorptionSpectrum: Triplet d'absorption du fer vers 450 nm.
   spectrumLines:
   - wavelengthNm: 450
@@ -49,6 +52,7 @@ MonoBehaviour:
     de fer)."
   baseValue: 140
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Cachemire (Kashmir)
     rarityWeight: 5

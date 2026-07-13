@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: Aucune fluorescence notable.
   fluorescenceShortWave: Aucune fluorescence notable.
   opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  opticalCharacterClass: 2
+  birefringence: 0.029
+  isQuartzFamily: 0
   absorptionSpectrum: Bandes d'absorption du chrome.
   spectrumLines:
   - wavelengthNm: 505
@@ -45,6 +48,7 @@ MonoBehaviour:
   magnetism: "Mod\xE9r\xE9ment attir\xE9 par un aimant puissant (silicate ferromagn\xE9sien)."
   baseValue: 30
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: "Russie (Sib\xE9rie)"
     rarityWeight: 50

@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Sinhalite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Sinhalite
+  description: "Borate de magn\xE9sium et d'aluminium, longtemps confondu avec le
+    p\xE9ridot brun avant d'\xEAtre reconnu comme esp\xE8ce distincte en 1952."
+  icon: {fileID: 21300000, guid: cb500712c237547a585c7e85caa15813, type: 3}
+  refractiveIndex: 1.68
+  density: 3.48
+  hardness: 6.75
+  lengthMm: 7
+  widthMm: 5.5
+  depthMm: 3.8
+  weightCarats: 1.3
+  luster: Vitreux
+  color: Brun
+  shape: Ovale
+  cutStyle: Mixte
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Jaune p\xE2le / Brun clair / Brun-rouge sombre selon les
+    trois axes (marqu\xE9)."
+  fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
+  fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  opticalCharacterClass: 2
+  birefringence: 0.038
+  isQuartzFamily: 0
+  absorptionSpectrum: "Bandes d'absorption fines li\xE9es au fer."
+  spectrumLines: []
+  inclusions: "G\xE9n\xE9ralement peu incluse, cristaux fins occasionnels."
+  interferenceFigure: Figure biaxe.
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "L\xE9g\xE8re r\xE9action possible avec un aimant tr\xE8s puissant (traces
+    de fer)."
+  baseValue: 55
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  origins:
+  - name: Sri Lanka
+    rarityWeight: 70
+    valueMultiplier: 1.2
+    inclusionOverride: "Gisement type qui a donn\xE9 son nom \xE0 l'esp\xE8ce."
+  - name: Myanmar
+    rarityWeight: 30
+    valueMultiplier: 1
+    inclusionOverride: 

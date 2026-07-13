@@ -61,7 +61,7 @@ public class ExaminationTool : MonoBehaviour
         switch (measurementType)
         {
             case MeasurementType.RefractiveIndex when gem.refractiveIndex > 1.81f:
-                RevealOverTheLimit(gemInstance);
+                RevealOverTheLimit(gemInstance, gem);
                 break;
             case MeasurementType.Pleochroism:
                 RevealQualitative(gemInstance, "Pléochroïsme",
@@ -74,7 +74,7 @@ public class ExaminationTool : MonoBehaviour
                 RevealQualitative(gemInstance, "Fluorescence UV courtes ondes", gem.fluorescenceShortWave);
                 break;
             case MeasurementType.OpticalCharacter:
-                RevealQualitative(gemInstance, "Caractère optique", gem.opticalCharacter);
+                RevealQualitative(gemInstance, "Caractère optique", OpticalDescriptions.PolariscopeText(gem));
                 break;
             case MeasurementType.AbsorptionSpectrum:
                 RevealQualitative(gemInstance, "Spectre d'absorption", gem.absorptionSpectrum);
@@ -84,7 +84,7 @@ public class ExaminationTool : MonoBehaviour
                 RevealInclusions(gemInstance);
                 break;
             case MeasurementType.InterferenceFigure:
-                RevealQualitative(gemInstance, "Figure d'interférence", gem.interferenceFigure);
+                RevealQualitative(gemInstance, "Figure d'interférence", OpticalDescriptions.ConoscopeText(gem));
                 break;
             case MeasurementType.ChelseaFilter:
                 RevealQualitative(gemInstance, "Réaction au filtre Chelsea", gem.chelseaFilterReaction);
@@ -148,10 +148,12 @@ public class ExaminationTool : MonoBehaviour
             $"{toolName} — Dimensions : {gemInstance.LengthMm:F1} x {gemInstance.WidthMm:F1} x {gemInstance.DepthMm:F1} mm");
     }
 
-    private void RevealOverTheLimit(GemInstance gemInstance)
+    private void RevealOverTheLimit(GemInstance gemInstance, GemDefinition gem)
     {
         gemInstance.RecordObservation("RefractiveIndexOTL");
-        ToolFeedbackUI.Instance.ShowMessage($"{toolName} — Indice de réfraction : OTL (hors limite du prisme, IR > 1.81)");
+        ToolFeedbackUI.Instance.ShowMessage(
+            $"{toolName} — Indice de réfraction : OTL (hors limite du prisme, IR > 1.81) | " +
+            $"Biréfringence : {OpticalDescriptions.BirefringenceText(gem)}");
     }
 
     private void RevealInclusions(GemInstance gemInstance)
@@ -191,7 +193,10 @@ public class ExaminationTool : MonoBehaviour
             gemInstance.RecordMeasurement(propertyKey, measured);
 
             var tierLabel = precision >= 1f ? "Parfait" : precision >= 0.6f ? "Bonne lecture" : "Lecture imprécise";
-            ToolFeedbackUI.Instance.ShowMessage($"{toolName} — {label} ≈ {measured:F3} ({tierLabel})");
+            var suffix = measurementType == MeasurementType.RefractiveIndex
+                ? $" | Biréfringence : {OpticalDescriptions.BirefringenceText(gem)}"
+                : "";
+            ToolFeedbackUI.Instance.ShowMessage($"{toolName} — {label} ≈ {measured:F3} ({tierLabel}){suffix}");
         });
     }
 }

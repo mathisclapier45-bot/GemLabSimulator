@@ -32,6 +32,9 @@ MonoBehaviour:
   fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
   fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
   opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
   absorptionSpectrum: Bandes d'absorption du fer et du chrome.
   spectrumLines:
   - wavelengthNm: 512
@@ -43,6 +46,7 @@ MonoBehaviour:
   magnetism: "Mod\xE9r\xE9ment attir\xE9 par un aimant puissant (fer et magn\xE9sium)."
   baseValue: 30
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Afrique du Sud
     rarityWeight: 40

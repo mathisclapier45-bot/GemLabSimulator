@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: Aucune fluorescence sous UV longue onde.
   fluorescenceShortWave: Aucune fluorescence sous UV courte onde.
   opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
   absorptionSpectrum: Larges bandes d'absorption du fer.
   spectrumLines:
   - wavelengthNm: 573
@@ -46,6 +49,7 @@ MonoBehaviour:
   magnetism: "Attir\xE9 par un aimant puissant (teneur en fer interm\xE9diaire)."
   baseValue: 38
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Sri Lanka
     rarityWeight: 35

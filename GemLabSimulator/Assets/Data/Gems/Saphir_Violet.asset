@@ -33,6 +33,9 @@ MonoBehaviour:
   fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
   fluorescenceShortWave: Inerte sous UV courte onde.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.008
+  isQuartzFamily: 0
   absorptionSpectrum: "Bandes d'absorption combin\xE9es, larges et diffuses."
   spectrumLines: []
   inclusions: "Zonation de couleur en secteurs, cristaux fins dispers\xE9s."
@@ -43,6 +46,7 @@ MonoBehaviour:
     de fer)."
   baseValue: 65
   forcedSynthetic: 0
+  forcedTreatment: 0
   origins:
   - name: Sri Lanka
     rarityWeight: 50

@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Jade_Jadeite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "Jade Jad\xE9ite"
+  description: "Silicate de sodium et d'aluminium du groupe des pyrox\xE8nes, la
+    plus pris\xE9e des deux vari\xE9t\xE9s de \"jade\"."
+  icon: {fileID: 21300000, guid: ba4c5acbe1429427a82b2672768fbf07, type: 3}
+  refractiveIndex: 1.665
+  density: 3.34
+  hardness: 6.75
+  lengthMm: 9
+  widthMm: 7
+  depthMm: 5
+  weightCarats: 3.5
+  luster: "Vitreux \xE0 gras"
+  color: Vert
+  shape: Coussin
+  cutStyle: Cabochon
+  transparency: Translucide
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
+  fluorescenceShortWave: "G\xE9n\xE9ralement inerte sous UV courte onde."
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent), lecture diffuse typique
+    d'un agr\xE9gat polycristallin."
+  opticalCharacterClass: 2
+  birefringence: 0.012
+  isQuartzFamily: 0
+  absorptionSpectrum: "Raie d'absorption fine dans le bleu-violet li\xE9e \xE0 un
+    \xE9l\xE9ment chromophore en trace."
+  spectrumLines:
+  - wavelengthNm: 437
+    widthNm: 6
+  inclusions: "Texture grenue \xE0 fibreuse entrelac\xE9e typique d'un agr\xE9gat
+    cristallin compact."
+  interferenceFigure: "Figure diffuse, non exploitable (agr\xE9gat polycristallin)."
+  chelseaFilterReaction: "G\xE9n\xE9ralement aucune r\xE9action (sauf coloration
+    artificielle)."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 120
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  origins:
+  - name: Myanmar
+    rarityWeight: 60
+    valueMultiplier: 1.6
+    inclusionOverride: "Texture fine et compacte, couleur verte homog\xE8ne et intense
+      \u2014 qualit\xE9 \"imp\xE9riale\" recherch\xE9e."
+  - name: Guatemala
+    rarityWeight: 40
+    valueMultiplier: 1
+    inclusionOverride: 
