@@ -5,8 +5,8 @@ public class ChestUI : MonoBehaviour
 {
     public static ChestUI Instance { get; private set; }
 
-    private const int Columns = 4;
-    private const int Rows = 3;
+    private const int Columns = 6;
+    private const int Rows = 4;
     private const float SlotSize = 56f;
     private const float SlotSpacing = 8f;
 
@@ -85,7 +85,7 @@ public class ChestUI : MonoBehaviour
         iconRect.anchoredPosition = Vector2.zero;
 
         var iconImage = iconGO.GetComponent<Image>();
-        iconImage.sprite = gem.Definition.icon;
+        iconImage.sprite = gem.DisplaySprite;
         iconImage.preserveAspect = true;
 
         var dragSource = go.AddComponent<GemDragSource>();

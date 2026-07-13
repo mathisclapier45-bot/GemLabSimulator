@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Verre
   description: "Un verre imitant l'apparence d'une pierre pr\xE9cieuse rouge."
   icon: {fileID: 21300000, guid: c4645c751664248d89ce11cd61c15d74, type: 3}
+  roughIcon: {fileID: 21300000, guid: 39bd76760629a451a97e7fe6f8fb41b2, type: 3}
   refractiveIndex: 1.5
   density: 2.5
   hardness: 5.5
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 0
   birefringence: 0
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: Spectre continu sans raies nettes, ou raies artificielles selon
     le colorant.
   spectrumLines: []

@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Un b\xE9ryl au c\xE9sium, de couleur \"framboise\", d\xE9couvert
     seulement en 2002 \xE0 Madagascar."
   icon: {fileID: 21300000, guid: 47322775a1a66405b946bc503dcd68eb, type: 3}
+  roughIcon: {fileID: 21300000, guid: 57a25daa3cd864e34a3afcf58a70fdc2, type: 3}
   refractiveIndex: 1.615
   density: 3.13
   hardness: 8
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.008
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Cristaux macl\xE9s en \xE9toile \xE0 trois branches, structure de

@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Grenat Spessartite
   description: "Un grenat orang\xE9 vif, \xE0 ne pas confondre avec l'almandin rouge."
   icon: {fileID: 21300000, guid: c57c2e82c8c4f43be9b6b646b508c540, type: 3}
+  roughIcon: {fileID: 21300000, guid: 864fc95d2a3fb41ac98bbecf6134d16d, type: 3}
   refractiveIndex: 1.8
   density: 4.15
   hardness: 7.5
@@ -35,6 +36,8 @@ MonoBehaviour:
   opticalCharacterClass: 0
   birefringence: 0
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Bandes d'absorption du mangan\xE8se."
   spectrumLines:
   - wavelengthNm: 412

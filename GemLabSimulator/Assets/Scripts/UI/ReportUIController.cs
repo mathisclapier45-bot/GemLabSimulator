@@ -76,6 +76,14 @@ public class ReportUIController : MonoBehaviour
             measured.Add($"Origine confirmée (UV-Vis-NIR) : {gemInstance.Origin.name}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.GrowthStructure.ToString()))
             measured.Add($"Structure de croissance (MEB) : {gemInstance.GrowthStructureDescription}");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ThermalConductivity.ToString()))
+            measured.Add($"Conductivité thermique : {(gem.isThermallyConductiveLikeDiamond ? "Élevée (type diamant)" : "Faible")}");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ElectricalConductivity.ToString()))
+            measured.Add($"Conductivité électrique : {(gem.isElectricallyConductive ? "Conductrice" : "Non conductrice")}");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.DiamondScreening.ToString()))
+            measured.Add($"DiamondSure : {(gemInstance.IsSynthetic ? "Refer" : "Pass")}");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.DiamondGrowthImaging.ToString()))
+            measured.Add($"DiamondView : {(gemInstance.IsSynthetic ? "Motifs de synthèse (HPHT/CVD)" : "Motifs de croissance naturelle")}");
 
         var identityLine = gemInstance.IsIdentified
             ? $"Gemme : {gem.displayName} (identifiée) — N° {gemInstance.DisplayId}"
@@ -119,7 +127,11 @@ public class ReportUIController : MonoBehaviour
             resultText.text = $"Rapport validé par le directeur ! Identifiée comme {gem.displayName}. " +
                                "Renvoyez-la à son client depuis la boîte aux lettres pour être payé.";
             gemInstance.MarkIdentified();
+
+            var isNewDiscovery = GemCodex.Instance != null && !GemCodex.Instance.IsDiscovered(gem.name);
             GemCodex.Instance?.MarkDiscovered(gem.name);
+            QuestState.Instance?.ReportIdentification();
+            if (isNewDiscovery) QuestState.Instance?.ReportDiscovery();
         }
         else
         {

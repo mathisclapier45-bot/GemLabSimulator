@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Feldspath potassique, dont la vari\xE9t\xE9 gemme jaune limpide est
     principalement extraite \xE0 Madagascar."
   icon: {fileID: 21300000, guid: a3ef552c36e0b413388133b57b6e2796, type: 3}
+  roughIcon: {fileID: 21300000, guid: 8cd7eefe75b4a4b0c9cac7f826db1e36, type: 3}
   refractiveIndex: 1.522
   density: 2.56
   hardness: 6.25
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.008
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "G\xE9n\xE9ralement propre, quelques plans de clivage fins."

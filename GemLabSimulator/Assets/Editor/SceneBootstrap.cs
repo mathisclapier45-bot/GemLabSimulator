@@ -202,6 +202,8 @@ public static class SceneBootstrap
         player.AddComponent<GameClock>();
         player.AddComponent<ReturnToMenuController>();
         player.AddComponent<MarketState>();
+        player.AddComponent<QuestState>();
+        player.AddComponent<RoughMarketState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -271,8 +273,8 @@ public static class SceneBootstrap
 
         var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
         pixelPerfect.assetsPPU = PixelsPerUnit;
-        pixelPerfect.refResolutionX = 384;
-        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.refResolutionX = 576;
+        pixelPerfect.refResolutionY = 324;
         pixelPerfect.upscaleRT = true;
         pixelPerfect.pixelSnapping = true;
         pixelPerfect.cropFrameX = true;
@@ -332,6 +334,8 @@ public static class SceneBootstrap
         player.AddComponent<GameClock>();
         player.AddComponent<ReturnToMenuController>();
         player.AddComponent<MarketState>();
+        player.AddComponent<QuestState>();
+        player.AddComponent<RoughMarketState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -351,6 +355,10 @@ public static class SceneBootstrap
             new Color(0.25f, 0.30f, 0.55f), new Color(0.70f, 0.75f, 0.90f), "", false);
         CreateBuilding("Marche aux Pierres", new Vector3(-12, -6, 0f),
             new Color(0.65f, 0.42f, 0.18f), new Color(0.88f, 0.70f, 0.45f), "Marche", true);
+        CreateBuilding("Ecole", new Vector3(-4, -6, 0f),
+            new Color(0.30f, 0.45f, 0.65f), new Color(0.90f, 0.85f, 0.70f), "", false);
+        CreateBuilding("Marche aux Brutes", new Vector3(4, -6, 0f),
+            new Color(0.50f, 0.35f, 0.22f), new Color(0.75f, 0.65f, 0.50f), "MarcheBrutes", true);
 
         CreateBuilding("Le Manoir", new Vector3(12, -6, 0f),
             new Color(0.35f, 0.18f, 0.42f), new Color(0.70f, 0.60f, 0.75f), "", false);
@@ -375,6 +383,11 @@ public static class SceneBootstrap
     private const int MarketMaxX = 14;
     private const int MarketMinY = -6;
     private const int MarketMaxY = 6;
+
+    private const int RoughMarketMinX = -14;
+    private const int RoughMarketMaxX = 14;
+    private const int RoughMarketMinY = -6;
+    private const int RoughMarketMaxY = 6;
 
     [MenuItem("GemLab/Setup Laboratory Scene")]
     public static void CreateLaboratoryScene()
@@ -453,6 +466,8 @@ public static class SceneBootstrap
         player.AddComponent<GameClock>();
         player.AddComponent<ReturnToMenuController>();
         player.AddComponent<MarketState>();
+        player.AddComponent<QuestState>();
+        player.AddComponent<RoughMarketState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -462,10 +477,14 @@ public static class SceneBootstrap
 
         CreateExitDoor(new Vector3(0, LabMinY + 1, 0f));
 
+        CreateExaminationStation("TesteurThermique", ExaminationTool.MeasurementType.ThermalConductivity, new Vector3(-8, 2, 0f));
         CreateExaminationStation("FTIR", ExaminationTool.MeasurementType.Treatment, new Vector3(-5, 2, 0f));
         CreateExaminationStation("Raman", ExaminationTool.MeasurementType.Authenticity, new Vector3(0, 2, 0f));
         CreateExaminationStation("UVVisNIR", ExaminationTool.MeasurementType.ConfirmedOrigin, new Vector3(5, 2, 0f));
+        CreateExaminationStation("TesteurElectrique", ExaminationTool.MeasurementType.ElectricalConductivity, new Vector3(8, 2, 0f));
+        CreateExaminationStation("DiamondView", ExaminationTool.MeasurementType.DiamondGrowthImaging, new Vector3(-5, -2, 0f));
         CreateExaminationStation("MEB", ExaminationTool.MeasurementType.GrowthStructure, new Vector3(0, -2, 0f));
+        CreateExaminationStation("DiamondSure", ExaminationTool.MeasurementType.DiamondScreening, new Vector3(5, -2, 0f));
 
         CreateUI(false);
 
@@ -554,6 +573,8 @@ public static class SceneBootstrap
         player.AddComponent<GameClock>();
         player.AddComponent<ReturnToMenuController>();
         player.AddComponent<MarketState>();
+        player.AddComponent<QuestState>();
+        player.AddComponent<RoughMarketState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -577,6 +598,110 @@ public static class SceneBootstrap
 
         AssetDatabase.SaveAssets();
         Debug.Log("Market scene created at Assets/Scenes/Marche.unity");
+    }
+
+    [MenuItem("GemLab/Setup Rough Market Scene")]
+    public static void CreateRoughMarketScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+
+        var light = GameObject.Find("Directional Light");
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
+
+        var cam = Camera.main;
+        cam.orthographic = true;
+        cam.orthographicSize = 6f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.14f, 0.11f, 0.08f);
+        cam.transform.position = new Vector3(0f, 0f, -10f);
+
+        var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
+        pixelPerfect.assetsPPU = PixelsPerUnit;
+        pixelPerfect.refResolutionX = 384;
+        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.upscaleRT = true;
+        pixelPerfect.pixelSnapping = true;
+        pixelPerfect.cropFrameX = true;
+        pixelPerfect.cropFrameY = true;
+
+        var gridGO = new GameObject("Grid", typeof(Grid));
+
+        var groundGO = new GameObject("Ground", typeof(Tilemap), typeof(TilemapRenderer));
+        groundGO.transform.SetParent(gridGO.transform);
+        var groundTilemap = groundGO.GetComponent<Tilemap>();
+
+        var wallsGO = new GameObject("Walls", typeof(Tilemap), typeof(TilemapRenderer), typeof(TilemapCollider2D));
+        wallsGO.transform.SetParent(gridGO.transform);
+        var wallsTilemap = wallsGO.GetComponent<Tilemap>();
+
+        var floorTile = GetOrCreateTile("labfloor_pixel", LabFloorPixel);
+        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
+
+        for (var x = RoughMarketMinX; x <= RoughMarketMaxX; x++)
+        {
+            for (var y = RoughMarketMinY; y <= RoughMarketMaxY; y++)
+            {
+                var isPerimeter = x == RoughMarketMinX || x == RoughMarketMaxX || y == RoughMarketMinY || y == RoughMarketMaxY;
+                var cell = new Vector3Int(x, y, 0);
+                if (isPerimeter)
+                    wallsTilemap.SetTile(cell, wallTile);
+                else
+                    groundTilemap.SetTile(cell, floorTile);
+            }
+        }
+
+        var spawnGO = new GameObject("SpawnPoint");
+        spawnGO.transform.position = new Vector3(0, RoughMarketMinY + 2, 0f);
+
+        var playerSprite = GetOrCreatePixelSprite("player_pixel", PlayerPattern, PlayerPalette);
+        var player = new GameObject("Player");
+        player.tag = "Player";
+        var sr = player.AddComponent<SpriteRenderer>();
+        sr.sprite = playerSprite;
+        sr.sortingOrder = 5;
+
+        var rb = player.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        var col = player.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.8f, 0.8f);
+
+        player.AddComponent<PlayerController>();
+        player.AddComponent<PlayerInventory>();
+        player.AddComponent<PlayerWallet>();
+        player.AddComponent<PlayerChest>();
+        player.AddComponent<GemCodex>();
+        player.AddComponent<MailboxState>();
+        player.AddComponent<GameClock>();
+        player.AddComponent<ReturnToMenuController>();
+        player.AddComponent<MarketState>();
+        player.AddComponent<QuestState>();
+        player.AddComponent<RoughMarketState>();
+        player.transform.position = spawnGO.transform.position;
+
+        var follow = cam.gameObject.AddComponent<CameraFollow>();
+        follow.SetTarget(player.transform);
+
+        CreateMusicManager();
+
+        CreateExitDoor(new Vector3(0, RoughMarketMinY + 1, 0f));
+
+        BakeAllFlags();
+        CreateRoughMarketVendorSpot(0, new Vector3(-9, 1, 0f));
+        CreateRoughMarketVendorSpot(1, new Vector3(-3, 1, 0f));
+        CreateRoughMarketVendorSpot(2, new Vector3(3, 1, 0f));
+        CreateRoughMarketVendorSpot(3, new Vector3(9, 1, 0f));
+
+        CreateUI(false);
+
+        Directory.CreateDirectory("Assets/Scenes");
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/MarcheBrutes.unity");
+        AddSceneToBuildSettings("Assets/Scenes/MarcheBrutes.unity");
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("Rough market scene created at Assets/Scenes/MarcheBrutes.unity");
     }
 
     private static void AddSceneToBuildSettings(string path, bool insertFirst = false)
@@ -880,6 +1005,47 @@ public static class SceneBootstrap
         so.ApplyModifiedProperties();
     }
 
+    private static void CreateRoughMarketVendorSpot(int vendorIndex, Vector3 position)
+    {
+        var tableSprite = GetOrCreatePixelSprite("markettable_pixel", MarketTablePattern, MarketTablePalette);
+        var tableGO = new GameObject($"RoughMarketTable_{vendorIndex}");
+        var tableSr = tableGO.AddComponent<SpriteRenderer>();
+        tableSr.sprite = tableSprite;
+        tableSr.sortingOrder = 4;
+        tableGO.transform.position = position;
+
+        var palette = MerchantPalettes[vendorIndex % MerchantPalettes.Length];
+        var merchantSprite = GetOrCreatePixelSprite($"roughmerchant{vendorIndex}_pixel", PlayerPattern, palette);
+        var merchantGO = new GameObject($"RoughMerchant_{vendorIndex}");
+        var merchantSr = merchantGO.AddComponent<SpriteRenderer>();
+        merchantSr.sprite = merchantSprite;
+        merchantSr.sortingOrder = 4;
+        merchantGO.transform.position = position + new Vector3(0f, 0.6f, 0f);
+
+        var flagGO = new GameObject("Flag", typeof(SpriteRenderer));
+        flagGO.transform.SetParent(merchantGO.transform, false);
+        flagGO.transform.localPosition = new Vector3(0f, 0.9f, 0f);
+        flagGO.transform.localScale = Vector3.one * 0.5f;
+        var flagSr = flagGO.GetComponent<SpriteRenderer>();
+        flagSr.sortingOrder = 6;
+
+        var tableItemsGO = new GameObject("TableItems");
+        tableItemsGO.transform.SetParent(tableGO.transform, false);
+        tableItemsGO.transform.localPosition = new Vector3(0f, 0.15f, 0f);
+
+        var col = tableGO.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1.4f, 1.4f);
+        col.offset = new Vector2(0f, 0.3f);
+
+        var spot = tableGO.AddComponent<RoughMarketVendorSpot>();
+        var so = new SerializedObject(spot);
+        so.FindProperty("vendorIndex").intValue = vendorIndex;
+        so.FindProperty("flagRenderer").objectReferenceValue = flagSr;
+        so.FindProperty("tableItemsRoot").objectReferenceValue = tableItemsGO.transform;
+        so.ApplyModifiedProperties();
+    }
+
     private static readonly string[] ReportSpeciesOptions =
     {
         "Quartz", "Corindon (Rubis)", "Spinelle", "Grenat Almandin", "Verre",
@@ -898,7 +1064,8 @@ public static class SceneBootstrap
         "Jade Jadéite", "Jade Néphrite", "Grenat Hydrogrossulaire", "Sinhalite", "Scapolite",
         "Pierre de Lune", "Orthose", "Labradorite", "Serpentine Bowénite",
         "Opale Noble", "Opale de Feu", "Kyanite", "Turquoise", "Turquoise Stabilisée",
-        "Obsidienne", "Rhodocrosite", "Rhodonite"
+        "Obsidienne", "Rhodocrosite", "Rhodonite",
+        "Diamant Synthétique (CVD)", "Diamant Synthétique (HPHT)"
     };
 
     private static void CreateUI(bool includeExaminationUI)
@@ -928,6 +1095,8 @@ public static class SceneBootstrap
             new Vector2(20, -98), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
         CreateUIText("MenuHint", canvasGO.transform, "Échap : Menu (sauvegarde)",
             new Vector2(20, -120), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
+        CreateUIText("QuestHint", canvasGO.transform, "J : Quêtes",
+            new Vector2(20, -142), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
 
         var feedbackGO = CreateUIText("ToolFeedback", canvasGO.transform, "",
             new Vector2(0, 20), new Vector2(760, 90), 16, TextAnchor.LowerCenter, new Color(0.95f, 0.95f, 0.8f));
@@ -946,6 +1115,9 @@ public static class SceneBootstrap
         CreateGrimoireUI(canvasGO.transform);
         CreateReturnToMenuUI(canvasGO.transform);
         CreateMarketUI(canvasGO.transform);
+        CreateRoughMarketUI(canvasGO.transform);
+        CreateQuestUI(canvasGO.transform);
+        CreateToolInfoUI(canvasGO.transform);
 
         if (!includeExaminationUI) return;
 
@@ -1294,6 +1466,157 @@ public static class SceneBootstrap
         marketSo.ApplyModifiedProperties();
     }
 
+    private static void CreateRoughMarketUI(Transform canvasTransform)
+    {
+        var panelGO = new GameObject("RoughMarketPanel", typeof(RectTransform), typeof(Image));
+        panelGO.transform.SetParent(canvasTransform, false);
+        var panelRect = panelGO.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        panelRect.pivot = new Vector2(0.5f, 0.5f);
+        panelRect.sizeDelta = new Vector2(460, 380);
+        panelRect.anchoredPosition = Vector2.zero;
+        panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.97f);
+        panelGO.SetActive(false);
+
+        var titleGO = CreateUIText("Title", panelGO.transform, "",
+            new Vector2(0, -14), new Vector2(420, 26), 18, TextAnchor.UpperCenter, Color.white);
+
+        var scrollViewGO = new GameObject("RoughMarketScrollView", typeof(RectTransform), typeof(Image), typeof(Mask), typeof(ScrollRect));
+        scrollViewGO.transform.SetParent(panelGO.transform, false);
+        var scrollViewRect = scrollViewGO.GetComponent<RectTransform>();
+        scrollViewRect.anchorMin = new Vector2(0.5f, 1f);
+        scrollViewRect.anchorMax = new Vector2(0.5f, 1f);
+        scrollViewRect.pivot = new Vector2(0.5f, 1f);
+        scrollViewRect.anchoredPosition = new Vector2(0, -50);
+        scrollViewRect.sizeDelta = new Vector2(420, 240);
+        scrollViewGO.GetComponent<Image>().color = new Color(0.04f, 0.04f, 0.05f, 0.6f);
+        scrollViewGO.GetComponent<Mask>().showMaskGraphic = true;
+
+        var contentGO = new GameObject("Content", typeof(RectTransform));
+        contentGO.transform.SetParent(scrollViewGO.transform, false);
+        var contentRect = contentGO.GetComponent<RectTransform>();
+        contentRect.anchorMin = new Vector2(0.5f, 1f);
+        contentRect.anchorMax = new Vector2(0.5f, 1f);
+        contentRect.pivot = new Vector2(0.5f, 1f);
+        contentRect.sizeDelta = new Vector2(400, 240);
+        contentRect.anchoredPosition = Vector2.zero;
+
+        var scroll = scrollViewGO.GetComponent<ScrollRect>();
+        scroll.content = contentRect;
+        scroll.horizontal = false;
+        scroll.vertical = true;
+        scroll.movementType = ScrollRect.MovementType.Clamped;
+        scroll.scrollSensitivity = 24f;
+
+        var closeButtonGO = CreateUIButton("CloseButton", panelGO.transform, "Fermer",
+            new Vector2(0, -340), new Vector2(180, 32));
+        closeButtonGO.AddComponent<CloseRoughMarketButton>();
+
+        var roughMarketUI = canvasTransform.gameObject.AddComponent<RoughMarketUI>();
+        var roughMarketSo = new SerializedObject(roughMarketUI);
+        roughMarketSo.FindProperty("panel").objectReferenceValue = panelGO;
+        roughMarketSo.FindProperty("titleText").objectReferenceValue = titleGO.GetComponent<Text>();
+        roughMarketSo.FindProperty("content").objectReferenceValue = contentRect;
+        roughMarketSo.ApplyModifiedProperties();
+    }
+
+    private static void CreateQuestUI(Transform canvasTransform)
+    {
+        var panelGO = new GameObject("QuestPanel", typeof(RectTransform), typeof(Image));
+        panelGO.transform.SetParent(canvasTransform, false);
+        var panelRect = panelGO.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        panelRect.pivot = new Vector2(0.5f, 0.5f);
+        panelRect.sizeDelta = new Vector2(460, 380);
+        panelRect.anchoredPosition = Vector2.zero;
+        panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.97f);
+        panelGO.SetActive(false);
+
+        CreateUIText("Title", panelGO.transform, "Quêtes",
+            new Vector2(0, -14), new Vector2(420, 26), 18, TextAnchor.UpperCenter, Color.white);
+
+        var scrollViewGO = new GameObject("QuestScrollView", typeof(RectTransform), typeof(Image), typeof(Mask), typeof(ScrollRect));
+        scrollViewGO.transform.SetParent(panelGO.transform, false);
+        var scrollViewRect = scrollViewGO.GetComponent<RectTransform>();
+        scrollViewRect.anchorMin = new Vector2(0.5f, 1f);
+        scrollViewRect.anchorMax = new Vector2(0.5f, 1f);
+        scrollViewRect.pivot = new Vector2(0.5f, 1f);
+        scrollViewRect.anchoredPosition = new Vector2(0, -50);
+        scrollViewRect.sizeDelta = new Vector2(420, 240);
+        scrollViewGO.GetComponent<Image>().color = new Color(0.04f, 0.04f, 0.05f, 0.6f);
+        scrollViewGO.GetComponent<Mask>().showMaskGraphic = true;
+
+        var contentGO = new GameObject("Content", typeof(RectTransform));
+        contentGO.transform.SetParent(scrollViewGO.transform, false);
+        var contentRect = contentGO.GetComponent<RectTransform>();
+        contentRect.anchorMin = new Vector2(0.5f, 1f);
+        contentRect.anchorMax = new Vector2(0.5f, 1f);
+        contentRect.pivot = new Vector2(0.5f, 1f);
+        contentRect.sizeDelta = new Vector2(400, 240);
+        contentRect.anchoredPosition = Vector2.zero;
+
+        var scroll = scrollViewGO.GetComponent<ScrollRect>();
+        scroll.content = contentRect;
+        scroll.horizontal = false;
+        scroll.vertical = true;
+        scroll.movementType = ScrollRect.MovementType.Clamped;
+        scroll.scrollSensitivity = 24f;
+
+        var closeButtonGO = CreateUIButton("CloseButton", panelGO.transform, "Fermer",
+            new Vector2(0, -340), new Vector2(180, 32));
+        closeButtonGO.AddComponent<CloseQuestButton>();
+
+        var questUI = canvasTransform.gameObject.AddComponent<QuestUI>();
+        var questSo = new SerializedObject(questUI);
+        questSo.FindProperty("panel").objectReferenceValue = panelGO;
+        questSo.FindProperty("content").objectReferenceValue = contentRect;
+        questSo.ApplyModifiedProperties();
+    }
+
+    private static void CreateToolInfoUI(Transform canvasTransform)
+    {
+        var buttonGO = CreateUIButton("ToolInfoButton", canvasTransform, "i",
+            new Vector2(-20, 20), new Vector2(40, 40), 20);
+        var buttonRect = buttonGO.GetComponent<RectTransform>();
+        buttonRect.anchorMin = new Vector2(1f, 0f);
+        buttonRect.anchorMax = new Vector2(1f, 0f);
+        buttonRect.pivot = new Vector2(1f, 0f);
+        buttonGO.GetComponent<Image>().color = new Color(0.30f, 0.45f, 0.65f, 1f);
+        buttonGO.AddComponent<OpenToolInfoButton>();
+
+        var panelGO = new GameObject("ToolInfoPanel", typeof(RectTransform), typeof(Image));
+        panelGO.transform.SetParent(canvasTransform, false);
+        var panelRect = panelGO.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        panelRect.pivot = new Vector2(0.5f, 0.5f);
+        panelRect.sizeDelta = new Vector2(440, 260);
+        panelRect.anchoredPosition = Vector2.zero;
+        panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.97f);
+        panelGO.SetActive(false);
+
+        var titleGO = CreateUIText("Title", panelGO.transform, "",
+            new Vector2(0, -16), new Vector2(400, 28), 18, TextAnchor.UpperCenter, Color.white);
+
+        var bodyGO = CreateUIText("Body", panelGO.transform, "",
+            new Vector2(0, -56), new Vector2(400, 150), 14, TextAnchor.UpperLeft, new Color(0.85f, 0.85f, 0.85f));
+        bodyGO.GetComponent<Text>().verticalOverflow = VerticalWrapMode.Overflow;
+
+        var closeButtonGO = CreateUIButton("CloseButton", panelGO.transform, "Fermer",
+            new Vector2(0, -220), new Vector2(180, 32));
+        closeButtonGO.AddComponent<CloseToolInfoButton>();
+
+        var toolInfoUI = canvasTransform.gameObject.AddComponent<ToolInfoUI>();
+        var toolInfoSo = new SerializedObject(toolInfoUI);
+        toolInfoSo.FindProperty("infoButton").objectReferenceValue = buttonGO;
+        toolInfoSo.FindProperty("panel").objectReferenceValue = panelGO;
+        toolInfoSo.FindProperty("titleText").objectReferenceValue = titleGO.GetComponent<Text>();
+        toolInfoSo.FindProperty("bodyText").objectReferenceValue = bodyGO.GetComponent<Text>();
+        toolInfoSo.ApplyModifiedProperties();
+    }
+
     private static void CreateChestUI(Transform canvasTransform)
     {
         var panelGO = new GameObject("ChestPanel", typeof(RectTransform), typeof(Image));
@@ -1302,13 +1625,13 @@ public static class SceneBootstrap
         panelRect.anchorMin = new Vector2(0.5f, 0.5f);
         panelRect.anchorMax = new Vector2(0.5f, 0.5f);
         panelRect.pivot = new Vector2(0.5f, 0.5f);
-        panelRect.sizeDelta = new Vector2(300, 260);
+        panelRect.sizeDelta = new Vector2(400, 320);
         panelRect.anchoredPosition = Vector2.zero;
         panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.95f);
         panelGO.SetActive(false);
 
         CreateUIText("Title", panelGO.transform, "Coffre",
-            new Vector2(0, -14), new Vector2(260, 26), 18, TextAnchor.UpperCenter, Color.white);
+            new Vector2(0, -14), new Vector2(360, 26), 18, TextAnchor.UpperCenter, Color.white);
 
         var slotsGO = new GameObject("Slots", typeof(RectTransform));
         slotsGO.transform.SetParent(panelGO.transform, false);
@@ -1317,7 +1640,7 @@ public static class SceneBootstrap
         slotsRect.anchorMax = new Vector2(0.5f, 1f);
         slotsRect.pivot = new Vector2(0.5f, 1f);
         slotsRect.anchoredPosition = new Vector2(0, -46);
-        slotsRect.sizeDelta = new Vector2(248, 184);
+        slotsRect.sizeDelta = new Vector2(376, 248);
 
         var dropZone = panelGO.AddComponent<GemDropZone>();
 
@@ -1549,6 +1872,7 @@ public static class SceneBootstrap
                 g.displayName = "Quartz";
                 g.description = "Un cristal de quartz incolore, courant, envoyé pour un premier examen.";
                 g.icon = GetGemIconSprite("quartz", new Color(0.85f, 0.87f, 0.88f), new Color(0.97f, 0.98f, 0.99f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("quartz", new Color(0.85f, 0.87f, 0.88f), "Ovale");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -1588,6 +1912,7 @@ public static class SceneBootstrap
                 g.displayName = "Corindon (Rubis)";
                 g.description = "Un corindon rouge intense, envoyé pour confirmer s'il s'agit d'un rubis naturel.";
                 g.icon = GetGemIconSprite("corindon", new Color(0.75f, 0.12f, 0.12f), new Color(0.95f, 0.35f, 0.30f), "Coussin", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("corindon", new Color(0.75f, 0.12f, 0.12f), "Coussin");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -1635,6 +1960,7 @@ public static class SceneBootstrap
                 g.displayName = "Spinelle";
                 g.description = "Une pierre rouge vif, historiquement souvent confondue avec le rubis.";
                 g.icon = GetGemIconSprite("spinelle", new Color(0.80f, 0.30f, 0.30f), new Color(0.95f, 0.55f, 0.55f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("spinelle", new Color(0.80f, 0.30f, 0.30f), "Rond");
                 g.refractiveIndex = 1.715f;
                 g.density = 3.60f;
                 g.hardness = 8f;
@@ -1679,6 +2005,7 @@ public static class SceneBootstrap
                 g.displayName = "Grenat Almandin";
                 g.description = "Un grenat rouge sombre, à ne pas confondre avec un rubis ou un spinelle.";
                 g.icon = GetGemIconSprite("grenat", new Color(0.45f, 0.10f, 0.12f), new Color(0.65f, 0.25f, 0.20f), "Poire", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("grenat", new Color(0.45f, 0.10f, 0.12f), "Poire");
                 g.refractiveIndex = 1.815f;
                 g.density = 4.05f;
                 g.hardness = 7.5f;
@@ -1722,6 +2049,7 @@ public static class SceneBootstrap
                 g.displayName = "Grenat Pyrope";
                 g.description = "Un grenat rouge profond, plus léger et de plus faible IR que l'almandin.";
                 g.icon = GetGemIconSprite("pyrope", new Color(0.55f, 0.08f, 0.10f), new Color(0.75f, 0.25f, 0.22f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("pyrope", new Color(0.55f, 0.08f, 0.10f), "Rond");
                 g.refractiveIndex = 1.74f;
                 g.density = 3.78f;
                 g.hardness = 7.25f;
@@ -1765,6 +2093,7 @@ public static class SceneBootstrap
                 g.displayName = "Grenat Tsavorite";
                 g.description = "Un grenat vert vif, rare et recherché, à ne pas confondre avec l'émeraude ou le péridot.";
                 g.icon = GetGemIconSprite("tsavorite", new Color(0.12f, 0.55f, 0.25f), new Color(0.35f, 0.78f, 0.45f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("tsavorite", new Color(0.12f, 0.55f, 0.25f), "Rond");
                 g.refractiveIndex = 1.74f;
                 g.density = 3.61f;
                 g.hardness = 7.25f;
@@ -1808,6 +2137,7 @@ public static class SceneBootstrap
                 g.displayName = "Grenat Hessonite";
                 g.description = "Un grenat brun-orangé (\"cinnamon stone\"), à ne pas confondre avec la spessartite.";
                 g.icon = GetGemIconSprite("hessonite", new Color(0.70f, 0.42f, 0.15f), new Color(0.85f, 0.60f, 0.35f), "Coussin", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("hessonite", new Color(0.70f, 0.42f, 0.15f), "Coussin");
                 g.refractiveIndex = 1.74f;
                 g.density = 3.68f;
                 g.hardness = 6.75f;
@@ -1850,6 +2180,7 @@ public static class SceneBootstrap
                 g.displayName = "Verre";
                 g.description = "Un verre imitant l'apparence d'une pierre précieuse rouge.";
                 g.icon = GetGemIconSprite("verre", new Color(0.75f, 0.80f, 0.82f), new Color(0.90f, 0.93f, 0.95f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("verre", new Color(0.75f, 0.80f, 0.82f), "Rond");
                 g.refractiveIndex = 1.50f;
                 g.density = 2.50f;
                 g.hardness = 5.5f;
@@ -1886,6 +2217,7 @@ public static class SceneBootstrap
                 g.displayName = "Péridot";
                 g.description = "Un péridot vert olive, envoyé pour confirmation d'espèce.";
                 g.icon = GetGemIconSprite("peridot", new Color(0.45f, 0.65f, 0.25f), new Color(0.65f, 0.85f, 0.40f), "Rectangle à pans coupés", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("peridot", new Color(0.45f, 0.65f, 0.25f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.67f;
                 g.density = 3.34f;
                 g.hardness = 6.5f;
@@ -1930,6 +2262,7 @@ public static class SceneBootstrap
                 g.displayName = "Spinelle Bleu";
                 g.description = "Une pierre bleu vif, à distinguer du saphir et du zircon bleu.";
                 g.icon = GetGemIconSprite("spinellebleu", new Color(0.15f, 0.40f, 0.80f), new Color(0.45f, 0.65f, 0.95f), "Coussin", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("spinellebleu", new Color(0.15f, 0.40f, 0.80f), "Coussin");
                 g.refractiveIndex = 1.715f;
                 g.density = 3.61f;
                 g.hardness = 8f;
@@ -1974,6 +2307,7 @@ public static class SceneBootstrap
                 g.displayName = "Saphir Bleu";
                 g.description = "Un corindon bleu intense, envoyé pour confirmer s'il s'agit d'un saphir naturel.";
                 g.icon = GetGemIconSprite("saphirbleu", new Color(0.08f, 0.18f, 0.55f), new Color(0.30f, 0.42f, 0.78f), "Ovale", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("saphirbleu", new Color(0.08f, 0.18f, 0.55f), "Ovale");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -2020,6 +2354,7 @@ public static class SceneBootstrap
                 g.displayName = "Zircon";
                 g.description = "Un zircon bleu, souvent confondu avec le saphir ou le spinelle bleu.";
                 g.icon = GetGemIconSprite("zircon", new Color(0.20f, 0.55f, 0.75f), new Color(0.45f, 0.78f, 0.92f), "Carré", "Princesse");
+                g.roughIcon = GetRoughGemIconSprite("zircon", new Color(0.20f, 0.55f, 0.75f), "Carré");
                 g.refractiveIndex = 1.95f;
                 g.density = 4.65f;
                 g.hardness = 7.5f;
@@ -2064,6 +2399,7 @@ public static class SceneBootstrap
                 g.displayName = "Diamant";
                 g.description = "Une pierre incolore à l'éclat exceptionnel, envoyée pour authentification.";
                 g.icon = GetGemIconSprite("diamant", new Color(0.92f, 0.94f, 0.97f), new Color(0.99f, 0.99f, 1.00f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("diamant", new Color(0.92f, 0.94f, 0.97f), "Rond");
                 g.refractiveIndex = 2.417f;
                 g.density = 3.52f;
                 g.hardness = 10f;
@@ -2083,6 +2419,7 @@ public static class SceneBootstrap
                 g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
                 g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
                 g.birefringence = 0.000f;
+                g.isThermallyConductiveLikeDiamond = true;
                 g.absorptionSpectrum = "Spectre variable selon le type ; raies dans le violet possibles (série Cape).";
                 g.spectrumLines = new List<SpectrumLine>
                 {
@@ -2107,6 +2444,7 @@ public static class SceneBootstrap
                 g.displayName = "Améthyste";
                 g.description = "Un quartz violet, variété courante mais toujours appréciée.";
                 g.icon = GetGemIconSprite("amethyste", new Color(0.45f, 0.25f, 0.65f), new Color(0.68f, 0.48f, 0.85f), "Poire", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("amethyste", new Color(0.45f, 0.25f, 0.65f), "Poire");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -2147,6 +2485,7 @@ public static class SceneBootstrap
                 g.displayName = "Grenat Spessartite";
                 g.description = "Un grenat orangé vif, à ne pas confondre avec l'almandin rouge.";
                 g.icon = GetGemIconSprite("spessartite", new Color(0.85f, 0.45f, 0.15f), new Color(0.95f, 0.65f, 0.35f), "Marquise", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("spessartite", new Color(0.85f, 0.45f, 0.15f), "Marquise");
                 g.refractiveIndex = 1.80f;
                 g.density = 4.15f;
                 g.hardness = 7.5f;
@@ -2191,6 +2530,7 @@ public static class SceneBootstrap
                 g.displayName = "Émeraude";
                 g.description = "Un béryl vert intense, envoyé pour authentification.";
                 g.icon = GetGemIconSprite("emeraude", new Color(0.10f, 0.45f, 0.30f), new Color(0.30f, 0.65f, 0.45f), "Rectangle à pans coupés", "Émeraude (à degrés)");
+                g.roughIcon = GetRoughGemIconSprite("emeraude", new Color(0.10f, 0.45f, 0.30f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.580f;
                 g.density = 2.72f;
                 g.hardness = 7.7f;
@@ -2236,6 +2576,7 @@ public static class SceneBootstrap
                 g.displayName = "Tanzanite";
                 g.description = "Une pierre bleu-violet, presque toujours traitée thermiquement.";
                 g.icon = GetGemIconSprite("tanzanite", new Color(0.25f, 0.15f, 0.55f), new Color(0.45f, 0.35f, 0.75f), "Ovale", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("tanzanite", new Color(0.25f, 0.15f, 0.55f), "Ovale");
                 g.refractiveIndex = 1.695f;
                 g.density = 3.35f;
                 g.hardness = 6.5f;
@@ -2278,6 +2619,7 @@ public static class SceneBootstrap
                 g.displayName = "Iolite";
                 g.description = "Une pierre bleu-violet à fort pléochroïsme, parfois appelée pierre des Vikings.";
                 g.icon = GetGemIconSprite("iolite", new Color(0.30f, 0.30f, 0.60f), new Color(0.50f, 0.50f, 0.80f), "Ovale", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("iolite", new Color(0.30f, 0.30f, 0.60f), "Ovale");
                 g.refractiveIndex = 1.545f;
                 g.density = 2.61f;
                 g.hardness = 7.25f;
@@ -2320,6 +2662,7 @@ public static class SceneBootstrap
                 g.displayName = "Kunzite";
                 g.description = "Une pierre rose-violet pâle, sensible à la lumière prolongée (risque de décoloration).";
                 g.icon = GetGemIconSprite("kunzite", new Color(0.75f, 0.45f, 0.65f), new Color(0.90f, 0.65f, 0.82f), "Rectangle à pans coupés", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("kunzite", new Color(0.75f, 0.45f, 0.65f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.665f;
                 g.density = 3.18f;
                 g.hardness = 6.75f;
@@ -2359,6 +2702,7 @@ public static class SceneBootstrap
                 g.displayName = "Tourmaline Rose";
                 g.description = "Une tourmaline rose à rouge, variété appelée rubellite.";
                 g.icon = GetGemIconSprite("tourmalinerose", new Color(0.80f, 0.25f, 0.45f), new Color(0.95f, 0.50f, 0.65f), "Baguette", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("tourmalinerose", new Color(0.80f, 0.25f, 0.45f), "Baguette");
                 g.refractiveIndex = 1.625f;
                 g.density = 3.06f;
                 g.hardness = 7.25f;
@@ -2398,6 +2742,7 @@ public static class SceneBootstrap
                 g.displayName = "Diopside Chromifère";
                 g.description = "Un diopside vert intense coloré par le chrome, souvent taillé en petites pierres.";
                 g.icon = GetGemIconSprite("diopside", new Color(0.15f, 0.55f, 0.20f), new Color(0.35f, 0.78f, 0.40f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("diopside", new Color(0.15f, 0.55f, 0.20f), "Rond");
                 g.refractiveIndex = 1.685f;
                 g.density = 3.29f;
                 g.hardness = 5.75f;
@@ -2441,6 +2786,7 @@ public static class SceneBootstrap
                 g.displayName = "Héliodore";
                 g.description = "Un béryl jaune doré, coloré par le fer.";
                 g.icon = GetGemIconSprite("heliodore", new Color(0.85f, 0.68f, 0.15f), new Color(0.98f, 0.85f, 0.40f), "Rectangle à pans coupés", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("heliodore", new Color(0.85f, 0.68f, 0.15f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.575f;
                 g.density = 2.70f;
                 g.hardness = 7.75f;
@@ -2480,6 +2826,7 @@ public static class SceneBootstrap
                 g.displayName = "Morganite";
                 g.description = "Un béryl rose, coloré par le manganèse.";
                 g.icon = GetGemIconSprite("morganite", new Color(0.85f, 0.60f, 0.65f), new Color(0.97f, 0.78f, 0.82f), "Ovale", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("morganite", new Color(0.85f, 0.60f, 0.65f), "Ovale");
                 g.refractiveIndex = 1.585f;
                 g.density = 2.80f;
                 g.hardness = 7.75f;
@@ -2519,6 +2866,7 @@ public static class SceneBootstrap
                 g.displayName = "Goshénite";
                 g.description = "Un béryl incolore, la variété la plus pure du groupe.";
                 g.icon = GetGemIconSprite("goshenite", new Color(0.88f, 0.90f, 0.92f), new Color(0.98f, 0.99f, 1.00f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("goshenite", new Color(0.88f, 0.90f, 0.92f), "Rond");
                 g.refractiveIndex = 1.577f;
                 g.density = 2.72f;
                 g.hardness = 7.75f;
@@ -2558,6 +2906,7 @@ public static class SceneBootstrap
                 g.displayName = "Apatite";
                 g.description = "Un phosphate bleu-vert, tendre et souvent confondu avec d'autres pierres (d'où son nom, du grec \"tromper\").";
                 g.icon = GetGemIconSprite("apatite", new Color(0.20f, 0.60f, 0.55f), new Color(0.40f, 0.80f, 0.75f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("apatite", new Color(0.20f, 0.60f, 0.55f), "Ovale");
                 g.refractiveIndex = 1.635f;
                 g.density = 3.19f;
                 g.hardness = 5f;
@@ -2602,6 +2951,7 @@ public static class SceneBootstrap
                 g.displayName = "Andalousite";
                 g.description = "Une pierre à très fort trichroïsme (vert, rouge, jaune-brun selon l'angle).";
                 g.icon = GetGemIconSprite("andalousite", new Color(0.45f, 0.40f, 0.20f), new Color(0.65f, 0.58f, 0.35f), "Coussin", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("andalousite", new Color(0.45f, 0.40f, 0.20f), "Coussin");
                 g.refractiveIndex = 1.635f;
                 g.density = 3.17f;
                 g.hardness = 7.25f;
@@ -2640,6 +2990,7 @@ public static class SceneBootstrap
                 g.displayName = "Chrysobéryl";
                 g.description = "Une pierre jaune-vert extrêmement dure, troisième minéral le plus dur après le corindon et le diamant.";
                 g.icon = GetGemIconSprite("chrysoberyl", new Color(0.65f, 0.65f, 0.20f), new Color(0.82f, 0.82f, 0.45f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("chrysoberyl", new Color(0.65f, 0.65f, 0.20f), "Ovale");
                 g.refractiveIndex = 1.745f;
                 g.density = 3.73f;
                 g.hardness = 8.5f;
@@ -2681,6 +3032,7 @@ public static class SceneBootstrap
                 g.displayName = "Chrysobéryl Alexandrite";
                 g.description = "La variété à changement de couleur du chrysobéryl : vert sous lumière du jour, rouge sous éclairage incandescent.";
                 g.icon = GetGemIconSprite("alexandrite", new Color(0.15f, 0.45f, 0.35f), new Color(0.55f, 0.20f, 0.30f), "Coussin", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("alexandrite", new Color(0.15f, 0.45f, 0.35f), "Coussin");
                 g.refractiveIndex = 1.745f;
                 g.density = 3.73f;
                 g.hardness = 8.5f;
@@ -2726,6 +3078,7 @@ public static class SceneBootstrap
                 g.displayName = "CZ";
                 g.description = "Zircone cubique : un simulant synthétique du diamant, bon marché mais très différent physiquement.";
                 g.icon = GetGemIconSprite("cz", new Color(0.85f, 0.90f, 0.95f), new Color(0.95f, 0.97f, 1.00f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("cz", new Color(0.85f, 0.90f, 0.95f), "Rond");
                 g.refractiveIndex = 2.16f;
                 g.density = 5.8f;
                 g.hardness = 8.25f;
@@ -2762,6 +3115,7 @@ public static class SceneBootstrap
                 g.displayName = "Moissanite Synthétique";
                 g.description = "Carbure de silicium synthétique, un autre simulant du diamant, mais biréfringent contrairement à celui-ci.";
                 g.icon = GetGemIconSprite("moissanite", new Color(0.88f, 0.88f, 0.80f), new Color(0.97f, 0.97f, 0.90f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("moissanite", new Color(0.88f, 0.88f, 0.80f), "Rond");
                 g.refractiveIndex = 2.67f;
                 g.density = 3.21f;
                 g.hardness = 9.25f;
@@ -2781,6 +3135,8 @@ public static class SceneBootstrap
                 g.opticalCharacter = "Anisotrope, uniaxial (biréfringent) — dédoublement des arêtes parfois visible à fort grossissement.";
                 g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
                 g.birefringence = 0.043f;
+                g.isThermallyConductiveLikeDiamond = true;
+                g.isElectricallyConductive = true;
                 g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
                 g.spectrumLines = new List<SpectrumLine>();
                 g.inclusions = "Généralement très propre, inclusions métalliques rares.";
@@ -2798,6 +3154,7 @@ public static class SceneBootstrap
                 g.displayName = "Fluorite";
                 g.description = "Un minéral tendre et coloré, dont le nom a donné le mot \"fluorescence\".";
                 g.icon = GetGemIconSprite("fluorite", new Color(0.55f, 0.30f, 0.70f), new Color(0.72f, 0.50f, 0.85f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("fluorite", new Color(0.55f, 0.30f, 0.70f), "Ovale");
                 g.refractiveIndex = 1.434f;
                 g.density = 3.18f;
                 g.hardness = 4f;
@@ -2838,6 +3195,7 @@ public static class SceneBootstrap
                 g.displayName = "Grenat Démantoïde";
                 g.description = "Un grenat vert à très fort éclat, l'un des plus prisés de la famille des grenats.";
                 g.icon = GetGemIconSprite("demantoide", new Color(0.15f, 0.50f, 0.25f), new Color(0.35f, 0.72f, 0.42f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("demantoide", new Color(0.15f, 0.50f, 0.25f), "Rond");
                 g.refractiveIndex = 1.885f;
                 g.density = 3.85f;
                 g.hardness = 6.75f;
@@ -2880,6 +3238,7 @@ public static class SceneBootstrap
                 g.displayName = "Hématite";
                 g.description = "Un oxyde de fer opaque à éclat métallique, souvent taillé en cabochon plutôt qu'à facettes.";
                 g.icon = GetGemIconSprite("hematite", new Color(0.25f, 0.22f, 0.22f), new Color(0.42f, 0.38f, 0.38f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("hematite", new Color(0.25f, 0.22f, 0.22f), "Ovale");
                 g.refractiveIndex = 2.94f;
                 g.density = 5.15f;
                 g.hardness = 6f;
@@ -2918,6 +3277,7 @@ public static class SceneBootstrap
                 g.displayName = "Pezzottaite";
                 g.description = "Un béryl au césium, de couleur \"framboise\", découvert seulement en 2002 à Madagascar.";
                 g.icon = GetGemIconSprite("pezzottaite", new Color(0.75f, 0.20f, 0.35f), new Color(0.90f, 0.42f, 0.55f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("pezzottaite", new Color(0.75f, 0.20f, 0.35f), "Ovale");
                 g.refractiveIndex = 1.615f;
                 g.density = 3.13f;
                 g.hardness = 8f;
@@ -2956,6 +3316,7 @@ public static class SceneBootstrap
                 g.displayName = "Pyrite";
                 g.description = "Sulfure de fer opaque à éclat métallique doré, surnommé \"or des fous\".";
                 g.icon = GetGemIconSprite("pyrite", new Color(0.72f, 0.62f, 0.20f), new Color(0.88f, 0.78f, 0.40f), "Rond", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("pyrite", new Color(0.72f, 0.62f, 0.20f), "Rond");
                 g.refractiveIndex = 1.85f;
                 g.density = 5.0f;
                 g.hardness = 6.25f;
@@ -2994,6 +3355,7 @@ public static class SceneBootstrap
                 g.displayName = "Corindon Synthétique (Rubis)";
                 g.description = "Corindon rouge obtenu par fusion de poudre d'alumine ; identique en apparence à un rubis, sa production remonte au début du XXe siècle.";
                 g.icon = GetGemIconSprite("corindonsynthrubis", new Color(0.70f, 0.15f, 0.15f), new Color(0.88f, 0.40f, 0.35f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("corindonsynthrubis", new Color(0.70f, 0.15f, 0.15f), "Rond");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -3037,6 +3399,7 @@ public static class SceneBootstrap
                 g.displayName = "Corindon Synthétique (Saphir)";
                 g.description = "Corindon bleu obtenu par fusion de poudre d'alumine et d'oxydes colorants ; longtemps utilisé en horlogerie et bijouterie bon marché.";
                 g.icon = GetGemIconSprite("corindonsynthsaphir", new Color(0.12f, 0.22f, 0.60f), new Color(0.35f, 0.48f, 0.82f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("corindonsynthsaphir", new Color(0.12f, 0.22f, 0.60f), "Ovale");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -3074,6 +3437,7 @@ public static class SceneBootstrap
                 g.displayName = "Saphir Jaune";
                 g.description = "Corindon jaune, couleur due à des centres colorés ou à des traces de fer.";
                 g.icon = GetGemIconSprite("saphirjaune", new Color(0.80f, 0.68f, 0.12f), new Color(0.95f, 0.85f, 0.40f), "Rectangle à pans coupés", "Émeraude");
+                g.roughIcon = GetRoughGemIconSprite("saphirjaune", new Color(0.80f, 0.68f, 0.12f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -3115,6 +3479,7 @@ public static class SceneBootstrap
                 g.displayName = "Saphir Rose";
                 g.description = "Corindon rose, coloré par de faibles traces de chrome, à la frontière stylistique avec le rubis.";
                 g.icon = GetGemIconSprite("saphirrose", new Color(0.80f, 0.35f, 0.50f), new Color(0.95f, 0.62f, 0.74f), "Coussin", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("saphirrose", new Color(0.80f, 0.35f, 0.50f), "Coussin");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -3157,6 +3522,7 @@ public static class SceneBootstrap
                 g.displayName = "Saphir Violet";
                 g.description = "Corindon violet, couleur résultant de la combinaison de plusieurs éléments traces.";
                 g.icon = GetGemIconSprite("saphirviolet", new Color(0.45f, 0.25f, 0.65f), new Color(0.66f, 0.46f, 0.83f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("saphirviolet", new Color(0.45f, 0.25f, 0.65f), "Ovale");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -3194,6 +3560,7 @@ public static class SceneBootstrap
                 g.displayName = "Saphir Orange";
                 g.description = "Corindon orange, teinte rare obtenue par un équilibre particulier entre plusieurs éléments traces.";
                 g.icon = GetGemIconSprite("saphirorange", new Color(0.85f, 0.45f, 0.12f), new Color(0.97f, 0.66f, 0.35f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("saphirorange", new Color(0.85f, 0.45f, 0.12f), "Rond");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -3231,6 +3598,7 @@ public static class SceneBootstrap
                 g.displayName = "Padparadscha";
                 g.description = "Corindon rose-orangé évoquant la fleur de lotus, l'une des variétés de corindon les plus recherchées et les plus chères au monde.";
                 g.icon = GetGemIconSprite("padparadscha", new Color(0.90f, 0.50f, 0.38f), new Color(0.98f, 0.72f, 0.58f), "Coussin", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("padparadscha", new Color(0.90f, 0.50f, 0.38f), "Coussin");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -3273,6 +3641,7 @@ public static class SceneBootstrap
                 g.displayName = "Saphir Vert";
                 g.description = "Corindon vert, souvent formé de fines bandes alternées bleu/jaune donnant une teinte verte à l'œil nu.";
                 g.icon = GetGemIconSprite("saphirvert", new Color(0.15f, 0.50f, 0.30f), new Color(0.35f, 0.72f, 0.48f), "Rectangle à pans coupés", "Émeraude");
+                g.roughIcon = GetRoughGemIconSprite("saphirvert", new Color(0.15f, 0.50f, 0.30f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -3315,6 +3684,7 @@ public static class SceneBootstrap
                 g.displayName = "Saphir Incolore";
                 g.description = "Corindon dépourvu d'éléments traces colorants ; historiquement utilisé comme substitut bon marché du diamant.";
                 g.icon = GetGemIconSprite("saphirincolore", new Color(0.88f, 0.90f, 0.93f), new Color(0.98f, 0.99f, 1.00f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("saphirincolore", new Color(0.88f, 0.90f, 0.93f), "Rond");
                 g.refractiveIndex = 1.766f;
                 g.density = 4.00f;
                 g.hardness = 9f;
@@ -3352,6 +3722,7 @@ public static class SceneBootstrap
                 g.displayName = "YAG";
                 g.description = "Grenat d'yttrium-aluminium synthétique, un des premiers simulants de diamant utilisés en joaillerie avant l'arrivée de la zircone cubique.";
                 g.icon = GetGemIconSprite("yag", new Color(0.85f, 0.87f, 0.90f), new Color(0.96f, 0.97f, 0.99f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("yag", new Color(0.85f, 0.87f, 0.90f), "Rond");
                 g.refractiveIndex = 1.833f;
                 g.density = 4.57f;
                 g.hardness = 8.25f;
@@ -3389,6 +3760,7 @@ public static class SceneBootstrap
                 g.displayName = "GGG";
                 g.description = "Grenat de gadolinium-gallium synthétique, simulant de diamant à très forte densité mais relativement tendre, aujourd'hui rare en joaillerie.";
                 g.icon = GetGemIconSprite("ggg", new Color(0.80f, 0.82f, 0.86f), new Color(0.92f, 0.94f, 0.97f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("ggg", new Color(0.80f, 0.82f, 0.86f), "Rond");
                 g.refractiveIndex = 1.97f;
                 g.density = 7.05f;
                 g.hardness = 6.5f;
@@ -3426,6 +3798,7 @@ public static class SceneBootstrap
                 g.displayName = "Grenat Malaya";
                 g.description = "Grenat de couleur orange à rose-orangé, intermédiaire entre le pyrope et la spessartite, longtemps considéré comme un rebut avant d'être reconnu comme variété à part entière.";
                 g.icon = GetGemIconSprite("grenatmalaya", new Color(0.85f, 0.45f, 0.30f), new Color(0.95f, 0.66f, 0.50f), "Coussin", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("grenatmalaya", new Color(0.85f, 0.45f, 0.30f), "Coussin");
                 g.refractiveIndex = 1.755f;
                 g.density = 3.84f;
                 g.hardness = 7.25f;
@@ -3467,6 +3840,7 @@ public static class SceneBootstrap
                 g.displayName = "Grenat Rhodolite";
                 g.description = "Grenat rouge-violacé (\"framboise\"), intermédiaire entre le pyrope et l'almandin.";
                 g.icon = GetGemIconSprite("grenatrhodolite", new Color(0.65f, 0.20f, 0.35f), new Color(0.83f, 0.42f, 0.55f), "Poire", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("grenatrhodolite", new Color(0.65f, 0.20f, 0.35f), "Poire");
                 g.refractiveIndex = 1.76f;
                 g.density = 3.84f;
                 g.hardness = 7.25f;
@@ -3509,6 +3883,7 @@ public static class SceneBootstrap
                 g.displayName = "Citrine";
                 g.description = "Quartz jaune à orangé, dont la grande majorité du matériel commercial provient d'un traitement thermique de l'améthyste.";
                 g.icon = GetGemIconSprite("citrine", new Color(0.85f, 0.55f, 0.12f), new Color(0.97f, 0.76f, 0.35f), "Rectangle à pans coupés", "Émeraude");
+                g.roughIcon = GetRoughGemIconSprite("citrine", new Color(0.85f, 0.55f, 0.12f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -3548,6 +3923,7 @@ public static class SceneBootstrap
                 g.displayName = "Amétrine";
                 g.description = "Quartz bicolore montrant à la fois les teintes violette de l'améthyste et jaune-orangé de la citrine dans un même cristal, provenant presque exclusivement d'un unique gisement bolivien.";
                 g.icon = GetGemIconSprite("ametrine", new Color(0.50f, 0.35f, 0.55f), new Color(0.85f, 0.65f, 0.30f), "Rectangle à pans coupés", "Émeraude");
+                g.roughIcon = GetRoughGemIconSprite("ametrine", new Color(0.50f, 0.35f, 0.55f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -3587,6 +3963,7 @@ public static class SceneBootstrap
                 g.displayName = "Quartz Fumé";
                 g.description = "Quartz brun-gris, coloré par des centres colorés liés à l'aluminium activés par une irradiation naturelle de fond.";
                 g.icon = GetGemIconSprite("quartzfume", new Color(0.35f, 0.28f, 0.22f), new Color(0.53f, 0.43f, 0.33f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("quartzfume", new Color(0.35f, 0.28f, 0.22f), "Rond");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -3626,6 +4003,7 @@ public static class SceneBootstrap
                 g.displayName = "Prasiolite";
                 g.description = "Quartz vert, rare à l'état naturel, la majeure partie du matériel commercial étant obtenue par traitement thermique d'améthyste.";
                 g.icon = GetGemIconSprite("prasiolite", new Color(0.35f, 0.60f, 0.35f), new Color(0.56f, 0.80f, 0.56f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("prasiolite", new Color(0.35f, 0.60f, 0.35f), "Rond");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -3664,6 +4042,7 @@ public static class SceneBootstrap
                 g.displayName = "Quartz Rose";
                 g.description = "Quartz rose, souvent riche en inclusions fibreuses de rutile pouvant produire un effet d'astérisme.";
                 g.icon = GetGemIconSprite("quartzrose", new Color(0.85f, 0.55f, 0.60f), new Color(0.96f, 0.76f, 0.79f), "Coussin", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("quartzrose", new Color(0.85f, 0.55f, 0.60f), "Coussin");
                 g.refractiveIndex = 1.544f;
                 g.density = 2.65f;
                 g.hardness = 7f;
@@ -3703,6 +4082,7 @@ public static class SceneBootstrap
                 g.displayName = "Zoïsite";
                 g.description = "Variété de zoïsite verte à brunâtre, chimiquement apparentée à la tanzanite mais dépourvue de son célèbre coloris bleu-violet.";
                 g.icon = GetGemIconSprite("zoisite", new Color(0.25f, 0.45f, 0.30f), new Color(0.46f, 0.66f, 0.49f), "Rectangle à pans coupés", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("zoisite", new Color(0.25f, 0.45f, 0.30f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.70f;
                 g.density = 3.35f;
                 g.hardness = 6.5f;
@@ -3741,6 +4121,7 @@ public static class SceneBootstrap
                 g.displayName = "Jade Jadéite";
                 g.description = "Silicate de sodium et d'aluminium du groupe des pyroxènes, la plus prisée des deux variétés de \"jade\".";
                 g.icon = GetGemIconSprite("jadejadeite", new Color(0.20f, 0.55f, 0.30f), new Color(0.45f, 0.75f, 0.50f), "Coussin", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("jadejadeite", new Color(0.20f, 0.55f, 0.30f), "Coussin");
                 g.refractiveIndex = 1.665f;
                 g.density = 3.34f;
                 g.hardness = 6.75f;
@@ -3782,6 +4163,7 @@ public static class SceneBootstrap
                 g.displayName = "Jade Néphrite";
                 g.description = "Silicate de calcium et de magnésium du groupe des amphiboles (série trémolite-actinote), la variété de \"jade\" la plus répandue.";
                 g.icon = GetGemIconSprite("jadenephrite", new Color(0.25f, 0.45f, 0.25f), new Color(0.45f, 0.62f, 0.40f), "Coussin", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("jadenephrite", new Color(0.25f, 0.45f, 0.25f), "Coussin");
                 g.refractiveIndex = 1.615f;
                 g.density = 2.95f;
                 g.hardness = 6.25f;
@@ -3821,6 +4203,7 @@ public static class SceneBootstrap
                 g.displayName = "Grenat Hydrogrossulaire";
                 g.description = "Variété massive et hydratée de grenat grossulaire, parfois surnommée \"jade du Transvaal\" en raison de sa ressemblance avec le jade.";
                 g.icon = GetGemIconSprite("hydrogrossulaire", new Color(0.35f, 0.55f, 0.35f), new Color(0.55f, 0.72f, 0.50f), "Coussin", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("hydrogrossulaire", new Color(0.35f, 0.55f, 0.35f), "Coussin");
                 g.refractiveIndex = 1.720f;
                 g.density = 3.47f;
                 g.hardness = 7.0f;
@@ -3860,6 +4243,7 @@ public static class SceneBootstrap
                 g.displayName = "Sinhalite";
                 g.description = "Borate de magnésium et d'aluminium, longtemps confondu avec le péridot brun avant d'être reconnu comme espèce distincte en 1952.";
                 g.icon = GetGemIconSprite("sinhalite", new Color(0.45f, 0.30f, 0.15f), new Color(0.65f, 0.48f, 0.28f), "Ovale", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("sinhalite", new Color(0.45f, 0.30f, 0.15f), "Ovale");
                 g.refractiveIndex = 1.68f;
                 g.density = 3.48f;
                 g.hardness = 6.75f;
@@ -3898,6 +4282,7 @@ public static class SceneBootstrap
                 g.displayName = "Scapolite";
                 g.description = "Silicate d'aluminium de la série marialite-méionite, au port cristallin allongé et prismatique caractéristique.";
                 g.icon = GetGemIconSprite("scapolite", new Color(0.85f, 0.75f, 0.25f), new Color(0.96f, 0.88f, 0.50f), "Baguette", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("scapolite", new Color(0.85f, 0.75f, 0.25f), "Baguette");
                 g.refractiveIndex = 1.555f;
                 g.density = 2.70f;
                 g.hardness = 6.25f;
@@ -3936,6 +4321,7 @@ public static class SceneBootstrap
                 g.displayName = "Pierre de Lune";
                 g.description = "Feldspar alcalin montrant un phénomène de lumière bleutée et flottante (adularescence) dû à l'intercroissance de deux minéraux.";
                 g.icon = GetGemIconSprite("pierredelune", new Color(0.80f, 0.85f, 0.90f), new Color(0.55f, 0.70f, 0.90f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("pierredelune", new Color(0.80f, 0.85f, 0.90f), "Ovale");
                 g.refractiveIndex = 1.525f;
                 g.density = 2.57f;
                 g.hardness = 6.25f;
@@ -3975,6 +4361,7 @@ public static class SceneBootstrap
                 g.displayName = "Orthose";
                 g.description = "Feldspath potassique, dont la variété gemme jaune limpide est principalement extraite à Madagascar.";
                 g.icon = GetGemIconSprite("orthose", new Color(0.85f, 0.72f, 0.20f), new Color(0.96f, 0.85f, 0.45f), "Rectangle à pans coupés", "Émeraude");
+                g.roughIcon = GetRoughGemIconSprite("orthose", new Color(0.85f, 0.72f, 0.20f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.522f;
                 g.density = 2.56f;
                 g.hardness = 6.25f;
@@ -4012,6 +4399,7 @@ public static class SceneBootstrap
                 g.displayName = "Labradorite";
                 g.description = "Feldspath plagioclase montrant un jeu de lumière irisé (labradorescence) dû à une structure lamellaire interne.";
                 g.icon = GetGemIconSprite("labradorite", new Color(0.35f, 0.38f, 0.42f), new Color(0.25f, 0.55f, 0.60f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("labradorite", new Color(0.35f, 0.38f, 0.42f), "Ovale");
                 g.refractiveIndex = 1.563f;
                 g.density = 2.70f;
                 g.hardness = 6.25f;
@@ -4052,6 +4440,7 @@ public static class SceneBootstrap
                 g.displayName = "Serpentine Bowénite";
                 g.description = "Variété compacte et dure d'antigorite (groupe du serpentin), parfois commercialisée comme substitut du jade.";
                 g.icon = GetGemIconSprite("bowenite", new Color(0.25f, 0.50f, 0.35f), new Color(0.45f, 0.68f, 0.50f), "Coussin", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("bowenite", new Color(0.25f, 0.50f, 0.35f), "Coussin");
                 g.refractiveIndex = 1.555f;
                 g.density = 2.60f;
                 g.hardness = 5.5f;
@@ -4090,6 +4479,7 @@ public static class SceneBootstrap
                 g.displayName = "Opale Noble";
                 g.description = "Silice hydratée amorphe organisée en réseau régulier de sphérules microscopiques, produisant un jeu de couleurs spectaculaire.";
                 g.icon = GetGemIconSprite("opalenoble", new Color(0.85f, 0.85f, 0.88f), new Color(0.55f, 0.75f, 0.90f), "Coussin", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("opalenoble", new Color(0.85f, 0.85f, 0.88f), "Coussin");
                 g.refractiveIndex = 1.450f;
                 g.density = 2.10f;
                 g.hardness = 6.0f;
@@ -4128,6 +4518,7 @@ public static class SceneBootstrap
                 g.displayName = "Opale de Feu";
                 g.description = "Silice hydratée amorphe de couleur orangée à rouge vif, généralement dépourvue de jeu de couleurs.";
                 g.icon = GetGemIconSprite("opaledefeu", new Color(0.90f, 0.45f, 0.15f), new Color(0.98f, 0.65f, 0.35f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("opaledefeu", new Color(0.90f, 0.45f, 0.15f), "Ovale");
                 g.refractiveIndex = 1.430f;
                 g.density = 2.00f;
                 g.hardness = 6.0f;
@@ -4167,6 +4558,7 @@ public static class SceneBootstrap
                 g.displayName = "Kyanite";
                 g.description = "Silicate d'aluminium au port cristallin en lames allongées, connu pour une dureté variant fortement selon la direction testée.";
                 g.icon = GetGemIconSprite("kyanite", new Color(0.15f, 0.30f, 0.60f), new Color(0.35f, 0.50f, 0.80f), "Baguette", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("kyanite", new Color(0.15f, 0.30f, 0.60f), "Baguette");
                 g.refractiveIndex = 1.720f;
                 g.density = 3.68f;
                 g.hardness = 5.5f;
@@ -4205,6 +4597,7 @@ public static class SceneBootstrap
                 g.displayName = "Turquoise";
                 g.description = "Phosphate hydraté de cuivre et d'aluminium, minéral opaque bleu à vert utilisé en joaillerie depuis l'Antiquité.";
                 g.icon = GetGemIconSprite("turquoise", new Color(0.15f, 0.60f, 0.60f), new Color(0.40f, 0.78f, 0.75f), "Coussin", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("turquoise", new Color(0.15f, 0.60f, 0.60f), "Coussin");
                 g.refractiveIndex = 1.62f;
                 g.density = 2.80f;
                 g.hardness = 5.5f;
@@ -4244,6 +4637,7 @@ public static class SceneBootstrap
                 g.displayName = "Turquoise Stabilisée";
                 g.description = "Turquoise naturelle poreuse imprégnée de résine pour en renforcer la structure et stabiliser sa couleur avant taille.";
                 g.icon = GetGemIconSprite("turquoisestab", new Color(0.18f, 0.55f, 0.55f), new Color(0.42f, 0.72f, 0.70f), "Coussin", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("turquoisestab", new Color(0.18f, 0.55f, 0.55f), "Coussin");
                 g.refractiveIndex = 1.62f;
                 g.density = 2.78f;
                 g.hardness = 5.25f;
@@ -4282,6 +4676,7 @@ public static class SceneBootstrap
                 g.displayName = "Obsidienne";
                 g.description = "Verre volcanique naturel formé par un refroidissement très rapide de lave riche en silice, sans structure cristalline.";
                 g.icon = GetGemIconSprite("obsidienne", new Color(0.08f, 0.08f, 0.09f), new Color(0.25f, 0.25f, 0.28f), "Rond", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("obsidienne", new Color(0.08f, 0.08f, 0.09f), "Rond");
                 g.refractiveIndex = 1.490f;
                 g.density = 2.45f;
                 g.hardness = 5.25f;
@@ -4320,6 +4715,7 @@ public static class SceneBootstrap
                 g.displayName = "Rhodocrosite";
                 g.description = "Carbonate de manganèse rose à rouge, souvent présenté en bandes concentriques, surnommé \"rose des Incas\".";
                 g.icon = GetGemIconSprite("rhodocrosite", new Color(0.85f, 0.40f, 0.45f), new Color(0.95f, 0.62f, 0.65f), "Coussin", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("rhodocrosite", new Color(0.85f, 0.40f, 0.45f), "Coussin");
                 g.refractiveIndex = 1.60f;
                 g.density = 3.75f;
                 g.hardness = 3.75f;
@@ -4360,6 +4756,7 @@ public static class SceneBootstrap
                 g.displayName = "Rhodonite";
                 g.description = "Silicate de manganèse rose, généralement traversé de veines noires d'oxydes de manganèse.";
                 g.icon = GetGemIconSprite("rhodonite", new Color(0.75f, 0.35f, 0.42f), new Color(0.90f, 0.55f, 0.58f), "Coussin", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("rhodonite", new Color(0.75f, 0.35f, 0.42f), "Coussin");
                 g.refractiveIndex = 1.735f;
                 g.density = 3.55f;
                 g.hardness = 6.0f;
@@ -4392,6 +4789,84 @@ public static class SceneBootstrap
                         inclusionOverride = "Gisement historique de l'Oural, matériau massif utilisé en ornementation depuis des siècles." },
                     new GemOrigin { name = "Australie", rarityWeight = 30, valueMultiplier = 1.0f },
                     new GemOrigin { name = "Suède", rarityWeight = 30, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Diamant_Synthetique_CVD", g =>
+            {
+                g.displayName = "Diamant Synthétique (CVD)";
+                g.description = "Diamant de synthèse obtenu par dépôt chimique en phase vapeur : des atomes de carbone se déposent couche par couche sur un germe de diamant placé dans un plasma d'hydrocarbures.";
+                g.icon = GetGemIconSprite("diamantcvd", new Color(0.88f, 0.92f, 0.90f), new Color(0.97f, 0.99f, 0.97f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("diamantcvd", new Color(0.88f, 0.92f, 0.90f), "Rond");
+                g.refractiveIndex = 2.417f;
+                g.density = 3.52f;
+                g.hardness = 10f;
+                g.lengthMm = 5.5f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.4f;
+                g.weightCarats = 0.9f;
+                g.luster = "Adamantin";
+                g.color = "Incolore";
+                g.shape = "Rond";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence orangée faible parfois observée sous UV longue onde.";
+                g.fluorescenceShortWave = "Fluorescence plus faible sous UV courte onde.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.000f;
+                g.isThermallyConductiveLikeDiamond = true;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Généralement très propre ; fin grainage parallèle aux couches de croissance parfois visible à fort grossissement.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 40;
+                g.forcedSynthetic = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Fabrication industrielle (dépôt chimique en phase vapeur)", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Diamant_Synthetique_HPHT", g =>
+            {
+                g.displayName = "Diamant Synthétique (HPHT)";
+                g.description = "Diamant de synthèse obtenu par haute pression et haute température, reproduisant en quelques semaines les conditions de formation naturelle du diamant à l'aide d'un catalyseur métallique.";
+                g.icon = GetGemIconSprite("diamanthpht", new Color(0.90f, 0.90f, 0.85f), new Color(0.99f, 0.98f, 0.92f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("diamanthpht", new Color(0.90f, 0.90f, 0.85f), "Rond");
+                g.refractiveIndex = 2.417f;
+                g.density = 3.52f;
+                g.hardness = 10f;
+                g.lengthMm = 5.5f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.4f;
+                g.weightCarats = 0.9f;
+                g.luster = "Adamantin";
+                g.color = "Incolore";
+                g.shape = "Rond";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence variable ; phosphorescence prolongée après extinction de la lampe parfois observée, un phénomène rarement rencontré naturellement.";
+                g.fluorescenceShortWave = "Fluorescence plus faible sous UV courte onde.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.000f;
+                g.isThermallyConductiveLikeDiamond = true;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Généralement très propre ; rares inclusions métalliques résiduelles du catalyseur de croissance possibles.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Légère réaction possible avec un aimant très puissant (inclusions métalliques résiduelles du procédé de croissance).";
+                g.baseValue = 45;
+                g.forcedSynthetic = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Fabrication industrielle (haute pression, haute température)", rarityWeight = 100, valueMultiplier = 1.0f },
                 };
             }),
         };
@@ -4666,6 +5141,10 @@ public static class SceneBootstrap
             case "Raman": return GetOrCreatePixelSprite("raman_pixel", DichroscopePattern, RamanPalette);
             case "UVVisNIR": return GetOrCreatePixelSprite("uvvisnir_pixel", BalanceCaratPattern, UVVisNIRPalette);
             case "MEB": return GetOrCreatePixelSprite("meb_pixel", MicroscopePattern, MEBPalette);
+            case "DiamondView": return GetOrCreatePixelSprite("diamondview_pixel", MicroscopePattern, DiamondViewPalette);
+            case "DiamondSure": return GetOrCreatePixelSprite("diamondsure_pixel", RefractometrePattern, DiamondSurePalette);
+            case "TesteurThermique": return GetOrCreatePixelSprite("testeurthermique_pixel", MicrometrePattern, ThermalProbePalette);
+            case "TesteurElectrique": return GetOrCreatePixelSprite("testeurelectrique_pixel", MicrometrePattern, ElectricalProbePalette);
             default: return GetOrCreatePixelSprite("loupe_pixel", LoupePattern, LoupePalette);
         }
     }
@@ -5363,6 +5842,54 @@ public static class SceneBootstrap
         return rows;
     }
 
+    private static readonly string[] RoughNodulePattern =
+    {
+        Row(16, '.'),
+        Row(5, '.', 3, 'G', 8, '.'),
+        Row(3, '.', 6, 'G', 7, '.'),
+        Row(2, '.', 9, 'G', 5, '.'),
+        Row(4, '.', 2, 'G', 1, 'F', 6, 'G', 3, '.'),
+        Row(1, '.', 12, 'G', 3, '.'),
+        Row(2, '.', 11, 'G', 3, '.'),
+        Row(1, '.', 10, 'G', 5, '.'),
+        Row(3, '.', 9, 'G', 4, '.'),
+        Row(2, '.', 8, 'G', 6, '.'),
+        Row(4, '.', 7, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(6, '.', 4, 'G', 6, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly string[] RoughCrystalPattern =
+    {
+        Row(7, '.', 2, 'G', 7, '.'),
+        Row(6, '.', 4, 'G', 6, '.'),
+        Row(5, '.', 1, 'F', 5, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(5, '.', 6, 'G', 5, '.'),
+        Row(4, '.', 8, 'G', 4, '.'),
+        Row(4, '.', 8, 'G', 4, '.'),
+        Row(4, '.', 8, 'G', 4, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+    };
+
+    private static Sprite GetRoughGemIconSprite(string key, Color gemColor, string shape)
+    {
+        var pattern = shape == "Baguette" ? RoughCrystalPattern : RoughNodulePattern;
+        var muted = new Color(gemColor.r * 0.72f, gemColor.g * 0.72f, gemColor.b * 0.72f, gemColor.a);
+        var palette = new Dictionary<char, Color> { { 'G', gemColor }, { 'F', muted } };
+        return GetOrCreatePixelSprite($"roughicon_{key}_pixel", pattern, palette);
+    }
+
     private static readonly string[] ChestPattern =
     {
         Row(16, '.'),
@@ -5416,6 +5943,32 @@ public static class SceneBootstrap
         { 'E', new Color(0.72f, 0.76f, 0.84f) },
         { 'B', new Color(0.20f, 0.25f, 0.35f) },
         { 'K', new Color(0.08f, 0.08f, 0.09f) },
+    };
+
+    private static readonly Dictionary<char, Color> DiamondViewPalette = new Dictionary<char, Color>
+    {
+        { 'E', new Color(0.45f, 0.75f, 0.95f) },
+        { 'B', new Color(0.12f, 0.15f, 0.28f) },
+        { 'K', new Color(0.06f, 0.06f, 0.08f) },
+    };
+
+    private static readonly Dictionary<char, Color> DiamondSurePalette = new Dictionary<char, Color>
+    {
+        { 'G', new Color(0.35f, 0.85f, 0.55f) },
+        { 'B', new Color(0.20f, 0.22f, 0.26f) },
+        { 'K', new Color(0.08f, 0.08f, 0.09f) },
+    };
+
+    private static readonly Dictionary<char, Color> ThermalProbePalette = new Dictionary<char, Color>
+    {
+        { 'B', new Color(0.75f, 0.30f, 0.15f) },
+        { 'J', new Color(0.95f, 0.55f, 0.25f) },
+    };
+
+    private static readonly Dictionary<char, Color> ElectricalProbePalette = new Dictionary<char, Color>
+    {
+        { 'B', new Color(0.20f, 0.35f, 0.75f) },
+        { 'J', new Color(0.90f, 0.85f, 0.20f) },
     };
 
     private static readonly string[] MagnetPattern =

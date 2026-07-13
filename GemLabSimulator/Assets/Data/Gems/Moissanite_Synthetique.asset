@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Carbure de silicium synth\xE9tique, un autre simulant du diamant,
     mais bir\xE9fringent contrairement \xE0 celui-ci."
   icon: {fileID: 21300000, guid: 5b8d8fcd95e984c629f098d9e00327b2, type: 3}
+  roughIcon: {fileID: 21300000, guid: a18726d80e6ae4a22a72f4497ff2b53a, type: 3}
   refractiveIndex: 2.67
   density: 3.21
   hardness: 9.25
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.043
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 1
+  isElectricallyConductive: 1
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "G\xE9n\xE9ralement tr\xE8s propre, inclusions m\xE9talliques rares."

@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Spinelle
   description: Une pierre rouge vif, historiquement souvent confondue avec le rubis.
   icon: {fileID: 21300000, guid: a1e439df191a642a08e80f95be50df64, type: 3}
+  roughIcon: {fileID: 21300000, guid: b1b444954413b435ba93d236b2149265, type: 3}
   refractiveIndex: 1.715
   density: 3.6
   hardness: 8
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 0
   birefringence: 0
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: Raies de fer/chrome faibles.
   spectrumLines:
   - wavelengthNm: 685

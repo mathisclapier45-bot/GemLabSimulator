@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Corindon vert, souvent form\xE9 de fines bandes altern\xE9es bleu/jaune
     donnant une teinte verte \xE0 l'\u0153il nu."
   icon: {fileID: 21300000, guid: 33284514bd1a3479cafde54c9ef27e56, type: 3}
+  roughIcon: {fileID: 21300000, guid: aceb02766925c415a9ca1bd4a1426ebe, type: 3}
   refractiveIndex: 1.766
   density: 4
   hardness: 9
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.008
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Bandes d'absorption combin\xE9es dans le bleu et le jaune."
   spectrumLines:
   - wavelengthNm: 460

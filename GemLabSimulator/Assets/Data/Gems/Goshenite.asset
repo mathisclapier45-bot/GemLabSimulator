@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: "Gosh\xE9nite"
   description: "Un b\xE9ryl incolore, la vari\xE9t\xE9 la plus pure du groupe."
   icon: {fileID: 21300000, guid: 1792448adf87f4966ba46d858fcda857, type: 3}
+  roughIcon: {fileID: 21300000, guid: 0a207430b659946148827dd48aa56906, type: 3}
   refractiveIndex: 1.577
   density: 2.72
   hardness: 7.75
@@ -35,6 +36,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.006
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "G\xE9n\xE9ralement tr\xE8s propre."

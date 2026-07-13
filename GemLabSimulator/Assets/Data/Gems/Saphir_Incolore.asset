@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Corindon d\xE9pourvu d'\xE9l\xE9ments traces colorants ; historiquement
     utilis\xE9 comme substitut bon march\xE9 du diamant."
   icon: {fileID: 21300000, guid: ede546f21e9994bfd8ed13b911652ba5, type: 3}
+  roughIcon: {fileID: 21300000, guid: f5e8ba16fb89b4c3f86772368c6b0ed6, type: 3}
   refractiveIndex: 1.766
   density: 4
   hardness: 9
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.008
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "G\xE9n\xE9ralement tr\xE8s propre, quelques cristaux fins dispers\xE9s

@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Corindon jaune, couleur due \xE0 des centres color\xE9s ou \xE0 des
     traces de fer."
   icon: {fileID: 21300000, guid: a8bbf58b45a58408cb35e7989b71bd95, type: 3}
+  roughIcon: {fileID: 21300000, guid: 82303dcc68f3645899f827dcb678668c, type: 3}
   refractiveIndex: 1.766
   density: 4
   hardness: 9
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.008
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: Bande d'absorption diffuse dans le bleu-violet.
   spectrumLines:
   - wavelengthNm: 450

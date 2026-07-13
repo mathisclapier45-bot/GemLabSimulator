@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Verre volcanique naturel form\xE9 par un refroidissement tr\xE8s
     rapide de lave riche en silice, sans structure cristalline."
   icon: {fileID: 21300000, guid: 85e4e33c8d1314c398f261eb6ca15cf7, type: 3}
+  roughIcon: {fileID: 21300000, guid: 87c0190298b09484eb67e0d927d709b4, type: 3}
   refractiveIndex: 1.49
   density: 2.45
   hardness: 5.25
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 0
   birefringence: 0
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Cassure concho\xEFdale caract\xE9ristique, parfois bulles de gaz ou

@@ -17,6 +17,7 @@ MonoBehaviour:
     et jaune-orang\xE9 de la citrine dans un m\xEAme cristal, provenant presque exclusivement
     d'un unique gisement bolivien."
   icon: {fileID: 21300000, guid: 5aeb5ca0b773640038069183d9754495, type: 3}
+  roughIcon: {fileID: 21300000, guid: 672257e4d7ac241b08517d19ee101015, type: 3}
   refractiveIndex: 1.544
   density: 2.65
   hardness: 7
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.009
   isQuartzFamily: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: Zonation de couleur nette en secteurs, limite de transition parfois

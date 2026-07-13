@@ -167,6 +167,7 @@ public class MailboxUI : MonoBehaviour
 
         PlayerInventory.Instance.RemoveGem(gem);
         PlayerWallet.Instance.AddMoney(gem.FinalValue);
+        QuestState.Instance?.ReportGemSent(gem.FinalValue);
         ToolFeedbackUI.Instance?.ShowMessage($"Colis envoyé à {gem.ClientName}. +{gem.FinalValue}€");
     }
 

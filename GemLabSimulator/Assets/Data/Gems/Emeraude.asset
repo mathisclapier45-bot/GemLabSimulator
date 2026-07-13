@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: "\xC9meraude"
   description: "Un b\xE9ryl vert intense, envoy\xE9 pour authentification."
   icon: {fileID: 21300000, guid: 628c56333fad74dc9babcd39867cf215, type: 3}
+  roughIcon: {fileID: 21300000, guid: d57c7034579e84200803ab21ea83c50d, type: 3}
   refractiveIndex: 1.58
   density: 2.72
   hardness: 7.7
@@ -35,6 +36,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.006
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: Doublet d'absorption du chrome dans le rouge.
   spectrumLines:
   - wavelengthNm: 683

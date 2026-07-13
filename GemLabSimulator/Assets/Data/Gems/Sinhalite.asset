@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Borate de magn\xE9sium et d'aluminium, longtemps confondu avec le
     p\xE9ridot brun avant d'\xEAtre reconnu comme esp\xE8ce distincte en 1952."
   icon: {fileID: 21300000, guid: cb500712c237547a585c7e85caa15813, type: 3}
+  roughIcon: {fileID: 21300000, guid: dcea0994828d3476e8b7e0fcea4f86fd, type: 3}
   refractiveIndex: 1.68
   density: 3.48
   hardness: 6.75
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.038
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Bandes d'absorption fines li\xE9es au fer."
   spectrumLines: []
   inclusions: "G\xE9n\xE9ralement peu incluse, cristaux fins occasionnels."

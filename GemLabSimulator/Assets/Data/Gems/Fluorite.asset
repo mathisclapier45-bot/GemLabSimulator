@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Un min\xE9ral tendre et color\xE9, dont le nom a donn\xE9 le mot
     \"fluorescence\"."
   icon: {fileID: 21300000, guid: b3f714ffeb42842c287ca9bb870044f5, type: 3}
+  roughIcon: {fileID: 21300000, guid: 4a75641a774724849b1fce94d75e8b7c, type: 3}
   refractiveIndex: 1.434
   density: 3.18
   hardness: 4
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 0
   birefringence: 0
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Clivage parfait dans quatre directions, fractures internes fr\xE9quentes."

@@ -8,6 +8,7 @@ public static class SaveSystem
     public const int SlotCount = 3;
 
     public static int ActiveSlot { get; set; } = 1;
+    public static bool PendingLoad { get; set; } = true;
 
     private static string SavePath(int slot) => Path.Combine(Application.persistentDataPath, $"savegame_{slot}.json");
 

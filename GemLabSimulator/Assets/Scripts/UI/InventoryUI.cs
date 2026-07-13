@@ -83,7 +83,7 @@ public class InventoryUI : MonoBehaviour
         iconRect.anchoredPosition = Vector2.zero;
 
         var iconImage = iconGO.GetComponent<Image>();
-        iconImage.sprite = gem.IsIdentified ? gem.Definition.icon : mysteryIcon;
+        iconImage.sprite = gem.IsIdentified ? gem.DisplaySprite : mysteryIcon;
         iconImage.preserveAspect = true;
 
         var button = go.AddComponent<Button>();

@@ -17,6 +17,7 @@ MonoBehaviour:
     apparent\xE9e \xE0 la tanzanite mais d\xE9pourvue de son c\xE9l\xE8bre coloris
     bleu-violet."
   icon: {fileID: 21300000, guid: 129926ae4ddf4467ba2a53db07d83760, type: 3}
+  roughIcon: {fileID: 21300000, guid: 5fad9839a5f004e12a23dfd2e03baedd, type: 3}
   refractiveIndex: 1.7
   density: 3.35
   hardness: 6.5
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.009
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Bandes d'absorption diffuses du fer et du chrome combin\xE9es."
   spectrumLines: []
   inclusions: "Cristaux fins dispers\xE9s, parfois accompagn\xE9s d'inclusions fibreuses."

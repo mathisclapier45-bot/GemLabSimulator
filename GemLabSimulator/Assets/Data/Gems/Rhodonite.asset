@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Silicate de mangan\xE8se rose, g\xE9n\xE9ralement travers\xE9 de
     veines noires d'oxydes de mangan\xE8se."
   icon: {fileID: 21300000, guid: 8e098d7a7a17f474db0e0f0586c70321, type: 3}
+  roughIcon: {fileID: 21300000, guid: 37f150cbda99c4987adda58e5fa234f0, type: 3}
   refractiveIndex: 1.735
   density: 3.55
   hardness: 6
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.012
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Bande d'absorption li\xE9e au mangan\xE8se."
   spectrumLines: []
   inclusions: "Veines noires d'oxydes de mangan\xE8se serpentant dans la masse rose,

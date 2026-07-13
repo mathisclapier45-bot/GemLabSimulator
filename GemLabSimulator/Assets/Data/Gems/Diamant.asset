@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Une pierre incolore \xE0 l'\xE9clat exceptionnel, envoy\xE9e pour
     authentification."
   icon: {fileID: 21300000, guid: 4e9c1bec72d4449c9906422b2802173b, type: 3}
+  roughIcon: {fileID: 21300000, guid: 9104d4769df434475b3cc74319956b15, type: 3}
   refractiveIndex: 2.417
   density: 3.52
   hardness: 10
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 0
   birefringence: 0
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 1
+  isElectricallyConductive: 0
   absorptionSpectrum: "Spectre variable selon le type ; raies dans le violet possibles
     (s\xE9rie Cape)."
   spectrumLines:

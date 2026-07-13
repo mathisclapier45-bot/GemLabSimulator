@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Un oxyde de fer opaque \xE0 \xE9clat m\xE9tallique, souvent taill\xE9
     en cabochon plut\xF4t qu'\xE0 facettes."
   icon: {fileID: 21300000, guid: ee5d8954b67bd4603bf27e642a694d3b, type: 3}
+  roughIcon: {fileID: 21300000, guid: 344f8be21ca784edeb5913c3611f9030, type: 3}
   refractiveIndex: 2.94
   density: 5.15
   hardness: 6
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 3
   birefringence: 0
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Non applicable (min\xE9ral opaque)."
   spectrumLines: []
   inclusions: "Non applicable (min\xE9ral opaque)."

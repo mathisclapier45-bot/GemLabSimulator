@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Silicate d'aluminium de la s\xE9rie marialite-m\xE9ionite, au port
     cristallin allong\xE9 et prismatique caract\xE9ristique."
   icon: {fileID: 21300000, guid: 16aff4fb51a8345abba93bddcaa5eaf6, type: 3}
+  roughIcon: {fileID: 21300000, guid: 88665d0f8d64541719e2d7b6e3751d7e, type: 3}
   refractiveIndex: 1.555
   density: 2.7
   hardness: 6.25
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.021
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Inclusions fibreuses ou tubulaires parall\xE8les \xE0 l'axe d'allongement

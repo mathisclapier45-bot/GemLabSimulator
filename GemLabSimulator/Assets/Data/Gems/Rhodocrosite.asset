@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Carbonate de mangan\xE8se rose \xE0 rouge, souvent pr\xE9sent\xE9
     en bandes concentriques, surnomm\xE9 \"rose des Incas\"."
   icon: {fileID: 21300000, guid: 71a0ba282708546de82230ca6a3776a7, type: 3}
+  roughIcon: {fileID: 21300000, guid: fc8fa52559f1a496c827f1ba439701d5, type: 3}
   refractiveIndex: 1.6
   density: 3.75
   hardness: 3.75
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.22
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Bandes concentriques alternant teintes claires et soutenues, tr\xE8s

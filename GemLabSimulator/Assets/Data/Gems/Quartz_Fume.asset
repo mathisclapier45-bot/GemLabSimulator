@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Quartz brun-gris, color\xE9 par des centres color\xE9s li\xE9s \xE0
     l'aluminium activ\xE9s par une irradiation naturelle de fond."
   icon: {fileID: 21300000, guid: f9ad176e1b928414ea00fcc3e504552e, type: 3}
+  roughIcon: {fileID: 21300000, guid: fd7e6b17870274d85bec23301eb81fd3, type: 3}
   refractiveIndex: 1.544
   density: 2.65
   hardness: 7
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.009
   isQuartzFamily: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: Zonation de couleur diffuse, voiles de fines fissures occasionnels.

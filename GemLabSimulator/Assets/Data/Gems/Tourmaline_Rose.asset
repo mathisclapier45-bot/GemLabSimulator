@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Tourmaline Rose
   description: "Une tourmaline rose \xE0 rouge, vari\xE9t\xE9 appel\xE9e rubellite."
   icon: {fileID: 21300000, guid: f87ace52c744b42468880f499a1011d9, type: 3}
+  roughIcon: {fileID: 21300000, guid: 0ed8d257c43f04e7294c15504ba6dcbc, type: 3}
   refractiveIndex: 1.625
   density: 3.06
   hardness: 7.25
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.018
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Inclusions liquides fragment\xE9es, fractures internes fr\xE9quentes."

@@ -11,6 +11,7 @@ public class GemInstance
     public string ClientName { get; private set; }
     public string DisplayId => $"{SpecimenId} — {ClientName}";
     public bool IsDonation { get; private set; }
+    public bool IsRough { get; private set; }
     public bool IsIdentified { get; private set; }
 
     public GemOrigin Origin { get; private set; }
@@ -32,6 +33,7 @@ public class GemInstance
 
     // Relative to the species' typical weight, clamped so icons stay legible within a fixed UI slot.
     public float SizeScale => Mathf.Clamp(CaratWeight / Mathf.Max(Definition.weightCarats, 0.01f), 0.6f, 1.15f);
+    public Sprite DisplaySprite => IsRough ? Definition.roughIcon : Definition.icon;
 
     private readonly Dictionary<string, float> measuredValues = new Dictionary<string, float>();
     private readonly HashSet<string> observedProperties = new HashSet<string>();
@@ -109,6 +111,7 @@ public class GemInstance
             SpecimenId = specimenId,
             ClientName = string.IsNullOrEmpty(data.clientName) ? ClientNames.GetRandom() : data.clientName,
             IsDonation = data.isDonation,
+            IsRough = data.isRough,
             IsIdentified = data.isIdentified,
             Origin = new GemOrigin
             {
@@ -149,6 +152,7 @@ public class GemInstance
             specimenId = SpecimenId,
             clientName = ClientName,
             isDonation = IsDonation,
+            isRough = IsRough,
             isIdentified = IsIdentified,
             originName = Origin.name,
             originValueMultiplier = Origin.valueMultiplier,
@@ -177,6 +181,11 @@ public class GemInstance
     public void MarkIdentified()
     {
         IsIdentified = true;
+    }
+
+    public void MarkAsRough()
+    {
+        IsRough = true;
     }
 
     public void RecordMeasurement(string propertyKey, float value)

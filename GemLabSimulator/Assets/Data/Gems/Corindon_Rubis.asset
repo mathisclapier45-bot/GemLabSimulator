@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Un corindon rouge intense, envoy\xE9 pour confirmer s'il s'agit d'un
     rubis naturel."
   icon: {fileID: 21300000, guid: 2aec49384777e465e917116c13692181, type: 3}
+  roughIcon: {fileID: 21300000, guid: 1bbf536e17b864e62bc051635bd51090, type: 3}
   refractiveIndex: 1.766
   density: 4
   hardness: 9
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.008
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: Raies d'absorption du chrome visibles dans le rouge.
   spectrumLines:
   - wavelengthNm: 694

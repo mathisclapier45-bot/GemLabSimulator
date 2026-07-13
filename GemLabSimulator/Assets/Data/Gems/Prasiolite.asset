@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Quartz vert, rare \xE0 l'\xE9tat naturel, la majeure partie du mat\xE9riel
     commercial \xE9tant obtenue par traitement thermique d'am\xE9thyste."
   icon: {fileID: 21300000, guid: 57908669b327e44648dc27b1a685bb2b, type: 3}
+  roughIcon: {fileID: 21300000, guid: 65ddd10036de149cb969da5b79e80a0e, type: 3}
   refractiveIndex: 1.544
   density: 2.65
   hardness: 7
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.009
   isQuartzFamily: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Zonation de couleur en bandes parall\xE8les."

@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Une pierre rose-violet p\xE2le, sensible \xE0 la lumi\xE8re prolong\xE9e
     (risque de d\xE9coloration)."
   icon: {fileID: 21300000, guid: cffa67795506f42bb8c969a038e13b0e, type: 3}
+  roughIcon: {fileID: 21300000, guid: b63479a9bc12a4b3ebd5d7bd6836a8b3, type: 3}
   refractiveIndex: 1.665
   density: 3.18
   hardness: 6.75
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.015
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Clivage net dans une direction, fractures parall\xE8les possibles."

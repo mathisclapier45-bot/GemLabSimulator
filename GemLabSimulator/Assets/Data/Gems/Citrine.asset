@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Quartz jaune \xE0 orang\xE9, dont la grande majorit\xE9 du mat\xE9riel
     commercial provient d'un traitement thermique de l'am\xE9thyste."
   icon: {fileID: 21300000, guid: cb4fd54aa128f4f1d8a1c09cab7e3b32, type: 3}
+  roughIcon: {fileID: 21300000, guid: 8834a89fe37314e9895cd92d980a08f3, type: 3}
   refractiveIndex: 1.544
   density: 2.65
   hardness: 7
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.009
   isQuartzFamily: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Zonation de couleur en bandes parall\xE8les, voiles de fines fissures

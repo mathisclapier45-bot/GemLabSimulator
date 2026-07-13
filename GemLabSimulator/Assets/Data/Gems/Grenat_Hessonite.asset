@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Un grenat brun-orang\xE9 (\"cinnamon stone\"), \xE0 ne pas confondre
     avec la spessartite."
   icon: {fileID: 21300000, guid: b781a3d1d568b4a579567582b4a253b4, type: 3}
+  roughIcon: {fileID: 21300000, guid: a031dc473754343f79f255436d76bf5c, type: 3}
   refractiveIndex: 1.74
   density: 3.68
   hardness: 6.75
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 0
   birefringence: 0
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Bandes d'absorption du fer et du mangan\xE8se."
   spectrumLines:
   - wavelengthNm: 420

@@ -114,12 +114,14 @@ public class MainMenuUI : MonoBehaviour
 
         SaveSystem.CreateNewSave(slotNumber, name);
         SaveSystem.ActiveSlot = slotNumber;
+        SaveSystem.PendingLoad = true;
         SceneManager.LoadScene("Home");
     }
 
     private void LoadSlot(int slotNumber, SaveData data)
     {
         SaveSystem.ActiveSlot = slotNumber;
+        SaveSystem.PendingLoad = true;
         SceneManager.LoadScene(string.IsNullOrEmpty(data.sceneName) ? "Home" : data.sceneName);
     }
 

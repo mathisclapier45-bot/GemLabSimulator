@@ -9,6 +9,7 @@ public class GemDefinition : ScriptableObject
     public string displayName;
     [TextArea] public string description;
     public Sprite icon;
+    public Sprite roughIcon;
 
     [Header("Propriétés physiques")]
     public float refractiveIndex;
@@ -35,6 +36,8 @@ public class GemDefinition : ScriptableObject
     public OpticalCharacterClass opticalCharacterClass;
     public float birefringence;
     public bool isQuartzFamily;
+    public bool isThermallyConductiveLikeDiamond;
+    public bool isElectricallyConductive;
     [TextArea] public string absorptionSpectrum;
     public List<SpectrumLine> spectrumLines = new List<SpectrumLine>();
     [TextArea] public string inclusions;

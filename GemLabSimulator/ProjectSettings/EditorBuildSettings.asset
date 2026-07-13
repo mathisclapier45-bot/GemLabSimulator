@@ -9,15 +9,18 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 26d9e696adf0c46739d302aeef2c41bc
   - enabled: 1
-    path: Assets/Scenes/Town.unity
-    guid: 436994916875340dba60314ffa83766d
-  - enabled: 1
     path: Assets/Scenes/Marche.unity
     guid: 291f928340aa447e89a519a289126f6f
   - enabled: 1
     path: Assets/Scenes/Laboratoire.unity
     guid: e813e661c67054888a8fc8a23d756d5d
   - enabled: 1
+    path: Assets/Scenes/MarcheBrutes.unity
+    guid: 273ebd537889c4d7d93743d7e783a22c
+  - enabled: 1
     path: Assets/Scenes/Home.unity
     guid: 36909d23915df4366b99428440e99db5
+  - enabled: 1
+    path: Assets/Scenes/Town.unity
+    guid: 436994916875340dba60314ffa83766d
   m_configObjects: {}

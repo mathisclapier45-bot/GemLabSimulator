@@ -8,8 +8,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float moveSpeed = 4f;
 
-    private static bool hasAttemptedLoad;
-
     private Rigidbody2D rb;
     private Vector2 moveInput;
 
@@ -29,10 +27,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        if (hasAttemptedLoad) return;
-        hasAttemptedLoad = true;
-
-        SaveSystem.Load();
+        TryLoad();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -43,6 +38,15 @@ public class PlayerController : MonoBehaviour
         var cam = Camera.main;
         var follow = cam != null ? cam.GetComponent<CameraFollow>() : null;
         if (follow != null) follow.SetTarget(transform);
+
+        TryLoad();
+    }
+
+    private static void TryLoad()
+    {
+        if (!SaveSystem.PendingLoad) return;
+        SaveSystem.PendingLoad = false;
+        SaveSystem.Load();
     }
 
     private void Update()

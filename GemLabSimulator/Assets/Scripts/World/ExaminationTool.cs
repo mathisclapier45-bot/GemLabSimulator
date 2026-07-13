@@ -21,7 +21,11 @@ public class ExaminationTool : MonoBehaviour
         Authenticity,
         ConfirmedOrigin,
         GrowthStructure,
-        Magnetism
+        Magnetism,
+        ThermalConductivity,
+        ElectricalConductivity,
+        DiamondScreening,
+        DiamondGrowthImaging
     }
 
     [SerializeField] private string toolName;
@@ -36,6 +40,7 @@ public class ExaminationTool : MonoBehaviour
         if (inventory == null) return;
         playerInventory = inventory;
         playerInRange = true;
+        ToolInfoUI.Instance?.ShowButtonFor(toolName);
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -43,6 +48,7 @@ public class ExaminationTool : MonoBehaviour
         if (other.GetComponent<PlayerInventory>() != playerInventory) return;
         playerInRange = false;
         playerInventory = null;
+        ToolInfoUI.Instance?.HideButtonIfCurrent(toolName);
     }
 
     private void Update()
@@ -114,6 +120,30 @@ public class ExaminationTool : MonoBehaviour
                 break;
             case MeasurementType.Magnetism:
                 RevealQualitative(gemInstance, "Réaction au magnétisme", gem.magnetism);
+                break;
+            case MeasurementType.ThermalConductivity:
+                RevealQualitative(gemInstance, "Conductivité thermique",
+                    gem.isThermallyConductiveLikeDiamond
+                        ? "Conduction thermique très élevée, comparable à celle d'un diamant (à confirmer par un test de conductivité électrique)."
+                        : "Conduction thermique faible, incompatible avec un diamant.");
+                break;
+            case MeasurementType.ElectricalConductivity:
+                RevealQualitative(gemInstance, "Conductivité électrique",
+                    gem.isElectricallyConductive
+                        ? "Conductrice à l'électricité — signature typique d'un carbure de silicium synthétique."
+                        : "Non conductrice à l'électricité — cohérent avec un diamant ou la plupart des autres gemmes.");
+                break;
+            case MeasurementType.DiamondScreening:
+                RevealQualitative(gemInstance, "Écran DiamondSure",
+                    gemInstance.IsSynthetic
+                        ? "Résultat : Refer — transmission UV atypique, examen complémentaire nécessaire."
+                        : "Résultat : Pass — fluorescence UV cohérente avec un diamant naturel de type Ia.");
+                break;
+            case MeasurementType.DiamondGrowthImaging:
+                RevealQualitative(gemInstance, "Imagerie DiamondView",
+                    gemInstance.IsSynthetic
+                        ? "Motifs de croissance concentriques ou sectorisés sous fluorescence UV, typiques d'une synthèse HPHT ou CVD."
+                        : "Zonation de croissance irrégulière sous fluorescence UV, typique d'une cristallisation naturelle lente.");
                 break;
             default:
                 StartNumericMeasurement(gemInstance, gem);

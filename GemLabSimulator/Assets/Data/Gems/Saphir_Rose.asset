@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Corindon rose, color\xE9 par de faibles traces de chrome, \xE0 la
     fronti\xE8re stylistique avec le rubis."
   icon: {fileID: 21300000, guid: 34b84440256a5434d807c09588dcbdd3, type: 3}
+  roughIcon: {fileID: 21300000, guid: 2498c96ce01b7458596ec4cee8c32cff, type: 3}
   refractiveIndex: 1.766
   density: 4
   hardness: 9
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.008
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Raies d'absorption fines dans le vert, dues \xE0 un \xE9l\xE9ment
     chromophore en faible concentration."
   spectrumLines:

@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: "P\xE9ridot"
   description: "Un p\xE9ridot vert olive, envoy\xE9 pour confirmation d'esp\xE8ce."
   icon: {fileID: 21300000, guid: c04394421d4e04b9484432658fc3cc6d, type: 3}
+  roughIcon: {fileID: 21300000, guid: c9cd088a76b434639b6d895f35e1762d, type: 3}
   refractiveIndex: 1.67
   density: 3.34
   hardness: 6.5
@@ -35,6 +36,8 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.036
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: Triplet d'absorption du fer dans le bleu.
   spectrumLines:
   - wavelengthNm: 453

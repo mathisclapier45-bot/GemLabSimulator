@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Corindon violet, couleur r\xE9sultant de la combinaison de plusieurs
     \xE9l\xE9ments traces."
   icon: {fileID: 21300000, guid: eacd93b1be6904392abd21e3c3fcd451, type: 3}
+  roughIcon: {fileID: 21300000, guid: f117743af68c04f4d9d77e1b98335484, type: 3}
   refractiveIndex: 1.766
   density: 4
   hardness: 9
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.008
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Bandes d'absorption combin\xE9es, larges et diffuses."
   spectrumLines: []
   inclusions: "Zonation de couleur en secteurs, cristaux fins dispers\xE9s."

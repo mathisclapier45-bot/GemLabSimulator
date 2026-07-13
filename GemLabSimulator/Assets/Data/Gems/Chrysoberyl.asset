@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Une pierre jaune-vert extr\xEAmement dure, troisi\xE8me min\xE9ral
     le plus dur apr\xE8s le corindon et le diamant."
   icon: {fileID: 21300000, guid: 80c8baba72fda4f21bad563ff5d9b3a7, type: 3}
+  roughIcon: {fileID: 21300000, guid: 4ab6d7c02191b447d9fd7402d2059902, type: 3}
   refractiveIndex: 1.745
   density: 3.73
   hardness: 8.5
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.009
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: Fine raie d'absorption dans le bleu.
   spectrumLines:
   - wavelengthNm: 445

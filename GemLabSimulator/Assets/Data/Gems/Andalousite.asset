@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Une pierre \xE0 tr\xE8s fort trichro\xEFsme (vert, rouge, jaune-brun
     selon l'angle)."
   icon: {fileID: 21300000, guid: 531175528f8464e66b7b395f10cdfc94, type: 3}
+  roughIcon: {fileID: 21300000, guid: 35990bd02e46e4212adec2097abd3cd4, type: 3}
   refractiveIndex: 1.635
   density: 3.17
   hardness: 7.25
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.01
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Inclusions carbon\xE9es possibles."

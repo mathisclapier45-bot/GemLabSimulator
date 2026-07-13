@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Feldspath plagioclase montrant un jeu de lumi\xE8re iris\xE9 (labradorescence)
     d\xFB \xE0 une structure lamellaire interne."
   icon: {fileID: 21300000, guid: e872a8d8c0a684f29a818bf7d08bb77b, type: 3}
+  roughIcon: {fileID: 21300000, guid: d092b2376a91e4bf1bfbdc483c6307c6, type: 3}
   refractiveIndex: 1.563
   density: 2.7
   hardness: 6.25
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.009
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Fines lamelles internes responsables du jeu de lumi\xE8re iris\xE9

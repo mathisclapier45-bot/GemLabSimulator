@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Corindon bleu obtenu par fusion de poudre d'alumine et d'oxydes colorants
     ; longtemps utilis\xE9 en horlogerie et bijouterie bon march\xE9."
   icon: {fileID: 21300000, guid: 825dfac6b87dc447b8f79cdf24360a8d, type: 3}
+  roughIcon: {fileID: 21300000, guid: f4a6975f66aa34abf8117cd91c58e27b, type: 3}
   refractiveIndex: 1.766
   density: 4
   hardness: 9
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.008
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: Bande d'absorption large et diffuse.
   spectrumLines: []
   inclusions: "Bulles de gaz sph\xE9riques, stries de croissance courbes et concentriques,

@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Phosphate hydrat\xE9 de cuivre et d'aluminium, min\xE9ral opaque
     bleu \xE0 vert utilis\xE9 en joaillerie depuis l'Antiquit\xE9."
   icon: {fileID: 21300000, guid: c004f1dcd79f048d6811da793639f023, type: 3}
+  roughIcon: {fileID: 21300000, guid: 43d4d217799184848b20cf635729ea35, type: 3}
   refractiveIndex: 1.62
   density: 2.8
   hardness: 5.5
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 3
   birefringence: 0
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Non applicable (min\xE9ral opaque)."
   spectrumLines: []
   inclusions: "Veinules brun\xE2tres ou noir\xE2tres de matrice h\xF4te fr\xE9quentes

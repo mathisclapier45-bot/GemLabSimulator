@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Corindon orange, teinte rare obtenue par un \xE9quilibre particulier
     entre plusieurs \xE9l\xE9ments traces."
   icon: {fileID: 21300000, guid: 4b353db2411574c32b856383cdc263cb, type: 3}
+  roughIcon: {fileID: 21300000, guid: c5e27d4ab36504e1aa1424f27880bad8, type: 3}
   refractiveIndex: 1.766
   density: 4
   hardness: 9
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.008
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: Bande d'absorption diffuse dans le bleu-violet.
   spectrumLines: []
   inclusions: "Zonation de couleur en bandes, cristaux fins dispers\xE9s."

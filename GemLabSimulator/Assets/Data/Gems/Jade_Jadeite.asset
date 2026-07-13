@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Silicate de sodium et d'aluminium du groupe des pyrox\xE8nes, la
     plus pris\xE9e des deux vari\xE9t\xE9s de \"jade\"."
   icon: {fileID: 21300000, guid: ba4c5acbe1429427a82b2672768fbf07, type: 3}
+  roughIcon: {fileID: 21300000, guid: d11ca6fdc14d5454aa25641e01a97fa7, type: 3}
   refractiveIndex: 1.665
   density: 3.34
   hardness: 6.75
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.012
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Raie d'absorption fine dans le bleu-violet li\xE9e \xE0 un
     \xE9l\xE9ment chromophore en trace."
   spectrumLines:

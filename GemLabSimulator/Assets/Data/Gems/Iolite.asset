@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Une pierre bleu-violet \xE0 fort pl\xE9ochro\xEFsme, parfois appel\xE9e
     pierre des Vikings."
   icon: {fileID: 21300000, guid: 5f72f0700fc644b21babac4da694589f, type: 3}
+  roughIcon: {fileID: 21300000, guid: 6ef8849855e8b4bc6a87568b373ba1fc, type: 3}
   refractiveIndex: 1.545
   density: 2.61
   hardness: 7.25
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.01
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: Bandes d'absorption du fer.
   spectrumLines:
   - wavelengthNm: 435

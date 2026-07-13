@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Silice hydrat\xE9e amorphe de couleur orang\xE9e \xE0 rouge vif,
     g\xE9n\xE9ralement d\xE9pourvue de jeu de couleurs."
   icon: {fileID: 21300000, guid: 32a9c064fc0cb4af2a813520c23ff3f8, type: 3}
+  roughIcon: {fileID: 21300000, guid: 7a0ba70d504df420e94a94b2190002b8, type: 3}
   refractiveIndex: 1.43
   density: 2
   hardness: 6
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 0
   birefringence: 0
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "G\xE9n\xE9ralement propre, parfois craquelures internes dues \xE0

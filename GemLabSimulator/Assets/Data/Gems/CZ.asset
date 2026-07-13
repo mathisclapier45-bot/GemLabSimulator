@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Zircone cubique : un simulant synth\xE9tique du diamant, bon march\xE9
     mais tr\xE8s diff\xE9rent physiquement."
   icon: {fileID: 21300000, guid: 69076c8c0da694fd6aadd2e9e1cf1cb5, type: 3}
+  roughIcon: {fileID: 21300000, guid: 47a39fa0ab435410fbe153b0cd6d34ea, type: 3}
   refractiveIndex: 2.16
   density: 5.8
   hardness: 8.25
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 0
   birefringence: 0
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "G\xE9n\xE9ralement tr\xE8s propre, poussi\xE8res de polissage possibles

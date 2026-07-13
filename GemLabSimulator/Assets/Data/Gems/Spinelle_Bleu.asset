@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Spinelle Bleu
   description: "Une pierre bleu vif, \xE0 distinguer du saphir et du zircon bleu."
   icon: {fileID: 21300000, guid: e5876f9f02f04441086bb1395d10d665, type: 3}
+  roughIcon: {fileID: 21300000, guid: 195c651f6070a4478be2960b105f9a4d, type: 3}
   refractiveIndex: 1.715
   density: 3.61
   hardness: 8
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 0
   birefringence: 0
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Bandes d'absorption du cobalt caract\xE9ristiques (trois bandes
     dans le rouge/orang\xE9) si color\xE9 au cobalt."
   spectrumLines:

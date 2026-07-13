@@ -17,6 +17,7 @@ MonoBehaviour:
     le pyrope et la spessartite, longtemps consid\xE9r\xE9 comme un rebut avant d'\xEAtre
     reconnu comme vari\xE9t\xE9 \xE0 part enti\xE8re."
   icon: {fileID: 21300000, guid: acf78fe57a8ad4f1dad94cc9f4553590, type: 3}
+  roughIcon: {fileID: 21300000, guid: 5f385faad479342ca8319b493ed042a5, type: 3}
   refractiveIndex: 1.755
   density: 3.84
   hardness: 7.25
@@ -37,6 +38,8 @@ MonoBehaviour:
   opticalCharacterClass: 0
   birefringence: 0
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Bandes d'absorption du fer et du mangan\xE8se combin\xE9es."
   spectrumLines:
   - wavelengthNm: 520

@@ -8,6 +8,7 @@ public class GemInstanceSaveData
     public string specimenId;
     public string clientName;
     public bool isDonation;
+    public bool isRough;
     public bool isIdentified;
 
     public string originName;

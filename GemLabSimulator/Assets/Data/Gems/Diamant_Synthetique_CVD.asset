@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Diamant_Synthetique_CVD
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "Diamant Synth\xE9tique (CVD)"
+  description: "Diamant de synth\xE8se obtenu par d\xE9p\xF4t chimique en phase vapeur
+    : des atomes de carbone se d\xE9posent couche par couche sur un germe de diamant
+    plac\xE9 dans un plasma d'hydrocarbures."
+  icon: {fileID: 21300000, guid: 8118c909fa31541dbac2da57042d94bb, type: 3}
+  roughIcon: {fileID: 21300000, guid: 60904d980ea534b18a32be0d3d552e0a, type: 3}
+  refractiveIndex: 2.417
+  density: 3.52
+  hardness: 10
+  lengthMm: 5.5
+  widthMm: 5.5
+  depthMm: 3.4
+  weightCarats: 0.9
+  luster: Adamantin
+  color: Incolore
+  shape: Rond
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Fluorescence orang\xE9e faible parfois observ\xE9e sous
+    UV longue onde."
+  fluorescenceShortWave: Fluorescence plus faible sous UV courte onde.
+  opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 1
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "G\xE9n\xE9ralement tr\xE8s propre ; fin grainage parall\xE8le aux
+    couches de croissance parfois visible \xE0 fort grossissement."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action \xE0 l'aimant."
+  baseValue: 40
+  forcedSynthetic: 1
+  forcedTreatment: 0
+  origins:
+  - name: "Fabrication industrielle (d\xE9p\xF4t chimique en phase vapeur)"
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 

@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: "Am\xE9thyste"
   description: "Un quartz violet, vari\xE9t\xE9 courante mais toujours appr\xE9ci\xE9e."
   icon: {fileID: 21300000, guid: 6685890b2bff6442ea98c4bbd2a01d2b, type: 3}
+  roughIcon: {fileID: 21300000, guid: 351ed39537b494befbcc0709d09574f7, type: 3}
   refractiveIndex: 1.544
   density: 2.65
   hardness: 7
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.009
   isQuartzFamily: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Zonation de couleur en bandes parall\xE8les."

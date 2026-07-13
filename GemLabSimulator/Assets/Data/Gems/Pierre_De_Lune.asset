@@ -16,6 +16,7 @@ MonoBehaviour:
   description: "Feldspar alcalin montrant un ph\xE9nom\xE8ne de lumi\xE8re bleut\xE9e
     et flottante (adularescence) d\xFB \xE0 l'intercroissance de deux min\xE9raux."
   icon: {fileID: 21300000, guid: d75e18b1bbd2545dc910c24c1331c11b, type: 3}
+  roughIcon: {fileID: 21300000, guid: 70f9617a6c8a140dfb41c260feb28be8, type: 3}
   refractiveIndex: 1.525
   density: 2.57
   hardness: 6.25
@@ -36,6 +37,8 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.006
   isQuartzFamily: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
   inclusions: "Structure lamellaire fine en intercroissance, responsable du flott\xE9

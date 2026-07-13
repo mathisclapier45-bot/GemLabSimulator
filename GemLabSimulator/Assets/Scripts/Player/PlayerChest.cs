@@ -6,7 +6,7 @@ public class PlayerChest : MonoBehaviour, IGemContainer
 {
     public static PlayerChest Instance { get; private set; }
 
-    private const int MaxCapacity = 12;
+    private const int MaxCapacity = 24;
 
     private readonly List<GemInstance> gems = new List<GemInstance>();
 
