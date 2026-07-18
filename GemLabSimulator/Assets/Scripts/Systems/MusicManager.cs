@@ -9,6 +9,9 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private AudioClip townMusic;
     [SerializeField] private AudioClip laboratoryMusic;
     [SerializeField] private AudioClip mainMenuMusic;
+    [SerializeField] private AudioClip tunnelMusic;
+    [SerializeField] private AudioClip manoirMusic;
+    [SerializeField] private AudioClip marketMusic;
     [SerializeField] private float fadeDuration = 1.5f;
     [SerializeField] private float volume = 0.5f;
 
@@ -31,6 +34,7 @@ public class MusicManager : MonoBehaviour
         source.loop = true;
         source.playOnAwake = false;
         source.volume = 0f;
+        source.spatialBlend = 0f;
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -56,6 +60,9 @@ public class MusicManager : MonoBehaviour
         var target = sceneName == "Town" ? townMusic
             : sceneName == "Laboratoire" || sceneName == "Home" ? laboratoryMusic
             : sceneName == "MainMenu" ? mainMenuMusic
+            : sceneName == "Tunnel" ? tunnelMusic
+            : sceneName == "Manoir" ? manoirMusic
+            : sceneName == "Marche" || sceneName == "MarcheBrutes" ? marketMusic
             : null;
 
         if (target == currentClip) return;

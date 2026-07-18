@@ -47,3 +47,6 @@ sysinfo.txt
 
 # Asset meta backups (keep .meta files tracked, ignore backups)
 *.meta.bak
+
+# Third-party purchased asset pack (LimeZu Modern Exteriors, ~530MB) — kept local only, not in git history
+GemLabSimulator/Assets/Art/tileset/

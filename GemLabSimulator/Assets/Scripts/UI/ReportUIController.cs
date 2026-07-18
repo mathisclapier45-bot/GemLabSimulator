@@ -131,7 +131,11 @@ public class ReportUIController : MonoBehaviour
             var isNewDiscovery = GemCodex.Instance != null && !GemCodex.Instance.IsDiscovered(gem.name);
             GemCodex.Instance?.MarkDiscovered(gem.name);
             QuestState.Instance?.ReportIdentification();
-            if (isNewDiscovery) QuestState.Instance?.ReportDiscovery();
+            if (isNewDiscovery)
+            {
+                QuestState.Instance?.ReportDiscovery();
+                ToolFeedbackUI.Instance?.ShowMessage($"✨ Nouvelle espèce découverte : {gem.displayName} ! Consultez le Grimoire (touche G).");
+            }
         }
         else
         {

@@ -36,6 +36,7 @@ public class GemDefinition : ScriptableObject
     public OpticalCharacterClass opticalCharacterClass;
     public float birefringence;
     public bool isQuartzFamily;
+    public bool isPolycrystalline;
     public bool isThermallyConductiveLikeDiamond;
     public bool isElectricallyConductive;
     [TextArea] public string absorptionSpectrum;
@@ -49,6 +50,8 @@ public class GemDefinition : ScriptableObject
     public int baseValue;
     public bool forcedSynthetic;
     public bool forcedTreatment;
+    public bool isTunnelExclusive;
+    public int tunnelMinPrice;
 
     [Header("Origines possibles")]
     public List<GemOrigin> origins = new List<GemOrigin>();

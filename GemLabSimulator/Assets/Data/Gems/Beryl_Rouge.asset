@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Beryl_Rouge
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "B\xE9ryl Rouge (Bixbite)"
+  description: "Vari\xE9t\xE9 rouge framboise du b\xE9ryl, color\xE9e par des traces
+    de mangan\xE8se, comptant parmi les gemmes les plus rares au monde et ne d\xE9passant
+    presque jamais le carat une fois taill\xE9e."
+  icon: {fileID: 21300000, guid: 0936c4906c1974f24abe1dbe947190bd, type: 3}
+  roughIcon: {fileID: 21300000, guid: 2ae2fe99c4e7446e7a7a2af040ae9051, type: 3}
+  refractiveIndex: 1.57
+  density: 2.68
+  hardness: 7.75
+  lengthMm: 4
+  widthMm: 3
+  depthMm: 2
+  weightCarats: 0.25
+  luster: Vitreux
+  color: Rouge framboise intense
+  shape: Ovale
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Dichro\xEFsme faible \xE0 mod\xE9r\xE9 entre rouge pourpr\xE9
+    et orang\xE9 selon l'axe."
+  fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
+  fluorescenceShortWave: Inerte sous UV courte onde.
+  opticalCharacter: "Uniaxe (bir\xE9fringent, r\xE9seau hexagonal)."
+  opticalCharacterClass: 1
+  birefringence: 0.006
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Bandes d'absorption li\xE9es au mangan\xE8se, notamment dans
+    le vert-jaune."
+  spectrumLines:
+  - wavelengthNm: 550
+    widthNm: 10
+  inclusions: "Voiles de croissance et canaux allong\xE9s occasionnels, typiques
+    des b\xE9ryls."
+  interferenceFigure: "Figure uniaxe centr\xE9e en lumi\xE8re convergente."
+  chelseaFilterReaction: "Aucune r\xE9action marqu\xE9e au filtre Chelsea."
+  magnetism: "Aucune r\xE9action \xE0 l'aimant."
+  baseValue: 1200
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 1
+  tunnelMinPrice: 10000
+  origins:
+  - name: "\xC9tats-Unis (Utah, Wah Wah Mountains)"
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 

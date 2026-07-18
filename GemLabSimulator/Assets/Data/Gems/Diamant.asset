@@ -38,6 +38,7 @@ MonoBehaviour:
   opticalCharacterClass: 0
   birefringence: 0
   isQuartzFamily: 0
+  isPolycrystalline: 0
   isThermallyConductiveLikeDiamond: 1
   isElectricallyConductive: 0
   absorptionSpectrum: "Spectre variable selon le type ; raies dans le violet possibles
@@ -53,6 +54,8 @@ MonoBehaviour:
   baseValue: 500
   forcedSynthetic: 0
   forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
   origins:
   - name: Botswana
     rarityWeight: 35

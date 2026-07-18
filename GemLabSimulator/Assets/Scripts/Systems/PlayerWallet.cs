@@ -7,6 +7,7 @@ public class PlayerWallet : MonoBehaviour
 
     public int Money { get; private set; }
     public event Action<int> OnMoneyChanged;
+    public event Action<int> OnMoneyDelta;
 
     private void Awake()
     {
@@ -18,6 +19,7 @@ public class PlayerWallet : MonoBehaviour
     {
         Money += amount;
         OnMoneyChanged?.Invoke(Money);
+        OnMoneyDelta?.Invoke(amount);
     }
 
     public void SetMoney(int amount)
@@ -31,6 +33,7 @@ public class PlayerWallet : MonoBehaviour
         if (Money < amount) return false;
         Money -= amount;
         OnMoneyChanged?.Invoke(Money);
+        OnMoneyDelta?.Invoke(-amount);
         return true;
     }
 }

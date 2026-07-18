@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Corne_Rhinoceros
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "Corne de Rhinoc\xE9ros"
+  description: "K\xE9ratine compact\xE9e formant la corne du rhinoc\xE9ros, chimiquement
+    proche des cheveux et des ongles humains, sans lien avec l'ivoire. Sa demande
+    sur les march\xE9s parall\xE8les, aliment\xE9e par des croyances m\xE9dicinales
+    sans fondement scientifique, en fait l'une des mati\xE8res les plus braconn\xE9es
+    au monde. Sa vente est prohib\xE9e par la CITES."
+  icon: {fileID: 21300000, guid: e7a53a97c334b41d9914004388289930, type: 3}
+  roughIcon: {fileID: 21300000, guid: 31169421386684fbdbd9182858319273, type: 3}
+  refractiveIndex: 1.55
+  density: 1.3
+  hardness: 2.5
+  lengthMm: 28
+  widthMm: 18
+  depthMm: 18
+  weightCarats: 12
+  luster: "Mat \xE0 soyeux"
+  color: "Brun-gris \xE0 noir"
+  shape: Coussin
+  cutStyle: Cabochon
+  transparency: Opaque
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Non applicable (mat\xE9riau opaque)."
+  fluorescenceShortWave: "Non applicable (mat\xE9riau opaque)."
+  opticalCharacter: "Non applicable (mat\xE9riau opaque)."
+  opticalCharacterClass: 3
+  birefringence: 0
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Non applicable (mat\xE9riau opaque)."
+  spectrumLines: []
+  inclusions: "Structure fibreuse compacte, visible sous forme de fines fibres parall\xE8les
+    \xE0 la base de la corne."
+  interferenceFigure: "Non applicable (mat\xE9riau opaque)."
+  chelseaFilterReaction: "Non applicable (mat\xE9riau opaque)."
+  magnetism: "Aucune r\xE9action \xE0 l'aimant."
+  baseValue: 1100
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 1
+  tunnelMinPrice: 2000
+  origins:
+  - name: Afrique australe
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 

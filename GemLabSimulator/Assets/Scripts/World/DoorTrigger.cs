@@ -1,11 +1,11 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class DoorTrigger : MonoBehaviour
 {
     [SerializeField] private string sceneName;
     [SerializeField] private bool implemented;
     [SerializeField] private string lockedMessage = "Ce lieu n'est pas encore accessible.";
+    [SerializeField] private string spawnPointName;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -17,6 +17,7 @@ public class DoorTrigger : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadScene(sceneName);
+        PlayerController.PendingSpawnPointName = spawnPointName;
+        SceneFader.FadeToScene(sceneName);
     }
 }

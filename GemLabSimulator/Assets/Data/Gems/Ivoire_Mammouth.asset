@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Ivoire_Mammouth
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Ivoire de Mammouth
+  description: "Dentine fossile extraite des d\xE9fenses de mammouths laineux pr\xE9serv\xE9es
+    dans le perg\xE9lisol sib\xE9rien depuis des mill\xE9naires. Contrairement \xE0
+    l'ivoire d'\xE9l\xE9phant, sa vente est l\xE9gale dans la plupart des pays car
+    l'esp\xE8ce est \xE9teinte, ce qui alimente h\xE9las un trafic parall\xE8le d'ivoire
+    frais faussement \xE9tiquet\xE9."
+  icon: {fileID: 21300000, guid: aff511378e9ca4e259abc855c957cc94, type: 3}
+  roughIcon: {fileID: 21300000, guid: 822c1ec80f5464e538beadee02995ada, type: 3}
+  refractiveIndex: 1.54
+  density: 1.9
+  hardness: 2.75
+  lengthMm: 32
+  widthMm: 22
+  depthMm: 11
+  weightCarats: 16
+  luster: Cireux
+  color: "Beige \xE0 brun, parfois tach\xE9 de bleu-vert"
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: "Opaque \xE0 translucide"
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Fluorescence bleu-blanc plus faible et irr\xE9guli\xE8re
+    sous UV longue onde."
+  fluorescenceShortWave: Fluorescence diffuse sous UV courte onde.
+  opticalCharacter: "Uniaxe (bir\xE9fringent), lecture diffuse typique d'un agr\xE9gat
+    organique."
+  opticalCharacterClass: 1
+  birefringence: 0.003
+  isQuartzFamily: 0
+  isPolycrystalline: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Lignes de Schreger entrecrois\xE9es formant des angles g\xE9n\xE9ralement
+    inf\xE9rieurs \xE0 115\xB0, souvent accompagn\xE9es de fissures de surface dues
+    au vieillissement."
+  interferenceFigure: "Figure diffuse, non exploitable (agr\xE9gat organique)."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action \xE0 l'aimant."
+  baseValue: 500
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 1
+  tunnelMinPrice: 2000
+  origins:
+  - name: "Sib\xE9rie (perg\xE9lisol)"
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 

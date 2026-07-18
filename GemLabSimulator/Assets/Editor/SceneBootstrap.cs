@@ -177,7 +177,7 @@ public static class SceneBootstrap
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = Vector3.zero;
 
-        var playerSprite = GetOrCreatePixelSprite("player_pixel", PlayerPattern, PlayerPalette);
+        var playerSprite = GetPlayerSprite();
 
         var player = new GameObject("Player");
         player.tag = "Player";
@@ -191,7 +191,8 @@ public static class SceneBootstrap
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
         var col = player.AddComponent<BoxCollider2D>();
-        col.size = new Vector2(0.8f, 0.8f);
+        col.size = new Vector2(0.7f, 0.4f);
+        col.offset = new Vector2(0f, 0.2f);
 
         player.AddComponent<PlayerController>();
         player.AddComponent<PlayerInventory>();
@@ -204,6 +205,8 @@ public static class SceneBootstrap
         player.AddComponent<MarketState>();
         player.AddComponent<QuestState>();
         player.AddComponent<RoughMarketState>();
+        player.AddComponent<TunnelState>();
+        player.AddComponent<ManoirRequestState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -211,7 +214,7 @@ public static class SceneBootstrap
 
         CreateMusicManager();
 
-        CreateExitDoor(new Vector3(RoomMinX + 1, RoomMinY + 1, 0f));
+        CreateExitDoor(new Vector3(0, RoomMinY + 1, 0f), "SpawnPoint_Home");
         CreateChest(new Vector3(3, 2, 0f));
         CreateBed(new Vector3(-3, 2, 0f));
 
@@ -290,8 +293,9 @@ public static class SceneBootstrap
         boundaryGO.transform.SetParent(gridGO.transform);
         var boundaryTilemap = boundaryGO.GetComponent<Tilemap>();
 
-        var grassTile = GetOrCreateTile("grass_pixel", GrassPixel);
+        var grassTile = GetOrCreateTileFromSprite("grass_pack", LoadPackSprite(PackTerrains + "Grass_1_9.png"));
         var hedgeTile = GetOrCreateTile("hedge_pixel", HedgePixel);
+        var pathTile = GetOrCreateTileFromSprite("path_pack", LoadPackSprite(PackTerrains + "Grass_1_21.png"));
 
         for (var x = TownMinX; x <= TownMaxX; x++)
         {
@@ -306,10 +310,22 @@ public static class SceneBootstrap
             }
         }
 
+        void PaintPathRect(int minX, int maxX, int minY, int maxY)
+        {
+            for (var x = minX; x <= maxX; x++)
+                for (var y = minY; y <= maxY; y++)
+                    groundTilemap.SetTile(new Vector3Int(x, y, 0), pathTile);
+        }
+
+        PaintPathRect(-18, 18, 4, 5);
+        PaintPathRect(-14, 14, -3, -2);
+        PaintPathRect(-1, 0, -10, 5);
+        PaintPathRect(-17, -16, 3, 5);
+
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(-16, 4, 0f);
 
-        var playerSprite = GetOrCreatePixelSprite("player_pixel", PlayerPattern, PlayerPalette);
+        var playerSprite = GetPlayerSprite();
 
         var player = new GameObject("Player");
         player.tag = "Player";
@@ -323,7 +339,8 @@ public static class SceneBootstrap
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
         var col = player.AddComponent<BoxCollider2D>();
-        col.size = new Vector2(0.8f, 0.8f);
+        col.size = new Vector2(0.7f, 0.4f);
+        col.offset = new Vector2(0f, 0.2f);
 
         player.AddComponent<PlayerController>();
         player.AddComponent<PlayerInventory>();
@@ -336,6 +353,8 @@ public static class SceneBootstrap
         player.AddComponent<MarketState>();
         player.AddComponent<QuestState>();
         player.AddComponent<RoughMarketState>();
+        player.AddComponent<TunnelState>();
+        player.AddComponent<ManoirRequestState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -350,7 +369,7 @@ public static class SceneBootstrap
         CreateBuilding("Atelier Lapidaire", new Vector3(0, 8, 0f),
             new Color(0.45f, 0.40f, 0.35f), new Color(0.65f, 0.60f, 0.55f), "", false);
         CreateBuilding("Musee", new Vector3(8, 8, 0f),
-            new Color(0.75f, 0.72f, 0.60f), new Color(0.92f, 0.90f, 0.85f), "", false);
+            new Color(0.75f, 0.72f, 0.60f), new Color(0.92f, 0.90f, 0.85f), "Musee", true);
         CreateBuilding("Quartier des Diamantaires", new Vector3(16, 8, 0f),
             new Color(0.25f, 0.30f, 0.55f), new Color(0.70f, 0.75f, 0.90f), "", false);
         CreateBuilding("Marche aux Pierres", new Vector3(-12, -6, 0f),
@@ -361,10 +380,79 @@ public static class SceneBootstrap
             new Color(0.50f, 0.35f, 0.22f), new Color(0.75f, 0.65f, 0.50f), "MarcheBrutes", true);
 
         CreateBuilding("Le Manoir", new Vector3(12, -6, 0f),
-            new Color(0.35f, 0.18f, 0.42f), new Color(0.70f, 0.60f, 0.75f), "", false);
+            new Color(0.35f, 0.18f, 0.42f), new Color(0.70f, 0.60f, 0.75f), "Manoir", true);
         CreateTunnelEntrance(new Vector3(0, -11, 0f));
 
+        CreateNamedSpawnPoint("SpawnPoint_Home", new Vector3(-16, 5, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Laboratoire", new Vector3(-8, 5, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Musee", new Vector3(8, 5, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Marche", new Vector3(-12, -4, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_MarcheBrutes", new Vector3(4, -4, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Manoir", new Vector3(12, -4, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Tunnel", new Vector3(0, -9, 0f));
+
+        var bushVariant = 0;
+        foreach (var pos in new[]
+                 {
+                     new Vector3(-19, 11, 0f), new Vector3(-12, 11, 0f), new Vector3(-4, 11, 0f),
+                     new Vector3(4, 11, 0f), new Vector3(12, 11, 0f), new Vector3(19, 11, 0f),
+                     new Vector3(-16, -9, 0f), new Vector3(-8, -9, 0f), new Vector3(8, -9, 0f), new Vector3(16, -9, 0f),
+                     new Vector3(-19, 9, 0f), new Vector3(19, 9, 0f), new Vector3(-19, -9, 0f), new Vector3(19, -9, 0f),
+                 })
+        {
+            CreateTree(pos, bushVariant);
+            bushVariant++;
+        }
+
+        foreach (var pos in new[]
+                 {
+                     new Vector3(-18, 6, 0f), new Vector3(-17, 6, 0f), new Vector3(-16, 6, 0f),
+                     new Vector3(-15, 6, 0f), new Vector3(-14, 6, 0f),
+                 })
+            CreateFence(pos);
+
+        foreach (var pos in new[]
+                 {
+                     new Vector3(-12, 6, 0f), new Vector3(-4, 6, 0f), new Vector3(4, 6, 0f), new Vector3(12, 6, 0f),
+                     new Vector3(-8, -4, 0f), new Vector3(8, -4, 0f),
+                 })
+            CreateLamppost(pos);
+
+        var flowerVariant = 0;
+        foreach (var pos in new[]
+                 {
+                     new Vector3(-17.5f, 6.5f, 0f), new Vector3(-9.5f, 6.5f, 0f), new Vector3(2.5f, 6.5f, 0f),
+                     new Vector3(10.5f, 6.5f, 0f), new Vector3(17.5f, 6.5f, 0f),
+                     new Vector3(-13.5f, -4.5f, 0f), new Vector3(-5.5f, -4.5f, 0f),
+                     new Vector3(5.5f, -4.5f, 0f), new Vector3(13.5f, -4.5f, 0f),
+                 })
+        {
+            CreateFlowerCluster(pos, flowerVariant);
+            flowerVariant++;
+        }
+
         CreateUI(false);
+
+        var townCanvas = GameObject.Find("Canvas");
+        if (townCanvas != null)
+        {
+            var overlayGO = new GameObject("DayNightOverlay", typeof(RectTransform), typeof(Image));
+            overlayGO.transform.SetParent(townCanvas.transform, false);
+            overlayGO.transform.SetSiblingIndex(0);
+            var overlayRect = overlayGO.GetComponent<RectTransform>();
+            overlayRect.anchorMin = Vector2.zero;
+            overlayRect.anchorMax = Vector2.one;
+            overlayRect.sizeDelta = Vector2.zero;
+            overlayRect.anchoredPosition = Vector2.zero;
+            var overlayImage = overlayGO.GetComponent<Image>();
+            overlayImage.color = new Color(0f, 0f, 0f, 0f);
+            overlayImage.raycastTarget = false;
+
+            var dayNight = overlayGO.AddComponent<DayNightOverlay>();
+            var dayNightSo = new SerializedObject(dayNight);
+            dayNightSo.FindProperty("overlayImage").objectReferenceValue = overlayImage;
+            dayNightSo.ApplyModifiedProperties();
+        }
 
         Directory.CreateDirectory("Assets/Scenes");
         EditorSceneManager.SaveScene(scene, "Assets/Scenes/Town.unity");
@@ -388,6 +476,21 @@ public static class SceneBootstrap
     private const int RoughMarketMaxX = 14;
     private const int RoughMarketMinY = -6;
     private const int RoughMarketMaxY = 6;
+
+    private const int MuseumMinX = -14;
+    private const int MuseumMaxX = 14;
+    private const int MuseumMinY = -6;
+    private const int MuseumMaxY = 6;
+
+    private const int TunnelMinX = -2;
+    private const int TunnelMaxX = 2;
+    private const int TunnelMinY = -16;
+    private const int TunnelMaxY = 16;
+
+    private const int ManoirMinX = -10;
+    private const int ManoirMaxX = 10;
+    private const int ManoirMinY = -6;
+    private const int ManoirMaxY = 6;
 
     [MenuItem("GemLab/Setup Laboratory Scene")]
     public static void CreateLaboratoryScene()
@@ -442,7 +545,7 @@ public static class SceneBootstrap
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(0, LabMinY + 2, 0f);
 
-        var playerSprite = GetOrCreatePixelSprite("player_pixel", PlayerPattern, PlayerPalette);
+        var playerSprite = GetPlayerSprite();
         var player = new GameObject("Player");
         player.tag = "Player";
         var sr = player.AddComponent<SpriteRenderer>();
@@ -455,7 +558,8 @@ public static class SceneBootstrap
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
         var col = player.AddComponent<BoxCollider2D>();
-        col.size = new Vector2(0.8f, 0.8f);
+        col.size = new Vector2(0.7f, 0.4f);
+        col.offset = new Vector2(0f, 0.2f);
 
         player.AddComponent<PlayerController>();
         player.AddComponent<PlayerInventory>();
@@ -468,6 +572,8 @@ public static class SceneBootstrap
         player.AddComponent<MarketState>();
         player.AddComponent<QuestState>();
         player.AddComponent<RoughMarketState>();
+        player.AddComponent<TunnelState>();
+        player.AddComponent<ManoirRequestState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -475,7 +581,7 @@ public static class SceneBootstrap
 
         CreateMusicManager();
 
-        CreateExitDoor(new Vector3(0, LabMinY + 1, 0f));
+        CreateExitDoor(new Vector3(0, LabMinY + 1, 0f), "SpawnPoint_Laboratoire");
 
         CreateExaminationStation("TesteurThermique", ExaminationTool.MeasurementType.ThermalConductivity, new Vector3(-8, 2, 0f));
         CreateExaminationStation("FTIR", ExaminationTool.MeasurementType.Treatment, new Vector3(-5, 2, 0f));
@@ -549,7 +655,7 @@ public static class SceneBootstrap
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(0, MarketMinY + 2, 0f);
 
-        var playerSprite = GetOrCreatePixelSprite("player_pixel", PlayerPattern, PlayerPalette);
+        var playerSprite = GetPlayerSprite();
         var player = new GameObject("Player");
         player.tag = "Player";
         var sr = player.AddComponent<SpriteRenderer>();
@@ -562,7 +668,8 @@ public static class SceneBootstrap
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
         var col = player.AddComponent<BoxCollider2D>();
-        col.size = new Vector2(0.8f, 0.8f);
+        col.size = new Vector2(0.7f, 0.4f);
+        col.offset = new Vector2(0f, 0.2f);
 
         player.AddComponent<PlayerController>();
         player.AddComponent<PlayerInventory>();
@@ -575,6 +682,8 @@ public static class SceneBootstrap
         player.AddComponent<MarketState>();
         player.AddComponent<QuestState>();
         player.AddComponent<RoughMarketState>();
+        player.AddComponent<TunnelState>();
+        player.AddComponent<ManoirRequestState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -582,7 +691,7 @@ public static class SceneBootstrap
 
         CreateMusicManager();
 
-        CreateExitDoor(new Vector3(0, MarketMinY + 1, 0f));
+        CreateExitDoor(new Vector3(0, MarketMinY + 1, 0f), "SpawnPoint_Marche");
 
         BakeAllFlags();
         CreateMarketVendorSpot(0, new Vector3(-9, 1, 0f));
@@ -653,7 +762,7 @@ public static class SceneBootstrap
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(0, RoughMarketMinY + 2, 0f);
 
-        var playerSprite = GetOrCreatePixelSprite("player_pixel", PlayerPattern, PlayerPalette);
+        var playerSprite = GetPlayerSprite();
         var player = new GameObject("Player");
         player.tag = "Player";
         var sr = player.AddComponent<SpriteRenderer>();
@@ -666,7 +775,8 @@ public static class SceneBootstrap
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
         var col = player.AddComponent<BoxCollider2D>();
-        col.size = new Vector2(0.8f, 0.8f);
+        col.size = new Vector2(0.7f, 0.4f);
+        col.offset = new Vector2(0f, 0.2f);
 
         player.AddComponent<PlayerController>();
         player.AddComponent<PlayerInventory>();
@@ -679,6 +789,8 @@ public static class SceneBootstrap
         player.AddComponent<MarketState>();
         player.AddComponent<QuestState>();
         player.AddComponent<RoughMarketState>();
+        player.AddComponent<TunnelState>();
+        player.AddComponent<ManoirRequestState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -686,7 +798,7 @@ public static class SceneBootstrap
 
         CreateMusicManager();
 
-        CreateExitDoor(new Vector3(0, RoughMarketMinY + 1, 0f));
+        CreateExitDoor(new Vector3(0, RoughMarketMinY + 1, 0f), "SpawnPoint_MarcheBrutes");
 
         BakeAllFlags();
         CreateRoughMarketVendorSpot(0, new Vector3(-9, 1, 0f));
@@ -704,6 +816,378 @@ public static class SceneBootstrap
         Debug.Log("Rough market scene created at Assets/Scenes/MarcheBrutes.unity");
     }
 
+    [MenuItem("GemLab/Setup Museum Scene")]
+    public static void CreateMuseumScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+
+        var light = GameObject.Find("Directional Light");
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
+
+        var cam = Camera.main;
+        cam.orthographic = true;
+        cam.orthographicSize = 6f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.10f, 0.10f, 0.13f);
+        cam.transform.position = new Vector3(0f, 0f, -10f);
+
+        var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
+        pixelPerfect.assetsPPU = PixelsPerUnit;
+        pixelPerfect.refResolutionX = 384;
+        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.upscaleRT = true;
+        pixelPerfect.pixelSnapping = true;
+        pixelPerfect.cropFrameX = true;
+        pixelPerfect.cropFrameY = true;
+
+        var gridGO = new GameObject("Grid", typeof(Grid));
+
+        var groundGO = new GameObject("Ground", typeof(Tilemap), typeof(TilemapRenderer));
+        groundGO.transform.SetParent(gridGO.transform);
+        var groundTilemap = groundGO.GetComponent<Tilemap>();
+
+        var wallsGO = new GameObject("Walls", typeof(Tilemap), typeof(TilemapRenderer), typeof(TilemapCollider2D));
+        wallsGO.transform.SetParent(gridGO.transform);
+        var wallsTilemap = wallsGO.GetComponent<Tilemap>();
+
+        var floorTile = GetOrCreateTile("labfloor_pixel", LabFloorPixel);
+        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
+
+        for (var x = MuseumMinX; x <= MuseumMaxX; x++)
+        {
+            for (var y = MuseumMinY; y <= MuseumMaxY; y++)
+            {
+                var isPerimeter = x == MuseumMinX || x == MuseumMaxX || y == MuseumMinY || y == MuseumMaxY;
+                var cell = new Vector3Int(x, y, 0);
+                if (isPerimeter)
+                    wallsTilemap.SetTile(cell, wallTile);
+                else
+                    groundTilemap.SetTile(cell, floorTile);
+            }
+        }
+
+        var spawnGO = new GameObject("SpawnPoint");
+        spawnGO.transform.position = new Vector3(0, MuseumMinY + 2, 0f);
+
+        var playerSprite = GetPlayerSprite();
+        var player = new GameObject("Player");
+        player.tag = "Player";
+        var sr = player.AddComponent<SpriteRenderer>();
+        sr.sprite = playerSprite;
+        sr.sortingOrder = 5;
+
+        var rb = player.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        var col = player.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.7f, 0.4f);
+        col.offset = new Vector2(0f, 0.2f);
+
+        player.AddComponent<PlayerController>();
+        player.AddComponent<PlayerInventory>();
+        player.AddComponent<PlayerWallet>();
+        player.AddComponent<PlayerChest>();
+        player.AddComponent<GemCodex>();
+        player.AddComponent<MailboxState>();
+        player.AddComponent<GameClock>();
+        player.AddComponent<ReturnToMenuController>();
+        player.AddComponent<MarketState>();
+        player.AddComponent<QuestState>();
+        player.AddComponent<RoughMarketState>();
+        player.AddComponent<TunnelState>();
+        player.AddComponent<ManoirRequestState>();
+        player.transform.position = spawnGO.transform.position;
+
+        var follow = cam.gameObject.AddComponent<CameraFollow>();
+        follow.SetTarget(player.transform);
+
+        CreateMusicManager();
+
+        CreateExitDoor(new Vector3(0, MuseumMinY + 1, 0f), "SpawnPoint_Musee");
+
+        CreateMuseumPedestal(0, new Vector3(-9, 2, 0f));
+        CreateMuseumPedestal(1, new Vector3(-3, 2, 0f));
+        CreateMuseumPedestal(2, new Vector3(3, 2, 0f));
+        CreateMuseumPedestal(3, new Vector3(9, 2, 0f));
+        CreateMuseumPedestal(4, new Vector3(-9, -2, 0f));
+        CreateMuseumPedestal(5, new Vector3(-3, -2, 0f));
+        CreateMuseumPedestal(6, new Vector3(3, -2, 0f));
+        CreateMuseumPedestal(7, new Vector3(9, -2, 0f));
+
+        CreateUI(false);
+
+        Directory.CreateDirectory("Assets/Scenes");
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/Musee.unity");
+        AddSceneToBuildSettings("Assets/Scenes/Musee.unity");
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("Museum scene created at Assets/Scenes/Musee.unity");
+    }
+
+    [MenuItem("GemLab/Setup Tunnel Scene")]
+    public static void CreateTunnelScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+
+        var light = GameObject.Find("Directional Light");
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
+
+        var cam = Camera.main;
+        cam.orthographic = true;
+        cam.orthographicSize = 6f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.04f, 0.04f, 0.05f);
+        cam.transform.position = new Vector3(0f, 0f, -10f);
+
+        var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
+        pixelPerfect.assetsPPU = PixelsPerUnit;
+        pixelPerfect.refResolutionX = 384;
+        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.upscaleRT = true;
+        pixelPerfect.pixelSnapping = true;
+        pixelPerfect.cropFrameX = true;
+        pixelPerfect.cropFrameY = true;
+
+        var gridGO = new GameObject("Grid", typeof(Grid));
+
+        var groundGO = new GameObject("Ground", typeof(Tilemap), typeof(TilemapRenderer));
+        groundGO.transform.SetParent(gridGO.transform);
+        var groundTilemap = groundGO.GetComponent<Tilemap>();
+
+        var wallsGO = new GameObject("Walls", typeof(Tilemap), typeof(TilemapRenderer), typeof(TilemapCollider2D));
+        wallsGO.transform.SetParent(gridGO.transform);
+        var wallsTilemap = wallsGO.GetComponent<Tilemap>();
+
+        var floorTile = GetOrCreateTile("tunnelfloor_pixel", TunnelFloorPixel);
+        var wallTile = GetOrCreateTile("tunnelwall_pixel", TunnelWallPixel);
+
+        for (var x = TunnelMinX; x <= TunnelMaxX; x++)
+        {
+            for (var y = TunnelMinY; y <= TunnelMaxY; y++)
+            {
+                var isPerimeter = x == TunnelMinX || x == TunnelMaxX || y == TunnelMinY || y == TunnelMaxY;
+                var cell = new Vector3Int(x, y, 0);
+                if (isPerimeter)
+                    wallsTilemap.SetTile(cell, wallTile);
+                else
+                    groundTilemap.SetTile(cell, floorTile);
+            }
+        }
+
+        var spawnGO = new GameObject("SpawnPoint");
+        spawnGO.transform.position = new Vector3(0, TunnelMinY + 2, 0f);
+
+        var playerSprite = GetPlayerSprite();
+        var player = new GameObject("Player");
+        player.tag = "Player";
+        var sr = player.AddComponent<SpriteRenderer>();
+        sr.sprite = playerSprite;
+        sr.sortingOrder = 5;
+
+        var rb = player.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        var col = player.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.7f, 0.4f);
+        col.offset = new Vector2(0f, 0.2f);
+
+        player.AddComponent<PlayerController>();
+        player.AddComponent<PlayerInventory>();
+        player.AddComponent<PlayerWallet>();
+        player.AddComponent<PlayerChest>();
+        player.AddComponent<GemCodex>();
+        player.AddComponent<MailboxState>();
+        player.AddComponent<GameClock>();
+        player.AddComponent<ReturnToMenuController>();
+        player.AddComponent<MarketState>();
+        player.AddComponent<QuestState>();
+        player.AddComponent<RoughMarketState>();
+        player.AddComponent<TunnelState>();
+        player.AddComponent<ManoirRequestState>();
+        player.transform.position = spawnGO.transform.position;
+
+        var follow = cam.gameObject.AddComponent<CameraFollow>();
+        follow.SetTarget(player.transform);
+
+        CreateMusicManager();
+
+        CreateExitDoor(new Vector3(0, TunnelMinY + 1, 0f), "SpawnPoint_Tunnel");
+        CreateExitDoor(new Vector3(0, TunnelMaxY - 1, 0f), "SpawnPoint_Tunnel");
+
+        CreateTunnelMerchant(new Vector3(0, 0, 0f));
+
+        CreateUI(false);
+
+        Directory.CreateDirectory("Assets/Scenes");
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/Tunnel.unity");
+        AddSceneToBuildSettings("Assets/Scenes/Tunnel.unity");
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("Tunnel scene created at Assets/Scenes/Tunnel.unity");
+    }
+
+    [MenuItem("GemLab/Setup Manoir Scene")]
+    public static void CreateManoirScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+
+        var light = GameObject.Find("Directional Light");
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
+
+        var cam = Camera.main;
+        cam.orthographic = true;
+        cam.orthographicSize = 6f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.10f, 0.08f, 0.11f);
+        cam.transform.position = new Vector3(0f, 0f, -10f);
+
+        var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
+        pixelPerfect.assetsPPU = PixelsPerUnit;
+        pixelPerfect.refResolutionX = 384;
+        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.upscaleRT = true;
+        pixelPerfect.pixelSnapping = true;
+        pixelPerfect.cropFrameX = true;
+        pixelPerfect.cropFrameY = true;
+
+        var gridGO = new GameObject("Grid", typeof(Grid));
+
+        var groundGO = new GameObject("Ground", typeof(Tilemap), typeof(TilemapRenderer));
+        groundGO.transform.SetParent(gridGO.transform);
+        var groundTilemap = groundGO.GetComponent<Tilemap>();
+
+        var wallsGO = new GameObject("Walls", typeof(Tilemap), typeof(TilemapRenderer), typeof(TilemapCollider2D));
+        wallsGO.transform.SetParent(gridGO.transform);
+        var wallsTilemap = wallsGO.GetComponent<Tilemap>();
+
+        var floorTile = GetOrCreateTile("floor_pixel", FloorPixel);
+        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
+
+        for (var x = ManoirMinX; x <= ManoirMaxX; x++)
+        {
+            for (var y = ManoirMinY; y <= ManoirMaxY; y++)
+            {
+                var isPerimeter = x == ManoirMinX || x == ManoirMaxX || y == ManoirMinY || y == ManoirMaxY;
+                var cell = new Vector3Int(x, y, 0);
+                if (isPerimeter)
+                    wallsTilemap.SetTile(cell, wallTile);
+                else
+                    groundTilemap.SetTile(cell, floorTile);
+            }
+        }
+
+        var spawnGO = new GameObject("SpawnPoint");
+        spawnGO.transform.position = new Vector3(0, ManoirMinY + 2, 0f);
+
+        var playerSprite = GetPlayerSprite();
+        var player = new GameObject("Player");
+        player.tag = "Player";
+        var sr = player.AddComponent<SpriteRenderer>();
+        sr.sprite = playerSprite;
+        sr.sortingOrder = 5;
+
+        var rb = player.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        var col = player.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.7f, 0.4f);
+        col.offset = new Vector2(0f, 0.2f);
+
+        player.AddComponent<PlayerController>();
+        player.AddComponent<PlayerInventory>();
+        player.AddComponent<PlayerWallet>();
+        player.AddComponent<PlayerChest>();
+        player.AddComponent<GemCodex>();
+        player.AddComponent<MailboxState>();
+        player.AddComponent<GameClock>();
+        player.AddComponent<ReturnToMenuController>();
+        player.AddComponent<MarketState>();
+        player.AddComponent<QuestState>();
+        player.AddComponent<RoughMarketState>();
+        player.AddComponent<TunnelState>();
+        player.AddComponent<ManoirRequestState>();
+        player.transform.position = spawnGO.transform.position;
+
+        var follow = cam.gameObject.AddComponent<CameraFollow>();
+        follow.SetTarget(player.transform);
+
+        CreateMusicManager();
+
+        CreateExitDoor(new Vector3(0, ManoirMinY + 1, 0f), "SpawnPoint_Manoir");
+
+        CreateOldMan(new Vector3(-3, 1, 0f));
+        CreateOldLady(new Vector3(3, 1, 0f));
+
+        CreateUI(false);
+
+        Directory.CreateDirectory("Assets/Scenes");
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/Manoir.unity");
+        AddSceneToBuildSettings("Assets/Scenes/Manoir.unity");
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("Manoir scene created at Assets/Scenes/Manoir.unity");
+    }
+
+    private static readonly Dictionary<char, Color> OldManPalette = new Dictionary<char, Color>
+    {
+        { 'H', new Color(0.80f, 0.80f, 0.82f) },
+        { 'S', new Color(0.80f, 0.65f, 0.55f) },
+        { 'E', new Color(0.10f, 0.10f, 0.10f) },
+        { 'C', new Color(0.35f, 0.10f, 0.14f) },
+        { 'D', new Color(0.22f, 0.06f, 0.09f) },
+        { 'B', new Color(0.12f, 0.10f, 0.10f) },
+    };
+
+    private static readonly Dictionary<char, Color> OldLadyPalette = new Dictionary<char, Color>
+    {
+        { 'H', new Color(0.88f, 0.88f, 0.88f) },
+        { 'S', new Color(0.82f, 0.67f, 0.57f) },
+        { 'E', new Color(0.10f, 0.10f, 0.10f) },
+        { 'C', new Color(0.25f, 0.20f, 0.45f) },
+        { 'D', new Color(0.16f, 0.13f, 0.30f) },
+        { 'B', new Color(0.14f, 0.12f, 0.14f) },
+    };
+
+    private static void CreateOldMan(Vector3 position)
+    {
+        var sprite = GetOrCreatePixelSprite("oldman_pixel", PlayerPattern, OldManPalette);
+
+        var go = new GameObject("Vieil Homme");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1.2f, 1.2f);
+
+        go.AddComponent<ManoirOldMan>();
+    }
+
+    private static void CreateOldLady(Vector3 position)
+    {
+        var sprite = GetOrCreatePixelSprite("oldlady_pixel", PlayerPattern, OldLadyPalette);
+
+        var go = new GameObject("Vieille Dame");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1.2f, 1.2f);
+
+        go.AddComponent<ManoirOldLady>();
+    }
+
     private static void AddSceneToBuildSettings(string path, bool insertFirst = false)
     {
         var scenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
@@ -715,7 +1199,7 @@ public static class SceneBootstrap
         EditorBuildSettings.scenes = scenes.ToArray();
     }
 
-    private static void CreateExitDoor(Vector3 position)
+    private static void CreateExitDoor(Vector3 position, string spawnPointName = "")
     {
         var sprite = GetOrCreatePixelSprite("exitdoor_pixel", DoorPattern, DoorPalette);
 
@@ -731,8 +1215,12 @@ public static class SceneBootstrap
 
         var trigger = door.AddComponent<DoorTrigger>();
         var so = new SerializedObject(trigger);
-        so.FindProperty("sceneName").stringValue = "Town";
-        so.FindProperty("implemented").boolValue = true;
+        var sceneNameProp = so.FindProperty("sceneName");
+        var implementedProp = so.FindProperty("implemented");
+        var spawnPointProp = so.FindProperty("spawnPointName");
+        if (sceneNameProp != null) sceneNameProp.stringValue = "Town";
+        if (implementedProp != null) implementedProp.boolValue = true;
+        if (spawnPointProp != null) spawnPointProp.stringValue = spawnPointName;
         so.ApplyModifiedProperties();
     }
 
@@ -835,12 +1323,44 @@ public static class SceneBootstrap
 
         var door = go.AddComponent<DoorTrigger>();
         var so = new SerializedObject(door);
-        so.FindProperty("sceneName").stringValue = "";
-        so.FindProperty("implemented").boolValue = false;
-        so.FindProperty("lockedMessage").stringValue = "Le Tunnel : un marchand mystérieux rôderait ici... pas encore accessible.";
+        so.FindProperty("sceneName").stringValue = "Tunnel";
+        so.FindProperty("implemented").boolValue = true;
         so.ApplyModifiedProperties();
 
         CreateBuildingLabel("Le Tunnel", position + new Vector3(0, 1.3f, 0));
+    }
+
+    private static readonly Dictionary<char, Color> TunnelMerchantPalette = new Dictionary<char, Color>
+    {
+        { 'H', new Color(0.12f, 0.08f, 0.16f) },
+        { 'S', new Color(0.55f, 0.52f, 0.55f) },
+        { 'E', new Color(0.75f, 0.15f, 0.15f) },
+        { 'C', new Color(0.10f, 0.07f, 0.14f) },
+        { 'D', new Color(0.05f, 0.03f, 0.08f) },
+        { 'B', new Color(0.06f, 0.05f, 0.07f) },
+    };
+
+    private static void CreateTunnelMerchant(Vector3 position)
+    {
+        var sprite = GetOrCreatePixelSprite("tunnelmerchant_pixel", PlayerPattern, TunnelMerchantPalette);
+
+        var go = new GameObject("Marchand du Tunnel");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        sr.enabled = false;
+        go.transform.position = position;
+
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1.2f, 1.2f);
+        col.enabled = false;
+
+        var merchant = go.AddComponent<TunnelMerchant>();
+        var so = new SerializedObject(merchant);
+        so.FindProperty("spriteRenderer").objectReferenceValue = sr;
+        so.FindProperty("interactionCollider").objectReferenceValue = col;
+        so.ApplyModifiedProperties();
     }
 
     private static void CreateBuildingLabel(string text, Vector3 position)
@@ -855,6 +1375,12 @@ public static class SceneBootstrap
         tm.alignment = TextAlignment.Center;
         tm.color = Color.white;
         go.GetComponent<MeshRenderer>().sortingOrder = 6;
+    }
+
+    private static void CreateNamedSpawnPoint(string name, Vector3 position)
+    {
+        var go = new GameObject(name);
+        go.transform.position = position;
     }
 
     private static void CreateExaminationStation(string toolName, ExaminationTool.MeasurementType measurementType, Vector3 position)
@@ -1046,6 +1572,60 @@ public static class SceneBootstrap
         so.ApplyModifiedProperties();
     }
 
+    private static readonly string[] MuseumPedestalPattern =
+    {
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(5, '.', 6, 'D', 5, '.'),
+        Row(5, '.', 6, 'D', 5, '.'),
+        Row(6, '.', 4, 'D', 6, '.'),
+        Row(6, '.', 4, 'D', 6, '.'),
+        Row(4, '.', 8, 'K', 4, '.'),
+        Row(3, '.', 10, 'K', 3, '.'),
+        Row(3, '.', 10, 'K', 3, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> MuseumPedestalPalette = new Dictionary<char, Color>
+    {
+        { 'D', new Color(0.78f, 0.74f, 0.60f) },
+        { 'K', new Color(0.55f, 0.50f, 0.38f) },
+    };
+
+    private static void CreateMuseumPedestal(int rank, Vector3 position)
+    {
+        var pedestalSprite = GetOrCreatePixelSprite("museumpedestal_pixel", MuseumPedestalPattern, MuseumPedestalPalette);
+        var pedestalGO = new GameObject($"MuseumPedestal_{rank}");
+        var pedestalSr = pedestalGO.AddComponent<SpriteRenderer>();
+        pedestalSr.sprite = pedestalSprite;
+        pedestalSr.sortingOrder = 4;
+        pedestalGO.transform.position = position;
+
+        var iconGO = new GameObject("Icon", typeof(SpriteRenderer));
+        iconGO.transform.SetParent(pedestalGO.transform, false);
+        iconGO.transform.localPosition = new Vector3(0f, 0.55f, 0f);
+        iconGO.transform.localScale = Vector3.one * 0.6f;
+        var iconSr = iconGO.GetComponent<SpriteRenderer>();
+        iconSr.sortingOrder = 5;
+
+        var col = pedestalGO.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1.2f, 1.2f);
+        col.offset = new Vector2(0f, 0.2f);
+
+        var pedestal = pedestalGO.AddComponent<MuseumPedestal>();
+        var so = new SerializedObject(pedestal);
+        so.FindProperty("rank").intValue = rank;
+        so.FindProperty("iconRenderer").objectReferenceValue = iconSr;
+        so.ApplyModifiedProperties();
+    }
+
     private static readonly string[] ReportSpeciesOptions =
     {
         "Quartz", "Corindon (Rubis)", "Spinelle", "Grenat Almandin", "Verre",
@@ -1065,7 +1645,10 @@ public static class SceneBootstrap
         "Pierre de Lune", "Orthose", "Labradorite", "Serpentine Bowénite",
         "Opale Noble", "Opale de Feu", "Kyanite", "Turquoise", "Turquoise Stabilisée",
         "Obsidienne", "Rhodocrosite", "Rhodonite",
-        "Diamant Synthétique (CVD)", "Diamant Synthétique (HPHT)"
+        "Diamant Synthétique (CVD)", "Diamant Synthétique (HPHT)",
+        "Painite", "Béryl Rouge (Bixbite)", "Ivoire d'Éléphant", "Ivoire de Mammouth",
+        "Ivoire de Morse", "Ivoire d'Hippopotame", "Défense de Narval",
+        "Corne de Rhinocéros", "Écaille de Tortue"
     };
 
     private static void CreateUI(bool includeExaminationUI)
@@ -1088,6 +1671,20 @@ public static class SceneBootstrap
         hudSo.FindProperty("moneyText").objectReferenceValue = moneyGO.GetComponent<Text>();
         hudSo.FindProperty("dayText").objectReferenceValue = dayGO.GetComponent<Text>();
         hudSo.ApplyModifiedProperties();
+
+        var moneyDeltaAnchorGO = new GameObject("MoneyDeltaAnchor", typeof(RectTransform));
+        moneyDeltaAnchorGO.transform.SetParent(canvasGO.transform, false);
+        var moneyDeltaAnchorRect = moneyDeltaAnchorGO.GetComponent<RectTransform>();
+        moneyDeltaAnchorRect.anchorMin = new Vector2(0f, 1f);
+        moneyDeltaAnchorRect.anchorMax = new Vector2(0f, 1f);
+        moneyDeltaAnchorRect.pivot = new Vector2(0f, 1f);
+        moneyDeltaAnchorRect.anchoredPosition = new Vector2(230, -20);
+        moneyDeltaAnchorRect.sizeDelta = new Vector2(160, 30);
+
+        var floatingMoneyUI = canvasGO.AddComponent<FloatingMoneyUI>();
+        var floatingMoneySo = new SerializedObject(floatingMoneyUI);
+        floatingMoneySo.FindProperty("spawnAnchor").objectReferenceValue = moneyDeltaAnchorRect;
+        floatingMoneySo.ApplyModifiedProperties();
 
         CreateUIText("InventoryHint", canvasGO.transform, "Tab : Inventaire",
             new Vector2(20, -76), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
@@ -1118,6 +1715,8 @@ public static class SceneBootstrap
         CreateRoughMarketUI(canvasGO.transform);
         CreateQuestUI(canvasGO.transform);
         CreateToolInfoUI(canvasGO.transform);
+        CreateTunnelUI(canvasGO.transform);
+        CreateSceneFader();
 
         if (!includeExaminationUI) return;
 
@@ -1246,13 +1845,16 @@ public static class SceneBootstrap
         panelRect.anchorMin = new Vector2(1f, 0.5f);
         panelRect.anchorMax = new Vector2(1f, 0.5f);
         panelRect.pivot = new Vector2(1f, 0.5f);
-        panelRect.sizeDelta = new Vector2(300, 260);
+        panelRect.sizeDelta = new Vector2(300, 280);
         panelRect.anchoredPosition = new Vector2(-20, 0);
         panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.95f);
         panelGO.SetActive(false);
 
         CreateUIText("Title", panelGO.transform, "Inventaire",
-            new Vector2(0, -14), new Vector2(260, 26), 18, TextAnchor.UpperCenter, Color.white);
+            new Vector2(0, -14), new Vector2(260, 22), 18, TextAnchor.UpperCenter, Color.white);
+
+        var clockGO = CreateUIText("Clock", panelGO.transform, "",
+            new Vector2(0, -38), new Vector2(260, 18), 12, TextAnchor.UpperCenter, new Color(0.75f, 0.75f, 0.75f));
 
         var slotsGO = new GameObject("Slots", typeof(RectTransform));
         slotsGO.transform.SetParent(panelGO.transform, false);
@@ -1260,7 +1862,7 @@ public static class SceneBootstrap
         slotsRect.anchorMin = new Vector2(0.5f, 1f);
         slotsRect.anchorMax = new Vector2(0.5f, 1f);
         slotsRect.pivot = new Vector2(0.5f, 1f);
-        slotsRect.anchoredPosition = new Vector2(0, -46);
+        slotsRect.anchoredPosition = new Vector2(0, -64);
         slotsRect.sizeDelta = new Vector2(248, 184);
 
         var dropZone = panelGO.AddComponent<GemDropZone>();
@@ -1273,6 +1875,7 @@ public static class SceneBootstrap
         so.FindProperty("slotsContainer").objectReferenceValue = slotsRect;
         so.FindProperty("dropZone").objectReferenceValue = dropZone;
         so.FindProperty("mysteryIcon").objectReferenceValue = mysteryIcon;
+        so.FindProperty("clockText").objectReferenceValue = clockGO.GetComponent<Text>();
         so.ApplyModifiedProperties();
     }
 
@@ -1519,6 +2122,71 @@ public static class SceneBootstrap
         roughMarketSo.FindProperty("titleText").objectReferenceValue = titleGO.GetComponent<Text>();
         roughMarketSo.FindProperty("content").objectReferenceValue = contentRect;
         roughMarketSo.ApplyModifiedProperties();
+    }
+
+    private static void CreateTunnelUI(Transform canvasTransform)
+    {
+        var panelGO = new GameObject("TunnelPanel", typeof(RectTransform), typeof(Image));
+        panelGO.transform.SetParent(canvasTransform, false);
+        var panelRect = panelGO.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        panelRect.pivot = new Vector2(0.5f, 0.5f);
+        panelRect.sizeDelta = new Vector2(380, 220);
+        panelRect.anchoredPosition = Vector2.zero;
+        panelGO.GetComponent<Image>().color = new Color(0.05f, 0.05f, 0.06f, 0.97f);
+        panelGO.SetActive(false);
+
+        var titleGO = CreateUIText("Title", panelGO.transform, "Le Marchand du Tunnel",
+            new Vector2(0, -16), new Vector2(340, 26), 18, TextAnchor.UpperCenter, new Color(0.85f, 0.75f, 0.95f));
+
+        var itemGO = CreateUIText("ItemText", panelGO.transform, "",
+            new Vector2(0, -60), new Vector2(340, 90), 14, TextAnchor.UpperCenter, Color.white);
+
+        var buyButtonGO = CreateUIButton("BuyButton", panelGO.transform, "Acheter",
+            new Vector2(0, -150), new Vector2(200, 34));
+        var buyButtonText = buyButtonGO.GetComponentInChildren<Text>();
+
+        var closeButtonGO = CreateUIButton("CloseButton", panelGO.transform, "Fermer",
+            new Vector2(0, -192), new Vector2(160, 30));
+        closeButtonGO.AddComponent<CloseTunnelButton>();
+
+        var tunnelUI = canvasTransform.gameObject.AddComponent<TunnelUI>();
+        var tunnelSo = new SerializedObject(tunnelUI);
+        tunnelSo.FindProperty("panel").objectReferenceValue = panelGO;
+        tunnelSo.FindProperty("titleText").objectReferenceValue = titleGO.GetComponent<Text>();
+        tunnelSo.FindProperty("itemText").objectReferenceValue = itemGO.GetComponent<Text>();
+        tunnelSo.FindProperty("buyButton").objectReferenceValue = buyButtonGO.GetComponent<Button>();
+        tunnelSo.FindProperty("buyButtonText").objectReferenceValue = buyButtonText;
+        tunnelSo.ApplyModifiedProperties();
+    }
+
+    private static void CreateSceneFader()
+    {
+        var canvasGO = new GameObject("SceneFaderCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+        var canvas = canvasGO.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 1000;
+        var scaler = canvasGO.GetComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1280, 720);
+
+        var imageGO = new GameObject("FadeImage", typeof(RectTransform), typeof(Image));
+        imageGO.transform.SetParent(canvasGO.transform, false);
+        var rect = imageGO.GetComponent<RectTransform>();
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.sizeDelta = Vector2.zero;
+        rect.anchoredPosition = Vector2.zero;
+        var image = imageGO.GetComponent<Image>();
+        image.color = new Color(0f, 0f, 0f, 0f);
+        image.raycastTarget = false;
+
+        var fader = canvasGO.AddComponent<SceneFader>();
+        var so = new SerializedObject(fader);
+        var fadeImageProp = so.FindProperty("fadeImage");
+        if (fadeImageProp != null) fadeImageProp.objectReferenceValue = image;
+        so.ApplyModifiedProperties();
     }
 
     private static void CreateQuestUI(Transform canvasTransform)
@@ -4141,6 +4809,7 @@ public static class SceneBootstrap
                 g.opticalCharacter = "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.";
                 g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
                 g.birefringence = 0.012f;
+                g.isPolycrystalline = true;
                 g.absorptionSpectrum = "Raie d'absorption fine dans le bleu-violet liée à un élément chromophore en trace.";
                 g.spectrumLines = new List<SpectrumLine>
                 {
@@ -4183,6 +4852,7 @@ public static class SceneBootstrap
                 g.opticalCharacter = "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.";
                 g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
                 g.birefringence = 0.027f;
+                g.isPolycrystalline = true;
                 g.absorptionSpectrum = "Bande d'absorption large liée au fer.";
                 g.spectrumLines = new List<SpectrumLine>();
                 g.inclusions = "Structure feutrée de fibres entrelacées, conférant une ténacité exceptionnelle à l'agrégat.";
@@ -4460,6 +5130,7 @@ public static class SceneBootstrap
                 g.opticalCharacter = "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat.";
                 g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
                 g.birefringence = 0.014f;
+                g.isPolycrystalline = true;
                 g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
                 g.spectrumLines = new List<SpectrumLine>();
                 g.inclusions = "Texture compacte à grain fin, parfois veinules blanchâtres.";
@@ -4869,6 +5540,370 @@ public static class SceneBootstrap
                     new GemOrigin { name = "Fabrication industrielle (haute pression, haute température)", rarityWeight = 100, valueMultiplier = 1.0f },
                 };
             }),
+            BuildGem("Painite", g =>
+            {
+                g.displayName = "Painite";
+                g.description = "Borate de zirconium et d'aluminium longtemps considéré comme le minéral gemme le plus rare au monde, ne se trouvant quasiment que dans une seule région de Birmanie.";
+                g.icon = GetGemIconSprite("painite", new Color(0.55f, 0.22f, 0.12f), new Color(0.78f, 0.42f, 0.20f), "Ovale", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("painite", new Color(0.55f, 0.22f, 0.12f), "Ovale");
+                g.refractiveIndex = 1.80f;
+                g.density = 4.01f;
+                g.hardness = 8.0f;
+                g.lengthMm = 5.0f;
+                g.widthMm = 4.0f;
+                g.depthMm = 3.0f;
+                g.weightCarats = 0.6f;
+                g.luster = "Vitreux";
+                g.color = "Brun-rouge à orangé";
+                g.shape = "Ovale";
+                g.cutStyle = "Mixte";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Nuances marquées de brun-rouge, orangé et brun foncé selon l'axe d'observation.";
+                g.fluorescenceLongWave = "Généralement inerte sous UV longue onde.";
+                g.fluorescenceShortWave = "Inerte sous UV courte onde.";
+                g.opticalCharacter = "Uniaxe (biréfringent, réseau hexagonal).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.022f;
+                g.absorptionSpectrum = "Raies d'absorption marquées dans le rouge et le bleu, liées à des traces de fer et de chrome.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 445f, widthNm = 6f },
+                    new SpectrumLine { wavelengthNm = 635f, widthNm = 6f },
+                };
+                g.inclusions = "Cristaux minéraux inclus rarement observés ; fines stries de croissance parfois visibles.";
+                g.interferenceFigure = "Figure uniaxe centrée observable en lumière convergente.";
+                g.chelseaFilterReaction = "Aucune réaction particulière au filtre Chelsea.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 1500;
+                g.isTunnelExclusive = true;
+                g.tunnelMinPrice = 10000;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Birmanie (Mogok)", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Beryl_Rouge", g =>
+            {
+                g.displayName = "Béryl Rouge (Bixbite)";
+                g.description = "Variété rouge framboise du béryl, colorée par des traces de manganèse, comptant parmi les gemmes les plus rares au monde et ne dépassant presque jamais le carat une fois taillée.";
+                g.icon = GetGemIconSprite("berylrouge", new Color(0.65f, 0.10f, 0.20f), new Color(0.88f, 0.30f, 0.38f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("berylrouge", new Color(0.65f, 0.10f, 0.20f), "Ovale");
+                g.refractiveIndex = 1.570f;
+                g.density = 2.68f;
+                g.hardness = 7.75f;
+                g.lengthMm = 4.0f;
+                g.widthMm = 3.0f;
+                g.depthMm = 2.0f;
+                g.weightCarats = 0.25f;
+                g.luster = "Vitreux";
+                g.color = "Rouge framboise intense";
+                g.shape = "Ovale";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Dichroïsme faible à modéré entre rouge pourpré et orangé selon l'axe.";
+                g.fluorescenceLongWave = "Généralement inerte sous UV longue onde.";
+                g.fluorescenceShortWave = "Inerte sous UV courte onde.";
+                g.opticalCharacter = "Uniaxe (biréfringent, réseau hexagonal).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.006f;
+                g.absorptionSpectrum = "Bandes d'absorption liées au manganèse, notamment dans le vert-jaune.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 550f, widthNm = 10f },
+                };
+                g.inclusions = "Voiles de croissance et canaux allongés occasionnels, typiques des béryls.";
+                g.interferenceFigure = "Figure uniaxe centrée en lumière convergente.";
+                g.chelseaFilterReaction = "Aucune réaction marquée au filtre Chelsea.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 1200;
+                g.isTunnelExclusive = true;
+                g.tunnelMinPrice = 10000;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "États-Unis (Utah, Wah Wah Mountains)", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Ivoire_Elephant", g =>
+            {
+                g.displayName = "Ivoire d'Éléphant";
+                g.description = "Dentine provenant des défenses d'éléphant. Son commerce international est interdit par la Convention de Washington (CITES) depuis 1989 en raison du braconnage massif ayant décimé les populations d'éléphants.";
+                g.icon = GetGemIconSprite("ivoireelephant", new Color(0.90f, 0.87f, 0.78f), new Color(0.97f, 0.95f, 0.90f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("ivoireelephant", new Color(0.90f, 0.87f, 0.78f), "Ovale");
+                g.refractiveIndex = 1.54f;
+                g.density = 1.85f;
+                g.hardness = 2.75f;
+                g.lengthMm = 30f;
+                g.widthMm = 20f;
+                g.depthMm = 10f;
+                g.weightCarats = 15f;
+                g.luster = "Cireux";
+                g.color = "Blanc crème à ivoire";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence bleu-blanc caractéristique sous UV longue onde.";
+                g.fluorescenceShortWave = "Fluorescence plus faible et diffuse sous UV courte onde.";
+                g.opticalCharacter = "Uniaxe (biréfringent), lecture diffuse typique d'un agrégat organique.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.003f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique au spectroscope.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "En coupe transversale, fines lignes entrecroisées (lignes de Schreger) formant des angles généralement supérieurs à 115°.";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat organique).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 600;
+                g.isTunnelExclusive = true;
+                g.tunnelMinPrice = 2000;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Afrique (défenses d'éléphant)", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Ivoire_Mammouth", g =>
+            {
+                g.displayName = "Ivoire de Mammouth";
+                g.description = "Dentine fossile extraite des défenses de mammouths laineux préservées dans le pergélisol sibérien depuis des millénaires. Contrairement à l'ivoire d'éléphant, sa vente est légale dans la plupart des pays car l'espèce est éteinte, ce qui alimente hélas un trafic parallèle d'ivoire frais faussement étiqueté.";
+                g.icon = GetGemIconSprite("ivoiremammouth", new Color(0.80f, 0.68f, 0.50f), new Color(0.90f, 0.80f, 0.65f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("ivoiremammouth", new Color(0.80f, 0.68f, 0.50f), "Ovale");
+                g.refractiveIndex = 1.54f;
+                g.density = 1.90f;
+                g.hardness = 2.75f;
+                g.lengthMm = 32f;
+                g.widthMm = 22f;
+                g.depthMm = 11f;
+                g.weightCarats = 16f;
+                g.luster = "Cireux";
+                g.color = "Beige à brun, parfois taché de bleu-vert";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Opaque à translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence bleu-blanc plus faible et irrégulière sous UV longue onde.";
+                g.fluorescenceShortWave = "Fluorescence diffuse sous UV courte onde.";
+                g.opticalCharacter = "Uniaxe (biréfringent), lecture diffuse typique d'un agrégat organique.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.003f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Lignes de Schreger entrecroisées formant des angles généralement inférieurs à 115°, souvent accompagnées de fissures de surface dues au vieillissement.";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat organique).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 500;
+                g.isTunnelExclusive = true;
+                g.tunnelMinPrice = 2000;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Sibérie (pergélisol)", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Ivoire_Morse", g =>
+            {
+                g.displayName = "Ivoire de Morse";
+                g.description = "Dentine provenant des défenses de morse, reconnaissable à son cœur granuleux caractéristique en coupe transversale. Sa vente est très réglementée et interdite dans de nombreux pays pour protéger les populations arctiques.";
+                g.icon = GetGemIconSprite("ivoiremorse", new Color(0.88f, 0.86f, 0.80f), new Color(0.96f, 0.95f, 0.90f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("ivoiremorse", new Color(0.88f, 0.86f, 0.80f), "Ovale");
+                g.refractiveIndex = 1.54f;
+                g.density = 1.95f;
+                g.hardness = 2.9f;
+                g.lengthMm = 25f;
+                g.widthMm = 16f;
+                g.depthMm = 9f;
+                g.weightCarats = 10f;
+                g.luster = "Cireux";
+                g.color = "Blanc ivoire à crème";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Opaque à translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence blanc-bleuté sous UV longue onde.";
+                g.fluorescenceShortWave = "Fluorescence faible sous UV courte onde.";
+                g.opticalCharacter = "Uniaxe (biréfringent), lecture diffuse typique d'un agrégat organique.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.003f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Cœur central granuleux et marbré, nettement distinct de la couche externe dense, visible en coupe transversale.";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat organique).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 480;
+                g.isTunnelExclusive = true;
+                g.tunnelMinPrice = 2000;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Arctique (Alaska, Canada)", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Ivoire_Hippopotame", g =>
+            {
+                g.displayName = "Ivoire d'Hippopotame";
+                g.description = "Dentine issue des canines et incisives d'hippopotame, réputée pour sa dureté et son grain très fin, autrefois utilisée pour la fabrication de dentiers avant l'apparition des matériaux synthétiques. Comme l'ivoire d'éléphant, son commerce international est interdit par la CITES.";
+                g.icon = GetGemIconSprite("ivoirehippopotame", new Color(0.93f, 0.91f, 0.85f), new Color(0.99f, 0.98f, 0.95f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("ivoirehippopotame", new Color(0.93f, 0.91f, 0.85f), "Ovale");
+                g.refractiveIndex = 1.54f;
+                g.density = 1.90f;
+                g.hardness = 3.0f;
+                g.lengthMm = 22f;
+                g.widthMm = 14f;
+                g.depthMm = 8f;
+                g.weightCarats = 8f;
+                g.luster = "Cireux, prenant un poli particulièrement fin";
+                g.color = "Blanc pur à crème";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence blanc-bleuté sous UV longue onde.";
+                g.fluorescenceShortWave = "Fluorescence faible sous UV courte onde.";
+                g.opticalCharacter = "Uniaxe (biréfringent), lecture diffuse typique d'un agrégat organique.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.003f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Grain exceptionnellement fin et homogène, sans structure entrecroisée marquée.";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat organique).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 500;
+                g.isTunnelExclusive = true;
+                g.tunnelMinPrice = 2000;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Afrique (zones humides)", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Defense_Narval", g =>
+            {
+                g.displayName = "Défense de Narval";
+                g.description = "Dent canine spiralée du narval, cétacé arctique parfois surnommé « licorne des mers ». Sa vente est encadrée par la CITES pour protéger l'espèce.";
+                g.icon = GetGemIconSprite("defensenarval", new Color(0.90f, 0.88f, 0.82f), new Color(0.97f, 0.96f, 0.92f), "Baguette", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("defensenarval", new Color(0.90f, 0.88f, 0.82f), "Baguette");
+                g.refractiveIndex = 1.54f;
+                g.density = 1.90f;
+                g.hardness = 2.75f;
+                g.lengthMm = 40f;
+                g.widthMm = 15f;
+                g.depthMm = 15f;
+                g.weightCarats = 20f;
+                g.luster = "Cireux";
+                g.color = "Ivoire crème, marqué de sillons en spirale";
+                g.shape = "Baguette";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence blanc-bleuté sous UV longue onde.";
+                g.fluorescenceShortWave = "Fluorescence faible sous UV courte onde.";
+                g.opticalCharacter = "Uniaxe (biréfringent), lecture diffuse typique d'un agrégat organique.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.003f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Croissance en spirale senestre caractéristique, visible en stries torsadées sur toute la longueur.";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat organique).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 700;
+                g.isTunnelExclusive = true;
+                g.tunnelMinPrice = 2000;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Arctique (Groenland)", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Corne_Rhinoceros", g =>
+            {
+                g.displayName = "Corne de Rhinocéros";
+                g.description = "Kératine compactée formant la corne du rhinocéros, chimiquement proche des cheveux et des ongles humains, sans lien avec l'ivoire. Sa demande sur les marchés parallèles, alimentée par des croyances médicinales sans fondement scientifique, en fait l'une des matières les plus braconnées au monde. Sa vente est prohibée par la CITES.";
+                g.icon = GetGemIconSprite("cornerhinoceros", new Color(0.30f, 0.26f, 0.22f), new Color(0.45f, 0.40f, 0.35f), "Coussin", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("cornerhinoceros", new Color(0.30f, 0.26f, 0.22f), "Coussin");
+                g.refractiveIndex = 1.55f;
+                g.density = 1.30f;
+                g.hardness = 2.5f;
+                g.lengthMm = 28f;
+                g.widthMm = 18f;
+                g.depthMm = 18f;
+                g.weightCarats = 12f;
+                g.luster = "Mat à soyeux";
+                g.color = "Brun-gris à noir";
+                g.shape = "Coussin";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Non applicable (matériau opaque).";
+                g.fluorescenceShortWave = "Non applicable (matériau opaque).";
+                g.opticalCharacter = "Non applicable (matériau opaque).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Opaque;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Non applicable (matériau opaque).";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Structure fibreuse compacte, visible sous forme de fines fibres parallèles à la base de la corne.";
+                g.interferenceFigure = "Non applicable (matériau opaque).";
+                g.chelseaFilterReaction = "Non applicable (matériau opaque).";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 1100;
+                g.isTunnelExclusive = true;
+                g.tunnelMinPrice = 2000;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Afrique australe", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Ecaille_Tortue", g =>
+            {
+                g.displayName = "Écaille de Tortue";
+                g.description = "Kératine translucide provenant de la carapace de la tortue imbriquée, façonnée depuis l'Antiquité en bijoux, peignes et incrustations pour son motif tacheté unique. Sa vente est interdite par la CITES depuis 1977 pour protéger cette espèce aujourd'hui en danger critique d'extinction.";
+                g.icon = GetGemIconSprite("ecailletortue", new Color(0.55f, 0.38f, 0.15f), new Color(0.78f, 0.58f, 0.28f), "Coussin", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("ecailletortue", new Color(0.55f, 0.38f, 0.15f), "Coussin");
+                g.refractiveIndex = 1.55f;
+                g.density = 1.29f;
+                g.hardness = 2.5f;
+                g.lengthMm = 20f;
+                g.widthMm = 15f;
+                g.depthMm = 4f;
+                g.weightCarats = 6f;
+                g.luster = "Résineux à cireux";
+                g.color = "Brun ambré tacheté de noir";
+                g.shape = "Coussin";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence faible, parfois verdâtre, sous UV longue onde.";
+                g.fluorescenceShortWave = "Fluorescence quasi nulle sous UV courte onde.";
+                g.opticalCharacter = "Uniaxe (biréfringent), lecture diffuse typique d'un agrégat organique.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.004f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Zones pigmentées irrégulières emprisonnées dans une matrice translucide homogène.";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat organique).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 450;
+                g.isTunnelExclusive = true;
+                g.tunnelMinPrice = 2000;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Caraïbes / Océan Indien", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
         };
     }
 
@@ -4907,6 +5942,129 @@ public static class SceneBootstrap
         Directory.CreateDirectory("Assets/Art/Tilesets");
         AssetDatabase.CreateAsset(tile, tilePath);
         return tile;
+    }
+
+    private static Tile GetOrCreateTileFromSprite(string name, Sprite sprite)
+    {
+        var tilePath = $"Assets/Art/Tilesets/{name}.asset";
+        var existingTile = AssetDatabase.LoadAssetAtPath<Tile>(tilePath);
+        if (existingTile != null) return existingTile;
+
+        var tile = ScriptableObject.CreateInstance<Tile>();
+        tile.sprite = sprite;
+
+        Directory.CreateDirectory("Assets/Art/Tilesets");
+        AssetDatabase.CreateAsset(tile, tilePath);
+        return tile;
+    }
+
+    // ----- External sprite pack (LimeZu Modern Exteriors) -----
+
+    private const string PackThemeRoot = "Assets/Art/tileset/modernexteriors-win/Modern_Exteriors_32x32/ME_Theme_Sorter_32x32/";
+    private const string PackTerrains = PackThemeRoot + "1_Terrains_and_Fences_Singles_32x32/ME_Singles_Terrains_and_Fences_32x32_";
+    private const string PackGarden = PackThemeRoot + "17_Garden_Singles_32x32/ME_Singles_Garden_32x32_";
+    private const string PackCityProps = PackThemeRoot + "3_City_Props_Singles_32x32/ME_Singles_City_Props_32x32_";
+
+    // Center-pivot import, matching our procedural sprites — used for tilemap tiles.
+    private static Sprite LoadPackSprite(string fullPath)
+    {
+        if (!File.Exists(fullPath))
+        {
+            Debug.LogWarning($"Sprite pack asset not found: {fullPath}");
+            return null;
+        }
+
+        var importer = (TextureImporter)AssetImporter.GetAtPath(fullPath);
+        if (importer == null)
+        {
+            AssetDatabase.ImportAsset(fullPath, ImportAssetOptions.ForceUpdate);
+            importer = (TextureImporter)AssetImporter.GetAtPath(fullPath);
+        }
+        if (importer == null)
+        {
+            AssetDatabase.Refresh();
+            importer = (TextureImporter)AssetImporter.GetAtPath(fullPath);
+        }
+        if (importer == null)
+        {
+            Debug.LogWarning($"Could not import sprite: {fullPath}");
+            return null;
+        }
+
+        if (importer.textureType != TextureImporterType.Sprite)
+        {
+            importer.textureType = TextureImporterType.Sprite;
+            importer.spriteImportMode = SpriteImportMode.Single;
+            importer.spritePixelsPerUnit = PixelsPerUnit;
+            importer.filterMode = FilterMode.Point;
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
+            importer.mipmapEnabled = false;
+            importer.SaveAndReimport();
+        }
+
+        return AssetDatabase.LoadAssetAtPath<Sprite>(fullPath);
+    }
+
+    // Bottom-pivot import — used for standalone world decorations, so `position` is where the object stands.
+    private static Sprite LoadPackSpriteGrounded(string fullPath)
+    {
+        if (!File.Exists(fullPath))
+        {
+            Debug.LogWarning($"Sprite pack asset not found: {fullPath}");
+            return null;
+        }
+
+        var importer = (TextureImporter)AssetImporter.GetAtPath(fullPath);
+        if (importer == null)
+        {
+            AssetDatabase.ImportAsset(fullPath, ImportAssetOptions.ForceUpdate);
+            importer = (TextureImporter)AssetImporter.GetAtPath(fullPath);
+        }
+        if (importer == null)
+        {
+            AssetDatabase.Refresh();
+            importer = (TextureImporter)AssetImporter.GetAtPath(fullPath);
+        }
+        if (importer == null)
+        {
+            Debug.LogWarning($"Could not import sprite: {fullPath}");
+            return null;
+        }
+
+        var settings = new TextureImporterSettings();
+        importer.ReadTextureSettings(settings);
+
+        if (importer.textureType != TextureImporterType.Sprite || settings.spriteAlignment != (int)SpriteAlignment.Custom)
+        {
+            settings.textureType = TextureImporterType.Sprite;
+            settings.spriteMode = (int)SpriteImportMode.Single;
+            settings.spriteAlignment = (int)SpriteAlignment.Custom;
+            settings.spritePivot = new Vector2(0.5f, 0f);
+            importer.SetTextureSettings(settings);
+
+            importer.spritePixelsPerUnit = PixelsPerUnit;
+            importer.filterMode = FilterMode.Point;
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
+            importer.mipmapEnabled = false;
+
+            importer.SaveAndReimport();
+        }
+
+        return AssetDatabase.LoadAssetAtPath<Sprite>(fullPath);
+    }
+
+    private static readonly string[] PlayerWalkDirections = { "Down", "Up", "Left", "Right" };
+
+    private static Sprite GetPlayerSprite()
+    {
+        foreach (var direction in PlayerWalkDirections)
+        {
+            for (var frame = 0; frame < 6; frame++)
+                LoadPackSpriteGrounded($"Assets/Resources/PlayerWalk/{direction}/{frame}.png");
+            LoadPackSpriteGrounded($"Assets/Resources/PlayerIdle/{direction}.png");
+        }
+
+        return LoadPackSpriteGrounded("Assets/Art/Sprites/player_character.png");
     }
 
     // ----- Pixel art generation -----
@@ -5056,13 +6214,25 @@ public static class SceneBootstrap
         var townClip = GetMusicClip("Music_Town.mp3");
         var laboratoryClip = GetMusicClip("Music_Laboratoire.mp3");
         var mainMenuClip = GetMusicClip("Music_MainMenu.mp3");
+        var tunnelClip = GetMusicClip("Music_Tunnel.mp3");
+        var manoirClip = GetMusicClip("Music_Manoir.mp3");
+        var marketClip = GetMusicClip("Music_Marche.mp3");
 
         var go = new GameObject("MusicManager");
         var manager = go.AddComponent<MusicManager>();
         var so = new SerializedObject(manager);
-        so.FindProperty("townMusic").objectReferenceValue = townClip;
-        so.FindProperty("laboratoryMusic").objectReferenceValue = laboratoryClip;
-        so.FindProperty("mainMenuMusic").objectReferenceValue = mainMenuClip;
+        var townProp = so.FindProperty("townMusic");
+        var labProp = so.FindProperty("laboratoryMusic");
+        var mainMenuProp = so.FindProperty("mainMenuMusic");
+        var tunnelProp = so.FindProperty("tunnelMusic");
+        var manoirProp = so.FindProperty("manoirMusic");
+        var marketProp = so.FindProperty("marketMusic");
+        if (townProp != null) townProp.objectReferenceValue = townClip;
+        if (labProp != null) labProp.objectReferenceValue = laboratoryClip;
+        if (mainMenuProp != null) mainMenuProp.objectReferenceValue = mainMenuClip;
+        if (tunnelProp != null) tunnelProp.objectReferenceValue = tunnelClip;
+        if (manoirProp != null) manoirProp.objectReferenceValue = manoirClip;
+        if (marketProp != null) marketProp.objectReferenceValue = marketClip;
         so.ApplyModifiedProperties();
     }
 
@@ -5074,6 +6244,17 @@ public static class SceneBootstrap
         AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
 
         var importer = (AudioImporter)AssetImporter.GetAtPath(path);
+        if (importer == null)
+        {
+            AssetDatabase.Refresh();
+            importer = (AudioImporter)AssetImporter.GetAtPath(path);
+        }
+        if (importer == null)
+        {
+            Debug.LogWarning($"Could not import audio clip: {path}");
+            return null;
+        }
+
         var settings = importer.defaultSampleSettings;
         settings.loadType = AudioClipLoadType.Streaming;
         importer.defaultSampleSettings = settings;
@@ -5119,6 +6300,28 @@ public static class SceneBootstrap
         return (x / 8 + y / 8) % 2 == 0 ? tileA : tileB;
     }
 
+    private static Color TunnelWallPixel(int x, int y)
+    {
+        var rock = new Color(0.16f, 0.15f, 0.16f);
+        var rockDark = new Color(0.11f, 0.10f, 0.11f);
+        var vein = new Color(0.20f, 0.17f, 0.14f);
+
+        var noise = (x * 7 + y * 13) % 17;
+        if (noise == 0) return vein;
+        return (x / 3 + y / 3) % 2 == 0 ? rock : rockDark;
+    }
+
+    private static Color TunnelFloorPixel(int x, int y)
+    {
+        var dirtA = new Color(0.27f, 0.22f, 0.17f);
+        var dirtB = new Color(0.23f, 0.19f, 0.15f);
+        var pebble = new Color(0.32f, 0.30f, 0.28f);
+
+        var noise = (x * 5 + y * 11) % 23;
+        if (noise == 0) return pebble;
+        return (x / 4 + y / 4) % 2 == 0 ? dirtA : dirtB;
+    }
+
     private static Sprite GetToolSprite(string toolName)
     {
         switch (toolName)
@@ -5147,17 +6350,6 @@ public static class SceneBootstrap
             case "TesteurElectrique": return GetOrCreatePixelSprite("testeurelectrique_pixel", MicrometrePattern, ElectricalProbePalette);
             default: return GetOrCreatePixelSprite("loupe_pixel", LoupePattern, LoupePalette);
         }
-    }
-
-    private static Color GrassPixel(int x, int y)
-    {
-        var grassA = new Color(0.29f, 0.47f, 0.27f);
-        var grassB = new Color(0.26f, 0.43f, 0.24f);
-        var speck = new Color(0.34f, 0.52f, 0.30f);
-
-        var noise = (x * 7 + y * 13) % 17;
-        if (noise == 0) return speck;
-        return (x / 4 + y / 4) % 2 == 0 ? grassA : grassB;
     }
 
     private static Color HedgePixel(int x, int y)
@@ -5424,6 +6616,75 @@ public static class SceneBootstrap
         Row(1, '.', 14, 'F', 1, '.'),
         Row(16, '.'),
     };
+
+    private static readonly string[] BushSprites =
+    {
+        PackGarden + "Bush_4.png",
+        PackGarden + "Bush_3.png",
+    };
+
+    private static readonly string[] FlowerSprites =
+    {
+        PackGarden + "Small_Red_Flower.png",
+        PackGarden + "Small_Light_Blue_Flower.png",
+        PackGarden + "Small_Sunflower.png",
+    };
+
+    private static void CreateTree(Vector3 position, int variant = 0)
+    {
+        var sprite = LoadPackSpriteGrounded(BushSprites[variant % BushSprites.Length]);
+        if (sprite == null) return;
+
+        var go = new GameObject("Arbre");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        var col = go.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.6f, 0.35f);
+        col.offset = new Vector2(0f, 0.15f);
+    }
+
+    private static void CreateLamppost(Vector3 position)
+    {
+        var sprite = LoadPackSpriteGrounded(PackCityProps + "Street_Lamp_5.png");
+        if (sprite == null) return;
+
+        var go = new GameObject("Lampadaire");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+    }
+
+    private static void CreateFlowerCluster(Vector3 position, int variant)
+    {
+        var sprite = LoadPackSpriteGrounded(FlowerSprites[variant % FlowerSprites.Length]);
+        if (sprite == null) return;
+
+        var go = new GameObject("Fleurs");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 3;
+        go.transform.position = position;
+    }
+
+    private static void CreateFence(Vector3 position)
+    {
+        var sprite = LoadPackSpriteGrounded(PackTerrains + "Fence_1_7.png");
+        if (sprite == null) return;
+
+        var go = new GameObject("Cloture");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        var col = go.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.9f, 0.3f);
+        col.offset = new Vector2(0f, 0.15f);
+    }
 
     private static readonly string[] TunnelPattern =
     {

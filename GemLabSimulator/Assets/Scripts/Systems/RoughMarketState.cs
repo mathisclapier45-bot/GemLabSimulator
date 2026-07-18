@@ -60,7 +60,7 @@ public class RoughMarketState : MonoBehaviour
 
         foreach (var def in database.allGems)
         {
-            if (def == null) continue;
+            if (def == null || def.isTunnelExclusive) continue;
             foreach (var origin in def.origins)
             {
                 foreach (var keyword in country.MatchKeywords)
@@ -82,7 +82,11 @@ public class RoughMarketState : MonoBehaviour
         }
         else
         {
-            var def = database.allGems[UnityEngine.Random.Range(0, database.allGems.Count)];
+            GemDefinition def;
+            do
+            {
+                def = database.allGems[UnityEngine.Random.Range(0, database.allGems.Count)];
+            } while (def.isTunnelExclusive);
             instance = new GemInstance(def);
         }
 

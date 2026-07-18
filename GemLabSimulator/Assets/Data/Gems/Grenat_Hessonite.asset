@@ -37,6 +37,7 @@ MonoBehaviour:
   opticalCharacterClass: 0
   birefringence: 0
   isQuartzFamily: 0
+  isPolycrystalline: 0
   isThermallyConductiveLikeDiamond: 0
   isElectricallyConductive: 0
   absorptionSpectrum: "Bandes d'absorption du fer et du mangan\xE8se."
@@ -51,6 +52,8 @@ MonoBehaviour:
   baseValue: 40
   forcedSynthetic: 0
   forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
   origins:
   - name: Sri Lanka
     rarityWeight: 50

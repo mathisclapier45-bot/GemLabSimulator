@@ -19,6 +19,7 @@ public class BedInteractable : MonoBehaviour
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
         GameClock.Instance?.AdvanceDay();
+        DayNightOverlay.ResetToDay();
         SaveSystem.Save();
         ToolFeedbackUI.Instance?.ShowMessage("Partie sauvegardée. Bonne nuit !");
     }

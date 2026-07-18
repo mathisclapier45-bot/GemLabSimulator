@@ -38,6 +38,7 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.012
   isQuartzFamily: 0
+  isPolycrystalline: 1
   isThermallyConductiveLikeDiamond: 0
   isElectricallyConductive: 0
   absorptionSpectrum: "Raie d'absorption fine dans le bleu-violet li\xE9e \xE0 un
@@ -54,6 +55,8 @@ MonoBehaviour:
   baseValue: 120
   forcedSynthetic: 0
   forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
   origins:
   - name: Myanmar
     rarityWeight: 60

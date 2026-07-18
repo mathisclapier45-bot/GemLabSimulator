@@ -37,6 +37,7 @@ MonoBehaviour:
   opticalCharacterClass: 2
   birefringence: 0.029
   isQuartzFamily: 0
+  isPolycrystalline: 0
   isThermallyConductiveLikeDiamond: 0
   isElectricallyConductive: 0
   absorptionSpectrum: Bandes d'absorption du chrome.
@@ -52,6 +53,8 @@ MonoBehaviour:
   baseValue: 30
   forcedSynthetic: 0
   forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
   origins:
   - name: "Russie (Sib\xE9rie)"
     rarityWeight: 50

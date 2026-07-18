@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Painite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Painite
+  description: "Borate de zirconium et d'aluminium longtemps consid\xE9r\xE9 comme
+    le min\xE9ral gemme le plus rare au monde, ne se trouvant quasiment que dans
+    une seule r\xE9gion de Birmanie."
+  icon: {fileID: 21300000, guid: 7124918772b594be1a69350c39071122, type: 3}
+  roughIcon: {fileID: 21300000, guid: 6afc66f400cd441c39543a08cac9073c, type: 3}
+  refractiveIndex: 1.8
+  density: 4.01
+  hardness: 8
+  lengthMm: 5
+  widthMm: 4
+  depthMm: 3
+  weightCarats: 0.6
+  luster: Vitreux
+  color: "Brun-rouge \xE0 orang\xE9"
+  shape: Ovale
+  cutStyle: Mixte
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Nuances marqu\xE9es de brun-rouge, orang\xE9 et brun fonc\xE9
+    selon l'axe d'observation."
+  fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
+  fluorescenceShortWave: Inerte sous UV courte onde.
+  opticalCharacter: "Uniaxe (bir\xE9fringent, r\xE9seau hexagonal)."
+  opticalCharacterClass: 1
+  birefringence: 0.022
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Raies d'absorption marqu\xE9es dans le rouge et le bleu, li\xE9es
+    \xE0 des traces de fer et de chrome."
+  spectrumLines:
+  - wavelengthNm: 445
+    widthNm: 6
+  - wavelengthNm: 635
+    widthNm: 6
+  inclusions: "Cristaux min\xE9raux inclus rarement observ\xE9s ; fines stries de
+    croissance parfois visibles."
+  interferenceFigure: "Figure uniaxe centr\xE9e observable en lumi\xE8re convergente."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re au filtre Chelsea."
+  magnetism: "Aucune r\xE9action \xE0 l'aimant."
+  baseValue: 1500
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 1
+  tunnelMinPrice: 10000
+  origins:
+  - name: Birmanie (Mogok)
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 

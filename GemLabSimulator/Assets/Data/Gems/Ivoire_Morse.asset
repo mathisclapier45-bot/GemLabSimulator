@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Ivoire_Morse
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Ivoire de Morse
+  description: "Dentine provenant des d\xE9fenses de morse, reconnaissable \xE0 son
+    c\u0153ur granuleux caract\xE9ristique en coupe transversale. Sa vente est tr\xE8s
+    r\xE9glement\xE9e et interdite dans de nombreux pays pour prot\xE9ger les populations
+    arctiques."
+  icon: {fileID: 21300000, guid: b60b346ef6548420aa580f5ae9b50f63, type: 3}
+  roughIcon: {fileID: 21300000, guid: 99b42c3f66102428392f63e6db32f1d6, type: 3}
+  refractiveIndex: 1.54
+  density: 1.95
+  hardness: 2.9
+  lengthMm: 25
+  widthMm: 16
+  depthMm: 9
+  weightCarats: 10
+  luster: Cireux
+  color: "Blanc ivoire \xE0 cr\xE8me"
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: "Opaque \xE0 translucide"
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Fluorescence blanc-bleut\xE9 sous UV longue onde."
+  fluorescenceShortWave: Fluorescence faible sous UV courte onde.
+  opticalCharacter: "Uniaxe (bir\xE9fringent), lecture diffuse typique d'un agr\xE9gat
+    organique."
+  opticalCharacterClass: 1
+  birefringence: 0.003
+  isQuartzFamily: 0
+  isPolycrystalline: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "C\u0153ur central granuleux et marbr\xE9, nettement distinct de la
+    couche externe dense, visible en coupe transversale."
+  interferenceFigure: "Figure diffuse, non exploitable (agr\xE9gat organique)."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action \xE0 l'aimant."
+  baseValue: 480
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 1
+  tunnelMinPrice: 2000
+  origins:
+  - name: Arctique (Alaska, Canada)
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 

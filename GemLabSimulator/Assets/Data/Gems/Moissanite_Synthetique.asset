@@ -38,6 +38,7 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.043
   isQuartzFamily: 0
+  isPolycrystalline: 0
   isThermallyConductiveLikeDiamond: 1
   isElectricallyConductive: 1
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
@@ -49,6 +50,8 @@ MonoBehaviour:
   baseValue: 10
   forcedSynthetic: 0
   forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
   origins:
   - name: Fabrication industrielle
     rarityWeight: 100

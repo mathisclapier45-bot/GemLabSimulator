@@ -12,6 +12,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private RectTransform slotsContainer;
     [SerializeField] private GemDropZone dropZone;
     [SerializeField] private Sprite mysteryIcon;
+    [SerializeField] private Text clockText;
 
     private void Start()
     {
@@ -31,6 +32,12 @@ public class InventoryUI : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
             panel.SetActive(!panel.activeSelf);
+
+        if (panel.activeSelf && clockText != null)
+        {
+            var day = GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1;
+            clockText.text = $"Jour {day} — {DayNightOverlay.GetClockLabel()}";
+        }
     }
 
     private void Refresh()

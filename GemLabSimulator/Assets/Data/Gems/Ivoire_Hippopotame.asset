@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Ivoire_Hippopotame
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Ivoire d'Hippopotame
+  description: "Dentine issue des canines et incisives d'hippopotame, r\xE9put\xE9e
+    pour sa duret\xE9 et son grain tr\xE8s fin, autrefois utilis\xE9e pour la fabrication
+    de dentiers avant l'apparition des mat\xE9riaux synth\xE9tiques. Comme l'ivoire
+    d'\xE9l\xE9phant, son commerce international est interdit par la CITES."
+  icon: {fileID: 21300000, guid: 23b9c9e758bd845229419184ae31a530, type: 3}
+  roughIcon: {fileID: 21300000, guid: de0f411057aa84f2696b0dfbb7b0a3af, type: 3}
+  refractiveIndex: 1.54
+  density: 1.9
+  hardness: 3
+  lengthMm: 22
+  widthMm: 14
+  depthMm: 8
+  weightCarats: 8
+  luster: "Cireux, prenant un poli particuli\xE8rement fin"
+  color: "Blanc pur \xE0 cr\xE8me"
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: Translucide
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Fluorescence blanc-bleut\xE9 sous UV longue onde."
+  fluorescenceShortWave: Fluorescence faible sous UV courte onde.
+  opticalCharacter: "Uniaxe (bir\xE9fringent), lecture diffuse typique d'un agr\xE9gat
+    organique."
+  opticalCharacterClass: 1
+  birefringence: 0.003
+  isQuartzFamily: 0
+  isPolycrystalline: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Grain exceptionnellement fin et homog\xE8ne, sans structure entrecrois\xE9e
+    marqu\xE9e."
+  interferenceFigure: "Figure diffuse, non exploitable (agr\xE9gat organique)."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action \xE0 l'aimant."
+  baseValue: 500
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 1
+  tunnelMinPrice: 2000
+  origins:
+  - name: Afrique (zones humides)
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 

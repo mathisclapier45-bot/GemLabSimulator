@@ -37,6 +37,7 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.008
   isQuartzFamily: 0
+  isPolycrystalline: 0
   isThermallyConductiveLikeDiamond: 0
   isElectricallyConductive: 0
   absorptionSpectrum: Raies d'absorption du chrome visibles dans le rouge.
@@ -57,6 +58,8 @@ MonoBehaviour:
   baseValue: 4
   forcedSynthetic: 1
   forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
   origins:
   - name: Fabrication industrielle (fusion de poudre)
     rarityWeight: 100

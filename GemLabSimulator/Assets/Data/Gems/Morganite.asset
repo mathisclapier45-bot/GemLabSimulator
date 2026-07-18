@@ -36,6 +36,7 @@ MonoBehaviour:
   opticalCharacterClass: 1
   birefringence: 0.008
   isQuartzFamily: 0
+  isPolycrystalline: 0
   isThermallyConductiveLikeDiamond: 0
   isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
@@ -47,6 +48,8 @@ MonoBehaviour:
   baseValue: 40
   forcedSynthetic: 0
   forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
   origins:
   - name: "Br\xE9sil"
     rarityWeight: 35

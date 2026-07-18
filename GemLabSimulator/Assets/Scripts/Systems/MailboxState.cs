@@ -47,7 +47,12 @@ public class MailboxState : MonoBehaviour
         var changed = false;
         while (pendingLetters.Count < MaxPendingLetters)
         {
-            var definition = database.allGems[UnityEngine.Random.Range(0, database.allGems.Count)];
+            GemDefinition definition;
+            do
+            {
+                definition = database.allGems[UnityEngine.Random.Range(0, database.allGems.Count)];
+            } while (definition.isTunnelExclusive);
+
             pendingLetters.Add(new GemInstance(definition));
             changed = true;
         }

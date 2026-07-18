@@ -37,6 +37,7 @@ MonoBehaviour:
   opticalCharacterClass: 3
   birefringence: 0
   isQuartzFamily: 0
+  isPolycrystalline: 0
   isThermallyConductiveLikeDiamond: 0
   isElectricallyConductive: 0
   absorptionSpectrum: "Non applicable (min\xE9ral opaque)."
@@ -49,6 +50,8 @@ MonoBehaviour:
   baseValue: 10
   forcedSynthetic: 0
   forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
   origins:
   - name: Angleterre
     rarityWeight: 30
