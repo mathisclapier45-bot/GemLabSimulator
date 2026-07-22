@@ -13,11 +13,13 @@ public class PlayerController : MonoBehaviour
     private enum FacingDirection { Down, Up, Left, Right }
 
     [SerializeField] private float moveSpeed = 4f;
+    [SerializeField] private float townSpeedMultiplier = 1.6f;
     private const float FrameDuration = 0.12f;
 
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private SpriteRenderer spriteRenderer;
+    private float currentMoveSpeed;
 
     private Sprite[] downFrames;
     private Sprite[] upFrames;
@@ -57,6 +59,12 @@ public class PlayerController : MonoBehaviour
         rightIdle = Resources.Load<Sprite>("PlayerIdle/Right");
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+        UpdateMoveSpeedForScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void UpdateMoveSpeedForScene(string sceneName)
+    {
+        currentMoveSpeed = sceneName == "Town" ? moveSpeed * townSpeedMultiplier : moveSpeed;
     }
 
     private static Sprite[] LoadWalkFrames(string direction)
@@ -95,6 +103,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        UpdateMoveSpeedForScene(scene.name);
+
         var spawnName = string.IsNullOrEmpty(PendingSpawnPointName) ? "SpawnPoint" : PendingSpawnPointName;
         var spawn = GameObject.Find(spawnName) ?? GameObject.Find("SpawnPoint");
         if (spawn != null) transform.position = spawn.transform.position;
@@ -134,10 +144,11 @@ public class PlayerController : MonoBehaviour
                 ? (moveInput.x > 0 ? FacingDirection.Right : FacingDirection.Left)
                 : (moveInput.y > 0 ? FacingDirection.Up : FacingDirection.Down);
 
+            var frameDuration = FrameDuration * (moveSpeed / currentMoveSpeed);
             frameTimer += Time.deltaTime;
-            if (frameTimer >= FrameDuration)
+            if (frameTimer >= frameDuration)
             {
-                frameTimer -= FrameDuration;
+                frameTimer -= frameDuration;
                 frameIndex = (frameIndex + 1) % CurrentFrames().Length;
             }
         }
@@ -159,6 +170,6 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + moveInput * currentMoveSpeed * Time.fixedDeltaTime);
     }
 }

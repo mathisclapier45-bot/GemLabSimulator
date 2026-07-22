@@ -127,6 +127,7 @@ public class ReportUIController : MonoBehaviour
             resultText.text = $"Rapport validé par le directeur ! Identifiée comme {gem.displayName}. " +
                                "Renvoyez-la à son client depuis la boîte aux lettres pour être payé.";
             gemInstance.MarkIdentified();
+            ReputationState.Instance?.AddPoint();
 
             var isNewDiscovery = GemCodex.Instance != null && !GemCodex.Instance.IsDiscovered(gem.name);
             GemCodex.Instance?.MarkDiscovered(gem.name);

@@ -58,6 +58,7 @@ public static class SaveSystem
             money = PlayerWallet.Instance.Money,
             currentDay = GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1,
             sceneName = SceneManager.GetActiveScene().name,
+            reputationPoints = ReputationState.Instance != null ? ReputationState.Instance.Points : 0,
         };
 
         if (PlayerController.Instance != null)
@@ -99,6 +100,9 @@ public static class SaveSystem
 
         if (GemCodex.Instance != null)
             GemCodex.Instance.LoadDiscovered(data.discoveredSpecies);
+
+        if (ReputationState.Instance != null)
+            ReputationState.Instance.SetPoints(data.reputationPoints);
 
         if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)
             SceneManager.LoadScene(data.sceneName);

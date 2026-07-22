@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Laboratoire.unity
     guid: e813e661c67054888a8fc8a23d756d5d
   - enabled: 1
+    path: Assets/Scenes/Home.unity
+    guid: 36909d23915df4366b99428440e99db5
+  - enabled: 1
     path: Assets/Scenes/Manoir.unity
     guid: bd5305b0f3285407f8fb0ba30834fdc8
   - enabled: 1
@@ -24,12 +27,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MarcheBrutes.unity
     guid: 273ebd537889c4d7d93743d7e783a22c
   - enabled: 1
-    path: Assets/Scenes/Town.unity
-    guid: 436994916875340dba60314ffa83766d
-  - enabled: 1
     path: Assets/Scenes/Tunnel.unity
     guid: 5d09c9470828046c6981ab066e7646f1
   - enabled: 1
-    path: Assets/Scenes/Home.unity
-    guid: 36909d23915df4366b99428440e99db5
+    path: Assets/Scenes/Town.unity
+    guid: 436994916875340dba60314ffa83766d
   m_configObjects: {}

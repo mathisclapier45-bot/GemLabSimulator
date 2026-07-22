@@ -23,10 +23,10 @@ public static class SceneBootstrap
     private const int DoorGapY1 = -1;
     private const int DoorGapY2 = 0;
 
-    private const int TownMinX = -20;
-    private const int TownMaxX = 20;
-    private const int TownMinY = -14;
-    private const int TownMaxY = 14;
+    private const int TownMinX = -70;
+    private const int TownMaxX = 70;
+    private const int TownMinY = -60;
+    private const int TownMaxY = 45;
 
     [MenuItem("GemLab/Setup Main Menu Scene")]
     public static void CreateMainMenuScene()
@@ -207,6 +207,7 @@ public static class SceneBootstrap
         player.AddComponent<RoughMarketState>();
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
+        player.AddComponent<ReputationState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -276,8 +277,8 @@ public static class SceneBootstrap
 
         var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
         pixelPerfect.assetsPPU = PixelsPerUnit;
-        pixelPerfect.refResolutionX = 576;
-        pixelPerfect.refResolutionY = 324;
+        pixelPerfect.refResolutionX = 896;
+        pixelPerfect.refResolutionY = 504;
         pixelPerfect.upscaleRT = true;
         pixelPerfect.pixelSnapping = true;
         pixelPerfect.cropFrameX = true;
@@ -317,13 +318,12 @@ public static class SceneBootstrap
                     groundTilemap.SetTile(new Vector3Int(x, y, 0), pathTile);
         }
 
-        PaintPathRect(-18, 18, 4, 5);
-        PaintPathRect(-14, 14, -3, -2);
-        PaintPathRect(-1, 0, -10, 5);
-        PaintPathRect(-17, -16, 3, 5);
+        PaintPathRect(-65, 65, 24, 27);
+        PaintPathRect(-55, 55, -19, -16);
+        PaintPathRect(-1, 1, -48, 24);
 
         var spawnGO = new GameObject("SpawnPoint");
-        spawnGO.transform.position = new Vector3(-16, 4, 0f);
+        spawnGO.transform.position = new Vector3(-55, 25, 0f);
 
         var playerSprite = GetPlayerSprite();
 
@@ -355,6 +355,7 @@ public static class SceneBootstrap
         player.AddComponent<RoughMarketState>();
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
+        player.AddComponent<ReputationState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -362,72 +363,60 @@ public static class SceneBootstrap
 
         CreateMusicManager();
 
-        CreateBuilding("Maison & Bureau de Gemmologie", new Vector3(-16, 8, 0f),
-            new Color(0.65f, 0.22f, 0.18f), new Color(0.85f, 0.78f, 0.62f), "Home", true);
-        CreateBuilding("Laboratoire de Gemmologie", new Vector3(-8, 8, 0f),
-            new Color(0.30f, 0.45f, 0.55f), new Color(0.75f, 0.78f, 0.80f), "Laboratoire", true);
-        CreateBuilding("Atelier Lapidaire", new Vector3(0, 8, 0f),
-            new Color(0.45f, 0.40f, 0.35f), new Color(0.65f, 0.60f, 0.55f), "", false);
-        CreateBuilding("Musee", new Vector3(8, 8, 0f),
-            new Color(0.75f, 0.72f, 0.60f), new Color(0.92f, 0.90f, 0.85f), "Musee", true);
-        CreateBuilding("Quartier des Diamantaires", new Vector3(16, 8, 0f),
-            new Color(0.25f, 0.30f, 0.55f), new Color(0.70f, 0.75f, 0.90f), "", false);
-        CreateBuilding("Marche aux Pierres", new Vector3(-12, -6, 0f),
-            new Color(0.65f, 0.42f, 0.18f), new Color(0.88f, 0.70f, 0.45f), "Marche", true);
-        CreateBuilding("Ecole", new Vector3(-4, -6, 0f),
-            new Color(0.30f, 0.45f, 0.65f), new Color(0.90f, 0.85f, 0.70f), "", false);
-        CreateBuilding("Marche aux Brutes", new Vector3(4, -6, 0f),
-            new Color(0.50f, 0.35f, 0.22f), new Color(0.75f, 0.65f, 0.50f), "MarcheBrutes", true);
+        CreateRealBuilding("Maison & Bureau de Gemmologie", new Vector3(-55, 28, 0f), HouseStyle.Chalet, "Home", true);
+        CreateRealBuilding("Laboratoire de Gemmologie", new Vector3(-30, 28, 0f), HouseStyle.Modern, "Laboratoire", true);
+        CreateRealBuilding("Atelier Lapidaire", new Vector3(-5, 28, 0f), HouseStyle.Chalet, "", false);
+        CreateRealBuilding("Musee", new Vector3(20, 28, 0f), HouseStyle.Modern, "Musee", true);
+        CreateRealBuilding("Quartier des Diamantaires", new Vector3(45, 28, 0f), HouseStyle.Chalet, "", false);
 
-        CreateBuilding("Le Manoir", new Vector3(12, -6, 0f),
-            new Color(0.35f, 0.18f, 0.42f), new Color(0.70f, 0.60f, 0.75f), "Manoir", true);
-        CreateTunnelEntrance(new Vector3(0, -11, 0f));
+        CreateRealBuilding("Marche aux Pierres", new Vector3(-45, -15, 0f), HouseStyle.Modern, "Marche", true);
+        CreateRealBuilding("Ecole", new Vector3(-15, -15, 0f), HouseStyle.Chalet, "", false);
+        CreateRealBuilding("Marche aux Brutes", new Vector3(15, -15, 0f), HouseStyle.Modern, "MarcheBrutes", true);
+        CreateRealBuilding("Le Manoir", new Vector3(45, -15, 0f), HouseStyle.Chalet, "Manoir", true);
 
-        CreateNamedSpawnPoint("SpawnPoint_Home", new Vector3(-16, 5, 0f));
-        CreateNamedSpawnPoint("SpawnPoint_Laboratoire", new Vector3(-8, 5, 0f));
-        CreateNamedSpawnPoint("SpawnPoint_Musee", new Vector3(8, 5, 0f));
-        CreateNamedSpawnPoint("SpawnPoint_Marche", new Vector3(-12, -4, 0f));
-        CreateNamedSpawnPoint("SpawnPoint_MarcheBrutes", new Vector3(4, -4, 0f));
-        CreateNamedSpawnPoint("SpawnPoint_Manoir", new Vector3(12, -4, 0f));
-        CreateNamedSpawnPoint("SpawnPoint_Tunnel", new Vector3(0, -9, 0f));
+        CreateTunnelEntrance(new Vector3(0, -50, 0f));
+
+        CreateNamedSpawnPoint("SpawnPoint_Home", new Vector3(-55, 26, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Laboratoire", new Vector3(-30, 26, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Musee", new Vector3(20, 26, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Marche", new Vector3(-45, -17, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_MarcheBrutes", new Vector3(15, -17, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Manoir", new Vector3(45, -17, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Tunnel", new Vector3(0, -47, 0f));
 
         var bushVariant = 0;
-        foreach (var pos in new[]
-                 {
-                     new Vector3(-19, 11, 0f), new Vector3(-12, 11, 0f), new Vector3(-4, 11, 0f),
-                     new Vector3(4, 11, 0f), new Vector3(12, 11, 0f), new Vector3(19, 11, 0f),
-                     new Vector3(-16, -9, 0f), new Vector3(-8, -9, 0f), new Vector3(8, -9, 0f), new Vector3(16, -9, 0f),
-                     new Vector3(-19, 9, 0f), new Vector3(19, 9, 0f), new Vector3(-19, -9, 0f), new Vector3(19, -9, 0f),
-                 })
+        for (var x = TownMinX + 5; x <= TownMaxX - 5; x += 15)
         {
-            CreateTree(pos, bushVariant);
+            CreateTree(new Vector3(x, TownMaxY - 4, 0f), bushVariant % 2);
+            bushVariant++;
+            CreateTree(new Vector3(x, TownMinY + 4, 0f), bushVariant % 2);
+            bushVariant++;
+        }
+        for (var y = TownMinY + 15; y <= TownMaxY - 15; y += 15)
+        {
+            CreateTree(new Vector3(TownMinX + 4, y, 0f), bushVariant % 2);
+            bushVariant++;
+            CreateTree(new Vector3(TownMaxX - 4, y, 0f), bushVariant % 2);
             bushVariant++;
         }
 
-        foreach (var pos in new[]
-                 {
-                     new Vector3(-18, 6, 0f), new Vector3(-17, 6, 0f), new Vector3(-16, 6, 0f),
-                     new Vector3(-15, 6, 0f), new Vector3(-14, 6, 0f),
-                 })
-            CreateFence(pos);
+        for (var i = 0; i < 5; i++)
+            CreateFence(new Vector3(-59 + i, 22, 0f));
 
-        foreach (var pos in new[]
-                 {
-                     new Vector3(-12, 6, 0f), new Vector3(-4, 6, 0f), new Vector3(4, 6, 0f), new Vector3(12, 6, 0f),
-                     new Vector3(-8, -4, 0f), new Vector3(8, -4, 0f),
-                 })
-            CreateLamppost(pos);
+        var buildingStreetSpots = new[]
+        {
+            new Vector3(-55, 26, 0f), new Vector3(-30, 26, 0f), new Vector3(-5, 26, 0f),
+            new Vector3(20, 26, 0f), new Vector3(45, 26, 0f),
+            new Vector3(-45, -17, 0f), new Vector3(-15, -17, 0f), new Vector3(15, -17, 0f), new Vector3(45, -17, 0f),
+        };
+
+        foreach (var pos in buildingStreetSpots)
+            CreateLamppost(pos + new Vector3(4.5f, 0f, 0f));
 
         var flowerVariant = 0;
-        foreach (var pos in new[]
-                 {
-                     new Vector3(-17.5f, 6.5f, 0f), new Vector3(-9.5f, 6.5f, 0f), new Vector3(2.5f, 6.5f, 0f),
-                     new Vector3(10.5f, 6.5f, 0f), new Vector3(17.5f, 6.5f, 0f),
-                     new Vector3(-13.5f, -4.5f, 0f), new Vector3(-5.5f, -4.5f, 0f),
-                     new Vector3(5.5f, -4.5f, 0f), new Vector3(13.5f, -4.5f, 0f),
-                 })
+        foreach (var pos in buildingStreetSpots)
         {
-            CreateFlowerCluster(pos, flowerVariant);
+            CreateFlowerCluster(pos + new Vector3(-4.5f, 0.3f, 0f), flowerVariant % 3);
             flowerVariant++;
         }
 
@@ -574,6 +563,7 @@ public static class SceneBootstrap
         player.AddComponent<RoughMarketState>();
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
+        player.AddComponent<ReputationState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -684,6 +674,7 @@ public static class SceneBootstrap
         player.AddComponent<RoughMarketState>();
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
+        player.AddComponent<ReputationState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -791,6 +782,7 @@ public static class SceneBootstrap
         player.AddComponent<RoughMarketState>();
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
+        player.AddComponent<ReputationState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -898,6 +890,7 @@ public static class SceneBootstrap
         player.AddComponent<RoughMarketState>();
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
+        player.AddComponent<ReputationState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -1008,6 +1001,7 @@ public static class SceneBootstrap
         player.AddComponent<RoughMarketState>();
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
+        player.AddComponent<ReputationState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -1112,6 +1106,7 @@ public static class SceneBootstrap
         player.AddComponent<RoughMarketState>();
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
+        player.AddComponent<ReputationState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -1278,31 +1273,41 @@ public static class SceneBootstrap
         }
     }
 
-    private static void CreateBuilding(string label, Vector3 position, Color roof, Color wall, string targetScene, bool implemented)
+    private enum HouseStyle { Chalet, Modern }
+
+    private static void CreateRealBuilding(string label, Vector3 position, HouseStyle style, string targetScene, bool implemented)
     {
-        var key = label.Replace(" ", "").Replace("&", "").ToLowerInvariant();
-        var sprite = GetBuildingSprite(key, roof, wall);
+        var isChalet = style == HouseStyle.Chalet;
+        var spriteFile = isChalet ? "house_chalet.png" : "house_modern.png";
+        var doorOffset = isChalet ? new Vector2(-6.5f, 6.5f) : new Vector2(-1.6f, 1.8f);
+        var doorSize = isChalet ? new Vector2(3.5f, 3.5f) : new Vector2(3.5f, 3f);
+        var labelHeight = isChalet ? 16.7f : 15.7f;
+
+        var sprite = LoadPackSpriteGrounded($"Assets/Art/Sprites/{spriteFile}");
+        if (sprite == null) return;
 
         var go = new GameObject(label);
         var sr = go.AddComponent<SpriteRenderer>();
         sr.sprite = sprite;
         sr.sortingOrder = 4;
         go.transform.position = position;
-        go.transform.localScale = new Vector3(2f, 2f, 1f);
 
         var col = go.AddComponent<BoxCollider2D>();
         col.isTrigger = true;
-        col.size = new Vector2(1f, 0.6f);
-        col.offset = new Vector2(0f, -0.5f);
+        col.size = doorSize;
+        col.offset = doorOffset;
 
         var door = go.AddComponent<DoorTrigger>();
         var so = new SerializedObject(door);
-        so.FindProperty("sceneName").stringValue = targetScene;
-        so.FindProperty("implemented").boolValue = implemented;
-        so.FindProperty("lockedMessage").stringValue = $"{label} : ce lieu n'est pas encore accessible.";
+        var sceneNameProp = so.FindProperty("sceneName");
+        var implementedProp = so.FindProperty("implemented");
+        var lockedProp = so.FindProperty("lockedMessage");
+        if (sceneNameProp != null) sceneNameProp.stringValue = targetScene;
+        if (implementedProp != null) implementedProp.boolValue = implemented;
+        if (lockedProp != null) lockedProp.stringValue = $"{label} : ce lieu n'est pas encore accessible.";
         so.ApplyModifiedProperties();
 
-        CreateBuildingLabel(label, position + new Vector3(0, 1.3f, 0));
+        CreateBuildingLabel(label, position + new Vector3(0, labelHeight, 0));
     }
 
     private static void CreateTunnelEntrance(Vector3 position)
@@ -1694,6 +1699,8 @@ public static class SceneBootstrap
             new Vector2(20, -120), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
         CreateUIText("QuestHint", canvasGO.transform, "J : Quêtes",
             new Vector2(20, -142), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
+        CreateUIText("MapHint", canvasGO.transform, "C : Carte",
+            new Vector2(20, -164), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
 
         var feedbackGO = CreateUIText("ToolFeedback", canvasGO.transform, "",
             new Vector2(0, 20), new Vector2(760, 90), 16, TextAnchor.LowerCenter, new Color(0.95f, 0.95f, 0.8f));
@@ -1717,6 +1724,16 @@ public static class SceneBootstrap
         CreateToolInfoUI(canvasGO.transform);
         CreateTunnelUI(canvasGO.transform);
         CreateSceneFader();
+        CreateReputationUI(canvasGO.transform);
+
+        try
+        {
+            CreateTownMapUI(canvasGO.transform);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"CreateTownMapUI failed: {e}");
+        }
 
         if (!includeExaminationUI) return;
 
@@ -2187,6 +2204,144 @@ public static class SceneBootstrap
         var fadeImageProp = so.FindProperty("fadeImage");
         if (fadeImageProp != null) fadeImageProp.objectReferenceValue = image;
         so.ApplyModifiedProperties();
+    }
+
+    private static void CreateReputationUI(Transform canvasTransform)
+    {
+        var containerGO = new GameObject("ReputationGauge", typeof(RectTransform));
+        containerGO.transform.SetParent(canvasTransform, false);
+        var containerRect = containerGO.GetComponent<RectTransform>();
+        containerRect.anchorMin = new Vector2(1f, 1f);
+        containerRect.anchorMax = new Vector2(1f, 1f);
+        containerRect.pivot = new Vector2(1f, 1f);
+        containerRect.anchoredPosition = new Vector2(-20, -20);
+        containerRect.sizeDelta = new Vector2(160, 36);
+
+        var levelGO = CreateUIText("LevelText", containerGO.transform, "Niveau 1",
+            Vector2.zero, new Vector2(160, 20), 14, TextAnchor.UpperRight, Color.white);
+        var levelRect = levelGO.GetComponent<RectTransform>();
+        levelRect.anchorMin = new Vector2(1f, 1f);
+        levelRect.anchorMax = new Vector2(1f, 1f);
+        levelRect.pivot = new Vector2(1f, 1f);
+        levelRect.anchoredPosition = Vector2.zero;
+
+        var barBgGO = new GameObject("BarBackground", typeof(RectTransform), typeof(Image));
+        barBgGO.transform.SetParent(containerGO.transform, false);
+        var barBgRect = barBgGO.GetComponent<RectTransform>();
+        barBgRect.anchorMin = new Vector2(1f, 1f);
+        barBgRect.anchorMax = new Vector2(1f, 1f);
+        barBgRect.pivot = new Vector2(1f, 1f);
+        barBgRect.anchoredPosition = new Vector2(0, -22);
+        barBgRect.sizeDelta = new Vector2(160, 14);
+        barBgGO.GetComponent<Image>().color = new Color(0.15f, 0.15f, 0.18f, 0.9f);
+
+        var barFillGO = new GameObject("BarFill", typeof(RectTransform), typeof(Image));
+        barFillGO.transform.SetParent(barBgGO.transform, false);
+        var barFillRect = barFillGO.GetComponent<RectTransform>();
+        barFillRect.anchorMin = Vector2.zero;
+        barFillRect.anchorMax = Vector2.one;
+        barFillRect.sizeDelta = Vector2.zero;
+        barFillRect.anchoredPosition = Vector2.zero;
+        var barFillImage = barFillGO.GetComponent<Image>();
+        barFillImage.color = new Color(0.55f, 0.35f, 0.85f, 1f);
+        barFillImage.type = Image.Type.Filled;
+        barFillImage.fillMethod = Image.FillMethod.Horizontal;
+        barFillImage.fillOrigin = (int)Image.OriginHorizontal.Left;
+        barFillImage.fillAmount = 0f;
+
+        var reputationUI = containerGO.AddComponent<ReputationUI>();
+        var reputationSo = new SerializedObject(reputationUI);
+        var levelProp = reputationSo.FindProperty("levelText");
+        var fillProp = reputationSo.FindProperty("fillImage");
+        if (levelProp != null) levelProp.objectReferenceValue = levelGO.GetComponent<Text>();
+        if (fillProp != null) fillProp.objectReferenceValue = barFillImage;
+        reputationSo.ApplyModifiedProperties();
+    }
+
+    private static void CreateTownMapUI(Transform canvasTransform)
+    {
+        var panelGO = new GameObject("TownMapPanel", typeof(RectTransform), typeof(Image));
+        panelGO.transform.SetParent(canvasTransform, false);
+        var panelRect = panelGO.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(0.5f, 0.5f);
+        panelRect.anchorMax = new Vector2(0.5f, 0.5f);
+        panelRect.pivot = new Vector2(0.5f, 0.5f);
+        panelRect.sizeDelta = new Vector2(500, 420);
+        panelRect.anchoredPosition = Vector2.zero;
+        panelGO.GetComponent<Image>().color = new Color(0.08f, 0.09f, 0.07f, 0.97f);
+        panelGO.SetActive(false);
+
+        CreateUIText("Title", panelGO.transform, "Carte de la Ville",
+            new Vector2(0, -14), new Vector2(460, 26), 18, TextAnchor.UpperCenter, Color.white);
+
+        var mapAreaGO = new GameObject("MapArea", typeof(RectTransform), typeof(Image));
+        mapAreaGO.transform.SetParent(panelGO.transform, false);
+        var mapAreaRect = mapAreaGO.GetComponent<RectTransform>();
+        mapAreaRect.anchorMin = new Vector2(0.5f, 0.5f);
+        mapAreaRect.anchorMax = new Vector2(0.5f, 0.5f);
+        mapAreaRect.pivot = new Vector2(0.5f, 0.5f);
+        mapAreaRect.sizeDelta = new Vector2(460, 330);
+        mapAreaRect.anchoredPosition = new Vector2(0, -20);
+        mapAreaGO.GetComponent<Image>().color = new Color(0.20f, 0.32f, 0.18f, 1f);
+
+        var buildings = new (string name, float x, float y)[]
+        {
+            ("Maison", -55, 28), ("Laboratoire", -30, 28), ("Atelier Lapidaire", -5, 28),
+            ("Musée", 20, 28), ("Quartier Diamantaires", 45, 28),
+            ("Marché Pierres", -45, -15), ("École", -15, -15),
+            ("Marché Brutes", 15, -15), ("Manoir", 45, -15),
+            ("Tunnel", 0, -50),
+        };
+
+        var mapWidth = mapAreaRect.sizeDelta.x;
+        var mapHeight = mapAreaRect.sizeDelta.y;
+
+        float MapX(float worldX) => Mathf.InverseLerp(TownMinX, TownMaxX, worldX) * mapWidth - mapWidth / 2f;
+        float MapY(float worldY) => Mathf.InverseLerp(TownMinY, TownMaxY, worldY) * mapHeight - mapHeight / 2f;
+
+        foreach (var b in buildings)
+        {
+            var markerGO = new GameObject($"Marker_{b.name}", typeof(RectTransform), typeof(Image));
+            markerGO.transform.SetParent(mapAreaGO.transform, false);
+            var markerRect = markerGO.GetComponent<RectTransform>();
+            markerRect.anchorMin = new Vector2(0.5f, 0.5f);
+            markerRect.anchorMax = new Vector2(0.5f, 0.5f);
+            markerRect.pivot = new Vector2(0.5f, 0.5f);
+            markerRect.sizeDelta = new Vector2(14, 14);
+            markerRect.anchoredPosition = new Vector2(MapX(b.x), MapY(b.y));
+            markerGO.GetComponent<Image>().color = new Color(0.75f, 0.55f, 0.25f, 1f);
+
+            var labelGO = CreateUIText($"Label_{b.name}", mapAreaGO.transform, b.name,
+                new Vector2(MapX(b.x), MapY(b.y) - 10), new Vector2(90, 16), 9, TextAnchor.UpperCenter, Color.white);
+            var labelRect = labelGO.GetComponent<RectTransform>();
+            labelRect.anchorMin = new Vector2(0.5f, 0.5f);
+            labelRect.anchorMax = new Vector2(0.5f, 0.5f);
+            labelRect.pivot = new Vector2(0.5f, 1f);
+            labelRect.anchoredPosition = new Vector2(MapX(b.x), MapY(b.y) - 10);
+        }
+
+        var playerMarkerGO = new GameObject("PlayerMarker", typeof(RectTransform), typeof(Image));
+        playerMarkerGO.transform.SetParent(mapAreaGO.transform, false);
+        var playerMarkerRect = playerMarkerGO.GetComponent<RectTransform>();
+        playerMarkerRect.anchorMin = new Vector2(0.5f, 0.5f);
+        playerMarkerRect.anchorMax = new Vector2(0.5f, 0.5f);
+        playerMarkerRect.pivot = new Vector2(0.5f, 0.5f);
+        playerMarkerRect.sizeDelta = new Vector2(10, 10);
+        playerMarkerGO.GetComponent<Image>().color = new Color(0.95f, 0.95f, 0.2f, 1f);
+
+        var closeButtonGO = CreateUIButton("CloseButton", panelGO.transform, "Fermer",
+            new Vector2(0, -395), new Vector2(160, 30));
+        closeButtonGO.AddComponent<CloseTownMapButton>();
+
+        var mapUI = canvasTransform.gameObject.AddComponent<TownMapUI>();
+        var mapSo = new SerializedObject(mapUI);
+        var panelProp = mapSo.FindProperty("panel");
+        var mapAreaProp = mapSo.FindProperty("mapAreaRect");
+        var markerProp = mapSo.FindProperty("playerMarker");
+        if (panelProp != null) panelProp.objectReferenceValue = panelGO;
+        if (mapAreaProp != null) mapAreaProp.objectReferenceValue = mapAreaRect;
+        if (markerProp != null) markerProp.objectReferenceValue = playerMarkerRect;
+        mapSo.ApplyModifiedProperties();
     }
 
     private static void CreateQuestUI(Transform canvasTransform)
@@ -6360,19 +6515,6 @@ public static class SceneBootstrap
         return noise < 3 ? leafB : leafA;
     }
 
-    private static Sprite GetBuildingSprite(string key, Color roof, Color wall)
-    {
-        var palette = new Dictionary<char, Color>
-        {
-            { 'R', roof },
-            { 'W', wall },
-            { 'N', new Color(0.25f, 0.35f, 0.55f) },
-            { 'O', new Color(0.36f, 0.24f, 0.14f) },
-            { 'F', new Color(0.20f, 0.20f, 0.22f) },
-        };
-        return GetOrCreatePixelSprite($"building_{key}_pixel", BuildingPattern, palette);
-    }
-
     // ----- Sprite patterns (16x16 logical pixels, upscaled 2x) -----
 
     private static readonly string[] PlayerPattern =
@@ -6597,25 +6739,6 @@ public static class SceneBootstrap
         { 'B', new Color(0.23f, 0.23f, 0.23f) },
     };
 
-    private static readonly string[] BuildingPattern =
-    {
-        Row(16, '.'),
-        Row(7, '.', 2, 'R', 7, '.'),
-        Row(6, '.', 4, 'R', 6, '.'),
-        Row(5, '.', 6, 'R', 5, '.'),
-        Row(4, '.', 8, 'R', 4, '.'),
-        Row(3, '.', 10, 'R', 3, '.'),
-        Row(2, '.', 12, 'W', 2, '.'),
-        Row(2, '.', 12, 'W', 2, '.'),
-        Row(2, '.', 5, 'W', 2, 'N', 5, 'W', 2, '.'),
-        Row(2, '.', 5, 'W', 2, 'N', 5, 'W', 2, '.'),
-        Row(2, '.', 12, 'W', 2, '.'),
-        Row(2, '.', 4, 'W', 4, 'O', 4, 'W', 2, '.'),
-        Row(2, '.', 4, 'W', 4, 'O', 4, 'W', 2, '.'),
-        Row(2, '.', 4, 'W', 4, 'O', 4, 'W', 2, '.'),
-        Row(1, '.', 14, 'F', 1, '.'),
-        Row(16, '.'),
-    };
 
     private static readonly string[] BushSprites =
     {
