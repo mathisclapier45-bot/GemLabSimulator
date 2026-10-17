@@ -10,6 +10,9 @@ public class GemInstanceSaveData
     public bool isDonation;
     public bool isRough;
     public bool isIdentified;
+    public bool hasWindow;
+    public string cutShape;
+    public string cutStyle;
 
     public string originName;
     public float originValueMultiplier;
@@ -40,6 +43,13 @@ public class GemInstanceSaveData
 }
 
 [Serializable]
+public class LapidaryJobSaveData
+{
+    public GemInstanceSaveData gem;
+    public int readyDay;
+}
+
+[Serializable]
 public class SaveData
 {
     public string saveName = "";
@@ -52,4 +62,5 @@ public class SaveData
     public float playerX;
     public float playerY;
     public int reputationPoints;
+    public List<LapidaryJobSaveData> lapidaryJobs = new List<LapidaryJobSaveData>();
 }

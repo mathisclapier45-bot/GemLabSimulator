@@ -76,6 +76,9 @@ public static class SaveSystem
         if (GemCodex.Instance != null)
             data.discoveredSpecies = GemCodex.Instance.GetDiscoveredNames();
 
+        if (LapidaryState.Instance != null)
+            data.lapidaryJobs = LapidaryState.Instance.ToSaveData();
+
         File.WriteAllText(SavePath(ActiveSlot), JsonUtility.ToJson(data, true));
     }
 
@@ -104,11 +107,21 @@ public static class SaveSystem
         if (ReputationState.Instance != null)
             ReputationState.Instance.SetPoints(data.reputationPoints);
 
+        if (LapidaryState.Instance != null)
+            LapidaryState.Instance.LoadJobs(data.lapidaryJobs, RestoreGem);
+
         if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)
             SceneManager.LoadScene(data.sceneName);
 
         if (PlayerController.Instance != null)
             PlayerController.Instance.transform.position = new Vector3(data.playerX, data.playerY, 0f);
+    }
+
+    private static GemInstance RestoreGem(GemInstanceSaveData saved)
+    {
+        if (saved == null || GemDatabase.Instance == null) return null;
+        var definition = GemDatabase.Instance.FindByAssetName(saved.definitionName);
+        return definition != null ? GemInstance.FromSaveData(definition, saved) : null;
     }
 
     private static List<GemInstance> RestoreGems(List<GemInstanceSaveData> savedGems)

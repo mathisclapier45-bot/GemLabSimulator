@@ -10,6 +10,8 @@ public class GemDefinition : ScriptableObject
     [TextArea] public string description;
     public Sprite icon;
     public Sprite roughIcon;
+    public Color iconColor;
+    public Color iconFacetColor;
 
     [Header("Propriétés physiques")]
     public float refractiveIndex;

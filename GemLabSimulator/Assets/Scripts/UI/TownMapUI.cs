@@ -17,6 +17,7 @@ public class TownMapUI : MonoBehaviour
     {
         ("Home", -55f, 28f),
         ("Laboratoire", -30f, 28f),
+        ("AtelierLapidaire", -5f, 28f),
         ("Musee", 20f, 28f),
         ("Marche", -45f, -15f),
         ("MarcheBrutes", 15f, -15f),

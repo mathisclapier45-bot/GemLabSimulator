@@ -86,6 +86,11 @@ public class ExaminationTool : MonoBehaviour
                 RevealQualitative(gemInstance, "Spectre d'absorption", gem.absorptionSpectrum);
                 SpectrumUI.Instance?.Show(gem);
                 break;
+            case MeasurementType.Inclusions when gemInstance.IsRough && !gemInstance.HasWindow:
+                ToolFeedbackUI.Instance.ShowMessage(
+                    $"{toolName} — La surface brute diffuse la lumière : impossible de voir à l'intérieur. " +
+                    "Faites polir une fenêtre à l'atelier lapidaire.");
+                break;
             case MeasurementType.Inclusions:
                 RevealInclusions(gemInstance);
                 break;
@@ -162,7 +167,7 @@ public class ExaminationTool : MonoBehaviour
         gemInstance.RecordObservation(measurementType.ToString());
         ToolFeedbackUI.Instance.ShowMessage(
             $"{toolName} — Éclat : {gem.luster} | Couleur : {gem.color} ({gemInstance.SaturationGrade}) | " +
-            $"Transparence : {gem.transparency} | Forme : {gem.shape} | Style de taille : {gem.cutStyle}");
+            $"Transparence : {gem.transparency} | Forme : {gemInstance.ShapeName} | Style de taille : {gemInstance.CutStyleName}");
     }
 
     private void RevealWeight(GemInstance gemInstance, GemDefinition gem)

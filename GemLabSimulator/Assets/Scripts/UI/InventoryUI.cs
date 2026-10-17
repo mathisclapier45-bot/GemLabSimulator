@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
+    public static InventoryUI Instance { get; private set; }
+
     private const int Columns = 4;
     private const int Rows = 3;
     private const float SlotSize = 56f;
@@ -13,6 +15,16 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private GemDropZone dropZone;
     [SerializeField] private Sprite mysteryIcon;
     [SerializeField] private Text clockText;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    public void Open()
+    {
+        if (panel != null) panel.SetActive(true);
+    }
 
     private void Start()
     {

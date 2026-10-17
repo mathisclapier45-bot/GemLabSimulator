@@ -39,8 +39,8 @@ public class ReportUIController : MonoBehaviour
             measured.Add($"Éclat : {gem.luster}");
             measured.Add($"Couleur : {gem.color} ({gemInstance.SaturationGrade})");
             measured.Add($"Transparence : {gem.transparency}");
-            measured.Add($"Forme : {gem.shape}");
-            measured.Add($"Style de taille : {gem.cutStyle}");
+            measured.Add($"Forme : {gemInstance.ShapeName}");
+            measured.Add($"Style de taille : {gemInstance.CutStyleName}");
         }
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Dimensions.ToString()))
             measured.Add($"Dimensions : {gemInstance.LengthMm:F1} x {gemInstance.WidthMm:F1} x {gemInstance.DepthMm:F1} mm");

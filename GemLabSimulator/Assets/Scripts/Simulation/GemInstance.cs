@@ -33,7 +33,23 @@ public class GemInstance
 
     // Relative to the species' typical weight, clamped so icons stay legible within a fixed UI slot.
     public float SizeScale => Mathf.Clamp(CaratWeight / Mathf.Max(Definition.weightCarats, 0.01f), 0.6f, 1.15f);
-    public Sprite DisplaySprite => IsRough ? Definition.roughIcon : Definition.icon;
+    public bool HasWindow { get; private set; }
+    public string CutShape { get; private set; }
+    public string CutStyle { get; private set; }
+
+    // Once cut at the lapidary the chosen shape/style replaces the species default.
+    public string ShapeName => CutShape ?? Definition.shape;
+    public string CutStyleName => CutStyle ?? Definition.cutStyle;
+
+    public Sprite DisplaySprite
+    {
+        get
+        {
+            if (IsRough) return Definition.roughIcon;
+            if (CutShape != null) return GemIconFactory.Get(Definition, CutShape, CutStyle);
+            return Definition.icon;
+        }
+    }
 
     private readonly Dictionary<string, float> measuredValues = new Dictionary<string, float>();
     private readonly HashSet<string> observedProperties = new HashSet<string>();
@@ -113,6 +129,9 @@ public class GemInstance
             IsDonation = data.isDonation,
             IsRough = data.isRough,
             IsIdentified = data.isIdentified,
+            HasWindow = data.hasWindow,
+            CutShape = string.IsNullOrEmpty(data.cutShape) ? null : data.cutShape,
+            CutStyle = string.IsNullOrEmpty(data.cutStyle) ? null : data.cutStyle,
             Origin = new GemOrigin
             {
                 name = data.originName,
@@ -154,6 +173,9 @@ public class GemInstance
             isDonation = IsDonation,
             isRough = IsRough,
             isIdentified = IsIdentified,
+            hasWindow = HasWindow,
+            cutShape = CutShape,
+            cutStyle = CutStyle,
             originName = Origin.name,
             originValueMultiplier = Origin.valueMultiplier,
             originInclusionOverride = Origin.inclusionOverride,
@@ -183,9 +205,30 @@ public class GemInstance
         IsIdentified = true;
     }
 
+    // A polished window lets light into a rough stone so its inclusions and clarity can be observed.
+    public void OpenWindow()
+    {
+        HasWindow = true;
+    }
+
     public void MarkAsRough()
     {
         IsRough = true;
+    }
+
+    // Turns a rough stone into a cut one: weight and dimensions shrink, value is recomputed by the lapidary.
+    public void ApplyCut(string shape, string style, float newCaratWeight, int newFinalValue)
+    {
+        var ratio = Mathf.Max(newCaratWeight / Mathf.Max(CaratWeight, 0.001f), 0.01f);
+        var dimensionFactor = Mathf.Pow(ratio, 1f / 3f);
+        LengthMm *= dimensionFactor;
+        WidthMm *= dimensionFactor;
+        DepthMm *= dimensionFactor;
+        CaratWeight = newCaratWeight;
+        FinalValue = newFinalValue;
+        CutShape = shape;
+        CutStyle = style;
+        IsRough = false;
     }
 
     public void RecordMeasurement(string propertyKey, float value)

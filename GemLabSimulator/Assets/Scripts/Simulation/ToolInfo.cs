@@ -20,11 +20,12 @@ public static class ToolInfo
         { "Aimant", "Aimant très puissant permettant de tester la sensibilité magnétique de la gemme, liée à sa teneur en fer." },
         { "FTIR", "Spectroscopie infrarouge à transformée de Fourier, identifiant les liaisons moléculaires révélatrices de traitements (huile, résine, comblement de fractures)." },
         { "Raman", "Spectroscopie Raman identifiant la signature vibratoire exacte du réseau cristallin, permettant de distinguer une croissance naturelle d'une synthèse en laboratoire." },
-        { "UVVisNIR", "Spectrophotométrie UV-Visible-Proche Infrarouge, utilisée pour l'analyse des éléments traces et l'estimation de l'origine géographique probable." },
+        { "LAICPMS", "Spectrométrie de masse à plasma à couplage inductif avec ablation laser (LA-ICP-MS) : un laser vaporise une quantité microscopique de matière à la surface de la gemme, analysée pour mesurer précisément la concentration des éléments traces. C'est la méthode de référence en gemmologie pour déterminer l'origine géographique et détecter certains traitements comme la diffusion au béryllium." },
         { "MEB", "Microscope électronique à balayage révélant les structures de croissance microscopiques, permettant de distinguer une gemme naturelle d'une gemme synthétique." },
         { "TesteurThermique", "Sonde mesurant la conductivité thermique de la gemme. Le diamant conduit exceptionnellement bien la chaleur, ce qui permet de le distinguer rapidement de la plupart de ses imitations — à l'exception de la moissanite synthétique, qui conduit également très bien la chaleur." },
         { "TesteurElectrique", "Sonde mesurant la conductivité électrique de la gemme. Contrairement au diamant qui est un isolant électrique, la moissanite synthétique (carbure de silicium) est conductrice, ce qui permet de départager les deux lorsque le test thermique seul ne suffit pas." },
         { "DiamondView", "Instrument d'imagerie par fluorescence UV développé pour l'industrie diamantaire, révélant les motifs de croissance internes et distinguant un diamant naturel d'un diamant synthétique (HPHT ou CVD)." },
+        { "PolisseuseFenetre", "Machine de l'atelier lapidaire qui polit une petite facette plane (une « fenêtre ») sur une pierre brute. La surface naturelle diffuse la lumière ; à travers la fenêtre, on peut observer les inclusions et la clarté de l'intérieur au microscope." },
         { "DiamondSure", "Instrument de dépistage rapide analysant la transmission UV du diamant. Il classe chaque pierre en \"Pass\" (cohérent avec un diamant naturel courant) ou \"Refer\" (nécessite un examen complémentaire, par exemple au DiamondView)." },
     };
 

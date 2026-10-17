@@ -71,6 +71,7 @@ public class GemDragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         return $"{gem.Definition.displayName}  (N° {gem.DisplayId})\n" +
                $"Origine : {gem.Origin.name}\n" +
+               (gem.IsRough ? "Pierre brute\n" : $"Taille : {gem.ShapeName} — {gem.CutStyleName}\n") +
                $"Poids : {gem.CaratWeight:F2} ct\n" +
                $"Dimensions : {gem.LengthMm:F1} x {gem.WidthMm:F1} x {gem.DepthMm:F1} mm\n" +
                $"Pureté : {gem.ClarityGrade}\n" +

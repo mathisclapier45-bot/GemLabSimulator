@@ -208,6 +208,7 @@ public static class SceneBootstrap
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
+        player.AddComponent<LapidaryState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -297,6 +298,8 @@ public static class SceneBootstrap
         var grassTile = GetOrCreateTileFromSprite("grass_pack", LoadPackSprite(PackTerrains + "Grass_1_9.png"));
         var hedgeTile = GetOrCreateTile("hedge_pixel", HedgePixel);
         var pathTile = GetOrCreateTileFromSprite("path_pack", LoadPackSprite(PackTerrains + "Grass_1_21.png"));
+        var pathTileAlt = GetOrCreateTileFromSprite("path_pack_alt", LoadPackSprite(PackTerrains + "Grass_3_9.png"));
+        var sidewalkTile = GetOrCreateTileFromSprite("sidewalk_pack", LoadPackSprite(PackCityTerrains + "Sidewalk_1_9.png"));
 
         for (var x = TownMinX; x <= TownMaxX; x++)
         {
@@ -311,16 +314,22 @@ public static class SceneBootstrap
             }
         }
 
-        void PaintPathRect(int minX, int maxX, int minY, int maxY)
+        void PaintStreetRect(int minX, int maxX, int minY, int maxY, bool vertical)
         {
             for (var x = minX; x <= maxX; x++)
+            {
                 for (var y = minY; y <= maxY; y++)
-                    groundTilemap.SetTile(new Vector3Int(x, y, 0), pathTile);
+                {
+                    var isSidewalk = vertical ? (x == minX || x == maxX) : (y == minY || y == maxY);
+                    var tile = isSidewalk ? sidewalkTile : ((x + y) % 2 == 0 ? pathTile : pathTileAlt);
+                    groundTilemap.SetTile(new Vector3Int(x, y, 0), tile);
+                }
+            }
         }
 
-        PaintPathRect(-65, 65, 24, 27);
-        PaintPathRect(-55, 55, -19, -16);
-        PaintPathRect(-1, 1, -48, 24);
+        PaintStreetRect(-65, 65, 24, 27, false);
+        PaintStreetRect(-55, 55, -19, -16, false);
+        PaintStreetRect(-1, 1, -48, 24, true);
 
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(-55, 25, 0f);
@@ -356,6 +365,7 @@ public static class SceneBootstrap
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
+        player.AddComponent<LapidaryState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -365,7 +375,7 @@ public static class SceneBootstrap
 
         CreateRealBuilding("Maison & Bureau de Gemmologie", new Vector3(-55, 28, 0f), HouseStyle.Chalet, "Home", true);
         CreateRealBuilding("Laboratoire de Gemmologie", new Vector3(-30, 28, 0f), HouseStyle.Modern, "Laboratoire", true);
-        CreateRealBuilding("Atelier Lapidaire", new Vector3(-5, 28, 0f), HouseStyle.Chalet, "", false);
+        CreateRealBuilding("Atelier Lapidaire", new Vector3(-5, 28, 0f), HouseStyle.Chalet, "AtelierLapidaire", true);
         CreateRealBuilding("Musee", new Vector3(20, 28, 0f), HouseStyle.Modern, "Musee", true);
         CreateRealBuilding("Quartier des Diamantaires", new Vector3(45, 28, 0f), HouseStyle.Chalet, "", false);
 
@@ -378,6 +388,7 @@ public static class SceneBootstrap
 
         CreateNamedSpawnPoint("SpawnPoint_Home", new Vector3(-55, 26, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Laboratoire", new Vector3(-30, 26, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_AtelierLapidaire", new Vector3(-5, 26, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Musee", new Vector3(20, 26, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Marche", new Vector3(-45, -17, 0f));
         CreateNamedSpawnPoint("SpawnPoint_MarcheBrutes", new Vector3(15, -17, 0f));
@@ -564,6 +575,7 @@ public static class SceneBootstrap
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
+        player.AddComponent<LapidaryState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -576,7 +588,7 @@ public static class SceneBootstrap
         CreateExaminationStation("TesteurThermique", ExaminationTool.MeasurementType.ThermalConductivity, new Vector3(-8, 2, 0f));
         CreateExaminationStation("FTIR", ExaminationTool.MeasurementType.Treatment, new Vector3(-5, 2, 0f));
         CreateExaminationStation("Raman", ExaminationTool.MeasurementType.Authenticity, new Vector3(0, 2, 0f));
-        CreateExaminationStation("UVVisNIR", ExaminationTool.MeasurementType.ConfirmedOrigin, new Vector3(5, 2, 0f));
+        CreateExaminationStation("LAICPMS", ExaminationTool.MeasurementType.ConfirmedOrigin, new Vector3(5, 2, 0f));
         CreateExaminationStation("TesteurElectrique", ExaminationTool.MeasurementType.ElectricalConductivity, new Vector3(8, 2, 0f));
         CreateExaminationStation("DiamondView", ExaminationTool.MeasurementType.DiamondGrowthImaging, new Vector3(-5, -2, 0f));
         CreateExaminationStation("MEB", ExaminationTool.MeasurementType.GrowthStructure, new Vector3(0, -2, 0f));
@@ -675,6 +687,7 @@ public static class SceneBootstrap
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
+        player.AddComponent<LapidaryState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -783,6 +796,7 @@ public static class SceneBootstrap
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
+        player.AddComponent<LapidaryState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -891,6 +905,7 @@ public static class SceneBootstrap
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
+        player.AddComponent<LapidaryState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -1002,6 +1017,7 @@ public static class SceneBootstrap
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
+        player.AddComponent<LapidaryState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -1107,6 +1123,7 @@ public static class SceneBootstrap
         player.AddComponent<TunnelState>();
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
+        player.AddComponent<LapidaryState>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -1127,6 +1144,228 @@ public static class SceneBootstrap
 
         AssetDatabase.SaveAssets();
         Debug.Log("Manoir scene created at Assets/Scenes/Manoir.unity");
+    }
+
+    private const int AtelierMinX = -10;
+    private const int AtelierMaxX = 10;
+    private const int AtelierMinY = -6;
+    private const int AtelierMaxY = 6;
+
+    [MenuItem("GemLab/Setup Atelier Lapidaire Scene")]
+    public static void CreateAtelierLapidaireScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+
+        var light = GameObject.Find("Directional Light");
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
+
+        var cam = Camera.main;
+        cam.orthographic = true;
+        cam.orthographicSize = 6f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.12f, 0.09f, 0.07f);
+        cam.transform.position = new Vector3(0f, 0f, -10f);
+
+        var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
+        pixelPerfect.assetsPPU = PixelsPerUnit;
+        pixelPerfect.refResolutionX = 384;
+        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.upscaleRT = true;
+        pixelPerfect.pixelSnapping = true;
+        pixelPerfect.cropFrameX = true;
+        pixelPerfect.cropFrameY = true;
+
+        var gridGO = new GameObject("Grid", typeof(Grid));
+
+        var groundGO = new GameObject("Ground", typeof(Tilemap), typeof(TilemapRenderer));
+        groundGO.transform.SetParent(gridGO.transform);
+        var groundTilemap = groundGO.GetComponent<Tilemap>();
+
+        var wallsGO = new GameObject("Walls", typeof(Tilemap), typeof(TilemapRenderer), typeof(TilemapCollider2D));
+        wallsGO.transform.SetParent(gridGO.transform);
+        var wallsTilemap = wallsGO.GetComponent<Tilemap>();
+
+        var floorTile = GetOrCreateTile("floor_pixel", FloorPixel);
+        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
+
+        for (var x = AtelierMinX; x <= AtelierMaxX; x++)
+        {
+            for (var y = AtelierMinY; y <= AtelierMaxY; y++)
+            {
+                var isPerimeter = x == AtelierMinX || x == AtelierMaxX || y == AtelierMinY || y == AtelierMaxY;
+                var cell = new Vector3Int(x, y, 0);
+                if (isPerimeter)
+                    wallsTilemap.SetTile(cell, wallTile);
+                else
+                    groundTilemap.SetTile(cell, floorTile);
+            }
+        }
+
+        var spawnGO = new GameObject("SpawnPoint");
+        spawnGO.transform.position = new Vector3(0, AtelierMinY + 2, 0f);
+
+        var playerSprite = GetPlayerSprite();
+        var player = new GameObject("Player");
+        player.tag = "Player";
+        var sr = player.AddComponent<SpriteRenderer>();
+        sr.sprite = playerSprite;
+        sr.sortingOrder = 5;
+
+        var rb = player.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        var col = player.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.7f, 0.4f);
+        col.offset = new Vector2(0f, 0.2f);
+
+        player.AddComponent<PlayerController>();
+        player.AddComponent<PlayerInventory>();
+        player.AddComponent<PlayerWallet>();
+        player.AddComponent<PlayerChest>();
+        player.AddComponent<GemCodex>();
+        player.AddComponent<MailboxState>();
+        player.AddComponent<GameClock>();
+        player.AddComponent<ReturnToMenuController>();
+        player.AddComponent<MarketState>();
+        player.AddComponent<QuestState>();
+        player.AddComponent<RoughMarketState>();
+        player.AddComponent<TunnelState>();
+        player.AddComponent<ManoirRequestState>();
+        player.AddComponent<ReputationState>();
+        player.AddComponent<LapidaryState>();
+        player.transform.position = spawnGO.transform.position;
+
+        var follow = cam.gameObject.AddComponent<CameraFollow>();
+        follow.SetTarget(player.transform);
+
+        CreateMusicManager();
+
+        CreateExitDoor(new Vector3(0, AtelierMinY + 1, 0f), "SpawnPoint_AtelierLapidaire");
+
+        CreateLapidaryDesk(new Vector3(0, 1, 0f));
+        CreateWindowPolisher(new Vector3(6, 3, 0f));
+
+        CreateUI(false);
+
+        var canvas = GameObject.Find("Canvas");
+        if (canvas != null)
+        {
+            try
+            {
+                canvas.AddComponent<LapidaryUI>();
+                canvas.AddComponent<WindowPolisherUI>();
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"Lapidary UI setup failed: {e.Message}");
+            }
+        }
+
+        Directory.CreateDirectory("Assets/Scenes");
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/AtelierLapidaire.unity");
+        AddSceneToBuildSettings("Assets/Scenes/AtelierLapidaire.unity");
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("Atelier Lapidaire scene created at Assets/Scenes/AtelierLapidaire.unity");
+    }
+
+    private static readonly Dictionary<char, Color> LapidaryPalette = new Dictionary<char, Color>
+    {
+        { 'H', new Color(0.55f, 0.55f, 0.58f) },
+        { 'S', new Color(0.85f, 0.68f, 0.55f) },
+        { 'E', new Color(0.10f, 0.10f, 0.10f) },
+        { 'C', new Color(0.50f, 0.34f, 0.18f) },
+        { 'D', new Color(0.36f, 0.24f, 0.12f) },
+        { 'B', new Color(0.18f, 0.14f, 0.12f) },
+    };
+
+    private static readonly string[] WindowPolisherPattern =
+    {
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(16, '.'),
+        Row(6, '.', 4, 'W', 6, '.'),
+        Row(4, '.', 8, 'W', 4, '.'),
+        Row(3, '.', 4, 'W', 2, 'H', 4, 'W', 3, '.'),
+        Row(3, '.', 3, 'W', 4, 'H', 3, 'W', 3, '.'),
+        Row(3, '.', 4, 'W', 2, 'H', 4, 'W', 3, '.'),
+        Row(4, '.', 8, 'W', 4, '.'),
+        Row(6, '.', 4, 'W', 6, '.'),
+        Row(2, '.', 12, 'M', 2, '.'),
+        Row(2, '.', 12, 'M', 2, '.'),
+        Row(2, '.', 2, 'M', 8, 'D', 2, 'M', 2, '.'),
+        Row(2, '.', 12, 'M', 2, '.'),
+        Row(2, '.', 12, 'K', 2, '.'),
+        Row(16, '.'),
+    };
+
+    private static readonly Dictionary<char, Color> WindowPolisherPalette = new Dictionary<char, Color>
+    {
+        { 'W', new Color(0.80f, 0.82f, 0.86f) },
+        { 'H', new Color(0.40f, 0.40f, 0.45f) },
+        { 'M', new Color(0.45f, 0.48f, 0.52f) },
+        { 'D', new Color(0.20f, 0.22f, 0.25f) },
+        { 'K', new Color(0.25f, 0.22f, 0.20f) },
+    };
+
+    private static void CreateWindowPolisher(Vector3 position)
+    {
+        var sprite = GetOrCreatePixelSprite("windowpolisher_pixel", WindowPolisherPattern, WindowPolisherPalette);
+
+        var go = new GameObject("Polisseuse a fenetre");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        var solid = go.AddComponent<BoxCollider2D>();
+        solid.size = new Vector2(1.2f, 0.7f);
+        solid.offset = new Vector2(0f, -0.2f);
+
+        var trigger = go.AddComponent<BoxCollider2D>();
+        trigger.isTrigger = true;
+        trigger.size = new Vector2(2.6f, 2.4f);
+        trigger.offset = new Vector2(0f, -0.2f);
+
+        go.AddComponent<WindowPolisher>();
+        CreateBuildingLabel("Polisseuse (fenêtre)", position + new Vector3(0f, 1.0f, 0f));
+    }
+
+    private static void CreateLapidaryDesk(Vector3 position)
+    {
+        var tableSprite = GetOrCreatePixelSprite("markettable_pixel", MarketTablePattern, MarketTablePalette);
+
+        var deskGO = new GameObject("Bureau du Lapidaire");
+        deskGO.transform.position = position;
+        for (var i = -1; i <= 1; i++)
+        {
+            var tableGO = new GameObject($"Table_{i + 1}");
+            tableGO.transform.SetParent(deskGO.transform, false);
+            tableGO.transform.localPosition = new Vector3(i, 0f, 0f);
+            var tableSr = tableGO.AddComponent<SpriteRenderer>();
+            tableSr.sprite = tableSprite;
+            tableSr.sortingOrder = 4;
+        }
+
+        var solid = deskGO.AddComponent<BoxCollider2D>();
+        solid.size = new Vector2(3f, 0.6f);
+        solid.offset = new Vector2(0f, 0.1f);
+
+        var npcSprite = GetOrCreatePixelSprite("lapidary_pixel", PlayerPattern, LapidaryPalette);
+        var npcGO = new GameObject("Lapidaire");
+        var npcSr = npcGO.AddComponent<SpriteRenderer>();
+        npcSr.sprite = npcSprite;
+        npcSr.sortingOrder = 4;
+        npcGO.transform.position = position + new Vector3(0f, 1.2f, 0f);
+
+        var trigger = npcGO.AddComponent<BoxCollider2D>();
+        trigger.isTrigger = true;
+        trigger.size = new Vector2(4f, 3.2f);
+        trigger.offset = new Vector2(0f, -1.1f);
+
+        npcGO.AddComponent<LapidaryNPC>();
     }
 
     private static readonly Dictionary<char, Color> OldManPalette = new Dictionary<char, Color>
@@ -6069,7 +6308,16 @@ public static class SceneBootstrap
         var isNew = gem == null;
         if (isNew) gem = ScriptableObject.CreateInstance<GemDefinition>();
 
+        lastGemIconColor = default;
+        lastGemIconFacetColor = default;
         configure(gem);
+
+        // Remember the icon colours so custom-cut icons can be drawn at runtime (lapidary).
+        if (lastGemIconColor.a > 0f)
+        {
+            gem.iconColor = lastGemIconColor;
+            gem.iconFacetColor = lastGemIconFacetColor;
+        }
 
         if (isNew)
         {
@@ -6119,6 +6367,7 @@ public static class SceneBootstrap
     private const string PackTerrains = PackThemeRoot + "1_Terrains_and_Fences_Singles_32x32/ME_Singles_Terrains_and_Fences_32x32_";
     private const string PackGarden = PackThemeRoot + "17_Garden_Singles_32x32/ME_Singles_Garden_32x32_";
     private const string PackCityProps = PackThemeRoot + "3_City_Props_Singles_32x32/ME_Singles_City_Props_32x32_";
+    private const string PackCityTerrains = PackThemeRoot + "2_City_Terrains_Singles_32x32/ME_Singles_City_Terrains_32x32_";
 
     // Center-pivot import, matching our procedural sprites — used for tilemap tiles.
     private static Sprite LoadPackSprite(string fullPath)
@@ -6497,7 +6746,7 @@ public static class SceneBootstrap
             case "Aimant": return GetOrCreatePixelSprite("aimant_pixel", MagnetPattern, MagnetPalette);
             case "FTIR": return GetOrCreatePixelSprite("ftir_pixel", RefractometrePattern, FTIRPalette);
             case "Raman": return GetOrCreatePixelSprite("raman_pixel", DichroscopePattern, RamanPalette);
-            case "UVVisNIR": return GetOrCreatePixelSprite("uvvisnir_pixel", BalanceCaratPattern, UVVisNIRPalette);
+            case "LAICPMS": return GetOrCreatePixelSprite("laicpms_pixel", BalanceCaratPattern, LAICPMSPalette);
             case "MEB": return GetOrCreatePixelSprite("meb_pixel", MicroscopePattern, MEBPalette);
             case "DiamondView": return GetOrCreatePixelSprite("diamondview_pixel", MicroscopePattern, DiamondViewPalette);
             case "DiamondSure": return GetOrCreatePixelSprite("diamondsure_pixel", RefractometrePattern, DiamondSurePalette);
@@ -7174,8 +7423,13 @@ public static class SceneBootstrap
         Row(16, '.'),
     };
 
+    private static Color lastGemIconColor;
+    private static Color lastGemIconFacetColor;
+
     private static Sprite GetGemIconSprite(string key, Color gemColor, Color facetColor, string shape = "", string cutStyle = "")
     {
+        lastGemIconColor = gemColor;
+        lastGemIconFacetColor = facetColor;
         var basePattern = shape switch
         {
             "Rond" => GemRoundPattern,
@@ -7315,7 +7569,7 @@ public static class SceneBootstrap
         { 'L', new Color(0.95f, 0.15f, 0.15f) },
     };
 
-    private static readonly Dictionary<char, Color> UVVisNIRPalette = new Dictionary<char, Color>
+    private static readonly Dictionary<char, Color> LAICPMSPalette = new Dictionary<char, Color>
     {
         { 'D', new Color(0.38f, 0.20f, 0.78f) },
         { 'P', new Color(0.55f, 0.60f, 0.72f) },
