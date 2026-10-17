@@ -19,6 +19,10 @@ public static class SceneBootstrap
     private const int RoomMinY = -4;
     private const int RoomMaxY = 4;
 
+    // Interior camera framing: a larger reference resolution shows more of the room (480x270 = 15x8.4 world units).
+    private const int InteriorRefResolutionX = 480;
+    private const int InteriorRefResolutionY = 270;
+
     private const int DividerX = 6;
     private const int DoorGapY1 = -1;
     private const int DoorGapY2 = 0;
@@ -140,8 +144,8 @@ public static class SceneBootstrap
 
         var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
         pixelPerfect.assetsPPU = PixelsPerUnit;
-        pixelPerfect.refResolutionX = 384;
-        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.refResolutionX = InteriorRefResolutionX;
+        pixelPerfect.refResolutionY = InteriorRefResolutionY;
         pixelPerfect.upscaleRT = true;
         pixelPerfect.pixelSnapping = true;
         pixelPerfect.cropFrameX = true;
@@ -157,8 +161,8 @@ public static class SceneBootstrap
         wallsGO.transform.SetParent(gridGO.transform);
         var wallsTilemap = wallsGO.GetComponent<Tilemap>();
 
-        var floorTile = GetOrCreateTile("floor_pixel", FloorPixel);
-        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
+        var floorTile = GetInteriorFloorTile("home", Color.white, "floor_pixel", FloorPixel);
+        var wallTile = GetInteriorSideWallTile("home", InteriorSideWallTint, "wall_pixel", WallPixel);
 
         for (var x = RoomMinX; x <= RoomMaxX; x++)
         {
@@ -173,6 +177,8 @@ public static class SceneBootstrap
                     groundTilemap.SetTile(cell, floorTile);
             }
         }
+
+        PaintInteriorTopWall(wallsTilemap, RoomMinX, RoomMaxX, RoomMaxY, "home", Color.white);
 
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = Vector3.zero;
@@ -251,6 +257,8 @@ public static class SceneBootstrap
         CreateExaminationStation("Aimant", ExaminationTool.MeasurementType.Magnetism, new Vector3(24, -2, 0f));
 
         CreateDirector(new Vector3(26, 0, 0f));
+        DecorateHome();
+
         CreateUI(true);
 
         Directory.CreateDirectory("Assets/Scenes");
@@ -509,8 +517,8 @@ public static class SceneBootstrap
 
         var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
         pixelPerfect.assetsPPU = PixelsPerUnit;
-        pixelPerfect.refResolutionX = 384;
-        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.refResolutionX = InteriorRefResolutionX;
+        pixelPerfect.refResolutionY = InteriorRefResolutionY;
         pixelPerfect.upscaleRT = true;
         pixelPerfect.pixelSnapping = true;
         pixelPerfect.cropFrameX = true;
@@ -526,8 +534,8 @@ public static class SceneBootstrap
         wallsGO.transform.SetParent(gridGO.transform);
         var wallsTilemap = wallsGO.GetComponent<Tilemap>();
 
-        var floorTile = GetOrCreateTile("labfloor_pixel", LabFloorPixel);
-        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
+        var floorTile = GetInteriorFloorTile("lab", Color.white, "labfloor_pixel", LabFloorPixel);
+        var wallTile = GetInteriorSideWallTile("lab", InteriorSideWallTint, "wall_pixel", WallPixel);
 
         for (var x = LabMinX; x <= LabMaxX; x++)
         {
@@ -541,6 +549,8 @@ public static class SceneBootstrap
                     groundTilemap.SetTile(cell, floorTile);
             }
         }
+
+        PaintInteriorTopWall(wallsTilemap, LabMinX, LabMaxX, LabMaxY, "lab", Color.white);
 
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(0, LabMinY + 2, 0f);
@@ -594,6 +604,8 @@ public static class SceneBootstrap
         CreateExaminationStation("MEB", ExaminationTool.MeasurementType.GrowthStructure, new Vector3(0, -2, 0f));
         CreateExaminationStation("DiamondSure", ExaminationTool.MeasurementType.DiamondScreening, new Vector3(5, -2, 0f));
 
+        DecorateLaboratory();
+
         CreateUI(false);
 
         Directory.CreateDirectory("Assets/Scenes");
@@ -621,8 +633,8 @@ public static class SceneBootstrap
 
         var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
         pixelPerfect.assetsPPU = PixelsPerUnit;
-        pixelPerfect.refResolutionX = 384;
-        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.refResolutionX = InteriorRefResolutionX;
+        pixelPerfect.refResolutionY = InteriorRefResolutionY;
         pixelPerfect.upscaleRT = true;
         pixelPerfect.pixelSnapping = true;
         pixelPerfect.cropFrameX = true;
@@ -638,8 +650,8 @@ public static class SceneBootstrap
         wallsGO.transform.SetParent(gridGO.transform);
         var wallsTilemap = wallsGO.GetComponent<Tilemap>();
 
-        var floorTile = GetOrCreateTile("labfloor_pixel", LabFloorPixel);
-        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
+        var floorTile = GetInteriorFloorTile("market", Color.white, "labfloor_pixel", LabFloorPixel);
+        var wallTile = GetInteriorSideWallTile("market", InteriorSideWallTint, "wall_pixel", WallPixel);
 
         for (var x = MarketMinX; x <= MarketMaxX; x++)
         {
@@ -653,6 +665,8 @@ public static class SceneBootstrap
                     groundTilemap.SetTile(cell, floorTile);
             }
         }
+
+        PaintInteriorTopWall(wallsTilemap, MarketMinX, MarketMaxX, MarketMaxY, "market", Color.white);
 
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(0, MarketMinY + 2, 0f);
@@ -703,6 +717,8 @@ public static class SceneBootstrap
         CreateMarketVendorSpot(2, new Vector3(3, 1, 0f));
         CreateMarketVendorSpot(3, new Vector3(9, 1, 0f));
 
+        DecorateMarket();
+
         CreateUI(false);
 
         Directory.CreateDirectory("Assets/Scenes");
@@ -730,8 +746,8 @@ public static class SceneBootstrap
 
         var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
         pixelPerfect.assetsPPU = PixelsPerUnit;
-        pixelPerfect.refResolutionX = 384;
-        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.refResolutionX = InteriorRefResolutionX;
+        pixelPerfect.refResolutionY = InteriorRefResolutionY;
         pixelPerfect.upscaleRT = true;
         pixelPerfect.pixelSnapping = true;
         pixelPerfect.cropFrameX = true;
@@ -747,8 +763,8 @@ public static class SceneBootstrap
         wallsGO.transform.SetParent(gridGO.transform);
         var wallsTilemap = wallsGO.GetComponent<Tilemap>();
 
-        var floorTile = GetOrCreateTile("labfloor_pixel", LabFloorPixel);
-        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
+        var floorTile = GetInteriorFloorTile("rough", Color.white, "labfloor_pixel", LabFloorPixel);
+        var wallTile = GetInteriorSideWallTile("rough", InteriorSideWallTint, "wall_pixel", WallPixel);
 
         for (var x = RoughMarketMinX; x <= RoughMarketMaxX; x++)
         {
@@ -762,6 +778,8 @@ public static class SceneBootstrap
                     groundTilemap.SetTile(cell, floorTile);
             }
         }
+
+        PaintInteriorTopWall(wallsTilemap, RoughMarketMinX, RoughMarketMaxX, RoughMarketMaxY, "rough", Color.white);
 
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(0, RoughMarketMinY + 2, 0f);
@@ -812,6 +830,8 @@ public static class SceneBootstrap
         CreateRoughMarketVendorSpot(2, new Vector3(3, 1, 0f));
         CreateRoughMarketVendorSpot(3, new Vector3(9, 1, 0f));
 
+        DecorateRoughMarket();
+
         CreateUI(false);
 
         Directory.CreateDirectory("Assets/Scenes");
@@ -839,8 +859,8 @@ public static class SceneBootstrap
 
         var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
         pixelPerfect.assetsPPU = PixelsPerUnit;
-        pixelPerfect.refResolutionX = 384;
-        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.refResolutionX = InteriorRefResolutionX;
+        pixelPerfect.refResolutionY = InteriorRefResolutionY;
         pixelPerfect.upscaleRT = true;
         pixelPerfect.pixelSnapping = true;
         pixelPerfect.cropFrameX = true;
@@ -856,8 +876,8 @@ public static class SceneBootstrap
         wallsGO.transform.SetParent(gridGO.transform);
         var wallsTilemap = wallsGO.GetComponent<Tilemap>();
 
-        var floorTile = GetOrCreateTile("labfloor_pixel", LabFloorPixel);
-        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
+        var floorTile = GetInteriorFloorTile("museum", Color.white, "labfloor_pixel", LabFloorPixel);
+        var wallTile = GetInteriorSideWallTile("museum", InteriorSideWallTint, "wall_pixel", WallPixel);
 
         for (var x = MuseumMinX; x <= MuseumMaxX; x++)
         {
@@ -871,6 +891,8 @@ public static class SceneBootstrap
                     groundTilemap.SetTile(cell, floorTile);
             }
         }
+
+        PaintInteriorTopWall(wallsTilemap, MuseumMinX, MuseumMaxX, MuseumMaxY, "museum", Color.white);
 
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(0, MuseumMinY + 2, 0f);
@@ -924,6 +946,8 @@ public static class SceneBootstrap
         CreateMuseumPedestal(6, new Vector3(3, -2, 0f));
         CreateMuseumPedestal(7, new Vector3(9, -2, 0f));
 
+        DecorateMuseum();
+
         CreateUI(false);
 
         Directory.CreateDirectory("Assets/Scenes");
@@ -968,8 +992,8 @@ public static class SceneBootstrap
         wallsGO.transform.SetParent(gridGO.transform);
         var wallsTilemap = wallsGO.GetComponent<Tilemap>();
 
-        var floorTile = GetOrCreateTile("tunnelfloor_pixel", TunnelFloorPixel);
-        var wallTile = GetOrCreateTile("tunnelwall_pixel", TunnelWallPixel);
+        var floorTile = GetInteriorFloorTile("tunnel", new Color(0.55f, 0.55f, 0.58f, 1f), "tunnelfloor_pixel", TunnelFloorPixel);
+        var wallTile = GetInteriorSideWallTile("tunnel", new Color(0.40f, 0.40f, 0.44f, 1f), "tunnelwall_pixel", TunnelWallPixel);
 
         for (var x = TunnelMinX; x <= TunnelMaxX; x++)
         {
@@ -983,6 +1007,8 @@ public static class SceneBootstrap
                     groundTilemap.SetTile(cell, floorTile);
             }
         }
+
+        PaintInteriorTopWall(wallsTilemap, TunnelMinX, TunnelMaxX, TunnelMaxY, "tunnel", new Color(0.55f, 0.55f, 0.58f, 1f));
 
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(0, TunnelMinY + 2, 0f);
@@ -1057,8 +1083,8 @@ public static class SceneBootstrap
 
         var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
         pixelPerfect.assetsPPU = PixelsPerUnit;
-        pixelPerfect.refResolutionX = 384;
-        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.refResolutionX = InteriorRefResolutionX;
+        pixelPerfect.refResolutionY = InteriorRefResolutionY;
         pixelPerfect.upscaleRT = true;
         pixelPerfect.pixelSnapping = true;
         pixelPerfect.cropFrameX = true;
@@ -1074,8 +1100,8 @@ public static class SceneBootstrap
         wallsGO.transform.SetParent(gridGO.transform);
         var wallsTilemap = wallsGO.GetComponent<Tilemap>();
 
-        var floorTile = GetOrCreateTile("floor_pixel", FloorPixel);
-        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
+        var floorTile = GetInteriorFloorTile("manoir", Color.white, "floor_pixel", FloorPixel);
+        var wallTile = GetInteriorSideWallTile("manoir", InteriorSideWallTint, "wall_pixel", WallPixel);
 
         for (var x = ManoirMinX; x <= ManoirMaxX; x++)
         {
@@ -1089,6 +1115,8 @@ public static class SceneBootstrap
                     groundTilemap.SetTile(cell, floorTile);
             }
         }
+
+        PaintInteriorTopWall(wallsTilemap, ManoirMinX, ManoirMaxX, ManoirMaxY, "manoir", Color.white);
 
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(0, ManoirMinY + 2, 0f);
@@ -1136,6 +1164,8 @@ public static class SceneBootstrap
         CreateOldMan(new Vector3(-3, 1, 0f));
         CreateOldLady(new Vector3(3, 1, 0f));
 
+        DecorateManoir();
+
         CreateUI(false);
 
         Directory.CreateDirectory("Assets/Scenes");
@@ -1168,8 +1198,8 @@ public static class SceneBootstrap
 
         var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
         pixelPerfect.assetsPPU = PixelsPerUnit;
-        pixelPerfect.refResolutionX = 384;
-        pixelPerfect.refResolutionY = 216;
+        pixelPerfect.refResolutionX = InteriorRefResolutionX;
+        pixelPerfect.refResolutionY = InteriorRefResolutionY;
         pixelPerfect.upscaleRT = true;
         pixelPerfect.pixelSnapping = true;
         pixelPerfect.cropFrameX = true;
@@ -1185,8 +1215,8 @@ public static class SceneBootstrap
         wallsGO.transform.SetParent(gridGO.transform);
         var wallsTilemap = wallsGO.GetComponent<Tilemap>();
 
-        var floorTile = GetOrCreateTile("floor_pixel", FloorPixel);
-        var wallTile = GetOrCreateTile("wall_pixel", WallPixel);
+        var floorTile = GetInteriorFloorTile("atelier", Color.white, "floor_pixel", FloorPixel);
+        var wallTile = GetInteriorSideWallTile("atelier", InteriorSideWallTint, "wall_pixel", WallPixel);
 
         for (var x = AtelierMinX; x <= AtelierMaxX; x++)
         {
@@ -1200,6 +1230,8 @@ public static class SceneBootstrap
                     groundTilemap.SetTile(cell, floorTile);
             }
         }
+
+        PaintInteriorTopWall(wallsTilemap, AtelierMinX, AtelierMaxX, AtelierMaxY, "atelier", Color.white);
 
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(0, AtelierMinY + 2, 0f);
@@ -1246,6 +1278,8 @@ public static class SceneBootstrap
 
         CreateLapidaryDesk(new Vector3(0, 1, 0f));
         CreateWindowPolisher(new Vector3(6, 3, 0f));
+
+        DecorateAtelier();
 
         CreateUI(false);
 
@@ -6368,6 +6402,173 @@ public static class SceneBootstrap
     private const string PackGarden = PackThemeRoot + "17_Garden_Singles_32x32/ME_Singles_Garden_32x32_";
     private const string PackCityProps = PackThemeRoot + "3_City_Props_Singles_32x32/ME_Singles_City_Props_32x32_";
     private const string PackCityTerrains = PackThemeRoot + "2_City_Terrains_Singles_32x32/ME_Singles_City_Terrains_32x32_";
+
+    // ----- Per-room decoration -----
+
+    private static void DecorateHome()
+    {
+        PlaceWallDecor("curtains", -2, RoomMaxY);
+        PlaceWallDecor("window_white", 3, RoomMaxY);
+        foreach (var x in new[] { 9, 14, 19, 24 }) PlaceWallDecor("window_white", x, RoomMaxY);
+
+        PlaceRug("rug_red", new Vector3(-1.5f, -0.5f, 0f));
+        PlaceFurniture("palm", new Vector3(5.2f, 3.0f, 0f));
+        PlaceFurniture("plant_small", new Vector3(7.6f, -3.0f, 0f));
+        PlaceFurniture("shelf_a", new Vector3(12.0f, 3.0f, 0f));
+        PlaceFurniture("shelf_b", new Vector3(17.0f, 3.0f, 0f));
+        PlaceFurniture("palm", new Vector3(27.0f, 3.0f, 0f));
+    }
+
+    private static void DecorateLaboratory()
+    {
+        foreach (var x in new[] { -7, -2, 3, 8 }) PlaceWallDecor("window_white", x, LabMaxY);
+
+        PlaceFurniture("shelf_a", new Vector3(-7f, LabMaxY - 1f, 0f));
+        PlaceFurniture("shelf_b", new Vector3(7f, LabMaxY - 1f, 0f));
+        PlaceFurniture("palm", new Vector3(-8.8f, LabMaxY - 1.2f, 0f));
+        PlaceFurniture("palm", new Vector3(9.0f, LabMaxY - 1.2f, 0f));
+    }
+
+    private static void DecorateMarket()
+    {
+        var shelves = new[] { "shop_a", "shop_b", "shop_c", "shop_d", "shop_e", "shop_f", "shop_a" };
+        for (var i = 0; i < shelves.Length; i++)
+            PlaceFurniture(shelves[i], new Vector3(-12f + i * 4f, MarketMaxY - 1f, 0f));
+
+        PlaceFurniture("plant_small", new Vector3(-12.8f, MarketMinY + 1.2f, 0f));
+        PlaceFurniture("plant_small", new Vector3(12.8f, MarketMinY + 1.2f, 0f));
+    }
+
+    private static void DecorateRoughMarket()
+    {
+        var shelves = new[] { "shelf_a", "shelf_b", "shelf_a", "shelf_b" };
+        var xs = new[] { -12f, -4f, 4f, 12f };
+        for (var i = 0; i < shelves.Length; i++)
+            PlaceFurniture(shelves[i], new Vector3(xs[i], RoughMarketMaxY - 1f, 0f));
+
+        foreach (var x in new[] { -8, 0, 8 }) PlaceWallDecor("window_red", x, RoughMarketMaxY);
+    }
+
+    private static void DecorateMuseum()
+    {
+        foreach (var x in new[] { -12, -8, -4, 0, 4, 8, 12 }) PlaceWallDecor("window_white", x, MuseumMaxY);
+
+        PlaceRug("rug_gold", new Vector3(0f, 0.2f, 0f));
+        PlaceFurniture("palm", new Vector3(-13.0f, MuseumMaxY - 1.2f, 0f));
+        PlaceFurniture("palm", new Vector3(13.0f, MuseumMaxY - 1.2f, 0f));
+        PlaceFurniture("globe", new Vector3(-6.5f, MuseumMaxY - 1.3f, 0f));
+        PlaceFurniture("globe", new Vector3(6.5f, MuseumMaxY - 1.3f, 0f));
+    }
+
+    private static void DecorateManoir()
+    {
+        PlaceFurniture("fireplace", new Vector3(0f, ManoirMaxY - 1.5f, 0f));
+        PlaceFurniture("wardrobe_a", new Vector3(-7f, ManoirMaxY - 1.5f, 0f));
+        PlaceFurniture("mirror", new Vector3(7f, ManoirMaxY - 1.5f, 0f));
+        PlaceWallDecor("window_red", -4, ManoirMaxY);
+        PlaceWallDecor("window_red", 3, ManoirMaxY);
+
+        PlaceRug("rug_red", new Vector3(0f, -0.5f, 0f));
+        PlaceFurniture("palm", new Vector3(9.0f, ManoirMaxY - 1.5f, 0f));
+        PlaceFurniture("plant_small", new Vector3(-9.0f, ManoirMaxY - 1.5f, 0f));
+    }
+
+    private static void DecorateAtelier()
+    {
+        PlaceWallDecor("window_white", -8, AtelierMaxY);
+        PlaceWallDecor("window_white", 8, AtelierMaxY);
+
+        PlaceFurniture("shelf_a", new Vector3(-3f, AtelierMaxY - 1f, 0f));
+        PlaceFurniture("shelf_b", new Vector3(3f, AtelierMaxY - 1f, 0f));
+        PlaceFurniture("palm", new Vector3(-8.8f, AtelierMaxY - 1.2f, 0f));
+        PlaceFurniture("plant_small", new Vector3(9.0f, AtelierMinY + 1.2f, 0f));
+        PlaceRug("rug_red", new Vector3(0f, -2.0f, 0f));
+    }
+
+    // ----- Interior dressing (LimeZu Modern Interiors / Office, pre-cut into Assets/Art/Sprites/interior_*.png) -----
+
+    private const string InteriorSpriteRoot = "Assets/Art/Sprites/interior_";
+    private static readonly Color InteriorSideWallTint = new Color(0.62f, 0.62f, 0.68f, 1f);
+
+    private static Tile GetOrCreateTintedTile(string name, Sprite sprite, Color tint)
+    {
+        var tilePath = $"Assets/Art/Tilesets/{name}.asset";
+        var existing = AssetDatabase.LoadAssetAtPath<Tile>(tilePath);
+        if (existing != null) return existing;
+
+        var tile = ScriptableObject.CreateInstance<Tile>();
+        tile.sprite = sprite;
+        tile.color = tint;
+
+        Directory.CreateDirectory("Assets/Art/Tilesets");
+        AssetDatabase.CreateAsset(tile, tilePath);
+        return tile;
+    }
+
+    private static Tile GetInteriorFloorTile(string theme, Color tint, string fallbackName, Func<int, int, Color> fallback)
+    {
+        var sprite = LoadPackSprite($"{InteriorSpriteRoot}floor_{theme}.png");
+        return sprite != null
+            ? GetOrCreateTintedTile($"interior_floor_{theme}", sprite, tint)
+            : GetOrCreateTile(fallbackName, fallback);
+    }
+
+    // Side and bottom walls are the wallpaper tile darkened, so the top wall reads as the lit wall face.
+    private static Tile GetInteriorSideWallTile(string theme, Color tint, string fallbackName, Func<int, int, Color> fallback)
+    {
+        var sprite = LoadPackSprite($"{InteriorSpriteRoot}wall_{theme}.png");
+        return sprite != null
+            ? GetOrCreateTintedTile($"interior_sidewall_{theme}", sprite, tint)
+            : GetOrCreateTile(fallbackName, fallback);
+    }
+
+    private static void PaintInteriorTopWall(Tilemap walls, int minX, int maxX, int maxY, string theme, Color tint)
+    {
+        var sprite = LoadPackSprite($"{InteriorSpriteRoot}wall_{theme}.png");
+        if (sprite == null) return;
+
+        var tile = GetOrCreateTintedTile($"interior_topwall_{theme}", sprite, tint);
+        for (var x = minX; x <= maxX; x++)
+            walls.SetTile(new Vector3Int(x, maxY, 0), tile);
+    }
+
+    // Decorative prop. `grounded` props stand with their feet at `position`; the others are centered on it.
+    private static GameObject PlaceInteriorProp(string spriteName, Vector3 position, bool grounded, bool solid, int sortingOrder)
+    {
+        var path = $"{InteriorSpriteRoot}prop_{spriteName}.png";
+        var sprite = grounded ? LoadPackSpriteGrounded(path) : LoadPackSprite(path);
+        if (sprite == null) return null;
+
+        var go = new GameObject($"Deco_{spriteName}");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = sortingOrder;
+        go.transform.position = position;
+
+        if (solid)
+        {
+            var col = go.AddComponent<BoxCollider2D>();
+            var width = sprite.bounds.size.x * 0.8f;
+            col.size = new Vector2(width, 0.5f);
+            col.offset = grounded ? new Vector2(0f, 0.25f) : Vector2.zero;
+        }
+        return go;
+    }
+
+    private static void PlaceWallDecor(string spriteName, int tileX, int wallY)
+    {
+        PlaceInteriorProp(spriteName, new Vector3(tileX + 0.5f, wallY + 0.5f, 0f), false, false, 1);
+    }
+
+    private static void PlaceRug(string spriteName, Vector3 center)
+    {
+        PlaceInteriorProp(spriteName, center, false, false, 1);
+    }
+
+    private static void PlaceFurniture(string spriteName, Vector3 feet)
+    {
+        PlaceInteriorProp(spriteName, feet, true, true, 4);
+    }
 
     // Center-pivot import, matching our procedural sprites — used for tilemap tiles.
     private static Sprite LoadPackSprite(string fullPath)

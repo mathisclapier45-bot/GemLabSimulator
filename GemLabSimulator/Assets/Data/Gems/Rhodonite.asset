@@ -17,6 +17,8 @@ MonoBehaviour:
     veines noires d'oxydes de mangan\xE8se."
   icon: {fileID: 21300000, guid: 8e098d7a7a17f474db0e0f0586c70321, type: 3}
   roughIcon: {fileID: 21300000, guid: 37f150cbda99c4987adda58e5fa234f0, type: 3}
+  iconColor: {r: 0.75, g: 0.35, b: 0.42, a: 1}
+  iconFacetColor: {r: 0.9, g: 0.55, b: 0.58, a: 1}
   refractiveIndex: 1.735
   density: 3.55
   hardness: 6

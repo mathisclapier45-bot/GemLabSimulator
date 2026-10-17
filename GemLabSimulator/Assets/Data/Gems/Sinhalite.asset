@@ -17,6 +17,8 @@ MonoBehaviour:
     p\xE9ridot brun avant d'\xEAtre reconnu comme esp\xE8ce distincte en 1952."
   icon: {fileID: 21300000, guid: cb500712c237547a585c7e85caa15813, type: 3}
   roughIcon: {fileID: 21300000, guid: dcea0994828d3476e8b7e0fcea4f86fd, type: 3}
+  iconColor: {r: 0.45, g: 0.3, b: 0.15, a: 1}
+  iconFacetColor: {r: 0.65, g: 0.48, b: 0.28, a: 1}
   refractiveIndex: 1.68
   density: 3.48
   hardness: 6.75

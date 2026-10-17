@@ -19,6 +19,8 @@ MonoBehaviour:
     pour prot\xE9ger cette esp\xE8ce aujourd'hui en danger critique d'extinction."
   icon: {fileID: 21300000, guid: 411fd1ae432a14a618645df5051ed44f, type: 3}
   roughIcon: {fileID: 21300000, guid: 91e4ff0f947fb44ea95afb87a073720f, type: 3}
+  iconColor: {r: 0.55, g: 0.38, b: 0.15, a: 1}
+  iconFacetColor: {r: 0.78, g: 0.58, b: 0.28, a: 1}
   refractiveIndex: 1.55
   density: 1.29
   hardness: 2.5

@@ -17,6 +17,8 @@ MonoBehaviour:
     le plus dur apr\xE8s le corindon et le diamant."
   icon: {fileID: 21300000, guid: 80c8baba72fda4f21bad563ff5d9b3a7, type: 3}
   roughIcon: {fileID: 21300000, guid: 4ab6d7c02191b447d9fd7402d2059902, type: 3}
+  iconColor: {r: 0.65, g: 0.65, b: 0.2, a: 1}
+  iconFacetColor: {r: 0.82, g: 0.82, b: 0.45, a: 1}
   refractiveIndex: 1.745
   density: 3.73
   hardness: 8.5

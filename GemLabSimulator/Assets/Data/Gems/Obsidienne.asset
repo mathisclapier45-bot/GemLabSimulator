@@ -17,6 +17,8 @@ MonoBehaviour:
     rapide de lave riche en silice, sans structure cristalline."
   icon: {fileID: 21300000, guid: 85e4e33c8d1314c398f261eb6ca15cf7, type: 3}
   roughIcon: {fileID: 21300000, guid: 87c0190298b09484eb67e0d927d709b4, type: 3}
+  iconColor: {r: 0.08, g: 0.08, b: 0.09, a: 1}
+  iconFacetColor: {r: 0.25, g: 0.25, b: 0.28, a: 1}
   refractiveIndex: 1.49
   density: 2.45
   hardness: 5.25

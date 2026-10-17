@@ -18,6 +18,8 @@ MonoBehaviour:
     en raison du braconnage massif ayant d\xE9cim\xE9 les populations d'\xE9l\xE9phants."
   icon: {fileID: 21300000, guid: e542076f1efd44729b90727c051e99dd, type: 3}
   roughIcon: {fileID: 21300000, guid: 7bd4bd7aa8adf429ea1e94e19e623182, type: 3}
+  iconColor: {r: 0.9, g: 0.87, b: 0.78, a: 1}
+  iconFacetColor: {r: 0.97, g: 0.95, b: 0.9, a: 1}
   refractiveIndex: 1.54
   density: 1.85
   hardness: 2.75

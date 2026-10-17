@@ -18,6 +18,8 @@ MonoBehaviour:
     plac\xE9 dans un plasma d'hydrocarbures."
   icon: {fileID: 21300000, guid: 8118c909fa31541dbac2da57042d94bb, type: 3}
   roughIcon: {fileID: 21300000, guid: 60904d980ea534b18a32be0d3d552e0a, type: 3}
+  iconColor: {r: 0.88, g: 0.92, b: 0.9, a: 1}
+  iconFacetColor: {r: 0.97, g: 0.99, b: 0.97, a: 1}
   refractiveIndex: 2.417
   density: 3.52
   hardness: 10

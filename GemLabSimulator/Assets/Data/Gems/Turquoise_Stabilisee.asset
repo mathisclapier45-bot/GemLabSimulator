@@ -17,6 +17,8 @@ MonoBehaviour:
     renforcer la structure et stabiliser sa couleur avant taille."
   icon: {fileID: 21300000, guid: ddc412153c62d4b259a6cd71de53c178, type: 3}
   roughIcon: {fileID: 21300000, guid: bad20bcfb0c5d4d96b6fec2719cfedbe, type: 3}
+  iconColor: {r: 0.18, g: 0.55, b: 0.55, a: 1}
+  iconFacetColor: {r: 0.42, g: 0.72, b: 0.7, a: 1}
   refractiveIndex: 1.62
   density: 2.78
   hardness: 5.25

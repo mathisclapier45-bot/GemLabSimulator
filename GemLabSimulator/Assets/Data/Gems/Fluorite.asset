@@ -17,6 +17,8 @@ MonoBehaviour:
     \"fluorescence\"."
   icon: {fileID: 21300000, guid: b3f714ffeb42842c287ca9bb870044f5, type: 3}
   roughIcon: {fileID: 21300000, guid: 4a75641a774724849b1fce94d75e8b7c, type: 3}
+  iconColor: {r: 0.55, g: 0.3, b: 0.7, a: 1}
+  iconFacetColor: {r: 0.72, g: 0.5, b: 0.85, a: 1}
   refractiveIndex: 1.434
   density: 3.18
   hardness: 4

@@ -17,6 +17,8 @@ MonoBehaviour:
     principalement extraite \xE0 Madagascar."
   icon: {fileID: 21300000, guid: a3ef552c36e0b413388133b57b6e2796, type: 3}
   roughIcon: {fileID: 21300000, guid: 8cd7eefe75b4a4b0c9cac7f826db1e36, type: 3}
+  iconColor: {r: 0.85, g: 0.72, b: 0.2, a: 1}
+  iconFacetColor: {r: 0.96, g: 0.85, b: 0.45, a: 1}
   refractiveIndex: 1.522
   density: 2.56
   hardness: 6.25

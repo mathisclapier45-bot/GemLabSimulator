@@ -17,6 +17,8 @@ MonoBehaviour:
     mais tr\xE8s diff\xE9rent physiquement."
   icon: {fileID: 21300000, guid: 69076c8c0da694fd6aadd2e9e1cf1cb5, type: 3}
   roughIcon: {fileID: 21300000, guid: 47a39fa0ab435410fbe153b0cd6d34ea, type: 3}
+  iconColor: {r: 0.85, g: 0.9, b: 0.95, a: 1}
+  iconFacetColor: {r: 0.95, g: 0.97, b: 1, a: 1}
   refractiveIndex: 2.16
   density: 5.8
   hardness: 8.25

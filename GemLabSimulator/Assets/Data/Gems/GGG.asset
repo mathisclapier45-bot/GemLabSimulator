@@ -17,6 +17,8 @@ MonoBehaviour:
     \xE0 tr\xE8s forte densit\xE9 mais relativement tendre, aujourd'hui rare en joaillerie."
   icon: {fileID: 21300000, guid: 31f113bab73f14e8fad481df41021117, type: 3}
   roughIcon: {fileID: 21300000, guid: 9f1ac5add170c4f1e8f8fe0192e4e9c6, type: 3}
+  iconColor: {r: 0.8, g: 0.82, b: 0.86, a: 1}
+  iconFacetColor: {r: 0.92, g: 0.94, b: 0.97, a: 1}
   refractiveIndex: 1.97
   density: 7.05
   hardness: 6.5

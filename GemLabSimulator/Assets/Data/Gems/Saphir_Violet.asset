@@ -17,6 +17,8 @@ MonoBehaviour:
     \xE9l\xE9ments traces."
   icon: {fileID: 21300000, guid: eacd93b1be6904392abd21e3c3fcd451, type: 3}
   roughIcon: {fileID: 21300000, guid: f117743af68c04f4d9d77e1b98335484, type: 3}
+  iconColor: {r: 0.45, g: 0.25, b: 0.65, a: 1}
+  iconFacetColor: {r: 0.66, g: 0.46, b: 0.83, a: 1}
   refractiveIndex: 1.766
   density: 4
   hardness: 9

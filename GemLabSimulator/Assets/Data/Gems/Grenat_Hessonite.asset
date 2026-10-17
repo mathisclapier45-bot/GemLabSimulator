@@ -17,6 +17,8 @@ MonoBehaviour:
     avec la spessartite."
   icon: {fileID: 21300000, guid: b781a3d1d568b4a579567582b4a253b4, type: 3}
   roughIcon: {fileID: 21300000, guid: a031dc473754343f79f255436d76bf5c, type: 3}
+  iconColor: {r: 0.7, g: 0.42, b: 0.15, a: 1}
+  iconFacetColor: {r: 0.85, g: 0.6, b: 0.35, a: 1}
   refractiveIndex: 1.74
   density: 3.68
   hardness: 6.75

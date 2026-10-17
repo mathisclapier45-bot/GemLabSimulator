@@ -17,6 +17,8 @@ MonoBehaviour:
     pyrope et l'almandin."
   icon: {fileID: 21300000, guid: 26b39afccb3b9424db2e21de6589c540, type: 3}
   roughIcon: {fileID: 21300000, guid: 78be423181a2647b3a686aabd4ec9b2e, type: 3}
+  iconColor: {r: 0.65, g: 0.2, b: 0.35, a: 1}
+  iconFacetColor: {r: 0.83, g: 0.42, b: 0.55, a: 1}
   refractiveIndex: 1.76
   density: 3.84
   hardness: 7.25

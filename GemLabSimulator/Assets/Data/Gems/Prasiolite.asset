@@ -17,6 +17,8 @@ MonoBehaviour:
     commercial \xE9tant obtenue par traitement thermique d'am\xE9thyste."
   icon: {fileID: 21300000, guid: 57908669b327e44648dc27b1a685bb2b, type: 3}
   roughIcon: {fileID: 21300000, guid: 65ddd10036de149cb969da5b79e80a0e, type: 3}
+  iconColor: {r: 0.35, g: 0.6, b: 0.35, a: 1}
+  iconFacetColor: {r: 0.56, g: 0.8, b: 0.56, a: 1}
   refractiveIndex: 1.544
   density: 2.65
   hardness: 7

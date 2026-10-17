@@ -18,6 +18,8 @@ MonoBehaviour:
     pour prot\xE9ger l'esp\xE8ce."
   icon: {fileID: 21300000, guid: 25da6f37c7c7349f098e8163e743afca, type: 3}
   roughIcon: {fileID: 21300000, guid: 0d1f437aef1ba4a108f8937ba7c7a09b, type: 3}
+  iconColor: {r: 0.9, g: 0.88, b: 0.82, a: 1}
+  iconFacetColor: {r: 0.97, g: 0.96, b: 0.92, a: 1}
   refractiveIndex: 1.54
   density: 1.9
   hardness: 2.75

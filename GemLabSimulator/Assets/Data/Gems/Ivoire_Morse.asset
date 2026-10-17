@@ -19,6 +19,8 @@ MonoBehaviour:
     arctiques."
   icon: {fileID: 21300000, guid: b60b346ef6548420aa580f5ae9b50f63, type: 3}
   roughIcon: {fileID: 21300000, guid: 99b42c3f66102428392f63e6db32f1d6, type: 3}
+  iconColor: {r: 0.88, g: 0.86, b: 0.8, a: 1}
+  iconFacetColor: {r: 0.96, g: 0.95, b: 0.9, a: 1}
   refractiveIndex: 1.54
   density: 1.95
   hardness: 2.9

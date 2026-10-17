@@ -17,6 +17,8 @@ MonoBehaviour:
     sous lumi\xE8re du jour, rouge sous \xE9clairage incandescent."
   icon: {fileID: 21300000, guid: 1202a0f69bb9848cc8d142c5e1a06afb, type: 3}
   roughIcon: {fileID: 21300000, guid: 13ce77ed7c9c84294b7c11e7da694a71, type: 3}
+  iconColor: {r: 0.15, g: 0.45, b: 0.35, a: 1}
+  iconFacetColor: {r: 0.55, g: 0.2, b: 0.3, a: 1}
   refractiveIndex: 1.745
   density: 3.73
   hardness: 8.5

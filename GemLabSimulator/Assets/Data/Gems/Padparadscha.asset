@@ -17,6 +17,8 @@ MonoBehaviour:
     vari\xE9t\xE9s de corindon les plus recherch\xE9es et les plus ch\xE8res au monde."
   icon: {fileID: 21300000, guid: 6c47ab4d617824e798082ebf35c3498b, type: 3}
   roughIcon: {fileID: 21300000, guid: 204213617fa81458d8ede66a7741acf2, type: 3}
+  iconColor: {r: 0.9, g: 0.5, b: 0.38, a: 1}
+  iconFacetColor: {r: 0.98, g: 0.72, b: 0.58, a: 1}
   refractiveIndex: 1.766
   density: 4
   hardness: 9

@@ -17,6 +17,8 @@ MonoBehaviour:
     l'\xE9meraude ou le p\xE9ridot."
   icon: {fileID: 21300000, guid: 538849f26a27145fbba73b9597e8a0c4, type: 3}
   roughIcon: {fileID: 21300000, guid: e879c391cfeac46b1b92c2f31f959271, type: 3}
+  iconColor: {r: 0.12, g: 0.55, b: 0.25, a: 1}
+  iconFacetColor: {r: 0.35, g: 0.78, b: 0.45, a: 1}
   refractiveIndex: 1.74
   density: 3.61
   hardness: 7.25

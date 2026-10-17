@@ -18,6 +18,8 @@ MonoBehaviour:
     presque jamais le carat une fois taill\xE9e."
   icon: {fileID: 21300000, guid: 0936c4906c1974f24abe1dbe947190bd, type: 3}
   roughIcon: {fileID: 21300000, guid: 2ae2fe99c4e7446e7a7a2af040ae9051, type: 3}
+  iconColor: {r: 0.65, g: 0.1, b: 0.2, a: 1}
+  iconFacetColor: {r: 0.88, g: 0.3, b: 0.38, a: 1}
   refractiveIndex: 1.57
   density: 2.68
   hardness: 7.75

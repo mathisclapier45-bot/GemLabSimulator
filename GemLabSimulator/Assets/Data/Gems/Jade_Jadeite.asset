@@ -17,6 +17,8 @@ MonoBehaviour:
     plus pris\xE9e des deux vari\xE9t\xE9s de \"jade\"."
   icon: {fileID: 21300000, guid: ba4c5acbe1429427a82b2672768fbf07, type: 3}
   roughIcon: {fileID: 21300000, guid: d11ca6fdc14d5454aa25641e01a97fa7, type: 3}
+  iconColor: {r: 0.2, g: 0.55, b: 0.3, a: 1}
+  iconFacetColor: {r: 0.45, g: 0.75, b: 0.5, a: 1}
   refractiveIndex: 1.665
   density: 3.34
   hardness: 6.75

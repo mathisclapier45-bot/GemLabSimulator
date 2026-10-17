@@ -18,6 +18,8 @@ MonoBehaviour:
     d'un unique gisement bolivien."
   icon: {fileID: 21300000, guid: 5aeb5ca0b773640038069183d9754495, type: 3}
   roughIcon: {fileID: 21300000, guid: 672257e4d7ac241b08517d19ee101015, type: 3}
+  iconColor: {r: 0.5, g: 0.35, b: 0.55, a: 1}
+  iconFacetColor: {r: 0.85, g: 0.65, b: 0.3, a: 1}
   refractiveIndex: 1.544
   density: 2.65
   hardness: 7
