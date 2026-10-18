@@ -23,7 +23,7 @@ public static class LapidaryCatalog
     public const int MaxJobs = 1;
 
     // Cutting grows the per-carat value of a finished stone compared with its rough form.
-    private const float CutValuePremium = 3.2f;
+    private const float CutValuePremium = 3.8f;
 
     public static readonly string[] Shapes =
     {
@@ -149,6 +149,7 @@ public static class LapidaryCatalog
     {
         if (gem == null) return "";
         if (IsDiamond(gem.Definition)) return "Je ne taille pas les diamants. Adressez-vous aux diamantaires.";
+        if (gem.IsClientStone) return "Cette pierre appartient à un client : je ne taille que vos propres spécimens.";
         if (!gem.IsRough) return "Cette pierre est déjà taillée.";
         if (!gem.IsIdentified) return "Je ne taille pas une pierre dont j'ignore la nature. Identifiez-la d'abord.";
         return null;

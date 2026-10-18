@@ -12,6 +12,9 @@ public class GemInstance
     public string DisplayId => $"{SpecimenId} — {ClientName}";
     public bool IsDonation { get; private set; }
     public bool IsRough { get; private set; }
+    // Stones that arrive by mail belong to a client: they are only identified/appraised, then sent back.
+    // Every other stone is one of the player's own specimens.
+    public bool IsClientStone { get; private set; }
     public bool IsIdentified { get; private set; }
 
     public GemOrigin Origin { get; private set; }
@@ -128,6 +131,8 @@ public class GemInstance
             ClientName = string.IsNullOrEmpty(data.clientName) ? ClientNames.GetRandom() : data.clientName,
             IsDonation = data.isDonation,
             IsRough = data.isRough,
+            // Older saves have no flag: anything that is not rough or a donation is treated as a client's stone.
+            IsClientStone = !data.isPersonalSpecimen && !data.isRough && !data.isDonation,
             IsIdentified = data.isIdentified,
             HasWindow = data.hasWindow,
             CutShape = string.IsNullOrEmpty(data.cutShape) ? null : data.cutShape,
@@ -172,6 +177,7 @@ public class GemInstance
             clientName = ClientName,
             isDonation = IsDonation,
             isRough = IsRough,
+            isPersonalSpecimen = !IsClientStone,
             isIdentified = IsIdentified,
             hasWindow = HasWindow,
             cutShape = CutShape,
@@ -209,6 +215,11 @@ public class GemInstance
     public void OpenWindow()
     {
         HasWindow = true;
+    }
+
+    public void MarkAsClientStone()
+    {
+        IsClientStone = true;
     }
 
     public void MarkAsRough()

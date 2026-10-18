@@ -53,7 +53,9 @@ public class MailboxState : MonoBehaviour
                 definition = database.allGems[UnityEngine.Random.Range(0, database.allGems.Count)];
             } while (definition.isTunnelExclusive);
 
-            pendingLetters.Add(new GemInstance(definition));
+            var letter = new GemInstance(definition);
+            if (!letter.IsDonation) letter.MarkAsClientStone();
+            pendingLetters.Add(letter);
             changed = true;
         }
 

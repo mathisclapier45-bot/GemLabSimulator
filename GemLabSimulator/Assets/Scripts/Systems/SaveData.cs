@@ -9,6 +9,7 @@ public class GemInstanceSaveData
     public string clientName;
     public bool isDonation;
     public bool isRough;
+    public bool isPersonalSpecimen;
     public bool isIdentified;
     public bool hasWindow;
     public string cutShape;

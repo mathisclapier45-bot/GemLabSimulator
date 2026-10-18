@@ -79,7 +79,7 @@ public class MailboxUI : MonoBehaviour
             var remaining = MailboxState.Instance != null ? MailboxState.Instance.LettersRemainingToday : 0;
             tabHintText.text = showingReceive
                 ? $"Récupérer — {remaining} lettre(s) restante(s) aujourd'hui"
-                : "Envoyer — gemmes identifiées prêtes à être renvoyées";
+                : "Envoyer — gemmes de clients identifiées, prêtes à être renvoyées";
         }
 
         var rowCount = showingReceive ? BuildReceiveRows() : BuildSendRows();
@@ -120,12 +120,12 @@ public class MailboxUI : MonoBehaviour
         if (inventory != null)
         {
             foreach (var gem in inventory.Gems)
-                if (gem.IsIdentified && !gem.IsDonation) sendable.Add(gem);
+                if (gem.IsIdentified && gem.IsClientStone) sendable.Add(gem);
         }
 
         if (sendable.Count == 0)
         {
-            CreateRow(0, "Aucune gemme identifiée à renvoyer.");
+            CreateRow(0, "Aucune gemme de client identifiée à renvoyer.");
             return 1;
         }
 

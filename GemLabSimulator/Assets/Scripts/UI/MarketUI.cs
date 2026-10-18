@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,27 +16,87 @@ public class MarketUI : MonoBehaviour
     [SerializeField] private RectTransform content;
 
     private MarketVendor currentVendor;
+    private bool selling;
+    private Button buyTabButton;
+    private Button sellTabButton;
 
     private void Awake()
     {
         Instance = this;
+        BuildTabs();
         if (panel != null) panel.SetActive(false);
     }
 
     private void Start()
     {
         if (MarketState.Instance != null) MarketState.Instance.OnMarketChanged += RefreshIfOpen;
+        if (PlayerInventory.Instance != null) PlayerInventory.Instance.OnInventoryChanged += RefreshIfOpen;
     }
 
     private void OnDestroy()
     {
         if (MarketState.Instance != null) MarketState.Instance.OnMarketChanged -= RefreshIfOpen;
+        if (PlayerInventory.Instance != null) PlayerInventory.Instance.OnInventoryChanged -= RefreshIfOpen;
+    }
+
+    // Tabs and the shifted scroll area are created here rather than in the editor script, so existing scenes
+    // only need to be regenerated, not re-wired.
+    private void BuildTabs()
+    {
+        if (panel == null) return;
+
+        var scrollView = panel.transform.Find("MarketScrollView") as RectTransform;
+        if (scrollView != null)
+        {
+            scrollView.anchoredPosition = new Vector2(0f, -78f);
+            scrollView.sizeDelta = new Vector2(420f, 250f);
+        }
+
+        buyTabButton = MakeTabButton("BuyTab", "Acheter", -105f);
+        sellTabButton = MakeTabButton("SellTab", "Vendre", 105f);
+        buyTabButton.onClick.AddListener(() => SetMode(false));
+        sellTabButton.onClick.AddListener(() => SetMode(true));
+    }
+
+    private Button MakeTabButton(string name, string label, float x)
+    {
+        var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
+        go.transform.SetParent(panel.transform, false);
+        var rect = go.GetComponent<RectTransform>();
+        rect.anchorMin = new Vector2(0.5f, 1f);
+        rect.anchorMax = new Vector2(0.5f, 1f);
+        rect.pivot = new Vector2(0.5f, 1f);
+        rect.anchoredPosition = new Vector2(x, -44f);
+        rect.sizeDelta = new Vector2(190f, 28f);
+
+        var textGO = new GameObject("Label", typeof(RectTransform), typeof(Text));
+        textGO.transform.SetParent(go.transform, false);
+        var textRect = textGO.GetComponent<RectTransform>();
+        textRect.anchorMin = Vector2.zero;
+        textRect.anchorMax = Vector2.one;
+        textRect.offsetMin = Vector2.zero;
+        textRect.offsetMax = Vector2.zero;
+        var text = textGO.GetComponent<Text>();
+        text.text = label;
+        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        text.fontSize = 14;
+        text.alignment = TextAnchor.MiddleCenter;
+        text.color = Color.white;
+        text.raycastTarget = false;
+        return go.GetComponent<Button>();
+    }
+
+    private void SetMode(bool sell)
+    {
+        selling = sell;
+        Refresh();
     }
 
     public void Open(MarketVendor vendor)
     {
         if (vendor == null) return;
         currentVendor = vendor;
+        selling = false;
         if (panel != null) panel.SetActive(true);
         Refresh();
     }
@@ -55,6 +117,12 @@ public class MarketUI : MonoBehaviour
         if (titleText != null)
             titleText.text = currentVendor != null ? $"Marchand — {currentVendor.CountryName}" : "";
 
+        if (buyTabButton != null)
+        {
+            buyTabButton.GetComponent<Image>().color = selling ? new Color(0.22f, 0.22f, 0.27f) : new Color(0.30f, 0.55f, 0.35f);
+            sellTabButton.GetComponent<Image>().color = selling ? new Color(0.30f, 0.55f, 0.35f) : new Color(0.22f, 0.22f, 0.27f);
+        }
+
         if (content == null) return;
 
         for (var i = content.childCount - 1; i >= 0; i--)
@@ -62,18 +130,52 @@ public class MarketUI : MonoBehaviour
 
         if (currentVendor == null) return;
 
+        var rows = selling ? BuildSellRows() : BuildBuyRows();
+        content.sizeDelta = new Vector2(content.sizeDelta.x, Mathf.Max(rows * (RowHeight + RowSpacing) + 10f, 40f));
+    }
+
+    private int BuildBuyRows()
+    {
         if (currentVendor.Stock.Count == 0)
         {
-            CreateRow(0, "Ce marchand n'a plus rien à vendre aujourd'hui.", null);
-            content.sizeDelta = new Vector2(content.sizeDelta.x, RowHeight + RowSpacing);
-            return;
+            CreateRow(0, "Ce marchand n'a plus rien à vendre aujourd'hui.", null, null);
+            return 1;
         }
 
         for (var i = 0; i < currentVendor.Stock.Count; i++)
-            CreateRow(i, BuildItemLabel(currentVendor.Stock[i]), currentVendor.Stock[i]);
+        {
+            var item = currentVendor.Stock[i];
+            CreateRow(i, BuildItemLabel(item), "Acheter", () => Purchase(item));
+        }
+        return currentVendor.Stock.Count;
+    }
 
-        content.sizeDelta = new Vector2(content.sizeDelta.x,
-            currentVendor.Stock.Count * (RowHeight + RowSpacing) + 10f);
+    private int BuildSellRows()
+    {
+        var sellable = new List<GemInstance>();
+        if (PlayerInventory.Instance != null)
+        {
+            foreach (var gem in PlayerInventory.Instance.Gems)
+            {
+                if (MarketState.CanSell(gem)) sellable.Add(gem);
+            }
+        }
+
+        if (sellable.Count == 0)
+        {
+            CreateRow(0, "Aucun spécimen identifié à vendre.\n(Les pierres de clients repartent par courrier.)", null, null);
+            return 1;
+        }
+
+        for (var i = 0; i < sellable.Count; i++)
+        {
+            var gem = sellable[i];
+            var offer = MarketState.Instance.GetBuybackPrice(currentVendor, gem);
+            var state = gem.IsRough ? "brute" : $"{gem.ShapeName}, {gem.CutStyleName.ToLowerInvariant()}";
+            var label = $"{gem.Definition.displayName} — {gem.CaratWeight:F2} ct ({state})\nOffre : {offer}€";
+            CreateRow(i, label, "Vendre", () => Sell(gem));
+        }
+        return sellable.Count;
     }
 
     private string BuildItemLabel(GemInstance item)
@@ -82,7 +184,7 @@ public class MarketUI : MonoBehaviour
         return $"{item.Definition.displayName}\nOrigine : {item.Origin.name}\nPrix : {price}€";
     }
 
-    private void CreateRow(int index, string label, GemInstance item)
+    private void CreateRow(int index, string label, string buttonLabel, Action onClick)
     {
         var y = -index * (RowHeight + RowSpacing);
 
@@ -111,7 +213,7 @@ public class MarketUI : MonoBehaviour
         text.alignment = TextAnchor.MiddleLeft;
         text.color = Color.white;
 
-        if (item == null) return;
+        if (onClick == null) return;
 
         var buttonGO = new GameObject("Button", typeof(RectTransform), typeof(Image), typeof(Button));
         buttonGO.transform.SetParent(rowGO.transform, false);
@@ -131,14 +233,13 @@ public class MarketUI : MonoBehaviour
         buttonTextRect.sizeDelta = Vector2.zero;
         buttonTextRect.anchoredPosition = Vector2.zero;
         var buttonText = buttonTextGO.AddComponent<Text>();
-        buttonText.text = "Acheter";
+        buttonText.text = buttonLabel;
         buttonText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         buttonText.fontSize = 13;
         buttonText.alignment = TextAnchor.MiddleCenter;
         buttonText.color = Color.white;
 
-        var button = buttonGO.GetComponent<Button>();
-        button.onClick.AddListener(() => Purchase(item));
+        buttonGO.GetComponent<Button>().onClick.AddListener(() => onClick());
     }
 
     private void Purchase(GemInstance item)
@@ -161,5 +262,15 @@ public class MarketUI : MonoBehaviour
 
         if (MarketState.Instance.TryPurchase(currentVendor, item, PlayerInventory.Instance, PlayerWallet.Instance))
             ToolFeedbackUI.Instance?.ShowMessage($"Achat : {item.Definition.displayName} pour {price}€.");
+    }
+
+    private void Sell(GemInstance gem)
+    {
+        if (currentVendor == null || PlayerInventory.Instance == null || PlayerWallet.Instance == null || MarketState.Instance == null)
+            return;
+
+        var name = gem.Definition.displayName;
+        if (MarketState.Instance.TrySell(currentVendor, gem, PlayerInventory.Instance, PlayerWallet.Instance, out var price))
+            ToolFeedbackUI.Instance?.ShowMessage($"Vente : {name} pour {price}€ ({currentVendor.CountryName}).");
     }
 }
