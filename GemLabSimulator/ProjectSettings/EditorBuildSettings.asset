@@ -30,9 +30,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MarcheBrutes.unity
     guid: 273ebd537889c4d7d93743d7e783a22c
   - enabled: 1
-    path: Assets/Scenes/Town.unity
-    guid: 436994916875340dba60314ffa83766d
-  - enabled: 1
     path: Assets/Scenes/Tunnel.unity
     guid: 5d09c9470828046c6981ab066e7646f1
+  - enabled: 1
+    path: Assets/Scenes/Town.unity
+    guid: 436994916875340dba60314ffa83766d
   m_configObjects: {}

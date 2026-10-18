@@ -338,6 +338,14 @@ public static class SceneBootstrap
         PaintStreetRect(-65, 65, 24, 27, false);
         PaintStreetRect(-55, 55, -19, -16, false);
         PaintStreetRect(-1, 1, -48, 24, true);
+        PaintStreetRect(-40, 40, 3, 6, false);
+        PaintStreetRect(-45, 45, -39, -36, false);
+        // Path to Vincent Pardieu's cabin, off on its own in the upper-left.
+        PaintStreetRect(-58, -40, 3, 6, false);
+        PaintStreetRect(-57, -55, 6, 9, true);
+        // Airport on the right edge: street in front of the terminal, then the runway.
+        PaintStreetRect(40, 63, 3, 6, false);
+        PaintRunway(groundTilemap, 64, 68, -13, 21);
 
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(-55, 25, 0f);
@@ -392,6 +400,14 @@ public static class SceneBootstrap
         CreateRealBuilding("Marche aux Brutes", new Vector3(15, -15, 0f), HouseStyle.Modern, "MarcheBrutes", true);
         CreateRealBuilding("Le Manoir", new Vector3(45, -15, 0f), HouseStyle.Chalet, "Manoir", true);
 
+        // Decorative for now: no interior yet, the door shows the usual "not accessible" message.
+        CreateRealBuilding("Bijouterie", new Vector3(-22, 7, 0f), HouseStyle.Chalet, "", false);
+        CreateRealBuilding("Banque et Encheres", new Vector3(22, 7, 0f), HouseStyle.Modern, "", false);
+
+        CreateDealership(new Vector3(28, -35, 0f));
+        CreateVincentPardieuHouse(new Vector3(-58, 10, 0f));
+        CreateAirport(new Vector3(58, 8, 0f), new Vector3(46, 8, 0f), new Vector3(59, -5, 0f));
+
         CreateTunnelEntrance(new Vector3(0, -50, 0f));
 
         CreateNamedSpawnPoint("SpawnPoint_Home", new Vector3(-55, 26, 0f));
@@ -415,7 +431,8 @@ public static class SceneBootstrap
         {
             CreateTree(new Vector3(TownMinX + 4, y, 0f), bushVariant % 2);
             bushVariant++;
-            CreateTree(new Vector3(TownMaxX - 4, y, 0f), bushVariant % 2);
+            // Keep the runway clear of the right-hand tree line.
+            if (y < -14 || y > 22) CreateTree(new Vector3(TownMaxX - 4, y, 0f), bushVariant % 2);
             bushVariant++;
         }
 
@@ -427,6 +444,8 @@ public static class SceneBootstrap
             new Vector3(-55, 26, 0f), new Vector3(-30, 26, 0f), new Vector3(-5, 26, 0f),
             new Vector3(20, 26, 0f), new Vector3(45, 26, 0f),
             new Vector3(-45, -17, 0f), new Vector3(-15, -17, 0f), new Vector3(15, -17, 0f), new Vector3(45, -17, 0f),
+            new Vector3(-22, 5, 0f), new Vector3(22, 5, 0f), new Vector3(28, -37, 0f), new Vector3(-56, 8, 0f),
+            new Vector3(46, 6, 0f), new Vector3(58, 6, 0f),
         };
 
         foreach (var pos in buildingStreetSpots)
@@ -1583,6 +1602,168 @@ public static class SceneBootstrap
         CreateBuildingLabel(label, position + new Vector3(0, labelHeight, 0));
     }
 
+    // Painted on the ground tilemap: asphalt with white edge lines and a dashed center line.
+    private static void PaintRunway(Tilemap ground, int minX, int maxX, int minY, int maxY)
+    {
+        Color Asphalt(int x, int y) => ((x * 7 + y * 13) % 17 == 0) ? new Color(0.27f, 0.28f, 0.31f) : new Color(0.22f, 0.23f, 0.26f);
+
+        var plain = GetOrCreateTile("runway_plain", (x, y) => Asphalt(x, y));
+        var edgeLeft = GetOrCreateTile("runway_edge_left", (x, y) => x >= 3 && x <= 4 ? new Color(0.9f, 0.9f, 0.9f) : Asphalt(x, y));
+        var edgeRight = GetOrCreateTile("runway_edge_right", (x, y) => x >= 27 && x <= 28 ? new Color(0.9f, 0.9f, 0.9f) : Asphalt(x, y));
+        var dash = GetOrCreateTile("runway_dash", (x, y) => x >= 15 && x <= 16 && y >= 4 && y <= 27 ? new Color(0.9f, 0.9f, 0.9f) : Asphalt(x, y));
+
+        var centerX = (minX + maxX) / 2;
+        for (var x = minX; x <= maxX; x++)
+        {
+            for (var y = minY; y <= maxY; y++)
+            {
+                Tile tile;
+                if (x == minX) tile = edgeLeft;
+                else if (x == maxX) tile = edgeRight;
+                else if (x == centerX && y % 2 == 0) tile = dash;
+                else tile = plain;
+                ground.SetTile(new Vector3Int(x, y, 0), tile);
+            }
+        }
+    }
+
+    // Decorative airport: terminal hangar (locked for now, later the way to travel to the mines), control tower
+    // and a parked helicopter. The runway itself is painted in the town scene.
+    private static void CreateAirport(Vector3 terminalPos, Vector3 towerPos, Vector3 helicopterPos)
+    {
+        var terminal = LoadPackSpriteGrounded("Assets/Art/Sprites/airport_hangar.png");
+        if (terminal != null)
+        {
+            var go = new GameObject("Aeroport");
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = terminal;
+            sr.sortingOrder = 4;
+            go.transform.position = terminalPos;
+
+            var col = go.AddComponent<BoxCollider2D>();
+            col.isTrigger = true;
+            col.size = new Vector2(4f, 3f);
+            col.offset = new Vector2(-0.3f, 1.2f);
+
+            var door = go.AddComponent<DoorTrigger>();
+            var so = new SerializedObject(door);
+            var sceneNameProp = so.FindProperty("sceneName");
+            var implementedProp = so.FindProperty("implemented");
+            var lockedProp = so.FindProperty("lockedMessage");
+            if (sceneNameProp != null) sceneNameProp.stringValue = "";
+            if (implementedProp != null) implementedProp.boolValue = false;
+            if (lockedProp != null) lockedProp.stringValue = "Aéroport : les vols vers les mines ne sont pas encore ouverts.";
+            so.ApplyModifiedProperties();
+
+            CreateBuildingLabel("Aeroport", terminalPos + new Vector3(0f, terminal.bounds.size.y + 0.5f, 0f));
+        }
+
+        var tower = LoadPackSpriteGrounded("Assets/Art/Sprites/airport_tower.png");
+        if (tower != null)
+        {
+            var go = new GameObject("Tour de controle");
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = tower;
+            sr.sortingOrder = 4;
+            go.transform.position = towerPos;
+
+            var col = go.AddComponent<BoxCollider2D>();
+            col.size = new Vector2(tower.bounds.size.x * 0.8f, 1.2f);
+            col.offset = new Vector2(0f, 0.6f);
+        }
+
+        var helicopter = LoadPackSpriteGrounded("Assets/Art/Sprites/airport_helicopter.png");
+        if (helicopter != null)
+        {
+            var go = new GameObject("Helicoptere");
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = helicopter;
+            sr.sortingOrder = 4;
+            go.transform.position = helicopterPos;
+
+            var col = go.AddComponent<BoxCollider2D>();
+            col.size = new Vector2(helicopter.bounds.size.x * 0.6f, 1.6f);
+            col.offset = new Vector2(0f, 1.2f);
+        }
+    }
+
+    // Small cabin away from the town center: home of Vincent Pardieu (NPC, not accessible yet).
+    private static void CreateVincentPardieuHouse(Vector3 position)
+    {
+        var sprite = LoadPackSpriteGrounded("Assets/Art/Sprites/house_cabin.png");
+        if (sprite == null) return;
+
+        var go = new GameObject("Maison de Vincent Pardieu");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(3f, 3f);
+        col.offset = new Vector2(1.6f, 1.5f);
+
+        var door = go.AddComponent<DoorTrigger>();
+        var so = new SerializedObject(door);
+        var sceneNameProp = so.FindProperty("sceneName");
+        var implementedProp = so.FindProperty("implemented");
+        var lockedProp = so.FindProperty("lockedMessage");
+        if (sceneNameProp != null) sceneNameProp.stringValue = "";
+        if (implementedProp != null) implementedProp.boolValue = false;
+        if (lockedProp != null) lockedProp.stringValue = "Maison de Vincent Pardieu : personne ne répond pour l'instant.";
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel("Maison de Vincent Pardieu", position + new Vector3(0f, sprite.bounds.size.y + 0.5f, 0f));
+    }
+
+    // Decorative car dealership: showroom building (locked door) with a few cars parked beside it.
+    private static void CreateDealership(Vector3 position)
+    {
+        var sprite = LoadPackSpriteGrounded("Assets/Art/Sprites/dealership_building.png");
+        if (sprite == null) return;
+
+        var go = new GameObject("Concessionnaire Automobile");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(4f, 3f);
+        col.offset = new Vector2(-0.3f, 1.5f);
+
+        var door = go.AddComponent<DoorTrigger>();
+        var so = new SerializedObject(door);
+        var sceneNameProp = so.FindProperty("sceneName");
+        var implementedProp = so.FindProperty("implemented");
+        var lockedProp = so.FindProperty("lockedMessage");
+        if (sceneNameProp != null) sceneNameProp.stringValue = "";
+        if (implementedProp != null) implementedProp.boolValue = false;
+        if (lockedProp != null) lockedProp.stringValue = "Concessionnaire Automobile : ce lieu n'est pas encore accessible.";
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel("Concessionnaire Auto", position + new Vector3(0f, sprite.bounds.size.y + 0.5f, 0f));
+
+        var cars = new (int model, float dx)[] { (1, -20f), (4, -17f), (11, -14f), (13, 14f), (5, 17f) };
+        foreach (var (model, dx) in cars)
+        {
+            var carSprite = LoadPackSpriteGrounded($"Assets/Art/Sprites/car_down_{model}.png");
+            if (carSprite == null) continue;
+
+            var car = new GameObject($"Voiture_{model}");
+            var carSr = car.AddComponent<SpriteRenderer>();
+            carSr.sprite = carSprite;
+            carSr.sortingOrder = 4;
+            car.transform.position = position + new Vector3(dx, 0.2f, 0f);
+
+            var carCol = car.AddComponent<BoxCollider2D>();
+            carCol.size = new Vector2(1.7f, 3.2f);
+            carCol.offset = new Vector2(0f, 1.8f);
+        }
+    }
+
     private static void CreateTunnelEntrance(Vector3 position)
     {
         var sprite = GetOrCreatePixelSprite("tunnel_pixel", TunnelPattern, TunnelPalette);
@@ -2563,6 +2744,7 @@ public static class SceneBootstrap
             ("Musée", 20, 28), ("Quartier Diamantaires", 45, 28),
             ("Marché Pierres", -45, -15), ("École", -15, -15),
             ("Marché Brutes", 15, -15), ("Manoir", 45, -15),
+            ("Bijouterie", -22, 7), ("Banque", 22, 7), ("Concessionnaire", 28, -35), ("Vincent Pardieu", -58, 10), ("Aéroport", 58, 8),
             ("Tunnel", 0, -50),
         };
 
