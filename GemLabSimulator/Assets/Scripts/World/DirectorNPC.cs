@@ -18,17 +18,12 @@ public class DirectorNPC : MonoBehaviour
         if (other.GetComponent<PlayerInventory>() != playerInventory) return;
         playerInRange = false;
         playerInventory = null;
+        ReportUIController.Instance?.Close();
     }
 
     private void Update()
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
-
-        if (playerInventory.SelectedGem == null)
-        {
-            ToolFeedbackUI.Instance.ShowMessage("Le directeur : \"Revenez avec une gemme sélectionnée (Tab pour l'inventaire).\"");
-            return;
-        }
 
         ReportUIController.Instance.Open(playerInventory);
     }

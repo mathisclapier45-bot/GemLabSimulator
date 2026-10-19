@@ -248,13 +248,13 @@ public static class SceneBootstrap
         CreateExaminationStation("Spectroscope", ExaminationTool.MeasurementType.AbsorptionSpectrum, new Vector3(21.5f, 2, 0f));
         CreateExaminationStation("Microscope", ExaminationTool.MeasurementType.Inclusions, new Vector3(24, 2, 0f));
 
-        CreateExaminationStation("Conoscope", ExaminationTool.MeasurementType.InterferenceFigure, new Vector3(9, -2, 0f));
-        CreateExaminationStation("UVLongues", ExaminationTool.MeasurementType.FluorescenceLongWave, new Vector3(11.5f, -2, 0f));
-        CreateExaminationStation("UVCourtes", ExaminationTool.MeasurementType.FluorescenceShortWave, new Vector3(14, -2, 0f));
-        CreateExaminationStation("FiltreChelsea", ExaminationTool.MeasurementType.ChelseaFilter, new Vector3(16.5f, -2, 0f));
-        CreateExaminationStation("Micrometre", ExaminationTool.MeasurementType.Dimensions, new Vector3(19, -2, 0f));
-        CreateExaminationStation("BalanceCarat", ExaminationTool.MeasurementType.Weight, new Vector3(21.5f, -2, 0f));
-        CreateExaminationStation("Aimant", ExaminationTool.MeasurementType.Magnetism, new Vector3(24, -2, 0f));
+        // The conoscope is now built into the polariscope, so it has no station of its own.
+        // One UV cabinet with both lamps (365 nm and 254 nm) replaces the two former UV stations.
+        CreateExaminationStation("CabineUV", ExaminationTool.MeasurementType.FluorescenceLongWave, new Vector3(9, -2, 0f));
+        CreateExaminationStation("FiltreChelsea", ExaminationTool.MeasurementType.ChelseaFilter, new Vector3(11.5f, -2, 0f));
+        CreateExaminationStation("Micrometre", ExaminationTool.MeasurementType.Dimensions, new Vector3(14, -2, 0f));
+        CreateExaminationStation("BalanceCarat", ExaminationTool.MeasurementType.Weight, new Vector3(16.5f, -2, 0f));
+        CreateExaminationStation("Aimant", ExaminationTool.MeasurementType.Magnetism, new Vector3(19, -2, 0f));
 
         CreateDirector(new Vector3(26, 0, 0f));
         DecorateHome();
@@ -406,6 +406,7 @@ public static class SceneBootstrap
 
         CreateDealership(new Vector3(28, -35, 0f));
         CreateVincentPardieuHouse(new Vector3(-58, 10, 0f));
+        CreateLibrary(new Vector3(-41, 7, 0f));
         CreateAirport(new Vector3(58, 8, 0f), new Vector3(46, 8, 0f), new Vector3(59, -5, 0f));
 
         CreateTunnelEntrance(new Vector3(0, -50, 0f));
@@ -446,6 +447,7 @@ public static class SceneBootstrap
             new Vector3(-45, -17, 0f), new Vector3(-15, -17, 0f), new Vector3(15, -17, 0f), new Vector3(45, -17, 0f),
             new Vector3(-22, 5, 0f), new Vector3(22, 5, 0f), new Vector3(28, -37, 0f), new Vector3(-56, 8, 0f),
             new Vector3(46, 6, 0f), new Vector3(58, 6, 0f),
+            new Vector3(-41, 5, 0f),
         };
 
         foreach (var pos in buildingStreetSpots)
@@ -1687,6 +1689,36 @@ public static class SceneBootstrap
         }
     }
 
+    // Decorative library (brick building with a clock-less tower); locked until its interior exists.
+    private static void CreateLibrary(Vector3 position)
+    {
+        var sprite = LoadPackSpriteGrounded("Assets/Art/Sprites/building_library.png");
+        if (sprite == null) return;
+
+        var go = new GameObject("Bibliotheque");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(3f, 3f);
+        col.offset = new Vector2(-6f, 1.5f);
+
+        var door = go.AddComponent<DoorTrigger>();
+        var so = new SerializedObject(door);
+        var sceneNameProp = so.FindProperty("sceneName");
+        var implementedProp = so.FindProperty("implemented");
+        var lockedProp = so.FindProperty("lockedMessage");
+        if (sceneNameProp != null) sceneNameProp.stringValue = "";
+        if (implementedProp != null) implementedProp.boolValue = false;
+        if (lockedProp != null) lockedProp.stringValue = "Bibliothèque : ce lieu n'est pas encore accessible.";
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel("Bibliotheque", position + new Vector3(0f, sprite.bounds.size.y + 0.5f, 0f));
+    }
+
     // Small cabin away from the town center: home of Vincent Pardieu (NPC, not accessible yet).
     private static void CreateVincentPardieuHouse(Vector3 position)
     {
@@ -2744,7 +2776,7 @@ public static class SceneBootstrap
             ("Musée", 20, 28), ("Quartier Diamantaires", 45, 28),
             ("Marché Pierres", -45, -15), ("École", -15, -15),
             ("Marché Brutes", 15, -15), ("Manoir", 45, -15),
-            ("Bijouterie", -22, 7), ("Banque", 22, 7), ("Concessionnaire", 28, -35), ("Vincent Pardieu", -58, 10), ("Aéroport", 58, 8),
+            ("Bijouterie", -22, 7), ("Banque", 22, 7), ("Concessionnaire", 28, -35), ("Vincent Pardieu", -58, 10), ("Aéroport", 58, 8), ("Bibliothèque", -41, 7),
             ("Tunnel", 0, -50),
         };
 
@@ -7120,9 +7152,7 @@ public static class SceneBootstrap
             case "Polariscope": return GetOrCreatePixelSprite("polariscope_pixel", PolariscopePattern, PolariscopePalette);
             case "Spectroscope": return GetOrCreatePixelSprite("spectroscope_pixel", DichroscopePattern, SpectroscopePalette);
             case "Microscope": return GetOrCreatePixelSprite("microscope_pixel", MicroscopePattern, MicroscopePalette);
-            case "Conoscope": return GetOrCreatePixelSprite("conoscope_pixel", DichroscopePattern, ConoscopePalette);
-            case "UVLongues": return GetOrCreatePixelSprite("uvlongues_pixel", LampeUVPattern, LampeUVPalette);
-            case "UVCourtes": return GetOrCreatePixelSprite("uvcourtes_pixel", LampeUVPattern, UVCourtesPalette);
+            case "CabineUV": return GetOrCreatePixelSprite("uvlongues_pixel", LampeUVPattern, LampeUVPalette);
             case "FiltreChelsea": return GetOrCreatePixelSprite("chelsea_pixel", LoupePattern, ChelseaPalette);
             case "Micrometre": return GetOrCreatePixelSprite("micrometre_pixel", MicrometrePattern, MicrometrePalette);
             case "BalanceCarat": return GetOrCreatePixelSprite("balancecarat_pixel", BalanceCaratPattern, BalanceCaratPalette);
@@ -7526,12 +7556,6 @@ public static class SceneBootstrap
         { 'L', new Color(0.85f, 0.35f, 0.30f) },
     };
 
-    private static readonly Dictionary<char, Color> ConoscopePalette = new Dictionary<char, Color>
-    {
-        { 'D', new Color(0.55f, 0.36f, 0.18f) },
-        { 'L', new Color(0.90f, 0.75f, 0.45f) },
-    };
-
     private static readonly string[] MicroscopePattern =
     {
         Row(16, '.'),
@@ -7557,13 +7581,6 @@ public static class SceneBootstrap
         { 'E', new Color(0.65f, 0.68f, 0.72f) },
         { 'B', new Color(0.18f, 0.32f, 0.24f) },
         { 'K', new Color(0.10f, 0.10f, 0.10f) },
-    };
-
-    private static readonly Dictionary<char, Color> UVCourtesPalette = new Dictionary<char, Color>
-    {
-        { 'U', new Color(0.29f, 0.24f, 0.88f) },
-        { 'u', new Color(0.58f, 0.50f, 1.00f) },
-        { 'B', new Color(0.23f, 0.23f, 0.23f) },
     };
 
     private static readonly Dictionary<char, Color> ChelseaPalette = new Dictionary<char, Color>

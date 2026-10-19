@@ -15,6 +15,10 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private float fadeDuration = 1.5f;
     [SerializeField] private float volume = 0.5f;
 
+    private const string MutedPrefKey = "MusicMuted";
+
+    public bool IsMuted { get; private set; }
+
     private AudioSource source;
     private AudioClip currentClip;
     private Coroutine fadeRoutine;
@@ -36,7 +40,24 @@ public class MusicManager : MonoBehaviour
         source.volume = 0f;
         source.spatialBlend = 0f;
 
+        try { IsMuted = PlayerPrefs.GetInt(MutedPrefKey, 0) == 1; } catch (System.Exception) { IsMuted = false; }
+        source.mute = IsMuted;
+
         SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    public void SetMuted(bool muted)
+    {
+        IsMuted = muted;
+        if (source != null) source.mute = muted;
+        try
+        {
+            PlayerPrefs.SetInt(MutedPrefKey, muted ? 1 : 0);
+            PlayerPrefs.Save();
+        }
+        catch (System.Exception)
+        {
+        }
     }
 
     private void Start()
