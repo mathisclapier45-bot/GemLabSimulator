@@ -63,7 +63,7 @@ public class GemDragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     private static string BuildTooltipText(GemInstance gem)
     {
         if (!gem.IsIdentified)
-            return $"(gemme non identifiée)\nN° {gem.DisplayId}";
+            return $"(gemme non identifiée)\nN° {gem.DisplayId}{BuildMeasurementLines(gem)}";
 
         var valueLine = gem.IsDonation
             ? "Don — à conserver, non destiné à être renvoyé"
@@ -81,6 +81,30 @@ public class GemDragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                $"Traitement : {gem.TreatmentGrade}\n" +
                $"Authenticité : {gem.AuthenticityGrade}\n" +
                $"{valueLine}";
+    }
+
+    // Measurements taken with the lab tools are added to the description of a stone that is not identified yet.
+    private static string BuildMeasurementLines(GemInstance gem)
+    {
+        var lines = "";
+
+        if (gem.HasObserved(ExaminationTool.MeasurementType.Weight.ToString()))
+            lines += $"\nPoids : {gem.CaratWeight:F2} ct ({gem.CaratWeight * 0.2f:F3} g)";
+
+        foreach (var line in DimensionReport.Lines(gem))
+            lines += "\n" + line;
+
+        var refractiveKey = ExaminationTool.MeasurementType.RefractiveIndex.ToString();
+        if (gem.HasMeasured(refractiveKey))
+            lines += $"\nIndice de réfraction : {gem.GetMeasuredValue(refractiveKey):F3}";
+        else if (gem.HasObserved("RefractiveIndexOTL"))
+            lines += "\nIndice de réfraction : OTL (> 1.81)";
+
+        var densityKey = ExaminationTool.MeasurementType.Density.ToString();
+        if (gem.HasMeasured(densityKey))
+            lines += $"\nDensité : {gem.GetMeasuredValue(densityKey):F2}";
+
+        return lines;
     }
 
     public void OnPointerExit(PointerEventData eventData)

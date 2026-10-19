@@ -46,6 +46,19 @@ public class ExaminationTool : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.GetComponent<PlayerInventory>() != playerInventory) return;
+        if (measurementType == MeasurementType.Weight) WeightScaleUI.Instance?.Close();
+        if (measurementType == MeasurementType.RefractiveIndex) RefractometerUI.Instance?.Close();
+        if (measurementType == MeasurementType.OpticalCharacter) PolariscopeUI.Instance?.Close();
+        if (measurementType == MeasurementType.AbsorptionSpectrum) SpectroscopeUI.Instance?.Close();
+        if (measurementType == MeasurementType.Density) HydrostaticBalanceUI.Instance?.Close();
+        if (measurementType == MeasurementType.FluorescenceLongWave || measurementType == MeasurementType.FluorescenceShortWave)
+            UvCabinUI.Instance?.Close();
+        if (measurementType == MeasurementType.ChelseaFilter) ChelseaFilterUI.Instance?.Close();
+        if (measurementType == MeasurementType.Dimensions) MicrometerUI.Instance?.Close();
+        if (measurementType == MeasurementType.Magnetism) MagnetUI.Instance?.Close();
+        if (measurementType == MeasurementType.Pleochroism) DichroscopeUI.Instance?.Close();
+        if (measurementType == MeasurementType.VisualExamination) LoupeUI.Instance?.Close();
+        if (measurementType == MeasurementType.Inclusions) MicroscopeUI.Instance?.Close();
         playerInRange = false;
         playerInventory = null;
         ToolInfoUI.Instance?.HideButtonIfCurrent(toolName);
@@ -54,6 +67,43 @@ public class ExaminationTool : MonoBehaviour
     private void Update()
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
+
+        // The carat balance has its own drag-and-drop interface.
+        if (measurementType == MeasurementType.Weight && WeightScaleUI.TryOpen()) return;
+
+        // Same for the refractometer: hemicylinder, graduated scale and rotating lens.
+        if (measurementType == MeasurementType.RefractiveIndex && RefractometerUI.TryOpen()) return;
+
+        // And the polariscope: rotate the stone between crossed polarizers.
+        if (measurementType == MeasurementType.OpticalCharacter && PolariscopeUI.TryOpen()) return;
+
+        // The spectroscope shows the absorption spectrum with hover wavelengths.
+        if (measurementType == MeasurementType.AbsorptionSpectrum && SpectroscopeUI.TryOpen()) return;
+
+        // The hydrostatic balance: weight in water, then density once the air weight is known.
+        if (measurementType == MeasurementType.Density && HydrostaticBalanceUI.TryOpen()) return;
+
+        // Both UV stations open the same UV cabinet, with a long-wave and a short-wave lamp.
+        if ((measurementType == MeasurementType.FluorescenceLongWave || measurementType == MeasurementType.FluorescenceShortWave)
+            && UvCabinUI.TryOpen()) return;
+
+        // Chelsea filter: reflected light and a red reaction for chromium-colored stones.
+        if (measurementType == MeasurementType.ChelseaFilter && ChelseaFilterUI.TryOpen()) return;
+
+        // Micrometer: place the stone in three positions to read length, width and depth.
+        if (measurementType == MeasurementType.Dimensions && MicrometerUI.TryOpen()) return;
+
+        // Magnet: the gem slides toward it if it is attracted.
+        if (measurementType == MeasurementType.Magnetism && MagnetUI.TryOpen()) return;
+
+        // Dichroscope: turn the stone in every direction to see two or three colors.
+        if (measurementType == MeasurementType.Pleochroism && DichroscopeUI.TryOpen()) return;
+
+        // 10x loupe: rotate the stone, move the lens, look for inclusions and surface defects.
+        if (measurementType == MeasurementType.VisualExamination && LoupeUI.TryOpen()) return;
+
+        // Microscope: 10x-40x, reflected light or darkfield, fine focus. Rough stones need a window (handled inside).
+        if (measurementType == MeasurementType.Inclusions && MicroscopeUI.TryOpen()) return;
 
         var gemInstance = playerInventory.SelectedGem;
         if (gemInstance == null)

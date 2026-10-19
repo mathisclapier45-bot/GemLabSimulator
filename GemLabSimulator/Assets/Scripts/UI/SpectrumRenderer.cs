@@ -3,21 +3,27 @@ using UnityEngine;
 
 public static class SpectrumRenderer
 {
-    private const float MinNm = 400f;
-    private const float MaxNm = 700f;
+    public const float MinNm = 400f;
+    public const float MaxNm = 700f;
     private const int TextureWidth = 300;
     private const int TextureHeight = 40;
 
     public static Sprite BuildSpectrumSprite(List<SpectrumLine> lines)
     {
-        var tex = new Texture2D(TextureWidth, TextureHeight, TextureFormat.RGBA32, false)
+        return BuildSpectrumSprite(lines, TextureWidth, TextureHeight);
+    }
+
+    public static Sprite BuildSpectrumSprite(List<SpectrumLine> lines, int width, int height)
+    {
+        var tex = new Texture2D(width, height, TextureFormat.RGBA32, false)
         {
-            filterMode = FilterMode.Bilinear
+            filterMode = FilterMode.Bilinear,
+            wrapMode = TextureWrapMode.Clamp,
         };
 
-        for (var x = 0; x < TextureWidth; x++)
+        for (var x = 0; x < width; x++)
         {
-            var t = x / (float)(TextureWidth - 1);
+            var t = x / (float)(width - 1);
             var wavelength = Mathf.Lerp(MinNm, MaxNm, t);
             var baseColor = WavelengthToColor(wavelength);
 
@@ -34,12 +40,12 @@ public static class SpectrumRenderer
             }
 
             var finalColor = Color.Lerp(baseColor, Color.black, darkness * 0.85f);
-            for (var y = 0; y < TextureHeight; y++)
+            for (var y = 0; y < height; y++)
                 tex.SetPixel(x, y, finalColor);
         }
 
         tex.Apply();
-        return Sprite.Create(tex, new Rect(0, 0, TextureWidth, TextureHeight), new Vector2(0.5f, 0.5f), 100f);
+        return Sprite.Create(tex, new Rect(0, 0, width, height), new Vector2(0.5f, 0.5f), 100f);
     }
 
     private static Color WavelengthToColor(float wavelength)
