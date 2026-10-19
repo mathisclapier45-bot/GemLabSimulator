@@ -115,7 +115,7 @@ public class GrimoireUI : MonoBehaviour
         iconRect.anchoredPosition = new Vector2(0, -6f);
         iconRect.sizeDelta = new Vector2(CardSize - 24f, CardSize - 24f);
         var iconImage = iconGO.GetComponent<Image>();
-        iconImage.sprite = discovered ? def.icon : lockedIcon;
+        iconImage.sprite = discovered ? def.GetIcon() : lockedIcon;
         iconImage.preserveAspect = true;
 
         var nameGO = new GameObject("Name", typeof(RectTransform));

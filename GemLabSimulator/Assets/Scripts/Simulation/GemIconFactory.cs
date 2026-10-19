@@ -1,112 +1,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Builds gem icons at runtime so that a stone cut at the lapidary shows the chosen shape/style.
-// The 16x16 shape patterns live in GemIconPatterns.cs.
-public static partial class GemIconFactory
+// Runtime gem icons ("3D pixel" art from GemPixelArt): a stone shows the shape and cut style it really has,
+// including the ones chosen at the lapidary.
+public static class GemIconFactory
 {
-    private const int PatternSize = 16;
-    private const int Upscale = 2;
-
     private static readonly Dictionary<string, Sprite> Cache = new Dictionary<string, Sprite>();
 
     public static Sprite Get(GemDefinition def, string shape, string cutStyle)
     {
         if (def == null) return null;
-        if (def.iconColor.a <= 0f || string.IsNullOrEmpty(shape)) return def.icon;
+        if (def.iconColor.a <= 0f) return def.icon;
 
         var key = $"{def.name}|{shape}|{cutStyle}";
         if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
 
-        if (!PatternsByShape.TryGetValue(shape, out var basePattern)) basePattern = DefaultPattern;
-        var pattern = ApplyStyle(basePattern, cutStyle);
-        var sprite = Build(pattern, def.iconColor, def.iconFacetColor);
+        var sprite = ToSprite(GemPixelArt.RenderGem(shape, cutStyle, def.iconColor, def.iconFacetColor));
         Cache[key] = sprite;
         return sprite;
     }
 
-    private static string[] ApplyStyle(string[] basePattern, string cutStyle)
+    public static Sprite GetRough(GemDefinition def)
     {
-        var rows = new string[basePattern.Length];
-        for (var y = 0; y < basePattern.Length; y++)
-        {
-            var chars = basePattern[y].ToCharArray();
-            for (var x = 0; x < chars.Length; x++)
-            {
-                switch (cutStyle)
-                {
-                    case "Cabochon":
-                        // Smooth dome: no facets, one soft highlight near the top-left.
-                        if (chars[x] == 'F') chars[x] = 'G';
-                        break;
-                    case "À degrés":
-                    case "Émeraude":
-                    case "Ascher":
-                        // Step cut: horizontal bands of light.
-                        if (chars[x] != '.') chars[x] = (y % 2 == 0) ? 'F' : 'G';
-                        break;
-                    case "Ciseaux":
-                        // Scissor cut: crossing diagonal bands.
-                        if (chars[x] != '.') chars[x] = ((x + y) % 4 < 2) ? 'F' : 'G';
-                        break;
-                    case "Princesse":
-                    case "Radiant":
-                        // Chevron-like faceting.
-                        if (chars[x] != '.') chars[x] = (Mathf.Abs(x - PatternSize / 2) + y) % 4 == 0 ? 'F' : 'G';
-                        break;
-                }
-            }
+        if (def == null) return null;
+        if (def.iconColor.a <= 0f) return def.roughIcon;
 
-            rows[y] = new string(chars);
-        }
+        var key = $"{def.name}|rough";
+        if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
 
-        if (cutStyle == "Cabochon")
-        {
-            for (var y = 0; y < rows.Length; y++)
-            {
-                var chars = rows[y].ToCharArray();
-                var placed = false;
-                for (var x = 0; x < chars.Length && !placed; x++)
-                {
-                    if (chars[x] != 'G' || y < 3) continue;
-                    if (x + 1 < chars.Length && chars[x + 1] == 'G' && y + 1 < rows.Length && rows[y + 1][x] == 'G')
-                    {
-                        chars[x] = 'F';
-                        placed = true;
-                    }
-                }
-
-                rows[y] = new string(chars);
-                if (placed) break;
-            }
-        }
-
-        return rows;
+        var sprite = ToSprite(GemPixelArt.RenderRough(def.iconColor, (int)StoneOptics.StableHash(def.name)));
+        Cache[key] = sprite;
+        return sprite;
     }
 
-    private static Sprite Build(string[] pattern, Color body, Color facet)
+    // Flat-colored version of a shape/style, used for effects such as UV luminescence (body = main color,
+    // facet = highlight color). The facet shading stays, so a white body can be tinted at will.
+    public static Sprite GetSolid(string shape, string cutStyle, Color body, Color facet)
     {
-        var size = PatternSize * Upscale;
-        var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
-        {
-            filterMode = FilterMode.Point,
-            wrapMode = TextureWrapMode.Clamp,
-        };
+        var key = $"solid|{shape}|{cutStyle}|{ColorUtility.ToHtmlStringRGB(body)}|{ColorUtility.ToHtmlStringRGB(facet)}";
+        if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
 
-        for (var py = 0; py < PatternSize; py++)
-        {
-            var row = py < pattern.Length ? pattern[py] : new string('.', PatternSize);
-            for (var px = 0; px < PatternSize; px++)
-            {
-                var c = px < row.Length ? row[px] : '.';
-                var color = c == 'G' ? body : c == 'F' ? facet : Color.clear;
-                for (var dy = 0; dy < Upscale; dy++)
-                for (var dx = 0; dx < Upscale; dx++)
-                    texture.SetPixel(px * Upscale + dx, (PatternSize - 1 - py) * Upscale + dy, color);
-            }
-        }
+        var sprite = ToSprite(GemPixelArt.RenderGem(shape, cutStyle, body, facet));
+        Cache[key] = sprite;
+        return sprite;
+    }
 
-        texture.Apply();
-        return Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 32f);
+    private static Sprite ToSprite(Texture2D texture)
+    {
+        return Sprite.Create(texture, new Rect(0, 0, GemPixelArt.Size, GemPixelArt.Size), new Vector2(0.5f, 0.5f), GemPixelArt.Size);
     }
 }

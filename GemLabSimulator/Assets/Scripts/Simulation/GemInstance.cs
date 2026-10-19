@@ -48,9 +48,8 @@ public class GemInstance
     {
         get
         {
-            if (IsRough) return Definition.roughIcon;
-            if (CutShape != null) return GemIconFactory.Get(Definition, CutShape, CutStyle);
-            return Definition.icon;
+            if (IsRough) return Definition.GetRoughIcon();
+            return GemIconFactory.Get(Definition, ShapeName, CutStyleName);
         }
     }
 
@@ -235,6 +234,12 @@ public class GemInstance
         LengthMm *= dimensionFactor;
         WidthMm *= dimensionFactor;
         DepthMm *= dimensionFactor;
+        // Measurements taken before the cut no longer describe the stone.
+        measuredValues.Remove(DimensionReport.LengthKey);
+        measuredValues.Remove(DimensionReport.WidthKey);
+        measuredValues.Remove(DimensionReport.DepthKey);
+        observedProperties.Remove(ExaminationTool.MeasurementType.Dimensions.ToString());
+
         CaratWeight = newCaratWeight;
         FinalValue = newFinalValue;
         CutShape = shape;

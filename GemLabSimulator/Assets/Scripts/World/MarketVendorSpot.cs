@@ -63,7 +63,7 @@ public class MarketVendorSpot : MonoBehaviour
             go.transform.localPosition = new Vector3((i - 1) * 0.32f, 0f, 0f);
             go.transform.localScale = Vector3.one * 0.45f;
             var sr = go.GetComponent<SpriteRenderer>();
-            sr.sprite = item.Definition.icon;
+            sr.sprite = item.DisplaySprite;
             sr.sortingOrder = 5;
         }
     }

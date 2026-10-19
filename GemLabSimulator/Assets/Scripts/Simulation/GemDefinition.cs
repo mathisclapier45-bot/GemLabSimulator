@@ -13,6 +13,17 @@ public class GemDefinition : ScriptableObject
     public Color iconColor;
     public Color iconFacetColor;
 
+    // Default look of the species, drawn at runtime ("3D pixel" art); falls back on the baked sprites.
+    public Sprite GetIcon()
+    {
+        return iconColor.a > 0f ? GemIconFactory.Get(this, shape, cutStyle) : icon;
+    }
+
+    public Sprite GetRoughIcon()
+    {
+        return iconColor.a > 0f ? GemIconFactory.GetRough(this) : roughIcon;
+    }
+
     [Header("Propriétés physiques")]
     public float refractiveIndex;
     public float density;

@@ -16,6 +16,8 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private Sprite mysteryIcon;
     [SerializeField] private Text clockText;
 
+    public Sprite MysteryIcon => mysteryIcon;
+
     private void Awake()
     {
         Instance = this;
@@ -102,11 +104,14 @@ public class InventoryUI : MonoBehaviour
         iconRect.anchoredPosition = Vector2.zero;
 
         var iconImage = iconGO.GetComponent<Image>();
-        iconImage.sprite = gem.IsIdentified ? gem.DisplaySprite : mysteryIcon;
+        // Color and shape are visible at a glance, no instrument needed: even an unidentified stone shows them.
+        iconImage.sprite = gem.DisplaySprite;
         iconImage.preserveAspect = true;
 
         var button = go.AddComponent<Button>();
         button.onClick.AddListener(() => inventory.Select(gem));
+
+        RuntimeUIKit.AddEnvelopeBadge(go.transform, gem);
 
         var dragSource = go.AddComponent<GemDragSource>();
         dragSource.Gem = gem;

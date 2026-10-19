@@ -88,6 +88,8 @@ public class ChestUI : MonoBehaviour
         iconImage.sprite = gem.DisplaySprite;
         iconImage.preserveAspect = true;
 
+        RuntimeUIKit.AddEnvelopeBadge(go.transform, gem);
+
         var dragSource = go.AddComponent<GemDragSource>();
         dragSource.Gem = gem;
         dragSource.SourceContainer = chest;

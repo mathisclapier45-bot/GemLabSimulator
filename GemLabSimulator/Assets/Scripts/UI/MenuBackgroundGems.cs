@@ -28,7 +28,7 @@ public class MenuBackgroundGems : MonoBehaviour
         for (var i = 0; i < gemCount; i++)
         {
             var definition = allGems[Random.Range(0, allGems.Count)];
-            if (definition == null || definition.icon == null) continue;
+            if (definition == null || definition.GetIcon() == null) continue;
 
             var go = new GameObject("BackgroundGem", typeof(RectTransform), typeof(Image));
             go.transform.SetParent(container, false);
@@ -44,7 +44,7 @@ public class MenuBackgroundGems : MonoBehaviour
             rect.localRotation = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f));
 
             var image = go.GetComponent<Image>();
-            image.sprite = definition.icon;
+            image.sprite = definition.GetIcon();
             image.preserveAspect = true;
             image.raycastTarget = false;
             var color = Color.white;

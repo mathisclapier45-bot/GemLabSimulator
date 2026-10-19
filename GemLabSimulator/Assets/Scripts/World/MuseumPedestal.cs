@@ -47,7 +47,7 @@ public class MuseumPedestal : MonoBehaviour
     {
         displayedGem = GetTopDiscoveredGem(rank);
         if (iconRenderer != null)
-            iconRenderer.sprite = displayedGem != null ? displayedGem.icon : null;
+            iconRenderer.sprite = displayedGem != null ? displayedGem.GetIcon() : null;
     }
 
     private static GemDefinition GetTopDiscoveredGem(int rank)
