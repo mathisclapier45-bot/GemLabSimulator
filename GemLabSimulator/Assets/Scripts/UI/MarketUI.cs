@@ -145,7 +145,7 @@ public class MarketUI : MonoBehaviour
         for (var i = 0; i < currentVendor.Stock.Count; i++)
         {
             var item = currentVendor.Stock[i];
-            CreateRow(i, BuildItemLabel(item), "Acheter", () => Purchase(item));
+            CreateRow(i, BuildItemLabel(item), "Acheter", () => Purchase(item), () => Inspect(item));
         }
         return currentVendor.Stock.Count;
     }
@@ -181,10 +181,10 @@ public class MarketUI : MonoBehaviour
     private string BuildItemLabel(GemInstance item)
     {
         var price = MarketState.Instance != null ? MarketState.Instance.GetPrice(item) : item.FinalValue;
-        return $"{item.Definition.displayName}\nOrigine : {item.Origin.name}\nPrix : {price}€";
+        return $"{item.Definition.displayName} — {item.CaratWeight:F2} ct\nOrigine : {item.Origin.name}\nPrix : {price}€";
     }
 
-    private void CreateRow(int index, string label, string buttonLabel, Action onClick)
+    private void CreateRow(int index, string label, string buttonLabel, Action onClick, Action onInspect = null)
     {
         var y = -index * (RowHeight + RowSpacing);
 
@@ -205,7 +205,7 @@ public class MarketUI : MonoBehaviour
         textRect.anchorMax = new Vector2(0f, 1f);
         textRect.pivot = new Vector2(0f, 0.5f);
         textRect.anchoredPosition = new Vector2(10f, 0f);
-        textRect.sizeDelta = new Vector2(RowWidth - 130f, 0f);
+        textRect.sizeDelta = new Vector2(RowWidth - (onInspect != null ? 232f : 130f), 0f);
         var text = textGO.AddComponent<Text>();
         text.text = label;
         text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
@@ -240,6 +240,47 @@ public class MarketUI : MonoBehaviour
         buttonText.color = Color.white;
 
         buttonGO.GetComponent<Button>().onClick.AddListener(() => onClick());
+
+        if (onInspect == null) return;
+
+        // "Examiner": look at the stone from every side, with a loupe, a torch and a UV lamp.
+        var inspectGO = new GameObject("InspectButton", typeof(RectTransform), typeof(Image), typeof(Button));
+        inspectGO.transform.SetParent(rowGO.transform, false);
+        var inspectRect = inspectGO.GetComponent<RectTransform>();
+        inspectRect.anchorMin = new Vector2(1f, 0.5f);
+        inspectRect.anchorMax = new Vector2(1f, 0.5f);
+        inspectRect.pivot = new Vector2(1f, 0.5f);
+        inspectRect.anchoredPosition = new Vector2(-114f, 0f);
+        inspectRect.sizeDelta = new Vector2(84f, 36f);
+        inspectGO.GetComponent<Image>().color = new Color(0.22f, 0.32f, 0.42f, 1f);
+
+        var inspectTextGO = new GameObject("Label", typeof(RectTransform));
+        inspectTextGO.transform.SetParent(inspectGO.transform, false);
+        var inspectTextRect = inspectTextGO.GetComponent<RectTransform>();
+        inspectTextRect.anchorMin = Vector2.zero;
+        inspectTextRect.anchorMax = Vector2.one;
+        inspectTextRect.sizeDelta = Vector2.zero;
+        inspectTextRect.anchoredPosition = Vector2.zero;
+        var inspectText = inspectTextGO.AddComponent<Text>();
+        inspectText.text = "Examiner";
+        inspectText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        inspectText.fontSize = 13;
+        inspectText.alignment = TextAnchor.MiddleCenter;
+        inspectText.color = Color.white;
+        inspectGO.GetComponent<Button>().onClick.AddListener(() => onInspect());
+    }
+
+    // Hides the vendor while the stone is examined, then brings it back.
+    private void Inspect(GemInstance item)
+    {
+        if (panel != null) panel.SetActive(false);
+        LoupeUI.OpenForMarket(item, ReopenAfterInspection);
+    }
+
+    private void ReopenAfterInspection()
+    {
+        if (panel != null && currentVendor != null) panel.SetActive(true);
+        RefreshIfOpen();
     }
 
     private void Purchase(GemInstance item)
