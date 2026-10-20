@@ -68,7 +68,7 @@ public class GemDragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         var valueLine = gem.IsDonation
             ? "Don — à conserver, non destiné à être renvoyé"
             : gem.IsClientStone
-                ? $"Valeur estimée : {gem.FinalValue}€"
+                ? $"Rapport d'identification : {gem.IdentificationReportFee}€ (payé par le client à la livraison)"
                 : $"Valeur estimée : {gem.FinalValue}€ — spécimen personnel";
 
         return $"{gem.Definition.displayName}  (N° {gem.DisplayId})\n" +

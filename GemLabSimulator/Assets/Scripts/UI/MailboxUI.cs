@@ -132,7 +132,7 @@ public class MailboxUI : MonoBehaviour
         for (var i = 0; i < sendable.Count; i++)
         {
             var gem = sendable[i];
-            var row = CreateRow(i, $"{gem.Definition.displayName} (N° {gem.DisplayId}) — {gem.FinalValue}€");
+            var row = CreateRow(i, $"{gem.Definition.displayName} (N° {gem.DisplayId}) — rapport : {gem.IdentificationReportFee}€");
             var button = CreateRowButton(row.transform, "Envoyer");
             button.onClick.AddListener(() => SendGem(gem));
         }
@@ -165,10 +165,12 @@ public class MailboxUI : MonoBehaviour
     {
         if (PlayerInventory.Instance == null || PlayerWallet.Instance == null) return;
 
+        // The client pays for the identification report, by weight of the stone.
+        var fee = gem.IdentificationReportFee;
         PlayerInventory.Instance.RemoveGem(gem);
-        PlayerWallet.Instance.AddMoney(gem.FinalValue);
-        QuestState.Instance?.ReportGemSent(gem.FinalValue);
-        ToolFeedbackUI.Instance?.ShowMessage($"Colis envoyé à {gem.ClientName}. +{gem.FinalValue}€");
+        PlayerWallet.Instance.AddMoney(fee);
+        QuestState.Instance?.ReportGemSent(fee);
+        ToolFeedbackUI.Instance?.ShowMessage($"Colis envoyé à {gem.ClientName}. Rapport d'identification payé : +{fee}€");
     }
 
     private GameObject CreateRow(int index, string label)

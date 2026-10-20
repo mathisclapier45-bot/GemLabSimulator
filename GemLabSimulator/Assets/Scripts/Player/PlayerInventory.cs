@@ -52,6 +52,12 @@ public class PlayerInventory : MonoBehaviour, IGemContainer
         OnInventoryChanged?.Invoke();
     }
 
+    // For changes made to a stone already in the bag (identified...) so the slots redraw their badges.
+    public void NotifyChanged()
+    {
+        OnInventoryChanged?.Invoke();
+    }
+
     public void RemoveGem(GemInstance instance)
     {
         gems.Remove(instance);

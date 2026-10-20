@@ -247,6 +247,7 @@ public class ReportUIController : MonoBehaviour
             resultText.text = $"Rapport validé par le directeur ! Identifiée comme {gem.displayName}. " +
                                "Renvoyez-la à son client depuis la boîte aux lettres pour être payé.";
             gemInstance.MarkIdentified();
+            PlayerInventory.Instance?.NotifyChanged();
             ReputationState.Instance?.AddPoint();
 
             var isNewDiscovery = GemCodex.Instance != null && !GemCodex.Instance.IsDiscovered(gem.name);
@@ -260,7 +261,7 @@ public class ReportUIController : MonoBehaviour
         }
         else
         {
-            resultText.text = "Le directeur rejette le rapport : identification incorrecte.";
+            resultText.text = $"Le directeur rejette le rapport : identification incorrecte.";
         }
     }
 }

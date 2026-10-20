@@ -721,6 +721,423 @@ public static class SceneBootstrap
         clerk.AddComponent<ShopkeeperNPC>();
     }
 
+    // ----- Diamond Quarter tower -----
+
+    // Outside: the office tower in the town (replaces the old "Quartier des Diamantaires" chalet).
+    private static void CreateDiamondTower(Vector3 position)
+    {
+        var sprite = LoadPackSpriteGrounded("Assets/Art/Sprites/building_diamantaires.png");
+        if (sprite == null) return;
+
+        var go = new GameObject("Immeuble des Diamantaires");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(2.6f, 2.4f);
+        col.offset = new Vector2(0f, 1.2f);
+
+        var door = go.AddComponent<DoorTrigger>();
+        var so = new SerializedObject(door);
+        so.FindProperty("sceneName").stringValue = "DiamantairesAccueil";
+        so.FindProperty("implemented").boolValue = true;
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel("Immeuble des Diamantaires", position + new Vector3(0f, sprite.bounds.size.y + 0.5f, 0f));
+    }
+
+    private static void AddStandardPlayer(GameObject player)
+    {
+        player.AddComponent<PlayerController>();
+        player.AddComponent<PlayerInventory>();
+        player.AddComponent<PlayerWallet>();
+        player.AddComponent<PlayerChest>();
+        player.AddComponent<GemCodex>();
+        player.AddComponent<MailboxState>();
+        player.AddComponent<GameClock>();
+        player.AddComponent<ReturnToMenuController>();
+        player.AddComponent<MarketState>();
+        player.AddComponent<QuestState>();
+        player.AddComponent<RoughMarketState>();
+        player.AddComponent<TunnelState>();
+        player.AddComponent<ManoirRequestState>();
+        player.AddComponent<ReputationState>();
+        player.AddComponent<LapidaryState>();
+        player.AddComponent<PlayerCabinet>();
+        player.AddComponent<PlayerOrderCabinet>();
+        player.AddComponent<PlayerOwnedTools>();
+    }
+
+    // Shared shell of every room of the tower: camera, floor, walls, player, UI. `furnish` receives the walls tilemap and
+    // wall tile so it can add partitions. `floorTheme` null gives the open-air concrete of the roof.
+    private static void CreateTowerRoom(string sceneName, string floorTheme, int minX, int maxX, int minY, int maxY, Color background,
+        Vector3 spawn, bool topWall, System.Action<Tilemap, Tile> furnish)
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+
+        var light = GameObject.Find("Directional Light");
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
+
+        var cam = Camera.main;
+        cam.orthographic = true;
+        cam.orthographicSize = 5f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = background;
+        cam.transform.position = new Vector3(0f, 0f, -10f);
+
+        var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
+        pixelPerfect.assetsPPU = PixelsPerUnit;
+        pixelPerfect.refResolutionX = InteriorRefResolutionX;
+        pixelPerfect.refResolutionY = InteriorRefResolutionY;
+        pixelPerfect.upscaleRT = true;
+        pixelPerfect.pixelSnapping = true;
+        pixelPerfect.cropFrameX = true;
+        pixelPerfect.cropFrameY = true;
+
+        var gridGO = new GameObject("Grid", typeof(Grid));
+
+        var groundGO = new GameObject("Ground", typeof(Tilemap), typeof(TilemapRenderer));
+        groundGO.transform.SetParent(gridGO.transform);
+        var groundTilemap = groundGO.GetComponent<Tilemap>();
+
+        var wallsGO = new GameObject("Walls", typeof(Tilemap), typeof(TilemapRenderer), typeof(TilemapCollider2D));
+        wallsGO.transform.SetParent(gridGO.transform);
+        var wallsTilemap = wallsGO.GetComponent<Tilemap>();
+
+        var theme = floorTheme ?? "lab";
+        var floorTile = floorTheme != null
+            ? GetInteriorFloorTile(floorTheme, Color.white, "floor_pixel", FloorPixel)
+            : GetOrCreateTile("roof_concrete", (x, y) => ((x * 5 + y * 3) % 11 == 0) ? new Color(0.50f, 0.50f, 0.53f) : new Color(0.56f, 0.56f, 0.59f));
+        var wallTile = GetInteriorSideWallTile(theme, InteriorSideWallTint, "wall_pixel", WallPixel);
+
+        for (var x = minX; x <= maxX; x++)
+        {
+            for (var y = minY; y <= maxY; y++)
+            {
+                var isPerimeter = x == minX || x == maxX || y == minY || y == maxY;
+                var cell = new Vector3Int(x, y, 0);
+                if (isPerimeter)
+                    wallsTilemap.SetTile(cell, wallTile);
+                else
+                    groundTilemap.SetTile(cell, floorTile);
+            }
+        }
+
+        if (topWall) PaintInteriorTopWall(wallsTilemap, minX, maxX, maxY, theme, Color.white);
+
+        var spawnGO = new GameObject("SpawnPoint");
+        spawnGO.transform.position = spawn;
+
+        var player = new GameObject("Player");
+        player.tag = "Player";
+        var sr = player.AddComponent<SpriteRenderer>();
+        sr.sprite = GetPlayerSprite();
+        sr.sortingOrder = 5;
+
+        var rb = player.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        var col = player.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.7f, 0.4f);
+        col.offset = new Vector2(0f, 0.2f);
+
+        AddStandardPlayer(player);
+        player.transform.position = spawnGO.transform.position;
+
+        var follow = cam.gameObject.AddComponent<CameraFollow>();
+        follow.SetTarget(player.transform);
+
+        CreateMusicManager();
+
+        furnish?.Invoke(wallsTilemap, wallTile);
+
+        CreateUI(false);
+
+        Directory.CreateDirectory("Assets/Scenes");
+        EditorSceneManager.SaveScene(scene, $"Assets/Scenes/{sceneName}.unity");
+        AddSceneToBuildSettings($"Assets/Scenes/{sceneName}.unity");
+        AssetDatabase.SaveAssets();
+        Debug.Log($"{sceneName} scene created at Assets/Scenes/{sceneName}.unity");
+    }
+
+    // Elevator doors in the top wall; the player arrives just in front of them.
+    private static void CreateTowerElevator(float x, float wallFeetY)
+    {
+        // The sprite is 2.6 tall: stand it 0.6 lower than the wall base so it does not poke above the top wall.
+        var elevator = PlaceFurniture("elevator", new Vector3(x, wallFeetY - 0.6f, 0f));
+        if (elevator == null) return;
+        elevator.name = "Ascenseur";
+
+        var trigger = elevator.AddComponent<BoxCollider2D>();
+        trigger.isTrigger = true;
+        trigger.size = new Vector2(3f, 1.8f);
+        trigger.offset = new Vector2(0f, -0.9f);
+        elevator.AddComponent<ElevatorInteractable>();
+
+        CreateNamedSpawnPoint("SpawnPoint_Elevator", new Vector3(x, wallFeetY - 2.2f, 0f));
+    }
+
+    // Character that talks when the player presses E next to it (placeholder lines).
+    private static GameObject CreateTalkNpc(string speaker, string spriteName, Vector3 feet, string[] lines)
+    {
+        var sprite = LoadPackSpriteGrounded($"Assets/Art/Sprites/npc_{spriteName}.png");
+        var npc = new GameObject(speaker);
+        var sr = npc.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite != null ? sprite : GetOrCreatePixelSprite("directeur_pixel", DirectorPattern, DirectorPalette);
+        sr.sortingOrder = 4;
+        npc.transform.position = feet;
+
+        var solid = npc.AddComponent<BoxCollider2D>();
+        solid.size = new Vector2(0.7f, 0.4f);
+        solid.offset = new Vector2(0f, 0.2f);
+
+        var trigger = npc.AddComponent<BoxCollider2D>();
+        trigger.isTrigger = true;
+        trigger.size = new Vector2(3.4f, 3.4f);
+        trigger.offset = new Vector2(0f, -0.4f);
+
+        var talk = npc.AddComponent<TalkNPC>();
+        var so = new SerializedObject(talk);
+        so.FindProperty("speaker").stringValue = speaker;
+        var linesProp = so.FindProperty("lines");
+        linesProp.arraySize = lines.Length;
+        for (var i = 0; i < lines.Length; i++) linesProp.GetArrayElementAtIndex(i).stringValue = lines[i];
+        so.ApplyModifiedProperties();
+        return npc;
+    }
+
+    private static void CreateTowerStairs(Vector3 feet, string targetScene)
+    {
+        var stairs = PlaceFurniture("stairs", feet);
+        if (stairs == null) return;
+        stairs.name = "Escalier";
+
+        var trigger = stairs.AddComponent<BoxCollider2D>();
+        trigger.isTrigger = true;
+        trigger.size = new Vector2(3f, 2f);
+        trigger.offset = new Vector2(-0.8f, -0.8f);
+
+        var interact = stairs.AddComponent<StairsInteractable>();
+        var so = new SerializedObject(interact);
+        so.FindProperty("targetScene").stringValue = targetScene;
+        so.ApplyModifiedProperties();
+    }
+
+    // Wall decoration that hangs on the lit wall face (not grounded, no collider).
+    private static void HangOnWall(string spriteName, float x, float wallY)
+    {
+        PlaceInteriorProp(spriteName, new Vector3(x, wallY + 0.35f, 0f), false, false, 2);
+    }
+
+    // A small closed office: partition walls with a door gap, a desk, a seller behind it and a visitor chair.
+    private static void CreateSellerOffice(string label, string npcSprite, float centerX, int floorY0, int floorY1, bool opensEast)
+    {
+        var deskFeet = new Vector3(centerX, floorY0 + 1.0f, 0f);
+        PlaceFurniture("off_desk", deskFeet);
+        PlaceFurniture("off_pc", deskFeet + new Vector3(0.1f, 0.85f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
+        CreateTalkNpc($"Vendeur — {label}", npcSprite, deskFeet + new Vector3(0f, 1.25f, 0f), new[]
+        {
+            $"Bienvenue au {label}. Mon stock de diamants arrive bientôt, repassez nous voir !",
+            "Ici, chaque pierre est vendue avec son certificat. Les premières arrivées sont attendues.",
+        });
+        PlaceFurniture("off_chair_dark", deskFeet + new Vector3(opensEast ? 1.6f : -1.6f, -0.2f, 0f));
+        CreateBuildingLabel(label, new Vector3(centerX, floorY1 + 0.6f, 0f));
+    }
+
+    [MenuItem("GemLab/Setup Diamond Tower Scenes")]
+    public static void CreateDiamondTowerScenes()
+    {
+        // --- Ground floor: reception ---
+        CreateTowerRoom("DiamantairesAccueil", "museum", -10, 10, -5, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, -3f, 0f), true, (walls, wallTile) =>
+        {
+            CreateExitDoor(new Vector3(0, -4, 0f), "SpawnPoint_Diamantaires");
+            CreateTowerElevator(6.5f, 4f);
+
+            PlaceRug("rug_gold", new Vector3(0f, -0.8f, 0f));
+            PlaceFurniture("reception_counter", new Vector3(-3.0f, 1.3f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
+
+            var lady = CreateTalkNpc("Réceptionniste", "receptionist", new Vector3(-3.0f, 2.6f, 0f), new string[0]);
+            UnityEngine.Object.DestroyImmediate(lady.GetComponent<TalkNPC>());
+            var licenseGO = new GameObject("Licence de diamantaire");
+            licenseGO.transform.SetParent(lady.transform, false);
+            var licenseItem = licenseGO.AddComponent<ShopItem>();
+            var licenseSo = new SerializedObject(licenseItem);
+            licenseSo.FindProperty("toolId").stringValue = DiamondBuilding.LicenseId;
+            licenseSo.FindProperty("displayName").stringValue = "Licence de diamantaire";
+            licenseSo.FindProperty("description").stringValue =
+                "Licence officielle donnant accès aux étages de l'immeuble : bureaux des vendeurs de diamants, grading, vente de diamants bruts, laboratoire de précision, centre de taille et bureau de Martin Rapaport.\n\nLa licence est personnelle et valable sans limite de durée.";
+            licenseSo.FindProperty("price").intValue = DiamondBuilding.LicensePrice;
+            licenseSo.FindProperty("purchaseMessage").stringValue =
+                "Licence de diamantaire acquise ! L'ascenseur vous mène désormais à tous les étages.";
+            licenseSo.ApplyModifiedProperties();
+            var receptionist = lady.AddComponent<ReceptionistNPC>();
+            var receptionistSo = new SerializedObject(receptionist);
+            receptionistSo.FindProperty("licenseItem").objectReferenceValue = licenseItem;
+            receptionistSo.ApplyModifiedProperties();
+            CreateBuildingLabel("Accueil", new Vector3(-3.0f, 4.7f, 0f));
+
+            // Waiting area on the left, plants and a water cooler on the right.
+            PlaceFurniture("off_sofa", new Vector3(-7.4f, 3.0f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(-8.6f, 1.2f, 0f));
+            PlaceFurniture("off_armchair", new Vector3(-7.2f, -1.6f, 0f));
+            PlaceFurniture("off_cooler", new Vector3(3.0f, 4.0f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(9.0f, 3.2f, 0f));
+            PlaceFurniture("off_plant", new Vector3(-9.0f, -3.2f, 0f));
+            PlaceFurniture("off_plant", new Vector3(9.0f, -3.2f, 0f));
+            HangOnWall("off_cert", -8.5f, 5f);
+            HangOnWall("off_cert2", 0.2f, 5f);
+            HangOnWall("off_poster", 2.3f, 5f);
+            PlaceWallDecor("window_white", -6, 5);
+            CreateBuildingLabel("Ascenseur", new Vector3(6.5f, 6.7f, 0f));
+        });
+
+        // --- 1st floor: offices of the diamond dealers ---
+        CreateTowerRoom("Diamantaires1", "lab", -13, 13, -6, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, 2.4f, 0f), true, (walls, wallTile) =>
+        {
+            CreateTowerElevator(0f, 4f);
+
+            // Partitions: x = -7 and x = 7, with a door gap in each office; a divider at y = -1 between the two offices of a side.
+            foreach (var wallX in new[] { -7, 7 })
+            {
+                for (var y = -5; y <= 4; y++)
+                {
+                    if (y == -3 || y == 2) continue;
+                    walls.SetTile(new Vector3Int(wallX, y, 0), wallTile);
+                }
+            }
+            for (var x = -12; x <= -8; x++) walls.SetTile(new Vector3Int(x, -1, 0), wallTile);
+            for (var x = 8; x <= 12; x++) walls.SetTile(new Vector3Int(x, -1, 0), wallTile);
+
+            CreateSellerOffice("Bureau 1", "merchant0", -10f, -5, -2, true);
+            CreateSellerOffice("Bureau 2", "merchant1", -10f, 0, 4, true);
+            CreateSellerOffice("Bureau 3", "merchant2", 10f, -5, -2, false);
+            CreateSellerOffice("Bureau 4", "merchant3", 10f, 0, 4, false);
+
+            PlaceRug("rug_red", new Vector3(0f, -1.5f, 0f));
+            PlaceFurniture("off_sofa", new Vector3(-2.2f, -3.2f, 0f));
+            PlaceFurniture("off_sofa", new Vector3(2.2f, -3.2f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(-3.6f, 4.0f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(3.6f, 4.0f, 0f));
+            PlaceFurniture("off_cooler", new Vector3(-5.4f, 4.0f, 0f));
+            HangOnWall("off_cert", -2.8f, 5f);
+            HangOnWall("off_cert2", 2.8f, 5f);
+            CreateBuildingLabel("1er étage — Vendeurs de diamants", new Vector3(0f, 6.7f, 0f));
+        });
+
+        // --- 2nd floor: grading (to be developed) ---
+        CreateTowerRoom("Diamantaires2", "museum", -10, 10, -5, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, 2.4f, 0f), true, (walls, wallTile) =>
+        {
+            CreateTowerElevator(0f, 4f);
+            PlaceFurniture("off_desk_l", new Vector3(-6.5f, 0.5f, 0f));
+            PlaceFurniture("off_pc", new Vector3(-6.2f, 1.4f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
+            PlaceFurniture("off_desk_l", new Vector3(6.5f, 0.5f, 0f));
+            PlaceFurniture("off_pc", new Vector3(6.2f, 1.4f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
+            PlaceFurniture("off_desk", new Vector3(-6.5f, -3.0f, 0f));
+            PlaceFurniture("off_desk", new Vector3(6.5f, -3.0f, 0f));
+            PlaceFurniture("off_printer", new Vector3(-3.0f, 4.0f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(3.2f, 4.0f, 0f));
+            HangOnWall("off_chart", -6.5f, 5f);
+            HangOnWall("off_chart2", 6.5f, 5f);
+            PlaceRug("rug_blue_tall", new Vector3(0f, -1.0f, 0f));
+            CreateBuildingLabel("2e étage — Grading (bientôt)", new Vector3(0f, 6.7f, 0f));
+        });
+
+        // --- 3rd floor: rough diamond sales ---
+        CreateTowerRoom("Diamantaires3", "rough", -10, 10, -5, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, 2.4f, 0f), true, (walls, wallTile) =>
+        {
+            CreateTowerElevator(0f, 4f);
+            PlaceFurniture("reception_counter", new Vector3(-6.0f, 0.0f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
+            CreateTalkNpc("Vendeur de diamants bruts", "rough3", new Vector3(-6.0f, 1.3f, 0f), new[]
+            {
+                "Les diamants bruts sont arrivés de la mine ce matin. La vente ouvrira bientôt !",
+            });
+            PlaceFurniture("reception_counter", new Vector3(6.0f, 0.0f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
+            CreateTalkNpc("Vendeur de diamants bruts", "rough1", new Vector3(6.0f, 1.3f, 0f), new[]
+            {
+                "Chaque lot est pesé et scellé avant la vente. Revenez bientôt !",
+            });
+            PlaceFurniture("off_plant_big", new Vector3(-3.2f, 4.0f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(3.2f, 4.0f, 0f));
+            PlaceFurniture("off_vending", new Vector3(-8.5f, 3.9f, 0f));
+            PlaceRug("rug_red", new Vector3(0f, -1.8f, 0f));
+            CreateBuildingLabel("3e étage — Diamants bruts (bientôt)", new Vector3(0f, 6.7f, 0f));
+        });
+
+        // --- 4th floor: precision laboratory (to be developed) ---
+        CreateTowerRoom("Diamantaires4", "lab", -10, 10, -5, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, 2.4f, 0f), true, (walls, wallTile) =>
+        {
+            CreateTowerElevator(0f, 4f);
+            foreach (var benchX in new[] { -6.5f, -2.2f, 2.2f, 6.5f })
+            {
+                PlaceFurniture("off_desk", new Vector3(benchX, -0.5f, 0f));
+                PlaceFurniture("off_pc", new Vector3(benchX + 0.1f, 0.35f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
+            }
+            PlaceFurniture("off_printer", new Vector3(-6.5f, 3.4f, 0f));
+            PlaceFurniture("off_printer", new Vector3(6.5f, 3.4f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(-3.4f, 4.0f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(3.4f, 4.0f, 0f));
+            HangOnWall("off_chart", -6.5f, 5f);
+            HangOnWall("off_chart2", 6.5f, 5f);
+            CreateBuildingLabel("4e étage — Laboratoire de précision (bientôt)", new Vector3(0f, 6.7f, 0f));
+        });
+
+        // --- 5th floor: cutting centre (to be developed) ---
+        CreateTowerRoom("Diamantaires5", "atelier", -10, 10, -5, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, 2.4f, 0f), true, (walls, wallTile) =>
+        {
+            CreateTowerElevator(0f, 4f);
+            foreach (var benchX in new[] { -7.0f, -3.5f, 3.5f, 7.0f })
+            {
+                PlaceFurniture("off_wood_top", new Vector3(benchX, 0.0f, 0f));
+                PlaceFurniture("off_chair_orange", new Vector3(benchX, -1.4f, 0f));
+            }
+            PlaceFurniture("off_cooler", new Vector3(-3.5f, 4.0f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(3.5f, 4.0f, 0f));
+            PlaceRug("rug_red", new Vector3(0f, -2.4f, 0f));
+            CreateBuildingLabel("5e étage — Centre de taille (bientôt)", new Vector3(0f, 6.7f, 0f));
+        });
+
+        // --- 6th floor: Martin Rapaport's office ---
+        CreateTowerRoom("Diamantaires6", "manoir", -10, 10, -5, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, 2.4f, 0f), true, (walls, wallTile) =>
+        {
+            CreateTowerElevator(0f, 4f);
+            foreach (var shelfX in new[] { -6.0f, -3.0f, 3.0f, 6.0f })
+                PlaceFurniture("bookshelf", new Vector3(shelfX, 3.5f, 0f));
+            CreateTowerStairs(new Vector3(8.2f, 3.75f, 0f), "DiamantairesToit");
+            CreateNamedSpawnPoint("SpawnPoint_Stairs", new Vector3(8.4f, 2.4f, 0f));
+
+            PlaceRug("rug_red", new Vector3(0f, -1.4f, 0f));
+            PlaceFurniture("exec_desk", new Vector3(0f, -1.0f, 0f));
+            CreateTalkNpc("Martin Rapaport", "rapaport", new Vector3(0f, 1.2f, 0f), new[]
+            {
+                "Bienvenue dans mon bureau. Les prix des diamants, c'est mon affaire depuis toujours.",
+                "Revenez me voir quand vous aurez de quoi m'intéresser.",
+            });
+            PlaceFurniture("off_chair_dark", new Vector3(-1.1f, -2.9f, 0f));
+            PlaceFurniture("off_chair_dark", new Vector3(1.1f, -2.9f, 0f));
+            PlaceFurniture("off_armchair_dark", new Vector3(-7.6f, -2.2f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(-8.7f, 1.0f, 0f));
+            PlaceFurniture("globe", new Vector3(7.8f, -1.2f, 0f));
+            HangOnWall("off_cert", -8.7f, 5f);
+            HangOnWall("off_cert2", 8.9f, 5f);
+            CreateBuildingLabel("Bureau de Martin Rapaport", new Vector3(0f, 6.7f, 0f));
+        });
+
+        // --- Rooftop: empty for now ---
+        CreateTowerRoom("DiamantairesToit", null, -10, 10, -6, 5, new Color(0.55f, 0.72f, 0.88f), new Vector3(6.4f, 1.4f, 0f), false, (walls, wallTile) =>
+        {
+            CreateTowerStairs(new Vector3(8.2f, 3.4f, 0f), "Diamantaires6");
+            CreateNamedSpawnPoint("SpawnPoint_Stairs", new Vector3(6.4f, 1.4f, 0f));
+            CreateBuildingLabel("Toit de l'immeuble", new Vector3(0f, 6.2f, 0f));
+        });
+
+        Debug.Log("Diamond tower scenes created: DiamantairesAccueil, Diamantaires1-6, DiamantairesToit.");
+    }
+
     [MenuItem("GemLab/Setup Town Scene")]
     public static void CreateTownScene()
     {
@@ -954,7 +1371,8 @@ public static class SceneBootstrap
         CreateRealBuilding("Laboratoire de Gemmologie", new Vector3(-30, 28, 0f), HouseStyle.Modern, "Laboratoire", true);
         CreateRealBuilding("Atelier Lapidaire", new Vector3(-5, 28, 0f), HouseStyle.Chalet, "AtelierLapidaire", true);
         CreateRealBuilding("Musee", new Vector3(20, 28, 0f), HouseStyle.Modern, "Musee", true);
-        CreateRealBuilding("Quartier des Diamantaires", new Vector3(45, 28, 0f), HouseStyle.Chalet, "", false);
+        CreateDiamondTower(new Vector3(45, 28, 0f));
+        CreateClothingStore(new Vector3(57.5f, 28, 0f));
 
         CreateRealBuilding("Marche aux Pierres", new Vector3(-45, -15, 0f), HouseStyle.Modern, "Marche", true);
         CreateRealBuilding("Ecole", new Vector3(-15, -15, 0f), HouseStyle.Chalet, "", false);
@@ -982,6 +1400,7 @@ public static class SceneBootstrap
         CreateNamedSpawnPoint("SpawnPoint_MarcheBrutes", new Vector3(15, -17, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Manoir", new Vector3(45, -17, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Tunnel", new Vector3(0, -47, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Diamantaires", new Vector3(45f, 26f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_GemStore", new Vector3(34f, 5f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_MaisonJoueur", new Vector3(-51.2f, -52f, 0f));
 
@@ -2550,6 +2969,34 @@ public static class SceneBootstrap
         CreateBuildingLabel("Maison du personnage", position + new Vector3(0f, sprite.bounds.size.y * 2f + 0.5f, 0f));
     }
 
+    // Clothing shop (not accessible yet): decorative front with a locked door.
+    private static void CreateClothingStore(Vector3 position)
+    {
+        var sprite = LoadPackSpriteGrounded("Assets/Art/Sprites/building_clothes.png");
+        if (sprite == null) return;
+
+        var go = new GameObject("Boutique de vêtements");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        // The glass door is on the right of the shop window.
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1.8f, 2.4f);
+        col.offset = new Vector2(1.75f, 1.2f);
+
+        var door = go.AddComponent<DoorTrigger>();
+        var so = new SerializedObject(door);
+        so.FindProperty("sceneName").stringValue = "";
+        so.FindProperty("implemented").boolValue = false;
+        so.FindProperty("lockedMessage").stringValue = "Boutique de vêtements : ouverture prochaine.";
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel("Boutique de vêtements", position + new Vector3(0f, sprite.bounds.size.y + 0.5f, 0f));
+    }
+
     // GemStore: the gemology tool shop (sells tools and tool upgrades).
     private static void CreateGemStore(Vector3 position)
     {
@@ -3767,10 +4214,10 @@ public static class SceneBootstrap
         var buildings = new (string name, float x, float y)[]
         {
             ("Maison", -55, 28), ("Laboratoire", -30, 28), ("Atelier Lapidaire", -5, 28),
-            ("Musée", 20, 28), ("Quartier Diamantaires", 45, 28),
+            ("Musée", 20, 28), ("Immeuble Diamantaires", 45, 28),
             ("Marché Pierres", -45, -15), ("École", -15, -15),
             ("Marché Brutes", 15, -15), ("Manoir", 45, -15),
-            ("Bijouterie", -22, 7), ("Banque", 22, 7), ("Concessionnaire", 28, -35), ("Vincent Pardieu", -58, 10), ("Aéroport", 58, 8), ("Bibliothèque", -41, 7), ("GemStore", 35, 7), ("Maison perso", -52, -50),
+            ("Bijouterie", -22, 7), ("Banque", 22, 7), ("Concessionnaire", 28, -35), ("Vincent Pardieu", -58, 10), ("Aéroport", 58, 8), ("Bibliothèque", -41, 7), ("GemStore", 35, 7), ("Maison perso", -52, -50), ("Boutique de vêtements", 57, 28),
             ("Tunnel", 0, -50),
         };
 

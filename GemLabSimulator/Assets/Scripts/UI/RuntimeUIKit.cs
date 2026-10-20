@@ -40,32 +40,79 @@ public static class RuntimeUIKit
         }
     }
 
-    // Envelope for a client's stone, gift box for a donation.
+    private static Sprite validated;
+
+    // Small pixel-art green seal with a check mark: marks the slots that hold an identified stone.
+    public static Sprite Validated
+    {
+        get
+        {
+            if (validated == null) validated = MakeValidatedSprite();
+            return validated;
+        }
+    }
+
+    // Top right: envelope for a client's stone, gift box for a donation. Bottom right: green check once identified.
     public static void AddEnvelopeBadge(Transform slot, GemInstance gem)
     {
         if (gem == null) return;
-        if (gem.IsDonation)
-        {
-            AddBadge(slot, "GiftBadge", Gift, new Vector2(16f, 16f));
-            return;
-        }
-        if (!gem.IsClientStone) return;
 
-        AddBadge(slot, "EnvelopeBadge", Envelope, new Vector2(20f, 15f));
+        if (gem.IsDonation)
+            AddBadge(slot, "GiftBadge", Gift, new Vector2(16f, 16f), new Vector2(1f, 1f));
+        else if (gem.IsClientStone)
+            AddBadge(slot, "EnvelopeBadge", Envelope, new Vector2(20f, 15f), new Vector2(1f, 1f));
+
+        if (gem.IsIdentified)
+            AddBadge(slot, "ValidatedBadge", Validated, new Vector2(16f, 16f), new Vector2(1f, 0f));
     }
 
-    private static void AddBadge(Transform slot, string badgeName, Sprite sprite, Vector2 size)
+    private static void AddBadge(Transform slot, string badgeName, Sprite sprite, Vector2 size, Vector2 corner)
     {
         var go = new GameObject(badgeName, typeof(RectTransform), typeof(Image));
         go.transform.SetParent(slot, false);
         var rect = go.GetComponent<RectTransform>();
-        rect.anchorMin = rect.anchorMax = new Vector2(1f, 1f);
-        rect.pivot = new Vector2(1f, 1f);
-        rect.anchoredPosition = new Vector2(-2f, -2f);
+        rect.anchorMin = rect.anchorMax = corner;
+        rect.pivot = corner;
+        rect.anchoredPosition = new Vector2(-2f, corner.y > 0.5f ? -2f : 2f);
         rect.sizeDelta = size;
         var image = go.GetComponent<Image>();
         image.sprite = sprite;
         image.raycastTarget = false;
+    }
+
+    private static Sprite MakeValidatedSprite()
+    {
+        const int size = 12;
+        var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+        {
+            filterMode = FilterMode.Point,
+            wrapMode = TextureWrapMode.Clamp,
+        };
+
+        var clear = new Color(0f, 0f, 0f, 0f);
+        var outline = new Color(0.08f, 0.30f, 0.14f, 1f);
+        var green = new Color(0.22f, 0.72f, 0.34f, 1f);
+        var light = new Color(0.45f, 0.88f, 0.52f, 1f);
+        var check = new Color(1f, 1f, 1f, 1f);
+
+        var center = (size - 1) / 2f;
+        for (var y = 0; y < size; y++)
+        {
+            for (var x = 0; x < size; x++)
+            {
+                var distance = Mathf.Sqrt((x - center) * (x - center) + (y - center) * (y - center));
+                Color c = clear;
+                if (distance <= 5.6f) c = distance > 4.6f ? outline : (y >= 7 ? light : green);
+                texture.SetPixel(x, y, c);
+            }
+        }
+
+        // Check mark (y = 0 is the bottom).
+        foreach (var (px, py) in new[] { (3, 5), (4, 4), (5, 3), (6, 4), (7, 5), (8, 6), (9, 7), (3, 6), (4, 5), (5, 4), (6, 5), (7, 6), (8, 7) })
+            texture.SetPixel(px, py, check);
+
+        texture.Apply();
+        return Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
     }
 
     private static Sprite MakeGiftSprite()

@@ -23,6 +23,9 @@ public class GemInstance
     public string ClarityDescription { get; private set; }
     public string InclusionDescription { get; private set; }
     public float CaratWeight { get; private set; }
+
+    // What the identification report is worth: paid by the client when the identified stone is sent back to them.
+    public int IdentificationReportFee => CaratWeight > 5f ? 90 : (CaratWeight >= 1f ? 70 : 50);
     public float LengthMm { get; private set; }
     public float WidthMm { get; private set; }
     public float DepthMm { get; private set; }

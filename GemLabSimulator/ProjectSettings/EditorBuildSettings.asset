@@ -33,12 +33,36 @@ EditorBuildSettings:
     path: Assets/Scenes/MaisonJoueur.unity
     guid: aa21f5ad0c82645feb17422a2288a7cb
   - enabled: 1
-    path: Assets/Scenes/Town.unity
-    guid: 436994916875340dba60314ffa83766d
-  - enabled: 1
     path: Assets/Scenes/Home.unity
     guid: 36909d23915df4366b99428440e99db5
   - enabled: 1
     path: Assets/Scenes/GemStore.unity
     guid: 11669b37047894a988da5b95e8cc7aee
+  - enabled: 1
+    path: Assets/Scenes/DiamantairesAccueil.unity
+    guid: 13fb8d10fe01945d39c8b8f57b3d97fc
+  - enabled: 1
+    path: Assets/Scenes/Diamantaires1.unity
+    guid: 4a718d41060854ff1aa7a5b8f68c45ae
+  - enabled: 1
+    path: Assets/Scenes/Diamantaires2.unity
+    guid: f3301ee7216f847bd91e04056992f2a2
+  - enabled: 1
+    path: Assets/Scenes/Diamantaires3.unity
+    guid: a1858496c3e564c6cbdbaae8357412fd
+  - enabled: 1
+    path: Assets/Scenes/Diamantaires4.unity
+    guid: d32f72147ad6e413b806edac9bbf9041
+  - enabled: 1
+    path: Assets/Scenes/Diamantaires5.unity
+    guid: 662f5d30055ca4dac859f5335175f1f6
+  - enabled: 1
+    path: Assets/Scenes/Diamantaires6.unity
+    guid: b0b1140aebbf34cb5bd1c8d6a6c1d016
+  - enabled: 1
+    path: Assets/Scenes/DiamantairesToit.unity
+    guid: 709c0bef84bb24542b2158a81e108a98
+  - enabled: 1
+    path: Assets/Scenes/Town.unity
+    guid: 436994916875340dba60314ffa83766d
   m_configObjects: {}
