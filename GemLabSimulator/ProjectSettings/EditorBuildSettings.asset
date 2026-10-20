@@ -30,9 +30,15 @@ EditorBuildSettings:
     path: Assets/Scenes/Tunnel.unity
     guid: 5d09c9470828046c6981ab066e7646f1
   - enabled: 1
+    path: Assets/Scenes/MaisonJoueur.unity
+    guid: aa21f5ad0c82645feb17422a2288a7cb
+  - enabled: 1
     path: Assets/Scenes/Town.unity
     guid: 436994916875340dba60314ffa83766d
   - enabled: 1
     path: Assets/Scenes/Home.unity
     guid: 36909d23915df4366b99428440e99db5
+  - enabled: 1
+    path: Assets/Scenes/GemStore.unity
+    guid: 11669b37047894a988da5b95e8cc7aee
   m_configObjects: {}

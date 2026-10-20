@@ -115,7 +115,7 @@ public class MainMenuUI : MonoBehaviour
         SaveSystem.CreateNewSave(slotNumber, name);
         SaveSystem.ActiveSlot = slotNumber;
         SaveSystem.PendingLoad = true;
-        SceneManager.LoadScene("Home");
+        SceneManager.LoadScene("MaisonJoueur");
     }
 
     private void LoadSlot(int slotNumber, SaveData data)

@@ -130,7 +130,6 @@ public class ReportUIController : MonoBehaviour
         {
             measured.Add($"Clarté : {gemInstance.ClarityGrade} ({gemInstance.ClarityDescription})");
             measured.Add($"Inclusions : {gemInstance.InclusionDescription}");
-            measured.Add($"Origine probable : {gemInstance.Origin.name}");
         }
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.InterferenceFigure.ToString()))
             measured.Add($"Conoscope : {OpticalDescriptions.ConoscopeText(gem)}");
@@ -143,13 +142,13 @@ public class ReportUIController : MonoBehaviour
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Authenticity.ToString()))
             measured.Add($"Authenticité (Raman) : {gemInstance.AuthenticityGrade}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ConfirmedOrigin.ToString()))
-            measured.Add($"Origine confirmée (UV-Vis-NIR) : {gemInstance.Origin.name}");
-        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.GrowthStructure.ToString()))
-            measured.Add($"Structure de croissance (MEB) : {gemInstance.GrowthStructureDescription}");
+            measured.Add($"Origine confirmée (spectrophotomètre UV-Vis-NIR) : {gemInstance.Origin.name}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ThermalConductivity.ToString()))
             measured.Add($"Conductivité thermique : {(gem.isThermallyConductiveLikeDiamond ? "Élevée (type diamant)" : "Faible")}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ElectricalConductivity.ToString()))
             measured.Add($"Conductivité électrique : {(gem.isElectricallyConductive ? "Conductrice" : "Non conductrice")}");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.GrowthStructure.ToString()))
+            measured.Add($"Structure de croissance (MEB) : {gemInstance.GrowthStructureDescription}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.DiamondScreening.ToString()))
             measured.Add($"DiamondSure : {(gemInstance.IsSynthetic ? "Refer" : "Pass")}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.DiamondGrowthImaging.ToString()))

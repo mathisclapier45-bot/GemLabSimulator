@@ -28,20 +28,93 @@ public static class RuntimeUIKit
         }
     }
 
+    private static Sprite gift;
+
+    // Small pixel-art gift box: marks the slots that hold a donated stone.
+    public static Sprite Gift
+    {
+        get
+        {
+            if (gift == null) gift = MakeGiftSprite();
+            return gift;
+        }
+    }
+
+    // Envelope for a client's stone, gift box for a donation.
     public static void AddEnvelopeBadge(Transform slot, GemInstance gem)
     {
-        if (gem == null || !gem.IsClientStone) return;
+        if (gem == null) return;
+        if (gem.IsDonation)
+        {
+            AddBadge(slot, "GiftBadge", Gift, new Vector2(16f, 16f));
+            return;
+        }
+        if (!gem.IsClientStone) return;
 
-        var go = new GameObject("EnvelopeBadge", typeof(RectTransform), typeof(Image));
+        AddBadge(slot, "EnvelopeBadge", Envelope, new Vector2(20f, 15f));
+    }
+
+    private static void AddBadge(Transform slot, string badgeName, Sprite sprite, Vector2 size)
+    {
+        var go = new GameObject(badgeName, typeof(RectTransform), typeof(Image));
         go.transform.SetParent(slot, false);
         var rect = go.GetComponent<RectTransform>();
         rect.anchorMin = rect.anchorMax = new Vector2(1f, 1f);
         rect.pivot = new Vector2(1f, 1f);
         rect.anchoredPosition = new Vector2(-2f, -2f);
-        rect.sizeDelta = new Vector2(20f, 15f);
+        rect.sizeDelta = size;
         var image = go.GetComponent<Image>();
-        image.sprite = Envelope;
+        image.sprite = sprite;
         image.raycastTarget = false;
+    }
+
+    private static Sprite MakeGiftSprite()
+    {
+        const int size = 12;
+        var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+        {
+            filterMode = FilterMode.Point,
+            wrapMode = TextureWrapMode.Clamp,
+        };
+
+        var clear = new Color(0f, 0f, 0f, 0f);
+        var outline = new Color(0.38f, 0.10f, 0.20f, 1f);
+        var box = new Color(0.86f, 0.25f, 0.42f, 1f);
+        var boxShade = new Color(0.68f, 0.17f, 0.33f, 1f);
+        var ribbon = new Color(0.99f, 0.84f, 0.30f, 1f);
+        var ribbonShade = new Color(0.86f, 0.66f, 0.16f, 1f);
+
+        for (var y = 0; y < size; y++)
+            for (var x = 0; x < size; x++)
+                texture.SetPixel(x, y, clear);
+
+        void Px(int x, int y, Color c) => texture.SetPixel(x, y, c);
+
+        // Box body (rows 0..6) with a lid (rows 7..8); y = 0 is the bottom.
+        for (var x = 1; x <= 10; x++)
+        {
+            for (var y = 0; y <= 8; y++)
+            {
+                var edge = x == 1 || x == 10 || y == 0 || y == 8 || y == 6;
+                Px(x, y, edge ? outline : (y <= 5 ? (x >= 8 ? boxShade : box) : box));
+            }
+        }
+        // Vertical ribbon on the box and lid.
+        for (var y = 1; y <= 8; y++)
+        {
+            Px(5, y, y == 6 ? ribbonShade : ribbon);
+            Px(6, y, y == 6 ? ribbonShade : ribbon);
+        }
+        // Bow: two loops and a knot on top of the lid.
+        foreach (var (bx, by) in new[] { (3, 9), (4, 9), (3, 10), (7, 9), (8, 9), (8, 10), (4, 10), (7, 10) })
+            Px(bx, by, ribbon);
+        foreach (var (bx, by) in new[] { (2, 9), (2, 10), (9, 9), (9, 10), (3, 11), (4, 11), (7, 11), (8, 11), (5, 10), (6, 10) })
+            Px(bx, by, outline);
+        Px(5, 9, ribbonShade);
+        Px(6, 9, ribbonShade);
+
+        texture.Apply();
+        return Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
     }
 
     private static Sprite MakeEnvelopeSprite()

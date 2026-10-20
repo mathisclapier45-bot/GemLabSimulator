@@ -2,6 +2,11 @@ using UnityEngine;
 
 public class Mailbox : MonoBehaviour
 {
+    public enum MailboxKind { Lab, Personal }
+
+    // Lab: the letters addressed to the gemology lab (client stones). Personal: the player's own mail, not developed yet.
+    [SerializeField] private MailboxKind kind = MailboxKind.Lab;
+
     private bool playerInRange;
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -17,6 +22,13 @@ public class Mailbox : MonoBehaviour
     private void Update()
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
+
+        if (kind == MailboxKind.Personal)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage("Courrier personnel : rien pour le moment.");
+            return;
+        }
+
         MailboxUI.Instance?.Toggle();
     }
 }

@@ -21,6 +21,18 @@ public class PlayerChest : MonoBehaviour, IGemContainer
         Instance = this;
     }
 
+    public bool CanAccept(GemInstance gem, out string reason)
+    {
+        reason = null;
+        if (!gem.IsIdentified)
+            reason = "Seules les gemmes identifiées peuvent être rangées dans le coffre.";
+        else if (gem.IsDonation)
+            reason = "Les dons se rangent dans l'armoire.";
+        else if (gem.IsClientStone)
+            reason = "Les pierres des clients se rangent dans l'armoire bleue.";
+        return reason == null;
+    }
+
     public bool TryAddGem(GemInstance instance)
     {
         if (IsFull) return false;

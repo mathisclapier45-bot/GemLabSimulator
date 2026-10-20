@@ -14,9 +14,9 @@ public class GemDropZone : MonoBehaviour, IDropHandler
         {
             var gem = source.Gem;
 
-            if (!gem.IsIdentified)
+            if (!TargetContainer.CanAccept(gem, out var reason))
             {
-                ToolFeedbackUI.Instance?.ShowMessage("Seules les gemmes identifiées peuvent être rangées dans le coffre.");
+                ToolFeedbackUI.Instance?.ShowMessage(reason);
             }
             else if (!TargetContainer.TryAddGem(gem))
             {

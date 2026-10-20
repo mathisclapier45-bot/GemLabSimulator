@@ -23,6 +23,18 @@ public static class SceneBootstrap
     private const int InteriorRefResolutionX = 480;
     private const int InteriorRefResolutionY = 270;
 
+    // The player's own house: one small room.
+    private const int HouseMinX = -5;
+    private const int HouseMaxX = 5;
+    private const int HouseMinY = -4;
+    private const int HouseMaxY = 3;
+
+    // The GemStore interior.
+    private const int ShopMinX = -8;
+    private const int ShopMaxX = 8;
+    private const int ShopMinY = -5;
+    private const int ShopMaxY = 4;
+
     private const int DividerX = 6;
     private const int DoorGapY1 = -1;
     private const int DoorGapY2 = 0;
@@ -215,6 +227,9 @@ public static class SceneBootstrap
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
         player.AddComponent<LapidaryState>();
+        player.AddComponent<PlayerCabinet>();
+        player.AddComponent<PlayerOrderCabinet>();
+        player.AddComponent<PlayerOwnedTools>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -223,38 +238,41 @@ public static class SceneBootstrap
         CreateMusicManager();
 
         CreateExitDoor(new Vector3(0, RoomMinY + 1, 0f), "SpawnPoint_Home");
-        CreateChest(new Vector3(3, 2, 0f));
-        CreateBed(new Vector3(-3, 2, 0f));
 
-        var mailboxSprite = GetOrCreatePixelSprite("mailbox_pixel", MailboxPattern, MailboxPalette);
-        var mailbox = new GameObject("Mailbox");
-        var mailboxSr = mailbox.AddComponent<SpriteRenderer>();
-        mailboxSr.sprite = mailboxSprite;
-        mailboxSr.sortingOrder = 4;
-        var mailboxCol = mailbox.AddComponent<BoxCollider2D>();
-        mailboxCol.isTrigger = true;
-        mailboxCol.size = new Vector2(1.2f, 1.2f);
-        mailbox.AddComponent<Mailbox>();
-        mailbox.transform.position = new Vector3(DividerX - 2, RoomMinY + 1, 0f);
+        // The entrance room is the storage room: a row of wardrobes (the bed and the personal chest now live in the player's house).
+        // The two blue ones are reserved for client orders; the wooden ones keep the donations.
+        foreach (var armoireX in new[] { -4f, -2f })
+            CreateArmoire(new Vector3(armoireX, 3.0f, 0f), true);
+        foreach (var armoireX in new[] { 0f, 2f, 4f })
+            CreateArmoire(new Vector3(armoireX, 3.0f, 0f));
+
+        CreateMailbox(new Vector3(DividerX - 2, RoomMinY + 1.1f, 0f));
 
         var gemPool = GetOrCreateGemPool();
         UpdateGemDatabase(gemPool);
 
-        CreateExaminationStation("Loupe", ExaminationTool.MeasurementType.VisualExamination, new Vector3(9, 2, 0f));
-        CreateExaminationStation("Refractometre", ExaminationTool.MeasurementType.RefractiveIndex, new Vector3(11.5f, 2, 0f));
-        CreateExaminationStation("BalanceHydrostatique", ExaminationTool.MeasurementType.Density, new Vector3(14, 2, 0f));
-        CreateExaminationStation("Dichroscope", ExaminationTool.MeasurementType.Pleochroism, new Vector3(16.5f, 2, 0f));
-        CreateExaminationStation("Polariscope", ExaminationTool.MeasurementType.OpticalCharacter, new Vector3(19, 2, 0f));
-        CreateExaminationStation("Spectroscope", ExaminationTool.MeasurementType.AbsorptionSpectrum, new Vector3(21.5f, 2, 0f));
-        CreateExaminationStation("Microscope", ExaminationTool.MeasurementType.Inclusions, new Vector3(24, 2, 0f));
+        // Tools stand on small desks along the walls of the lab half of the house.
+        const float topDeskY = 3.0f;
+        const float bottomDeskY = -2.9f;
+        CreateDeskStation("Loupe", ExaminationTool.MeasurementType.VisualExamination, 8.6f, topDeskY, false);
+        CreateDeskStation("Refractometre", ExaminationTool.MeasurementType.RefractiveIndex, 11.2f, topDeskY, false);
+        CreateDeskStation("BalanceHydrostatique", ExaminationTool.MeasurementType.Density, 13.8f, topDeskY, false);
+        CreateDeskStation("Dichroscope", ExaminationTool.MeasurementType.Pleochroism, 16.4f, topDeskY, false);
+        CreateDeskStation("Polariscope", ExaminationTool.MeasurementType.OpticalCharacter, 19.0f, topDeskY, false);
+        CreateDeskStation("Spectroscope", ExaminationTool.MeasurementType.AbsorptionSpectrum, 21.6f, topDeskY, false);
+        CreateDeskStation("Microscope", ExaminationTool.MeasurementType.Inclusions, 24.2f, topDeskY, false);
+        // The computer that receives the microphotographs, right next to the microscope.
+        CreateComputerDesk(26.8f, topDeskY);
 
-        // The conoscope is now built into the polariscope, so it has no station of its own.
-        // One UV cabinet with both lamps (365 nm and 254 nm) replaces the two former UV stations.
-        CreateExaminationStation("CabineUV", ExaminationTool.MeasurementType.FluorescenceLongWave, new Vector3(9, -2, 0f));
-        CreateExaminationStation("FiltreChelsea", ExaminationTool.MeasurementType.ChelseaFilter, new Vector3(11.5f, -2, 0f));
-        CreateExaminationStation("Micrometre", ExaminationTool.MeasurementType.Dimensions, new Vector3(14, -2, 0f));
-        CreateExaminationStation("BalanceCarat", ExaminationTool.MeasurementType.Weight, new Vector3(16.5f, -2, 0f));
-        CreateExaminationStation("Aimant", ExaminationTool.MeasurementType.Magnetism, new Vector3(19, -2, 0f));
+        // The conoscope is built into the polariscope; one UV cabinet with both lamps replaces the two UV stations.
+        CreateDeskStation("CabineUV", ExaminationTool.MeasurementType.FluorescenceLongWave, 9.3f, bottomDeskY, true);
+        CreateDeskStation("FiltreChelsea", ExaminationTool.MeasurementType.ChelseaFilter, 12.0f, bottomDeskY, true);
+        CreateDeskStation("Micrometre", ExaminationTool.MeasurementType.Dimensions, 14.7f, bottomDeskY, true);
+        CreateDeskStation("BalanceCarat", ExaminationTool.MeasurementType.Weight, 17.4f, bottomDeskY, true);
+        CreateDeskStation("Aimant", ExaminationTool.MeasurementType.Magnetism, 20.1f, bottomDeskY, true);
+        // Bought at the GemStore: these two desks only appear once the tools are owned.
+        CreateDeskStation("TesteurThermique", ExaminationTool.MeasurementType.ThermalConductivity, 22.8f, bottomDeskY, true, true);
+        CreateDeskStation("TesteurElectrique", ExaminationTool.MeasurementType.ElectricalConductivity, 25.5f, bottomDeskY, true, true);
 
         CreateDirector(new Vector3(26, 0, 0f));
         DecorateHome();
@@ -267,6 +285,440 @@ public static class SceneBootstrap
 
         AssetDatabase.SaveAssets();
         Debug.Log("Home scene created at Assets/Scenes/Home.unity");
+    }
+
+    // A free-standing red post box (grounded sprite: feet at its position), with a wider trigger in front of it.
+    private static void CreateMailbox(Vector3 position, bool personal = false)
+    {
+        var mailboxSprite = LoadPackSpriteGrounded("Assets/Art/Sprites/furniture_mailbox.png");
+        var mailbox = new GameObject(personal ? "Boite aux lettres perso" : "Mailbox");
+        var mailboxSr = mailbox.AddComponent<SpriteRenderer>();
+        var mailboxCol = mailbox.AddComponent<BoxCollider2D>();
+        mailboxCol.isTrigger = true;
+        var mailboxComponent = mailbox.AddComponent<Mailbox>();
+        if (personal)
+        {
+            var mailboxSo = new SerializedObject(mailboxComponent);
+            mailboxSo.FindProperty("kind").enumValueIndex = (int)Mailbox.MailboxKind.Personal;
+            mailboxSo.ApplyModifiedProperties();
+        }
+        if (mailboxSprite != null)
+        {
+            mailboxSr.sprite = mailboxSprite;
+            mailboxCol.size = new Vector2(1.6f, 1.6f);
+            mailboxCol.offset = new Vector2(0f, 0.5f);
+            mailbox.transform.position = position;
+        }
+        else
+        {
+            mailboxSr.sprite = GetOrCreatePixelSprite("mailbox_pixel", MailboxPattern, MailboxPalette);
+            mailboxCol.size = new Vector2(1.2f, 1.2f);
+            mailbox.transform.position = position - new Vector3(0f, 0.1f, 0f);
+        }
+        mailboxSr.sortingOrder = 4;
+    }
+
+    [MenuItem("GemLab/Setup Player House Scene")]
+    public static void CreatePlayerHouseScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+
+        var light = GameObject.Find("Directional Light");
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
+
+        var cam = Camera.main;
+        cam.orthographic = true;
+        cam.orthographicSize = 5f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.11f, 0.11f, 0.13f);
+        cam.transform.position = new Vector3(0f, 0f, -10f);
+
+        var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
+        pixelPerfect.assetsPPU = PixelsPerUnit;
+        pixelPerfect.refResolutionX = InteriorRefResolutionX;
+        pixelPerfect.refResolutionY = InteriorRefResolutionY;
+        pixelPerfect.upscaleRT = true;
+        pixelPerfect.pixelSnapping = true;
+        pixelPerfect.cropFrameX = true;
+        pixelPerfect.cropFrameY = true;
+
+        var gridGO = new GameObject("Grid", typeof(Grid));
+
+        var groundGO = new GameObject("Ground", typeof(Tilemap), typeof(TilemapRenderer));
+        groundGO.transform.SetParent(gridGO.transform);
+        var groundTilemap = groundGO.GetComponent<Tilemap>();
+
+        var wallsGO = new GameObject("Walls", typeof(Tilemap), typeof(TilemapRenderer), typeof(TilemapCollider2D));
+        wallsGO.transform.SetParent(gridGO.transform);
+        var wallsTilemap = wallsGO.GetComponent<Tilemap>();
+
+        var floorTile = GetInteriorFloorTile("home", Color.white, "floor_pixel", FloorPixel);
+        var wallTile = GetInteriorSideWallTile("home", InteriorSideWallTint, "wall_pixel", WallPixel);
+
+        for (var x = HouseMinX; x <= HouseMaxX; x++)
+        {
+            for (var y = HouseMinY; y <= HouseMaxY; y++)
+            {
+                var isPerimeter = x == HouseMinX || x == HouseMaxX || y == HouseMinY || y == HouseMaxY;
+                var cell = new Vector3Int(x, y, 0);
+                if (isPerimeter)
+                    wallsTilemap.SetTile(cell, wallTile);
+                else
+                    groundTilemap.SetTile(cell, floorTile);
+            }
+        }
+
+        PaintInteriorTopWall(wallsTilemap, HouseMinX, HouseMaxX, HouseMaxY, "home", Color.white);
+
+        var spawnGO = new GameObject("SpawnPoint");
+        spawnGO.transform.position = new Vector3(0f, -1.2f, 0f);
+
+        var playerSprite = GetPlayerSprite();
+
+        var player = new GameObject("Player");
+        player.tag = "Player";
+        var sr = player.AddComponent<SpriteRenderer>();
+        sr.sprite = playerSprite;
+        sr.sortingOrder = 5;
+
+        var rb = player.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        var col = player.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.7f, 0.4f);
+        col.offset = new Vector2(0f, 0.2f);
+
+        player.AddComponent<PlayerController>();
+        player.AddComponent<PlayerInventory>();
+        player.AddComponent<PlayerWallet>();
+        player.AddComponent<PlayerChest>();
+        player.AddComponent<GemCodex>();
+        player.AddComponent<MailboxState>();
+        player.AddComponent<GameClock>();
+        player.AddComponent<ReturnToMenuController>();
+        player.AddComponent<MarketState>();
+        player.AddComponent<QuestState>();
+        player.AddComponent<RoughMarketState>();
+        player.AddComponent<TunnelState>();
+        player.AddComponent<ManoirRequestState>();
+        player.AddComponent<ReputationState>();
+        player.AddComponent<LapidaryState>();
+        player.AddComponent<PlayerCabinet>();
+        player.AddComponent<PlayerOrderCabinet>();
+        player.AddComponent<PlayerOwnedTools>();
+        player.transform.position = spawnGO.transform.position;
+
+        var follow = cam.gameObject.AddComponent<CameraFollow>();
+        follow.SetTarget(player.transform);
+
+        CreateMusicManager();
+
+        CreateExitDoor(new Vector3(0, HouseMinY + 1, 0f), "SpawnPoint_MaisonJoueur");
+
+        // Against the back wall: bed, wardrobe, desk, personal chest. Post box by the door.
+        CreateBed(new Vector3(-3.5f, 1.4f, 0f));
+        PlaceFurniture("wardrobe_a", new Vector3(-1.3f, HouseMaxY - 1f, 0f));
+        PlaceFurniture("desk_a", new Vector3(1.3f, HouseMaxY - 1f, 0f));
+        CreateChest(new Vector3(3.5f, 1.5f, 0f));
+        CreateMailbox(new Vector3(3.5f, HouseMinY + 1.1f, 0f), true);
+
+        PlaceWallDecor("window_white", -3, HouseMaxY);
+        PlaceWallDecor("window_white", 3, HouseMaxY);
+        PlaceRug("rug_red", new Vector3(0f, -0.4f, 0f));
+        PlaceFurniture("plant_small", new Vector3(-4.0f, HouseMinY + 1.1f, 0f));
+
+        CreateUI(true);
+
+        Directory.CreateDirectory("Assets/Scenes");
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/MaisonJoueur.unity");
+        AddSceneToBuildSettings("Assets/Scenes/MaisonJoueur.unity");
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("Player house scene created at Assets/Scenes/MaisonJoueur.unity");
+    }
+
+    [MenuItem("GemLab/Setup GemStore Scene")]
+    public static void CreateGemStoreScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+
+        var light = GameObject.Find("Directional Light");
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
+
+        var cam = Camera.main;
+        cam.orthographic = true;
+        cam.orthographicSize = 5f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.11f, 0.11f, 0.13f);
+        cam.transform.position = new Vector3(0f, 0f, -10f);
+
+        var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
+        pixelPerfect.assetsPPU = PixelsPerUnit;
+        pixelPerfect.refResolutionX = InteriorRefResolutionX;
+        pixelPerfect.refResolutionY = InteriorRefResolutionY;
+        pixelPerfect.upscaleRT = true;
+        pixelPerfect.pixelSnapping = true;
+        pixelPerfect.cropFrameX = true;
+        pixelPerfect.cropFrameY = true;
+
+        var gridGO = new GameObject("Grid", typeof(Grid));
+
+        var groundGO = new GameObject("Ground", typeof(Tilemap), typeof(TilemapRenderer));
+        groundGO.transform.SetParent(gridGO.transform);
+        var groundTilemap = groundGO.GetComponent<Tilemap>();
+
+        var wallsGO = new GameObject("Walls", typeof(Tilemap), typeof(TilemapRenderer), typeof(TilemapCollider2D));
+        wallsGO.transform.SetParent(gridGO.transform);
+        var wallsTilemap = wallsGO.GetComponent<Tilemap>();
+
+        var floorTile = GetInteriorFloorTile("lab", Color.white, "floor_pixel", FloorPixel);
+        var wallTile = GetInteriorSideWallTile("lab", InteriorSideWallTint, "wall_pixel", WallPixel);
+
+        for (var x = ShopMinX; x <= ShopMaxX; x++)
+        {
+            for (var y = ShopMinY; y <= ShopMaxY; y++)
+            {
+                var isPerimeter = x == ShopMinX || x == ShopMaxX || y == ShopMinY || y == ShopMaxY;
+                var cell = new Vector3Int(x, y, 0);
+                if (isPerimeter)
+                    wallsTilemap.SetTile(cell, wallTile);
+                else
+                    groundTilemap.SetTile(cell, floorTile);
+            }
+        }
+
+        PaintInteriorTopWall(wallsTilemap, ShopMinX, ShopMaxX, ShopMaxY, "lab", Color.white);
+
+        var spawnGO = new GameObject("SpawnPoint");
+        spawnGO.transform.position = new Vector3(0f, ShopMinY + 2f, 0f);
+
+        var playerSprite = GetPlayerSprite();
+
+        var player = new GameObject("Player");
+        player.tag = "Player";
+        var sr = player.AddComponent<SpriteRenderer>();
+        sr.sprite = playerSprite;
+        sr.sortingOrder = 5;
+
+        var rb = player.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        var col = player.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.7f, 0.4f);
+        col.offset = new Vector2(0f, 0.2f);
+
+        player.AddComponent<PlayerController>();
+        player.AddComponent<PlayerInventory>();
+        player.AddComponent<PlayerWallet>();
+        player.AddComponent<PlayerChest>();
+        player.AddComponent<GemCodex>();
+        player.AddComponent<MailboxState>();
+        player.AddComponent<GameClock>();
+        player.AddComponent<ReturnToMenuController>();
+        player.AddComponent<MarketState>();
+        player.AddComponent<QuestState>();
+        player.AddComponent<RoughMarketState>();
+        player.AddComponent<TunnelState>();
+        player.AddComponent<ManoirRequestState>();
+        player.AddComponent<ReputationState>();
+        player.AddComponent<LapidaryState>();
+        player.AddComponent<PlayerCabinet>();
+        player.AddComponent<PlayerOrderCabinet>();
+        player.AddComponent<PlayerOwnedTools>();
+        player.transform.position = spawnGO.transform.position;
+
+        var follow = cam.gameObject.AddComponent<CameraFollow>();
+        follow.SetTarget(player.transform);
+
+        CreateMusicManager();
+
+        CreateExitDoor(new Vector3(0, ShopMinY + 1, 0f), "SpawnPoint_GemStore");
+
+        // Shelves against the back wall and the left wall: the items for sale will be placed on them later.
+        var backWallY = ShopMaxY - 1f;
+        var backShelves = new List<GameObject>();
+        foreach (var shelfX in new[] { -5.5f, -2.5f, 0.5f, 5.5f })
+            backShelves.Add(CreateShopShelf("gemstore_shelf", new Vector3(shelfX, backWallY, 0f), new[] { -1.0f, 0f, 1.0f }));
+        var sideShelves = new List<GameObject>();
+        foreach (var shelfY in new[] { -3.0f, -1.0f, 1.0f })
+            sideShelves.Add(CreateShopShelf("gemstore_shelf_side", new Vector3(ShopMinX + 1.5f, shelfY, 0f), new[] { 0f }));
+
+        // First items for sale: the two diamond testers, bought once and then installed in the home lab.
+        CreateShopItem(backShelves[0], "Slot_0", "TesteurThermique", "Diamond Selector II (testeur thermique)", 2000,
+            "Sonde de conductivité thermique. Le diamant évacue la chaleur bien mieux que la plupart de ses imitations : l'appareil les distingue en quelques secondes.\n\nAttention : la moissanite conduit aussi la chaleur, un second test sera nécessaire.");
+        CreateShopItem(backShelves[0], "Slot_1", "TesteurElectrique", "Testeur Moissanite / Diamant (conductivité électrique)", 2000,
+            "Sonde de conductivité électrique. Le diamant est un isolant, la moissanite synthétique conduit l'électricité : c'est le test qui les départage.");
+
+        // Microscope upgrades: bought once, they appear on the microscope of the home lab.
+        // Field equipment: bought items go straight into the player's bag (H).
+        CreateShopItem(backShelves[0], "Slot_2", "Maglite", "Maglite", 159,
+            "Lampe torche compacte et puissante. Indispensable pour éclairer une gemme (diaphanéité, inclusions, éclat) en dehors du laboratoire.",
+            "", true);
+        CreateShopItem(backShelves[1], "Slot_2", "SpectroscopePoche", "Spectroscope de poche", 129,
+            "Spectroscope à réseau de diffraction : décompose la lumière traversant la gemme pour montrer ses bandes d'absorption. Se glisse dans le sac et s'utilise partout.",
+            "", true);
+        CreateShopItem(backShelves[2], "Slot_0", "Loupe10X", "Loupe 10× (Hastings)", 59,
+            "Loupe de poche à triplet, grossissement ×10 : l'outil de base du gemmologue. Se glisse dans le sac et s'utilise partout.",
+            "", true);
+        CreateShopItem(backShelves[2], "Slot_1", "Loupe20X", "Loupe 20× (triplet)", 69,
+            "Loupe de poche à triplet, grossissement ×20 : pour distinguer les fines inclusions. Se glisse dans le sac et s'utilise partout.",
+            "", true);
+        CreateShopItem(backShelves[2], "Slot_2", "FiltreChelseaPortable", "Filtre Chelsea", 79,
+            "Filtre dichromatique ne laissant passer que le rouge profond et le vert-jaune, pour repérer certaines gemmes colorées par le chrome. Se glisse dans le sac.",
+            "", true);
+        CreateShopItem(sideShelves[0], "Slot_0", "BalanceCaratPoche", "Balance à carat de poche", 199,
+            "Petite balance électronique de précision, donnant le poids d'une gemme en carats. Se glisse dans le sac et s'utilise partout.",
+            "", true);
+        CreateShopItem(sideShelves[0], "Slot_1", "LampeUVLongs", "Lampe UV longs (365 nm)", 249,
+            "Torche à LED ultraviolettes de 365 nm : révèle la fluorescence de certaines gemmes dans la pénombre. Se glisse dans le sac et s'utilise partout.",
+            "", true);
+        CreateShopItem(sideShelves[1], "Slot_0", "Chamoisine", "Chamoisine (gem cloth)", 15,
+            "Carré de feutre doux pour essuyer une gemme sans la rayer : poussières, traces de doigts et résidus gras disparaissent avant l'examen. Se glisse dans le sac.",
+            "", true);
+        CreateShopItem(sideShelves[1], "Slot_1", "AimantGemmologie", "Aimant de gemmologie", 5,
+            "Aimant au néodyme très puissant : il attire les gemmes riches en fer (grenats, par exemple) et sert à un premier tri rapide sur le terrain. Se glisse dans le sac.",
+            "", true);
+        CreateShopItem(sideShelves[2], "Slot_0", "DichroscopeCalcite", "Dichroscope à calcite", 99,
+            "Deux fenêtres côte à côte à travers un cristal de calcite : on compare les deux couleurs d'un pléochroïsme en tournant la gemme. Se glisse dans le sac.",
+            "", true);
+        CreateShopItem(sideShelves[2], "Slot_1", "DichroscopeLondres", "Dichroscope de Londres", 90,
+            "Dichroscope tubulaire classique (modèle londonien) : il sépare la lumière en deux faisceaux polarisés pour révéler le pléochroïsme. Se glisse dans le sac.",
+            "", true);
+
+        CreateShopItem(backShelves[1], "Slot_0", "Objectif60X", "Objectif ×60 pour microscope", 6499,
+            "Objectif à forte ouverture numérique (60x / 0,85). S'ajoute au microscope du laboratoire à côté des objectifs ×10, ×20 et ×40.\n\nLes plus fines inclusions deviennent visibles, mais la mise au point demande plus de précision.",
+            "Objectif ×60 acheté ! Il est monté sur le microscope du laboratoire.");
+        CreateShopItem(backShelves[1], "Slot_1", "CameraMicroscope", "Caméra pour microscope", 8999,
+            "Caméra numérique à fixer sur le microscope. Elle permet de prendre en photo ce que l'on observe : les images sont envoyées directement à l'ordinateur du laboratoire.",
+            "Caméra achetée ! Elle est fixée sur le microscope : un bouton « Photographier » apparaît.");
+
+        // Counter along the right side, the clerk standing behind it.
+        CreateShopCounter(new Vector3(4.5f, -1.5f, 0f), 4);
+        CreateShopkeeper(new Vector3(6.1f, -1.0f, 0f));
+
+        PlaceWallDecor("window_white", 3, ShopMaxY);
+        PlaceRug("rug_gold", new Vector3(-1.0f, -1.2f, 0f));
+        PlaceFurniture("plant_small", new Vector3(-6.3f, ShopMinY + 1.1f, 0f));
+        PlaceFurniture("plant_small", new Vector3(6.3f, ShopMinY + 1.1f, 0f));
+
+        CreateUI(false);
+
+        Directory.CreateDirectory("Assets/Scenes");
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/GemStore.unity");
+        AddSceneToBuildSettings("Assets/Scenes/GemStore.unity");
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("GemStore scene created at Assets/Scenes/GemStore.unity");
+    }
+
+    // Wooden shelf unit. Each compartment gets an empty "Slot_*" child (on the shelf boards) where a sale item will be put.
+    private static GameObject CreateShopShelf(string spriteName, Vector3 feet, float[] slotXs)
+    {
+        var shelf = PlaceFurniture(spriteName, feet);
+        if (shelf == null) return null;
+        shelf.name = "Etagere";
+
+        var slotIndex = 0;
+        foreach (var boardY in new[] { 0.4375f, 1.125f })
+        {
+            foreach (var slotX in slotXs)
+            {
+                var slot = new GameObject($"Slot_{slotIndex++}");
+                slot.transform.SetParent(shelf.transform, false);
+                slot.transform.localPosition = new Vector3(slotX, boardY, 0f);
+            }
+        }
+        return shelf;
+    }
+
+    // A purchasable instrument standing on a shelf slot. `slotName` is one of the shelf's "Slot_*" children.
+    // `addsToBag`: the item goes into the player's bag (field equipment) instead of the lab. The item is clicked with the mouse.
+    private static void CreateShopItem(GameObject shelf, string slotName, string toolId, string displayName, int price, string description,
+        string purchaseMessage = "", bool addsToBag = false)
+    {
+        if (shelf == null) return;
+        var slot = shelf.transform.Find(slotName);
+        var spritePath = addsToBag ? $"Assets/Resources/BagIcons/{toolId}.png" : $"Assets/Art/Sprites/shopitem_{toolId}.png";
+        var sprite = LoadPackSpriteGrounded(spritePath);
+        if (slot == null || sprite == null) return;
+
+        var item = new GameObject($"Article_{toolId}");
+        item.transform.position = slot.position;
+        var sr = item.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 5;
+
+        // Click area around the sprite (a trigger: it never blocks the player).
+        var clickArea = item.AddComponent<BoxCollider2D>();
+        clickArea.isTrigger = true;
+        clickArea.size = sprite.bounds.size + new Vector3(0.15f, 0.15f, 0f);
+        clickArea.offset = new Vector2(0f, sprite.bounds.size.y / 2f);
+
+        var shopItem = item.AddComponent<ShopItem>();
+        var so = new SerializedObject(shopItem);
+        so.FindProperty("toolId").stringValue = toolId;
+        so.FindProperty("displayName").stringValue = displayName;
+        so.FindProperty("description").stringValue = description;
+        so.FindProperty("price").intValue = price;
+        so.FindProperty("purchaseMessage").stringValue = purchaseMessage;
+        so.FindProperty("addsToBag").boolValue = addsToBag;
+        so.ApplyModifiedProperties();
+    }
+
+    // A counter made of `length` 1x1 tiles running north-south, `bottom` being the centre of the lowest tile row.
+    private static void CreateShopCounter(Vector3 bottomCenter, int length)
+    {
+        for (var i = 0; i < length; i++)
+        {
+            var kind = i == 0 ? "bottom" : (i == length - 1 ? "top" : "mid");
+            var sprite = LoadPackSprite($"{InteriorSpriteRoot}prop_gemstore_counter_{kind}.png");
+            if (sprite == null) continue;
+
+            var piece = new GameObject("Comptoir");
+            var sr = piece.AddComponent<SpriteRenderer>();
+            sr.sprite = sprite;
+            sr.sortingOrder = 4;
+            piece.transform.position = bottomCenter + new Vector3(0f, i, 0f);
+
+            var solid = piece.AddComponent<BoxCollider2D>();
+            solid.size = new Vector2(1f, 1f);
+        }
+
+        var registerSprite = LoadPackSprite($"{InteriorSpriteRoot}prop_gemstore_register.png");
+        if (registerSprite != null)
+        {
+            var register = new GameObject("Caisse");
+            var registerSr = register.AddComponent<SpriteRenderer>();
+            registerSr.sprite = registerSprite;
+            registerSr.sortingOrder = 5;
+            register.transform.position = bottomCenter + new Vector3(0.15f, length - 1.6f, 0f);
+        }
+    }
+
+    private static void CreateShopkeeper(Vector3 feet)
+    {
+        var sprite = LoadPackSpriteGrounded("Assets/Art/Sprites/npc_merchant1.png");
+        var clerk = new GameObject("Vendeur GemStore");
+        var sr = clerk.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite != null ? sprite : GetOrCreatePixelSprite("directeur_pixel", DirectorPattern, DirectorPalette);
+        sr.sortingOrder = 4;
+        clerk.transform.position = feet;
+
+        // Wide trigger reaching over the counter, so the player can talk from the customer side.
+        var trigger = clerk.AddComponent<BoxCollider2D>();
+        trigger.isTrigger = true;
+        trigger.size = new Vector2(5f, 3.5f);
+        trigger.offset = new Vector2(-2.5f, 0.8f);
+
+        var solid = clerk.AddComponent<BoxCollider2D>();
+        solid.size = new Vector2(0.7f, 0.4f);
+        solid.offset = new Vector2(0f, 0.2f);
+
+        clerk.AddComponent<ShopkeeperNPC>();
     }
 
     [MenuItem("GemLab/Setup Town Scene")]
@@ -335,17 +787,123 @@ public static class SceneBootstrap
             }
         }
 
-        PaintStreetRect(-65, 65, 24, 27, false);
-        PaintStreetRect(-55, 55, -19, -16, false);
-        PaintStreetRect(-1, 1, -48, 24, true);
-        PaintStreetRect(-40, 40, 3, 6, false);
-        PaintStreetRect(-45, 45, -39, -36, false);
-        // Path to Vincent Pardieu's cabin, off on its own in the upper-left.
+        // Rural dirt paths first (long path to the character's house, path to Vincent Pardieu's cabin).
+        PaintStreetRect(-53, -51, -49, -20, true);
         PaintStreetRect(-58, -40, 3, 6, false);
         PaintStreetRect(-57, -55, 6, 9, true);
+
+        // Asphalt roads: sidewalk on both edges, dashed line along the middle. Crossings stay plain asphalt.
+        var asphaltTiles = new[]
+        {
+            GetOrCreateTileFromSprite("asphalt_a", LoadPackSprite(PackCityTerrains + "Asphalt_1_Variation_16.png")),
+            GetOrCreateTileFromSprite("asphalt_b", LoadPackSprite(PackCityTerrains + "Asphalt_1_Variation_17.png")),
+            GetOrCreateTileFromSprite("asphalt_c", LoadPackSprite(PackCityTerrains + "Asphalt_1_Variation_18.png")),
+        };
+        var dashHTiles = new[]
+        {
+            GetOrCreateTileFromSprite("asphalt_dash_h1", LoadPackSprite(PackCityTerrains + "Asphalt_1_Variation_2.png")),
+            GetOrCreateTileFromSprite("asphalt_dash_h2", LoadPackSprite(PackCityTerrains + "Asphalt_1_Variation_6.png")),
+        };
+        var dashVTiles = new[]
+        {
+            GetOrCreateTileFromSprite("asphalt_dash_v1", LoadPackSprite(PackCityTerrains + "Asphalt_1_Variation_4.png")),
+            GetOrCreateTileFromSprite("asphalt_dash_v2", LoadPackSprite(PackCityTerrains + "Asphalt_1_Variation_8.png")),
+        };
+        var asphaltSet = new HashSet<TileBase>(asphaltTiles);
+        foreach (var t in dashHTiles) asphaltSet.Add(t);
+        foreach (var t in dashVTiles) asphaltSet.Add(t);
+
+        void PaintRoad(int minX, int maxX, int minY, int maxY, bool vertical)
+        {
+            var mid = vertical ? (minX + maxX) / 2 : (minY + maxY) / 2;
+            for (var x = minX; x <= maxX; x++)
+            {
+                for (var y = minY; y <= maxY; y++)
+                {
+                    var cell = new Vector3Int(x, y, 0);
+                    var existing = groundTilemap.GetTile(cell);
+                    var isEdge = vertical ? (x == minX || x == maxX) : (y == minY || y == maxY);
+                    if (isEdge)
+                    {
+                        if (!asphaltSet.Contains(existing)) groundTilemap.SetTile(cell, sidewalkTile);
+                        continue;
+                    }
+
+                    var isCenter = vertical ? x == mid : y == mid;
+                    if (isCenter && !asphaltSet.Contains(existing))
+                        groundTilemap.SetTile(cell, vertical ? dashVTiles[Mathf.Abs(y) % 2] : dashHTiles[Mathf.Abs(x) % 2]);
+                    else
+                        groundTilemap.SetTile(cell, asphaltTiles[Mathf.Abs(x * 7 + y * 13) % asphaltTiles.Length]);
+                }
+            }
+        }
+
+        PaintRoad(-65, 65, 23, 27, false);
+        PaintRoad(-55, 55, -20, -16, false);
+        PaintRoad(-40, 40, 2, 6, false);
+        PaintRoad(-45, 45, -40, -36, false);
         // Airport on the right edge: street in front of the terminal, then the runway.
-        PaintStreetRect(40, 63, 3, 6, false);
+        PaintRoad(40, 63, 2, 6, false);
+        PaintRoad(-3, 3, -48, 27, true);
         PaintRunway(groundTilemap, 64, 68, -13, 21);
+
+        // River crossing the whole town from west to east, with a stone bridge on the main road
+        // and a wooden footbridge on the path to the character's house.
+        const int RiverMinY = -29;
+        const int RiverMaxY = -24;
+        var waterGO = new GameObject("Water", typeof(Tilemap), typeof(TilemapRenderer), typeof(TilemapCollider2D));
+        waterGO.transform.SetParent(gridGO.transform);
+        var waterTilemap = waterGO.GetComponent<Tilemap>();
+        // Above the ground layer: the grass tiles underneath would otherwise be drawn over the water (same sorting order).
+        waterGO.GetComponent<TilemapRenderer>().sortingOrder = 1;
+        var shallowTile = GetOrCreateTileFromSprite("water_shallow", LoadPackSprite(PackTerrains + "Deep_Water_1_22.png"));
+        var deepTiles = new[]
+        {
+            GetOrCreateTileFromSprite("water_deep_a", LoadPackSprite(PackTerrains + "Deep_Water_1_9.png")),
+            GetOrCreateTileFromSprite("water_deep_b", LoadPackSprite(PackTerrains + "Deep_Water_1_10.png")),
+        };
+        var topEdgeTiles = new[]
+        {
+            GetOrCreateTileFromSprite("water_edge_top_1", LoadPackSprite(PackTerrains + "Deep_Water_1_1.png")),
+            GetOrCreateTileFromSprite("water_edge_top_2", LoadPackSprite(PackTerrains + "Deep_Water_1_2.png")),
+            GetOrCreateTileFromSprite("water_edge_top_3", LoadPackSprite(PackTerrains + "Deep_Water_1_3.png")),
+        };
+        var bottomEdgeTile = GetOrCreateTileFromSprite("water_edge_bottom", LoadPackSprite(PackTerrains + "Deep_Water_1_6.png"));
+        var plankTile = GetOrCreateTileFromSprite("bridge_plank", LoadPackSprite("Assets/Art/Sprites/bridge_plank.png"));
+
+        for (var x = TownMinX + 1; x <= TownMaxX - 1; x++)
+        {
+            var onMainBridge = x >= -3 && x <= 3;
+            var onFootbridge = x >= -53 && x <= -51;
+            for (var y = RiverMinY; y <= RiverMaxY; y++)
+            {
+                var cell = new Vector3Int(x, y, 0);
+                if (onFootbridge)
+                {
+                    groundTilemap.SetTile(cell, plankTile);
+                    continue;
+                }
+                if (onMainBridge) continue;
+
+                TileBase tile;
+                if (y == RiverMaxY || y == RiverMinY) tile = shallowTile;
+                else if (y == RiverMaxY - 1) tile = topEdgeTiles[Mathf.Abs(x) % topEdgeTiles.Length];
+                else if (y == RiverMinY + 1) tile = bottomEdgeTile;
+                else tile = deepTiles[(Mathf.Abs(x * 5 + y) % 9 == 0) ? 1 : 0];
+                waterTilemap.SetTile(cell, tile);
+            }
+        }
+
+        // Bridge parapets: thin strips along both outer edges (the water colliders keep the player on the deck).
+        var stoneRail = LoadPackSpriteGrounded("Assets/Art/Sprites/bridge_rail_stone.png");
+        var woodRail = LoadPackSpriteGrounded("Assets/Art/Sprites/bridge_rail_wood.png");
+        for (var y = RiverMinY; y <= RiverMaxY; y++)
+        {
+            PlaceRail(stoneRail, new Vector3(-3f + 0.094f, y, 0f));
+            PlaceRail(stoneRail, new Vector3(4f - 0.094f, y, 0f));
+            PlaceRail(woodRail, new Vector3(-53f + 0.094f, y, 0f));
+            PlaceRail(woodRail, new Vector3(-50f - 0.094f, y, 0f));
+        }
 
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(-55, 25, 0f);
@@ -382,6 +940,9 @@ public static class SceneBootstrap
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
         player.AddComponent<LapidaryState>();
+        player.AddComponent<PlayerCabinet>();
+        player.AddComponent<PlayerOrderCabinet>();
+        player.AddComponent<PlayerOwnedTools>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -407,6 +968,8 @@ public static class SceneBootstrap
         CreateDealership(new Vector3(28, -35, 0f));
         CreateVincentPardieuHouse(new Vector3(-58, 10, 0f));
         CreateLibrary(new Vector3(-41, 7, 0f));
+        CreateGemStore(new Vector3(35, 7, 0f));
+        CreatePersonalHouse(new Vector3(-52, -50, 0f));
         CreateAirport(new Vector3(58, 8, 0f), new Vector3(46, 8, 0f), new Vector3(59, -5, 0f));
 
         CreateTunnelEntrance(new Vector3(0, -50, 0f));
@@ -419,45 +982,252 @@ public static class SceneBootstrap
         CreateNamedSpawnPoint("SpawnPoint_MarcheBrutes", new Vector3(15, -17, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Manoir", new Vector3(45, -17, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Tunnel", new Vector3(0, -47, 0f));
-
-        var bushVariant = 0;
-        for (var x = TownMinX + 5; x <= TownMaxX - 5; x += 15)
-        {
-            CreateTree(new Vector3(x, TownMaxY - 4, 0f), bushVariant % 2);
-            bushVariant++;
-            CreateTree(new Vector3(x, TownMinY + 4, 0f), bushVariant % 2);
-            bushVariant++;
-        }
-        for (var y = TownMinY + 15; y <= TownMaxY - 15; y += 15)
-        {
-            CreateTree(new Vector3(TownMinX + 4, y, 0f), bushVariant % 2);
-            bushVariant++;
-            // Keep the runway clear of the right-hand tree line.
-            if (y < -14 || y > 22) CreateTree(new Vector3(TownMaxX - 4, y, 0f), bushVariant % 2);
-            bushVariant++;
-        }
+        CreateNamedSpawnPoint("SpawnPoint_GemStore", new Vector3(34f, 5f, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_MaisonJoueur", new Vector3(-51.2f, -52f, 0f));
 
         for (var i = 0; i < 5; i++)
             CreateFence(new Vector3(-59 + i, 22, 0f));
 
-        var buildingStreetSpots = new[]
+        // Footprints of everything placed so far (buildings, cars, runway...): scenery must stay clear of them.
+        var occupied = new List<Rect>();
+        foreach (var existingRenderer in UnityEngine.Object.FindObjectsByType<SpriteRenderer>(FindObjectsSortMode.None))
+        {
+            var b = existingRenderer.bounds;
+            occupied.Add(new Rect(b.min.x - 1.5f, b.min.y - 1.5f, b.size.x + 3f, b.size.y + 3f));
+        }
+
+        bool GroundIsGrass(float px, float py, int radius)
+        {
+            var cx = Mathf.FloorToInt(px);
+            var cy = Mathf.FloorToInt(py);
+            for (var dx = -radius; dx <= radius; dx++)
+            {
+                for (var dy = -radius; dy <= radius; dy++)
+                {
+                    var cell = new Vector3Int(cx + dx, cy + dy, 0);
+                    if (groundTilemap.GetTile(cell) != grassTile || waterTilemap.HasTile(cell)) return false;
+                }
+            }
+            return true;
+        }
+
+        bool AreaIsFree(Rect area)
+        {
+            foreach (var r in occupied)
+                if (r.Overlaps(area)) return false;
+            return true;
+        }
+
+        bool AreaIsGrass(Rect area)
+        {
+            for (var cx = Mathf.FloorToInt(area.xMin); cx <= Mathf.FloorToInt(area.xMax); cx++)
+                for (var cy = Mathf.FloorToInt(area.yMin); cy <= Mathf.FloorToInt(area.yMax); cy++)
+                {
+                    var cell = new Vector3Int(cx, cy, 0);
+                    if (groundTilemap.GetTile(cell) != grassTile || waterTilemap.HasTile(cell)) return false;
+                }
+            return true;
+        }
+
+        // Places a ground-anchored prop if its footprint (width x depth, in tiles) is clear. Returns whether it was placed.
+        bool TryPlace(string spritePath, float fx, float fy, float footW, float footD, string name,
+                      float colW = 0f, float colH = 0f, bool needGrass = true)
+        {
+            var foot = new Rect(fx - footW / 2f, fy - 0.2f, footW, footD);
+            if (!AreaIsFree(foot)) return false;
+            if (needGrass && !AreaIsGrass(foot)) return false;
+            var go = PlaceTownProp(spritePath, new Vector3(fx, fy, 0f), name, colW, colH);
+            if (go == null) return false;
+            occupied.Add(foot);
+            return true;
+        }
+
+        var rng = new System.Random(20260);
+        float Rf(float min, float max) => min + (float)rng.NextDouble() * (max - min);
+
+        // --- East park: paved plaza with a fountain, benches, flower beds and oaks ---
+        // (the buildings on both sides are large: the free corridor is x 4..14 east and x -11..-4 west of the main road)
+        var eastPark = new Rect(4f, 8f, 10f, 14f);
+        if (AreaIsFree(eastPark) && AreaIsGrass(eastPark))
+        {
+            for (var x = 7; x <= 11; x++)
+                for (var y = 10; y <= 15; y++)
+                    groundTilemap.SetTile(new Vector3Int(x, y, 0), sidewalkTile);
+            for (var x = 4; x <= 6; x++)
+                for (var y = 12; y <= 13; y++)
+                    groundTilemap.SetTile(new Vector3Int(x, y, 0), sidewalkTile);
+
+            TryPlace(PackCityProps + "Fountain_1.png", 9f, 11.2f, 2f, 1.4f, "Fontaine", 1.5f, 0.8f, false);
+            TryPlace(PackGarden + "Medium_Bench_Horizontal.png", 9f, 16.1f, 2f, 0.8f, "Banc", 1.7f, 0.4f, false);
+            TryPlace(PackGarden + "Medium_Bench_Horizontal.png", 9f, 9.2f, 2f, 0.8f, "Banc", 1.7f, 0.4f, false);
+            TryPlace(PackCityProps + "Flower_Bush_4.png", 6.6f, 18.6f, 3f, 0.8f, "Massif");
+            TryPlace(PackCityProps + "Flower_Bush_5.png", 12f, 18.6f, 3f, 0.8f, "Massif");
+            TryPlace(PackCityProps + "Flower_Bush_6.png", 12.2f, 8.6f, 3f, 0.8f, "Massif");
+            TryPlace(PackCityProps + "Flower_Bush_2.png", 5.8f, 9.0f, 2f, 0.8f, "Massif");
+            TryPlace(PackCityProps + "Tree_11.png", 13.0f, 20.8f, 2.2f, 1f, "Arbre", 0.9f, 0.5f);
+            TryPlace(PackCityProps + "Tree_12.png", 5.6f, 21.4f, 2.2f, 1f, "Arbre", 0.9f, 0.5f);
+            TryPlace(PackCityProps + "Tree_1.png", 13.2f, 12.8f, 1.4f, 1f, "Arbre", 0.7f, 0.4f);
+            CreateLamppost(new Vector3(6.3f, 14.2f, 0f));
+            CreateLamppost(new Vector3(11.8f, 14.2f, 0f));
+        }
+
+        // --- West park: a little pond with benches and trees ---
+        var westPark = new Rect(-11f, 8f, 7f, 14f);
+        if (AreaIsFree(westPark) && AreaIsGrass(westPark))
+        {
+            for (var x = -10; x <= -6; x++)
+            {
+                for (var y = 11; y <= 15; y++)
+                {
+                    var rim = x == -10 || x == -6 || y == 11 || y == 15;
+                    waterTilemap.SetTile(new Vector3Int(x, y, 0), rim ? shallowTile : deepTiles[0]);
+                }
+            }
+            for (var x = -5; x <= -4; x++)
+                for (var y = 12; y <= 13; y++)
+                    groundTilemap.SetTile(new Vector3Int(x, y, 0), sidewalkTile);
+
+            TryPlace(PackGarden + "Medium_Bench_Horizontal.png", -8f, 17.2f, 2f, 0.8f, "Banc", 1.7f, 0.4f);
+            TryPlace(PackGarden + "Medium_Bench_Horizontal.png", -8f, 9.4f, 2f, 0.8f, "Banc", 1.7f, 0.4f);
+            TryPlace(PackCityProps + "Tree_11.png", -9.2f, 20.8f, 2.2f, 1f, "Arbre", 0.9f, 0.5f);
+            TryPlace(PackCityProps + "Tree_12.png", -5.6f, 21.4f, 2.2f, 1f, "Arbre", 0.9f, 0.5f);
+            TryPlace(PackCityProps + "Tree_2.png", -10.3f, 9.0f, 1.5f, 1f, "Arbre", 0.7f, 0.4f);
+            TryPlace(PackCityProps + "Tree_5.png", -10.3f, 18.6f, 1.5f, 1f, "Cyprès", 0.7f, 0.4f);
+            TryPlace(PackCityProps + "Tree_6.png", -5.6f, 17.6f, 1.5f, 1f, "Cyprès", 0.7f, 0.4f);
+            TryPlace(PackCityProps + "Flower_Bush_1.png", -5.8f, 9.3f, 2f, 0.8f, "Massif");
+        }
+
+        // Planter trees along the main road.
+        var planterTrees = new[] { PackCityProps + "Tree_9.png", PackCityProps + "Tree_10.png" };
+        var planterIndex = 0;
+        for (var y = -46; y <= 20; y += 6)
+        {
+            if ((y >= 0 && y <= 8) || (y >= -22 && y <= -14) || (y >= -42 && y <= -34) || (y >= -31 && y <= -22)) continue;
+            if (y >= 10 && y <= 15) continue;
+            TryPlace(planterTrees[planterIndex++ % 2], 4.9f, y, 1.8f, 1f, "Arbre en bac", 0.9f, 0.5f);
+            TryPlace(planterTrees[planterIndex++ % 2], -4.9f, y + 1, 1.8f, 1f, "Arbre en bac", 0.9f, 0.5f);
+        }
+
+        // Garden along the path to the character's house: flower beds, bushes and a few lamps.
+        for (var y = -46; y <= -31; y += 3)
+        {
+            TryPlace(PackCityProps + $"Flower_Bush_{1 + (y + 100) % 3}.png", -55.6f, y, 2f, 0.8f, "Massif");
+            TryPlace(PackGarden + $"Bush_{18 + (y + 100) % 4}.png", -48.2f, y, 2f, 1f, "Buisson", 1.2f, 0.5f);
+        }
+        foreach (var lampY in new[] { -45f, -38f, -32f })
+            CreateLamppost(new Vector3(-49.4f, lampY, 0f));
+
+        // Flowers along Vincent Pardieu's path, and bushes beside the cabin.
+        for (var x = -54; x <= -46; x += 3)
+            TryPlace(FlowerSprites[Mathf.Abs(x) % FlowerSprites.Length], x, 7.3f, 1f, 0.6f, "Fleurs");
+
+        // River banks: bushes, flowers and benches facing the water.
+        foreach (var benchX in new[] { -12f, 12f, -36f, 36f })
+        {
+            TryPlace(PackGarden + "Medium_Bench_Horizontal.png", benchX, -22.8f, 2f, 0.8f, "Banc", 1.7f, 0.4f);
+            TryPlace(PackGarden + "Medium_Bench_Horizontal.png", benchX, -31.4f, 2f, 0.8f, "Banc", 1.7f, 0.4f);
+        }
+        var bankBushes = new[] { "Bush_1.png", "Bush_2.png", "Bush_3.png", "Bush_5.png", "Bush_18.png", "Bush_19.png" };
+        for (var x = TownMinX + 4; x <= TownMaxX - 4; x += 3)
+        {
+            if (Rf(0f, 1f) < 0.35f) continue;
+            var bankY = Rf(0f, 1f) < 0.5f ? Rf(-22.9f, -21.4f) : Rf(-31.8f, -30.2f);
+            if (Rf(0f, 1f) < 0.6f)
+                TryPlace(PackGarden + bankBushes[rng.Next(bankBushes.Length)], x + Rf(-1f, 1f), bankY, 1.4f, 0.8f, "Buisson", 0.8f, 0.4f);
+            else
+                TryPlace(FlowerSprites[rng.Next(FlowerSprites.Length)], x + Rf(-1f, 1f), bankY, 1f, 0.6f, "Fleurs");
+        }
+
+        // Groves and forest edges: denser near the town border and where the noise field is high.
+        var forest = new[]
+        {
+            new { path = PackCityProps + "Tree_11.png", w = 2.2f, cw = 1.0f },
+            new { path = PackCityProps + "Tree_12.png", w = 2.2f, cw = 1.0f },
+            new { path = PackCityProps + "Tree_1.png", w = 1.5f, cw = 0.7f },
+            new { path = PackCityProps + "Tree_2.png", w = 1.5f, cw = 0.7f },
+            new { path = PackCityProps + "Tree_5.png", w = 1.5f, cw = 0.7f },
+            new { path = PackCityProps + "Tree_6.png", w = 1.5f, cw = 0.7f },
+        };
+        var treesPlaced = 0;
+        for (var attempt = 0; attempt < 6000 && treesPlaced < 260; attempt++)
+        {
+            var tx = Rf(TownMinX + 3f, TownMaxX - 3f);
+            var ty = Rf(TownMinY + 3f, TownMaxY - 3f);
+            var noise = Mathf.PerlinNoise(tx * 0.07f + 11.3f, ty * 0.07f + 5.7f);
+            var edgeDistance = Mathf.Min(Mathf.Min(tx - TownMinX, TownMaxX - tx), Mathf.Min(ty - TownMinY, TownMaxY - ty));
+            var chance = (noise > 0.52f ? 0.9f : 0.06f) + (edgeDistance < 10f ? 0.6f : 0f);
+            if (Rf(0f, 1f) > chance) continue;
+            if (!GroundIsGrass(tx, ty, 1)) continue;
+
+            var pick = forest[rng.Next(forest.Length)];
+            if (TryPlace(pick.path, tx, ty, pick.w, 1.1f, "Arbre", pick.cw, 0.45f)) treesPlaced++;
+        }
+
+        // Small bushes and flower tufts scattered on open grass.
+        var scatter = 0;
+        for (var attempt = 0; attempt < 3000 && scatter < 160; attempt++)
+        {
+            var sx = Rf(TownMinX + 3f, TownMaxX - 3f);
+            var sy = Rf(TownMinY + 3f, TownMaxY - 3f);
+            if (!GroundIsGrass(sx, sy, 1)) continue;
+            var pickFlower = Rf(0f, 1f) < 0.65f;
+            var ok = pickFlower
+                ? TryPlace(FlowerSprites[rng.Next(FlowerSprites.Length)], sx, sy, 1f, 0.6f, "Fleurs")
+                : TryPlace(PackGarden + bankBushes[rng.Next(bankBushes.Length)], sx, sy, 1.4f, 0.8f, "Buisson", 0.8f, 0.4f);
+            if (ok) scatter++;
+        }
+
+        // Lamps and flower clusters in front of the buildings. Asphalt streets are one tile wider now:
+        // the lamps stand on the sidewalk next to the buildings.
+        var asphaltSpots = new[]
         {
             new Vector3(-55, 26, 0f), new Vector3(-30, 26, 0f), new Vector3(-5, 26, 0f),
             new Vector3(20, 26, 0f), new Vector3(45, 26, 0f),
             new Vector3(-45, -17, 0f), new Vector3(-15, -17, 0f), new Vector3(15, -17, 0f), new Vector3(45, -17, 0f),
-            new Vector3(-22, 5, 0f), new Vector3(22, 5, 0f), new Vector3(28, -37, 0f), new Vector3(-56, 8, 0f),
-            new Vector3(46, 6, 0f), new Vector3(58, 6, 0f),
-            new Vector3(-41, 5, 0f),
+            new Vector3(-22, 5, 0f), new Vector3(22, 5, 0f), new Vector3(28, -37, 0f),
+            new Vector3(-41, 5, 0f), new Vector3(35, 5, 0f),
+        };
+        var otherSpots = new[]
+        {
+            new Vector3(-56, 8, 0f), new Vector3(46, 6, 0f), new Vector3(58, 6, 0f), new Vector3(-52, -47, 0f),
         };
 
-        foreach (var pos in buildingStreetSpots)
+        foreach (var pos in asphaltSpots)
+            CreateLamppost(pos + new Vector3(4.5f, 1f, 0f));
+        foreach (var pos in otherSpots)
             CreateLamppost(pos + new Vector3(4.5f, 0f, 0f));
 
         var flowerVariant = 0;
-        foreach (var pos in buildingStreetSpots)
+        foreach (var pos in asphaltSpots)
+        {
+            CreateFlowerCluster(pos + new Vector3(-4.5f, 1.1f, 0f), flowerVariant % 3);
+            flowerVariant++;
+        }
+        foreach (var pos in otherSpots)
         {
             CreateFlowerCluster(pos + new Vector3(-4.5f, 0.3f, 0f), flowerVariant % 3);
             flowerVariant++;
+        }
+
+        // Townspeople strolling along the streets and the main road.
+        var strollZones = new[]
+        {
+            new Rect(-60f, 23.4f, 120f, 3f), new Rect(-60f, 23.4f, 120f, 3f),
+            new Rect(-38f, 2.4f, 76f, 3f), new Rect(-38f, 2.4f, 76f, 3f),
+            new Rect(-50f, -19.6f, 100f, 3f), new Rect(-50f, -19.6f, 100f, 3f),
+            new Rect(-44f, -39.6f, 88f, 3f),
+            new Rect(-2f, -46f, 4f, 68f), new Rect(-2f, -46f, 4f, 68f), new Rect(-2f, -46f, 4f, 68f),
+            new Rect(42f, 2.4f, 20f, 3f),
+        };
+        for (var i = 0; i < strollZones.Length; i++)
+        {
+            var zone = strollZones[i];
+            var walker = new GameObject($"Passant {i + 1}", typeof(SpriteRenderer), typeof(TownWanderer));
+            var wander = walker.GetComponent<TownWanderer>();
+            wander.variant = i % 8;
+            wander.zone = zone;
+            wander.speed = Rf(1.1f, 1.9f);
+            walker.transform.position = new Vector3(Rf(zone.xMin, zone.xMax), Rf(zone.yMin, zone.yMax), 0f);
         }
 
         CreateUI(false);
@@ -607,6 +1377,9 @@ public static class SceneBootstrap
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
         player.AddComponent<LapidaryState>();
+        player.AddComponent<PlayerCabinet>();
+        player.AddComponent<PlayerOrderCabinet>();
+        player.AddComponent<PlayerOwnedTools>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -616,11 +1389,9 @@ public static class SceneBootstrap
 
         CreateExitDoor(new Vector3(0, LabMinY + 1, 0f), "SpawnPoint_Laboratoire");
 
-        CreateExaminationStation("TesteurThermique", ExaminationTool.MeasurementType.ThermalConductivity, new Vector3(-8, 2, 0f));
         CreateExaminationStation("FTIR", ExaminationTool.MeasurementType.Treatment, new Vector3(-5, 2, 0f));
         CreateExaminationStation("Raman", ExaminationTool.MeasurementType.Authenticity, new Vector3(0, 2, 0f));
-        CreateExaminationStation("LAICPMS", ExaminationTool.MeasurementType.ConfirmedOrigin, new Vector3(5, 2, 0f));
-        CreateExaminationStation("TesteurElectrique", ExaminationTool.MeasurementType.ElectricalConductivity, new Vector3(8, 2, 0f));
+        CreateExaminationStation("Spectrophotometre", ExaminationTool.MeasurementType.ConfirmedOrigin, new Vector3(5, 2, 0f));
         CreateExaminationStation("DiamondView", ExaminationTool.MeasurementType.DiamondGrowthImaging, new Vector3(-5, -2, 0f));
         CreateExaminationStation("MEB", ExaminationTool.MeasurementType.GrowthStructure, new Vector3(0, -2, 0f));
         CreateExaminationStation("DiamondSure", ExaminationTool.MeasurementType.DiamondScreening, new Vector3(5, -2, 0f));
@@ -723,6 +1494,9 @@ public static class SceneBootstrap
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
         player.AddComponent<LapidaryState>();
+        player.AddComponent<PlayerCabinet>();
+        player.AddComponent<PlayerOrderCabinet>();
+        player.AddComponent<PlayerOwnedTools>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -836,6 +1610,9 @@ public static class SceneBootstrap
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
         player.AddComponent<LapidaryState>();
+        player.AddComponent<PlayerCabinet>();
+        player.AddComponent<PlayerOrderCabinet>();
+        player.AddComponent<PlayerOwnedTools>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -949,6 +1726,9 @@ public static class SceneBootstrap
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
         player.AddComponent<LapidaryState>();
+        player.AddComponent<PlayerCabinet>();
+        player.AddComponent<PlayerOrderCabinet>();
+        player.AddComponent<PlayerOwnedTools>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -1065,6 +1845,9 @@ public static class SceneBootstrap
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
         player.AddComponent<LapidaryState>();
+        player.AddComponent<PlayerCabinet>();
+        player.AddComponent<PlayerOrderCabinet>();
+        player.AddComponent<PlayerOwnedTools>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -1173,6 +1956,9 @@ public static class SceneBootstrap
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
         player.AddComponent<LapidaryState>();
+        player.AddComponent<PlayerCabinet>();
+        player.AddComponent<PlayerOrderCabinet>();
+        player.AddComponent<PlayerOwnedTools>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -1288,6 +2074,9 @@ public static class SceneBootstrap
         player.AddComponent<ManoirRequestState>();
         player.AddComponent<ReputationState>();
         player.AddComponent<LapidaryState>();
+        player.AddComponent<PlayerCabinet>();
+        player.AddComponent<PlayerOrderCabinet>();
+        player.AddComponent<PlayerOwnedTools>();
         player.transform.position = spawnGO.transform.position;
 
         var follow = cam.gameObject.AddComponent<CameraFollow>();
@@ -1421,6 +2210,12 @@ public static class SceneBootstrap
         trigger.offset = new Vector2(0f, -1.1f);
 
         npcGO.AddComponent<LapidaryNPC>();
+        if (TryUseNpcSprite(npcGO, npcSr, trigger, "lapidary", position + new Vector3(0f, 1.2f, 0f)))
+        {
+            // Behind the desk, so its tables hide the lower body; keep the wide trigger in front of the desk.
+            npcSr.sortingOrder = 3;
+            trigger.offset = new Vector2(0f, -0.6f);
+        }
     }
 
     private static readonly Dictionary<char, Color> OldManPalette = new Dictionary<char, Color>
@@ -1457,6 +2252,7 @@ public static class SceneBootstrap
         col.isTrigger = true;
         col.size = new Vector2(1.2f, 1.2f);
 
+        TryUseNpcSprite(go, sr, col, "oldman", position);
         go.AddComponent<ManoirOldMan>();
     }
 
@@ -1474,6 +2270,7 @@ public static class SceneBootstrap
         col.isTrigger = true;
         col.size = new Vector2(1.2f, 1.2f);
 
+        TryUseNpcSprite(go, sr, col, "oldlady", position);
         go.AddComponent<ManoirOldLady>();
     }
 
@@ -1515,7 +2312,8 @@ public static class SceneBootstrap
 
     private static void CreateChest(Vector3 position)
     {
-        var sprite = GetOrCreatePixelSprite("chest_pixel", ChestPattern, ChestPalette);
+        var sprite = LoadPackSprite("Assets/Art/Sprites/furniture_chest.png")
+                     ?? GetOrCreatePixelSprite("chest_pixel", ChestPattern, ChestPalette);
 
         var chest = new GameObject("Coffre");
         var sr = chest.AddComponent<SpriteRenderer>();
@@ -1528,6 +2326,39 @@ public static class SceneBootstrap
         col.size = new Vector2(1.2f, 1.2f);
 
         chest.AddComponent<ChestInteractable>();
+    }
+
+    // Wardrobe standing against the wall. Wooden ones keep donated stones; the blue ones are reserved for client orders.
+    // `feet` is where it stands.
+    private static void CreateArmoire(Vector3 feet, bool clientOrders = false)
+    {
+        var sprite = LoadPackSpriteGrounded(clientOrders
+            ? "Assets/Art/Sprites/furniture_armoire_orders.png"
+            : "Assets/Art/Sprites/furniture_armoire.png");
+        if (sprite == null) return;
+
+        var armoire = new GameObject(clientOrders ? "Armoire des commandes" : "Armoire des dons");
+        var sr = armoire.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        armoire.transform.position = feet;
+
+        var solid = armoire.AddComponent<BoxCollider2D>();
+        solid.size = new Vector2(1.1f, 0.6f);
+        solid.offset = new Vector2(0f, 0.4f);
+
+        var trigger = armoire.AddComponent<BoxCollider2D>();
+        trigger.isTrigger = true;
+        trigger.size = new Vector2(1.8f, 1.6f);
+        trigger.offset = new Vector2(0f, -0.5f);
+
+        var interactable = armoire.AddComponent<CabinetInteractable>();
+        if (clientOrders)
+        {
+            var so = new SerializedObject(interactable);
+            so.FindProperty("kind").enumValueIndex = (int)CabinetKind.ClientOrders;
+            so.ApplyModifiedProperties();
+        }
     }
 
     private static void CreateBed(Vector3 position)
@@ -1689,6 +2520,64 @@ public static class SceneBootstrap
         }
     }
 
+    // The character's own little house, far from the town (decorative for now, door locked).
+    private static void CreatePersonalHouse(Vector3 position)
+    {
+        var sprite = LoadPackSpriteGrounded("Assets/Art/Sprites/house_personal.png");
+        if (sprite == null) return;
+
+        var go = new GameObject("Maison du personnage");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+        go.transform.localScale = new Vector3(2f, 2f, 1f);
+
+        // Collider values are in local units: the sprite is scaled by 2.
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1.6f, 1.6f);
+        col.offset = new Vector2(0.55f, 0.8f);
+
+        var door = go.AddComponent<DoorTrigger>();
+        var so = new SerializedObject(door);
+        var sceneNameProp = so.FindProperty("sceneName");
+        var implementedProp = so.FindProperty("implemented");
+        if (sceneNameProp != null) sceneNameProp.stringValue = "MaisonJoueur";
+        if (implementedProp != null) implementedProp.boolValue = true;
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel("Maison du personnage", position + new Vector3(0f, sprite.bounds.size.y * 2f + 0.5f, 0f));
+    }
+
+    // GemStore: the gemology tool shop (sells tools and tool upgrades).
+    private static void CreateGemStore(Vector3 position)
+    {
+        var sprite = LoadPackSpriteGrounded("Assets/Art/Sprites/building_gemstore.png");
+        if (sprite == null) return;
+
+        var go = new GameObject("GemStore");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(2.4f, 2.4f);
+        col.offset = new Vector2(-1.0f, 1.0f);
+
+        var door = go.AddComponent<DoorTrigger>();
+        var so = new SerializedObject(door);
+        var sceneNameProp = so.FindProperty("sceneName");
+        var implementedProp = so.FindProperty("implemented");
+        if (sceneNameProp != null) sceneNameProp.stringValue = "GemStore";
+        if (implementedProp != null) implementedProp.boolValue = true;
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel("GemStore", position + new Vector3(0f, sprite.bounds.size.y + 0.5f, 0f));
+    }
+
     // Decorative library (brick building with a clock-less tower); locked until its interior exists.
     private static void CreateLibrary(Vector3 position)
     {
@@ -1846,6 +2735,7 @@ public static class SceneBootstrap
         col.isTrigger = true;
         col.size = new Vector2(1.2f, 1.2f);
         col.enabled = false;
+        TryUseNpcSprite(go, sr, col, "tunnel", position);
 
         var merchant = go.AddComponent<TunnelMerchant>();
         var so = new SerializedObject(merchant);
@@ -1874,9 +2764,10 @@ public static class SceneBootstrap
         go.transform.position = position;
     }
 
-    private static void CreateExaminationStation(string toolName, ExaminationTool.MeasurementType measurementType, Vector3 position)
+    private static GameObject CreateExaminationStation(string toolName, ExaminationTool.MeasurementType measurementType, Vector3 position,
+        Sprite spriteOverride = null)
     {
-        var sprite = GetToolSprite(toolName);
+        var sprite = spriteOverride != null ? spriteOverride : GetToolSprite(toolName);
 
         var station = new GameObject(toolName);
         var stationSr = station.AddComponent<SpriteRenderer>();
@@ -1894,6 +2785,100 @@ public static class SceneBootstrap
         so.ApplyModifiedProperties();
 
         station.transform.position = position;
+        return station;
+    }
+
+    // A tool standing on its own small desk, against a wall. `accessFromNorth` is for desks on the bottom wall,
+    // where the player stands on the room side (north of the desk).
+    // Desk with the lab computer. Pressing E in front of it tells how many microphotographs it holds (interface to come).
+    private static void CreateComputerDesk(float x, float feetY)
+    {
+        var deskSprite = LoadPackSpriteGrounded("Assets/Art/Sprites/interior_prop_desk_a.png");
+        if (deskSprite != null)
+        {
+            var desk = new GameObject("Bureau_Ordinateur");
+            var deskSr = desk.AddComponent<SpriteRenderer>();
+            deskSr.sprite = deskSprite;
+            deskSr.sortingOrder = 4;
+            desk.transform.position = new Vector3(x, feetY, 0f);
+
+            var solid = desk.AddComponent<BoxCollider2D>();
+            solid.size = new Vector2(1.5f, 1.2f);
+            solid.offset = new Vector2(0f, 0.65f);
+        }
+
+        var pcSprite = LoadPackSprite("Assets/Art/Sprites/toolhd_Ordinateur.png");
+        if (pcSprite == null) return;
+
+        var pc = new GameObject("Ordinateur");
+        var pcSr = pc.AddComponent<SpriteRenderer>();
+        pcSr.sprite = pcSprite;
+        pcSr.sortingOrder = 5;
+        pc.transform.position = new Vector3(x, feetY + 0.8f + pcSprite.bounds.size.y / 2f, 0f);
+
+        var trigger = pc.AddComponent<BoxCollider2D>();
+        trigger.isTrigger = true;
+        trigger.size = new Vector2(1.7f, 1.7f);
+        trigger.offset = new Vector2(0f, -1.1f);
+
+        pc.AddComponent<ComputerInteractable>();
+    }
+
+    // `requiresPurchase`: the desk and its tool only appear once the player has bought the tool at the GemStore.
+    private static void CreateDeskStation(string toolName, ExaminationTool.MeasurementType measurementType, float x, float feetY, bool accessFromNorth,
+        bool requiresPurchase = false)
+    {
+        var gated = new List<GameObject>();
+        var deskSprite = LoadPackSpriteGrounded("Assets/Art/Sprites/interior_prop_desk_a.png");
+        if (deskSprite != null)
+        {
+            var desk = new GameObject($"Bureau_{toolName}");
+            gated.Add(desk);
+            var deskSr = desk.AddComponent<SpriteRenderer>();
+            deskSr.sprite = deskSprite;
+            deskSr.sortingOrder = 4;
+            desk.transform.position = new Vector3(x, feetY, 0f);
+
+            var solid = desk.AddComponent<BoxCollider2D>();
+            solid.size = new Vector2(1.5f, 1.2f);
+            solid.offset = new Vector2(0f, 0.65f);
+        }
+
+        // The tool sits on the tabletop, drawn over the desk (detailed 48x40 sprite when available).
+        var toolSprite = LoadPackSprite($"Assets/Art/Sprites/toolhd_{toolName}.png");
+        var centerY = toolSprite != null ? feetY + 0.8f + toolSprite.bounds.size.y / 2f : feetY + 1.25f;
+        var station = CreateExaminationStation(toolName, measurementType, new Vector3(x, centerY, 0f), toolSprite);
+        station.GetComponent<SpriteRenderer>().sortingOrder = 5;
+
+        // Wider trigger reaching the side the player stands on.
+        var trigger = station.GetComponent<BoxCollider2D>();
+        trigger.size = new Vector2(1.7f, 1.7f);
+        trigger.offset = accessFromNorth ? new Vector2(0f, 0.9f) : new Vector2(0f, -1.1f);
+
+        if (!requiresPurchase) return;
+        gated.Add(station);
+        var gate = new GameObject($"Acces_{toolName}").AddComponent<OwnedToolGate>();
+        var gateSo = new SerializedObject(gate);
+        gateSo.FindProperty("toolId").stringValue = toolName;
+        var targets = gateSo.FindProperty("targets");
+        targets.arraySize = gated.Count;
+        for (var i = 0; i < gated.Count; i++)
+            targets.GetArrayElementAtIndex(i).objectReferenceValue = gated[i];
+        gateSo.ApplyModifiedProperties();
+    }
+
+    // NPC art: the free LimeZu characters recolored and accessorized into Assets/Art/Sprites/npc_<name>.png.
+    // The sprites have their feet at the bottom pivot, whereas the old placeholders were centered: `centerPosition` is
+    // where the old sprite's middle was, so the feet land half a unit below it.
+    private static bool TryUseNpcSprite(GameObject go, SpriteRenderer sr, BoxCollider2D col, string npcName, Vector3 centerPosition)
+    {
+        var sprite = LoadPackSpriteGrounded($"Assets/Art/Sprites/npc_{npcName}.png");
+        if (sprite == null) return false;
+
+        sr.sprite = sprite;
+        go.transform.position = centerPosition + new Vector3(0f, -0.5f, 0f);
+        if (col != null) col.offset = new Vector2(0f, 0.5f);
+        return true;
     }
 
     private static void CreateDirector(Vector3 position)
@@ -1911,7 +2896,10 @@ public static class SceneBootstrap
 
         director.AddComponent<DirectorNPC>();
         director.transform.position = position;
-        director.transform.localScale = new Vector3(1.15f, 1.15f, 1f);
+        if (TryUseNpcSprite(director, sr, col, "directeur", position))
+            director.transform.localScale = Vector3.one;
+        else
+            director.transform.localScale = new Vector3(1.15f, 1.15f, 1f);
     }
 
     private static readonly Dictionary<char, Color>[] MerchantPalettes =
@@ -1997,10 +2985,13 @@ public static class SceneBootstrap
         merchantSr.sprite = merchantSprite;
         merchantSr.sortingOrder = 4;
         merchantGO.transform.position = position + new Vector3(0f, 0.6f, 0f);
+        var usesNpcArt = TryUseNpcSprite(merchantGO, merchantSr, null, $"merchant{vendorIndex % 4}", position + new Vector3(0f, 0.6f, 0f));
+        // Behind the table, so the table hides the lower body.
+        if (usesNpcArt) merchantSr.sortingOrder = 3;
 
         var flagGO = new GameObject("Flag", typeof(SpriteRenderer));
         flagGO.transform.SetParent(merchantGO.transform, false);
-        flagGO.transform.localPosition = new Vector3(0f, 0.9f, 0f);
+        flagGO.transform.localPosition = new Vector3(0f, usesNpcArt ? 2.0f : 0.9f, 0f);
         flagGO.transform.localScale = Vector3.one * 0.5f;
         var flagSr = flagGO.GetComponent<SpriteRenderer>();
         flagSr.sortingOrder = 6;
@@ -2038,10 +3029,13 @@ public static class SceneBootstrap
         merchantSr.sprite = merchantSprite;
         merchantSr.sortingOrder = 4;
         merchantGO.transform.position = position + new Vector3(0f, 0.6f, 0f);
+        var usesNpcArt = TryUseNpcSprite(merchantGO, merchantSr, null, $"rough{vendorIndex % 4}", position + new Vector3(0f, 0.6f, 0f));
+        // Behind the table, so the table hides the lower body.
+        if (usesNpcArt) merchantSr.sortingOrder = 3;
 
         var flagGO = new GameObject("Flag", typeof(SpriteRenderer));
         flagGO.transform.SetParent(merchantGO.transform, false);
-        flagGO.transform.localPosition = new Vector3(0f, 0.9f, 0f);
+        flagGO.transform.localPosition = new Vector3(0f, usesNpcArt ? 2.0f : 0.9f, 0f);
         flagGO.transform.localScale = Vector3.one * 0.5f;
         var flagSr = flagGO.GetComponent<SpriteRenderer>();
         flagSr.sortingOrder = 6;
@@ -2776,7 +3770,7 @@ public static class SceneBootstrap
             ("Musée", 20, 28), ("Quartier Diamantaires", 45, 28),
             ("Marché Pierres", -45, -15), ("École", -15, -15),
             ("Marché Brutes", 15, -15), ("Manoir", 45, -15),
-            ("Bijouterie", -22, 7), ("Banque", 22, 7), ("Concessionnaire", 28, -35), ("Vincent Pardieu", -58, 10), ("Aéroport", 58, 8), ("Bibliothèque", -41, 7),
+            ("Bijouterie", -22, 7), ("Banque", 22, 7), ("Concessionnaire", 28, -35), ("Vincent Pardieu", -58, 10), ("Aéroport", 58, 8), ("Bibliothèque", -41, 7), ("GemStore", 35, 7), ("Maison perso", -52, -50),
             ("Tunnel", 0, -50),
         };
 
@@ -6621,16 +7615,10 @@ public static class SceneBootstrap
 
     private static void DecorateHome()
     {
-        PlaceWallDecor("curtains", -2, RoomMaxY);
-        PlaceWallDecor("window_white", 3, RoomMaxY);
         foreach (var x in new[] { 9, 14, 19, 24 }) PlaceWallDecor("window_white", x, RoomMaxY);
 
         PlaceRug("rug_red", new Vector3(-1.5f, -0.5f, 0f));
-        PlaceFurniture("palm", new Vector3(5.2f, 3.0f, 0f));
         PlaceFurniture("plant_small", new Vector3(7.6f, -3.0f, 0f));
-        PlaceFurniture("shelf_a", new Vector3(12.0f, 3.0f, 0f));
-        PlaceFurniture("shelf_b", new Vector3(17.0f, 3.0f, 0f));
-        PlaceFurniture("palm", new Vector3(27.0f, 3.0f, 0f));
     }
 
     private static void DecorateLaboratory()
@@ -6779,9 +7767,9 @@ public static class SceneBootstrap
         PlaceInteriorProp(spriteName, center, false, false, 1);
     }
 
-    private static void PlaceFurniture(string spriteName, Vector3 feet)
+    private static GameObject PlaceFurniture(string spriteName, Vector3 feet)
     {
-        PlaceInteriorProp(spriteName, feet, true, true, 4);
+        return PlaceInteriorProp(spriteName, feet, true, true, 4);
     }
 
     // Center-pivot import, matching our procedural sprites — used for tilemap tiles.
@@ -7159,12 +8147,11 @@ public static class SceneBootstrap
             case "Aimant": return GetOrCreatePixelSprite("aimant_pixel", MagnetPattern, MagnetPalette);
             case "FTIR": return GetOrCreatePixelSprite("ftir_pixel", RefractometrePattern, FTIRPalette);
             case "Raman": return GetOrCreatePixelSprite("raman_pixel", DichroscopePattern, RamanPalette);
+            case "Spectrophotometre":
             case "LAICPMS": return GetOrCreatePixelSprite("laicpms_pixel", BalanceCaratPattern, LAICPMSPalette);
             case "MEB": return GetOrCreatePixelSprite("meb_pixel", MicroscopePattern, MEBPalette);
             case "DiamondView": return GetOrCreatePixelSprite("diamondview_pixel", MicroscopePattern, DiamondViewPalette);
             case "DiamondSure": return GetOrCreatePixelSprite("diamondsure_pixel", RefractometrePattern, DiamondSurePalette);
-            case "TesteurThermique": return GetOrCreatePixelSprite("testeurthermique_pixel", MicrometrePattern, ThermalProbePalette);
-            case "TesteurElectrique": return GetOrCreatePixelSprite("testeurelectrique_pixel", MicrometrePattern, ElectricalProbePalette);
             default: return GetOrCreatePixelSprite("loupe_pixel", LoupePattern, LoupePalette);
         }
     }
@@ -7449,6 +8436,37 @@ public static class SceneBootstrap
         if (sprite == null) return;
 
         var go = new GameObject("Fleurs");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 3;
+        go.transform.position = position;
+    }
+
+    // Ground-anchored scenery prop (sprite pivot at its feet) with an optional small trunk/base collider.
+    private static GameObject PlaceTownProp(string spritePath, Vector3 feet, string name, float colliderWidth = 0f, float colliderHeight = 0f)
+    {
+        var sprite = LoadPackSpriteGrounded(spritePath);
+        if (sprite == null) return null;
+
+        var go = new GameObject(name);
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = feet;
+
+        if (colliderWidth > 0f)
+        {
+            var col = go.AddComponent<BoxCollider2D>();
+            col.size = new Vector2(colliderWidth, colliderHeight);
+            col.offset = new Vector2(0f, colliderHeight / 2f);
+        }
+        return go;
+    }
+
+    private static void PlaceRail(Sprite sprite, Vector3 position)
+    {
+        if (sprite == null) return;
+        var go = new GameObject("Parapet");
         var sr = go.AddComponent<SpriteRenderer>();
         sr.sprite = sprite;
         sr.sortingOrder = 3;

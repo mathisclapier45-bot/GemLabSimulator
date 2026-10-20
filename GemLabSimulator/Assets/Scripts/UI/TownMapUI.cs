@@ -16,6 +16,8 @@ public class TownMapUI : MonoBehaviour
     private static readonly (string scene, float x, float y)[] SceneToBuildingPos =
     {
         ("Home", -55f, 28f),
+        ("MaisonJoueur", -52f, -50f),
+        ("GemStore", 35f, 7f),
         ("Laboratoire", -30f, 28f),
         ("AtelierLapidaire", -5f, 28f),
         ("Musee", 20f, 28f),

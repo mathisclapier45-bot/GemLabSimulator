@@ -58,6 +58,11 @@ public class SaveData
     public int currentDay = 1;
     public List<GemInstanceSaveData> inventoryGems = new List<GemInstanceSaveData>();
     public List<GemInstanceSaveData> chestGems = new List<GemInstanceSaveData>();
+    public List<GemInstanceSaveData> cabinetGems = new List<GemInstanceSaveData>();
+    public List<GemInstanceSaveData> orderCabinetGems = new List<GemInstanceSaveData>();
+    public List<string> ownedTools = new List<string>();
+    public List<string> bagSlots = new List<string>();
+    public List<MicroPhotoEntry> microPhotos = new List<MicroPhotoEntry>();
     public List<string> discoveredSpecies = new List<string>();
     public string sceneName;
     public float playerX;

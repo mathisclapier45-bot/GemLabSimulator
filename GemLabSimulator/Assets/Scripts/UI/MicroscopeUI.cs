@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Gemological microscope: 10x / 20x / 40x objectives, reflected light or darkfield, fine focus through the
+// Gemological microscope: 10x / 20x / 40x objectives (+ 60x once bought at the GemStore), reflected light or darkfield, fine focus through the
 // depth of the stone, stage movement, and a view drawn in detail (inclusions, growth structure, surface
-// defects). Rough stones need a polished window first.
+// defects). Rough stones need a polished window first. With the microscope camera (GemStore) the view can be
+// photographed and sent to the lab computer.
 public class MicroscopeUI : MonoBehaviour
 {
     public static MicroscopeUI Instance { get; private set; }
@@ -55,9 +56,13 @@ public class MicroscopeUI : MonoBehaviour
     private Text resultText;
     private Text focusText;
     private Text magnificationText;
-    private readonly Button[] objectiveButtons = new Button[3];
+    private readonly Button[] objectiveButtons = new Button[4];
     private readonly Button[] lightingButtons = new Button[2];
-    private readonly float[] magnifications = { 10f, 20f, 40f };
+    private readonly float[] magnifications = { 10f, 20f, 40f, 60f };
+    private const string Objective60Id = "Objectif60X";
+    private const string CameraId = "CameraMicroscope";
+    private Button photoButton;
+    private Text photoCountText;
 
     private GemInstance stone;
     private readonly List<MicroFeature> features = new List<MicroFeature>();
@@ -96,11 +101,76 @@ public class MicroscopeUI : MonoBehaviour
     private void Start()
     {
         if (PlayerInventory.Instance != null) PlayerInventory.Instance.OnInventoryChanged += RefreshIfOpen;
+        var tools = PlayerOwnedTools.Ensure();
+        if (tools != null) tools.OnToolsChanged += RefreshIfOpen;
+        var library = MicroPhotoLibrary.Ensure();
+        if (library != null) library.OnPhotosChanged += RefreshIfOpen;
     }
 
     private void OnDestroy()
     {
         if (PlayerInventory.Instance != null) PlayerInventory.Instance.OnInventoryChanged -= RefreshIfOpen;
+        if (PlayerOwnedTools.Instance != null) PlayerOwnedTools.Instance.OnToolsChanged -= RefreshIfOpen;
+        if (MicroPhotoLibrary.Instance != null) MicroPhotoLibrary.Instance.OnPhotosChanged -= RefreshIfOpen;
+    }
+
+    private static bool Owns(string toolId)
+    {
+        var tools = PlayerOwnedTools.Ensure();
+        return tools != null && tools.Has(toolId);
+    }
+
+    // Photographs what the eyepiece shows (round field, with a scale bar) and sends it to the lab computer.
+    private void TakePhoto()
+    {
+        if (stone == null || !Owns(CameraId)) return;
+        var library = MicroPhotoLibrary.Ensure();
+        if (library == null) return;
+
+        if (dirty)
+        {
+            dirty = false;
+            DrawView();
+        }
+
+        var pixels = new Color32[buffer.Length];
+        var center = ViewSize * 0.5f;
+        for (var y = 0; y < ViewSize; y++)
+        {
+            for (var x = 0; x < ViewSize; x++)
+            {
+                var inside = (new Vector2(x + 0.5f, y + 0.5f) - new Vector2(center, center)).magnitude <= HoleRadius;
+                pixels[y * ViewSize + x] = inside ? buffer[y * ViewSize + x] : new Color32(0, 0, 0, 255);
+            }
+        }
+
+        // Scale bar: the longest round length that fits in 90 pixels.
+        var barMm = 0f;
+        foreach (var candidate in new[] { 1f, 0.5f, 0.2f, 0.1f, 0.05f, 0.02f, 0.01f })
+        {
+            if (candidate * PxPerMm <= 90f) { barMm = candidate; break; }
+        }
+        var barPx = Mathf.Max(2, Mathf.RoundToInt(barMm * PxPerMm));
+        for (var y = 30; y < 34; y++)
+            for (var x = 60; x < 60 + barPx; x++)
+                pixels[y * ViewSize + x] = new Color32(245, 245, 245, 255);
+
+        var image = new Texture2D(ViewSize, ViewSize, TextureFormat.RGBA32, false);
+        image.SetPixels32(pixels);
+        image.Apply();
+
+        library.AddPhoto(image, new MicroPhotoEntry
+        {
+            gemName = stone.IsIdentified ? stone.Definition.displayName : "Spécimen non identifié",
+            gemId = stone.DisplayId,
+            magnification = magnifications[objective],
+            lighting = lighting == Lighting.Darkfield ? "Fond sombre" : "Lumière réfléchie",
+            day = GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1,
+        });
+        Destroy(image);
+
+        ToolFeedbackUI.Instance?.ShowMessage($"Microphotographie ×{magnifications[objective]:F0} envoyée à l'ordinateur du laboratoire.");
+        UpdateControls();
     }
 
     public void Open()
@@ -245,7 +315,7 @@ public class MicroscopeUI : MonoBehaviour
         stone.RecordObservation(ExaminationTool.MeasurementType.Inclusions.ToString());
         ToolFeedbackUI.Instance?.ShowMessage(
             $"Microscope — Clarté : {stone.ClarityGrade} ({stone.ClarityDescription}) | " +
-            $"Inclusions : {stone.InclusionDescription} | Origine probable : {stone.Origin.name}");
+            $"Inclusions : {stone.InclusionDescription}");
         UpdateTexts();
     }
 
@@ -739,7 +809,20 @@ public class MicroscopeUI : MonoBehaviour
     private void UpdateControls()
     {
         for (var i = 0; i < objectiveButtons.Length; i++)
+        {
+            objectiveButtons[i].gameObject.SetActive(i < 3 || Owns(Objective60Id));
             objectiveButtons[i].GetComponent<Image>().color = objective == i ? ButtonOn : ButtonColor;
+        }
+
+        var hasCamera = Owns(CameraId);
+        photoButton.gameObject.SetActive(hasCamera);
+        photoCountText.gameObject.SetActive(hasCamera);
+        photoButton.interactable = stone != null;
+        if (hasCamera)
+        {
+            var library = MicroPhotoLibrary.Instance;
+            photoCountText.text = $"Photos envoyées : {(library != null ? library.Photos.Count : 0)}";
+        }
         for (var i = 0; i < lightingButtons.Length; i++)
             lightingButtons[i].GetComponent<Image>().color = (int)lighting == i ? ButtonOn : ButtonColor;
 
@@ -777,8 +860,7 @@ public class MicroscopeUI : MonoBehaviour
             return;
         }
 
-        var text = $"Clarté : {stone.ClarityGrade}\n{stone.ClarityDescription}\n\nInclusions : {stone.InclusionDescription}\n\n" +
-                   $"Origine probable : {stone.Origin.name}";
+        var text = $"Clarté : {stone.ClarityGrade}\n{stone.ClarityDescription}\n\nInclusions : {stone.InclusionDescription}";
 
         var kinds = new Dictionary<FeatureKind, int>();
         foreach (var mf in features)
@@ -917,11 +999,11 @@ public class MicroscopeUI : MonoBehaviour
         const float x = 392f;
 
         RuntimeUIKit.MakeText("ObjectiveHeader", panel.transform, "Objectif", 14, TextAnchor.UpperLeft, Gold, new Vector2(x + 4f, -44f), new Vector2(200f, 20f));
-        for (var i = 0; i < 3; i++)
+        for (var i = 0; i < objectiveButtons.Length; i++)
         {
             var captured = i;
             objectiveButtons[i] = RuntimeUIKit.MakeButton("Objective" + i, panel.transform, $"×{magnifications[i]:F0}", 14, ButtonColor,
-                new Vector2(x + i * 78f, -68f), new Vector2(72f, 28f));
+                new Vector2(x + i * 58f, -68f), new Vector2(54f, 28f));
             objectiveButtons[i].onClick.AddListener(() => SelectObjective(captured));
         }
 
@@ -965,6 +1047,13 @@ public class MicroscopeUI : MonoBehaviour
 
         RuntimeUIKit.MakeText("MapLabel", panel.transform, "Zone observée", 11, TextAnchor.UpperLeft, new Color(0.6f, 0.62f, 0.68f),
             new Vector2(x + 102f, -236f), new Vector2(130f, 16f));
+
+        // Microscope camera (bought at the GemStore): photographs the field of view and sends it to the lab computer.
+        photoButton = RuntimeUIKit.MakeButton("Photo", panel.transform, "Photographier", 12, new Color(0.30f, 0.38f, 0.58f, 1f),
+            new Vector2(x + 102f, -258f), new Vector2(128f, 28f));
+        photoButton.onClick.AddListener(TakePhoto);
+        photoCountText = RuntimeUIKit.MakeText("PhotoCount", panel.transform, "", 11, TextAnchor.UpperLeft, new Color(0.65f, 0.72f, 0.9f),
+            new Vector2(x + 102f, -290f), new Vector2(130f, 32f));
 
         RuntimeUIKit.MakeBox("ResultBox", panel.transform, new Vector2(x - 4f, -332f), new Vector2(240f, 110f), new Color(0.04f, 0.05f, 0.07f, 1f));
         resultText = RuntimeUIKit.MakeText("Result", panel.transform, "", 11, TextAnchor.UpperLeft, new Color(0.85f, 0.92f, 1f),

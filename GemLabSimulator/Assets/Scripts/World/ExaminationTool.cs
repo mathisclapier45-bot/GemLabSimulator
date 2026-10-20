@@ -20,10 +20,10 @@ public class ExaminationTool : MonoBehaviour
         Treatment,
         Authenticity,
         ConfirmedOrigin,
-        GrowthStructure,
-        Magnetism,
         ThermalConductivity,
         ElectricalConductivity,
+        GrowthStructure,
+        Magnetism,
         DiamondScreening,
         DiamondGrowthImaging
     }
@@ -168,7 +168,7 @@ public class ExaminationTool : MonoBehaviour
                     $"{gemInstance.AuthenticityGrade} — {gemInstance.AuthenticityDescription}");
                 break;
             case MeasurementType.ConfirmedOrigin:
-                RevealQualitative(gemInstance, "Origine confirmée (analyse des éléments traces)", gemInstance.Origin.name);
+                RevealQualitative(gemInstance, "Origine confirmée (spectrophotométrie UV-Vis-NIR)", gemInstance.Origin.name);
                 break;
             case MeasurementType.GrowthStructure:
                 RevealQualitative(gemInstance, "Structure de croissance", gemInstance.GrowthStructureDescription);
@@ -246,7 +246,7 @@ public class ExaminationTool : MonoBehaviour
         gemInstance.RecordObservation(measurementType.ToString());
         ToolFeedbackUI.Instance.ShowMessage(
             $"{toolName} — Clarté : {gemInstance.ClarityGrade} ({gemInstance.ClarityDescription}) | " +
-            $"Inclusions : {gemInstance.InclusionDescription} | Origine probable : {gemInstance.Origin.name}");
+            $"Inclusions : {gemInstance.InclusionDescription}");
     }
 
     private void StartNumericMeasurement(GemInstance gemInstance, GemDefinition gem)

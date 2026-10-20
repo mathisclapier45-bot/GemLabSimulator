@@ -78,8 +78,8 @@ public class MusicManager : MonoBehaviour
 
     private void PlayForScene(string sceneName)
     {
-        var target = sceneName == "Town" ? townMusic
-            : sceneName == "Laboratoire" || sceneName == "Home" ? laboratoryMusic
+        var target = sceneName == "Town" || sceneName == "GemStore" ? townMusic
+            : sceneName == "Laboratoire" || sceneName == "Home" || sceneName == "MaisonJoueur" ? laboratoryMusic
             : sceneName == "MainMenu" ? mainMenuMusic
             : sceneName == "Tunnel" ? tunnelMusic
             : sceneName == "Manoir" ? manoirMusic

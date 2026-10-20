@@ -40,7 +40,7 @@ public static class SaveSystem
             saveName = saveName,
             money = 0,
             currentDay = 1,
-            sceneName = "Home",
+            sceneName = "MaisonJoueur",
         };
         File.WriteAllText(SavePath(slot), JsonUtility.ToJson(data, true));
     }
@@ -72,6 +72,25 @@ public static class SaveSystem
             data.inventoryGems.Add(gem.ToSaveData());
         foreach (var gem in PlayerChest.Instance.Gems)
             data.chestGems.Add(gem.ToSaveData());
+        if (PlayerCabinet.Instance != null)
+        {
+            foreach (var gem in PlayerCabinet.Instance.Gems)
+                data.cabinetGems.Add(gem.ToSaveData());
+        }
+
+        if (PlayerOrderCabinet.Instance != null)
+        {
+            foreach (var gem in PlayerOrderCabinet.Instance.Gems)
+                data.orderCabinetGems.Add(gem.ToSaveData());
+        }
+
+        var ownedTools = PlayerOwnedTools.Instance;
+        if (ownedTools != null)
+        {
+            data.ownedTools.AddRange(ownedTools.Owned);
+            foreach (var slot in ownedTools.BagSlots) data.bagSlots.Add(slot ?? "");
+        }
+        if (MicroPhotoLibrary.Instance != null) data.microPhotos.AddRange(MicroPhotoLibrary.Instance.Photos);
 
         if (GemCodex.Instance != null)
             data.discoveredSpecies = GemCodex.Instance.GetDiscoveredNames();
@@ -100,6 +119,18 @@ public static class SaveSystem
 
         if (PlayerChest.Instance != null)
             PlayerChest.Instance.LoadGems(RestoreGems(data.chestGems));
+
+        if (PlayerCabinet.Instance != null)
+            PlayerCabinet.Instance.LoadGems(RestoreGems(data.cabinetGems));
+
+        if (PlayerOrderCabinet.Instance != null)
+            PlayerOrderCabinet.Instance.LoadGems(RestoreGems(data.orderCabinetGems));
+
+        var tools = PlayerOwnedTools.Ensure();
+        if (tools != null) tools.LoadTools(data.ownedTools, data.bagSlots);
+
+        var photoLibrary = MicroPhotoLibrary.Ensure();
+        if (photoLibrary != null) photoLibrary.LoadEntries(data.microPhotos);
 
         if (GemCodex.Instance != null)
             GemCodex.Instance.LoadDiscovered(data.discoveredSpecies);
