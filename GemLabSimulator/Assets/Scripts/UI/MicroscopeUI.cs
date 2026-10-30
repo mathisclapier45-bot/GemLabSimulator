@@ -860,7 +860,8 @@ public class MicroscopeUI : MonoBehaviour
             return;
         }
 
-        var text = $"Clarté : {stone.ClarityGrade}\n{stone.ClarityDescription}\n\nInclusions : {stone.InclusionDescription}";
+        var text = $"Clarté : {stone.ClarityGrade}\n{stone.ClarityDescription}\n\nInclusions : {stone.InclusionDescription}" +
+                   (stone.FacetSummary != null ? $"\n\nFacettes : {stone.FacetSummary}" : "");
 
         var kinds = new Dictionary<FeatureKind, int>();
         foreach (var mf in features)

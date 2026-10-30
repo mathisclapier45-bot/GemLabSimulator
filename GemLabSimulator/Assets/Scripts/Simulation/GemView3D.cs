@@ -39,12 +39,22 @@ public class GemView3D
     {
         return gem.IsRough
             ? GemMesh.GetRough((int)StoneOptics.StableHash(gem.Definition.name))
-            : GemMesh.Get(gem.ShapeName, gem.CutStyleName);
+            : GemMesh.Get(gem.ShapeName, gem.CutStyleName, gem.HasOpenCulet);
     }
 
+    // Half sizes of the stone in mm. Length and width are fitted to the proportions of the shape, so a stone drawn as
+    // round never shows up oval in the loupe (the footprint area is kept).
     public static Vector3 HalfExtents(GemInstance gem)
     {
-        return new Vector3(Mathf.Max(gem.LengthMm, 0.1f), Mathf.Max(gem.WidthMm, 0.1f), Mathf.Max(gem.DepthMm, 0.1f)) * 0.5f;
+        var length = Mathf.Max(gem.LengthMm, 0.1f);
+        var width = Mathf.Max(gem.WidthMm, 0.1f);
+        if (!gem.IsRough)
+        {
+            var ratio = GemMesh.AspectRatio(gem.ShapeName);
+            length = Mathf.Sqrt(length * width / ratio);
+            width = length * ratio;
+        }
+        return new Vector3(length, width, Mathf.Max(gem.DepthMm, 0.1f)) * 0.5f;
     }
 
     // Largest dimension of the stone in millimeters, which is what the image side is scaled from.
@@ -97,7 +107,11 @@ public class GemView3D
             var specular = Mathf.Pow(Mathf.Max(0f, Vector3.Dot(normal, HalfVector)), 28f);
             var tone = (diffuse + 0.2f) / 1.15f + specular * 0.7f;
 
-            Raster(p0, p1, p2, center, tone, mesh.FacetIds[t]);
+            // Every facet gets its own small brightness offset, so neighbouring facets stay readable, as on a real cut stone.
+            var facetId = mesh.FacetIds[t];
+            tone += ((facetId * 73) % 11 / 10f - 0.5f) * 0.16f;
+
+            Raster(p0, p1, p2, center, tone, facetId);
         }
 
         Finish(body, facet);

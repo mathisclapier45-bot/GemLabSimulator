@@ -49,6 +49,26 @@ public class GemInstance
     public string CutShape { get; private set; }
     public string CutStyle { get; private set; }
 
+    // Brilliant-type cuts end in a pointed culet; about one stone in fifteen has an open culet (one more facet).
+    // Stable per specimen: the same stone always looks the same.
+    public bool HasOpenCulet => !IsRough && GemMesh.HasCulet(CutStyleName) && StoneOptics.StableHash((SpecimenId ?? "") + "|culet") % 100 < 7;
+
+    // Real number of facets of the cut (e.g. 57 / 58 for a round brilliant, 50 for an emerald cut); 0 for a cabochon or rough stone.
+    public int FacetCount => IsRough || CutStyleName == "Cabochon" ? 0 : GemMesh.Get(ShapeName, CutStyleName, HasOpenCulet).FacetCount;
+
+    // Short text for the loupe and microscope panels; null for a rough stone.
+    public string FacetSummary
+    {
+        get
+        {
+            if (IsRough) return null;
+            if (CutStyleName == "Cabochon") return "aucune (cabochon poli)";
+            var count = FacetCount;
+            if (!GemMesh.HasCulet(CutStyleName)) return $"{count} (pavillon à degrés, quille)";
+            return HasOpenCulet ? $"{count} (colette ouverte, rare)" : $"{count} (colette pointue)";
+        }
+    }
+
     // Once cut at the lapidary the chosen shape/style replaces the species default.
     public string ShapeName => CutShape ?? Definition.shape;
     public string CutStyleName => CutStyle ?? Definition.cutStyle;
@@ -94,6 +114,7 @@ public class GemInstance
         LengthMm = definition.lengthMm * dimensionFactor;
         WidthMm = definition.widthMm * dimensionFactor;
         DepthMm = definition.depthMm * dimensionFactor;
+        FitDimensionsToShape();
 
         var sizeValueMultiplier = Mathf.Pow(sizeFactor, 1.5f);
 
@@ -120,6 +141,15 @@ public class GemInstance
 
     private GemInstance()
     {
+    }
+
+    // Length and width follow the proportions of the stone's shape (a round stone is as wide as long), keeping the area.
+    private void FitDimensionsToShape()
+    {
+        if (LengthMm <= 0f || WidthMm <= 0f) return;
+        var ratio = GemMesh.AspectRatio(ShapeName);
+        LengthMm = Mathf.Sqrt(LengthMm * WidthMm / ratio);
+        WidthMm = LengthMm * ratio;
     }
 
     // A natural diamond as sold by a dealer: fully specified, identified, with its certificate.
@@ -327,6 +357,7 @@ public class GemInstance
         CutShape = shape;
         CutStyle = style;
         IsRough = false;
+        FitDimensionsToShape();
     }
 
     public void RecordMeasurement(string propertyKey, float value)

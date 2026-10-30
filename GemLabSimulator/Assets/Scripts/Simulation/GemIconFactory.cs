@@ -15,9 +15,21 @@ public static class GemIconFactory
         var key = $"{def.name}|{shape}|{cutStyle}";
         if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
 
-        var sprite = ToSprite(GemPixelArt.RenderGem(shape, cutStyle, def.iconColor, def.iconFacetColor));
+        var sprite = cutStyle != "Cabochon"
+            ? FacetedIcon(shape, cutStyle, def.iconColor, def.iconFacetColor)
+            : ToSprite(GemPixelArt.RenderGem(shape, cutStyle, def.iconColor, def.iconFacetColor));
         Cache[key] = sprite;
         return sprite;
+    }
+
+    // Icon of a faceted cut: the top view of its real facet mesh, with the proportions of its shape, filling the icon.
+    private static Sprite FacetedIcon(string shape, string cutStyle, Color body, Color facet)
+    {
+        var view = new GemView3D(GemPixelArt.Size);
+        var aspect = GemMesh.Aspect(shape);
+        var half = GemView3D.FitFraction;                      // cancels the margin the viewer keeps around the stone
+        view.Draw(GemMesh.Get(shape, cutStyle), new Vector3(aspect.x * half, aspect.y * half, half * 0.6f), Quaternion.identity, body, facet);
+        return view.Sprite;
     }
 
     public static Sprite GetRough(GemDefinition def)
@@ -40,7 +52,9 @@ public static class GemIconFactory
         var key = $"solid|{shape}|{cutStyle}|{ColorUtility.ToHtmlStringRGB(body)}|{ColorUtility.ToHtmlStringRGB(facet)}";
         if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
 
-        var sprite = ToSprite(GemPixelArt.RenderGem(shape, cutStyle, body, facet));
+        Sprite sprite;
+        if (cutStyle != "Cabochon") sprite = FacetedIcon(shape, cutStyle, body, facet);
+        else sprite = ToSprite(GemPixelArt.RenderGem(shape, cutStyle, body, facet));
         Cache[key] = sprite;
         return sprite;
     }

@@ -628,7 +628,8 @@ public class LoupeUI : MonoBehaviour
         if (visualObserved)
         {
             text += $"Éclat : {def.luster}\nCouleur : {def.color}\nTransparence : {def.transparency}\n" +
-                    $"Forme : {stone.ShapeName}\nTaille : {stone.CutStyleName}\n\n";
+                    $"Forme : {stone.ShapeName}\nTaille : {stone.CutStyleName}\n" +
+                    (stone.FacetSummary != null ? $"Facettes : {stone.FacetSummary}\n" : "") + "\n";
         }
 
         if (marketMode ? inspectedLocal : stone.HasObserved(InspectionKey))
