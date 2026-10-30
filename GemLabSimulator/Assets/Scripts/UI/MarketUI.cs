@@ -301,6 +301,16 @@ public class MarketUI : MonoBehaviour
             return;
         }
 
+        ConfirmDialog.Show("Confirmer l'achat",
+            $"Êtes-vous sûr de vouloir acheter cette pierre ?\n\n{item.Definition.displayName} — {item.CaratWeight:F2} ct\nPrix : {price}€",
+            "Acheter", () => ConfirmPurchase(item, price));
+    }
+
+    private void ConfirmPurchase(GemInstance item, int price)
+    {
+        if (currentVendor == null || PlayerInventory.Instance == null || PlayerWallet.Instance == null || MarketState.Instance == null)
+            return;
+
         if (MarketState.Instance.TryPurchase(currentVendor, item, PlayerInventory.Instance, PlayerWallet.Instance))
             ToolFeedbackUI.Instance?.ShowMessage($"Achat : {item.Definition.displayName} pour {price}€.");
     }

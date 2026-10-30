@@ -198,6 +198,16 @@ public class RoughMarketUI : MonoBehaviour
             return;
         }
 
+        ConfirmDialog.Show("Confirmer l'achat",
+            $"Êtes-vous sûr de vouloir acheter cette pierre brute ?\n\n{item.Definition.displayName} (brute) — {item.CaratWeight:F2} ct\nPrix : {price}€",
+            "Acheter", () => ConfirmPurchase(item, price));
+    }
+
+    private void ConfirmPurchase(GemInstance item, int price)
+    {
+        if (currentVendor == null || PlayerInventory.Instance == null || PlayerWallet.Instance == null || RoughMarketState.Instance == null)
+            return;
+
         if (RoughMarketState.Instance.TryPurchase(currentVendor, item, PlayerInventory.Instance, PlayerWallet.Instance))
             ToolFeedbackUI.Instance?.ShowMessage($"Achat : {item.Definition.displayName} (brute) pour {price}€.");
     }

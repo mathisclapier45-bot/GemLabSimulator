@@ -158,10 +158,10 @@ public static class SceneBootstrap
         pixelPerfect.assetsPPU = PixelsPerUnit;
         pixelPerfect.refResolutionX = InteriorRefResolutionX;
         pixelPerfect.refResolutionY = InteriorRefResolutionY;
-        pixelPerfect.upscaleRT = true;
+        pixelPerfect.upscaleRT = false;
         pixelPerfect.pixelSnapping = true;
-        pixelPerfect.cropFrameX = true;
-        pixelPerfect.cropFrameY = true;
+        pixelPerfect.cropFrameX = false;
+        pixelPerfect.cropFrameY = false;
 
         var gridGO = new GameObject("Grid", typeof(Grid));
 
@@ -337,10 +337,10 @@ public static class SceneBootstrap
         pixelPerfect.assetsPPU = PixelsPerUnit;
         pixelPerfect.refResolutionX = InteriorRefResolutionX;
         pixelPerfect.refResolutionY = InteriorRefResolutionY;
-        pixelPerfect.upscaleRT = true;
+        pixelPerfect.upscaleRT = false;
         pixelPerfect.pixelSnapping = true;
-        pixelPerfect.cropFrameX = true;
-        pixelPerfect.cropFrameY = true;
+        pixelPerfect.cropFrameX = false;
+        pixelPerfect.cropFrameY = false;
 
         var gridGO = new GameObject("Grid", typeof(Grid));
 
@@ -458,10 +458,10 @@ public static class SceneBootstrap
         pixelPerfect.assetsPPU = PixelsPerUnit;
         pixelPerfect.refResolutionX = InteriorRefResolutionX;
         pixelPerfect.refResolutionY = InteriorRefResolutionY;
-        pixelPerfect.upscaleRT = true;
+        pixelPerfect.upscaleRT = false;
         pixelPerfect.pixelSnapping = true;
-        pixelPerfect.cropFrameX = true;
-        pixelPerfect.cropFrameY = true;
+        pixelPerfect.cropFrameX = false;
+        pixelPerfect.cropFrameY = false;
 
         var gridGO = new GameObject("Grid", typeof(Grid));
 
@@ -792,10 +792,10 @@ public static class SceneBootstrap
         pixelPerfect.assetsPPU = PixelsPerUnit;
         pixelPerfect.refResolutionX = InteriorRefResolutionX;
         pixelPerfect.refResolutionY = InteriorRefResolutionY;
-        pixelPerfect.upscaleRT = true;
+        pixelPerfect.upscaleRT = false;
         pixelPerfect.pixelSnapping = true;
-        pixelPerfect.cropFrameX = true;
-        pixelPerfect.cropFrameY = true;
+        pixelPerfect.cropFrameX = false;
+        pixelPerfect.cropFrameY = false;
 
         var gridGO = new GameObject("Grid", typeof(Grid));
 
@@ -883,7 +883,8 @@ public static class SceneBootstrap
     }
 
     // Character that talks when the player presses E next to it (placeholder lines).
-    private static GameObject CreateTalkNpc(string speaker, string spriteName, Vector3 feet, string[] lines)
+    private static GameObject CreateTalkNpc(string speaker, string spriteName, Vector3 feet, string[] lines,
+        Vector2? triggerSize = null, Vector2? triggerOffset = null)
     {
         var sprite = LoadPackSpriteGrounded($"Assets/Art/Sprites/npc_{spriteName}.png");
         var npc = new GameObject(speaker);
@@ -898,8 +899,8 @@ public static class SceneBootstrap
 
         var trigger = npc.AddComponent<BoxCollider2D>();
         trigger.isTrigger = true;
-        trigger.size = new Vector2(3.4f, 3.4f);
-        trigger.offset = new Vector2(0f, -0.4f);
+        trigger.size = triggerSize ?? new Vector2(3.4f, 3.4f);
+        trigger.offset = triggerOffset ?? new Vector2(0f, -0.4f);
 
         var talk = npc.AddComponent<TalkNPC>();
         var so = new SerializedObject(talk);
@@ -934,19 +935,26 @@ public static class SceneBootstrap
         PlaceInteriorProp(spriteName, new Vector3(x, wallY + 0.35f, 0f), false, false, 2);
     }
 
-    // A small closed office: partition walls with a door gap, a desk, a seller behind it and a visitor chair.
-    private static void CreateSellerOffice(string label, string npcSprite, float centerX, int floorY0, int floorY1, bool opensEast)
+    // A small closed office: partition walls with a door gap, a desk, a diamond dealer behind it and a visitor chair.
+    // `dealerIndex` is the dealer of DiamondDealerState whose stock he sells.
+    private static void CreateSellerOffice(string houseName, string specialty, string npcSprite, float centerX, int floorY0, int floorY1,
+        bool opensEast, int dealerIndex)
     {
         var deskFeet = new Vector3(centerX, floorY0 + 1.0f, 0f);
         PlaceFurniture("off_desk", deskFeet);
         PlaceFurniture("off_pc", deskFeet + new Vector3(0.1f, 0.85f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
-        CreateTalkNpc($"Vendeur — {label}", npcSprite, deskFeet + new Vector3(0f, 1.25f, 0f), new[]
-        {
-            $"Bienvenue au {label}. Mon stock de diamants arrive bientôt, repassez nous voir !",
-            "Ici, chaque pierre est vendue avec son certificat. Les premières arrivées sont attendues.",
-        });
+
+        // The trigger covers the whole office, so the dealer can be spoken to from the chair side of the desk.
+        var dealer = CreateTalkNpc($"Vendeur — {houseName}", npcSprite, deskFeet + new Vector3(0f, 1.25f, 0f), new string[0],
+            new Vector2(6f, 4.2f), new Vector2(0f, -1.0f));
+        UnityEngine.Object.DestroyImmediate(dealer.GetComponent<TalkNPC>());
+        var dealerNpc = dealer.AddComponent<DiamondDealerNPC>();
+        var dealerSo = new SerializedObject(dealerNpc);
+        dealerSo.FindProperty("dealerIndex").intValue = dealerIndex;
+        dealerSo.ApplyModifiedProperties();
+
         PlaceFurniture("off_chair_dark", deskFeet + new Vector3(opensEast ? 1.6f : -1.6f, -0.2f, 0f));
-        CreateBuildingLabel(label, new Vector3(centerX, floorY1 + 0.6f, 0f));
+        CreateBuildingLabel($"{houseName}\n{specialty}", new Vector3(centerX, floorY1 + 0.6f, 0f));
     }
 
     [MenuItem("GemLab/Setup Diamond Tower Scenes")]
@@ -1013,10 +1021,11 @@ public static class SceneBootstrap
             for (var x = -12; x <= -8; x++) walls.SetTile(new Vector3Int(x, -1, 0), wallTile);
             for (var x = 8; x <= 12; x++) walls.SetTile(new Vector3Int(x, -1, 0), wallTile);
 
-            CreateSellerOffice("Bureau 1", "merchant0", -10f, -5, -2, true);
-            CreateSellerOffice("Bureau 2", "merchant1", -10f, 0, 4, true);
-            CreateSellerOffice("Bureau 3", "merchant2", 10f, -5, -2, false);
-            CreateSellerOffice("Bureau 4", "merchant3", 10f, 0, 4, false);
+            // The four dealers of DiamondDealerState: classic stones, very large stones, melee, economy grades.
+            CreateSellerOffice("Maison Verhoeven", "Diamants classiques", "merchant0", -10f, -5, -2, true, 0);
+            CreateSellerOffice("Maison Kolenberg", "Très gros diamants", "merchant1", -10f, 0, 4, true, 1);
+            CreateSellerOffice("Atelier Janssens", "Mêlées", "merchant2", 10f, -5, -2, false, 2);
+            CreateSellerOffice("Comptoir Mertens", "Qualité économique", "merchant3", 10f, 0, 4, false, 3);
 
             PlaceRug("rug_red", new Vector3(0f, -1.5f, 0f));
             PlaceFurniture("off_sofa", new Vector3(-2.2f, -3.2f, 0f));
@@ -1138,6 +1147,65 @@ public static class SceneBootstrap
         Debug.Log("Diamond tower scenes created: DiamantairesAccueil, Diamantaires1-6, DiamantairesToit.");
     }
 
+    // ----- WatchStore: the town's clockmaker -----
+
+    private static void CreateWatchStore(Vector3 position)
+    {
+        var sprite = LoadPackSpriteGrounded("Assets/Art/Sprites/building_watchstore.png");
+        if (sprite == null) return;
+
+        var go = new GameObject("WatchStore");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        // The glass door is on the right of the shop window.
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1.8f, 2.4f);
+        col.offset = new Vector2(1.75f, 1.2f);
+
+        var door = go.AddComponent<DoorTrigger>();
+        var so = new SerializedObject(door);
+        so.FindProperty("sceneName").stringValue = "WatchStore";
+        so.FindProperty("implemented").boolValue = true;
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel("WatchStore", position + new Vector3(0f, sprite.bounds.size.y + 0.5f, 0f));
+    }
+
+    [MenuItem("GemLab/Setup WatchStore Scene")]
+    public static void CreateWatchStoreScene()
+    {
+        CreateTowerRoom("WatchStore", "manoir", -8, 8, -5, 4, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, -2.5f, 0f), true, (walls, wallTile) =>
+        {
+            CreateExitDoor(new Vector3(0, -4, 0f), "SpawnPoint_WatchStore");
+
+            // Display shelves on the back wall (empty for now: the watches for sale will be placed on them).
+            foreach (var shelfX in new[] { -2.5f, 0.5f })
+                CreateShopShelf("gemstore_shelf", new Vector3(shelfX, 3.0f, 0f), new[] { -1.0f, 0f, 1.0f });
+            // Two grandfather clocks and wall clocks.
+            PlaceFurniture("grandfather_clock", new Vector3(-6.4f, 2.0f, 0f));
+            PlaceFurniture("grandfather_clock", new Vector3(-4.9f, 2.0f, 0f));
+            HangOnWall("wall_clock", 3.0f, 4f);
+            HangOnWall("wall_clock", 6.3f, 4f);
+
+            // Counter on the right with the clockmaker behind it.
+            CreateShopCounter(new Vector3(4.5f, -1.5f, 0f), 4);
+            CreateTalkNpc("Horloger", "horloger", new Vector3(6.1f, -1.0f, 0f), new[]
+            {
+                "Bienvenue chez l'horloger. Le temps, c'est précieux : chaque montre ici est réglée à la seconde.",
+                "Mes plus belles pièces arrivent bientôt. Repassez nous voir !",
+            }, new Vector2(5f, 3.5f), new Vector2(-2.5f, 0.8f));
+
+            PlaceRug("rug_red", new Vector3(-1.0f, -1.2f, 0f));
+            PlaceFurniture("plant_small", new Vector3(-6.3f, -3.0f, 0f));
+            PlaceFurniture("plant_small", new Vector3(6.3f, -3.0f, 0f));
+            PlaceWallDecor("window_white", 5, 4);
+        });
+    }
+
     [MenuItem("GemLab/Setup Town Scene")]
     public static void CreateTownScene()
     {
@@ -1157,10 +1225,10 @@ public static class SceneBootstrap
         pixelPerfect.assetsPPU = PixelsPerUnit;
         pixelPerfect.refResolutionX = 896;
         pixelPerfect.refResolutionY = 504;
-        pixelPerfect.upscaleRT = true;
+        pixelPerfect.upscaleRT = false;
         pixelPerfect.pixelSnapping = true;
-        pixelPerfect.cropFrameX = true;
-        pixelPerfect.cropFrameY = true;
+        pixelPerfect.cropFrameX = false;
+        pixelPerfect.cropFrameY = false;
 
         var gridGO = new GameObject("Grid", typeof(Grid));
 
@@ -1373,6 +1441,7 @@ public static class SceneBootstrap
         CreateRealBuilding("Musee", new Vector3(20, 28, 0f), HouseStyle.Modern, "Musee", true);
         CreateDiamondTower(new Vector3(45, 28, 0f));
         CreateClothingStore(new Vector3(57.5f, 28, 0f));
+        CreateWatchStore(new Vector3(-31.5f, -15, 0f));
 
         CreateRealBuilding("Marche aux Pierres", new Vector3(-45, -15, 0f), HouseStyle.Modern, "Marche", true);
         CreateRealBuilding("Ecole", new Vector3(-15, -15, 0f), HouseStyle.Chalet, "", false);
@@ -1401,6 +1470,7 @@ public static class SceneBootstrap
         CreateNamedSpawnPoint("SpawnPoint_Manoir", new Vector3(45, -17, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Tunnel", new Vector3(0, -47, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Diamantaires", new Vector3(45f, 26f, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_WatchStore", new Vector3(-29.75f, -17f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_GemStore", new Vector3(34f, 5f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_MaisonJoueur", new Vector3(-51.2f, -52f, 0f));
 
@@ -1729,10 +1799,10 @@ public static class SceneBootstrap
         pixelPerfect.assetsPPU = PixelsPerUnit;
         pixelPerfect.refResolutionX = InteriorRefResolutionX;
         pixelPerfect.refResolutionY = InteriorRefResolutionY;
-        pixelPerfect.upscaleRT = true;
+        pixelPerfect.upscaleRT = false;
         pixelPerfect.pixelSnapping = true;
-        pixelPerfect.cropFrameX = true;
-        pixelPerfect.cropFrameY = true;
+        pixelPerfect.cropFrameX = false;
+        pixelPerfect.cropFrameY = false;
 
         var gridGO = new GameObject("Grid", typeof(Grid));
 
@@ -1846,10 +1916,10 @@ public static class SceneBootstrap
         pixelPerfect.assetsPPU = PixelsPerUnit;
         pixelPerfect.refResolutionX = InteriorRefResolutionX;
         pixelPerfect.refResolutionY = InteriorRefResolutionY;
-        pixelPerfect.upscaleRT = true;
+        pixelPerfect.upscaleRT = false;
         pixelPerfect.pixelSnapping = true;
-        pixelPerfect.cropFrameX = true;
-        pixelPerfect.cropFrameY = true;
+        pixelPerfect.cropFrameX = false;
+        pixelPerfect.cropFrameY = false;
 
         var gridGO = new GameObject("Grid", typeof(Grid));
 
@@ -1962,10 +2032,10 @@ public static class SceneBootstrap
         pixelPerfect.assetsPPU = PixelsPerUnit;
         pixelPerfect.refResolutionX = InteriorRefResolutionX;
         pixelPerfect.refResolutionY = InteriorRefResolutionY;
-        pixelPerfect.upscaleRT = true;
+        pixelPerfect.upscaleRT = false;
         pixelPerfect.pixelSnapping = true;
-        pixelPerfect.cropFrameX = true;
-        pixelPerfect.cropFrameY = true;
+        pixelPerfect.cropFrameX = false;
+        pixelPerfect.cropFrameY = false;
 
         var gridGO = new GameObject("Grid", typeof(Grid));
 
@@ -2078,10 +2148,10 @@ public static class SceneBootstrap
         pixelPerfect.assetsPPU = PixelsPerUnit;
         pixelPerfect.refResolutionX = InteriorRefResolutionX;
         pixelPerfect.refResolutionY = InteriorRefResolutionY;
-        pixelPerfect.upscaleRT = true;
+        pixelPerfect.upscaleRT = false;
         pixelPerfect.pixelSnapping = true;
-        pixelPerfect.cropFrameX = true;
-        pixelPerfect.cropFrameY = true;
+        pixelPerfect.cropFrameX = false;
+        pixelPerfect.cropFrameY = false;
 
         var gridGO = new GameObject("Grid", typeof(Grid));
 
@@ -2197,10 +2267,10 @@ public static class SceneBootstrap
         pixelPerfect.assetsPPU = PixelsPerUnit;
         pixelPerfect.refResolutionX = 384;
         pixelPerfect.refResolutionY = 216;
-        pixelPerfect.upscaleRT = true;
+        pixelPerfect.upscaleRT = false;
         pixelPerfect.pixelSnapping = true;
-        pixelPerfect.cropFrameX = true;
-        pixelPerfect.cropFrameY = true;
+        pixelPerfect.cropFrameX = false;
+        pixelPerfect.cropFrameY = false;
 
         var gridGO = new GameObject("Grid", typeof(Grid));
 
@@ -2308,10 +2378,10 @@ public static class SceneBootstrap
         pixelPerfect.assetsPPU = PixelsPerUnit;
         pixelPerfect.refResolutionX = InteriorRefResolutionX;
         pixelPerfect.refResolutionY = InteriorRefResolutionY;
-        pixelPerfect.upscaleRT = true;
+        pixelPerfect.upscaleRT = false;
         pixelPerfect.pixelSnapping = true;
-        pixelPerfect.cropFrameX = true;
-        pixelPerfect.cropFrameY = true;
+        pixelPerfect.cropFrameX = false;
+        pixelPerfect.cropFrameY = false;
 
         var gridGO = new GameObject("Grid", typeof(Grid));
 
@@ -2426,10 +2496,10 @@ public static class SceneBootstrap
         pixelPerfect.assetsPPU = PixelsPerUnit;
         pixelPerfect.refResolutionX = InteriorRefResolutionX;
         pixelPerfect.refResolutionY = InteriorRefResolutionY;
-        pixelPerfect.upscaleRT = true;
+        pixelPerfect.upscaleRT = false;
         pixelPerfect.pixelSnapping = true;
-        pixelPerfect.cropFrameX = true;
-        pixelPerfect.cropFrameY = true;
+        pixelPerfect.cropFrameX = false;
+        pixelPerfect.cropFrameY = false;
 
         var gridGO = new GameObject("Grid", typeof(Grid));
 
@@ -3598,6 +3668,7 @@ public static class SceneBootstrap
             new Vector2(20, -20), new Vector2(300, 30), 24, TextAnchor.UpperLeft, Color.white);
         var dayGO = CreateUIText("DayText", canvasGO.transform, "Jour 1",
             new Vector2(20, -50), new Vector2(300, 24), 16, TextAnchor.UpperLeft, new Color(0.85f, 0.85f, 0.85f));
+        dayGO.SetActive(false);
         moneyGO.AddComponent<HUDController>();
         var hudSo = new SerializedObject(moneyGO.GetComponent<HUDController>());
         hudSo.FindProperty("moneyText").objectReferenceValue = moneyGO.GetComponent<Text>();
@@ -3618,16 +3689,6 @@ public static class SceneBootstrap
         floatingMoneySo.FindProperty("spawnAnchor").objectReferenceValue = moneyDeltaAnchorRect;
         floatingMoneySo.ApplyModifiedProperties();
 
-        CreateUIText("InventoryHint", canvasGO.transform, "Tab : Inventaire",
-            new Vector2(20, -76), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
-        CreateUIText("GrimoireHint", canvasGO.transform, "G : Grimoire",
-            new Vector2(20, -98), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
-        CreateUIText("MenuHint", canvasGO.transform, "Échap : Menu (sauvegarde)",
-            new Vector2(20, -120), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
-        CreateUIText("QuestHint", canvasGO.transform, "J : Quêtes",
-            new Vector2(20, -142), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
-        CreateUIText("MapHint", canvasGO.transform, "C : Carte",
-            new Vector2(20, -164), new Vector2(300, 24), 14, TextAnchor.UpperLeft, new Color(0.7f, 0.7f, 0.7f));
 
         var feedbackGO = CreateUIText("ToolFeedback", canvasGO.transform, "",
             new Vector2(0, 20), new Vector2(760, 90), 16, TextAnchor.LowerCenter, new Color(0.95f, 0.95f, 0.8f));
@@ -4217,7 +4278,7 @@ public static class SceneBootstrap
             ("Musée", 20, 28), ("Immeuble Diamantaires", 45, 28),
             ("Marché Pierres", -45, -15), ("École", -15, -15),
             ("Marché Brutes", 15, -15), ("Manoir", 45, -15),
-            ("Bijouterie", -22, 7), ("Banque", 22, 7), ("Concessionnaire", 28, -35), ("Vincent Pardieu", -58, 10), ("Aéroport", 58, 8), ("Bibliothèque", -41, 7), ("GemStore", 35, 7), ("Maison perso", -52, -50), ("Boutique de vêtements", 57, 28),
+            ("Bijouterie", -22, 7), ("Banque", 22, 7), ("Concessionnaire", 28, -35), ("Vincent Pardieu", -58, 10), ("Aéroport", 58, 8), ("Bibliothèque", -41, 7), ("GemStore", 35, 7), ("Maison perso", -52, -50), ("Boutique de vêtements", 57, 28), ("WatchStore", -31, -15),
             ("Tunnel", 0, -50),
         };
 

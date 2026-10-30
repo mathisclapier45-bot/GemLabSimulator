@@ -38,6 +38,13 @@ public class GemInstanceSaveData
 
     public int finalValue;
 
+    // Diamonds from the dealers: grades and certificate (empty for other stones).
+    public string colorGrade;
+    public string diamondClarity;
+    public string certificateNumber;
+    public string certificateIssuer;
+    public int certificateDay;
+
     public List<string> measuredKeys = new List<string>();
     public List<float> measuredValues = new List<float>();
     public List<string> observedKeys = new List<string>();

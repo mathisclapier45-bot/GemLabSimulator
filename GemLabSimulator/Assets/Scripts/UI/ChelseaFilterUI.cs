@@ -77,6 +77,8 @@ public class ChelseaFilterUI : MonoBehaviour
         Refresh();
     }
 
+    public bool IsOpen => panel != null && panel.activeSelf;
+
     public void Close()
     {
         if (panel != null) panel.SetActive(false);

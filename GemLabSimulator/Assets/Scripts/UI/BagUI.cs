@@ -23,6 +23,7 @@ public class BagUI : MonoBehaviour
     private static readonly Color SlotHint = new Color(0.55f, 0.50f, 0.45f, 0.8f);
 
     private GameObject panel;
+    private GameObject returnButton;
     private readonly Image[] equipmentIcons = new Image[PlayerOwnedTools.BagSlotCount];
     private Text infoText;
 
@@ -51,6 +52,28 @@ public class BagUI : MonoBehaviour
         Instance = this;
         BuildPanel();
         panel.SetActive(false);
+        BuildReturnButton();
+    }
+
+    // "Retour au sac": shown at the top of the screen while a tool opened from the bag is on screen.
+    private void BuildReturnButton()
+    {
+        var button = RuntimeUIKit.MakeButton("ReturnToBag", transform, "← Retour au sac", 15, new Color(0.30f, 0.38f, 0.58f, 1f),
+            Vector2.zero, new Vector2(190f, 36f));
+        returnButton = button.gameObject;
+        var rect = returnButton.GetComponent<RectTransform>();
+        rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 1f);
+        rect.pivot = new Vector2(0.5f, 1f);
+        rect.anchoredPosition = new Vector2(-150f, -14f);
+        button.onClick.AddListener(ReturnToBag);
+        returnButton.SetActive(false);
+    }
+
+    private void ReturnToBag()
+    {
+        BagToolLauncher.CloseTool();
+        returnButton.SetActive(false);
+        panel.SetActive(true);
     }
 
     private void Start()
@@ -82,7 +105,19 @@ public class BagUI : MonoBehaviour
     {
         var tools = PlayerOwnedTools.Instance;
         var id = tools != null && slotIndex < tools.BagSlots.Count ? tools.BagSlots[slotIndex] : null;
-        infoText.text = string.IsNullOrEmpty(id) ? "" : $"{BagItemCatalog.NameOf(id)}\n\n{BagItemCatalog.DescriptionOf(id)}";
+        infoText.text = string.IsNullOrEmpty(id)
+            ? ""
+            : $"{BagItemCatalog.NameOf(id)}\n\n{BagItemCatalog.DescriptionOf(id)}\n\nClic : utiliser";
+    }
+
+    // Click on a field-equipment slot: use the item (its tool window opens, the bag closes).
+    private void UseSlot(int slotIndex)
+    {
+        var tools = PlayerOwnedTools.Instance;
+        var id = tools != null && slotIndex < tools.BagSlots.Count ? tools.BagSlots[slotIndex] : null;
+        if (string.IsNullOrEmpty(id)) return;
+
+        if (BagToolLauncher.Use(id)) Close();
     }
 
     private void HideInfo()
@@ -92,6 +127,13 @@ public class BagUI : MonoBehaviour
 
     private void Update()
     {
+        var toolOpen = BagToolLauncher.ToolOpenFromBag;
+        if (toolOpen != returnButton.activeSelf)
+        {
+            returnButton.SetActive(toolOpen);
+            if (toolOpen) returnButton.transform.SetAsLastSibling();
+        }
+
         if (Input.GetKeyDown(KeyCode.H)) panel.SetActive(!panel.activeSelf);
         else if (panel.activeSelf && Input.GetKeyDown(KeyCode.Escape)) panel.SetActive(false);
     }
@@ -114,8 +156,6 @@ public class BagUI : MonoBehaviour
         panel.GetComponent<Image>().color = PanelColor;
 
         RuntimeUIKit.MakeText("Title", panel.transform, "Sac", 22, TextAnchor.UpperLeft, Gold, new Vector2(24f, -12f), new Vector2(200f, 30f));
-        RuntimeUIKit.MakeText("Hint", panel.transform, "H : ouvrir / fermer", 11, TextAnchor.UpperRight, new Color(0.6f, 0.58f, 0.55f),
-            new Vector2(PanelWidth - 190f, -18f), new Vector2(120f, 16f));
         var close = RuntimeUIKit.MakeButton("Close", panel.transform, "X", 14, new Color(0.30f, 0.22f, 0.20f, 1f),
             new Vector2(PanelWidth - 56f, -12f), new Vector2(32f, 28f));
         close.onClick.AddListener(Close);
@@ -151,6 +191,7 @@ public class BagUI : MonoBehaviour
             equipmentIcons[i] = icon;
 
             var captured = i;
+            slot.gameObject.AddComponent<Button>().onClick.AddListener(() => UseSlot(captured));
             var hover = slot.gameObject.AddComponent<BagSlotHover>();
             hover.OnEnter = () => ShowInfo(captured);
             hover.OnExit = HideInfo;

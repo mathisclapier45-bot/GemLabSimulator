@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// 10x loupe: the gem lies under the lens. Turn it in every direction (left drag = tilt, wheel = roll), move the
+// Loupe (10x at the lab, 10x or 20x from the bag, with the bag's maglite and long-wave UV lamp when owned): the gem lies under the lens. Turn it in every direction (left drag = tilt, wheel = roll), move the
 // loupe over it (right drag or the arrows) and look at the inclusions inside and the defects on the surface.
 public class LoupeUI : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class LoupeUI : MonoBehaviour
     private const float AreaY = -44f;
     private const float AreaSize = 330f;
     private const float HoleRadius = 150f;
-    private float PxPerMm => loupeOn ? 34f : 20f;      // magnification of the view (x10 with the loupe, x1 without)
+    private float PxPerMm => loupeOn ? 3.4f * (marketMode ? 10f : loupePower) : 20f;   // magnification of the view (x1 without a lens)
     private const float ObservationTime = 2.5f;
     private const float InspectionRotation = 200f;     // degrees turned before the loupe findings are logged
     private const string InspectionKey = "LoupeInspection";
@@ -50,6 +50,9 @@ public class LoupeUI : MonoBehaviour
     private bool marketMode;
     private System.Action onMarketClose;
     private bool loupeOn = true;
+    private float loupePower = 10f;     // lens magnification in lab/bag mode; 0 = no lens (naked eye)
+    private const string MagliteId = "Maglite";
+    private const string UvLampId = "LampeUVLongs";
     private bool maglite;
     private bool uvOn;
     private bool inspectedLocal;
@@ -74,7 +77,8 @@ public class LoupeUI : MonoBehaviour
     private float watched;
     private bool visualObserved;
 
-    public static bool TryOpen()
+    // `power`: magnification of the lens (10 at the lab desk; 10 or 20 for the bag loupes; 0 for no lens).
+    public static bool TryOpen(float power = 10f)
     {
         if (Instance == null)
         {
@@ -84,8 +88,15 @@ public class LoupeUI : MonoBehaviour
         }
 
         if (Instance == null) return false;
+        Instance.loupePower = power;
         Instance.Open();
         return true;
+    }
+
+    private static bool Owns(string toolId)
+    {
+        var tools = PlayerOwnedTools.Ensure();
+        return tools != null && tools.Has(toolId);
     }
 
     private void Awake()
@@ -153,22 +164,27 @@ public class LoupeUI : MonoBehaviour
     private void SetMode(bool market)
     {
         marketMode = market;
-        loupeOn = !market;
+        loupeOn = !market && loupePower > 0f;
         maglite = false;
         uvOn = false;
-        titleText.text = market ? "Examen de la pierre" : "Loupe ×10";
+        titleText.text = market ? "Examen de la pierre" : loupePower > 0f ? $"Loupe ×{loupePower:F0}" : "Examen à l'œil nu";
         // Leave no market lighting effect behind when switching back to the lab loupe.
         litImage.enabled = false;
         lightGlow.color = new Color(1f, 1f, 1f, 0f);
         uvTint.color = new Color(0f, 0f, 0f, 0f);
         stoneImage.color = Color.white;
+        // Outside the market, the torch and the UV lamp are there only if the player bought them (they live in the bag).
+        var hasTorch = market || Owns(MagliteId);
+        var hasUv = market || Owns(UvLampId);
         loupeToggle.gameObject.SetActive(market);
-        magliteToggle.gameObject.SetActive(market);
-        uvToggle.gameObject.SetActive(market);
+        magliteToggle.gameObject.SetActive(hasTorch);
+        uvToggle.gameObject.SetActive(hasUv);
         removeButton.gameObject.SetActive(!market);
-        tipText.gameObject.SetActive(!market);
+        tipText.gameObject.SetActive(!market && !hasTorch && !hasUv);
         UpdateToggleColors();
     }
+
+    public bool IsOpen => panel != null && panel.activeSelf;
 
     public void Close()
     {
@@ -192,7 +208,7 @@ public class LoupeUI : MonoBehaviour
         loupeToggle.GetComponent<Image>().color = loupeOn ? on : ButtonColor;
         magliteToggle.GetComponent<Image>().color = maglite ? on : ButtonColor;
         uvToggle.GetComponent<Image>().color = uvOn ? on : ButtonColor;
-        magnificationText.text = loupeOn ? "×10" : "×1";
+        magnificationText.text = loupeOn ? $"×{(marketMode ? 10f : loupePower):F0}" : "×1";
     }
 
     private void ToggleLoupe()
@@ -218,6 +234,9 @@ public class LoupeUI : MonoBehaviour
         {
             maglite = false;
             uvSeen = true;
+            // With the bag lamp the fluorescence is recorded like a lab measurement.
+            if (!marketMode && stone != null)
+                stone.RecordObservation(ExaminationTool.MeasurementType.FluorescenceLongWave.ToString());
             UpdateTexts();
         }
         UpdateToggleColors();
@@ -234,6 +253,8 @@ public class LoupeUI : MonoBehaviour
     private void SetStone(GemInstance gem)
     {
         stone = gem;
+        uvInfo = FluorescenceInfo.ForGem(gem.Definition, true);
+        uvSeen = uvOn;
         orientation = Quaternion.identity;
         pan = Vector2.zero;
         explored = 0f;
@@ -298,6 +319,8 @@ public class LoupeUI : MonoBehaviour
     private void CheckInspection()
     {
         if (stone == null || explored < InspectionRotation) return;
+        // Without a lens nothing small can be seen, so the examination does not count.
+        if (!marketMode && !loupeOn) return;
 
         if (marketMode)
         {
@@ -488,7 +511,7 @@ public class LoupeUI : MonoBehaviour
         GemView3D.Colors(stone, out var body, out var facet);
         var halfMm = new Vector3(stone.LengthMm, stone.WidthMm, Mathf.Max(stone.DepthMm, 0.5f)) * 0.5f;
         var mesh = GemView3D.MeshFor(stone);
-        var uvMode = marketMode && uvOn;
+        var uvMode = uvOn;
 
         // Under UV the stone itself is dark; its luminescence is a second, tinted render on top.
         view3D.Draw(mesh, halfMm, orientation, uvMode ? GemPixelArt.Dim(body, 0.12f) : body, uvMode ? GemPixelArt.Dim(facet, 0.18f) : facet);
@@ -500,7 +523,7 @@ public class LoupeUI : MonoBehaviour
 
         // Lighting (market): torch brightens the stone and the inclusions, UV shows its fluorescence, nothing = dim room.
         stoneImage.color = !marketMode || maglite || uvMode ? Color.white : new Color(0.68f, 0.68f, 0.74f, 1f);
-        lightGlow.color = marketMode && maglite ? new Color(1f, 0.93f, 0.7f, 0.5f) : new Color(1f, 1f, 1f, 0f);
+        lightGlow.color = maglite ? new Color(1f, 0.93f, 0.7f, 0.5f) : new Color(1f, 1f, 1f, 0f);
         lightGlow.rectTransform.sizeDelta = new Vector2(side * 1.5f, side * 1.5f);
         uvTint.color = uvMode ? new Color(0.45f, 0.2f, 0.9f, 0.28f) : new Color(0f, 0f, 0f, 0f);
 
@@ -514,7 +537,7 @@ public class LoupeUI : MonoBehaviour
         }
 
         // Inclusions and surface defects need the loupe; the torch makes them stand out, UV hides them.
-        featureVisibility = !marketMode ? 1f : (loupeOn && !uvOn) ? (maglite ? 1f : 0.5f) : 0f;
+        featureVisibility = !marketMode ? ((loupeOn && !uvOn) ? 1f : 0f) : (loupeOn && !uvOn) ? (maglite ? 1f : 0.5f) : 0f;
 
         UpdateFeatures(half);
 
@@ -622,7 +645,7 @@ public class LoupeUI : MonoBehaviour
                 : "Tournez la gemme et déplacez la loupe pour repérer les inclusions et les défauts de surface.";
         }
 
-        if (marketMode && uvSeen)
+        if (uvSeen)
             text += $"\n\nUV longs : {def.fluorescenceLongWave}";
 
         resultText.text = text.TrimEnd('\n');

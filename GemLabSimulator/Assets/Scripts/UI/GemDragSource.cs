@@ -76,8 +76,10 @@ public class GemDragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                (gem.IsRough ? "Pierre brute\n" : $"Taille : {gem.ShapeName} — {gem.CutStyleName}\n") +
                $"Poids : {gem.CaratWeight:F2} ct\n" +
                $"Dimensions : {gem.LengthMm:F1} x {gem.WidthMm:F1} x {gem.DepthMm:F1} mm\n" +
-               $"Pureté : {gem.ClarityGrade}\n" +
-               $"Saturation : {gem.SaturationGrade}\n" +
+               (gem.ColorGrade != null
+                   ? $"Couleur : {gem.ColorGrade}   Pureté : {gem.DiamondClarity}\n"
+                   : $"Pureté : {gem.ClarityGrade}\nSaturation : {gem.SaturationGrade}\n") +
+               (gem.Certificate != null ? $"Certificat n° {gem.Certificate.number} ({gem.Certificate.issuer})\n" : "") +
                $"Traitement : {gem.TreatmentGrade}\n" +
                $"Authenticité : {gem.AuthenticityGrade}\n" +
                $"{valueLine}";

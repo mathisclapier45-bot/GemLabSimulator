@@ -37,6 +37,12 @@ public class GemInstance
     public string GrowthStructureDescription { get; private set; }
     public int FinalValue { get; private set; }
 
+    // Diamonds sold by the dealers of the Diamond Quarter: colour grade (D..Z), clarity grade (FL..I3) and the certificate
+    // delivered with the stone. All null for every other stone.
+    public string ColorGrade { get; private set; }
+    public string DiamondClarity { get; private set; }
+    public DiamondCertificate Certificate { get; private set; }
+
     // Relative to the species' typical weight, clamped so icons stay legible within a fixed UI slot.
     public float SizeScale => Mathf.Clamp(CaratWeight / Mathf.Max(Definition.weightCarats, 0.01f), 0.6f, 1.15f);
     public bool HasWindow { get; private set; }
@@ -116,6 +122,59 @@ public class GemInstance
     {
     }
 
+    // A natural diamond as sold by a dealer: fully specified, identified, with its certificate.
+    public static GemInstance CreateDiamond(GemDefinition definition, GemOrigin origin, float carat, int colorIndex, int clarityIndex,
+        string shape, string style, float lengthMm, float widthMm, float depthMm, int value, string issuer, int issueDay, string certificateNumber)
+    {
+        var colorGrade = DiamondGrading.Color(colorIndex);
+        var clarityGrade = DiamondGrading.Clarity(clarityIndex);
+        var tier = DiamondGrading.GameClarityTier(clarityIndex);
+        var tierDescription = "";
+        foreach (var grade in GemGrading.ClarityGrades)
+            if (grade.Name == tier) tierDescription = grade.Description;
+
+        var instance = new GemInstance
+        {
+            Definition = definition,
+            SpecimenId = $"id{nextSpecimenNumber:D4}",
+            ClientName = issuer,
+            IsIdentified = true,
+            CutShape = shape,
+            CutStyle = style,
+            Origin = origin ?? GemGrading.PickOrigin(definition.origins),
+            SaturationGrade = $"qualité {colorGrade}",
+            ClarityGrade = tier,
+            ClarityDescription = tierDescription,
+            InclusionDescription = definition.inclusions,
+            CaratWeight = carat,
+            LengthMm = lengthMm,
+            WidthMm = widthMm,
+            DepthMm = depthMm,
+            TreatmentGrade = "Non traité",
+            TreatmentDescription = "Aucune trace de traitement détectée.",
+            IsSynthetic = false,
+            AuthenticityGrade = "Naturelle",
+            AuthenticityDescription = "Signature Raman cohérente avec une croissance naturelle.",
+            GrowthStructureDescription = "Zones de croissance irrégulières et courbes, typiques d'une cristallisation naturelle lente.",
+            FinalValue = value,
+            ColorGrade = colorGrade,
+            DiamondClarity = clarityGrade,
+            Certificate = new DiamondCertificate
+            {
+                number = certificateNumber,
+                issuer = issuer,
+                issueDay = issueDay,
+                colorGrade = colorGrade,
+                clarityGrade = clarityGrade,
+                caratWeight = carat,
+                shape = shape,
+                cutStyle = style,
+            },
+        };
+        nextSpecimenNumber++;
+        return instance;
+    }
+
     public static GemInstance FromSaveData(GemDefinition definition, GemInstanceSaveData data)
     {
         var specimenId = string.IsNullOrEmpty(data.specimenId)
@@ -160,6 +219,21 @@ public class GemInstance
             AuthenticityDescription = data.authenticityDescription,
             GrowthStructureDescription = data.growthStructureDescription,
             FinalValue = data.finalValue,
+            ColorGrade = string.IsNullOrEmpty(data.colorGrade) ? null : data.colorGrade,
+            DiamondClarity = string.IsNullOrEmpty(data.diamondClarity) ? null : data.diamondClarity,
+            Certificate = string.IsNullOrEmpty(data.certificateNumber)
+                ? null
+                : new DiamondCertificate
+                {
+                    number = data.certificateNumber,
+                    issuer = data.certificateIssuer,
+                    issueDay = data.certificateDay,
+                    colorGrade = data.colorGrade,
+                    clarityGrade = data.diamondClarity,
+                    caratWeight = data.caratWeight,
+                    shape = data.cutShape,
+                    cutStyle = data.cutStyle,
+                },
         };
 
         for (var i = 0; i < data.measuredKeys.Count; i++)
@@ -202,6 +276,11 @@ public class GemInstance
             authenticityDescription = AuthenticityDescription,
             growthStructureDescription = GrowthStructureDescription,
             finalValue = FinalValue,
+            colorGrade = ColorGrade,
+            diamondClarity = DiamondClarity,
+            certificateNumber = Certificate?.number,
+            certificateIssuer = Certificate?.issuer,
+            certificateDay = Certificate != null ? Certificate.issueDay : 0,
             measuredKeys = new List<string>(measuredValues.Keys),
             measuredValues = new List<float>(measuredValues.Values),
             observedKeys = new List<string>(observedProperties),
