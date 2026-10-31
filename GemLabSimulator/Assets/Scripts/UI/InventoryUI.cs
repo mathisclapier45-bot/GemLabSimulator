@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
@@ -109,7 +110,15 @@ public class InventoryUI : MonoBehaviour
         iconImage.preserveAspect = true;
 
         var button = go.AddComponent<Button>();
-        button.onClick.AddListener(() => inventory.Select(gem));
+        button.onClick.AddListener(() =>
+        {
+            inventory.Select(gem);
+            GemTooltipUI.Instance?.Hide();
+            GemDetailUI.Instance?.Open(gem);
+        });
+
+        // Like the shelves of the GemStore: the stone grows a little under the mouse.
+        go.AddComponent<InventorySlotHover>().Icon = iconRect;
 
         RuntimeUIKit.AddEnvelopeBadge(go.transform, gem);
 
@@ -117,5 +126,23 @@ public class InventoryUI : MonoBehaviour
         dragSource.Gem = gem;
         dragSource.SourceContainer = inventory;
         dragSource.SetIcon(iconImage);
+    }
+}
+
+// Enlarges the stone icon of an inventory slot while the mouse is over it.
+public class InventorySlotHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+{
+    private const float HoverScale = 1.2f;
+
+    public RectTransform Icon;
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (Icon != null) Icon.localScale = Vector3.one * HoverScale;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (Icon != null) Icon.localScale = Vector3.one;
     }
 }

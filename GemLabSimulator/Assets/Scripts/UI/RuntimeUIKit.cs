@@ -40,6 +40,18 @@ public static class RuntimeUIKit
         }
     }
 
+    private static Sprite reportIcon;
+
+    // Small pixel-art sheet of paper with a gold seal: the laboratory report of a stone.
+    public static Sprite ReportIcon
+    {
+        get
+        {
+            if (reportIcon == null) reportIcon = MakeReportSprite();
+            return reportIcon;
+        }
+    }
+
     private static Sprite validated;
 
     // Small pixel-art green seal with a check mark: marks the slots that hold an identified stone.
@@ -78,6 +90,48 @@ public static class RuntimeUIKit
         var image = go.GetComponent<Image>();
         image.sprite = sprite;
         image.raycastTarget = false;
+    }
+
+    private static Sprite MakeReportSprite()
+    {
+        const int size = 12;
+        var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+        {
+            filterMode = FilterMode.Point,
+            wrapMode = TextureWrapMode.Clamp,
+        };
+
+        var clear = new Color(0f, 0f, 0f, 0f);
+        var outline = new Color(0.25f, 0.22f, 0.18f, 1f);
+        var paper = new Color(0.97f, 0.95f, 0.88f, 1f);
+        var ink = new Color(0.55f, 0.50f, 0.42f, 1f);
+        var seal = new Color(0.90f, 0.70f, 0.20f, 1f);
+
+        for (var y = 0; y < size; y++)
+            for (var x = 0; x < size; x++)
+                texture.SetPixel(x, y, clear);
+
+        void Px(int x, int y, Color c) => texture.SetPixel(x, y, c);
+
+        // Sheet from x 2..9 and y 0..11 (y = 0 is the bottom), outline around a paper-colored body.
+        for (var y = 0; y <= 11; y++)
+            for (var x = 2; x <= 9; x++)
+                Px(x, y, x == 2 || x == 9 || y == 0 || y == 11 ? outline : paper);
+
+        // Cut top-right corner.
+        Px(9, 11, clear); Px(8, 11, clear); Px(9, 10, clear);
+        Px(8, 10, outline);
+
+        // Lines of text.
+        foreach (var row in new[] { 9, 7, 5 })
+            for (var x = 4; x <= 7; x++)
+                Px(x, row, ink);
+
+        // Seal.
+        Px(4, 2, seal); Px(5, 2, seal); Px(4, 3, seal); Px(5, 3, seal);
+
+        texture.Apply();
+        return Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
     }
 
     private static Sprite MakeValidatedSprite()

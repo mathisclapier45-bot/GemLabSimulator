@@ -275,6 +275,7 @@ public static class SceneBootstrap
         CreateDeskStation("TesteurElectrique", ExaminationTool.MeasurementType.ElectricalConductivity, 25.5f, bottomDeskY, true, true);
 
         CreateDirector(new Vector3(26, 0, 0f));
+        CreateReportPrinter(23.4f, -0.7f);
         DecorateHome();
 
         CreateUI(true);
@@ -3396,6 +3397,25 @@ public static class SceneBootstrap
         go.transform.position = centerPosition + new Vector3(0f, -0.5f, 0f);
         if (col != null) col.offset = new Vector2(0f, 0.5f);
         return true;
+    }
+
+    // The printer of the GemLab reports, on a desk beside the professor. Pressing E in front of it opens its interface.
+    private static void CreateReportPrinter(float x, float feetY)
+    {
+        PlaceFurniture("off_desk", new Vector3(x, feetY, 0f));
+
+        var printer = PlaceFurniture("off_printer", new Vector3(x, feetY + 0.9f, 0f));
+        if (printer == null) return;
+
+        printer.name = "Imprimante";
+        printer.GetComponent<SpriteRenderer>().sortingOrder = 5;
+
+        var trigger = printer.AddComponent<BoxCollider2D>();
+        trigger.isTrigger = true;
+        trigger.size = new Vector2(3.2f, 3.4f);
+        trigger.offset = new Vector2(0f, -0.4f);
+
+        printer.AddComponent<ReportPrinterInteractable>();
     }
 
     private static void CreateDirector(Vector3 position)

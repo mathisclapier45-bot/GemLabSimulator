@@ -132,8 +132,13 @@ public class MailboxUI : MonoBehaviour
         for (var i = 0; i < sendable.Count; i++)
         {
             var gem = sendable[i];
-            var row = CreateRow(i, $"{gem.Definition.displayName} (N° {gem.DisplayId}) — rapport : {gem.IdentificationReportFee}€");
+            // The client wants the printed GemLab report with the stone.
+            var label = gem.HasReport
+                ? $"{gem.Definition.displayName} (N° {gem.DisplayId}) — rapport : {gem.IdentificationReportFee}€"
+                : $"{gem.Definition.displayName} (N° {gem.DisplayId}) — rapport GemLab à imprimer";
+            var row = CreateRow(i, label);
             var button = CreateRowButton(row.transform, "Envoyer");
+            button.interactable = gem.HasReport;
             button.onClick.AddListener(() => SendGem(gem));
         }
         return sendable.Count;
@@ -164,6 +169,12 @@ public class MailboxUI : MonoBehaviour
     private void SendGem(GemInstance gem)
     {
         if (PlayerInventory.Instance == null || PlayerWallet.Instance == null) return;
+
+        if (!gem.HasReport)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage("Le client attend le rapport GemLab : imprimez-le d'abord à l'imprimante du laboratoire.");
+            return;
+        }
 
         // The client pays for the identification report, by weight of the stone.
         var fee = gem.IdentificationReportFee;

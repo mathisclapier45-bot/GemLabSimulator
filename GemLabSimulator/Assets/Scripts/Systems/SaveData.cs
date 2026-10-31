@@ -46,6 +46,9 @@ public class GemInstanceSaveData
     public float colorBrightness;
     public bool isFancyDiamond;
     public string tradeName;
+    public bool hasReport;
+    public string reportNumber;
+    public int reportDay;
     public string diamondClarity;
     public string certificateNumber;
     public string certificateIssuer;

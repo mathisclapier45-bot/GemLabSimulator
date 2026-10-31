@@ -31,6 +31,19 @@ public class GemInstance
     public string ColorName { get; private set; }
     public string TradeName { get; private set; }
 
+    // GemLab laboratory report printed for this stone (see ReportPrinterUI). It describes the stone as it was examined,
+    // so cutting it again cancels it.
+    public bool HasReport { get; private set; }
+    public string ReportNumber { get; private set; }
+    public int ReportDay { get; private set; }
+
+    public void IssueReport(int day)
+    {
+        HasReport = true;
+        ReportDay = day;
+        ReportNumber = $"GL-{100000 + StoneOptics.StableHash((SpecimenId ?? "") + "|report") % 900000}";
+    }
+
     private GemColorValue ColorValue => new GemColorValue(ColorHue, ColorSaturation, ColorBrightness);
     public Color BodyColor => HasColor ? GemColorSystem.BodyColor(ColorValue) : Definition.iconColor;
     public Color FacetColor => HasColor ? GemColorSystem.FacetColor(ColorValue) : Definition.iconFacetColor;
@@ -334,6 +347,12 @@ public class GemInstance
                 instance.SetDiamondLetterColor(DiamondGrading.ColorScale.IndexOf(instance.ColorGrade[0]), DiamondGrading.ColorDescription(DiamondGrading.ColorScale.IndexOf(instance.ColorGrade[0])));
             instance.TradeName = string.IsNullOrEmpty(data.tradeName) ? null : data.tradeName;
         }
+        if (data.hasReport)
+        {
+            instance.HasReport = true;
+            instance.ReportNumber = data.reportNumber;
+            instance.ReportDay = data.reportDay;
+        }
         else if (definition != null)
         {
             // Older saves have no color: give the stone a stable one from its specimen number.
@@ -388,6 +407,9 @@ public class GemInstance
             colorBrightness = ColorBrightness,
             isFancyDiamond = IsFancyDiamond,
             tradeName = TradeName,
+            hasReport = HasReport,
+            reportNumber = ReportNumber,
+            reportDay = ReportDay,
             diamondClarity = DiamondClarity,
             certificateNumber = Certificate?.number,
             certificateIssuer = Certificate?.issuer,
@@ -433,6 +455,7 @@ public class GemInstance
         measuredValues.Remove(DimensionReport.DepthKey);
         observedProperties.Remove(ExaminationTool.MeasurementType.Dimensions.ToString());
 
+        HasReport = false;
         CaratWeight = newCaratWeight;
         FinalValue = newFinalValue;
         CutShape = shape;

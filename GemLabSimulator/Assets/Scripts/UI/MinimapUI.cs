@@ -14,10 +14,10 @@ public class MinimapUI : MonoBehaviour
     private const int PixelsPerUnit = 4;
 
     // Must match the town bounds in SceneBootstrap.cs (cells -70..70 and -60..45, inclusive).
-    private const int MapMinX = -70;
-    private const int MapMaxX = 71;
-    private const int MapMinY = -60;
-    private const int MapMaxY = 46;
+    public const int MapMinX = -70;
+    public const int MapMaxX = 71;
+    public const int MapMinY = -60;
+    public const int MapMaxY = 46;
 
     private static readonly Color Gold = new Color(0.86f, 0.70f, 0.36f, 1f);
     private static readonly Color GoldDark = new Color(0.45f, 0.32f, 0.14f, 1f);
@@ -60,6 +60,35 @@ public class MinimapUI : MonoBehaviour
         { "WatchStore", "montre" },
     };
 
+    // Names of the buildings as shown on the big map (the town map opened with C).
+    private static readonly Dictionary<string, string> DisplayNames = new Dictionary<string, string>
+    {
+        { "Musee", "Musée" },
+        { "Marche aux Pierres", "Marché aux Pierres" },
+        { "Marche aux Brutes", "Marché aux Brutes" },
+        { "Ecole", "École" },
+        { "Aeroport", "Aéroport" },
+        { "Bibliotheque", "Bibliothèque" },
+        { "Banque et Encheres", "Banque et Enchères" },
+        { "Concessionnaire Automobile", "Concessionnaire" },
+        { "Maison & Bureau de Gemmologie", "Maison & Bureau" },
+        { "Immeuble des Diamantaires", "Diamantaires" },
+        { "Laboratoire de Gemmologie", "Laboratoire" },
+        { "Maison de Vincent Pardieu", "Maison de V. Pardieu" },
+    };
+
+    // What the town looked like the last time it was loaded: the big map (C) draws from it, also from inside a building.
+    public struct BuildingIcon
+    {
+        public Vector2 World;
+        public string Key;
+        public string Name;
+        public bool Accessible;
+    }
+
+    public static Texture2D SharedMap { get; private set; }
+    public static readonly List<BuildingIcon> SharedIcons = new List<BuildingIcon>();
+
     private const float IconSize = 20f;
     private readonly List<(Vector2 world, RectTransform rect)> buildingIcons = new List<(Vector2, RectTransform)>();
 
@@ -91,12 +120,13 @@ public class MinimapUI : MonoBehaviour
     private void Awake()
     {
         BuildMapTexture();
+        SharedIcons.Clear();
         BuildFrame();
     }
 
+    // The texture outlives the scene (the big map uses it everywhere): the next town load replaces it.
     private void OnDestroy()
     {
-        if (mapTexture != null) Destroy(mapTexture);
     }
 
     // ---- Map drawing ---------------------------------------------------------------------------------------
@@ -142,6 +172,9 @@ public class MinimapUI : MonoBehaviour
 
         mapTexture.SetPixels32(pixels);
         mapTexture.Apply();
+
+        if (SharedMap != null) Destroy(SharedMap);
+        SharedMap = mapTexture;
     }
 
     private static Tilemap FindTilemap(string name)
@@ -270,7 +303,6 @@ public class MinimapUI : MonoBehaviour
     // One small badge per building, placed over the map (clipped by the disc, so it slides in and out at the edge).
     private void BuildIcons(Transform parent)
     {
-        var circle = RuntimeUIKit.MakeRoundedSprite(64, 32);
         foreach (var door in FindObjectsByType<DoorTrigger>(FindObjectsSortMode.None))
         {
             var renderer = door.GetComponent<SpriteRenderer>();
@@ -283,27 +315,42 @@ public class MinimapUI : MonoBehaviour
             var world = new Vector2(bounds.center.x, bounds.min.y + Mathf.Min(bounds.size.y, 8f) / 2f);
             var accessible = door.IsAccessible;
 
-            var badge = MakeDisc("Icon_" + key, parent, circle, IconSize + 8f,
-                accessible ? new Color(0.20f, 0.15f, 0.07f, 0.92f) : new Color(0.20f, 0.20f, 0.23f, 0.85f));
-            var ring = MakeDisc("Ring", badge.transform, circle, IconSize + 8f, accessible ? Gold : new Color(0.55f, 0.55f, 0.60f, 1f));
-            ring.rectTransform.sizeDelta = new Vector2(IconSize + 8f, IconSize + 8f);
-            var inner = MakeDisc("Inner", badge.transform, circle, IconSize + 4f, accessible ? new Color(0.20f, 0.15f, 0.07f, 1f) : new Color(0.20f, 0.20f, 0.23f, 1f));
+            var badge = CreateBadge("Icon_" + key, parent, sprite, accessible, IconSize);
 
-            var iconGO = new GameObject("Glyph", typeof(RectTransform), typeof(Image));
-            iconGO.transform.SetParent(badge.transform, false);
-            var iconRect = iconGO.GetComponent<RectTransform>();
-            iconRect.anchorMin = iconRect.anchorMax = new Vector2(0.5f, 0.5f);
-            iconRect.pivot = new Vector2(0.5f, 0.5f);
-            iconRect.sizeDelta = new Vector2(IconSize - 2f, IconSize - 2f);
-            iconRect.anchoredPosition = Vector2.zero;
-            var iconImage = iconGO.GetComponent<Image>();
-            iconImage.sprite = sprite;
-            iconImage.color = accessible ? Color.white : new Color(1f, 1f, 1f, 0.7f);
-            iconImage.raycastTarget = false;
-            inner.raycastTarget = false;
-
-            buildingIcons.Add((world, badge.rectTransform));
+            SharedIcons.Add(new BuildingIcon
+            {
+                World = world,
+                Key = key,
+                Name = DisplayNames.TryGetValue(door.gameObject.name, out var display) ? display : door.gameObject.name,
+                Accessible = accessible,
+            });
+            buildingIcons.Add((world, badge));
         }
+    }
+
+    // Round badge with a ring and the glyph of a building, used by the minimap and by the big town map.
+    public static RectTransform CreateBadge(string name, Transform parent, Sprite glyph, bool accessible, float iconSize)
+    {
+        var circle = RuntimeUIKit.MakeRoundedSprite(64, 32);
+        var badge = MakeDisc(name, parent, circle, iconSize + 8f,
+            accessible ? new Color(0.20f, 0.15f, 0.07f, 0.92f) : new Color(0.20f, 0.20f, 0.23f, 0.85f));
+        var ring = MakeDisc("Ring", badge.transform, circle, iconSize + 8f, accessible ? Gold : new Color(0.55f, 0.55f, 0.60f, 1f));
+        ring.rectTransform.sizeDelta = new Vector2(iconSize + 8f, iconSize + 8f);
+        var inner = MakeDisc("Inner", badge.transform, circle, iconSize + 4f, accessible ? new Color(0.20f, 0.15f, 0.07f, 1f) : new Color(0.20f, 0.20f, 0.23f, 1f));
+
+        var iconGO = new GameObject("Glyph", typeof(RectTransform), typeof(Image));
+        iconGO.transform.SetParent(badge.transform, false);
+        var iconRect = iconGO.GetComponent<RectTransform>();
+        iconRect.anchorMin = iconRect.anchorMax = new Vector2(0.5f, 0.5f);
+        iconRect.pivot = new Vector2(0.5f, 0.5f);
+        iconRect.sizeDelta = new Vector2(iconSize - 2f, iconSize - 2f);
+        iconRect.anchoredPosition = Vector2.zero;
+        var iconImage = iconGO.GetComponent<Image>();
+        iconImage.sprite = glyph;
+        iconImage.color = accessible ? Color.white : new Color(1f, 1f, 1f, 0.7f);
+        iconImage.raycastTarget = false;
+        inner.raycastTarget = false;
+        return badge.rectTransform;
     }
 
     private static Image MakeDisc(string name, Transform parent, Sprite circle, float size, Color color)
