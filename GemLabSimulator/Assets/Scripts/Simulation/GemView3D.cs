@@ -67,6 +67,12 @@ public class GemView3D
     public static void Colors(GemInstance gem, out Color body, out Color facet)
     {
         var def = gem.Definition;
+        if (gem.HasColor)
+        {
+            body = gem.BodyColor;
+            facet = gem.FacetColor;
+            return;
+        }
         body = def.iconColor.a > 0f ? def.iconColor : new Color(0.75f, 0.75f, 0.8f);
         facet = def.iconColor.a > 0f ? def.iconFacetColor : new Color(0.92f, 0.92f, 0.96f);
     }

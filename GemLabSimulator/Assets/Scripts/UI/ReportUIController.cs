@@ -103,7 +103,7 @@ public class ReportUIController : MonoBehaviour
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.VisualExamination.ToString()))
         {
             measured.Add($"Éclat : {gem.luster}");
-            measured.Add($"Couleur : {gem.color} ({gemInstance.SaturationGrade})");
+            measured.Add($"Couleur : {gemInstance.ColorDescription}");
             measured.Add($"Transparence : {gem.transparency}");
             measured.Add($"Forme : {gemInstance.ShapeName}");
             measured.Add($"Style de taille : {gemInstance.CutStyleName}");

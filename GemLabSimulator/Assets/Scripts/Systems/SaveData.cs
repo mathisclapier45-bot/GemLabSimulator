@@ -40,6 +40,12 @@ public class GemInstanceSaveData
 
     // Diamonds from the dealers: grades and certificate (empty for other stones).
     public string colorGrade;
+    public bool hasColor;
+    public float colorHue;
+    public float colorSaturation;
+    public float colorBrightness;
+    public bool isFancyDiamond;
+    public string tradeName;
     public string diamondClarity;
     public string certificateNumber;
     public string certificateIssuer;

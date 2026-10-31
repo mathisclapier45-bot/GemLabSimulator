@@ -22,6 +22,42 @@ public static class GemIconFactory
         return sprite;
     }
 
+    // Icon of a stone with its own color. The colors are quantized so near-identical stones share one sprite.
+    public static Sprite Get(GemDefinition def, string shape, string cutStyle, Color body, Color facet)
+    {
+        if (def == null) return null;
+        body = Quantize(body);
+        facet = Quantize(facet);
+
+        var key = $"{def.name}|{shape}|{cutStyle}|{ColorUtility.ToHtmlStringRGB(body)}|{ColorUtility.ToHtmlStringRGB(facet)}";
+        if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
+
+        var sprite = cutStyle != "Cabochon"
+            ? FacetedIcon(shape, cutStyle, body, facet)
+            : ToSprite(GemPixelArt.RenderGem(shape, cutStyle, body, facet));
+        Cache[key] = sprite;
+        return sprite;
+    }
+
+    public static Sprite GetRough(GemDefinition def, Color body)
+    {
+        if (def == null) return null;
+        body = Quantize(body);
+
+        var key = $"{def.name}|rough|{ColorUtility.ToHtmlStringRGB(body)}";
+        if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
+
+        var sprite = ToSprite(GemPixelArt.RenderRough(body, (int)StoneOptics.StableHash(def.name)));
+        Cache[key] = sprite;
+        return sprite;
+    }
+
+    private static Color Quantize(Color color)
+    {
+        const float steps = 31f;
+        return new Color(Mathf.Round(color.r * steps) / steps, Mathf.Round(color.g * steps) / steps, Mathf.Round(color.b * steps) / steps, 1f);
+    }
+
     // Icon of a faceted cut: the top view of its real facet mesh, with the proportions of its shape, filling the icon.
     private static Sprite FacetedIcon(string shape, string cutStyle, Color body, Color facet)
     {

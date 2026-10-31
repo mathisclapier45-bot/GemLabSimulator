@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Tourmaline_Paraiba
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "Tourmaline Para\xEFba"
+  description: "Une tourmaline cuprif\xE8re au bleu n\xE9on \xE9lectrique, parmi
+    les gemmes les plus rares et les plus ch\xE8res."
+  icon: {fileID: 21300000, guid: 72e7e39c14e5949d3b16cc62826d916e, type: 3}
+  roughIcon: {fileID: 21300000, guid: bd0a978be25604a638086f953ad19719, type: 3}
+  iconColor: {r: 0.1, g: 0.75, b: 0.9, a: 1}
+  iconFacetColor: {r: 0.55, g: 0.97, b: 1, a: 1}
+  refractiveIndex: 1.625
+  density: 3.06
+  hardness: 7.25
+  lengthMm: 7
+  widthMm: 5
+  depthMm: 3.5
+  weightCarats: 0.9
+  luster: Vitreux
+  color: "Bleu n\xE9on, vert bleut\xE9 ou violet"
+  shape: Ovale
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Bleu \xE9lectrique / Bleu verd\xE2tre selon l'axe d'observation
+    (marqu\xE9)."
+  fluorescenceLongWave: Aucune fluorescence notable.
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.018
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: Large bande d'absorption du cuivre dans le rouge.
+  spectrumLines:
+  - wavelengthNm: 650
+    widthNm: 40
+  inclusions: "Inclusions liquides, tubes et fractures cicatris\xE9es ; pierres souvent
+    chauff\xE9es."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 900
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: "Br\xE9sil (Para\xEDba)"
+    rarityWeight: 8
+    valueMultiplier: 2.5
+    inclusionOverride: "Gisement de Mina da Batalha, d\xE9couvert \xE0 la fin des
+      ann\xE9es 1980 : l'origine historique la plus recherch\xE9e."
+  - name: Mozambique
+    rarityWeight: 47
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Nigeria
+    rarityWeight: 45
+    valueMultiplier: 0.8
+    inclusionOverride: 

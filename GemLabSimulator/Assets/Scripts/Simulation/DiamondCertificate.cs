@@ -39,6 +39,16 @@ public static class DiamondGrading
 
     public static string Color(int index) => ColorScale[Mathf.Clamp(index, 0, ColorScale.Length - 1)].ToString();
 
+    // Plain-language description of the D-to-Z colour scale.
+    public static string ColorDescription(int index)
+    {
+        if (index <= 2) return "Incolore";
+        if (index <= 6) return "Presque incolore";
+        if (index <= 9) return "Jaune très léger";
+        if (index <= 13) return "Jaune léger";
+        return "Jaune clair";
+    }
+
     public static string Clarity(int index) => ClarityScale[Mathf.Clamp(index, 0, ClarityScale.Length - 1)];
 
     // Value of a stone in the game's currency: reference 1 ct, G colour, VS2 = about 1100.

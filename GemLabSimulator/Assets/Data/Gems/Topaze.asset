@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Topaze
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Topaze
+  description: "Une topaze, de l'incolore au bleu Swiss ou \xE0 l'orange imp\xE9rial,
+    tr\xE8s vari\xE9e en couleur."
+  icon: {fileID: 21300000, guid: 7ec226c71680a47a98ea7d0bc7e588b4, type: 3}
+  roughIcon: {fileID: 21300000, guid: 697003f15ff4341e295bdb56ebd1163b, type: 3}
+  iconColor: {r: 0.45, g: 0.72, b: 0.9, a: 1}
+  iconFacetColor: {r: 0.78, g: 0.92, b: 1, a: 1}
+  refractiveIndex: 1.62
+  density: 3.53
+  hardness: 8
+  lengthMm: 9
+  widthMm: 7
+  depthMm: 4.6
+  weightCarats: 2
+  luster: Vitreux
+  color: Incolore, bleu, jaune, orange ou rose
+  shape: Ovale
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: 'Faible : nuances proches de la couleur du corps selon l''axe.'
+  fluorescenceLongWave: "Faible, jaun\xE2tre \xE0 verd\xE2tre selon la couleur."
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  opticalCharacterClass: 2
+  birefringence: 0.01
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique (la topaze imp\xE9riale
+    peut montrer des raies du chrome)."
+  spectrumLines: []
+  inclusions: "Inclusions liquides \xE0 deux phases, fissures de clivage fr\xE9quentes."
+  interferenceFigure: "Figure d'interf\xE9rence biaxiale."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 35
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: "Br\xE9sil"
+    rarityWeight: 40
+    valueMultiplier: 1.2
+    inclusionOverride: 
+  - name: Russie (Oural)
+    rarityWeight: 15
+    valueMultiplier: 1.1
+    inclusionOverride: 
+  - name: Pakistan
+    rarityWeight: 20
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Nigeria
+    rarityWeight: 15
+    valueMultiplier: 0.9
+    inclusionOverride: 
+  - name: Sri Lanka
+    rarityWeight: 10
+    valueMultiplier: 1
+    inclusionOverride: 

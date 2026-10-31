@@ -3634,7 +3634,7 @@ public static class SceneBootstrap
         "Péridot", "Spinelle Bleu", "Saphir Bleu", "Zircon", "Diamant",
         "Améthyste", "Grenat Spessartite", "Émeraude",
         "Grenat Pyrope", "Grenat Tsavorite", "Grenat Hessonite",
-        "Tanzanite", "Iolite", "Kunzite", "Tourmaline Rose", "Diopside Chromifère",
+        "Tanzanite", "Iolite", "Kunzite", "Tourmaline Rose", "Tourmaline Paraïba", "Topaze", "Diopside Chromifère",
         "Héliodore", "Morganite", "Goshénite", "Apatite", "Andalousite",
         "Chrysobéryl", "Chrysobéryl Alexandrite", "CZ", "Moissanite Synthétique",
         "Fluorite", "Grenat Démantoïde", "Hématite", "Pezzottaite", "Pyrite",
@@ -5547,6 +5547,90 @@ public static class SceneBootstrap
                     new GemOrigin { name = "Afghanistan", rarityWeight = 25, valueMultiplier = 1.0f },
                     new GemOrigin { name = "Madagascar", rarityWeight = 25, valueMultiplier = 1.0f },
                     new GemOrigin { name = "Nigeria", rarityWeight = 15, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Topaze", g =>
+            {
+                g.displayName = "Topaze";
+                g.description = "Une topaze, de l'incolore au bleu Swiss ou à l'orange impérial, très variée en couleur.";
+                g.icon = GetGemIconSprite("topaze", new Color(0.45f, 0.72f, 0.90f), new Color(0.78f, 0.92f, 1.00f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("topaze", new Color(0.45f, 0.72f, 0.90f), "Ovale");
+                g.refractiveIndex = 1.620f;
+                g.density = 3.53f;
+                g.hardness = 8.0f;
+                g.lengthMm = 9.0f;
+                g.widthMm = 7.0f;
+                g.depthMm = 4.6f;
+                g.weightCarats = 2.0f;
+                g.luster = "Vitreux";
+                g.color = "Incolore, bleu, jaune, orange ou rose";
+                g.shape = "Ovale";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Faible : nuances proches de la couleur du corps selon l'axe.";
+                g.fluorescenceLongWave = "Faible, jaunâtre à verdâtre selon la couleur.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.010f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique (la topaze impériale peut montrer des raies du chrome).";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Inclusions liquides à deux phases, fissures de clivage fréquentes.";
+                g.interferenceFigure = "Figure d'interférence biaxiale.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 35;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil", rarityWeight = 40, valueMultiplier = 1.2f },
+                    new GemOrigin { name = "Russie (Oural)", rarityWeight = 15, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "Pakistan", rarityWeight = 20, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Nigeria", rarityWeight = 15, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "Sri Lanka", rarityWeight = 10, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Tourmaline_Paraiba", g =>
+            {
+                g.displayName = "Tourmaline Paraïba";
+                g.description = "Une tourmaline cuprifère au bleu néon électrique, parmi les gemmes les plus rares et les plus chères.";
+                g.icon = GetGemIconSprite("tourmalineparaiba", new Color(0.10f, 0.75f, 0.90f), new Color(0.55f, 0.97f, 1.00f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("tourmalineparaiba", new Color(0.10f, 0.75f, 0.90f), "Ovale");
+                g.refractiveIndex = 1.625f;
+                g.density = 3.06f;
+                g.hardness = 7.25f;
+                g.lengthMm = 7.0f;
+                g.widthMm = 5.0f;
+                g.depthMm = 3.5f;
+                g.weightCarats = 0.9f;
+                g.luster = "Vitreux";
+                g.color = "Bleu néon, vert bleuté ou violet";
+                g.shape = "Ovale";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Bleu électrique / Bleu verdâtre selon l'axe d'observation (marqué).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.018f;
+                g.absorptionSpectrum = "Large bande d'absorption du cuivre dans le rouge.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 650f, widthNm = 40f },
+                };
+                g.inclusions = "Inclusions liquides, tubes et fractures cicatrisées ; pierres souvent chauffées.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 900;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil (Paraíba)", rarityWeight = 8, valueMultiplier = 2.5f,
+                        inclusionOverride = "Gisement de Mina da Batalha, découvert à la fin des années 1980 : l'origine historique la plus recherchée." },
+                    new GemOrigin { name = "Mozambique", rarityWeight = 47, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Nigeria", rarityWeight = 45, valueMultiplier = 0.8f },
                 };
             }),
             BuildGem("Diopside_Chromifere", g =>

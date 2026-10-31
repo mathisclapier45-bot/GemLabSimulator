@@ -18,7 +18,26 @@ public class GemInstance
     public bool IsIdentified { get; private set; }
 
     public GemOrigin Origin { get; private set; }
+    // Tone / saturation step of the color ("Vif", "Pastel", "Profond"...). The full description is ColorName.
     public string SaturationGrade { get; private set; }
+
+    // Color in the HSB model of the gemology labs, graded like a lab report ("Rouge vif", "Rose pastel"...). Rare colors carry
+    // a trade name ("Sang de pigeon", "Bleu royal", "Padparadscha"...), only awarded to clean, untreated stones.
+    public bool HasColor { get; private set; }
+    public float ColorHue { get; private set; }
+    public float ColorSaturation { get; private set; }
+    public float ColorBrightness { get; private set; }
+    public bool IsFancyDiamond { get; private set; }
+    public string ColorName { get; private set; }
+    public string TradeName { get; private set; }
+
+    private GemColorValue ColorValue => new GemColorValue(ColorHue, ColorSaturation, ColorBrightness);
+    public Color BodyColor => HasColor ? GemColorSystem.BodyColor(ColorValue) : Definition.iconColor;
+    public Color FacetColor => HasColor ? GemColorSystem.FacetColor(ColorValue) : Definition.iconFacetColor;
+
+    // Color and trade name as one line: "Rouge vif — Sang de pigeon".
+    public string ColorDescription => string.IsNullOrEmpty(TradeName) ? ColorName : $"{ColorName} — {TradeName}";
+
     public string ClarityGrade { get; private set; }
     public string ClarityDescription { get; private set; }
     public string InclusionDescription { get; private set; }
@@ -77,8 +96,10 @@ public class GemInstance
     {
         get
         {
-            if (IsRough) return Definition.GetRoughIcon();
-            return GemIconFactory.Get(Definition, ShapeName, CutStyleName);
+            if (IsRough) return HasColor ? GemIconFactory.GetRough(Definition, BodyColor) : Definition.GetRoughIcon();
+            return HasColor
+                ? GemIconFactory.Get(Definition, ShapeName, CutStyleName, BodyColor, FacetColor)
+                : GemIconFactory.Get(Definition, ShapeName, CutStyleName);
         }
     }
 
@@ -95,8 +116,12 @@ public class GemInstance
 
         Origin = forcedOrigin ?? GemGrading.PickOrigin(definition.origins);
 
-        var saturation = GemGrading.PickWeighted(GemGrading.SaturationGrades);
-        SaturationGrade = saturation.Name;
+        // A few percent of the diamonds are colored ("fancy"); every other color follows the species' own color range.
+        var fancy = definition.name == "Diamant" && Random.value < 0.04f;
+        var colorValue = fancy
+            ? GemColorSystem.SampleFancyDiamond(() => Random.value)
+            : GemColorSystem.Sample(definition, () => Random.value);
+        var colorGrade = SetColor(colorValue, fancy);
 
         var clarity = GemGrading.PickWeighted(GemGrading.ClarityGrades);
         ClarityGrade = clarity.Name;
@@ -134,9 +159,44 @@ public class GemInstance
             ? "Zones de croissance régulières, motifs anguleux ou courbes concentriques artificielles, typiques d'une croissance accélérée en laboratoire."
             : "Zones de croissance irrégulières et courbes, typiques d'une cristallisation naturelle lente.";
 
+        // Trade names are only awarded to clean stones with no treatment other than heating.
+        var cleanStone = (clarity.Name == "Eye-clean" || clarity.Name == "Loupe clean")
+                         && (treatment.Name == "Non traité" || treatment.Name == "Chauffé") && !IsSynthetic;
+        TradeName = cleanStone ? GemColorSystem.TradeName(definition.name, colorValue) : null;
+
+        var colorMultiplier = colorGrade.ValueMultiplier * GemColorSystem.TradeMultiplier(TradeName)
+                              * (fancy ? GemColorSystem.FancyDiamondRarity(colorValue) : 1f);
+
         FinalValue = Mathf.RoundToInt(
-            definition.baseValue * Origin.valueMultiplier * saturation.Multiplier * clarity.Multiplier *
+            definition.baseValue * Origin.valueMultiplier * colorMultiplier * clarity.Multiplier *
             sizeValueMultiplier * treatment.Multiplier * authenticity.Multiplier);
+    }
+
+    private GemColorGrade SetColor(GemColorValue color, bool fancy)
+    {
+        HasColor = true;
+        ColorHue = color.Hue;
+        ColorSaturation = color.Saturation;
+        ColorBrightness = color.Brightness;
+        IsFancyDiamond = fancy;
+
+        var grade = GemColorSystem.Describe(color, fancy);
+        ColorName = grade.Name;
+        SaturationGrade = grade.Tone;
+        return grade;
+    }
+
+    // Dealer diamonds: the D-to-Z colorless scale, drawn as an ever so slightly yellow body from K on.
+    private void SetDiamondLetterColor(int colorIndex, string letterDescription)
+    {
+        var t = Mathf.Clamp01(colorIndex / 22f);
+        var color = new GemColorValue(Mathf.Lerp(215f, 52f, Mathf.Clamp01(colorIndex / 5f)), Mathf.Lerp(0.02f, 0.62f, t * t), Mathf.Lerp(0.96f, 0.90f, t));
+        HasColor = true;
+        ColorHue = color.Hue;
+        ColorSaturation = color.Saturation;
+        ColorBrightness = color.Brightness;
+        IsFancyDiamond = false;
+        ColorName = letterDescription;
     }
 
     private GemInstance()
@@ -202,6 +262,7 @@ public class GemInstance
             },
         };
         nextSpecimenNumber++;
+        instance.SetDiamondLetterColor(colorIndex, DiamondGrading.ColorDescription(colorIndex));
         return instance;
     }
 
@@ -266,6 +327,20 @@ public class GemInstance
                 },
         };
 
+        if (data.hasColor)
+        {
+            instance.SetColor(new GemColorValue(data.colorHue, data.colorSaturation, data.colorBrightness), data.isFancyDiamond);
+            if (!string.IsNullOrEmpty(instance.ColorGrade) && !data.isFancyDiamond)
+                instance.SetDiamondLetterColor(DiamondGrading.ColorScale.IndexOf(instance.ColorGrade[0]), DiamondGrading.ColorDescription(DiamondGrading.ColorScale.IndexOf(instance.ColorGrade[0])));
+            instance.TradeName = string.IsNullOrEmpty(data.tradeName) ? null : data.tradeName;
+        }
+        else if (definition != null)
+        {
+            // Older saves have no color: give the stone a stable one from its specimen number.
+            var rng = new System.Random((int)StoneOptics.StableHash(specimenId));
+            instance.SetColor(GemColorSystem.Sample(definition, () => (float)rng.NextDouble()), false);
+        }
+
         for (var i = 0; i < data.measuredKeys.Count; i++)
             instance.measuredValues[data.measuredKeys[i]] = data.measuredValues[i];
         foreach (var key in data.observedKeys)
@@ -307,6 +382,12 @@ public class GemInstance
             growthStructureDescription = GrowthStructureDescription,
             finalValue = FinalValue,
             colorGrade = ColorGrade,
+            hasColor = HasColor,
+            colorHue = ColorHue,
+            colorSaturation = ColorSaturation,
+            colorBrightness = ColorBrightness,
+            isFancyDiamond = IsFancyDiamond,
+            tradeName = TradeName,
             diamondClarity = DiamondClarity,
             certificateNumber = Certificate?.number,
             certificateIssuer = Certificate?.issuer,

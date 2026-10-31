@@ -354,7 +354,7 @@ public class LoupeUI : MonoBehaviour
             var def = stone.Definition;
             stone.RecordObservation(ExaminationTool.MeasurementType.VisualExamination.ToString());
             ToolFeedbackUI.Instance?.ShowMessage(
-                $"Loupe — Éclat : {def.luster} | Couleur : {def.color} ({stone.SaturationGrade}) | " +
+                $"Loupe — Éclat : {def.luster} | Couleur : {stone.ColorName} | " +
                 $"Transparence : {def.transparency} | Forme : {stone.ShapeName} | Style de taille : {stone.CutStyleName}");
             UpdateTexts();
         }
@@ -627,7 +627,7 @@ public class LoupeUI : MonoBehaviour
         var text = marketMode ? $"Poids : {stone.CaratWeight:F2} ct\n\n" : "";
         if (visualObserved)
         {
-            text += $"Éclat : {def.luster}\nCouleur : {def.color}\nTransparence : {def.transparency}\n" +
+            text += $"Éclat : {def.luster}\nCouleur : {stone.ColorName}\nTransparence : {def.transparency}\n" +
                     $"Forme : {stone.ShapeName}\nTaille : {stone.CutStyleName}\n" +
                     (stone.FacetSummary != null ? $"Facettes : {stone.FacetSummary}\n" : "") + "\n";
         }
