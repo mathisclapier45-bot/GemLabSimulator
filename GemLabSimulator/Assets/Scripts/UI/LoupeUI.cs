@@ -27,11 +27,7 @@ public class LoupeUI : MonoBehaviour
     private class FeatureView
     {
         public LoupeFeature Feature;
-        public readonly List<Image> Parts = new List<Image>();
-        public readonly List<Vector2> Offsets = new List<Vector2>();
-        public readonly List<float> Widths = new List<float>();
-        public readonly List<float> Heights = new List<float>();
-        public Color Color;
+        public List<InclusionPart> Parts;
     }
 
     private GameObject panel;
@@ -40,6 +36,11 @@ public class LoupeUI : MonoBehaviour
     private Image stoneImage;
     private GemView3D view3D;
     private readonly List<FeatureView> features = new List<FeatureView>();
+    private RawImage overlayImage;       // the stone's picture with its inclusions painted inside it
+    private Texture2D overlayTexture;
+    private Color32[] overlayBuffer;
+    private Color32[] overlayBase;           // the stone alone, before its inclusions
+    private FeaturePainter overlayPainter;
     private Text hintText;
     private Text resultText;
     private Text rotationText;
@@ -114,6 +115,7 @@ public class LoupeUI : MonoBehaviour
     private void OnDestroy()
     {
         if (PlayerInventory.Instance != null) PlayerInventory.Instance.OnInventoryChanged -= RefreshIfOpen;
+        if (overlayTexture != null) Destroy(overlayTexture);
     }
 
     public void Open()
@@ -355,7 +357,7 @@ public class LoupeUI : MonoBehaviour
             stone.RecordObservation(ExaminationTool.MeasurementType.VisualExamination.ToString());
             ToolFeedbackUI.Instance?.ShowMessage(
                 $"Loupe — Éclat : {def.luster} | Couleur : {stone.ColorName} | " +
-                $"Transparence : {def.transparency} | Forme : {stone.ShapeName} | Style de taille : {stone.CutStyleName}");
+                $"Transparence : {def.TransparencyLabel} | Forme : {stone.ShapeName} | Style de taille : {stone.CutStyleName}");
             UpdateTexts();
         }
     }
@@ -364,13 +366,6 @@ public class LoupeUI : MonoBehaviour
 
     private void ClearFeatureViews()
     {
-        foreach (var view in features)
-        {
-            foreach (var part in view.Parts)
-            {
-                if (part != null) Destroy(part.gameObject);
-            }
-        }
         features.Clear();
     }
 
@@ -379,97 +374,13 @@ public class LoupeUI : MonoBehaviour
         ClearFeatureViews();
         if (stone == null) return;
 
-        var rng = new System.Random((int)StoneOptics.StableHash((stone.SpecimenId ?? "") + "parts"));
+        var index = 0;
         foreach (var feature in LoupeFeatures.Generate(stone))
         {
-            var view = new FeatureView { Feature = feature };
-            var size = feature.Size;
-
-            switch (feature.Kind)
-            {
-                case FeatureKind.Crystal:
-                    view.Color = new Color(0.93f, 0.94f, 0.88f, 0.85f);
-                    AddPart(view, Vector2.zero, 7f + size * 11f, 4f + size * 5f, false);
-                    AddPart(view, new Vector2(2f, -1.5f), 5f + size * 8f, 3f + size * 3f, false, 0.35f);
-                    break;
-                case FeatureKind.Fluid:
-                    view.Color = new Color(0.9f, 0.95f, 1f, 0.7f);
-                    for (var i = 0; i < 4; i++)
-                        AddPart(view, new Vector2(Rnd(rng, -9f, 9f), Rnd(rng, -9f, 9f)), 3f + size * 3f, 3f + size * 3f, true);
-                    break;
-                case FeatureKind.Bubble:
-                    view.Color = new Color(1f, 1f, 1f, 0.75f);
-                    AddPart(view, Vector2.zero, 7f + size * 7f, 7f + size * 7f, true);
-                    break;
-                case FeatureKind.Fracture:
-                    view.Color = new Color(1f, 1f, 1f, 0.55f);
-                    AddPart(view, Vector2.zero, 24f + size * 24f, 1.6f, false);
-                    AddPart(view, new Vector2(14f, 3f), 14f + size * 12f, 1.4f, false, 0.8f);
-                    break;
-                case FeatureKind.Cleavage:
-                    view.Color = new Color(0.95f, 0.97f, 1f, 0.5f);
-                    AddPart(view, new Vector2(0f, 3f), 30f + size * 26f, 1.4f, false);
-                    AddPart(view, new Vector2(0f, -3f), 30f + size * 26f, 1.4f, false);
-                    break;
-                case FeatureKind.Healing:
-                    view.Color = new Color(1f, 1f, 1f, 0.7f);
-                    for (var i = -3; i <= 3; i++)
-                        AddPart(view, new Vector2(i * (4f + size * 2f), Mathf.Sin(i * 0.9f) * 3f), 2.5f + size, 2.5f + size, true);
-                    break;
-                case FeatureKind.Needle:
-                    view.Color = new Color(1f, 0.97f, 0.85f, 0.6f);
-                    for (var i = -2; i <= 1; i++)
-                        AddPart(view, new Vector2(i * 4f + 2f, i * 1.5f), 24f + size * 22f, 1.1f, false);
-                    break;
-                case FeatureKind.Zoning:
-                    view.Color = new Color(1f, 1f, 1f, 0.16f);
-                    AddPart(view, Vector2.zero, 60f + size * 40f, 9f, false);
-                    break;
-                case FeatureKind.Scratch:
-                    view.Color = new Color(1f, 1f, 1f, 0.8f);
-                    AddPart(view, Vector2.zero, 14f + size * 22f, 1.2f, false);
-                    break;
-                case FeatureKind.Chip:
-                    view.Color = new Color(0.10f, 0.10f, 0.12f, 0.9f);
-                    AddPart(view, Vector2.zero, 7f + size * 7f, 5f + size * 4f, false);
-                    break;
-                case FeatureKind.Pit:
-                    view.Color = new Color(0.08f, 0.08f, 0.10f, 0.85f);
-                    AddPart(view, Vector2.zero, 4f + size * 4f, 4f + size * 4f, true);
-                    break;
-                default:    // Abrasion
-                    view.Color = new Color(0.92f, 0.92f, 0.94f, 0.35f);
-                    AddPart(view, Vector2.zero, 16f + size * 14f, 9f + size * 6f, false);
-                    break;
-            }
-
-            features.Add(view);
+            var rng = new System.Random((int)StoneOptics.StableHash((stone.SpecimenId ?? "") + "shape" + index));
+            index++;
+            features.Add(new FeatureView { Feature = feature, Parts = InclusionShapes.Build(feature, rng) });
         }
-    }
-
-    private static float Rnd(System.Random rng, float min, float max)
-    {
-        return min + (float)rng.NextDouble() * (max - min);
-    }
-
-    private void AddPart(FeatureView view, Vector2 offset, float width, float height, bool round, float alphaScale = 1f)
-    {
-        var go = new GameObject("Part", typeof(RectTransform), typeof(Image));
-        go.transform.SetParent(content, false);
-        var rect = go.GetComponent<RectTransform>();
-        rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-        rect.pivot = new Vector2(0.5f, 0.5f);
-        rect.sizeDelta = new Vector2(width, height);
-
-        var image = go.GetComponent<Image>();
-        image.raycastTarget = false;
-        if (round) image.sprite = RuntimeUIKit.Glow;
-
-        view.Parts.Add(image);
-        view.Offsets.Add(offset);
-        view.Widths.Add(width);
-        view.Heights.Add(height);
-        image.color = new Color(view.Color.r, view.Color.g, view.Color.b, view.Color.a * alphaScale);
     }
 
     // ---- Display ---------------------------------------------------------------------------------------------
@@ -485,6 +396,7 @@ public class LoupeUI : MonoBehaviour
         if (stone == null)
         {
             stoneImage.enabled = false;
+            overlayImage.enabled = false;
             hintText.text = "Déposez une gemme sous la loupe";
         }
         else
@@ -514,7 +426,7 @@ public class LoupeUI : MonoBehaviour
         var uvMode = uvOn;
 
         // Under UV the stone itself is dark; its luminescence is a second, tinted render on top.
-        view3D.Draw(mesh, halfMm, orientation, uvMode ? GemPixelArt.Dim(body, 0.12f) : body, uvMode ? GemPixelArt.Dim(facet, 0.18f) : facet);
+        view3D.Draw(mesh, halfMm, orientation, uvMode ? GemPixelArt.Dim(body, 0.12f) : body, uvMode ? GemPixelArt.Dim(facet, 0.18f) : facet, stone.Definition.Diaphaneity, uvMode ? 0 : stone.AsterismRays);
 
         var side = Mathf.Max(half.x, half.y, half.z) * 2f / GemView3D.FitFraction;
         stoneRect.sizeDelta = new Vector2(side, side);
@@ -544,75 +456,128 @@ public class LoupeUI : MonoBehaviour
         rotationText.text = $"Parcouru : {Mathf.Min(explored, 360f):F0}° / 360°";
     }
 
+    private void EnsureOverlay(int size)
+    {
+        if (overlayTexture != null && overlayTexture.width == size) return;
+
+        if (overlayTexture != null) Destroy(overlayTexture);
+        overlayTexture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+        {
+            filterMode = FilterMode.Point,
+            wrapMode = TextureWrapMode.Clamp,
+        };
+        overlayBase = new Color32[size * size];
+        overlayBuffer = new Color32[size * size];
+        overlayPainter = new FeaturePainter(overlayBuffer, size, size, FeaturePainter.Mode.Composite);
+        overlayImage.texture = overlayTexture;
+    }
+
+    // The inclusions are painted into the picture of the stone itself, so they are really inside it: they only show where
+    // there is stone, deeper ones fade into the body color, and the facets' shade and glints stay in front of them.
+    // Surface defects (scratches, chips...) are painted last, on top.
     private void UpdateFeatures(Vector3 half)
     {
-        if (featureVisibility <= 0f)
+        if (featureVisibility <= 0f || stone == null)
         {
-            foreach (var hidden in features) SetViewVisible(hidden, false);
+            overlayImage.enabled = false;
+            stoneImage.enabled = stone != null;
             return;
         }
 
-        var hideInside = stone.IsRough && !stone.HasWindow;
-        foreach (var view in features)
+        var side = Mathf.Max(half.x, half.y, half.z) * 2f / GemView3D.FitFraction;
+        var size = Mathf.Clamp(Mathf.CeilToInt(side), 64, 512);
+        EnsureOverlay(size);
+        var ratio = size / side;
+        overlayImage.rectTransform.sizeDelta = new Vector2(side, side);
+        overlayImage.color = stoneImage.color;
+
+        // The stone as drawn, enlarged to the working size.
+        var source = view3D.Pixels;
+        var sourceSize = view3D.Size;
+        for (var y = 0; y < size; y++)
         {
-            var f = view.Feature;
-            Vector2 center;
-            float depthAlpha = 1f;
-
-            // A rough surface scatters light: the inside of an unwindowed rough stone cannot be seen.
-            if (!f.External && hideInside)
-            {
-                SetViewVisible(view, false);
-                continue;
-            }
-
-            if (f.External)
-            {
-                var worldNormal = orientation * f.Position;
-                var visible = worldNormal.z > 0.12f;
-                SetViewVisible(view, visible);
-                if (!visible) continue;
-
-                var surface = orientation * Vector3.Scale(f.Position, half);
-                center = new Vector2(surface.x, surface.y);
-                depthAlpha = Mathf.Clamp01(worldNormal.z * 1.6f);
-            }
-            else
-            {
-                var position = orientation * Vector3.Scale(f.Position, half);
-                center = new Vector2(position.x, position.y);
-                // Features deeper in the stone look fainter.
-                depthAlpha = Mathf.Lerp(0.35f, 1f, Mathf.InverseLerp(-half.z, half.z, position.z));
-                SetViewVisible(view, true);
-            }
-
-            // In-plane direction and foreshortening of an elongated feature.
-            var projectedDirection = orientation * f.Direction;
-            var directionLength = Mathf.Max(0.35f, new Vector2(projectedDirection.x, projectedDirection.y).magnitude);
-            var rotation = Mathf.Atan2(projectedDirection.y, projectedDirection.x);
-            var cos = Mathf.Cos(rotation);
-            var sin = Mathf.Sin(rotation);
-
-            for (var i = 0; i < view.Parts.Count; i++)
-            {
-                var part = view.Parts[i];
-                var offset = view.Offsets[i];
-                var rotated = new Vector2(offset.x * cos - offset.y * sin, offset.x * sin + offset.y * cos);
-                var rect = part.rectTransform;
-                rect.anchoredPosition = center + rotated;
-                rect.localEulerAngles = new Vector3(0f, 0f, rotation * Mathf.Rad2Deg);
-                rect.sizeDelta = new Vector2(view.Widths[i] * (view.Widths[i] > view.Heights[i] * 1.5f ? directionLength : 1f), view.Heights[i]);
-
-                var color = part.color;
-                color.a = view.Color.a * depthAlpha * featureVisibility * (i > 0 && f.Kind == FeatureKind.Crystal ? 0.35f : 1f);
-                part.color = color;
-            }
+            var row = (y * sourceSize / size) * sourceSize;
+            for (var x = 0; x < size; x++) overlayBase[y * size + x] = source[row + x * sourceSize / size];
         }
+        System.Array.Copy(overlayBase, overlayBuffer, overlayBase.Length);
+
+        GemView3D.Colors(stone, out var body, out _);
+        var host = Color.Lerp(Color.white, body, 0.30f);
+        var pxPerMm = PxPerMm * ratio;
+        var hideInside = stone.IsRough && !stone.HasWindow;
+
+        for (var pass = 0; pass < 2; pass++)
+        {
+            var surfacePass = pass == 1;
+            foreach (var view in features)
+            {
+                var f = view.Feature;
+                if (f.External != surfacePass) continue;
+
+                Vector2 center;
+                float depth;    // 0 = at the back of the stone, 1 = at the front
+
+                // A rough surface scatters light: the inside of an unwindowed rough stone cannot be seen.
+                if (!f.External && hideInside) continue;
+
+                if (f.External)
+                {
+                    var worldNormal = orientation * f.Position;
+                    if (worldNormal.z <= 0.12f) continue;
+
+                    var surface = orientation * Vector3.Scale(f.Position, half);
+                    center = new Vector2(surface.x, surface.y);
+                    depth = Mathf.Clamp01(worldNormal.z * 1.6f);
+                }
+                else
+                {
+                    var position = orientation * Vector3.Scale(f.Position, half);
+                    center = new Vector2(position.x, position.y);
+                    depth = Mathf.InverseLerp(-half.z, half.z, position.z);
+                }
+
+                // In-plane direction and foreshortening of an elongated feature.
+                var projected = orientation * f.Direction;
+                var along = new Vector2(projected.x, projected.y);
+                var foreshortening = Mathf.Max(0.35f, along.magnitude);
+                along = along.sqrMagnitude < 1e-6f ? Vector2.right : along.normalized;
+                var across = new Vector2(-along.y, along.x);
+
+                // Seen through the stone, a deep inclusion is fainter and takes on the color of the body.
+                var tint = f.External ? host : Color.Lerp(host, body, (1f - depth) * 0.55f);
+                var alpha = (f.External ? depth : Mathf.Lerp(0.35f, 1f, depth)) * featureVisibility;
+                var screen = center * ratio + new Vector2(size * 0.5f, size * 0.5f);
+                foreach (var part in view.Parts)
+                    overlayPainter.DrawPart(part, f.External, screen, along * foreshortening * pxPerMm, across * pxPerMm, alpha, 0.8f, false, tint, pxPerMm);
+            }
+
+            if (pass == 0) ShadeInclusions(size);
+        }
+
+        overlayTexture.SetPixels32(overlayBuffer);
+        overlayTexture.Apply();
+        overlayImage.enabled = true;
+        stoneImage.enabled = false;
     }
 
-    private static void SetViewVisible(FeatureView view, bool visible)
+    // What the inclusions added to the picture is seen through the facets: dark facets hide it more, and the bright
+    // glints of the crown stay in front of it.
+    private void ShadeInclusions(int size)
     {
-        foreach (var part in view.Parts) part.enabled = visible;
+        for (var i = 0; i < size * size; i++)
+        {
+            var b = overlayBase[i];
+            var p = overlayBuffer[i];
+            if (p.r == b.r && p.g == b.g && p.b == b.b) continue;
+
+            var luma = (b.r * 0.30f + b.g * 0.59f + b.b * 0.11f) / 255f;
+            var k = (0.45f + 0.55f * luma) * (luma > 0.92f ? 0.4f : 1f);
+            overlayBuffer[i] = new Color32(
+                (byte)Mathf.Clamp(b.r + (p.r - b.r) * k, 0f, 255f),
+                (byte)Mathf.Clamp(b.g + (p.g - b.g) * k, 0f, 255f),
+                (byte)Mathf.Clamp(b.b + (p.b - b.b) * k, 0f, 255f),
+                p.a);
+        }
     }
 
     private void UpdateTexts()
@@ -627,7 +592,7 @@ public class LoupeUI : MonoBehaviour
         var text = marketMode ? $"Poids : {stone.CaratWeight:F2} ct\n\n" : "";
         if (visualObserved)
         {
-            text += $"Éclat : {def.luster}\nCouleur : {stone.ColorName}\nTransparence : {def.transparency}\n" +
+            text += $"Éclat : {def.luster}\nCouleur : {stone.ColorName}\nTransparence : {def.TransparencyLabel}\n" +
                     $"Forme : {stone.ShapeName}\nTaille : {stone.CutStyleName}\n" +
                     (stone.FacetSummary != null ? $"Facettes : {stone.FacetSummary}\n" : "") + "\n";
         }
@@ -719,6 +684,16 @@ public class LoupeUI : MonoBehaviour
         // The stone is drawn in 3D pixel art, so it has real volume when turned.
         view3D = new GemView3D(64);
         stoneImage.sprite = view3D.Sprite;
+
+        // The picture of the stone with its inclusions painted inside it (replaces the plain stone while they show).
+        var overlayGO = new GameObject("Inclusions", typeof(RectTransform), typeof(RawImage));
+        overlayGO.transform.SetParent(content, false);
+        var overlayRect = overlayGO.GetComponent<RectTransform>();
+        overlayRect.anchorMin = overlayRect.anchorMax = new Vector2(0.5f, 0.5f);
+        overlayRect.pivot = new Vector2(0.5f, 0.5f);
+        overlayImage = overlayGO.GetComponent<RawImage>();
+        overlayImage.raycastTarget = false;
+        overlayImage.enabled = false;
 
         // Torch glow behind the stone, UV luminescence on top of it.
         var glowGO = new GameObject("TorchGlow", typeof(RectTransform), typeof(Image));

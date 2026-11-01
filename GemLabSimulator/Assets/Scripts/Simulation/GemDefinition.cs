@@ -19,6 +19,10 @@ public class GemDefinition : ScriptableObject
         return iconColor.a > 0f ? GemIconFactory.Get(this, shape, cutStyle) : icon;
     }
 
+    // The four levels the sprites and the sheets show, from the species' gemological wording (field `transparency`).
+    public Diaphaneity Diaphaneity => GemDiaphaneity.Parse(transparency);
+    public string TransparencyLabel => GemDiaphaneity.Label(Diaphaneity);
+
     public Sprite GetRoughIcon()
     {
         return iconColor.a > 0f ? GemIconFactory.GetRough(this) : roughIcon;

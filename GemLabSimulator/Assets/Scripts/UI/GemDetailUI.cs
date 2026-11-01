@@ -72,7 +72,7 @@ public static class GemObservations
         {
             Add("Loupe", $"Éclat : {def.luster}");
             Add("Loupe", $"Couleur : {gem.ColorDescription}");
-            Add("Loupe", $"Transparence : {def.transparency}");
+            Add("Loupe", $"Transparence : {def.TransparencyLabel}");
             Add("Loupe", $"Forme : {gem.ShapeName}");
             Add("Loupe", $"Style de taille : {gem.CutStyleName}");
             if (gem.FacetSummary != null) Add("Loupe", $"Facettes : {gem.FacetSummary}");
@@ -260,7 +260,7 @@ public class GemDetailUI : MonoBehaviour
     {
         if (gem == null || view == null) return;
         GemView3D.Colors(gem, out var body, out var facet);
-        view.Draw(GemView3D.MeshFor(gem), GemView3D.HalfExtents(gem), orientation, body, facet);
+        view.Draw(GemView3D.MeshFor(gem), GemView3D.HalfExtents(gem), orientation, body, facet, gem.Definition.Diaphaneity, gem.AsterismRays);
     }
 
     private void BuildPanel()

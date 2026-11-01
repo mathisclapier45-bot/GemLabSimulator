@@ -10,6 +10,10 @@ public class GemView3D
 
     public Sprite Sprite { get; private set; }
 
+    // The picture as drawn, for effects that compose with it (the inclusions inside the stone).
+    public Color32[] Pixels => pixels;
+    public int Size => size;
+
     private readonly int size;
     private readonly Texture2D texture;
     private readonly Color32[] pixels;
@@ -77,7 +81,7 @@ public class GemView3D
         facet = def.iconColor.a > 0f ? def.iconFacetColor : new Color(0.92f, 0.92f, 0.96f);
     }
 
-    public void Draw(GemMesh mesh, Vector3 halfExtentsMm, Quaternion orientation, Color body, Color facet)
+    public void Draw(GemMesh mesh, Vector3 halfExtentsMm, Quaternion orientation, Color body, Color facet, Diaphaneity? level = null, int starRays = 0)
     {
         var vertexCount = mesh.Vertices.Length;
         if (rotated.Length < vertexCount) rotated = new Vector3[vertexCount];
@@ -120,7 +124,8 @@ public class GemView3D
             Raster(p0, p1, p2, center, tone, facetId);
         }
 
-        Finish(body, facet);
+        Finish(body, facet, level);
+        if (starRays > 0) DrawStar(starRays, orientation);
         texture.SetPixels32(pixels);
         texture.Apply();
     }
@@ -165,8 +170,50 @@ public class GemView3D
         }
     }
 
+    // The star of a cabochon with dense silk: lines of light across the dome, turning with the stone and fading as it
+    // tilts away from the viewer.
+    private void DrawStar(int rays, Quaternion orientation)
+    {
+        var facing = (orientation * Vector3.forward).z;
+        if (facing < 0.35f) return;
+
+        var strength = Mathf.Clamp01((facing - 0.35f) / 0.5f);
+        var axis = orientation * Vector3.right;
+        var baseAngle = Mathf.Atan2(axis.y, axis.x);
+        var center = size * 0.5f;
+        var length = size * 0.42f;
+        var lines = Mathf.Max(1, rays / 2);
+        var halfWidth = Mathf.Max(0.7f, size * 0.012f);
+
+        for (var y = 0; y < size; y++)
+        {
+            for (var x = 0; x < size; x++)
+            {
+                var i = y * size + x;
+                if (ids[i] < 0) continue;
+
+                var dx = x + 0.5f - center;
+                var dy = y + 0.5f - center;
+                var r = Mathf.Sqrt(dx * dx + dy * dy);
+                if (r > length) continue;
+
+                var best = 0f;
+                for (var k = 0; k < lines; k++)
+                {
+                    var angle = baseAngle + k * Mathf.PI / lines;
+                    var d = Mathf.Abs(dx * Mathf.Sin(angle) - dy * Mathf.Cos(angle));
+                    best = Mathf.Max(best, Mathf.Clamp01(1f - d / (halfWidth * 2f)));
+                }
+
+                var falloff = 1f - r / length;
+                var intensity = (best * (0.3f + 0.7f * falloff) + Mathf.Clamp01(1f - r / (length * 0.2f)) * 0.45f) * strength;
+                if (intensity > 0.02f) pixels[i] = Color32.Lerp(pixels[i], new Color32(255, 255, 255, 255), Mathf.Clamp01(intensity));
+            }
+        }
+    }
+
     // Colors, facet creases and the dark rim.
-    private void Finish(Color body, Color facet)
+    private void Finish(Color body, Color facet, Diaphaneity? level)
     {
         var half = size * 0.5f;
         for (var y = 0; y < size; y++)
@@ -191,7 +238,9 @@ public class GemView3D
                 var belowDiffers = ids[i - size] != ids[i] && Mathf.Abs(tones[i - size] - tone) < 0.08f;
                 if (leftDiffers || belowDiffers) tone -= 0.12f;
 
-                pixels[i] = tone > 1.12f ? new Color32(255, 255, 255, 255) : (Color32)GemPixelArt.Palette(Mathf.Clamp01(tone), body, facet);
+                Color color = tone > 1.12f ? Color.white : GemPixelArt.Palette(Mathf.Clamp01(tone), body, facet);
+                if (level.HasValue) color = GemDiaphaneity.Shade(color, tone, level.Value, body, x, y);
+                pixels[i] = color;
             }
         }
     }

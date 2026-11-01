@@ -58,6 +58,7 @@ public class MinimapUI : MonoBehaviour
         { "Boutique de vêtements", "vetement" },
         { "Le Tunnel", "pioche" },
         { "WatchStore", "montre" },
+        { "Animalerie", "patte" },
     };
 
     // Names of the buildings as shown on the big map (the town map opened with C).

@@ -217,7 +217,7 @@ public class ExaminationTool : MonoBehaviour
         gemInstance.RecordObservation(measurementType.ToString());
         ToolFeedbackUI.Instance.ShowMessage(
             $"{toolName} — Éclat : {gem.luster} | Couleur : {gemInstance.ColorName} | " +
-            $"Transparence : {gem.transparency} | Forme : {gemInstance.ShapeName} | Style de taille : {gemInstance.CutStyleName}");
+            $"Transparence : {gem.TransparencyLabel} | Forme : {gemInstance.ShapeName} | Style de taille : {gemInstance.CutStyleName}");
     }
 
     private void RevealWeight(GemInstance gemInstance, GemDefinition gem)

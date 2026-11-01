@@ -177,7 +177,7 @@ public class GrimoireUI : MonoBehaviour
             $"Éclat : {def.luster}",
             $"Couleur : {def.color}",
             $"Forme : {def.shape}    Style de taille : {def.cutStyle}",
-            $"Transparence : {def.transparency}",
+            $"Transparence : {def.TransparencyLabel}",
             $"Indice de réfraction : {def.refractiveIndex:F3}",
             $"Biréfringence : {OpticalDescriptions.BirefringenceText(def)}",
             $"Densité : {def.density:F2}",

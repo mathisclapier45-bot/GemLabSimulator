@@ -136,7 +136,15 @@ public class GemInstance
             : GemColorSystem.Sample(definition, () => Random.value);
         var colorGrade = SetColor(colorValue, fancy);
 
-        var clarity = GemGrading.PickWeighted(GemGrading.ClarityGrades);
+        // Natural or synthetic first: the clarity of a stone and its inclusions depend on it, as on its species and deposit.
+        var authenticity = definition.forcedSynthetic
+            ? GemGrading.SyntheticGrade
+            : GemGrading.PickWeighted(GemGrading.AuthenticityGrades);
+        AuthenticityGrade = authenticity.Name;
+        AuthenticityDescription = authenticity.Description;
+        IsSynthetic = authenticity.Name == "Synthétique";
+
+        var clarity = InclusionCatalog.PickClarity(definition, Origin, IsSynthetic);
         ClarityGrade = clarity.Name;
         ClarityDescription = clarity.Description;
 
@@ -162,12 +170,6 @@ public class GemInstance
         TreatmentGrade = treatment.Name;
         TreatmentDescription = treatment.Description;
 
-        var authenticity = definition.forcedSynthetic
-            ? GemGrading.SyntheticGrade
-            : GemGrading.PickWeighted(GemGrading.AuthenticityGrades);
-        AuthenticityGrade = authenticity.Name;
-        AuthenticityDescription = authenticity.Description;
-        IsSynthetic = authenticity.Name == "Synthétique";
         GrowthStructureDescription = IsSynthetic
             ? "Zones de croissance régulières, motifs anguleux ou courbes concentriques artificielles, typiques d'une croissance accélérée en laboratoire."
             : "Zones de croissance irrégulières et courbes, typiques d'une cristallisation naturelle lente.";
@@ -183,6 +185,19 @@ public class GemInstance
         FinalValue = Mathf.RoundToInt(
             definition.baseValue * Origin.valueMultiplier * colorMultiplier * clarity.Multiplier *
             sizeValueMultiplier * treatment.Multiplier * authenticity.Multiplier);
+    }
+
+    // Dense rutile silk in a cabochon makes a star (six rays; four in a garnet).
+    public int AsterismRays
+    {
+        get
+        {
+            if (IsRough || IsSynthetic || CutStyleName != "Cabochon") return 0;
+            if (ClarityGrade == "Loupe clean" || ClarityGrade == "Eye-clean") return 0;
+            if (InclusionCatalog.ProfileFor(this).Share(FeatureKind.Needle, 0) < 0.18f) return 0;
+            if (StoneOptics.StableHash((SpecimenId ?? "") + "|star") % 100 >= 65) return 0;
+            return (Definition.displayName ?? "").ToLowerInvariant().Contains("grenat") ? 4 : 6;
+        }
     }
 
     private GemColorGrade SetColor(GemColorValue color, bool fancy)

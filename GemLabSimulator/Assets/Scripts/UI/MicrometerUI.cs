@@ -143,7 +143,7 @@ public class MicrometerUI : MonoBehaviour
         }
 
         GemView3D.Colors(stone, out var body, out var facet);
-        view3D.Draw(GemView3D.MeshFor(stone), GemView3D.HalfExtents(stone), orientation, body, facet);
+        view3D.Draw(GemView3D.MeshFor(stone), GemView3D.HalfExtents(stone), orientation, body, facet, stone.Definition.Diaphaneity);
 
         var side = GemView3D.MaxDimensionMm(stone) * PxPerMm / GemView3D.FitFraction;
         gemRect.sizeDelta = new Vector2(side, side);

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// The lab computer, standing next to the microscope: it receives the microphotographs. Its interface comes later.
+// The lab computer, standing next to the microscope: E turns it on (boot screen, then the desktop with the microphotographs).
 public class ComputerInteractable : MonoBehaviour
 {
     private bool playerInRange;
@@ -12,17 +12,15 @@ public class ComputerInteractable : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player")) playerInRange = false;
+        if (!other.CompareTag("Player")) return;
+        playerInRange = false;
+        ComputerUI.Instance?.Close();
     }
 
     private void Update()
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
-
-        var library = MicroPhotoLibrary.Ensure();
-        var count = library != null ? library.Photos.Count : 0;
-        ToolFeedbackUI.Instance?.ShowMessage(count == 0
-            ? "Ordinateur du laboratoire : aucune microphotographie reçue. (Interface bientôt disponible.)"
-            : $"Ordinateur du laboratoire : {count} microphotographie(s) reçue(s). (Interface bientôt disponible.)");
+        if (ComputerUI.Instance == null || ComputerUI.Instance.IsOpen) return;
+        ComputerUI.Instance.Open();
     }
 }

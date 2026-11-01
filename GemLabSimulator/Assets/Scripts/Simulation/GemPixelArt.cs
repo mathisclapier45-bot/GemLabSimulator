@@ -26,8 +26,9 @@ public static class GemPixelArt
 
     // ---- Public API ------------------------------------------------------------------------------------------
 
-    public static Texture2D RenderGem(string shape, string style, Color body, Color facet)
+    public static Texture2D RenderGem(string shape, string style, Color body, Color facet, Diaphaneity? level = null)
     {
+        var edgeAlpha = level.HasValue ? GemDiaphaneity.EdgeAlpha(level.Value) : 1f;
         var outline = GetOutline(shape);
         var count = Size * Size;
         var inside = new bool[count];
@@ -83,8 +84,8 @@ public static class GemPixelArt
                 if (inside[i]) continue;
                 var near = Covered(inside, px - 1, py + 1);
                 var far = Covered(inside, px - 2, py + 2);
-                if (near) pixels[i] = Dim(body, 0.34f);
-                else if (far) pixels[i] = Dim(body, 0.22f);
+                if (near) pixels[i] = WithAlpha(Dim(body, 0.34f), edgeAlpha);
+                else if (far) pixels[i] = WithAlpha(Dim(body, 0.22f), edgeAlpha);
             }
         }
 
@@ -96,22 +97,30 @@ public static class GemPixelArt
                 if (!inside[i]) continue;
 
                 var isRim = !Covered(inside, px - 1, py) || !Covered(inside, px + 1, py) || !Covered(inside, px, py - 1) || !Covered(inside, px, py + 1);
-                pixels[i] = isRim
-                    ? Dim(body, px < CenterX && py > CenterY ? 0.55f : 0.20f)      // lit rim at the upper left
-                    : Palette(Mathf.Clamp01(tone[i] + edge[i]), body, facet);
+                if (isRim)
+                {
+                    pixels[i] = Dim(body, px < CenterX && py > CenterY ? 0.55f : 0.20f);      // lit rim at the upper left
+                    continue;
+                }
+
+                var lit = Mathf.Clamp01(tone[i] + edge[i]);
+                pixels[i] = Palette(lit, body, facet);
+                if (level.HasValue) pixels[i] = GemDiaphaneity.Shade(pixels[i], lit, level.Value, body, px, py);
             }
         }
 
-        // A couple of sparkles on the table / crown.
-        if (!IsCabochon(style)) AddSparkle(pixels, inside, -0.26f, 0.30f);
-        AddSparkle(pixels, inside, IsCabochon(style) ? -0.34f : 0.28f, IsCabochon(style) ? 0.36f : -0.20f);
+        // A couple of sparkles on the table / crown: glass sparkles, a milky stone only glows, a dull one does not.
+        var sparkles = !level.HasValue || level.Value == Diaphaneity.Transparent ? 2 : level.Value == Diaphaneity.SemiTransparent ? 1 : 0;
+        if (sparkles > 1 && !IsCabochon(style)) AddSparkle(pixels, inside, -0.26f, 0.30f);
+        if (sparkles > 0) AddSparkle(pixels, inside, IsCabochon(style) ? -0.34f : 0.28f, IsCabochon(style) ? 0.36f : -0.20f);
 
         return ToTexture(pixels);
     }
 
     // A rough crystal / pebble: lumpy outline, flat angular planes, speckles.
-    public static Texture2D RenderRough(Color body, int seed)
+    public static Texture2D RenderRough(Color body, int seed, Diaphaneity? level = null)
     {
+        var edgeAlpha = level.HasValue ? GemDiaphaneity.EdgeAlpha(level.Value) : 1f;
         var rng = new System.Random(seed);
         var count = Size * Size;
         var inside = new bool[count];
@@ -175,8 +184,8 @@ public static class GemPixelArt
             {
                 var i = py * Size + px;
                 if (inside[i]) continue;
-                if (Covered(inside, px - 1, py + 1)) pixels[i] = Dim(dull, 0.34f);
-                else if (Covered(inside, px - 2, py + 2)) pixels[i] = Dim(dull, 0.22f);
+                if (Covered(inside, px - 1, py + 1)) pixels[i] = WithAlpha(Dim(dull, 0.34f), edgeAlpha);
+                else if (Covered(inside, px - 2, py + 2)) pixels[i] = WithAlpha(Dim(dull, 0.22f), edgeAlpha);
             }
         }
 
@@ -197,7 +206,9 @@ public static class GemPixelArt
                 var leftDiffers = px > 0 && inside[i - 1] && ids[i - 1] != ids[i];
                 var edgeBoost = leftDiffers ? 0.10f : 0f;
                 var speckle = rng.NextDouble() < 0.07 ? -0.18f : 0f;
-                pixels[i] = Palette(Mathf.Clamp01(tone[i] + edgeBoost + speckle), dull, Color.Lerp(dull, Color.white, 0.25f), false);
+                var lit = Mathf.Clamp01(tone[i] + edgeBoost + speckle);
+                pixels[i] = Palette(lit, dull, Color.Lerp(dull, Color.white, 0.25f), false);
+                if (level.HasValue) pixels[i] = GemDiaphaneity.Shade(pixels[i], lit, level.Value, dull, px, py);
             }
         }
 
@@ -438,6 +449,12 @@ public static class GemPixelArt
         }
         color.a = 1f;
         return color;
+    }
+
+    private static Color WithAlpha(Color c, float alpha)
+    {
+        c.a = alpha;
+        return c;
     }
 
     public static Color Dim(Color c, float factor)

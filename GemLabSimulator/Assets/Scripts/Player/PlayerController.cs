@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour
     // Set by DoorTrigger just before loading a scene, so the player lands at a door-specific spawn point instead of the default one.
     public static string PendingSpawnPointName;
 
+    // Set by full-screen interfaces (the lab computer) so the arrow keys do not walk the player around behind them.
+    public static bool InputLocked;
+
     private enum FacingDirection { Down, Up, Left, Right }
 
     [SerializeField] private float moveSpeed = 4f;
@@ -127,8 +130,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        moveInput.x = Input.GetAxisRaw("Horizontal");
-        moveInput.y = Input.GetAxisRaw("Vertical");
+        moveInput.x = InputLocked ? 0f : Input.GetAxisRaw("Horizontal");
+        moveInput.y = InputLocked ? 0f : Input.GetAxisRaw("Vertical");
         moveInput = moveInput.normalized;
 
         AnimateSprite();

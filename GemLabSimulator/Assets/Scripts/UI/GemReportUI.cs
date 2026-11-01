@@ -159,7 +159,7 @@ public class GemReportUI : MonoBehaviour
         Detail("Dimensions", $"{MeasuredOrActual(DimensionReport.LengthKey, gem.LengthMm):F2} x {MeasuredOrActual(DimensionReport.WidthKey, gem.WidthMm):F2} x {MeasuredOrActual(DimensionReport.DepthKey, gem.DepthMm):F2} mm");
         Detail("Forme", gem.ShapeName);
         Detail("Couleur", gem.ColorGrade != null ? $"{gem.ColorGrade} — {gem.ColorName}" : gem.ColorName);
-        Detail("Transparence", def.transparency);
+        Detail("Transparence", def.TransparencyLabel);
         Detail("Style de taille", gem.IsRough ? "Non taillée" : gem.CutStyleName);
         if (gem.FacetSummary != null) Detail("Facettes", gem.FacetSummary);
         Detail("Éclat", def.luster);

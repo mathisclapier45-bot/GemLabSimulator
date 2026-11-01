@@ -104,7 +104,7 @@ public class ReportUIController : MonoBehaviour
         {
             measured.Add($"Éclat : {gem.luster}");
             measured.Add($"Couleur : {gemInstance.ColorDescription}");
-            measured.Add($"Transparence : {gem.transparency}");
+            measured.Add($"Transparence : {gem.TransparencyLabel}");
             measured.Add($"Forme : {gemInstance.ShapeName}");
             measured.Add($"Style de taille : {gemInstance.CutStyleName}");
         }

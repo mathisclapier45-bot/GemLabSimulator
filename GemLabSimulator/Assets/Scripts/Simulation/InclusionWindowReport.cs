@@ -4,19 +4,28 @@ using System.Collections.Generic;
 // categories only, so it never names the species itself.
 public static class InclusionWindowReport
 {
-    private static readonly (string label, string[] keywords)[] Categories =
+    // Generic categories of what is found inside, so the window never names the species itself.
+    private static string Category(FeatureKind kind)
     {
-        ("clivage", new[] { "clivage" }),
-        ("fractures et fissures", new[] { "fracture", "fissure" }),
-        ("givres de guérison (fractures cicatrisées)", new[] { "empreintes digitales", "plume", "voiles" }),
-        ("zones de tension (halos autour des inclusions)", new[] { "halo", "discoïde", "disque" }),
-        ("cristaux inclus", new[] { "cristaux", "cristal", "cristallines", "aiguille", "aciculaire", "soie", "octa" }),
-        ("inclusions fluides", new[] { "liquide", "fluide", "multiphas", "triphas", "jardin" }),
-        ("bulles de gaz", new[] { "bulle" }),
-        ("fibres", new[] { "fibre", "tubulaire" }),
-        ("macles", new[] { "macl" }),
-        ("zonation de couleur", new[] { "zonation", "bandes", "secteurs" }),
-    };
+        switch (kind)
+        {
+            case FeatureKind.Crystal: return "cristaux inclus";
+            case FeatureKind.Bubble: return "bulles de gaz";
+            case FeatureKind.Fluid:
+            case FeatureKind.TwoPhase:
+            case FeatureKind.ThreePhase: return "inclusions fluides (cavités à une, deux ou trois phases)";
+            case FeatureKind.NegativeCrystal: return "cavités à facettes (cristaux négatifs)";
+            case FeatureKind.Needle: return "aiguilles et fibres";
+            case FeatureKind.HorseTail: return "fibres rayonnantes";
+            case FeatureKind.Fracture: return "fractures et fissures";
+            case FeatureKind.Cleavage: return "clivage";
+            case FeatureKind.Feather:
+            case FeatureKind.Healing: return "givres de guérison (fractures cicatrisées)";
+            case FeatureKind.Twinning: return "macles";
+            case FeatureKind.Cloud: return "nuages de fines particules";
+            default: return "structures de croissance (zones et stries)";
+        }
+    }
 
     public static string Build(GemInstance gem)
     {
@@ -27,19 +36,16 @@ public static class InclusionWindowReport
             return "Pierre opaque : la fenêtre ne laisse rien voir de l'intérieur.";
 
         var found = new List<string>();
-        foreach (var (label, keywords) in Categories)
+        foreach (var f in LoupeFeatures.GenerateMicro(gem))
         {
-            foreach (var keyword in keywords)
-            {
-                if (!text.Contains(keyword)) continue;
-                found.Add(label);
-                break;
-            }
+            if (f.External) continue;
+            var label = Category(f.Kind);
+            if (!found.Contains(label)) found.Add(label);
         }
 
         // Treatments leave their own traces inside the stone.
-        if (gem.TreatmentGrade == "Chauffé" && !found.Contains(Categories[3].label)) found.Add(Categories[3].label);
-        if (gem.TreatmentGrade == "Fracture comblée" && !found.Contains(Categories[1].label)) found.Add(Categories[1].label);
+        if (gem.TreatmentGrade == "Chauffé" && !found.Contains("zones de tension (halos autour des inclusions)")) found.Add("zones de tension (halos autour des inclusions)");
+        if (gem.TreatmentGrade == "Fracture comblée" && !found.Contains("fractures et fissures")) found.Add("fractures et fissures");
 
         switch (gem.ClarityGrade)
         {

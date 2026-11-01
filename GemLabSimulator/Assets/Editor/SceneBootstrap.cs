@@ -1442,6 +1442,7 @@ public static class SceneBootstrap
         CreateRealBuilding("Musee", new Vector3(20, 28, 0f), HouseStyle.Modern, "Musee", true);
         CreateDiamondTower(new Vector3(45, 28, 0f));
         CreateClothingStore(new Vector3(57.5f, 28, 0f));
+        CreatePetShop(new Vector3(8.5f, 7, 0f));
         CreateWatchStore(new Vector3(-31.5f, -15, 0f));
 
         CreateRealBuilding("Marche aux Pierres", new Vector3(-45, -15, 0f), HouseStyle.Modern, "Marche", true);
@@ -3066,6 +3067,34 @@ public static class SceneBootstrap
         so.ApplyModifiedProperties();
 
         CreateBuildingLabel("Boutique de vêtements", position + new Vector3(0f, sprite.bounds.size.y + 0.5f, 0f));
+    }
+
+    // Pet shop (not accessible yet): decorative front with a locked door, like the clothing shop.
+    private static void CreatePetShop(Vector3 position)
+    {
+        var sprite = LoadPackSpriteGrounded("Assets/Art/Sprites/building_animalerie.png");
+        if (sprite == null) return;
+
+        var go = new GameObject("Animalerie");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        // The glass door is on the right of the shop window.
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(1.8f, 2.4f);
+        col.offset = new Vector2(1.75f, 1.2f);
+
+        var door = go.AddComponent<DoorTrigger>();
+        var so = new SerializedObject(door);
+        so.FindProperty("sceneName").stringValue = "";
+        so.FindProperty("implemented").boolValue = false;
+        so.FindProperty("lockedMessage").stringValue = "Animalerie : ouverture prochaine.";
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel("Animalerie", position + new Vector3(0f, sprite.bounds.size.y + 0.5f, 0f));
     }
 
     // GemStore: the gemology tool shop (sells tools and tool upgrades).
