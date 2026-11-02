@@ -121,6 +121,7 @@ public class ComputerUI : MonoBehaviour
         taskButton.SetActive(false);
         slideshow = false;
 
+        Sfx.Play(Sfx.Id.ComputerBoot);
         booting = true;
         bootTimer = 0f;
         boot.SetActive(true);
@@ -131,6 +132,7 @@ public class ComputerUI : MonoBehaviour
 
     public void Close()
     {
+        if (panel != null && panel.activeSelf) Sfx.Play(Sfx.Id.ComputerOff);
         if (panel != null) panel.SetActive(false);
         PlayerController.InputLocked = false;
         slideshow = false;
@@ -424,6 +426,7 @@ public class ComputerUI : MonoBehaviour
 
     private void OpenWindow()
     {
+        Sfx.Play(Sfx.Id.ComputerClick);
         startMenu.SetActive(false);
         filesWindow.SetActive(true);
         filesWindow.transform.SetAsLastSibling();
@@ -523,6 +526,7 @@ public class ComputerUI : MonoBehaviour
 
     private void Step(int direction)
     {
+        Sfx.Play(Sfx.Id.ComputerClick);
         if (files.Count == 0) return;
         Select((selected + direction + files.Count) % files.Count, true);
         slideshowTimer = 0f;
@@ -530,6 +534,7 @@ public class ComputerUI : MonoBehaviour
 
     private void Select(int index, bool scrollTo)
     {
+        Sfx.Play(Sfx.Id.ComputerClick);
         if (index < 0 || index >= files.Count) return;
         selected = index;
         ShowSelection();

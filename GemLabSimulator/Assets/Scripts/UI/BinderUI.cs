@@ -95,6 +95,7 @@ public class BinderUI : MonoBehaviour
 
     public void Open()
     {
+        Sfx.Play(Sfx.Id.BookOpen);
         panel.SetActive(true);
         panel.transform.SetAsLastSibling();
         if (!PlayerController.InputLocked)
@@ -108,6 +109,7 @@ public class BinderUI : MonoBehaviour
     public void Close()
     {
         CloseDetail();
+        if (panel != null && panel.activeSelf) Sfx.Play(Sfx.Id.BookClose);
         if (panel != null) panel.SetActive(false);
         if (lockedInput)
         {
@@ -140,6 +142,7 @@ public class BinderUI : MonoBehaviour
     {
         var clamped = Mathf.Clamp(index, 0, SpreadCount - 1);
         if (clamped == spread && pageContainer.childCount > 0) return;
+        if (pageContainer.childCount > 0) Sfx.Play(Mathf.Abs(clamped - spread) > 1 ? Sfx.Id.PageFlurry : Sfx.Id.PageTurn);
         spread = clamped;
         Rebuild();
     }
@@ -219,6 +222,7 @@ public class BinderUI : MonoBehaviour
     private void ShowDetail(CardDef card)
     {
         CloseDetail();
+        Sfx.Play(Sfx.Id.CardSwish);
 
         detail = new GameObject("CardDetail", typeof(RectTransform), typeof(Image), typeof(Button));
         detail.transform.SetParent(panel.transform, false);

@@ -23,6 +23,7 @@ public class Mailbox : MonoBehaviour
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
+        Sfx.Play(Sfx.Id.Paper);
         if (kind == MailboxKind.Personal)
         {
             ToolFeedbackUI.Instance?.ShowMessage("Courrier personnel : rien pour le moment.");

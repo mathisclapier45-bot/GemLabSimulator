@@ -23,6 +23,7 @@ public class ReceptionistNPC : MonoBehaviour
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
+        Sfx.Play(Sfx.Id.Chat);
         if (DiamondBuilding.HasLicense)
         {
             ToolFeedbackUI.Instance?.ShowMessage("Accueil : Bonne visite ! L'ascenseur vous mène à tous les étages.");

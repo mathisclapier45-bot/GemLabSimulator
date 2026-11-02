@@ -77,6 +77,7 @@ public class ExaminationTool : MonoBehaviour
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
+        Sfx.Play(Sfx.Id.ToolOpen);
         // The carat balance has its own drag-and-drop interface.
         if (measurementType == MeasurementType.Weight && WeightScaleUI.TryOpen()) return;
 

@@ -151,6 +151,7 @@ public class MoneyHudUI : MonoBehaviour
         else if (money != target)
         {
             SpawnFloater(money - target);
+            Sfx.Play(money > target ? Sfx.Id.Coin : Sfx.Id.Spend);
             target = money;
             pulse = 1f;
         }

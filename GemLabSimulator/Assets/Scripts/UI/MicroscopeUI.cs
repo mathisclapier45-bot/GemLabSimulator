@@ -148,6 +148,7 @@ public class MicroscopeUI : MonoBehaviour
         image.SetPixels32(pixels);
         image.Apply();
 
+        Sfx.Play(Sfx.Id.Shutter, 0.9f);
         library.AddPhoto(image, new MicroPhotoEntry
         {
             gemName = stone.IsIdentified ? stone.Definition.displayName : "Spécimen non identifié",

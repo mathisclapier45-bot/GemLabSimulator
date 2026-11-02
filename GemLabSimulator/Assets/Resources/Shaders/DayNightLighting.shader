@@ -24,6 +24,7 @@ Shader "GemLab/DayNightLighting"
             sampler2D _MainTex;
             float4 _Ambient;          // rgb: colour multiplied with the picture
             float4 _Grade;            // x: saturation, y: vignette strength, z: aspect ratio (width / height), w: number of lights
+            float4 _Style;            // x: contrast, y: strength of the tone curve (deeper shadows, brighter lights)
             float4 _Lights[32];       // xy: position in the picture (0..1), z: radius in screen heights, w: intensity
             float4 _LightColors[32];
 
@@ -34,6 +35,11 @@ Shader "GemLab/DayNightLighting"
 
                 float luma = dot(rgb, float3(0.299, 0.587, 0.114));
                 rgb = lerp(float3(luma, luma, luma), rgb, _Grade.x);
+
+                // Contrast around the middle grey, then an S curve: darker shadows and brighter lights.
+                rgb = saturate((rgb - 0.5) * _Style.x + 0.5);
+                float3 curved = rgb * rgb * (3.0 - 2.0 * rgb);
+                rgb = lerp(rgb, curved, _Style.y);
 
                 float3 light = _Ambient.rgb;
                 int count = (int)_Grade.w;

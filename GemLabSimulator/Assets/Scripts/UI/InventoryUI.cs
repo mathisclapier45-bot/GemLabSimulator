@@ -7,7 +7,7 @@ public class InventoryUI : MonoBehaviour
     public static InventoryUI Instance { get; private set; }
 
     private const int Columns = 4;
-    private const int Rows = 3;
+    private const int Rows = PlayerInventory.Capacity / Columns;
     private const float SlotSize = 56f;
     private const float SlotSpacing = 8f;
 
@@ -22,6 +22,18 @@ public class InventoryUI : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        FitPanelToSlots();
+    }
+
+    // The scenes were generated with three rows of slots: the window is made taller for the rows added since.
+    private void FitPanelToSlots()
+    {
+        const int generatedRows = 3;
+        if (panel == null || slotsContainer == null || Rows <= generatedRows) return;
+        var extra = (Rows - generatedRows) * (SlotSize + SlotSpacing);
+        var panelRect = panel.GetComponent<RectTransform>();
+        panelRect.sizeDelta = new Vector2(panelRect.sizeDelta.x, panelRect.sizeDelta.y + extra);
+        slotsContainer.sizeDelta = new Vector2(slotsContainer.sizeDelta.x, slotsContainer.sizeDelta.y + extra);
     }
 
     public void Open()

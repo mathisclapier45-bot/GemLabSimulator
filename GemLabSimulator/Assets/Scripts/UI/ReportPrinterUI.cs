@@ -263,6 +263,7 @@ public class ReportPrinterUI : MonoBehaviour
 
         if (!ReportRequirements.AllDone(ReportRequirements.Evaluate(gem))) return;
 
+        Sfx.Play(Sfx.Id.Printer);
         gem.IssueReport(GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1);
         ToolFeedbackUI.Instance?.ShowMessage($"Rapport GemLab n° {gem.ReportNumber} imprimé : il est ajouté à la fiche de la pierre.");
         Refresh();

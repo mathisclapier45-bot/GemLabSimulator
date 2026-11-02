@@ -23,6 +23,7 @@ public class TalkNPC : MonoBehaviour
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E) || lines == null || lines.Length == 0) return;
 
+        Sfx.Play(Sfx.Id.Chat);
         ToolFeedbackUI.Instance?.ShowMessage($"{speaker} : {lines[lineIndex % lines.Length]}");
         lineIndex++;
     }

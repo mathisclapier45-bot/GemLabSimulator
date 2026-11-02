@@ -324,6 +324,7 @@ public class GradingUI : MonoBehaviour
     {
         hintText.text = message;
         hintText.color = good ? Good : Warning;
+        Sfx.Play(good ? Sfx.Id.Success : Sfx.Id.Error);
     }
 
     // ---- Refresh -------------------------------------------------------------------------------------------------

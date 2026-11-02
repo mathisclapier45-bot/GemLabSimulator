@@ -16,6 +16,7 @@ public class DoorTrigger : MonoBehaviour
     public void Use()
     {
         if (string.IsNullOrEmpty(sceneName)) return;
+        Sfx.Play(Sfx.Id.DoorOpen);
         PlayerController.PendingSpawnPointName = spawnPointName;
         SceneFader.FadeToScene(sceneName);
     }
@@ -26,12 +27,14 @@ public class DoorTrigger : MonoBehaviour
 
         if (!implemented || string.IsNullOrEmpty(sceneName))
         {
+            Sfx.Play(Sfx.Id.DoorLocked);
             ToolFeedbackUI.Instance?.ShowMessage(lockedMessage);
             return;
         }
 
         if (!OpeningHours.IsOpen(sceneName))
         {
+            Sfx.Play(Sfx.Id.DoorLocked);
             ToolFeedbackUI.Instance?.ShowMessage($"C'est fermé pour le moment. Ouvert de {OpeningHours.Describe(sceneName)}.");
             return;
         }

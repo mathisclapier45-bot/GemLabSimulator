@@ -26,6 +26,7 @@ public class ShopkeeperNPC : MonoBehaviour
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
+        Sfx.Play(Sfx.Id.Chat);
         ToolFeedbackUI.Instance?.ShowMessage(Lines[lineIndex % Lines.Length]);
         lineIndex++;
     }

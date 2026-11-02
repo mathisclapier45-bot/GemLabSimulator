@@ -6,7 +6,9 @@ public class PlayerInventory : MonoBehaviour, IGemContainer
 {
     public static PlayerInventory Instance { get; private set; }
 
-    private const int MaxCapacity = 12;
+    // Number of slots of the bag (4 columns); the inventory window grows with it.
+    public const int Capacity = 24;
+    private const int MaxCapacity = Capacity;
 
     private readonly List<GemInstance> gems = new List<GemInstance>();
 
@@ -29,6 +31,7 @@ public class PlayerInventory : MonoBehaviour, IGemContainer
 
         var instance = new GemInstance(definition);
         gems.Add(instance);
+        Sfx.Play(Sfx.Id.Pickup);
         if (SelectedGem == null) SelectedGem = instance;
 
         OnInventoryChanged?.Invoke();
@@ -40,6 +43,7 @@ public class PlayerInventory : MonoBehaviour, IGemContainer
         if (IsFull) return false;
 
         gems.Add(instance);
+        Sfx.Play(Sfx.Id.Pickup);
         if (SelectedGem == null) SelectedGem = instance;
 
         OnInventoryChanged?.Invoke();

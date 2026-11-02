@@ -22,6 +22,7 @@ public class StairsInteractable : MonoBehaviour
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E) || string.IsNullOrEmpty(targetScene)) return;
 
+        Sfx.Play(Sfx.Id.Stairs);
         PlayerController.PendingSpawnPointName = targetSpawnPoint;
         SceneFader.FadeToScene(targetScene);
     }

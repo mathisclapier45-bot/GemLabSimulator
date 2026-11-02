@@ -34,6 +34,7 @@ public class MuseumPedestal : MonoBehaviour
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
+        Sfx.Play(Sfx.Id.ToolOpen);
         if (displayedGem == null)
         {
             ToolFeedbackUI.Instance?.ShowMessage("Piédestal vide — continuez à explorer pour l'ajouter au musée !");

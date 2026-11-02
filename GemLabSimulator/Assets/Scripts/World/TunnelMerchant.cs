@@ -28,6 +28,8 @@ public class TunnelMerchant : MonoBehaviour
         Refresh();
 
         if (!wasPresent || !playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
+
+        Sfx.Play(Sfx.Id.Chat);
         TunnelUI.Instance?.Open();
     }
 

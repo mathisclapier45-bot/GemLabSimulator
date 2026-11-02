@@ -151,7 +151,10 @@ public class PlayerController : MonoBehaviour
             if (frameTimer >= frameDuration)
             {
                 frameTimer -= frameDuration;
-                frameIndex = (frameIndex + 1) % CurrentFrames().Length;
+                var cycle = CurrentFrames().Length;
+                frameIndex = (frameIndex + 1) % cycle;
+                // One step each time a foot lands: twice per walk cycle.
+                if (frameIndex % Mathf.Max(1, cycle / 2) == 0) Sfx.Step();
             }
         }
         else

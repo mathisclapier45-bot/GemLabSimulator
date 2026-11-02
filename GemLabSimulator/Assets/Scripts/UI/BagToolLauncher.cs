@@ -42,6 +42,7 @@ public static class BagToolLauncher
                 var tools = PlayerOwnedTools.Ensure();
                 if (tools == null) return false;
                 tools.SetLantern(!tools.LanternLit);
+                Sfx.Play(Sfx.Id.Flame);
                 ToolFeedbackUI.Instance?.ShowMessage(tools.LanternLit
                     ? "Lanterne allumée : elle éclaire la nuit autour de vous."
                     : "Lanterne éteinte.");

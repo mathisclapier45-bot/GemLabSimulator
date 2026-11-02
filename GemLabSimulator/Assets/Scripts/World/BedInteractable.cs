@@ -18,6 +18,7 @@ public class BedInteractable : MonoBehaviour
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
+        Sfx.Play(Sfx.Id.Sleep);
         GameClock.Instance?.AdvanceDay();
         DayNightOverlay.ResetToDay();
         SaveSystem.Save();

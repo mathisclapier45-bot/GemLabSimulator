@@ -66,6 +66,7 @@ public class DiamondCertificateUI : MonoBehaviour
     {
         if (target == null || target.Certificate == null) return;
         gem = target;
+        Sfx.Play(Sfx.Id.Paper);
         Build();
         page.SetActive(true);
         page.transform.SetAsLastSibling();

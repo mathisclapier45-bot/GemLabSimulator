@@ -50,6 +50,8 @@ public class DayNightLighting : MonoBehaviour
     // 0 in daylight, 1 in the dark: how much the lamps are lit.
     public static float Darkness { get; private set; }
 
+    private bool indoor;
+    private string sceneName;
     private Camera cam;
     private Material material;
     private readonly Vector4[] positions = new Vector4[MaxLights];
@@ -72,11 +74,19 @@ public class DayNightLighting : MonoBehaviour
     private static void Attach(Scene scene)
     {
         Active = false;
-        if (scene.name != "Town") return;
+        if (scene.name == "MainMenu") return;
 
         var camera = Camera.main;
         if (camera == null) return;
-        if (camera.GetComponent<DayNightLighting>() == null) camera.gameObject.AddComponent<DayNightLighting>();
+        var outdoor = scene.name == "Town";
+        var lighting = camera.GetComponent<DayNightLighting>();
+        if (lighting == null) lighting = camera.gameObject.AddComponent<DayNightLighting>();
+        lighting.indoor = !outdoor;
+        lighting.sceneName = scene.name;
+
+        // Indoors the picture is only graded (contrast, soft vignette); outdoors the hour colours it and the lamps are lit.
+        Active = outdoor && lighting.Ready;
+        if (!outdoor) return;
         AddLights();
     }
 
@@ -126,6 +136,8 @@ public class DayNightLighting : MonoBehaviour
         }
     }
 
+    private bool Ready => material != null;
+
     private void OnEnable()
     {
         cam = GetComponent<Camera>();
@@ -141,7 +153,7 @@ public class DayNightLighting : MonoBehaviour
 
     private void OnDisable()
     {
-        Active = false;
+        if (!indoor) Active = false;
         if (material != null) Destroy(material);
     }
 
@@ -174,12 +186,33 @@ public class DayNightLighting : MonoBehaviour
             return;
         }
 
-        Evaluate(OpeningHours.CurrentHour, out var ambient, out var saturation, out var vignette);
-        var brightness = (ambient.r + ambient.g + ambient.b) / 3f;
-        Darkness = Mathf.Clamp01((0.88f - brightness) / 0.4f);
+        Color ambient;
+        float saturation, vignette, contrast, curve;
+        var count = 0;
+        if (indoor)
+        {
+            // Inside: a warm, even light, a gentle vignette, and the tunnel is darker and colder.
+            var tunnel = sceneName == "Tunnel";
+            ambient = tunnel ? new Color(0.62f, 0.66f, 0.84f) : new Color(1.00f, 0.97f, 0.92f);
+            saturation = tunnel ? 0.92f : 1.06f;
+            vignette = tunnel ? 0.55f : 0.30f;
+            contrast = tunnel ? 1.18f : 1.12f;
+            curve = tunnel ? 0.45f : 0.35f;
+            Darkness = 0f;
+        }
+        else
+        {
+            Evaluate(OpeningHours.CurrentHour, out ambient, out saturation, out vignette);
+            var brightness = (ambient.r + ambient.g + ambient.b) / 3f;
+            Darkness = Mathf.Clamp01((0.88f - brightness) / 0.4f);
+            saturation = Mathf.Min(1.05f, saturation * 1.08f);
+            contrast = 1.10f;
+            curve = 0.30f;
+            count = GatherLights();
+        }
 
-        var count = GatherLights();
         material.SetColor("_Ambient", ambient);
+        material.SetVector("_Style", new Vector4(contrast, curve, 0f, 0f));
         material.SetVector("_Grade", new Vector4(saturation, vignette, cam.aspect, count));
         material.SetVectorArray("_Lights", positions);
         material.SetVectorArray("_LightColors", colors);

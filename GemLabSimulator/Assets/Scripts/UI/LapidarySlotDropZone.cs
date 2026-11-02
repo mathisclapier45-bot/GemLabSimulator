@@ -11,7 +11,10 @@ public class LapidarySlotDropZone : MonoBehaviour, IDropHandler
     {
         var source = GemDragSource.CurrentDrag;
         if (source != null && source.Gem != null && ReferenceEquals(source.SourceContainer, PlayerInventory.Instance))
+        {
+            Sfx.Play(Sfx.Id.GemClink);
             OnGemDropped?.Invoke(source.Gem);
+        }
 
         GemDragSource.CleanupDrag();
     }

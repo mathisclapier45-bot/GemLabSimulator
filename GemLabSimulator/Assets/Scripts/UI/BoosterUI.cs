@@ -112,6 +112,7 @@ public class BoosterUI : MonoBehaviour
     private void OpenPack()
     {
         if (stage != Stage.Pack) return;
+        Sfx.Play(Sfx.Id.PackTear);
         stage = Stage.Opening;
         openTimer = 0f;
         promptText.text = "";
@@ -173,6 +174,7 @@ public class BoosterUI : MonoBehaviour
     {
         if (packRect != null) Destroy(packRect.gameObject);
         stage = Stage.Cards;
+        Sfx.Play(Sfx.Id.PageFlurry, 0.7f);
         promptText.text = "Cliquez sur une carte pour la retourner";
 
         var backSprite = Resources.Load<Sprite>("Cards/card_back");
@@ -237,6 +239,23 @@ public class BoosterUI : MonoBehaviour
         binderButton.gameObject.SetActive(false);
     }
 
+    // The sound of a card turned over: a swish, and a chime that grows with its rarity.
+    private static void PlayReveal(CardDraw draw)
+    {
+        Sfx.Play(Sfx.Id.CardFlip);
+        switch (draw.Card.Rarity)
+        {
+            case CardRarity.Rare: Sfx.Play(Sfx.Id.RareChime, 0.9f); break;
+            case CardRarity.SuperRare: Sfx.Play(Sfx.Id.SuperChime); break;
+            case CardRarity.UltraRare:
+            case CardRarity.Gold: Sfx.Play(Sfx.Id.UltraSparkle); break;
+            case CardRarity.Secret: Sfx.Play(Sfx.Id.SecretShimmer); break;
+            default:
+                if (draw.IsNew) Sfx.Play(Sfx.Id.NewCard);
+                break;
+        }
+    }
+
     private void Flip(Slot slot, float delay)
     {
         if (slot.Flipping || slot.Revealed) return;
@@ -281,6 +300,7 @@ public class BoosterUI : MonoBehaviour
                     if (p >= 0.5f && !slot.Swapped)
                     {
                         slot.Swapped = true;
+                        PlayReveal(slot.Draw);
                         slot.Back.gameObject.SetActive(false);
                         slot.Face.gameObject.SetActive(true);
                     }
@@ -308,6 +328,7 @@ public class BoosterUI : MonoBehaviour
 
         if (slots.Count > 0 && AllRevealed() && !doneButton.gameObject.activeSelf)
         {
+            Sfx.Play(Sfx.Id.Paper, 0.6f);
             promptText.text = "Les cartes ont été ajoutées à votre classeur (B).";
             revealAllButton.gameObject.SetActive(false);
             doneButton.gameObject.SetActive(true);

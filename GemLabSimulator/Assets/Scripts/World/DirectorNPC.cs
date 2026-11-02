@@ -25,6 +25,7 @@ public class DirectorNPC : MonoBehaviour
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
+        Sfx.Play(Sfx.Id.Chat);
         ReportUIController.Instance.Open(playerInventory);
     }
 }
