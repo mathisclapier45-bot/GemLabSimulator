@@ -22,6 +22,7 @@ public class GemReportUI : MonoBehaviour
     private GameObject page;
     private GameObject sheet;
     private GemInstance gem;
+    private bool labPage;          // second page: the advanced laboratory analyses
 
     public bool IsOpen => page != null && page.activeSelf;
 
@@ -68,6 +69,7 @@ public class GemReportUI : MonoBehaviour
     {
         if (target == null || !target.HasReport) return;
         gem = target;
+        labPage = false;
         Build();
         page.SetActive(true);
         page.transform.SetAsLastSibling();
@@ -100,6 +102,12 @@ public class GemReportUI : MonoBehaviour
         rect.anchorMin = Vector2.zero;
         rect.anchorMax = Vector2.one;
         rect.offsetMin = rect.offsetMax = Vector2.zero;
+
+        if (labPage)
+        {
+            BuildLabPage();
+            return;
+        }
 
         var def = gem.Definition;
         var parent = sheet.transform;
@@ -204,6 +212,96 @@ public class GemReportUI : MonoBehaviour
             "Il ne constitue ni une garantie ni une évaluation.",
             10, TextAnchor.UpperLeft, Quiet, new Vector2(24f, -618f), new Vector2(630f, 28f));
 
+        // The advanced analyses are optional: the second page only exists once an instrument of the laboratory has been used.
+        if (LabFindings.Any(gem))
+        {
+            var more = RuntimeUIKit.MakeButton("LabPage", parent, "Analyses avancées  >", 13, new Color(0.45f, 0.36f, 0.22f, 1f),
+                new Vector2(PageWidth - 44f - 200f, -10f), new Vector2(190f, 26f));
+            more.onClick.AddListener(() => SetLabPage(true));
+        }
+
+        var close = RuntimeUIKit.MakeButton("Close", parent, "X", 14, new Color(0.35f, 0.30f, 0.26f, 1f),
+            new Vector2(PageWidth - 44f, -10f), new Vector2(32f, 26f));
+        close.onClick.AddListener(Close);
+    }
+
+    private void SetLabPage(bool value)
+    {
+        labPage = value;
+        Build();
+    }
+
+    // Page 2: what the spectrometers, the electron microscope and the other advanced instruments showed, instrument by instrument.
+    private void BuildLabPage()
+    {
+        var parent = sheet.transform;
+        var def = gem.Definition;
+
+        RuntimeUIKit.MakeBox("FrameTop", parent, new Vector2(0f, 0f), new Vector2(PageWidth, 6f), Gold, false);
+        RuntimeUIKit.MakeBox("FrameBottom", parent, new Vector2(0f, -PageHeight + 6f), new Vector2(PageWidth, 6f), Gold, false);
+
+        var emblem = new GameObject("Emblem", typeof(RectTransform), typeof(Image));
+        emblem.transform.SetParent(parent, false);
+        RuntimeUIKit.SetTopLeft(emblem.GetComponent<RectTransform>(), new Vector2(24f, -22f), new Vector2(60f, 60f));
+        var emblemImage = emblem.GetComponent<Image>();
+        emblemImage.sprite = GemIconFactory.GetSolid("Rond", "Brillant", new Color(0.78f, 0.62f, 0.25f), new Color(0.98f, 0.88f, 0.55f));
+        emblemImage.preserveAspect = true;
+        emblemImage.raycastTarget = false;
+
+        Label("GemLab", parent, "GemLab", 44, TextAnchor.UpperLeft, Ink, new Vector2(96f, -14f), new Vector2(240f, 54f), true);
+        Label("Subtitle", parent, "Laboratoire de gemmologie", 15, TextAnchor.UpperLeft, Gold, new Vector2(99f, -64f), new Vector2(260f, 22f));
+
+        Label("Species", parent, def.displayName, 28, TextAnchor.UpperLeft, Gold, new Vector2(412f, -22f), new Vector2(380f, 36f), true);
+        Label("Number", parent, $"Rapport GemLab N° {gem.ReportNumber}  —  page 2", 14, TextAnchor.UpperLeft, Ink, new Vector2(412f, -60f), new Vector2(380f, 22f), true);
+        Label("Title", parent, "Analyses de laboratoire avancées", 24, TextAnchor.UpperLeft, Gold, new Vector2(24f, -112f), new Vector2(600f, 32f), true);
+        Label("Optional", parent, "Analyses facultatives : seules celles réalisées sur cette pierre figurent sur cette page.", 12, TextAnchor.UpperLeft, Quiet,
+            new Vector2(24f, -146f), new Vector2(700f, 18f));
+
+        // The entries run down two columns.
+        const float columnWidth = 470f;
+        const float top = -184f;
+        const float bottom = -590f;
+        var column = 0;
+        var y = top;
+        foreach (var entry in LabFindings.Entries(gem))
+        {
+            var height = 30f + 6f;
+            foreach (var line in entry.Lines) height += Mathf.Ceil(line.Length / 62f) * 16f + 2f;
+
+            if (y - height < bottom && column == 0)
+            {
+                column = 1;
+                y = top;
+            }
+            var x = 24f + column * (columnWidth + 26f);
+
+            var iconGo = new GameObject("Icon_" + entry.Title, typeof(RectTransform), typeof(Image));
+            iconGo.transform.SetParent(parent, false);
+            RuntimeUIKit.SetTopLeft(iconGo.GetComponent<RectTransform>(), new Vector2(x, y), new Vector2(28f, 28f));
+            var iconImage = iconGo.GetComponent<Image>();
+            iconImage.sprite = Resources.Load<Sprite>($"ToolIcons/{entry.Icon}");
+            iconImage.preserveAspect = true;
+            iconImage.raycastTarget = false;
+            iconImage.enabled = iconImage.sprite != null;
+
+            Label("T_" + entry.Title, parent, entry.Title, 15, TextAnchor.MiddleLeft, Ink, new Vector2(x + 36f, y - 2f), new Vector2(columnWidth - 40f, 24f), true);
+            var ly = y - 30f;
+            foreach (var line in entry.Lines)
+            {
+                var lineHeight = Mathf.Ceil(line.Length / 62f) * 16f;
+                Label("L_" + entry.Title, parent, line, 12, TextAnchor.UpperLeft, Ink, new Vector2(x + 36f, ly), new Vector2(columnWidth - 40f, lineHeight));
+                ly -= lineHeight + 2f;
+            }
+            y -= height;
+        }
+
+        Label("Disclaimer", parent,
+            "Ces analyses complètent le rapport sans en être une condition. Les résultats ne concernent que la pierre décrite, d'après les instruments du laboratoire GemLab.",
+            10, TextAnchor.UpperLeft, Quiet, new Vector2(24f, -618f), new Vector2(900f, 28f));
+
+        var back = RuntimeUIKit.MakeButton("Back", parent, "<  Retour au rapport", 13, new Color(0.45f, 0.36f, 0.22f, 1f),
+            new Vector2(PageWidth - 44f - 200f, -10f), new Vector2(190f, 26f));
+        back.onClick.AddListener(() => SetLabPage(false));
         var close = RuntimeUIKit.MakeButton("Close", parent, "X", 14, new Color(0.35f, 0.30f, 0.26f, 1f),
             new Vector2(PageWidth - 44f, -10f), new Vector2(32f, 26f));
         close.onClick.AddListener(Close);

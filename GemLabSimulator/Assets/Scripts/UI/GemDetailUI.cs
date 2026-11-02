@@ -122,6 +122,10 @@ public static class GemObservations
         if (Seen(ExaminationTool.MeasurementType.DiamondGrowthImaging))
             Add("DiamondView", $"DiamondView : {DiamondViewImage.Summary(gem)}");
 
+        // What the advanced instruments showed in detail (bands, peaks, elements, images): optional, only for the instruments used.
+        foreach (var entry in LabFindings.Entries(gem))
+            foreach (var line in entry.Lines) Add(entry.Icon, $"{entry.Title} — {line}");
+
         return list;
     }
 }

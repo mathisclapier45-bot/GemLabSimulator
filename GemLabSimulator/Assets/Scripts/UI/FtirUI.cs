@@ -193,6 +193,7 @@ public class FtirUI : MonoBehaviour
         var count = Mathf.Min(analysis.Count, 4);
         analysisText.text = string.Join("\n", analysis.GetRange(0, count));
 
+        stone.RecordObservation(LabFindings.FtirKey);
         if (result.TreatmentConclusive)
         {
             stone.RecordObservation(ExaminationTool.MeasurementType.Treatment.ToString());

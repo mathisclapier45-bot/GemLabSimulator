@@ -212,6 +212,7 @@ public class RamanUI : MonoBehaviour
         analysisText.text = string.Join("\n", result.Analysis);
         Render();
 
+        stone.RecordObservation(LabFindings.RamanKey(target));
         if (result.RecordAuthenticity)
         {
             stone.RecordObservation(ExaminationTool.MeasurementType.Authenticity.ToString());

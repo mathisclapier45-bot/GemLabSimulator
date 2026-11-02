@@ -236,6 +236,7 @@ public class MebUI : MonoBehaviour
         interpretationText.text = result.Interpretation;
         ShowOverlays();
 
+        stone.RecordObservation(LabFindings.MebKey(result.Mode, result.Mode == MebMode.Surface ? Magnifications[magIndex] : 0));
         if (result.RecordGrowth)
         {
             stone.RecordObservation(ExaminationTool.MeasurementType.GrowthStructure.ToString());
