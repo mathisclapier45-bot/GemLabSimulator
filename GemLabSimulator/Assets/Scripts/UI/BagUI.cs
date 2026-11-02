@@ -23,6 +23,10 @@ public class BagUI : MonoBehaviour
     private static readonly Color SlotHint = new Color(0.55f, 0.50f, 0.45f, 0.8f);
 
     private GameObject panel;
+    private GameObject bagContent;
+    private CalendarTabUI calendar;
+    private Image bagTabImage;
+    private Image calendarTabImage;
     private GameObject returnButton;
     private readonly Image[] equipmentIcons = new Image[PlayerOwnedTools.BagSlotCount];
     private Text infoText;
@@ -183,7 +187,25 @@ public class BagUI : MonoBehaviour
             if (toolOpen) returnButton.transform.SetAsLastSibling();
         }
 
-        if (Input.GetKeyDown(KeyCode.H)) panel.SetActive(!panel.activeSelf);
+        // H opens the bag, K the calendar: the same key closes it again.
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            if (panel.activeSelf && bagContent.activeSelf) panel.SetActive(false);
+            else
+            {
+                panel.SetActive(true);
+                SelectTab(false);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.K))
+        {
+            if (panel.activeSelf && calendar.Root.activeSelf) panel.SetActive(false);
+            else
+            {
+                panel.SetActive(true);
+                SelectTab(true);
+            }
+        }
         else if (panel.activeSelf && Input.GetKeyDown(KeyCode.Escape)) panel.SetActive(false);
     }
 
@@ -213,6 +235,44 @@ public class BagUI : MonoBehaviour
         BuildPortraitFrame();
         BuildBadges();
         BuildPetSlot();
+        BuildTabs();
+    }
+
+    // Two tabs at the top: the bag itself, and the calendar. What the bag panel holds goes into one container, shown or hidden by the tabs.
+    private void BuildTabs()
+    {
+        var keep = new[] { "Title", "Close" };
+        bagContent = new GameObject("BagContent", typeof(RectTransform));
+        bagContent.transform.SetParent(panel.transform, false);
+        var contentRect = bagContent.GetComponent<RectTransform>();
+        contentRect.anchorMin = Vector2.zero;
+        contentRect.anchorMax = Vector2.one;
+        contentRect.offsetMin = contentRect.offsetMax = Vector2.zero;
+        for (var i = panel.transform.childCount - 1; i >= 0; i--)
+        {
+            var child = panel.transform.GetChild(i);
+            if (child.gameObject == bagContent || Array.IndexOf(keep, child.name) >= 0) continue;
+            child.SetParent(bagContent.transform, false);
+        }
+
+        calendar = new CalendarTabUI(panel.transform);
+
+        var bagTab = RuntimeUIKit.MakeButton("TabBag", panel.transform, "Sac", 14, SlotColor, new Vector2(120f, -12f), new Vector2(110f, 30f));
+        bagTab.onClick.AddListener(() => SelectTab(false));
+        bagTabImage = bagTab.GetComponent<Image>();
+        var calendarTab = RuntimeUIKit.MakeButton("TabCalendar", panel.transform, "Calendrier (K)", 14, SlotColor, new Vector2(236f, -12f), new Vector2(150f, 30f));
+        calendarTab.onClick.AddListener(() => SelectTab(true));
+        calendarTabImage = calendarTab.GetComponent<Image>();
+        SelectTab(false);
+    }
+
+    private void SelectTab(bool showCalendar)
+    {
+        bagContent.SetActive(!showCalendar);
+        calendar.Root.SetActive(showCalendar);
+        bagTabImage.color = showCalendar ? SlotColor : new Color(0.45f, 0.35f, 0.22f, 1f);
+        calendarTabImage.color = showCalendar ? new Color(0.45f, 0.35f, 0.22f, 1f) : SlotColor;
+        if (showCalendar) calendar.Show();
     }
 
     // Left: 18 slots (6 columns x 3 rows) for the field equipment.

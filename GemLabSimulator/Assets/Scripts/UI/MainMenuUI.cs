@@ -11,6 +11,8 @@ public class MainMenuUI : MonoBehaviour
     [SerializeField] private RectTransform slotsContainer;
 
     private readonly string[] pendingNames = new string[SaveSystem.SlotCount];
+    private readonly int[] pendingDays = { 15, 15, 15 };
+    private readonly int[] pendingMonths = { 6, 6, 6 };
 
     private void Start()
     {
@@ -54,7 +56,7 @@ public class MainMenuUI : MonoBehaviour
     {
         CreateLabel(parent, $"Emplacement {slotNumber} — {data.saveName}",
             new Vector2(16, -14), new Vector2(SlotWidth - 220, 24), 16, TextAnchor.UpperLeft, Color.white);
-        CreateLabel(parent, $"Jour {data.currentDay} — {data.money}€",
+        CreateLabel(parent, $"{GameCalendar.Short(data.currentDay)} (jour {data.currentDay}) — {data.money}€",
             new Vector2(16, -44), new Vector2(SlotWidth - 220, 22), 13, TextAnchor.UpperLeft, new Color(0.75f, 0.75f, 0.75f));
 
         var loadButton = CreateButton(parent, "Charger", new Vector2(-100, 0), new Vector2(140, 36));
@@ -103,8 +105,58 @@ public class MainMenuUI : MonoBehaviour
         inputField.characterLimit = 24;
         inputField.onValueChanged.AddListener(value => pendingNames[index] = value);
 
+        BuildBirthdayPicker(parent, index);
+
         var startButton = CreateButton(parent, "Commencer", new Vector2(-100, 0), new Vector2(140, 36));
         startButton.onClick.AddListener(() => StartNewSlot(slotNumber));
+    }
+
+    // "Anniversaire : < 15 > < juin >": the birthday of the player, shown in the calendar.
+    private void BuildBirthdayPicker(Transform parent, int index)
+    {
+        CreateLabel(parent, "Anniversaire :", new Vector2(16, -52), new Vector2(110, 24), 13, TextAnchor.MiddleLeft, new Color(0.85f, 0.85f, 0.85f));
+        var dayLabel = CreateLabel(parent, "", new Vector2(176, -52), new Vector2(32, 24), 14, TextAnchor.MiddleCenter, Color.white);
+        var monthLabel = CreateLabel(parent, "", new Vector2(264, -52), new Vector2(92, 24), 14, TextAnchor.MiddleCenter, Color.white);
+
+        void ShowPicker()
+        {
+            var daysInMonth = System.DateTime.DaysInMonth(2024, pendingMonths[index]);
+            pendingDays[index] = Mathf.Clamp(pendingDays[index], 1, daysInMonth);
+            dayLabel.text = pendingDays[index].ToString();
+            monthLabel.text = GameCalendar.MonthNames[pendingMonths[index] - 1];
+        }
+
+        void Step(bool month, int delta)
+        {
+            if (month) pendingMonths[index] = (pendingMonths[index] - 1 + delta + 12) % 12 + 1;
+            else
+            {
+                var daysInMonth = System.DateTime.DaysInMonth(2024, pendingMonths[index]);
+                pendingDays[index] = (pendingDays[index] - 1 + delta + daysInMonth) % daysInMonth + 1;
+            }
+            ShowPicker();
+        }
+
+        MakeSmallButton(parent, "<", new Vector2(146, -53), () => Step(false, -1));
+        MakeSmallButton(parent, ">", new Vector2(212, -53), () => Step(false, 1));
+        MakeSmallButton(parent, "<", new Vector2(234, -53), () => Step(true, -1));
+        MakeSmallButton(parent, ">", new Vector2(360, -53), () => Step(true, 1));
+        ShowPicker();
+    }
+
+    private static void MakeSmallButton(Transform parent, string label, Vector2 position, UnityEngine.Events.UnityAction action)
+    {
+        var go = new GameObject("StepButton", typeof(RectTransform), typeof(Image), typeof(Button));
+        go.transform.SetParent(parent, false);
+        var rect = go.GetComponent<RectTransform>();
+        rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
+        rect.pivot = new Vector2(0f, 1f);
+        rect.anchoredPosition = position;
+        rect.sizeDelta = new Vector2(26, 22);
+        go.GetComponent<Image>().color = new Color(0.30f, 0.32f, 0.42f, 1f);
+        go.GetComponent<Button>().onClick.AddListener(action);
+        var text = CreateLabel(go.transform, label, Vector2.zero, new Vector2(26, 22), 14, TextAnchor.MiddleCenter, Color.white);
+        text.raycastTarget = false;
     }
 
     private void StartNewSlot(int slotNumber)
@@ -112,7 +164,7 @@ public class MainMenuUI : MonoBehaviour
         var index = slotNumber - 1;
         var name = string.IsNullOrWhiteSpace(pendingNames[index]) ? $"Partie {slotNumber}" : pendingNames[index].Trim();
 
-        SaveSystem.CreateNewSave(slotNumber, name);
+        SaveSystem.CreateNewSave(slotNumber, name, pendingDays[index], pendingMonths[index]);
         SaveSystem.ActiveSlot = slotNumber;
         SaveSystem.PendingLoad = true;
         SceneManager.LoadScene("MaisonJoueur");

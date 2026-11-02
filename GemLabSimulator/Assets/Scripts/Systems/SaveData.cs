@@ -88,6 +88,8 @@ public class SaveData
     public string saveName = "";
     public int money;
     public int currentDay = 1;
+    public int birthdayDay;            // birthday of the player, chosen when the game is created (0: none)
+    public int birthdayMonth;
     public float timeOfDay = -1f;      // hour of the in-game day when saved (-1: older saves, the day starts at 7h)
     public List<GemInstanceSaveData> inventoryGems = new List<GemInstanceSaveData>();
     public List<GemInstanceSaveData> chestGems = new List<GemInstanceSaveData>();

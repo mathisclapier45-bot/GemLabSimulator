@@ -316,7 +316,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -1490,7 +1490,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -1569,7 +1569,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -2006,7 +2006,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -4766,7 +4766,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -9227,7 +9227,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -9734,7 +9734,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -13663,7 +13663,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -15182,8 +15182,8 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    pivot: {x: 0.5, y: 0}
+    oldSize: {x: 1, y: 1.375}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -17084,7 +17084,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -21329,7 +21329,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -24174,7 +24174,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -24728,7 +24728,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -25227,7 +25227,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -30488,7 +30488,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -31780,7 +31780,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -36550,7 +36550,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -36978,7 +36978,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -37415,7 +37415,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -37846,7 +37846,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0
@@ -39228,7 +39228,7 @@ MonoBehaviour:
     m_FontSize: 9
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 40
     m_Alignment: 1
     m_AlignByGeometry: 0

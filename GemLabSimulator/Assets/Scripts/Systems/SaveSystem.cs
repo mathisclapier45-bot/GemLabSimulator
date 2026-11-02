@@ -33,11 +33,13 @@ public static class SaveSystem
         if (HasSave(slot)) File.Delete(SavePath(slot));
     }
 
-    public static void CreateNewSave(int slot, string saveName)
+    public static void CreateNewSave(int slot, string saveName, int birthdayDay = 0, int birthdayMonth = 0)
     {
         var data = new SaveData
         {
             saveName = saveName,
+            birthdayDay = birthdayDay,
+            birthdayMonth = birthdayMonth,
             money = 0,
             currentDay = 1,
             sceneName = "MaisonJoueur",
@@ -58,6 +60,8 @@ public static class SaveSystem
             money = PlayerWallet.Instance.Money,
             currentDay = GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1,
             timeOfDay = OpeningHours.CurrentHour,
+            birthdayDay = GameCalendar.BirthdayDay,
+            birthdayMonth = GameCalendar.BirthdayMonth,
             sceneName = SceneManager.GetActiveScene().name,
             reputationPoints = ReputationState.Instance != null ? ReputationState.Instance.Points : 0,
         };
@@ -125,6 +129,7 @@ public static class SaveSystem
         if (GameClock.Instance != null)
             GameClock.Instance.SetDay(data.currentDay);
 
+        GameCalendar.SetBirthday(data.birthdayDay, data.birthdayMonth);
         if (data.timeOfDay >= 0f) DayNightOverlay.SetHour(data.timeOfDay);
         else DayNightOverlay.ResetToDay();
 

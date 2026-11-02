@@ -53,6 +53,8 @@ public class SkyDialUI : MonoBehaviour
     private Image moonImage;
     private readonly Sprite[] moonSprites = new Sprite[MoonPhases];
     private int shownPhase = -1;
+    private Text dateText;
+    private int shownDay = -1;
     private Image[] stars;
     private Vector2[] starPositions;
     private readonly Color32[] gradient = new Color32[GradientHeight];
@@ -127,6 +129,12 @@ public class SkyDialUI : MonoBehaviour
         sunRect = sunImage.rectTransform;
         moonImage = MakeBody("Moon", window.transform, null);
         moonRect = moonImage.rectTransform;
+
+        // The date, under the window.
+        dateText = RuntimeUIKit.MakeText("Date", root.transform, "", 12, TextAnchor.UpperCenter, new Color(0.92f, 0.92f, 0.95f), new Vector2(0f, -FrameHeight - 3f), new Vector2(FrameWidth, 18f));
+        var dateShadow = dateText.gameObject.AddComponent<Shadow>();
+        dateShadow.effectColor = new Color(0f, 0f, 0f, 0.7f);
+        dateShadow.effectDistance = new Vector2(1f, -1f);
 
         // Hills on the horizon.
         var hillsGo = new GameObject("Hills", typeof(RectTransform), typeof(Image));
@@ -242,7 +250,13 @@ public class SkyDialUI : MonoBehaviour
         PlaceBody(moonRect, moonImage, moonT <= 1f ? moonT : -1f);
 
         var day = GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1;
-        var phase = ((day % MoonPhases) + MoonPhases) % MoonPhases;
+        // The moon follows the real phases of the calendar.
+        var phase = Mathf.RoundToInt(GameCalendar.MoonPhase(GameCalendar.DateOf(day)) * MoonPhases) % MoonPhases;
+        if (day != shownDay)
+        {
+            shownDay = day;
+            dateText.text = GameCalendar.Short(GameCalendar.DateOf(day));
+        }
         if (phase != shownPhase)
         {
             shownPhase = phase;

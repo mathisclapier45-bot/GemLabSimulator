@@ -78,7 +78,7 @@ public class InventoryUI : MonoBehaviour
         if (panel.activeSelf && clockText != null)
         {
             var day = GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1;
-            clockText.text = $"Jour {day} — {DayNightOverlay.GetClockLabel()}";
+            clockText.text = $"{GameCalendar.WithWeekday(GameCalendar.DateOf(day))} — {DayNightOverlay.GetClockLabel()}";
         }
     }
 
