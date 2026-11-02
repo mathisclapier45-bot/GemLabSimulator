@@ -90,6 +90,13 @@ public static class SaveSystem
             data.ownedTools.AddRange(ownedTools.Owned);
             foreach (var slot in ownedTools.BagSlots) data.bagSlots.Add(slot ?? "");
         }
+        var pets = PlayerPets.Instance;
+        if (pets != null)
+        {
+            data.ownedPets.AddRange(pets.Owned);
+            data.equippedPet = pets.Equipped ?? "";
+        }
+        PlayerCards.Instance?.WriteTo(data);
         if (MicroPhotoLibrary.Instance != null) data.microPhotos.AddRange(MicroPhotoLibrary.Instance.Photos);
 
         if (GemCodex.Instance != null)
@@ -128,6 +135,12 @@ public static class SaveSystem
 
         var tools = PlayerOwnedTools.Ensure();
         if (tools != null) tools.LoadTools(data.ownedTools, data.bagSlots);
+
+        var pets = PlayerPets.Ensure();
+        if (pets != null) pets.LoadPets(data.ownedPets, data.equippedPet);
+
+        var cards = PlayerCards.Ensure();
+        if (cards != null) cards.LoadFrom(data);
 
         var photoLibrary = MicroPhotoLibrary.Ensure();
         if (photoLibrary != null) photoLibrary.LoadEntries(data.microPhotos);

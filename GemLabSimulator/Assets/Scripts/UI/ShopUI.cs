@@ -41,12 +41,15 @@ public class ShopUI : MonoBehaviour
         if (PlayerWallet.Instance != null) PlayerWallet.Instance.OnMoneyChanged += RefreshIfOpen;
         var tools = PlayerOwnedTools.Ensure();
         if (tools != null) tools.OnToolsChanged += RefreshIfOpen;
+        var pets = PlayerPets.Ensure();
+        if (pets != null) pets.OnPetsChanged += RefreshIfOpen;
     }
 
     private void OnDestroy()
     {
         if (PlayerWallet.Instance != null) PlayerWallet.Instance.OnMoneyChanged -= RefreshIfOpen;
         if (PlayerOwnedTools.Instance != null) PlayerOwnedTools.Instance.OnToolsChanged -= RefreshIfOpen;
+        if (PlayerPets.Instance != null) PlayerPets.Instance.OnPetsChanged -= RefreshIfOpen;
     }
 
     private void Open(ShopItem requested)
@@ -86,10 +89,16 @@ public class ShopUI : MonoBehaviour
         nameText.text = item.DisplayName;
         descriptionText.text = item.Description;
         priceText.text = $"Prix : {item.Price}€";
+        if (item.IsBooster)
+        {
+            RefreshBooster();
+            return;
+        }
 
         var tools = PlayerOwnedTools.Ensure();
+        var pets = PlayerPets.Ensure();
         var wallet = PlayerWallet.Instance;
-        var alreadyOwned = tools != null && tools.Has(item.ToolId);
+        var alreadyOwned = item.IsOwned();
         var money = wallet != null ? wallet.Money : 0;
 
         if (alreadyOwned)
@@ -99,7 +108,14 @@ public class ShopUI : MonoBehaviour
             buyLabel.text = "Acheté";
             buyButton.interactable = false;
         }
-        else if (item.AddsToBag && tools != null && !tools.BagHasRoom)
+        else if (item.IsPet && pets != null && !pets.HasRoom)
+        {
+            statusText.text = $"Votre sac n'a plus de place pour un animal ({PlayerPets.CollectionSlots} maximum).";
+            statusText.color = new Color(0.95f, 0.45f, 0.40f);
+            buyLabel.text = "Sac plein";
+            buyButton.interactable = false;
+        }
+        else if (!item.IsPet && item.AddsToBag && tools != null && !tools.BagHasRoom)
         {
             statusText.text = $"Votre sac est plein ({PlayerOwnedTools.BagSlotCount} emplacements).";
             statusText.color = new Color(0.95f, 0.45f, 0.40f);
@@ -120,6 +136,16 @@ public class ShopUI : MonoBehaviour
     {
         var tools = PlayerOwnedTools.Ensure();
         var wallet = PlayerWallet.Instance;
+        if (item != null && item.IsBooster)
+        {
+            BuyBooster(wallet);
+            return;
+        }
+        if (item != null && item.IsPet)
+        {
+            BuyPet(wallet);
+            return;
+        }
         if (item == null || tools == null || wallet == null || tools.Has(item.ToolId)) return;
         if (item.AddsToBag && !tools.BagHasRoom) return;
         if (!wallet.TrySpend(item.Price)) return;
@@ -131,6 +157,54 @@ public class ShopUI : MonoBehaviour
             : item.AddsToBag
                 ? $"{item.DisplayName} acheté ! Il a été rangé dans votre sac (H)."
                 : $"{item.DisplayName} acheté ! Il est installé dans le laboratoire de la maison.");
+        Refresh();
+    }
+
+    // A booster: five cards for the binder, a limited number of boosters a day.
+    private void RefreshBooster()
+    {
+        var cards = PlayerCards.Ensure();
+        var wallet = PlayerWallet.Instance;
+        var money = wallet != null ? wallet.Money : 0;
+        var left = cards != null ? cards.BoostersLeftToday : 0;
+
+        statusText.text = $"Boosters du jour : {left}   ·   Argent : {money}€";
+        if (left <= 0)
+        {
+            statusText.color = new Color(0.95f, 0.45f, 0.40f);
+            buyLabel.text = "Épuisé pour aujourd'hui";
+            buyButton.interactable = false;
+            return;
+        }
+
+        var canAfford = money >= item.Price;
+        statusText.color = canAfford ? new Color(0.85f, 0.85f, 0.85f) : new Color(0.95f, 0.45f, 0.40f);
+        buyLabel.text = canAfford ? "Acheter" : "Fonds insuffisants";
+        buyButton.interactable = canAfford;
+    }
+
+    private void BuyBooster(PlayerWallet wallet)
+    {
+        var cards = PlayerCards.Ensure();
+        if (cards == null || wallet == null || cards.BoostersLeftToday <= 0) return;
+        if (!wallet.TrySpend(item.Price)) return;
+
+        var draws = cards.OpenBooster();
+        Close();
+        BoosterUI.Show(draws);
+    }
+
+    // An animal goes into the bag; the player equips it there and it follows him.
+    private void BuyPet(PlayerWallet wallet)
+    {
+        var pets = PlayerPets.Ensure();
+        if (pets == null || wallet == null || pets.Has(item.ToolId) || !pets.HasRoom) return;
+        if (!wallet.TrySpend(item.Price)) return;
+
+        pets.TryAdd(item.ToolId);
+        ToolFeedbackUI.Instance?.ShowMessage(!string.IsNullOrEmpty(item.PurchaseMessage)
+            ? item.PurchaseMessage
+            : $"{item.DisplayName} adopté ! Il vous attend dans votre sac (H) : équipez-le pour qu'il vous suive.");
         Refresh();
     }
 

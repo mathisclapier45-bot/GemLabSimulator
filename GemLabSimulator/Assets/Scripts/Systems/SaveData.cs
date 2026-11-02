@@ -78,6 +78,12 @@ public class SaveData
     public List<GemInstanceSaveData> orderCabinetGems = new List<GemInstanceSaveData>();
     public List<string> ownedTools = new List<string>();
     public List<string> bagSlots = new List<string>();
+    public List<string> ownedPets = new List<string>();
+    public string equippedPet;
+    public List<string> cardIds = new List<string>();
+    public List<int> cardCounts = new List<int>();
+    public int boosterDay;
+    public int boostersToday;
     public List<MicroPhotoEntry> microPhotos = new List<MicroPhotoEntry>();
     public List<string> discoveredSpecies = new List<string>();
     public string sceneName;

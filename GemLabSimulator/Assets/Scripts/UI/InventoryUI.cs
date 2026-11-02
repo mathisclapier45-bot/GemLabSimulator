@@ -31,10 +31,25 @@ public class InventoryUI : MonoBehaviour
 
     private void Start()
     {
+        AddBinderButton();
+
         if (PlayerInventory.Instance == null) return;
         PlayerInventory.Instance.OnInventoryChanged += Refresh;
         if (dropZone != null) dropZone.TargetContainer = PlayerInventory.Instance;
         Refresh();
+    }
+
+    // "Classeur (B)": opens the card binder from the inventory.
+    private void AddBinderButton()
+    {
+        if (panel == null) return;
+        var button = RuntimeUIKit.MakeButton("BinderButton", panel.transform, "Classeur de cartes (B)", 13, new Color(0.36f, 0.26f, 0.18f, 1f),
+            Vector2.zero, new Vector2(220f, 24f));
+        var rect = button.GetComponent<RectTransform>();
+        rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0f);
+        rect.pivot = new Vector2(0.5f, 0f);
+        rect.anchoredPosition = new Vector2(0f, 6f);
+        button.onClick.AddListener(() => BinderUI.Instance?.Open());
     }
 
     private void OnDestroy()

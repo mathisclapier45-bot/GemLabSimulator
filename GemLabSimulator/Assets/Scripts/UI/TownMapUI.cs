@@ -17,6 +17,7 @@ public class TownMapUI : MonoBehaviour
         ("MaisonJoueur", -52f, -50f),
         ("GemStore", 35f, 7f),
         ("WatchStore", -31.5f, -15f),
+        ("Animalerie", 8.5f, 7f),
         ("DiamantairesAccueil", 45f, 28f),
         ("Diamantaires1", 45f, 28f),
         ("Diamantaires2", 45f, 28f),

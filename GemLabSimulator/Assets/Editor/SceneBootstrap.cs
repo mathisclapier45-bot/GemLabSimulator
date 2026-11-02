@@ -600,6 +600,7 @@ public static class SceneBootstrap
         // Counter along the right side, the clerk standing behind it.
         CreateShopCounter(new Vector3(4.5f, -1.5f, 0f), 4);
         CreateShopkeeper(new Vector3(6.1f, -1.0f, 0f));
+        CreateBoosterDisplay(new Vector3(4.5f, -0.85f, 0f));
 
         PlaceWallDecor("window_white", 3, ShopMaxY);
         PlaceRug("rug_gold", new Vector3(-1.0f, -1.2f, 0f));
@@ -614,6 +615,211 @@ public static class SceneBootstrap
 
         AssetDatabase.SaveAssets();
         Debug.Log("GemStore scene created at Assets/Scenes/GemStore.unity");
+    }
+
+    // Pet shop: three displays along the back wall (a pen with the puppy, a basket with the cat, a terrarium with the snake). Clicking
+    // an animal opens the purchase window; a bought animal goes into the bag, where the player equips it so that it follows him.
+    [MenuItem("GemLab/Setup Pet Shop Scene")]
+    public static void CreatePetShopScene()
+    {
+        var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
+
+        var light = GameObject.Find("Directional Light");
+        if (light != null) UnityEngine.Object.DestroyImmediate(light);
+
+        var cam = Camera.main;
+        cam.orthographic = true;
+        cam.orthographicSize = 5f;
+        cam.clearFlags = CameraClearFlags.SolidColor;
+        cam.backgroundColor = new Color(0.12f, 0.09f, 0.07f);
+        cam.transform.position = new Vector3(0f, 0f, -10f);
+
+        var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
+        pixelPerfect.assetsPPU = PixelsPerUnit;
+        pixelPerfect.refResolutionX = InteriorRefResolutionX;
+        pixelPerfect.refResolutionY = InteriorRefResolutionY;
+        pixelPerfect.upscaleRT = false;
+        pixelPerfect.pixelSnapping = true;
+        pixelPerfect.cropFrameX = false;
+        pixelPerfect.cropFrameY = false;
+
+        var gridGO = new GameObject("Grid", typeof(Grid));
+
+        var groundGO = new GameObject("Ground", typeof(Tilemap), typeof(TilemapRenderer));
+        groundGO.transform.SetParent(gridGO.transform);
+        var groundTilemap = groundGO.GetComponent<Tilemap>();
+
+        var wallsGO = new GameObject("Walls", typeof(Tilemap), typeof(TilemapRenderer), typeof(TilemapCollider2D));
+        wallsGO.transform.SetParent(gridGO.transform);
+        var wallsTilemap = wallsGO.GetComponent<Tilemap>();
+
+        var floorTile = GetInteriorFloorTile("market", Color.white, "labfloor_pixel", LabFloorPixel);
+        var wallTile = GetInteriorSideWallTile("market", InteriorSideWallTint, "wall_pixel", WallPixel);
+
+        for (var x = ShopMinX; x <= ShopMaxX; x++)
+        {
+            for (var y = ShopMinY; y <= ShopMaxY; y++)
+            {
+                var isPerimeter = x == ShopMinX || x == ShopMaxX || y == ShopMinY || y == ShopMaxY;
+                var cell = new Vector3Int(x, y, 0);
+                if (isPerimeter)
+                    wallsTilemap.SetTile(cell, wallTile);
+                else
+                    groundTilemap.SetTile(cell, floorTile);
+            }
+        }
+
+        PaintInteriorTopWall(wallsTilemap, ShopMinX, ShopMaxX, ShopMaxY, "market", Color.white);
+
+        var spawnGO = new GameObject("SpawnPoint");
+        spawnGO.transform.position = new Vector3(0f, ShopMinY + 2f, 0f);
+
+        var playerSprite = GetPlayerSprite();
+
+        var player = new GameObject("Player");
+        player.tag = "Player";
+        var sr = player.AddComponent<SpriteRenderer>();
+        sr.sprite = playerSprite;
+        sr.sortingOrder = 5;
+
+        var rb = player.AddComponent<Rigidbody2D>();
+        rb.gravityScale = 0f;
+        rb.freezeRotation = true;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        var col = player.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(0.7f, 0.4f);
+        col.offset = new Vector2(0f, 0.2f);
+
+        player.AddComponent<PlayerController>();
+        player.AddComponent<PlayerInventory>();
+        player.AddComponent<PlayerWallet>();
+        player.AddComponent<PlayerChest>();
+        player.AddComponent<GemCodex>();
+        player.AddComponent<MailboxState>();
+        player.AddComponent<GameClock>();
+        player.AddComponent<ReturnToMenuController>();
+        player.AddComponent<MarketState>();
+        player.AddComponent<QuestState>();
+        player.AddComponent<RoughMarketState>();
+        player.AddComponent<TunnelState>();
+        player.AddComponent<ManoirRequestState>();
+        player.AddComponent<ReputationState>();
+        player.AddComponent<LapidaryState>();
+        player.AddComponent<PlayerCabinet>();
+        player.AddComponent<PlayerOrderCabinet>();
+        player.AddComponent<PlayerOwnedTools>();
+        player.AddComponent<PlayerPets>();
+        player.transform.position = spawnGO.transform.position;
+
+        var follow = cam.gameObject.AddComponent<CameraFollow>();
+        follow.SetTarget(player.transform);
+
+        CreateMusicManager();
+
+        CreateExitDoor(new Vector3(0, ShopMinY + 1, 0f), "SpawnPoint_Animalerie");
+
+        // The three displays, spaced along the back wall.
+        var standY = ShopMaxY - 1.9f;
+        CreatePetStand("PetChien", "petpen", -4.5f, standY, 0.42f);
+        CreatePetStand("PetChat", "petbasket", 0f, standY, 0.5f);
+        CreatePetStand("PetSerpent", "terrarium", 4.5f, standY, 0.34f);
+
+        // Counter on the right, the shop assistant behind it.
+        CreateShopCounter(new Vector3(5.6f, -3.0f, 0f), 3);
+        CreateTalkNpc("Vendeuse de l'animalerie", "receptionist", new Vector3(7.0f, -2.2f, 0f), new[]
+        {
+            "Bienvenue à l'animalerie ! Cliquez sur un animal pour le voir, et pour l'adopter.",
+            "Un animal adopté vous attend dans votre sac (H). Équipez-le et il vous suivra partout.",
+            "Un seul compagnon à la fois, mais vous pouvez en garder plusieurs dans votre sac.",
+            "D'autres pensionnaires plus... impressionnants arriveront bientôt. Un tigre, peut-être ?",
+        }, new Vector2(5f, 3.5f), new Vector2(-2.5f, 0.6f));
+
+        foreach (var x in new[] { -7, -2, 3, 6 }) PlaceWallDecor("window_white", x, ShopMaxY);
+        PlaceFurniture("shop_b", new Vector3(-7f, ShopMaxY - 1f, 0f));
+        PlaceFurniture("shop_d", new Vector3(7f, ShopMaxY - 1f, 0f));
+        PlaceRug("rug_gold", new Vector3(-1.0f, -1.0f, 0f));
+        PlaceFurniture("plant_small", new Vector3(-6.3f, ShopMinY + 1.1f, 0f));
+        PlaceFurniture("plant_small", new Vector3(-6.3f, -0.8f, 0f));
+
+        CreateUI(false);
+
+        Directory.CreateDirectory("Assets/Scenes");
+        EditorSceneManager.SaveScene(scene, "Assets/Scenes/Animalerie.unity");
+        AddSceneToBuildSettings("Assets/Scenes/Animalerie.unity");
+
+        AssetDatabase.SaveAssets();
+        Debug.Log("Pet shop scene created at Assets/Scenes/Animalerie.unity");
+    }
+
+    // One display of the pet shop: the pen, basket or terrarium, the animal standing in it (click it to buy), and its name and price above.
+    private static void CreatePetStand(string petId, string propName, float x, float feetY, float petOffsetY)
+    {
+        if (!PetCatalog.TryGet(petId, out var pet)) return;
+
+        PlaceInteriorProp(propName, new Vector3(x, feetY, 0f), true, true, 4);
+
+        var sprite = LoadPackSpriteGrounded($"Assets/Resources/Pets/{pet.Sprite}_0.png");
+        if (sprite == null) return;
+
+        var animal = new GameObject($"Animal_{petId}");
+        animal.transform.position = new Vector3(x, feetY + petOffsetY, 0f);
+        var sr = animal.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 5;
+
+        // Click area over the animal and its display (a trigger: it never blocks the player).
+        var clickArea = animal.AddComponent<BoxCollider2D>();
+        clickArea.isTrigger = true;
+        clickArea.size = new Vector2(1.9f, 1.5f);
+        clickArea.offset = new Vector2(0f, 0.65f - petOffsetY);
+
+        var shopItem = animal.AddComponent<ShopItem>();
+        var so = new SerializedObject(shopItem);
+        so.FindProperty("toolId").stringValue = pet.Id;
+        so.FindProperty("displayName").stringValue = pet.Name;
+        so.FindProperty("description").stringValue = pet.Description;
+        so.FindProperty("price").intValue = pet.Price;
+        so.FindProperty("purchaseMessage").stringValue = "";
+        so.FindProperty("addsToBag").boolValue = false;
+        so.FindProperty("isPet").boolValue = true;
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel($"{pet.Name}\n{pet.Price}€", new Vector3(x, feetY + 1.45f, 0f));
+    }
+
+    // The small display on the counter of the GemStore: three card boosters. Clicking it opens the purchase window.
+    private static void CreateBoosterDisplay(Vector3 feet)
+    {
+        var sprite = LoadPackSpriteGrounded("Assets/Art/Sprites/interior_prop_boosterdisplay.png");
+        if (sprite == null) return;
+
+        var display = new GameObject("Presentoir_Boosters");
+        display.transform.position = feet;
+        var sr = display.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 5;
+
+        var clickArea = display.AddComponent<BoxCollider2D>();
+        clickArea.isTrigger = true;
+        clickArea.size = sprite.bounds.size + new Vector3(0.2f, 0.2f, 0f);
+        clickArea.offset = new Vector2(0f, sprite.bounds.size.y / 2f);
+
+        var item = display.AddComponent<ShopItem>();
+        var so = new SerializedObject(item);
+        so.FindProperty("toolId").stringValue = "BoosterCartes";
+        so.FindProperty("displayName").stringValue = "Booster de cartes";
+        so.FindProperty("description").stringValue =
+            "Un booster contient 5 cartes à collectionner : éléments du tableau périodique, master stones, gemmes et pierres célèbres. " +
+            "Les plus rares brillent ! Un booster par jour. Les cartes vont dans votre classeur (B).";
+        so.FindProperty("price").intValue = PlayerCards.BoosterPrice;
+        so.FindProperty("purchaseMessage").stringValue = "";
+        so.FindProperty("addsToBag").boolValue = false;
+        so.FindProperty("isPet").boolValue = false;
+        so.FindProperty("isBooster").boolValue = true;
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel($"Boosters de cartes\n{PlayerCards.BoosterPrice}€", feet + new Vector3(0f, sprite.bounds.size.y + 0.1f, 0f));
     }
 
     // Wooden shelf unit. Each compartment gets an empty "Slot_*" child (on the shelf boards) where a sale item will be put.
@@ -1474,6 +1680,7 @@ public static class SceneBootstrap
         CreateNamedSpawnPoint("SpawnPoint_Diamantaires", new Vector3(45f, 26f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_WatchStore", new Vector3(-29.75f, -17f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_GemStore", new Vector3(34f, 5f, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Animalerie", new Vector3(10f, 5f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_MaisonJoueur", new Vector3(-51.2f, -52f, 0f));
 
         for (var i = 0; i < 5; i++)
@@ -3124,9 +3331,9 @@ public static class SceneBootstrap
 
         var door = go.AddComponent<DoorTrigger>();
         var so = new SerializedObject(door);
-        so.FindProperty("sceneName").stringValue = "";
-        so.FindProperty("implemented").boolValue = false;
-        so.FindProperty("lockedMessage").stringValue = "Animalerie : ouverture prochaine.";
+        so.FindProperty("sceneName").stringValue = "Animalerie";
+        so.FindProperty("implemented").boolValue = true;
+        so.FindProperty("lockedMessage").stringValue = "Animalerie : ce lieu n'est pas encore accessible.";
         so.ApplyModifiedProperties();
 
         CreateBuildingLabel("Animalerie", position + new Vector3(0f, sprite.bounds.size.y + 0.5f, 0f));

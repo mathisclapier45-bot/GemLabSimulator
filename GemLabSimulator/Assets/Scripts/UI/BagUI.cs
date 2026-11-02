@@ -26,6 +26,8 @@ public class BagUI : MonoBehaviour
     private GameObject returnButton;
     private readonly Image[] equipmentIcons = new Image[PlayerOwnedTools.BagSlotCount];
     private Text infoText;
+    private Image equippedPetIcon;
+    private readonly Image[] collectionIcons = new Image[PlayerPets.CollectionSlots];
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Bootstrap()
@@ -81,12 +83,17 @@ public class BagUI : MonoBehaviour
         var tools = PlayerOwnedTools.Ensure();
         if (tools != null) tools.OnToolsChanged += RefreshEquipment;
         RefreshEquipment();
+
+        var pets = PlayerPets.Ensure();
+        if (pets != null) pets.OnPetsChanged += RefreshPets;
+        RefreshPets();
     }
 
     private void OnDestroy()
     {
         if (Instance == this) Instance = null;
         if (PlayerOwnedTools.Instance != null) PlayerOwnedTools.Instance.OnToolsChanged -= RefreshEquipment;
+        if (PlayerPets.Instance != null) PlayerPets.Instance.OnPetsChanged -= RefreshPets;
     }
 
     private void RefreshEquipment()
@@ -118,6 +125,46 @@ public class BagUI : MonoBehaviour
         if (string.IsNullOrEmpty(id)) return;
 
         if (BagToolLauncher.Use(id)) Close();
+    }
+
+    // The equipped animal and the ones waiting in the bag.
+    private void RefreshPets()
+    {
+        var pets = PlayerPets.Instance;
+        if (equippedPetIcon == null) return;
+
+        var equippedSprite = pets != null && !string.IsNullOrEmpty(pets.Equipped) ? PetCatalog.IconOf(pets.Equipped) : null;
+        equippedPetIcon.sprite = equippedSprite;
+        equippedPetIcon.enabled = equippedSprite != null;
+
+        var collection = pets != null ? pets.Collection : new System.Collections.Generic.List<string>();
+        for (var i = 0; i < collectionIcons.Length; i++)
+        {
+            var sprite = i < collection.Count ? PetCatalog.IconOf(collection[i]) : null;
+            collectionIcons[i].sprite = sprite;
+            collectionIcons[i].enabled = sprite != null;
+        }
+    }
+
+    private string CollectionPetAt(int index)
+    {
+        var pets = PlayerPets.Instance;
+        if (pets == null) return null;
+        var collection = pets.Collection;
+        return index < collection.Count ? collection[index] : null;
+    }
+
+    private void ShowPetInfo(string petId, bool equipped)
+    {
+        if (string.IsNullOrEmpty(petId)) return;
+        infoText.text = $"{PetCatalog.NameOf(petId)}\n\n{PetCatalog.DescriptionOf(petId)}\n\n" +
+                        (equipped ? "Clic : ranger dans le sac" : "Clic : équiper (il vous suivra partout)");
+    }
+
+    private void UseCollectionSlot(int index)
+    {
+        var id = CollectionPetAt(index);
+        if (!string.IsNullOrEmpty(id)) PlayerPets.Instance?.Equip(id);
     }
 
     private void HideInfo()
@@ -254,12 +301,45 @@ public class BagUI : MonoBehaviour
             MakeSlot($"Insigne_{i}", new Vector2(startX + i * (SlotSize + 16f), y - 4f), "Insigne");
     }
 
-    // Left of the frame, at the character's height: the pet.
+    // Left of the frame, at the character's height: the equipped animal, and under it the animals waiting in the bag.
     private void BuildPetSlot()
     {
         const float x = 424f;
         RuntimeUIKit.MakeText("PetLabel", panel.transform, "Animal", 13, TextAnchor.UpperLeft, Gold, new Vector2(x, -178f), new Vector2(80f, 20f));
-        MakeSlot("Animal", new Vector2(x, -204f), "Animal");
+        var equipped = MakeSlot("Animal", new Vector2(x, -204f), "Animal");
+        equippedPetIcon = AddIcon(equipped);
+        equipped.gameObject.AddComponent<Button>().onClick.AddListener(() => PlayerPets.Instance?.Unequip());
+        var equippedHover = equipped.gameObject.AddComponent<BagSlotHover>();
+        equippedHover.OnEnter = () => ShowPetInfo(PlayerPets.Instance != null ? PlayerPets.Instance.Equipped : null, true);
+        equippedHover.OnExit = HideInfo;
+
+        RuntimeUIKit.MakeText("PetCollectionLabel", panel.transform, "Animaux", 13, TextAnchor.UpperLeft, Gold, new Vector2(x, -268f), new Vector2(80f, 20f));
+        for (var i = 0; i < collectionIcons.Length; i++)
+        {
+            var captured = i;
+            var slot = RuntimeUIKit.MakeBox($"AnimalSac_{i}", panel.transform, new Vector2(x + 4f, -292f - i * 56f), new Vector2(48f, 48f), SlotColor);
+            collectionIcons[i] = AddIcon(slot);
+            slot.gameObject.AddComponent<Button>().onClick.AddListener(() => UseCollectionSlot(captured));
+            var hover = slot.gameObject.AddComponent<BagSlotHover>();
+            hover.OnEnter = () => ShowPetInfo(CollectionPetAt(captured), false);
+            hover.OnExit = HideInfo;
+        }
+    }
+
+    private static Image AddIcon(Image slot)
+    {
+        var iconGO = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+        iconGO.transform.SetParent(slot.transform, false);
+        var iconRect = iconGO.GetComponent<RectTransform>();
+        iconRect.anchorMin = Vector2.zero;
+        iconRect.anchorMax = Vector2.one;
+        iconRect.offsetMin = new Vector2(4f, 4f);
+        iconRect.offsetMax = new Vector2(-4f, -4f);
+        var icon = iconGO.GetComponent<Image>();
+        icon.preserveAspect = true;
+        icon.raycastTarget = false;
+        icon.enabled = false;
+        return icon;
     }
 
     private Image MakeSlot(string name, Vector2 position, string hint)

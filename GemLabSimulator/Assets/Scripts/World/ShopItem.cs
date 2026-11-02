@@ -10,6 +10,8 @@ public class ShopItem : MonoBehaviour
     [SerializeField] private int price = 100;
     [SerializeField] private string purchaseMessage;
     [SerializeField] private bool addsToBag;
+    [SerializeField] private bool isPet;
+    [SerializeField] private bool isBooster;
 
     private const float HoverScale = 1.12f;
 
@@ -23,6 +25,8 @@ public class ShopItem : MonoBehaviour
     public int Price => price;
     public string PurchaseMessage => purchaseMessage;
     public bool AddsToBag => addsToBag;
+    public bool IsPet => isPet;
+    public bool IsBooster => isBooster;
 
     private void Awake()
     {
@@ -35,21 +39,31 @@ public class ShopItem : MonoBehaviour
     {
         var tools = PlayerOwnedTools.Ensure();
         if (tools != null) tools.OnToolsChanged += RefreshLook;
+        var pets = PlayerPets.Ensure();
+        if (pets != null) pets.OnPetsChanged += RefreshLook;
         RefreshLook();
     }
 
     private void OnDestroy()
     {
         if (PlayerOwnedTools.Instance != null) PlayerOwnedTools.Instance.OnToolsChanged -= RefreshLook;
+        if (PlayerPets.Instance != null) PlayerPets.Instance.OnPetsChanged -= RefreshLook;
+    }
+
+    // Already bought (a tool, or an animal waiting in the bag or following the player).
+    public bool IsOwned()
+    {
+        if (isBooster) return false;     // boosters can be bought again every day
+        if (isPet) return PlayerPets.Instance != null && PlayerPets.Instance.Has(toolId);
+        return PlayerOwnedTools.Instance != null && PlayerOwnedTools.Instance.Has(toolId);
     }
 
     // Already bought: the item stays on the shelf but looks faded.
     private void RefreshLook()
     {
         if (spriteRenderer == null) return;
-        var tools = PlayerOwnedTools.Instance;
         var color = spriteRenderer.color;
-        color.a = tools != null && tools.Has(toolId) ? 0.4f : 1f;
+        color.a = IsOwned() ? 0.4f : 1f;
         spriteRenderer.color = color;
     }
 
