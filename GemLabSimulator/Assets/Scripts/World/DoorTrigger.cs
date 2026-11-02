@@ -10,6 +10,16 @@ public class DoorTrigger : MonoBehaviour
     // False for decorative buildings whose door stays locked.
     public bool IsAccessible => implemented && !string.IsNullOrEmpty(sceneName);
 
+    public string TargetScene => sceneName;
+
+    // Goes through the door, as the player does by walking into it.
+    public void Use()
+    {
+        if (string.IsNullOrEmpty(sceneName)) return;
+        PlayerController.PendingSpawnPointName = spawnPointName;
+        SceneFader.FadeToScene(sceneName);
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
@@ -20,7 +30,12 @@ public class DoorTrigger : MonoBehaviour
             return;
         }
 
-        PlayerController.PendingSpawnPointName = spawnPointName;
-        SceneFader.FadeToScene(sceneName);
+        if (!OpeningHours.IsOpen(sceneName))
+        {
+            ToolFeedbackUI.Instance?.ShowMessage($"C'est fermé pour le moment. Ouvert de {OpeningHours.Describe(sceneName)}.");
+            return;
+        }
+
+        Use();
     }
 }

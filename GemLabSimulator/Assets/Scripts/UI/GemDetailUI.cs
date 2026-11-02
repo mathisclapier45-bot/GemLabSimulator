@@ -154,6 +154,8 @@ public class GemDetailUI : MonoBehaviour
     private RectTransform content;
     private Text countText;
     private Button reportButton;
+    private Button certificateButton;
+    private Text certificateLabel;
     private Text reportLabel;
     private GemView3D view;
     private GemInstance gem;
@@ -319,6 +321,22 @@ public class GemDetailUI : MonoBehaviour
         reportIcon.raycastTarget = false;
         reportButton.gameObject.SetActive(false);
 
+        // The diamond certificate of the grading office, under the report.
+        certificateButton = RuntimeUIKit.MakeButton("CertificateButton", panel.transform, "", 12, new Color(0.20f, 0.28f, 0.42f, 1f),
+            new Vector2(24f, -374f), new Vector2(StoneBox, 44f));
+        certificateButton.onClick.AddListener(() => DiamondCertificateUI.Instance?.Open(gem));
+        certificateLabel = certificateButton.GetComponentInChildren<Text>();
+        certificateLabel.alignment = TextAnchor.MiddleLeft;
+        certificateLabel.rectTransform.offsetMin = new Vector2(48f, 0f);
+        var certificateIconGO = new GameObject("CertificateIcon", typeof(RectTransform), typeof(Image));
+        certificateIconGO.transform.SetParent(certificateButton.transform, false);
+        RuntimeUIKit.SetTopLeft(certificateIconGO.GetComponent<RectTransform>(), new Vector2(10f, -6f), new Vector2(32f, 32f));
+        var certificateIcon = certificateIconGO.GetComponent<Image>();
+        certificateIcon.sprite = GemIconFactory.GetSolid("Rond", "Brillant", new Color(0.30f, 0.50f, 0.80f), new Color(0.75f, 0.88f, 1f));
+        certificateIcon.preserveAspect = true;
+        certificateIcon.raycastTarget = false;
+        certificateButton.gameObject.SetActive(false);
+
         infoText = RuntimeUIKit.MakeText("Info", panel.transform, "", 13, TextAnchor.UpperLeft, new Color(0.88f, 0.86f, 0.80f),
             new Vector2(24f, -326f), new Vector2(StoneBox, 180f));
         infoText.supportRichText = true;
@@ -386,9 +404,22 @@ public class GemDetailUI : MonoBehaviour
         // The GemLab report, once printed, hangs under the picture of the stone.
         reportButton.gameObject.SetActive(gem.HasReport);
         if (gem.HasReport) reportLabel.text = $"Rapport GemLab\n{gem.ReportNumber}";
+
+        // The buttons stack under the picture; the text of the sheet starts under the last one.
+        var nextY = -322f;
+        if (gem.HasReport) nextY -= 52f;
+        var hasCertificate = gem.Certificate != null;
+        certificateButton.gameObject.SetActive(hasCertificate);
+        if (hasCertificate)
+        {
+            certificateLabel.text = $"Certificat de diamant\n{gem.Certificate.number}";
+            RuntimeUIKit.SetTopLeft(certificateButton.GetComponent<RectTransform>(), new Vector2(24f, nextY), new Vector2(StoneBox, 44f));
+            nextY -= 52f;
+        }
+
         var infoRect = infoText.rectTransform;
-        infoRect.anchoredPosition = new Vector2(24f, gem.HasReport ? -374f : -326f);
-        infoRect.sizeDelta = new Vector2(StoneBox, gem.HasReport ? 134f : 180f);
+        infoRect.anchoredPosition = new Vector2(24f, nextY - 4f);
+        infoRect.sizeDelta = new Vector2(StoneBox, Mathf.Max(60f, 180f + (nextY + 322f)));
 
         var entries = GemObservations.Build(gem);
         countText.text = entries.Count > 0 ? $"{entries.Count} information{(entries.Count > 1 ? "s" : "")}" : "";

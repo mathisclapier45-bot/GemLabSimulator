@@ -556,6 +556,9 @@ public static class SceneBootstrap
 
         // Microscope upgrades: bought once, they appear on the microscope of the home lab.
         // Field equipment: bought items go straight into the player's bag (H).
+        CreateShopItem(backShelves[3], "Slot_1", "Lanterne", "Lanterne à huile", 89,
+            "Lanterne en laiton à flamme vive. Une fois dans le sac, un clic l'allume : elle éclaire les nuits de la ville autour de vous.",
+            "", true);
         CreateShopItem(backShelves[0], "Slot_2", "Maglite", "Maglite", 159,
             "Lampe torche compacte et puissante. Indispensable pour éclairer une gemme (diaphanéité, inclusions, éclat) en dehors du laboratoire.",
             "", true);
@@ -1136,6 +1139,32 @@ public static class SceneBootstrap
         so.ApplyModifiedProperties();
     }
 
+    // The grading desk: a laboratory bench with the daylight lamp, the grading tray and the case of master stones. E in front of it opens
+    // the grading interface.
+    private static void CreateGradingStation(Vector3 feet)
+    {
+        PlaceFurniture("labbench", feet);
+
+        var toolSprite = LoadPackSprite("Assets/Art/Sprites/toolhd_Grading.png");
+        if (toolSprite != null)
+        {
+            var tool = new GameObject("PosteGrading");
+            var sr = tool.AddComponent<SpriteRenderer>();
+            sr.sprite = toolSprite;
+            sr.sortingOrder = 5;
+            tool.transform.position = feet + new Vector3(0f, 0.8f + toolSprite.bounds.size.y / 2f, 0f);
+        }
+
+        var access = new GameObject("AccesGrading");
+        access.transform.position = feet + new Vector3(0f, -0.7f, 0f);
+        var trigger = access.AddComponent<BoxCollider2D>();
+        trigger.isTrigger = true;
+        trigger.size = new Vector2(3.8f, 2.2f);
+        access.AddComponent<GradingStation>();
+
+        CreateBuildingLabel("Poste de grading", feet + new Vector3(0f, 2.9f, 0f));
+    }
+
     // Wall decoration that hangs on the lit wall face (not grounded, no collider).
     private static void HangOnWall(string spriteName, float x, float wallY)
     {
@@ -1162,6 +1191,35 @@ public static class SceneBootstrap
 
         PlaceFurniture("off_chair_dark", deskFeet + new Vector3(opensEast ? 1.6f : -1.6f, -0.2f, 0f));
         CreateBuildingLabel($"{houseName}\n{specialty}", new Vector3(centerX, floorY1 + 0.6f, 0f));
+    }
+
+    // A rough diamond dealer behind his counter: press E near him to see his lots.
+    private static void CreateRoughCounter(string houseName, string specialty, string npcSprite, Vector3 counterFeet, int dealerIndex)
+    {
+        PlaceFurniture("reception_counter", counterFeet).GetComponent<SpriteRenderer>().sortingOrder = 5;
+        var dealer = CreateTalkNpc($"Vendeur — {houseName}", npcSprite, counterFeet + new Vector3(0f, 1.3f, 0f), new string[0],
+            new Vector2(5f, 3.6f), new Vector2(0f, -1.3f));
+        UnityEngine.Object.DestroyImmediate(dealer.GetComponent<TalkNPC>());
+        var dealerNpc = dealer.AddComponent<DiamondDealerNPC>();
+        var dealerSo = new SerializedObject(dealerNpc);
+        dealerSo.FindProperty("dealerIndex").intValue = dealerIndex;
+        dealerSo.ApplyModifiedProperties();
+        CreateBuildingLabel($"{houseName}\n{specialty}", counterFeet + new Vector3(0f, 3.0f, 0f));
+    }
+
+    // A diamond cutter at his bench: press E near him to hand him a rough diamond.
+    private static void CreateCutterBench(string houseName, string specialty, string npcSprite, float benchX, int cutterIndex, float labelY)
+    {
+        PlaceFurniture("off_wood_top", new Vector3(benchX, 0.0f, 0f));
+        PlaceFurniture("off_chair_orange", new Vector3(benchX, -1.4f, 0f));
+        var cutter = CreateTalkNpc($"Tailleur — {houseName}", npcSprite, new Vector3(benchX, 1.3f, 0f), new string[0],
+            new Vector2(3.2f, 3.6f), new Vector2(0f, -1.6f));
+        UnityEngine.Object.DestroyImmediate(cutter.GetComponent<TalkNPC>());
+        var cutterNpc = cutter.AddComponent<DiamondCutterNPC>();
+        var cutterSo = new SerializedObject(cutterNpc);
+        cutterSo.FindProperty("cutterIndex").intValue = cutterIndex;
+        cutterSo.ApplyModifiedProperties();
+        CreateBuildingLabel($"{houseName}\n{specialty}", new Vector3(benchX, labelY, 0f));
     }
 
     [MenuItem("GemLab/Setup Diamond Tower Scenes")]
@@ -1260,61 +1318,74 @@ public static class SceneBootstrap
             HangOnWall("off_chart", -6.5f, 5f);
             HangOnWall("off_chart2", 6.5f, 5f);
             PlaceRug("rug_blue_tall", new Vector3(0f, -1.0f, 0f));
-            CreateBuildingLabel("2e étage — Grading (bientôt)", new Vector3(0f, 6.7f, 0f));
+
+            // The grading desk in the middle of the floor, and the grader next to it.
+            CreateGradingStation(new Vector3(0f, -2.0f, 0f));
+            CreateTalkNpc("Classificateur", "merchant2", new Vector3(3.4f, -1.6f, 0f), new[]
+            {
+                "Bienvenue au bureau de grading. Posez un diamant sur le plateau : nous le classons selon l'échelle de couleur D à Z et de pureté FL à I3.",
+                "Pour la couleur, comparez la pierre aux master stones sous la lumière du jour. Je vous dirai si vous êtes trop haut ou trop bas dans l'échelle.",
+                "Une fois la couleur et la pureté trouvées, nous mesurons la taille et nous établissons le certificat. Il reste attaché à la pierre.",
+            });
+            CreateBuildingLabel("2e étage — Grading", new Vector3(0f, 6.7f, 0f));
         });
 
         // --- 3rd floor: rough diamond sales ---
         CreateTowerRoom("Diamantaires3", "rough", -10, 10, -5, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, 2.4f, 0f), true, (walls, wallTile) =>
         {
             CreateTowerElevator(0f, 4f);
-            PlaceFurniture("reception_counter", new Vector3(-6.0f, 0.0f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
-            CreateTalkNpc("Vendeur de diamants bruts", "rough3", new Vector3(-6.0f, 1.3f, 0f), new[]
-            {
-                "Les diamants bruts sont arrivés de la mine ce matin. La vente ouvrira bientôt !",
-            });
-            PlaceFurniture("reception_counter", new Vector3(6.0f, 0.0f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
-            CreateTalkNpc("Vendeur de diamants bruts", "rough1", new Vector3(6.0f, 1.3f, 0f), new[]
-            {
-                "Chaque lot est pesé et scellé avant la vente. Revenez bientôt !",
-            });
+            PlaceRug("rug_red", new Vector3(0f, -0.8f, 0f));
+
+            // The three rough dealers of DiamondDealerState (indexes 4 to 6), each behind a counter.
+            CreateRoughCounter("Compagnie Minière du Kasaï", "Lots de la mine", "rough3", new Vector3(-6.5f, 0.2f, 0f), 4);
+            CreateRoughCounter("Maison Sarin & Fils", "Beaux cristaux", "rough1", new Vector3(6.5f, 0.2f, 0f), 5);
+            CreateRoughCounter("Négoce Vanderlinden", "Macles et fragments", "rough2", new Vector3(0f, -2.4f, 0f), 6);
+
             PlaceFurniture("off_plant_big", new Vector3(-3.2f, 4.0f, 0f));
             PlaceFurniture("off_plant_big", new Vector3(3.2f, 4.0f, 0f));
             PlaceFurniture("off_vending", new Vector3(-8.5f, 3.9f, 0f));
-            PlaceRug("rug_red", new Vector3(0f, -1.8f, 0f));
-            CreateBuildingLabel("3e étage — Diamants bruts (bientôt)", new Vector3(0f, 6.7f, 0f));
+            PlaceFurniture("off_sofa", new Vector3(8.0f, -3.2f, 0f));
+            CreateBuildingLabel("3e étage — Diamants bruts", new Vector3(0f, 6.7f, 0f));
         });
 
-        // --- 4th floor: precision laboratory (to be developed) ---
+        // --- 4th floor: precision laboratory ---
         CreateTowerRoom("Diamantaires4", "lab", -10, 10, -5, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, 2.4f, 0f), true, (walls, wallTile) =>
         {
             CreateTowerElevator(0f, 4f);
-            foreach (var benchX in new[] { -6.5f, -2.2f, 2.2f, 6.5f })
-            {
-                PlaceFurniture("off_desk", new Vector3(benchX, -0.5f, 0f));
-                PlaceFurniture("off_pc", new Vector3(benchX + 0.1f, 0.35f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
-            }
-            PlaceFurniture("off_printer", new Vector3(-6.5f, 3.4f, 0f));
-            PlaceFurniture("off_printer", new Vector3(6.5f, 3.4f, 0f));
-            PlaceFurniture("off_plant_big", new Vector3(-3.4f, 4.0f, 0f));
-            PlaceFurniture("off_plant_big", new Vector3(3.4f, 4.0f, 0f));
+
+            // Diamond instruments on wide laboratory benches: the same stations as in the laboratory of the GemLab, free to use here.
+            const string bench = "interior_prop_labbench.png";
+            const float benchWidth = 3.1f;
+            CreateDeskStation("Spectrophotometre", ExaminationTool.MeasurementType.ConfirmedOrigin, -7.2f, 3.6f, false, false, bench, benchWidth);
+            CreateDeskStation("DiamondView", ExaminationTool.MeasurementType.DiamondGrowthImaging, -3.6f, 3.6f, false, false, bench, benchWidth);
+            CreateDeskStation("DiamondSure", ExaminationTool.MeasurementType.DiamondScreening, 3.6f, 3.6f, false, false, bench, benchWidth);
+            CreateDeskStation("TesteurThermique", ExaminationTool.MeasurementType.ThermalConductivity, -2.0f, -3.8f, true, false, bench, benchWidth);
+            CreateDeskStation("TesteurElectrique", ExaminationTool.MeasurementType.ElectricalConductivity, 2.0f, -3.8f, true, false, bench, benchWidth);
+
+            PlaceFurniture("off_printer", new Vector3(7.2f, 3.4f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(-9.0f, -3.4f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(9.0f, -3.4f, 0f));
             HangOnWall("off_chart", -6.5f, 5f);
             HangOnWall("off_chart2", 6.5f, 5f);
-            CreateBuildingLabel("4e étage — Laboratoire de précision (bientôt)", new Vector3(0f, 6.7f, 0f));
+            PlaceRug("rug_blue_tall", new Vector3(0f, -0.4f, 0f));
+            CreateBuildingLabel("4e étage — Laboratoire de précision", new Vector3(0f, 6.7f, 0f));
         });
 
-        // --- 5th floor: cutting centre (to be developed) ---
+        // --- 5th floor: cutting centre ---
         CreateTowerRoom("Diamantaires5", "atelier", -10, 10, -5, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, 2.4f, 0f), true, (walls, wallTile) =>
         {
             CreateTowerElevator(0f, 4f);
-            foreach (var benchX in new[] { -7.0f, -3.5f, 3.5f, 7.0f })
-            {
-                PlaceFurniture("off_wood_top", new Vector3(benchX, 0.0f, 0f));
-                PlaceFurniture("off_chair_orange", new Vector3(benchX, -1.4f, 0f));
-            }
-            PlaceFurniture("off_cooler", new Vector3(-3.5f, 4.0f, 0f));
-            PlaceFurniture("off_plant_big", new Vector3(3.5f, 4.0f, 0f));
+
+            // The four cutters of DiamondCutting: economy and melee, standard, exceptional, fancy.
+            CreateCutterBench("Taillerie Jacobs", "Économique et mêlées", "merchant0", -7.0f, 0, 3.0f);
+            CreateCutterBench("Atelier Van Dael", "Tailles standards", "merchant1", -3.5f, 1, 4.1f);
+            CreateCutterBench("Maison Dekeyser", "Tailles d'exception", "merchant2", 3.5f, 2, 4.1f);
+            CreateCutterBench("Atelier Fantaisie Moreau", "Tailles fantaisie", "merchant3", 7.0f, 3, 3.0f);
+
+            PlaceFurniture("off_cooler", new Vector3(-9.0f, -3.2f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(9.0f, -3.2f, 0f));
             PlaceRug("rug_red", new Vector3(0f, -2.4f, 0f));
-            CreateBuildingLabel("5e étage — Centre de taille (bientôt)", new Vector3(0f, 6.7f, 0f));
+            CreateBuildingLabel("5e étage — Centre de taille", new Vector3(0f, 6.7f, 0f));
         });
 
         // --- 6th floor: Martin Rapaport's office ---

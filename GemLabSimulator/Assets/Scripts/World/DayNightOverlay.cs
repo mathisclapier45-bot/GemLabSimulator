@@ -7,9 +7,11 @@ public class DayNightOverlay : MonoBehaviour
 
     // A full 24h in-game day takes 14 real minutes, matching Stardew Valley's day length.
     private const float CycleDurationSeconds = 840f;
-    private const float DayPhaseStart = 8f / 24f;
+    // The player wakes up at 7h, after sleeping and when a game is loaded; a new game starts at 7h too.
+    private const float DayPhaseStart = 7f / 24f;
 
-    private static float dayResetTime = -1f;
+    private static float dayResetTime;
+    private static bool dayResetSet;
 
     private struct Keyframe
     {
@@ -33,13 +35,21 @@ public class DayNightOverlay : MonoBehaviour
     public static void ResetToDay()
     {
         dayResetTime = Time.time - DayPhaseStart * CycleDurationSeconds;
+        dayResetSet = true;
+    }
+
+    // Sets the time of the day, from 0 to 24.
+    public static void SetHour(float hour)
+    {
+        dayResetTime = Time.time - Mathf.Repeat(hour, 24f) / 24f * CycleDurationSeconds;
+        dayResetSet = true;
     }
 
     // Available scene-wide (not just where the overlay itself exists) so any UI can show the current time of day.
     public static float GetCurrentPhase()
     {
-        var referenceTime = dayResetTime >= 0f ? dayResetTime : 0f;
-        return Mathf.Repeat((Time.time - referenceTime) / CycleDurationSeconds, 1f);
+        if (!dayResetSet) ResetToDay();
+        return Mathf.Repeat((Time.time - dayResetTime) / CycleDurationSeconds, 1f);
     }
 
     public static string GetClockLabel()
@@ -53,7 +63,8 @@ public class DayNightOverlay : MonoBehaviour
     private void Update()
     {
         if (overlayImage == null) return;
-        overlayImage.color = Evaluate(GetCurrentPhase());
+        // The lighting effect on the camera replaces the translucent veil.
+        overlayImage.color = DayNightLighting.Active ? new Color(0f, 0f, 0f, 0f) : Evaluate(GetCurrentPhase());
     }
 
     private static Color Evaluate(float phase)

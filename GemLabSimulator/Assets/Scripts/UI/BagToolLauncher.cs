@@ -34,6 +34,17 @@ public static class BagToolLauncher
             case "FiltreChelseaPortable": return Track(ChelseaFilterUI.TryOpen(), () => ChelseaFilterUI.Instance != null && ChelseaFilterUI.Instance.IsOpen, () => ChelseaFilterUI.Instance.Close());
             case "AimantGemmologie": return Track(MagnetUI.TryOpen(), () => MagnetUI.Instance != null && MagnetUI.Instance.IsOpen, () => MagnetUI.Instance.Close());
             case "BalanceCaratPoche": return Track(WeightScaleUI.TryOpen(), () => WeightScaleUI.Instance != null && WeightScaleUI.Instance.IsOpen, () => WeightScaleUI.Instance.Close());
+            // The lantern is not a tool window: a click lights it or puts it out.
+            case "Lanterne":
+            {
+                var tools = PlayerOwnedTools.Ensure();
+                if (tools == null) return false;
+                tools.SetLantern(!tools.LanternLit);
+                ToolFeedbackUI.Instance?.ShowMessage(tools.LanternLit
+                    ? "Lanterne allumée : elle éclaire la nuit autour de vous."
+                    : "Lanterne éteinte.");
+                return false;
+            }
             case "Chamoisine":
                 ToolFeedbackUI.Instance?.ShowMessage("Chamoisine : elle servira à nettoyer les gemmes (bientôt).");
                 return false;

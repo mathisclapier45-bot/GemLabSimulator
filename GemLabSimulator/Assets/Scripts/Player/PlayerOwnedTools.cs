@@ -16,6 +16,10 @@ public class PlayerOwnedTools : MonoBehaviour
     public IReadOnlyList<string> BagSlots => bagSlots;
 
     public IEnumerable<string> Owned => owned;
+
+    // The lantern of the bag, lit or put out. It can only be lit once it has been bought.
+    public const string LanternId = "Lanterne";
+    public bool LanternLit { get; private set; }
     public event Action OnToolsChanged;
 
     private void Awake()
@@ -37,6 +41,14 @@ public class PlayerOwnedTools : MonoBehaviour
     public void Add(string toolId)
     {
         if (!owned.Add(toolId)) return;
+        OnToolsChanged?.Invoke();
+    }
+
+    public void SetLantern(bool lit)
+    {
+        lit = lit && owned.Contains(LanternId);
+        if (LanternLit == lit) return;
+        LanternLit = lit;
         OnToolsChanged?.Invoke();
     }
 

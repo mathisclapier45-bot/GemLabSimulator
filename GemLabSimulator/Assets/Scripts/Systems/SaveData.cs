@@ -54,6 +54,13 @@ public class GemInstanceSaveData
     public string certificateIssuer;
     public int certificateDay;
 
+    // Rough diamonds of the 3rd floor: crystal form, expected yield, and the grades hidden until the stone is cut (index + 1, 0 = none).
+    public string roughForm;
+    public float roughYield;
+    public int roughColor;
+    public int roughClarity;
+    public int cutQuality;          // quality of the cut given by a diamond cutter (index + 1, 0 = none)
+
     public List<string> measuredKeys = new List<string>();
     public List<float> measuredValues = new List<float>();
     public List<string> observedKeys = new List<string>();
@@ -67,16 +74,27 @@ public class LapidaryJobSaveData
 }
 
 [Serializable]
+public class DiamondCutJobSaveData
+{
+    public int cutterIndex;
+    public int readyDay;
+    public string summary;
+    public List<GemInstanceSaveData> stones = new List<GemInstanceSaveData>();
+}
+
+[Serializable]
 public class SaveData
 {
     public string saveName = "";
     public int money;
     public int currentDay = 1;
+    public float timeOfDay = -1f;      // hour of the in-game day when saved (-1: older saves, the day starts at 7h)
     public List<GemInstanceSaveData> inventoryGems = new List<GemInstanceSaveData>();
     public List<GemInstanceSaveData> chestGems = new List<GemInstanceSaveData>();
     public List<GemInstanceSaveData> cabinetGems = new List<GemInstanceSaveData>();
     public List<GemInstanceSaveData> orderCabinetGems = new List<GemInstanceSaveData>();
     public List<string> ownedTools = new List<string>();
+    public bool lanternLit;
     public List<string> bagSlots = new List<string>();
     public List<string> ownedPets = new List<string>();
     public string equippedPet;
@@ -91,4 +109,5 @@ public class SaveData
     public float playerY;
     public int reputationPoints;
     public List<LapidaryJobSaveData> lapidaryJobs = new List<LapidaryJobSaveData>();
+    public List<DiamondCutJobSaveData> diamondCutJobs = new List<DiamondCutJobSaveData>();
 }

@@ -13,6 +13,7 @@ public class PlayerInventory : MonoBehaviour, IGemContainer
     public IReadOnlyList<GemInstance> Gems => gems;
     public GemInstance SelectedGem { get; private set; }
     public bool IsFull => gems.Count >= MaxCapacity;
+    public int FreeSlots => Mathf.Max(0, MaxCapacity - gems.Count);
 
     public event Action OnInventoryChanged;
 

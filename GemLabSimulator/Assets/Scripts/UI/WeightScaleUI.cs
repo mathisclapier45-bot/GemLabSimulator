@@ -481,7 +481,7 @@ public class WeightScaleUI : MonoBehaviour
     }
 
     // Brushed-steel weighing pan: a bright rim around a slightly darker dish.
-    private static Sprite MakePanSprite(int size)
+    public static Sprite MakePanSprite(int size)
     {
         var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
         {

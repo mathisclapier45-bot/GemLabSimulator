@@ -125,7 +125,6 @@ public class PlayerController : MonoBehaviour
         if (!SaveSystem.PendingLoad) return;
         SaveSystem.PendingLoad = false;
         SaveSystem.Load();
-        DayNightOverlay.ResetToDay();
     }
 
     private void Update()

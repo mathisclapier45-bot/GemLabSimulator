@@ -382,7 +382,7 @@ public class MicrometerUI : MonoBehaviour
     }
 
     // Black round gauge body with a thin light ring.
-    private static Sprite MakeDiscSprite(int size)
+    public static Sprite MakeDiscSprite(int size)
     {
         var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
         {

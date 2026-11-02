@@ -75,6 +75,17 @@ public class GemInstance
     public string DiamondClarity { get; private set; }
     public DiamondCertificate Certificate { get; private set; }
 
+    // Rough diamonds sold on the 3rd floor of the tower: crystal form, share of the weight that will remain once cut, and the colour and
+    // clarity (indexes in the diamond scales) that only the cut will reveal. Empty / -1 for every other stone.
+    public string RoughForm { get; private set; }
+    public float RoughYield { get; private set; }
+    public int RoughColorIndex { get; private set; } = -1;
+    public int RoughClarityIndex { get; private set; } = -1;
+
+    // Quality of the cut (0 = excellent ... 3 = fair) given by the diamond cutter, which decides the proportions, polish and symmetry the
+    // grading office will find. -1 for a stone that was not cut by one of them.
+    public int CutQualityIndex { get; private set; } = -1;
+
     // Relative to the species' typical weight, clamped so icons stay legible within a fixed UI slot.
     public float SizeScale => Mathf.Clamp(CaratWeight / Mathf.Max(Definition.weightCarats, 0.01f), 0.6f, 1.15f);
     public bool HasWindow { get; private set; }
@@ -294,6 +305,109 @@ public class GemInstance
         return instance;
     }
 
+    // A rough natural diamond as sold by a rough dealer: identified, with no grade and no certificate. Its colour shows only as a tone.
+    public static GemInstance CreateRoughDiamond(GemDefinition definition, float carat, int colorIndex, int clarityIndex, string form, float yield,
+        float lengthMm, float widthMm, float depthMm, int value, string seller)
+    {
+        var tier = DiamondGrading.GameClarityTier(clarityIndex);
+        var tierDescription = "";
+        foreach (var grade in GemGrading.ClarityGrades)
+            if (grade.Name == tier) tierDescription = grade.Description;
+
+        var instance = new GemInstance
+        {
+            Definition = definition,
+            SpecimenId = $"id{nextSpecimenNumber:D4}",
+            ClientName = seller,
+            IsIdentified = true,
+            IsRough = true,
+            Origin = GemGrading.PickOrigin(definition.origins),
+            SaturationGrade = "brut",
+            ClarityGrade = tier,
+            ClarityDescription = tierDescription,
+            InclusionDescription = definition.inclusions,
+            CaratWeight = carat,
+            LengthMm = lengthMm,
+            WidthMm = widthMm,
+            DepthMm = depthMm,
+            TreatmentGrade = "Non traité",
+            TreatmentDescription = "Aucune trace de traitement détectée.",
+            IsSynthetic = false,
+            AuthenticityGrade = "Naturelle",
+            AuthenticityDescription = "Signature Raman cohérente avec une croissance naturelle.",
+            GrowthStructureDescription = "Zones de croissance irrégulières et courbes, typiques d'une cristallisation naturelle lente.",
+            FinalValue = value,
+            RoughForm = form,
+            RoughYield = yield,
+            RoughColorIndex = colorIndex,
+            RoughClarityIndex = clarityIndex,
+        };
+        nextSpecimenNumber++;
+        instance.SetDiamondLetterColor(colorIndex, DiamondGrading.ColorDescription(colorIndex));
+        return instance;
+    }
+
+    // A diamond cut by one of the cutters of the tower: finished, but with no grade and no certificate yet. Its colour and clarity are
+    // the ones of the rough (the cut can have improved or damaged the clarity), kept hidden until the grading office finds them.
+    public static GemInstance CreateCutDiamond(GemDefinition definition, float carat, int colorIndex, int clarityIndex, string shape, string style,
+        float lengthMm, float widthMm, float depthMm, int value, string cutter, int cutQuality)
+    {
+        var tier = DiamondGrading.GameClarityTier(clarityIndex);
+        var tierDescription = "";
+        foreach (var grade in GemGrading.ClarityGrades)
+            if (grade.Name == tier) tierDescription = grade.Description;
+
+        var instance = new GemInstance
+        {
+            Definition = definition,
+            SpecimenId = $"id{nextSpecimenNumber:D4}",
+            ClientName = cutter,
+            IsIdentified = true,
+            CutShape = shape,
+            CutStyle = style,
+            Origin = GemGrading.PickOrigin(definition.origins),
+            SaturationGrade = "taillé",
+            ClarityGrade = tier,
+            ClarityDescription = tierDescription,
+            InclusionDescription = definition.inclusions,
+            CaratWeight = carat,
+            LengthMm = lengthMm,
+            WidthMm = widthMm,
+            DepthMm = depthMm,
+            TreatmentGrade = "Non traité",
+            TreatmentDescription = "Aucune trace de traitement détectée.",
+            IsSynthetic = false,
+            AuthenticityGrade = "Naturelle",
+            AuthenticityDescription = "Signature Raman cohérente avec une croissance naturelle.",
+            GrowthStructureDescription = "Zones de croissance irrégulières et courbes, typiques d'une cristallisation naturelle lente.",
+            FinalValue = value,
+            RoughColorIndex = colorIndex,
+            RoughClarityIndex = clarityIndex,
+            CutQualityIndex = cutQuality,
+        };
+        nextSpecimenNumber++;
+        instance.SetDiamondLetterColor(colorIndex, DiamondGrading.ColorDescription(colorIndex));
+        return instance;
+    }
+
+    // The stone has been graded by the grading office: its grades are fixed, it carries the certificate and it is worth a little more.
+    public void Certify(DiamondCertificate certificate, DiamondGrade grade)
+    {
+        Certificate = certificate;
+        DepthMm = grade.DepthMm;
+        DiamondClarity = grade.ClarityGrade;
+        if (grade.Fancy)
+        {
+            ColorGrade = "Fancy";
+        }
+        else
+        {
+            ColorGrade = grade.ColorGrade;
+            SetDiamondLetterColor(grade.ColorIndex, grade.ColorText);
+        }
+        FinalValue = Mathf.RoundToInt(FinalValue * 1.15f);
+    }
+
     public static GemInstance FromSaveData(GemDefinition definition, GemInstanceSaveData data)
     {
         var specimenId = string.IsNullOrEmpty(data.specimenId)
@@ -340,6 +454,11 @@ public class GemInstance
             FinalValue = data.finalValue,
             ColorGrade = string.IsNullOrEmpty(data.colorGrade) ? null : data.colorGrade,
             DiamondClarity = string.IsNullOrEmpty(data.diamondClarity) ? null : data.diamondClarity,
+            RoughForm = string.IsNullOrEmpty(data.roughForm) ? null : data.roughForm,
+            RoughYield = data.roughYield,
+            RoughColorIndex = data.roughColor - 1,
+            RoughClarityIndex = data.roughClarity - 1,
+            CutQualityIndex = data.cutQuality - 1,
             Certificate = string.IsNullOrEmpty(data.certificateNumber)
                 ? null
                 : new DiamondCertificate
@@ -426,6 +545,11 @@ public class GemInstance
             reportNumber = ReportNumber,
             reportDay = ReportDay,
             diamondClarity = DiamondClarity,
+            roughForm = RoughForm,
+            roughYield = RoughYield,
+            roughColor = RoughColorIndex + 1,
+            roughClarity = RoughClarityIndex + 1,
+            cutQuality = CutQualityIndex + 1,
             certificateNumber = Certificate?.number,
             certificateIssuer = Certificate?.issuer,
             certificateDay = Certificate != null ? Certificate.issueDay : 0,

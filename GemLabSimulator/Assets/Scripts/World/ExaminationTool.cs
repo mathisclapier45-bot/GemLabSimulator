@@ -67,6 +67,7 @@ public class ExaminationTool : MonoBehaviour
         if (measurementType == MeasurementType.DiamondScreening) DiamondSureUI.Instance?.Close();
         if (measurementType == MeasurementType.GrowthStructure) MebUI.Instance?.Close();
         if (measurementType == MeasurementType.ElementalAnalysis) EdxrfUI.Instance?.Close();
+        if (measurementType == MeasurementType.ThermalConductivity || measurementType == MeasurementType.ElectricalConductivity) ConductivityTesterUI.Instance?.Close();
         playerInRange = false;
         playerInventory = null;
         ToolInfoUI.Instance?.HideButtonIfCurrent(toolName);
@@ -133,6 +134,10 @@ public class ExaminationTool : MonoBehaviour
 
         // EDXRF: X-ray fluorescence spectrum of the trace elements (deposit, synthesis, lead glass fillings).
         if (measurementType == MeasurementType.ElementalAnalysis && EdxrfUI.TryOpen()) return;
+
+        // Thermal and electrical testers: drop the stone in the box, grab the tester and put its tip on the stone.
+        if (measurementType == MeasurementType.ThermalConductivity && ConductivityTesterUI.TryOpen(ConductivityTesterUI.Mode.Thermal)) return;
+        if (measurementType == MeasurementType.ElectricalConductivity && ConductivityTesterUI.TryOpen(ConductivityTesterUI.Mode.Electrical)) return;
 
         var gemInstance = playerInventory.SelectedGem;
         if (gemInstance == null)

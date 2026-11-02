@@ -8,10 +8,10 @@ using UnityEngine.UI;
 // a click shows the character's wrist with the watch on it, large. Added to the Canvas of every game scene.
 public class WatchUI : MonoBehaviour
 {
-    private const float DialSize = 92f;               // diameter of the watch, in canvas units
+    private const float DialSize = 64f;               // diameter of the watch, in canvas units
     private const int TextureSize = 184;
 
-    private const float HoverZoom = 1.16f;
+    private const float HoverZoom = 1.4f;
 
     private RectTransform hourHand;
     private RectTransform minuteHand;

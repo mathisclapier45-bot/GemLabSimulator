@@ -85,7 +85,9 @@ public class DiamondDealerUI : MonoBehaviour
 
         titleText.text = currentDealer.Name;
         specialtyText.text = currentDealer.Specialty;
-        pitchText.text = currentDealer.Pitch + "\nDiamants naturels incolores (D à Z), livrés avec leur certificat.";
+        pitchText.text = currentDealer.Rough
+            ? currentDealer.Pitch + "\nDiamants bruts naturels, vendus sans grade : la couleur et la pureté exactes ne se révèlent qu'à la taille."
+            : currentDealer.Pitch + "\nDiamants naturels incolores (D à Z), livrés avec leur certificat.";
 
         for (var i = content.childCount - 1; i >= 0; i--)
             Destroy(content.GetChild(i).gameObject);
@@ -127,10 +129,22 @@ public class DiamondDealerUI : MonoBehaviour
         iconImage.preserveAspect = true;
         iconImage.raycastTarget = false;
 
-        var text =
-            $"{stone.CaratWeight:F2} ct — {stone.ShapeName}, {stone.CutStyleName.ToLowerInvariant()}\n" +
-            $"Couleur {stone.ColorGrade}   ·   Pureté {stone.DiamondClarity}   ·   Certificat {stone.Certificate.number}\n" +
-            $"Prix : {price:N0}€";
+        string text;
+        if (stone.IsRough)
+        {
+            DiamondDealerState.YieldEstimate(stone, out var low, out var high);
+            text =
+                $"{stone.CaratWeight:F2} ct brut — {stone.RoughForm}   ·   rendement estimé {low}–{high} %\n" +
+                $"Teinte {stone.ColorName.ToLowerInvariant()}   ·   {ApparentPurity(stone)}\n" +
+                $"Prix : {price:N0}€";
+        }
+        else
+        {
+            text =
+                $"{stone.CaratWeight:F2} ct — {stone.ShapeName}, {stone.CutStyleName.ToLowerInvariant()}\n" +
+                $"Couleur {stone.ColorGrade}   ·   Pureté {stone.DiamondClarity}   ·   Certificat {stone.Certificate.number}\n" +
+                $"Prix : {price:N0}€";
+        }
         RuntimeUIKit.MakeText("Label", row.transform, text, 13, TextAnchor.MiddleLeft, Color.white, new Vector2(64f, 0f), new Vector2(width - 64f - 190f, RowHeight));
 
         var inspect = RuntimeUIKit.MakeButton("Inspect", row.transform, "Examiner", 12, new Color(0.25f, 0.25f, 0.32f, 1f),
@@ -172,8 +186,11 @@ public class DiamondDealerUI : MonoBehaviour
             return;
         }
 
+        var description = stone.IsRough
+            ? $"{stone.CaratWeight:F2} ct brut — {stone.RoughForm}, {ApparentPurity(stone)}"
+            : $"{stone.CaratWeight:F2} ct — couleur {stone.ColorGrade}, pureté {stone.DiamondClarity}";
         ConfirmDialog.Show("Confirmer l'achat",
-            $"Êtes-vous sûr de vouloir acheter ce diamant ?\n\n{stone.CaratWeight:F2} ct — couleur {stone.ColorGrade}, pureté {stone.DiamondClarity}\nPrix : {price:N0}€",
+            $"Êtes-vous sûr de vouloir acheter ce diamant ?\n\n{description}\nPrix : {price:N0}€",
             "Acheter", () => ConfirmPurchase(stone, price));
     }
 
@@ -182,9 +199,22 @@ public class DiamondDealerUI : MonoBehaviour
         var state = DiamondDealerState.Instance;
         if (currentDealer == null || state == null) return;
 
-        if (state.TryPurchase(currentDealer, stone, PlayerInventory.Instance, PlayerWallet.Instance))
-            ToolFeedbackUI.Instance?.ShowMessage(
-                $"Achat : diamant de {stone.CaratWeight:F2} ct ({stone.ColorGrade} / {stone.DiamondClarity}) pour {price:N0}€. Certificat {stone.Certificate.number} remis.");
+        if (!state.TryPurchase(currentDealer, stone, PlayerInventory.Instance, PlayerWallet.Instance)) return;
+        ToolFeedbackUI.Instance?.ShowMessage(stone.IsRough
+            ? $"Achat : diamant brut de {stone.CaratWeight:F2} ct ({stone.RoughForm}) pour {price:N0}€."
+            : $"Achat : diamant de {stone.CaratWeight:F2} ct ({stone.ColorGrade} / {stone.DiamondClarity}) pour {price:N0}€. Certificat {stone.Certificate.number} remis.");
+    }
+
+    // What can be seen of the clarity of a rough crystal from outside.
+    public static string ApparentPurity(GemInstance stone)
+    {
+        switch (stone.ClarityGrade)
+        {
+            case "Loupe clean": return "très propre";
+            case "Eye-clean": return "propre à l'œil nu";
+            case "Inclus": return "inclusions visibles";
+            default: return "très inclus";
+        }
     }
 
     private void BuildPanel()

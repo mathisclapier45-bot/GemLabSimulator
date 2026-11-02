@@ -114,7 +114,9 @@ public class BagUI : MonoBehaviour
         var id = tools != null && slotIndex < tools.BagSlots.Count ? tools.BagSlots[slotIndex] : null;
         infoText.text = string.IsNullOrEmpty(id)
             ? ""
-            : $"{BagItemCatalog.NameOf(id)}\n\n{BagItemCatalog.DescriptionOf(id)}\n\nClic : utiliser";
+            : id == "Lanterne"
+                ? $"{BagItemCatalog.NameOf(id)}\n\n{BagItemCatalog.DescriptionOf(id)}\n\n{(tools.LanternLit ? "Allumée" : "Éteinte")} — clic : {(tools.LanternLit ? "éteindre" : "allumer")}"
+                : $"{BagItemCatalog.NameOf(id)}\n\n{BagItemCatalog.DescriptionOf(id)}\n\nClic : utiliser";
     }
 
     // Click on a field-equipment slot: use the item (its tool window opens, the bag closes).

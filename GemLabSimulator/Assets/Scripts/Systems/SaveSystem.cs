@@ -57,6 +57,7 @@ public static class SaveSystem
             saveName = string.IsNullOrEmpty(existingName) ? $"Partie {ActiveSlot}" : existingName,
             money = PlayerWallet.Instance.Money,
             currentDay = GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1,
+            timeOfDay = OpeningHours.CurrentHour,
             sceneName = SceneManager.GetActiveScene().name,
             reputationPoints = ReputationState.Instance != null ? ReputationState.Instance.Points : 0,
         };
@@ -89,6 +90,7 @@ public static class SaveSystem
         {
             data.ownedTools.AddRange(ownedTools.Owned);
             foreach (var slot in ownedTools.BagSlots) data.bagSlots.Add(slot ?? "");
+            data.lanternLit = ownedTools.LanternLit;
         }
         var pets = PlayerPets.Instance;
         if (pets != null)
@@ -104,6 +106,8 @@ public static class SaveSystem
 
         if (LapidaryState.Instance != null)
             data.lapidaryJobs = LapidaryState.Instance.ToSaveData();
+        if (DiamondCuttingState.Instance != null)
+            data.diamondCutJobs = DiamondCuttingState.Instance.ToSaveData();
 
         File.WriteAllText(SavePath(ActiveSlot), JsonUtility.ToJson(data, true));
     }
@@ -121,6 +125,9 @@ public static class SaveSystem
         if (GameClock.Instance != null)
             GameClock.Instance.SetDay(data.currentDay);
 
+        if (data.timeOfDay >= 0f) DayNightOverlay.SetHour(data.timeOfDay);
+        else DayNightOverlay.ResetToDay();
+
         if (PlayerInventory.Instance != null)
             PlayerInventory.Instance.LoadGems(RestoreGems(data.inventoryGems));
 
@@ -134,7 +141,11 @@ public static class SaveSystem
             PlayerOrderCabinet.Instance.LoadGems(RestoreGems(data.orderCabinetGems));
 
         var tools = PlayerOwnedTools.Ensure();
-        if (tools != null) tools.LoadTools(data.ownedTools, data.bagSlots);
+        if (tools != null)
+        {
+            tools.LoadTools(data.ownedTools, data.bagSlots);
+            tools.SetLantern(data.lanternLit);
+        }
 
         var pets = PlayerPets.Ensure();
         if (pets != null) pets.LoadPets(data.ownedPets, data.equippedPet);
@@ -153,6 +164,9 @@ public static class SaveSystem
 
         if (LapidaryState.Instance != null)
             LapidaryState.Instance.LoadJobs(data.lapidaryJobs, RestoreGem);
+
+        var diamondCutting = DiamondCuttingState.Ensure();
+        if (diamondCutting != null) diamondCutting.LoadJobs(data.diamondCutJobs, RestoreGem);
 
         if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)
             SceneManager.LoadScene(data.sceneName);

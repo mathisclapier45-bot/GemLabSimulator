@@ -21,6 +21,6 @@ public class BedInteractable : MonoBehaviour
         GameClock.Instance?.AdvanceDay();
         DayNightOverlay.ResetToDay();
         SaveSystem.Save();
-        ToolFeedbackUI.Instance?.ShowMessage("Partie sauvegardée. Bonne nuit !");
+        ToolFeedbackUI.Instance?.ShowMessage("Partie sauvegardée. Bonne nuit ! Vous vous réveillez à 7h.");
     }
 }
