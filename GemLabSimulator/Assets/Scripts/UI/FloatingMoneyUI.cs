@@ -25,7 +25,8 @@ public class FloatingMoneyUI : MonoBehaviour
 
     private void ShowDelta(int amount)
     {
-        if (amount == 0 || spawnAnchor == null) return;
+        // The purse of the new money display shows the gains and expenses itself.
+        if (MoneyHudUI.Instance != null || amount == 0 || spawnAnchor == null) return;
         StartCoroutine(AnimateFloatingText(amount));
     }
 

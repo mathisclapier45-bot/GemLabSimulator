@@ -34,6 +34,8 @@ public static class BagToolLauncher
             case "FiltreChelseaPortable": return Track(ChelseaFilterUI.TryOpen(), () => ChelseaFilterUI.Instance != null && ChelseaFilterUI.Instance.IsOpen, () => ChelseaFilterUI.Instance.Close());
             case "AimantGemmologie": return Track(MagnetUI.TryOpen(), () => MagnetUI.Instance != null && MagnetUI.Instance.IsOpen, () => MagnetUI.Instance.Close());
             case "BalanceCaratPoche": return Track(WeightScaleUI.TryOpen(), () => WeightScaleUI.Instance != null && WeightScaleUI.Instance.IsOpen, () => WeightScaleUI.Instance.Close());
+            case "TesteurThermique": return Track(ConductivityTesterUI.TryOpen(ConductivityTesterUI.Mode.Thermal), () => ConductivityTesterUI.Instance != null && ConductivityTesterUI.Instance.IsOpen, () => ConductivityTesterUI.Instance.Close());
+            case "TesteurElectrique": return Track(ConductivityTesterUI.TryOpen(ConductivityTesterUI.Mode.Electrical), () => ConductivityTesterUI.Instance != null && ConductivityTesterUI.Instance.IsOpen, () => ConductivityTesterUI.Instance.Close());
             // The lantern is not a tool window: a click lights it or puts it out.
             case "Lanterne":
             {

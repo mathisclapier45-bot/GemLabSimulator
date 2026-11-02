@@ -15,6 +15,8 @@ public static class BagItemCatalog
         { "AimantGemmologie", ("Aimant de gemmologie", "Aimant au néodyme très puissant : il attire les gemmes riches en fer (grenats, par exemple) et sert à un premier tri rapide sur le terrain.") },
         { "BalanceCaratPoche", ("Balance à carat de poche", "Petite balance électronique de précision, donnant le poids d'une gemme en carats : pratique pour peser une pierre n'importe où.") },
         { "LampeUVLongs", ("Lampe UV longs (365 nm)", "Torche à LED ultraviolettes de 365 nm : révèle la fluorescence de certaines gemmes (rubis, par exemple) dans la pénombre, hors du laboratoire.") },
+        { "TesteurThermique", ("Diamond Selector II (testeur thermique)", "Sonde de conductivité thermique : le diamant évacue la chaleur bien mieux que la plupart de ses imitations (mais la moissanite aussi). Se saisit à la main et se pose sur la pierre.") },
+        { "TesteurElectrique", ("Testeur Moissanite / Diamant", "Sonde de conductivité électrique : le diamant est un isolant, la moissanite conduit l'électricité. C'est le test qui les départage.") },
         { "Lanterne", ("Lanterne à huile", "Une lanterne en laiton à flamme vive : elle éclaire les nuits de la ville autour de vous. Un clic l'allume ou l'éteint.") },
         { "FiltreChelseaPortable", ("Filtre Chelsea", "Filtre dichromatique laissant passer le rouge profond et le vert-jaune, pour repérer certaines gemmes colorées par le chrome et démasquer des imitations.") },
     };

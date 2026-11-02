@@ -270,9 +270,7 @@ public static class SceneBootstrap
         CreateDeskStation("Micrometre", ExaminationTool.MeasurementType.Dimensions, 14.7f, bottomDeskY, true);
         CreateDeskStation("BalanceCarat", ExaminationTool.MeasurementType.Weight, 17.4f, bottomDeskY, true);
         CreateDeskStation("Aimant", ExaminationTool.MeasurementType.Magnetism, 20.1f, bottomDeskY, true);
-        // Bought at the GemStore: these two desks only appear once the tools are owned.
-        CreateDeskStation("TesteurThermique", ExaminationTool.MeasurementType.ThermalConductivity, 22.8f, bottomDeskY, true, true);
-        CreateDeskStation("TesteurElectrique", ExaminationTool.MeasurementType.ElectricalConductivity, 25.5f, bottomDeskY, true, true);
+        // The thermal and electrical testers are field equipment bought at the GemStore: they go into the bag, not into the laboratory.
 
         CreateDirector(new Vector3(26, 0, 0f));
         CreateReportPrinter(23.4f, -0.7f);
@@ -550,9 +548,11 @@ public static class SceneBootstrap
 
         // First items for sale: the two diamond testers, bought once and then installed in the home lab.
         CreateShopItem(backShelves[0], "Slot_0", "TesteurThermique", "Diamond Selector II (testeur thermique)", 2000,
-            "Sonde de conductivité thermique. Le diamant évacue la chaleur bien mieux que la plupart de ses imitations : l'appareil les distingue en quelques secondes.\n\nAttention : la moissanite conduit aussi la chaleur, un second test sera nécessaire.");
+            "Sonde de conductivité thermique. Le diamant évacue la chaleur bien mieux que la plupart de ses imitations : l'appareil les distingue en quelques secondes.\n\nAttention : la moissanite conduit aussi la chaleur, un second test sera nécessaire. Se glisse dans le sac et s'utilise partout.",
+            "", true);
         CreateShopItem(backShelves[0], "Slot_1", "TesteurElectrique", "Testeur Moissanite / Diamant (conductivité électrique)", 2000,
-            "Sonde de conductivité électrique. Le diamant est un isolant, la moissanite synthétique conduit l'électricité : c'est le test qui les départage.");
+            "Sonde de conductivité électrique. Le diamant est un isolant, la moissanite synthétique conduit l'électricité : c'est le test qui les départage. Se glisse dans le sac et s'utilise partout.",
+            "", true);
 
         // Microscope upgrades: bought once, they appear on the microscope of the home lab.
         // Field equipment: bought items go straight into the player's bag (H).
