@@ -117,9 +117,10 @@ public static class GemObservations
         if (Seen(ExaminationTool.MeasurementType.Authenticity)) Add("Raman", $"Authenticité (Raman) : {gem.AuthenticityGrade}");
         if (Seen(ExaminationTool.MeasurementType.ConfirmedOrigin)) Add("UvVisNir", $"Origine confirmée (UV-Vis-NIR) : {gem.Origin.name}");
         if (Seen(ExaminationTool.MeasurementType.GrowthStructure)) Add("MEB", $"Structure de croissance (MEB) : {gem.GrowthStructureDescription}");
-        if (Seen(ExaminationTool.MeasurementType.DiamondScreening)) Add("DiamondSure", $"DiamondSure : {(gem.IsSynthetic ? "Refer" : "Pass")}");
+        if (Seen(ExaminationTool.MeasurementType.ElementalAnalysis)) Add("EDXRF", $"EDXRF : {EdxrfSpectrum.Summary(gem)}");
+        if (Seen(ExaminationTool.MeasurementType.DiamondScreening)) Add("DiamondSure", $"DiamondSure : {DiamondSure.Label(gem)}");
         if (Seen(ExaminationTool.MeasurementType.DiamondGrowthImaging))
-            Add("DiamondView", $"DiamondView : {(gem.IsSynthetic ? "Motifs de synthèse (HPHT/CVD)" : "Motifs de croissance naturelle")}");
+            Add("DiamondView", $"DiamondView : {DiamondViewImage.Summary(gem)}");
 
         return list;
     }

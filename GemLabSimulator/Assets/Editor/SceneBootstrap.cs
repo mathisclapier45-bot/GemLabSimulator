@@ -1437,17 +1437,17 @@ public static class SceneBootstrap
         CreateMusicManager();
 
         CreateRealBuilding("Maison & Bureau de Gemmologie", new Vector3(-55, 28, 0f), HouseStyle.Chalet, "Home", true);
-        CreateRealBuilding("Laboratoire de Gemmologie", new Vector3(-30, 28, 0f), HouseStyle.Modern, "Laboratoire", true);
-        CreateRealBuilding("Atelier Lapidaire", new Vector3(-5, 28, 0f), HouseStyle.Chalet, "AtelierLapidaire", true);
+        CreateThemedBuilding("Laboratoire de Gemmologie", new Vector3(-30, 28, 0f), "building_laboratoire.png", 224, "Laboratoire");
+        CreateThemedBuilding("Atelier Lapidaire", new Vector3(-5, 28, 0f), "building_atelierlapidaire.png", 244, "AtelierLapidaire");
         CreateRealBuilding("Musee", new Vector3(20, 28, 0f), HouseStyle.Modern, "Musee", true);
         CreateDiamondTower(new Vector3(45, 28, 0f));
         CreateClothingStore(new Vector3(57.5f, 28, 0f));
         CreatePetShop(new Vector3(8.5f, 7, 0f));
         CreateWatchStore(new Vector3(-31.5f, -15, 0f));
 
-        CreateRealBuilding("Marche aux Pierres", new Vector3(-45, -15, 0f), HouseStyle.Modern, "Marche", true);
+        CreateThemedBuilding("Marche aux Pierres", new Vector3(-45, -15, 0f), "building_marchepierres.png", 240, "Marche");
         CreateRealBuilding("Ecole", new Vector3(-15, -15, 0f), HouseStyle.Chalet, "", false);
-        CreateRealBuilding("Marche aux Brutes", new Vector3(15, -15, 0f), HouseStyle.Modern, "MarcheBrutes", true);
+        CreateThemedBuilding("Marche aux Brutes", new Vector3(15, -15, 0f), "building_marchebrutes.png", 240, "MarcheBrutes");
         CreateRealBuilding("Le Manoir", new Vector3(45, -15, 0f), HouseStyle.Chalet, "Manoir", true);
 
         // Decorative for now: no interior yet, the door shows the usual "not accessible" message.
@@ -1880,13 +1880,21 @@ public static class SceneBootstrap
 
         CreateExitDoor(new Vector3(0, LabMinY + 1, 0f), "SpawnPoint_Laboratoire");
 
-        CreateExaminationStation("FTIR", ExaminationTool.MeasurementType.Treatment, new Vector3(-5, 2, 0f));
-        CreateExaminationStation("Raman", ExaminationTool.MeasurementType.Authenticity, new Vector3(0, 2, 0f));
-        CreateExaminationStation("Spectrophotometre", ExaminationTool.MeasurementType.ConfirmedOrigin, new Vector3(5, 2, 0f));
-        CreateExaminationStation("DiamondView", ExaminationTool.MeasurementType.DiamondGrowthImaging, new Vector3(-5, -2, 0f));
-        CreateExaminationStation("MEB", ExaminationTool.MeasurementType.GrowthStructure, new Vector3(0, -2, 0f));
-        CreateExaminationStation("DiamondSure", ExaminationTool.MeasurementType.DiamondScreening, new Vector3(5, -2, 0f));
+        // The advanced instruments stand on wide laboratory benches along the walls, like the tools of the classic lab:
+        // five on the north wall, two on the south wall on either side of the door.
+        const float northBenchY = LabMaxY - 1f;
+        const float southBenchY = LabMinY + 1.1f;
+        const string bench = "interior_prop_labbench.png";
+        const float benchWidth = 3.1f;
+        CreateDeskStation("Spectrophotometre", ExaminationTool.MeasurementType.ConfirmedOrigin, -7.2f, northBenchY, false, false, bench, benchWidth);
+        CreateDeskStation("FTIR", ExaminationTool.MeasurementType.Treatment, -3.6f, northBenchY, false, false, bench, benchWidth);
+        CreateDeskStation("Raman", ExaminationTool.MeasurementType.Authenticity, 0f, northBenchY, false, false, bench, benchWidth);
+        CreateDeskStation("EDXRF", ExaminationTool.MeasurementType.ElementalAnalysis, 3.6f, northBenchY, false, false, bench, benchWidth);
+        CreateDeskStation("MEB", ExaminationTool.MeasurementType.GrowthStructure, 7.2f, northBenchY, false, false, bench, benchWidth);
+        CreateDeskStation("DiamondView", ExaminationTool.MeasurementType.DiamondGrowthImaging, -5.4f, southBenchY, true, false, bench, benchWidth);
+        CreateDeskStation("DiamondSure", ExaminationTool.MeasurementType.DiamondScreening, 5.4f, southBenchY, true, false, bench, benchWidth);
 
+        CreateLabTable();
         DecorateLaboratory();
 
         CreateUI(false);
@@ -2889,6 +2897,33 @@ public static class SceneBootstrap
         }
     }
 
+    // Building with its own front (lab, workshop, markets): the door sits at the foot of the sprite, `doorX` pixels from its left edge.
+    private static void CreateThemedBuilding(string label, Vector3 position, string spriteFile, int doorX, string targetScene)
+    {
+        var sprite = LoadPackSpriteGrounded($"Assets/Art/Sprites/{spriteFile}");
+        if (sprite == null) return;
+
+        var go = new GameObject(label);
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 4;
+        go.transform.position = position;
+
+        var col = go.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(3.5f, 2.4f);
+        col.offset = new Vector2(doorX / (float)PixelsPerUnit - sprite.bounds.size.x * 0.5f, 1.2f);
+
+        var door = go.AddComponent<DoorTrigger>();
+        var so = new SerializedObject(door);
+        so.FindProperty("sceneName").stringValue = targetScene;
+        so.FindProperty("implemented").boolValue = true;
+        so.FindProperty("lockedMessage").stringValue = $"{label} : ce lieu n'est pas encore accessible.";
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel(label, position + new Vector3(0f, sprite.bounds.size.y + 0.5f, 0f));
+    }
+
     private enum HouseStyle { Chalet, Modern }
 
     private static void CreateRealBuilding(string label, Vector3 position, HouseStyle style, string targetScene, bool implemented)
@@ -3373,10 +3408,10 @@ public static class SceneBootstrap
 
     // `requiresPurchase`: the desk and its tool only appear once the player has bought the tool at the GemStore.
     private static void CreateDeskStation(string toolName, ExaminationTool.MeasurementType measurementType, float x, float feetY, bool accessFromNorth,
-        bool requiresPurchase = false)
+        bool requiresPurchase = false, string deskSpriteFile = "interior_prop_desk_a.png", float deskWidth = 1.5f)
     {
         var gated = new List<GameObject>();
-        var deskSprite = LoadPackSpriteGrounded("Assets/Art/Sprites/interior_prop_desk_a.png");
+        var deskSprite = LoadPackSpriteGrounded($"Assets/Art/Sprites/{deskSpriteFile}");
         if (deskSprite != null)
         {
             var desk = new GameObject($"Bureau_{toolName}");
@@ -3387,7 +3422,7 @@ public static class SceneBootstrap
             desk.transform.position = new Vector3(x, feetY, 0f);
 
             var solid = desk.AddComponent<BoxCollider2D>();
-            solid.size = new Vector2(1.5f, 1.2f);
+            solid.size = new Vector2(deskWidth, 1.2f);
             solid.offset = new Vector2(0f, 0.65f);
         }
 
@@ -3399,7 +3434,7 @@ public static class SceneBootstrap
 
         // Wider trigger reaching the side the player stands on.
         var trigger = station.GetComponent<BoxCollider2D>();
-        trigger.size = new Vector2(1.7f, 1.7f);
+        trigger.size = new Vector2(Mathf.Max(1.7f, deskWidth - 0.4f), 1.7f);
         trigger.offset = accessFromNorth ? new Vector2(0f, 0.9f) : new Vector2(0f, -1.1f);
 
         if (!requiresPurchase) return;
@@ -8262,14 +8297,33 @@ public static class SceneBootstrap
         PlaceFurniture("plant_small", new Vector3(7.6f, -3.0f, 0f));
     }
 
+    // A long table in the middle of the laboratory: two computers, a laptop and the paperwork of the analyses, with a chair at each screen.
+    private static void CreateLabTable()
+    {
+        const float feetY = -0.6f;
+
+        // Three desks side by side make one long table (the screens and papers are drawn over it).
+        foreach (var x in new[] { -1.9f, 0f, 1.9f }) PlaceFurniture("off_desk", new Vector3(x, feetY, 0f));
+
+        foreach (var x in new[] { -1.9f, 1.9f })
+            PlaceInteriorProp("off_pc", new Vector3(x + 0.1f, feetY + 0.85f, 0f), true, false, 5);
+        PlaceInteriorProp("off_pc_desktop", new Vector3(0.15f, feetY + 0.7f, 0f), true, false, 5);
+
+        PlaceInteriorProp("papers", new Vector3(-0.9f, feetY + 0.4f, 0f), true, false, 5);
+        PlaceInteriorProp("papers2", new Vector3(0.95f, feetY + 0.38f, 0f), true, false, 5);
+        PlaceInteriorProp("folder", new Vector3(2.75f, feetY + 0.4f, 0f), true, false, 5);
+        PlaceInteriorProp("mug", new Vector3(-2.75f, feetY + 0.45f, 0f), true, false, 5);
+
+        foreach (var x in new[] { -1.9f, 1.9f }) PlaceFurniture("off_chair_dark", new Vector3(x, feetY - 1.0f, 0f));
+    }
+
     private static void DecorateLaboratory()
     {
         foreach (var x in new[] { -7, -2, 3, 8 }) PlaceWallDecor("window_white", x, LabMaxY);
 
-        PlaceFurniture("shelf_a", new Vector3(-7f, LabMaxY - 1f, 0f));
-        PlaceFurniture("shelf_b", new Vector3(7f, LabMaxY - 1f, 0f));
-        PlaceFurniture("palm", new Vector3(-8.8f, LabMaxY - 1.2f, 0f));
-        PlaceFurniture("palm", new Vector3(9.0f, LabMaxY - 1.2f, 0f));
+        // The north wall belongs to the benches: plants stand in the south corners.
+        PlaceFurniture("palm", new Vector3(-8.8f, LabMinY + 1.2f, 0f));
+        PlaceFurniture("palm", new Vector3(9.0f, LabMinY + 1.2f, 0f));
     }
 
     private static void DecorateMarket()
@@ -8793,6 +8847,7 @@ public static class SceneBootstrap
             case "MEB": return GetOrCreatePixelSprite("meb_pixel", MicroscopePattern, MEBPalette);
             case "DiamondView": return GetOrCreatePixelSprite("diamondview_pixel", MicroscopePattern, DiamondViewPalette);
             case "DiamondSure": return GetOrCreatePixelSprite("diamondsure_pixel", RefractometrePattern, DiamondSurePalette);
+            case "EDXRF": return GetOrCreatePixelSprite("edxrf_pixel", BalanceCaratPattern, EDXRFPalette);
             default: return GetOrCreatePixelSprite("loupe_pixel", LoupePattern, LoupePalette);
         }
     }
@@ -9654,6 +9709,13 @@ public static class SceneBootstrap
         { 'G', new Color(0.35f, 0.85f, 0.55f) },
         { 'B', new Color(0.20f, 0.22f, 0.26f) },
         { 'K', new Color(0.08f, 0.08f, 0.09f) },
+    };
+
+    private static readonly Dictionary<char, Color> EDXRFPalette = new Dictionary<char, Color>
+    {
+        { 'D', new Color(0.90f, 0.70f, 0.15f) },
+        { 'P', new Color(0.80f, 0.82f, 0.86f) },
+        { 'K', new Color(0.15f, 0.15f, 0.18f) },
     };
 
     private static readonly Dictionary<char, Color> ThermalProbePalette = new Dictionary<char, Color>

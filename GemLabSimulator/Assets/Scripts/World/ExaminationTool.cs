@@ -25,7 +25,8 @@ public class ExaminationTool : MonoBehaviour
         GrowthStructure,
         Magnetism,
         DiamondScreening,
-        DiamondGrowthImaging
+        DiamondGrowthImaging,
+        ElementalAnalysis
     }
 
     [SerializeField] private string toolName;
@@ -59,6 +60,13 @@ public class ExaminationTool : MonoBehaviour
         if (measurementType == MeasurementType.Pleochroism) DichroscopeUI.Instance?.Close();
         if (measurementType == MeasurementType.VisualExamination) LoupeUI.Instance?.Close();
         if (measurementType == MeasurementType.Inclusions) MicroscopeUI.Instance?.Close();
+        if (measurementType == MeasurementType.ConfirmedOrigin) UvVisNirUI.Instance?.Close();
+        if (measurementType == MeasurementType.Treatment) FtirUI.Instance?.Close();
+        if (measurementType == MeasurementType.Authenticity) RamanUI.Instance?.Close();
+        if (measurementType == MeasurementType.DiamondGrowthImaging) DiamondViewUI.Instance?.Close();
+        if (measurementType == MeasurementType.DiamondScreening) DiamondSureUI.Instance?.Close();
+        if (measurementType == MeasurementType.GrowthStructure) MebUI.Instance?.Close();
+        if (measurementType == MeasurementType.ElementalAnalysis) EdxrfUI.Instance?.Close();
         playerInRange = false;
         playerInventory = null;
         ToolInfoUI.Instance?.HideButtonIfCurrent(toolName);
@@ -104,6 +112,27 @@ public class ExaminationTool : MonoBehaviour
 
         // Microscope: 10x-40x, reflected light or darkfield, fine focus. Rough stones need a window (handled inside).
         if (measurementType == MeasurementType.Inclusions && MicroscopeUI.TryOpen()) return;
+
+        // UV-Vis-NIR spectrophotometer: drop the stone in the box, press Start, read the absorbance curve.
+        if (measurementType == MeasurementType.ConfirmedOrigin && UvVisNirUI.TryOpen()) return;
+
+        // FTIR spectrometer: drop the stone in the compartment, press Start, read the infrared curve (fillers, heating, diamond type).
+        if (measurementType == MeasurementType.Treatment && FtirUI.TryOpen()) return;
+
+        // Raman spectrometer: drop the stone in the chamber, choose host / inclusion / fracture, press Start, match the spectrum.
+        if (measurementType == MeasurementType.Authenticity && RamanUI.TryOpen()) return;
+
+        // DiamondView: deep-UV fluorescence image of a diamond, whose growth pattern tells natural, CVD and HPHT apart.
+        if (measurementType == MeasurementType.DiamondGrowthImaging && DiamondViewUI.TryOpen()) return;
+
+        // DiamondSure: UV transmission screening, Pass (type I diamond) or Refer (needs further testing).
+        if (measurementType == MeasurementType.DiamondScreening && DiamondSureUI.TryOpen()) return;
+
+        // Scanning electron microscope: surface image, cathodoluminescence (growth structure) or X-ray analysis (elements).
+        if (measurementType == MeasurementType.GrowthStructure && MebUI.TryOpen()) return;
+
+        // EDXRF: X-ray fluorescence spectrum of the trace elements (deposit, synthesis, lead glass fillings).
+        if (measurementType == MeasurementType.ElementalAnalysis && EdxrfUI.TryOpen()) return;
 
         var gemInstance = playerInventory.SelectedGem;
         if (gemInstance == null)

@@ -149,10 +149,12 @@ public class ReportUIController : MonoBehaviour
             measured.Add($"Conductivité électrique : {(gem.isElectricallyConductive ? "Conductrice" : "Non conductrice")}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.GrowthStructure.ToString()))
             measured.Add($"Structure de croissance (MEB) : {gemInstance.GrowthStructureDescription}");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ElementalAnalysis.ToString()))
+            measured.Add($"EDXRF : {EdxrfSpectrum.Summary(gemInstance)}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.DiamondScreening.ToString()))
-            measured.Add($"DiamondSure : {(gemInstance.IsSynthetic ? "Refer" : "Pass")}");
+            measured.Add($"DiamondSure : {DiamondSure.Label(gemInstance)}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.DiamondGrowthImaging.ToString()))
-            measured.Add($"DiamondView : {(gemInstance.IsSynthetic ? "Motifs de synthèse (HPHT/CVD)" : "Motifs de croissance naturelle")}");
+            measured.Add($"DiamondView : {DiamondViewImage.Summary(gemInstance)}");
 
         var identityLine = gemInstance.IsIdentified
             ? $"Gemme : {gem.displayName} (identifiée) — N° {gemInstance.DisplayId}"
