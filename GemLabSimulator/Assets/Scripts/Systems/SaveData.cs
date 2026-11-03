@@ -60,6 +60,8 @@ public class GemInstanceSaveData
     public int roughColor;
     public int roughClarity;
     public int cutQuality;          // quality of the cut given by a diamond cutter (index + 1, 0 = none)
+    public int purchasePrice;       // what the player paid for the stone (0: unknown)
+    public int cuttingCost;         // what its cutting cost
 
     public List<string> measuredKeys = new List<string>();
     public List<float> measuredValues = new List<float>();
@@ -97,7 +99,15 @@ public class SaveData
     public List<GemInstanceSaveData> orderCabinetGems = new List<GemInstanceSaveData>();
     public List<string> ownedTools = new List<string>();
     public bool lanternLit;
+    public bool bankOpen;               // the account at the bank of the town
+    public int bankBalance;
+    public int bankMonthKey;
+    public int bankMinBalance;
+    public int bankLastInterest;
+    public float bankLastRate;
+    public int rapaportUntilDay;       // last day of the subscription to the Rapaport price list (0: never subscribed)
     public List<string> bagSlots = new List<string>();
+    public string mobility = "";
     public List<string> ownedPets = new List<string>();
     public string equippedPet;
     public List<string> cardIds = new List<string>();

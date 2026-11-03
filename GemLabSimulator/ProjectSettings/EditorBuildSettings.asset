@@ -9,23 +9,11 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 26d9e696adf0c46739d302aeef2c41bc
   - enabled: 1
-    path: Assets/Scenes/AtelierLapidaire.unity
-    guid: 4e3e83b81961642d880b5ab7d58bf3a9
-  - enabled: 1
-    path: Assets/Scenes/Manoir.unity
-    guid: bd5305b0f3285407f8fb0ba30834fdc8
-  - enabled: 1
-    path: Assets/Scenes/Marche.unity
-    guid: 291f928340aa447e89a519a289126f6f
-  - enabled: 1
     path: Assets/Scenes/Musee.unity
     guid: 9b9691001390f4367a4b7683179a1f5c
   - enabled: 1
     path: Assets/Scenes/MaisonJoueur.unity
     guid: aa21f5ad0c82645feb17422a2288a7cb
-  - enabled: 1
-    path: Assets/Scenes/MarcheBrutes.unity
-    guid: 273ebd537889c4d7d93743d7e783a22c
   - enabled: 1
     path: Assets/Scenes/Tunnel.unity
     guid: 5d09c9470828046c6981ab066e7646f1
@@ -36,8 +24,17 @@ EditorBuildSettings:
     path: Assets/Scenes/Laboratoire.unity
     guid: e813e661c67054888a8fc8a23d756d5d
   - enabled: 1
-    path: Assets/Scenes/Animalerie.unity
-    guid: 0acc4a27773894cf2b3f3595a64ffe46
+    path: Assets/Scenes/GemStore.unity
+    guid: 11669b37047894a988da5b95e8cc7aee
+  - enabled: 1
+    path: Assets/Scenes/Home.unity
+    guid: 36909d23915df4366b99428440e99db5
+  - enabled: 1
+    path: Assets/Scenes/LaboSynthese.unity
+    guid: cf34b9f35581d46bf9916456d255228e
+  - enabled: 1
+    path: Assets/Scenes/LaboTraitements.unity
+    guid: 1822d32d35ddd4d28a21493abab2a9d4
   - enabled: 1
     path: Assets/Scenes/DiamantairesAccueil.unity
     guid: 13fb8d10fe01945d39c8b8f57b3d97fc
@@ -63,18 +60,27 @@ EditorBuildSettings:
     path: Assets/Scenes/DiamantairesToit.unity
     guid: 709c0bef84bb24542b2158a81e108a98
   - enabled: 1
-    path: Assets/Scenes/GemStore.unity
-    guid: 11669b37047894a988da5b95e8cc7aee
+    path: Assets/Scenes/Animalerie.unity
+    guid: 0acc4a27773894cf2b3f3595a64ffe46
   - enabled: 1
-    path: Assets/Scenes/Home.unity
-    guid: 36909d23915df4366b99428440e99db5
+    path: Assets/Scenes/Banque.unity
+    guid: de8ac929566664a49a91a31b9c3bf107
   - enabled: 1
-    path: Assets/Scenes/LaboSynthese.unity
-    guid: cf34b9f35581d46bf9916456d255228e
+    path: Assets/Scenes/AtelierLapidaire.unity
+    guid: 4e3e83b81961642d880b5ab7d58bf3a9
   - enabled: 1
-    path: Assets/Scenes/LaboTraitements.unity
-    guid: 1822d32d35ddd4d28a21493abab2a9d4
+    path: Assets/Scenes/Manoir.unity
+    guid: bd5305b0f3285407f8fb0ba30834fdc8
+  - enabled: 1
+    path: Assets/Scenes/Marche.unity
+    guid: 291f928340aa447e89a519a289126f6f
+  - enabled: 1
+    path: Assets/Scenes/MarcheBrutes.unity
+    guid: 273ebd537889c4d7d93743d7e783a22c
   - enabled: 1
     path: Assets/Scenes/Town.unity
     guid: 436994916875340dba60314ffa83766d
+  - enabled: 1
+    path: Assets/Scenes/Concessionnaire.unity
+    guid: 460a28233df164c6d83f87a2e2bfd9da
   m_configObjects: {}

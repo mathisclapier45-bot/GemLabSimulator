@@ -28,7 +28,7 @@ public class ManoirOldMan : MonoBehaviour
 
         if (ManoirRequestState.Instance.CurrentRequest == null)
         {
-            ToolFeedbackUI.Instance?.ShowMessage("Le vieil homme : \"Rien à demander pour l'instant... repassez un autre jour.\"");
+            DialogueBoxUI.Say("Le vieil homme", "Rien à demander pour l'instant... repassez un autre jour.", gameObject);
             return;
         }
 
@@ -36,11 +36,11 @@ public class ManoirOldMan : MonoBehaviour
         if (selected != null && ManoirRequestState.Instance.Matches(selected))
         {
             if (ManoirRequestState.Instance.TryFulfill(selected, playerInventory, PlayerWallet.Instance, out var reward))
-                ToolFeedbackUI.Instance?.ShowMessage($"Le vieil homme sourit et vous tend {reward}€. \"Voilà qui fera l'affaire.\"");
+                DialogueBoxUI.Say("Le vieil homme", $"Il sourit et vous tend {reward}€. \"Voilà qui fera l'affaire.\"", gameObject);
             return;
         }
 
-        ToolFeedbackUI.Instance?.ShowMessage(
-            $"{ManoirRequestState.Instance.DescribeRequest()}\n(Sélectionnez la gemme correspondante dans l'inventaire avec Tab, puis revenez me voir.)");
+        DialogueBoxUI.Say("Le vieil homme",
+            $"{ManoirRequestState.Instance.DescribeRequest()}\n(Sélectionnez la gemme correspondante dans l'inventaire avec Tab, puis revenez me voir.)", gameObject);
     }
 }

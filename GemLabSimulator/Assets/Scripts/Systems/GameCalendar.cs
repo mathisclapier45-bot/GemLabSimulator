@@ -58,6 +58,9 @@ public static class GameCalendar
 
     public static DateTime Today => DateOf(GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1);
 
+    // The counter of the game for a date of the calendar (1 on the first day).
+    public static int DayOf(DateTime date) => (date.Date - Start.Date).Days + 1;
+
     public static string Long(DateTime date) => $"{WeekdayNames[(int)date.DayOfWeek]} {date.Day}{(date.Day == 1 ? "er" : "")} {MonthNames[date.Month - 1]} {date.Year}";
 
     public static string Short(DateTime date) => $"{date.Day} {MonthShort[date.Month - 1]} {date.Year}";
@@ -178,6 +181,13 @@ public static class GameCalendar
         if (month == 10 && IsWeekday(date, DayOfWeek.Saturday, 1)) Add(list, "Foire aux gemmes", "Brut, taillé, synthétique : tout se vend et tout se discute.", Trade);
         if (month == 11 && IsWeekday(date, DayOfWeek.Friday, 0)) Add(list, "Gala du diamant", "La soirée des grands noms de la joaillerie.", Trade);
         if (month == 12 && day == 10) Add(list, "Ouverture du marché de Noël", "Des lumières, des chalets et des bijoux jusqu'au 24.", Fun);
+
+        // The price list of the diamond trade comes out every Thursday.
+        if (date.DayOfWeek == DayOfWeek.Thursday)
+            Add(list, "Parution du Rapaport", "Le Rapaport, la liste de prix des diamants, paraît chaque jeudi : elle est dans le sac pour les abonnés.", Trade, false);
+
+        // The bank pays its interest on the first of the month.
+        if (day == 1) Add(list, "Versement des intérêts", "La banque verse les intérêts du mois écoulé sur les comptes ouverts.", Trade, false);
 
         // The first of the month brings its birthstones.
         if (day == 1)
@@ -302,6 +312,7 @@ public class CalendarAnnouncer : MonoBehaviour
         var notable = new List<string>();
         foreach (var calendarEvent in GameCalendar.EventsOn(date))
             if (calendarEvent.Notable) notable.Add(calendarEvent.Name);
+        if (date.DayOfWeek == DayOfWeek.Thursday && RapaportState.HasAccess) notable.Add("Le Rapaport est paru (onglet du sac)");
         if (notable.Count == 0) return;
         ToolFeedbackUI.Instance.ShowMessage($"Aujourd'hui, {GameCalendar.Long(date)} : {string.Join(" · ", notable)}.");
     }

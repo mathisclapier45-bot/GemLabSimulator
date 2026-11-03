@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 // The card binder (B, or the "Classeur" button of the inventory): two pages side by side, nine cards per page (3 x 3), in the order of
 // the collection. A card not owned yet leaves an empty slot. A card owned several times shows a counter at the top right of its artwork.
-// Click a card to see it large. Built at runtime and added to the scene's Canvas automatically.
+// Click a card to see it large. Built at runtime and added to the scene's Canvas automatically. The bag adopts the binder as one of its
+// tabs (B): it then lives inside the bag panel and the bag handles the key, the closing and the Escape key.
 public class BinderUI : MonoBehaviour
 {
     public static BinderUI Instance { get; private set; }
@@ -40,7 +41,12 @@ public class BinderUI : MonoBehaviour
     private int spread;
     private bool lockedInput;
 
-    public bool IsOpen => panel != null && panel.activeSelf;
+    private bool inBag;
+
+    public bool IsOpen => !inBag && panel != null && panel.activeSelf;
+    public GameObject Panel => panel;
+    public bool HasDetail => detail != null;
+    private bool Showing => panel != null && (inBag ? panel.activeInHierarchy : panel.activeSelf);
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Bootstrap()
@@ -84,7 +90,40 @@ public class BinderUI : MonoBehaviour
 
     private void RefreshIfOpen()
     {
-        if (IsOpen) Rebuild();
+        if (Showing) Rebuild();
+    }
+
+    // The bag takes the binder panel as a tab: it fills the bag panel, whose tabs replace the title and the close button.
+    public void AttachToBag(Transform bagPanel)
+    {
+        inBag = true;
+        Close();
+        panel.transform.SetParent(bagPanel, false);
+        panel.transform.SetAsFirstSibling();
+        var rect = panel.GetComponent<RectTransform>();
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = rect.offsetMax = Vector2.zero;
+        titleText.gameObject.SetActive(false);
+        progressText.gameObject.SetActive(false);
+        var close = panel.transform.Find("Close");
+        if (close != null) close.gameObject.SetActive(false);
+    }
+
+    public void ShowInBag()
+    {
+        Sfx.Play(Sfx.Id.BookOpen);
+        Rebuild();
+    }
+
+    public void HideInBag()
+    {
+        CloseDetail();
+    }
+
+    public void CloseDetailInBag()
+    {
+        CloseDetail();
     }
 
     public void Toggle()
@@ -95,6 +134,11 @@ public class BinderUI : MonoBehaviour
 
     public void Open()
     {
+        if (inBag)
+        {
+            BagUI.Instance?.ShowTab("Classeur");
+            return;
+        }
         Sfx.Play(Sfx.Id.BookOpen);
         panel.SetActive(true);
         panel.transform.SetAsLastSibling();
@@ -120,6 +164,16 @@ public class BinderUI : MonoBehaviour
 
     private void Update()
     {
+        if (inBag)
+        {
+            if (panel.activeInHierarchy && detail == null)
+            {
+                if (Input.GetKeyDown(KeyCode.RightArrow)) GoToSpread(spread + 1);
+                if (Input.GetKeyDown(KeyCode.LeftArrow)) GoToSpread(spread - 1);
+            }
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.B) && !BoosterUI.IsShowing) Toggle();
         if (!IsOpen) return;
 
@@ -209,12 +263,14 @@ public class BinderUI : MonoBehaviour
         var unique = cards != null ? cards.UniqueCards : 0;
         var total = CardCatalog.Count;
         titleText.text = "Classeur de cartes";
-        progressText.text = $"{unique} / {total} cartes  ·  {Mathf.RoundToInt(100f * unique / Mathf.Max(1, total))} %";
+        var progress = $"{unique} / {total} cartes  ·  {Mathf.RoundToInt(100f * unique / Mathf.Max(1, total))} %";
+        progressText.text = progress;
 
         var first = spread * CardsPerSpread + 1;
         var last = Mathf.Min(total, (spread + 1) * CardsPerSpread);
         var leftPage = spread * 2 + 1;
-        pageText.text = $"Pages {leftPage}-{leftPage + 1}  ·  cartes {first} à {last}  ·  {spread + 1} / {SpreadCount}";
+        var pages = $"Pages {leftPage}-{leftPage + 1}  ·  cartes {first} à {last}  ·  {spread + 1} / {SpreadCount}";
+        pageText.text = inBag ? $"{progress}\n{pages}" : pages;
     }
 
     // ---- Large card ------------------------------------------------------------------------------------------------

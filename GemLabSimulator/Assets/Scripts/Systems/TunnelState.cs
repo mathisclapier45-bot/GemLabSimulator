@@ -83,6 +83,7 @@ public class TunnelState : MonoBehaviour
             return false;
         }
 
+        CurrentOffer.RecordPurchase(price);
         GemCodex.Instance?.MarkDiscovered(CurrentOffer.Definition.name);
         CurrentOffer = null;
         OnTunnelChanged?.Invoke();

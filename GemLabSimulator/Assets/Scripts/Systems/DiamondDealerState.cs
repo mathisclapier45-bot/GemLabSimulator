@@ -319,6 +319,7 @@ public class DiamondDealerState : MonoBehaviour
             return false;
         }
 
+        stone.RecordPurchase(price);
         dealer.Stock.Remove(stone);
         dealer.Prices.Remove(stone);
         GemCodex.Instance?.MarkDiscovered(stone.Definition.name);

@@ -461,7 +461,17 @@ public class GemDetailUI : MonoBehaviour
             text += stone.IsIdentified
                 ? $"Pierre d'un client\nRapport d'identification : {stone.IdentificationReportFee}€ (payé par le client à la livraison)" + (stone.HasReport ? "" : "\nRapport GemLab à imprimer avant l'envoi")
                 : $"Pierre d'un client\nRapport d'identification : {stone.IdentificationReportFee}€ une fois la pierre renvoyée";
-        else if (stone.IsIdentified) text += $"Spécimen personnel\nValeur estimée : {stone.FinalValue}€";
+        else if (stone.IsIdentified)
+        {
+            text += $"Spécimen personnel\nValeur estimée : {stone.FinalValue}€";
+            if (stone.PurchasePrice > 0) text += $"\nPrix d'achat : {stone.PurchasePrice}€";
+            if (stone.CuttingCost > 0) text += $"\nCoût de la taille : {stone.CuttingCost}€";
+            if (stone.PurchasePrice > 0 || stone.CuttingCost > 0)
+            {
+                var gain = stone.FinalValue - stone.PurchasePrice - stone.CuttingCost;
+                text += $"\nBilan estimé : <color={(gain >= 0 ? "#8CE68C" : "#F07A70")}>{(gain >= 0 ? "+" : "-")}{Mathf.Abs(gain)}€</color>";
+            }
+        }
         else text += "Spécimen personnel";
 
         return text;

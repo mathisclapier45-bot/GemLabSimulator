@@ -21,6 +21,8 @@ public static class OpeningHours
         { "Marche", new Hours { Open = 9f, Close = 20f } },
         { "MarcheBrutes", new Hours { Open = 9f, Close = 20f } },
         { "Musee", new Hours { Open = 9f, Close = 20f } },
+        { "Banque", new Hours { Open = 9f, Close = 20f } },
+        { "Concessionnaire", new Hours { Open = 9f, Close = 20f } },
         { "Diamantaires", new Hours { Open = 8f, Close = 20f } },
     };
 

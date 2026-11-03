@@ -62,6 +62,7 @@ public static class SaveSystem
             timeOfDay = OpeningHours.CurrentHour,
             birthdayDay = GameCalendar.BirthdayDay,
             birthdayMonth = GameCalendar.BirthdayMonth,
+            rapaportUntilDay = RapaportState.Instance != null ? RapaportState.Instance.PaidUntilDay : 0,
             sceneName = SceneManager.GetActiveScene().name,
             reputationPoints = ReputationState.Instance != null ? ReputationState.Instance.Points : 0,
         };
@@ -89,12 +90,15 @@ public static class SaveSystem
                 data.orderCabinetGems.Add(gem.ToSaveData());
         }
 
+        BankState.Instance?.WriteTo(data);
+
         var ownedTools = PlayerOwnedTools.Instance;
         if (ownedTools != null)
         {
             data.ownedTools.AddRange(ownedTools.Owned);
             foreach (var slot in ownedTools.BagSlots) data.bagSlots.Add(slot ?? "");
             data.lanternLit = ownedTools.LanternLit;
+            data.mobility = ownedTools.Mobility;
         }
         var pets = PlayerPets.Instance;
         if (pets != null)
@@ -130,6 +134,8 @@ public static class SaveSystem
             GameClock.Instance.SetDay(data.currentDay);
 
         GameCalendar.SetBirthday(data.birthdayDay, data.birthdayMonth);
+        RapaportState.Ensure()?.Load(data.rapaportUntilDay);
+        BankState.Ensure()?.LoadFrom(data);
         if (data.timeOfDay >= 0f) DayNightOverlay.SetHour(data.timeOfDay);
         else DayNightOverlay.ResetToDay();
 
@@ -150,6 +156,7 @@ public static class SaveSystem
         {
             tools.LoadTools(data.ownedTools, data.bagSlots);
             tools.SetLantern(data.lanternLit);
+            tools.SetMobility(data.mobility);
         }
 
         var pets = PlayerPets.Ensure();

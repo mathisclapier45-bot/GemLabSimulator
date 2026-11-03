@@ -37,10 +37,15 @@ public class GrimoireUI : MonoBehaviour
         if (GemCodex.Instance != null) GemCodex.Instance.OnCodexChanged -= RefreshIfOpen;
     }
 
-    private void Update()
+    // The grimoire lives in a tab of the bag (G opens it there): the bag takes its two windows over.
+    public GameObject GridPanel => gridPanel;
+    public GameObject DetailPanel => detailPanel;
+
+    public void OpenInBag()
     {
-        if (Input.GetKeyDown(KeyCode.G))
-            Toggle();
+        if (detailPanel != null) detailPanel.SetActive(false);
+        if (gridPanel != null) gridPanel.SetActive(true);
+        Refresh();
     }
 
     private void Toggle()

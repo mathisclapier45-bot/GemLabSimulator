@@ -9,7 +9,7 @@ public class PlayerPets : MonoBehaviour
     public static PlayerPets Instance { get; private set; }
 
     // How many animals the bag keeps besides the equipped one.
-    public const int CollectionSlots = 4;
+    public const int CollectionSlots = 10;
 
     private readonly List<string> owned = new List<string>();
     private string equipped;

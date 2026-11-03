@@ -15,7 +15,7 @@ public class ReturnToMenuController : MonoBehaviour
         lastOpenPanels = openPanels;
 
         if (!pressed || closedOne) return;
-        if (ComputerUI.ConsumesEscape || BinderUI.ConsumesEscape || BoosterUI.ConsumesEscape) return;
+        if (ComputerUI.ConsumesEscape || BinderUI.ConsumesEscape || BoosterUI.ConsumesEscape || BagUI.ConsumesEscape) return;
         PauseMenuUI.Toggle();
     }
 

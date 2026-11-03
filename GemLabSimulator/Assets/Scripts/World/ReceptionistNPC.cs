@@ -26,12 +26,11 @@ public class ReceptionistNPC : MonoBehaviour
         Sfx.Play(Sfx.Id.Chat);
         if (DiamondBuilding.HasLicense)
         {
-            ToolFeedbackUI.Instance?.ShowMessage("Accueil : Bonne visite ! L'ascenseur vous mène à tous les étages.");
+            DialogueBoxUI.Say("Accueil", "Bonne visite ! L'ascenseur vous mène à tous les étages.", gameObject);
             return;
         }
 
-        ToolFeedbackUI.Instance?.ShowMessage(
-            "Accueil : Les étages sont réservés aux diamantaires licenciés. Voici les conditions de la licence.");
+        DialogueBoxUI.Say("Accueil", "Les étages sont réservés aux diamantaires licenciés. Voici les conditions de la licence.", gameObject);
         if (licenseItem != null) ShopUI.TryOpen(licenseItem);
     }
 }

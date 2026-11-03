@@ -93,6 +93,15 @@ public class DiamondCuttingState : MonoBehaviour
         var stones = DiamondCutting.Cut(cutter, option, rough, diamond);
         inventory.RemoveGem(rough);
 
+        // What was paid for the rough and for the cutting goes to the stones, shared by weight.
+        var totalCarat = 0f;
+        foreach (var stone in stones) totalCarat += stone.CaratWeight;
+        foreach (var stone in stones)
+        {
+            var share = totalCarat > 0f ? stone.CaratWeight / totalCarat : 1f / stones.Count;
+            stone.SetCosts(Mathf.RoundToInt(rough.PurchasePrice * share), Mathf.RoundToInt((rough.CuttingCost + quote.Price) * share));
+        }
+
         jobs.Add(new DiamondCutJob
         {
             CutterIndex = cutterIndex,

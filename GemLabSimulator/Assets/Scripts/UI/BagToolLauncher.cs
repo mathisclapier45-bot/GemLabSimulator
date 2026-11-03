@@ -48,6 +48,22 @@ public static class BagToolLauncher
                     : "Lanterne éteinte.");
                 return false;
             }
+            // The sneakers and the bicycle are not tool windows either: a click wears one or takes it off.
+            case PlayerOwnedTools.SneakersId:
+            case PlayerOwnedTools.BikeId:
+            {
+                var tools = PlayerOwnedTools.Ensure();
+                if (tools == null) return false;
+                var wearing = tools.Mobility == toolId;
+                tools.SetMobility(wearing ? "" : toolId);
+                Sfx.Play(Sfx.Id.Pickup);
+                ToolFeedbackUI.Instance?.ShowMessage(wearing
+                    ? $"{BagItemCatalog.NameOf(toolId)} : rangé."
+                    : toolId == PlayerOwnedTools.BikeId
+                        ? "Vous enfourchez la bicyclette : en ville, bien plus vite ! (Vous descendez en entrant dans un bâtiment.)"
+                        : "Vous enfilez les baskets : en ville, vous marchez plus vite.");
+                return false;
+            }
             case "Chamoisine":
                 ToolFeedbackUI.Instance?.ShowMessage("Chamoisine : elle servira à nettoyer les gemmes (bientôt).");
                 return false;

@@ -114,6 +114,7 @@ public class RoughMarketState : MonoBehaviour
             return false;
         }
 
+        item.RecordPurchase(price);
         vendor.Stock.Remove(item);
         GemCodex.Instance?.MarkDiscovered(item.Definition.name);
         OnMarketChanged?.Invoke();

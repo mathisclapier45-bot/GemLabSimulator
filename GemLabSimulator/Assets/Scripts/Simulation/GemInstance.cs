@@ -82,6 +82,26 @@ public class GemInstance
     public int RoughColorIndex { get; private set; } = -1;
     public int RoughClarityIndex { get; private set; } = -1;
 
+    // What the player paid for the stone and what its cutting cost (0 when unknown), shown under its estimated value.
+    public int PurchasePrice { get; private set; }
+    public int CuttingCost { get; private set; }
+
+    public void RecordPurchase(int price)
+    {
+        PurchasePrice = Mathf.Max(0, price);
+    }
+
+    public void AddCuttingCost(int cost)
+    {
+        CuttingCost += Mathf.Max(0, cost);
+    }
+
+    public void SetCosts(int purchase, int cutting)
+    {
+        PurchasePrice = Mathf.Max(0, purchase);
+        CuttingCost = Mathf.Max(0, cutting);
+    }
+
     // Quality of the cut (0 = excellent ... 3 = fair) given by the diamond cutter, which decides the proportions, polish and symmetry the
     // grading office will find. -1 for a stone that was not cut by one of them.
     public int CutQualityIndex { get; private set; } = -1;
@@ -459,6 +479,8 @@ public class GemInstance
             RoughColorIndex = data.roughColor - 1,
             RoughClarityIndex = data.roughClarity - 1,
             CutQualityIndex = data.cutQuality - 1,
+            PurchasePrice = data.purchasePrice,
+            CuttingCost = data.cuttingCost,
             Certificate = string.IsNullOrEmpty(data.certificateNumber)
                 ? null
                 : new DiamondCertificate
@@ -550,6 +572,8 @@ public class GemInstance
             roughColor = RoughColorIndex + 1,
             roughClarity = RoughClarityIndex + 1,
             cutQuality = CutQualityIndex + 1,
+            purchasePrice = PurchasePrice,
+            cuttingCost = CuttingCost,
             certificateNumber = Certificate?.number,
             certificateIssuer = Certificate?.issuer,
             certificateDay = Certificate != null ? Certificate.issueDay : 0,

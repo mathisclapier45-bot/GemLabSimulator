@@ -24,7 +24,14 @@ public class TalkNPC : MonoBehaviour
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E) || lines == null || lines.Length == 0) return;
 
         Sfx.Play(Sfx.Id.Chat);
-        ToolFeedbackUI.Instance?.ShowMessage($"{speaker} : {lines[lineIndex % lines.Length]}");
+        Speak();
+    }
+
+    // A click on the dialogue window goes on to the following line as long as there is one left to read.
+    private void Speak()
+    {
+        var line = lines[lineIndex % lines.Length];
         lineIndex++;
+        DialogueBoxUI.Say(speaker, line, gameObject, lineIndex % lines.Length != 0 ? (System.Action)Speak : null);
     }
 }

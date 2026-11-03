@@ -76,6 +76,7 @@ public class LapidaryState : MonoBehaviour
         LapidaryCatalog.RollResult(gem, shape, style, quote, out var newWeight, out var newValue);
         inventory.RemoveGem(gem);
         gem.ApplyCut(shape, style, newWeight, newValue);
+        gem.AddCuttingCost(quote.Price);
 
         var today = GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1;
         jobs.Add(new LapidaryJob { Gem = gem, ReadyDay = today + quote.Days });

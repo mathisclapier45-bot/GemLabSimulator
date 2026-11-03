@@ -1,13 +1,16 @@
 using UnityEditor;
 using UnityEngine;
 
-// The animal sprites in Resources/Pets are pixel art standing on their feet: sprite, 32 pixels per unit, no filtering,
-// pivot at the bottom center. Applied automatically whenever one is imported.
+// The animal sprites in Resources/Pets and the looks of the player (sneakers, bicycle) are pixel art standing on their feet: sprite,
+// 32 pixels per unit, no filtering, pivot at the bottom center. Applied automatically whenever one is imported.
 public class PetSpriteImporter : AssetPostprocessor
 {
     private void OnPreprocessTexture()
     {
-        if (!assetPath.StartsWith("Assets/Resources/Pets/")) return;
+        if (!assetPath.StartsWith("Assets/Resources/Pets/") && !assetPath.StartsWith("Assets/Resources/PlayerWalkBaskets/")
+            && !assetPath.StartsWith("Assets/Resources/PlayerIdleBaskets/") && !assetPath.StartsWith("Assets/Resources/PlayerWalkBike/")
+            && !assetPath.StartsWith("Assets/Resources/PlayerIdleBike/") && !assetPath.StartsWith("Assets/Resources/BagIcons/Baskets")
+            && !assetPath.StartsWith("Assets/Resources/BagIcons/Bicyclette")) return;
 
         var importer = (TextureImporter)assetImporter;
         importer.textureType = TextureImporterType.Sprite;

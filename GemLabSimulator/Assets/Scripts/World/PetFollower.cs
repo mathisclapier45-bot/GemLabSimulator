@@ -11,7 +11,12 @@ public class PetFollower : MonoBehaviour
     private const float TeleportDistance = 14f;
 
     private SpriteRenderer spriteRenderer;
-    private Sprite[] frames = new Sprite[0];
+    private Sprite[] frames = new Sprite[0];      // the frames in use
+    private Sprite[] sideFrames = new Sprite[0];
+    private Sprite[] upFrames = new Sprite[0];
+    private Sprite[] downFrames = new Sprite[0];
+    private enum Facing { Side, Up, Down }
+    private Facing facing = Facing.Side;
     private PetCatalog.Pet pet;
     private bool ready;
 
@@ -35,7 +40,11 @@ public class PetFollower : MonoBehaviour
     public void Setup(string petId)
     {
         ready = PetCatalog.TryGet(petId, out pet);
-        frames = ready ? PetCatalog.LoadFrames(petId) : new Sprite[0];
+        sideFrames = ready ? PetCatalog.LoadFrames(petId) : new Sprite[0];
+        upFrames = ready ? PetCatalog.LoadDirectionFrames(petId, "up") : new Sprite[0];
+        downFrames = ready ? PetCatalog.LoadDirectionFrames(petId, "down") : new Sprite[0];
+        facing = Facing.Side;
+        frames = sideFrames;
         frameIndex = 0;
         if (frames.Length > 0) spriteRenderer.sprite = frames[0];
         Teleport();
@@ -94,13 +103,35 @@ public class PetFollower : MonoBehaviour
             moving = movement.sqrMagnitude > 1e-6f;
         }
 
-        if (Mathf.Abs(movement.x) > 0.001f) spriteRenderer.flipX = movement.x < 0f;
+        if (moving) UpdateFacing(movement);
+        // Only the side view is turned to the left.
+        if (facing == Facing.Side && Mathf.Abs(movement.x) > 0.001f) spriteRenderer.flipX = movement.x < 0f;
+        else if (facing != Facing.Side) spriteRenderer.flipX = false;
         Animate(moving);
 
         // In front of the player when it is below him, behind when it is above.
         var playerRenderer = player.GetComponent<SpriteRenderer>();
         var baseOrder = playerRenderer != null ? playerRenderer.sortingOrder : 5;
         spriteRenderer.sortingOrder = transform.position.y < playerPosition.y ? baseOrder + 1 : baseOrder - 1;
+    }
+
+    // Walking mostly up or down shows the animal from behind or from the front; otherwise from the side.
+    private void UpdateFacing(Vector2 movement)
+    {
+        var wanted = Mathf.Abs(movement.y) > Mathf.Abs(movement.x) * 1.1f ? (movement.y > 0f ? Facing.Up : Facing.Down) : Facing.Side;
+        if (wanted == facing) return;
+
+        var set = wanted == Facing.Up ? upFrames : wanted == Facing.Down ? downFrames : sideFrames;
+        // An animal without views from the front and from behind keeps its side view.
+        if (set.Length == 0)
+        {
+            wanted = Facing.Side;
+            set = sideFrames;
+        }
+        facing = wanted;
+        frames = set;
+        frameIndex = 0;
+        if (frames.Length > 0) spriteRenderer.sprite = frames[0];
     }
 
     // Length of the walk from the animal to the player along the trail.

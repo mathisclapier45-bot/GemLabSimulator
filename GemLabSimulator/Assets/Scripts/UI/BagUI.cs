@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -12,6 +13,9 @@ public class BagUI : MonoBehaviour
 {
     public static BagUI Instance { get; private set; }
 
+    private static int escapeFrame = -1;
+    public static bool ConsumesEscape => escapeFrame == Time.frameCount;
+
     private const float PanelWidth = 800f;
     private const float PanelHeight = 520f;
     private const float SlotSize = 56f;
@@ -24,13 +28,37 @@ public class BagUI : MonoBehaviour
 
     private GameObject panel;
     private GameObject bagContent;
+    private RectTransform panelRect;
     private CalendarTabUI calendar;
-    private Image bagTabImage;
-    private Image calendarTabImage;
+    private RapaportTabUI rapaport;
+
+    // The tabs of the panel: the bag, the calendar, the grimoire of the gems, the card binder and, for a subscriber, the Rapaport price list.
+    private class BagTab
+    {
+        public string Label;
+        public KeyCode Key;
+        public GameObject Content;       // null for the grimoire, whose windows are shown by its own code
+        public Button Button;
+        public Image Image;
+        public float Width;
+        public float Height;
+        public float PanelWidth;
+        public float OffsetX;
+        public Action OnShow;
+        public Action OnHide;
+        public Func<bool> Visible;
+    }
+
+    private readonly List<BagTab> tabs = new List<BagTab>();
+    private int activeTab = -1;
+    private bool rapaportShown;
     private GameObject returnButton;
     private readonly Image[] equipmentIcons = new Image[PlayerOwnedTools.BagSlotCount];
     private Text infoText;
     private Image equippedPetIcon;
+    private Image portraitImage;
+    private RectTransform portraitRect;
+    private Image shoeIcon;
     private readonly Image[] collectionIcons = new Image[PlayerPets.CollectionSlots];
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -80,6 +108,7 @@ public class BagUI : MonoBehaviour
         BagToolLauncher.CloseTool();
         returnButton.SetActive(false);
         panel.SetActive(true);
+        SelectTab(0);
     }
 
     private void Start()
@@ -91,6 +120,7 @@ public class BagUI : MonoBehaviour
         var pets = PlayerPets.Ensure();
         if (pets != null) pets.OnPetsChanged += RefreshPets;
         RefreshPets();
+        AdoptBinder();
     }
 
     private void OnDestroy()
@@ -100,8 +130,52 @@ public class BagUI : MonoBehaviour
         if (PlayerPets.Instance != null) PlayerPets.Instance.OnPetsChanged -= RefreshPets;
     }
 
+    // The character in the frame wears what it has on: the sneakers on its feet, or it sits on its bicycle.
+    private void RefreshLook()
+    {
+        if (portraitImage == null) return;
+        var tools = PlayerOwnedTools.Instance;
+        var worn = tools != null ? tools.Mobility : "";
+        const float frameX = 510f;
+        const float frameY = -58f;
+
+        var riding = worn == PlayerOwnedTools.BikeId ? Resources.Load<Sprite>("PlayerIdleBike/Right") : null;
+        var sprite = riding != null ? riding
+            : worn == PlayerOwnedTools.SneakersId ? Resources.Load<Sprite>("PlayerIdleBaskets/Down") ?? Resources.Load<Sprite>("PlayerIdle/Down")
+            : Resources.Load<Sprite>("PlayerIdle/Down");
+        portraitImage.sprite = sprite;
+        portraitImage.enabled = sprite != null;
+
+        // The bicycle is wide: it is drawn smaller than the standing character, on the same ground line.
+        if (riding != null) RuntimeUIKit.SetTopLeft(portraitRect, new Vector2(frameX + 4f, frameY - 40f - 280f + 166f), new Vector2(166f, 166f));
+        else RuntimeUIKit.SetTopLeft(portraitRect, new Vector2(frameX + 14f, frameY - 40f), new Vector2(140f, 280f));
+
+        if (shoeIcon == null) return;
+        var shoes = worn == PlayerOwnedTools.SneakersId ? Resources.Load<Sprite>("BagIcons/" + PlayerOwnedTools.SneakersId) : null;
+        shoeIcon.sprite = shoes;
+        shoeIcon.enabled = shoes != null;
+    }
+
+    private void TakeOffSneakers()
+    {
+        var tools = PlayerOwnedTools.Instance;
+        if (tools == null || tools.Mobility != PlayerOwnedTools.SneakersId) return;
+        tools.SetMobility("");
+        Sfx.Play(Sfx.Id.Pickup);
+        HideInfo();
+    }
+
+    private void ShowShoeInfo()
+    {
+        var tools = PlayerOwnedTools.Instance;
+        infoText.text = tools != null && tools.Mobility == PlayerOwnedTools.SneakersId
+            ? $"{BagItemCatalog.NameOf(PlayerOwnedTools.SneakersId)}\n\n{BagItemCatalog.DescriptionOf(PlayerOwnedTools.SneakersId)}\n\nChaussées — clic : retirer"
+            : "Chaussures\n\nAucune paire n'est chaussée. Cliquez sur des baskets dans l'équipement de terrain pour les enfiler.";
+    }
+
     private void RefreshEquipment()
     {
+        RefreshLook();
         var tools = PlayerOwnedTools.Instance;
         for (var i = 0; i < equipmentIcons.Length; i++)
         {
@@ -118,6 +192,8 @@ public class BagUI : MonoBehaviour
         var id = tools != null && slotIndex < tools.BagSlots.Count ? tools.BagSlots[slotIndex] : null;
         infoText.text = string.IsNullOrEmpty(id)
             ? ""
+            : PlayerOwnedTools.IsMobilityItem(id)
+                ? $"{BagItemCatalog.NameOf(id)}\n\n{BagItemCatalog.DescriptionOf(id)}\n\n{(tools.Mobility == id ? "Utilisée" : "Rangée")} — clic : {(tools.Mobility == id ? "ranger" : "utiliser")}"
             : id == "Lanterne"
                 ? $"{BagItemCatalog.NameOf(id)}\n\n{BagItemCatalog.DescriptionOf(id)}\n\n{(tools.LanternLit ? "Allumée" : "Éteinte")} — clic : {(tools.LanternLit ? "éteindre" : "allumer")}"
                 : $"{BagItemCatalog.NameOf(id)}\n\n{BagItemCatalog.DescriptionOf(id)}\n\nClic : utiliser";
@@ -187,31 +263,64 @@ public class BagUI : MonoBehaviour
             if (toolOpen) returnButton.transform.SetAsLastSibling();
         }
 
-        // H opens the bag, K the calendar: the same key closes it again.
-        if (Input.GetKeyDown(KeyCode.H))
+        // The Rapaport tab exists only while the subscription lasts.
+        var access = RapaportState.HasAccess;
+        if (access != rapaportShown)
         {
-            if (panel.activeSelf && bagContent.activeSelf) panel.SetActive(false);
+            rapaportShown = access;
+            LayoutTabs();
+            if (!access && activeTab >= 0 && !TabVisible(tabs[activeTab])) SelectTab(0);
+        }
+
+        // H opens the bag, K the calendar, G the grimoire: the same key closes the panel again.
+        var keyed = false;
+        for (var i = 0; i < tabs.Count; i++)
+        {
+            if (!Input.GetKeyDown(tabs[i].Key) || !TabVisible(tabs[i])) continue;
+            if (tabs[i].Key == KeyCode.B && BoosterUI.IsShowing) continue;
+            keyed = true;
+            if (panel.activeSelf && activeTab == i) ClosePanel();
             else
             {
                 panel.SetActive(true);
-                SelectTab(false);
+                SelectTab(i);
             }
+            break;
         }
-        else if (Input.GetKeyDown(KeyCode.K))
+        if (!keyed && panel.activeSelf && Input.GetKeyDown(KeyCode.Escape))
         {
-            if (panel.activeSelf && calendar.Root.activeSelf) panel.SetActive(false);
-            else
+            // A large card of the binder closes first.
+            var binder = BinderUI.Instance;
+            if (activeTab >= 0 && tabs[activeTab].Key == KeyCode.B && binder != null && binder.HasDetail)
             {
-                panel.SetActive(true);
-                SelectTab(true);
+                escapeFrame = Time.frameCount;
+                binder.CloseDetailInBag();
             }
+            else ClosePanel();
         }
-        else if (panel.activeSelf && Input.GetKeyDown(KeyCode.Escape)) panel.SetActive(false);
+    }
+
+    // Opens the bag on the tab whose label starts with this text.
+    public void ShowTab(string labelStart)
+    {
+        for (var i = 0; i < tabs.Count; i++)
+        {
+            if (!tabs[i].Label.StartsWith(labelStart) || !TabVisible(tabs[i])) continue;
+            panel.SetActive(true);
+            SelectTab(i);
+            return;
+        }
+    }
+
+    private void ClosePanel()
+    {
+        if (activeTab >= 0 && activeTab < tabs.Count) tabs[activeTab].OnHide?.Invoke();
+        if (panel != null) panel.SetActive(false);
     }
 
     public void Close()
     {
-        if (panel != null) panel.SetActive(false);
+        ClosePanel();
     }
 
     private void BuildPanel()
@@ -238,9 +347,10 @@ public class BagUI : MonoBehaviour
         BuildTabs();
     }
 
-    // Two tabs at the top: the bag itself, and the calendar. What the bag panel holds goes into one container, shown or hidden by the tabs.
+    // The tabs at the top. What the bag panel holds goes into one container, shown or hidden by the tabs.
     private void BuildTabs()
     {
+        panelRect = panel.GetComponent<RectTransform>();
         var keep = new[] { "Title", "Close" };
         bagContent = new GameObject("BagContent", typeof(RectTransform));
         bagContent.transform.SetParent(panel.transform, false);
@@ -256,23 +366,100 @@ public class BagUI : MonoBehaviour
         }
 
         calendar = new CalendarTabUI(panel.transform);
+        rapaport = new RapaportTabUI(panel.transform);
 
-        var bagTab = RuntimeUIKit.MakeButton("TabBag", panel.transform, "Sac", 14, SlotColor, new Vector2(120f, -12f), new Vector2(110f, 30f));
-        bagTab.onClick.AddListener(() => SelectTab(false));
-        bagTabImage = bagTab.GetComponent<Image>();
-        var calendarTab = RuntimeUIKit.MakeButton("TabCalendar", panel.transform, "Calendrier (K)", 14, SlotColor, new Vector2(236f, -12f), new Vector2(150f, 30f));
-        calendarTab.onClick.AddListener(() => SelectTab(true));
-        calendarTabImage = calendarTab.GetComponent<Image>();
-        SelectTab(false);
+        AddTab("Sac", KeyCode.H, bagContent, 90f, PanelHeight, null, null, null);
+        AddTab("Calendrier (K)", KeyCode.K, calendar.Root, 130f, PanelHeight, calendar.Show, null, null);
+        if (AdoptGrimoire())
+            AddTab("Grimoire (G)", KeyCode.G, null, 120f, 624f, () => GrimoireUI.Instance.OpenInBag(), () => GrimoireUI.Instance.Close(), null);
+        AddTab("Rapaport", KeyCode.None, rapaport.Root, 110f, PanelHeight, rapaport.Show, null, () => RapaportState.HasAccess);
+        LayoutTabs();
+        SelectTab(0);
     }
 
-    private void SelectTab(bool showCalendar)
+    private void AddTab(string label, KeyCode key, GameObject content, float width, float height, Action onShow, Action onHide, Func<bool> visible,
+        float panelWidth = PanelWidth, float offsetX = -190f, int insertAt = -1)
     {
-        bagContent.SetActive(!showCalendar);
-        calendar.Root.SetActive(showCalendar);
-        bagTabImage.color = showCalendar ? SlotColor : new Color(0.45f, 0.35f, 0.22f, 1f);
-        calendarTabImage.color = showCalendar ? new Color(0.45f, 0.35f, 0.22f, 1f) : SlotColor;
-        if (showCalendar) calendar.Show();
+        var button = RuntimeUIKit.MakeButton("Tab" + label, panel.transform, label, 14, SlotColor, Vector2.zero, new Vector2(width, 30f));
+        var tab = new BagTab
+        {
+            Label = label, Key = key, Content = content, Button = button, Image = button.GetComponent<Image>(), Width = width, Height = height,
+            PanelWidth = panelWidth, OffsetX = offsetX, OnShow = onShow, OnHide = onHide, Visible = visible,
+        };
+        button.onClick.AddListener(() => SelectTab(tabs.IndexOf(tab)));
+        if (insertAt >= 0 && insertAt <= tabs.Count) tabs.Insert(insertAt, tab);
+        else tabs.Add(tab);
+    }
+
+    // The card binder moves into the bag as a tab, just before the Rapaport one. It is adopted in Start, once every interface exists.
+    private void AdoptBinder()
+    {
+        var binder = BinderUI.Instance;
+        if (binder == null || binder.Panel == null) return;
+
+        binder.AttachToBag(panel.transform);
+        var before = tabs.FindIndex(t => t.Label.StartsWith("Rapaport"));
+        AddTab("Classeur (B)", KeyCode.B, binder.Panel, 120f, 690f, binder.ShowInBag, binder.HideInBag, null, 900f, -150f, before);
+        LayoutTabs();
+    }
+
+    private static bool TabVisible(BagTab tab) => tab.Visible == null || tab.Visible();
+
+    private void LayoutTabs()
+    {
+        var x = 120f;
+        foreach (var tab in tabs)
+        {
+            var visible = TabVisible(tab);
+            tab.Button.gameObject.SetActive(visible);
+            if (!visible) continue;
+            RuntimeUIKit.SetTopLeft(tab.Button.GetComponent<RectTransform>(), new Vector2(x, -12f), new Vector2(tab.Width, 30f));
+            x += tab.Width + 6f;
+        }
+    }
+
+    // The grimoire of the gems moves into the bag: its two windows become children of the panel, below the tabs.
+    private bool AdoptGrimoire()
+    {
+        var grimoire = GrimoireUI.Instance;
+        if (grimoire == null || grimoire.GridPanel == null) return false;
+
+        foreach (var window in new[] { grimoire.GridPanel, grimoire.DetailPanel })
+        {
+            if (window == null) continue;
+            window.transform.SetParent(panel.transform, false);
+            var rect = window.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 1f);
+            rect.pivot = new Vector2(0.5f, 1f);
+            rect.anchoredPosition = new Vector2(0f, -50f);
+            rect.sizeDelta = new Vector2(700f, 560f);
+            var background = window.GetComponent<Image>();
+            if (background != null) background.color = Color.clear;
+        }
+        // The grid has no close button of its own any more: the tab and the X of the bag do that.
+        var closeButton = grimoire.GridPanel.transform.Find("CloseButton");
+        if (closeButton != null) closeButton.gameObject.SetActive(false);
+        return true;
+    }
+
+    private void SelectTab(int index)
+    {
+        if (index < 0 || index >= tabs.Count) return;
+        if (activeTab >= 0 && activeTab < tabs.Count) tabs[activeTab].OnHide?.Invoke();
+        foreach (var tab in tabs)
+            if (tab.Content != null) tab.Content.SetActive(false);
+
+        activeTab = index;
+        var current = tabs[index];
+        if (current.Content != null) current.Content.SetActive(true);
+        panelRect.sizeDelta = new Vector2(current.PanelWidth, current.Height);
+        panelRect.anchoredPosition = new Vector2(current.OffsetX, 0f);
+        var closeButton = panel.transform.Find("Close");
+        if (closeButton != null)
+            RuntimeUIKit.SetTopLeft(closeButton.GetComponent<RectTransform>(), new Vector2(current.PanelWidth - 56f, -12f), new Vector2(32f, 28f));
+        for (var i = 0; i < tabs.Count; i++)
+            tabs[i].Image.color = i == index ? new Color(0.45f, 0.35f, 0.22f, 1f) : SlotColor;
+        current.OnShow?.Invoke();
     }
 
     // Left: 18 slots (6 columns x 3 rows) for the field equipment.
@@ -331,8 +518,9 @@ public class BagUI : MonoBehaviour
         var sprite = Resources.Load<Sprite>("PlayerIdle/Down");
         var portrait = new GameObject("Portrait", typeof(RectTransform), typeof(Image));
         portrait.transform.SetParent(panel.transform, false);
-        RuntimeUIKit.SetTopLeft(portrait.GetComponent<RectTransform>(), new Vector2(frameX + 14f, frameY - 40f), new Vector2(140f, 280f));
-        var portraitImage = portrait.GetComponent<Image>();
+        portraitRect = portrait.GetComponent<RectTransform>();
+        RuntimeUIKit.SetTopLeft(portraitRect, new Vector2(frameX + 14f, frameY - 40f), new Vector2(140f, 280f));
+        portraitImage = portrait.GetComponent<Image>();
         portraitImage.sprite = sprite;
         portraitImage.preserveAspect = true;
         portraitImage.raycastTarget = false;
@@ -344,7 +532,15 @@ public class BagUI : MonoBehaviour
         for (var i = 0; i < 4; i++)
         {
             var slotY = frameY - spacing - i * (SlotSize + spacing);
-            MakeSlot($"Habit_{labels[i]}", new Vector2(frameX + frameW - SlotSize - 14f, slotY), hints[i]);
+            var clothesSlot = MakeSlot($"Habit_{labels[i]}", new Vector2(frameX + frameW - SlotSize - 14f, slotY), hints[i]);
+
+            // The shoes slot holds the sneakers worn by the character.
+            if (i != 3) continue;
+            shoeIcon = AddIcon(clothesSlot);
+            clothesSlot.gameObject.AddComponent<Button>().onClick.AddListener(TakeOffSneakers);
+            var shoeHover = clothesSlot.gameObject.AddComponent<BagSlotHover>();
+            shoeHover.OnEnter = ShowShoeInfo;
+            shoeHover.OnExit = HideInfo;
         }
     }
 
@@ -379,7 +575,8 @@ public class BagUI : MonoBehaviour
         for (var i = 0; i < collectionIcons.Length; i++)
         {
             var captured = i;
-            var slot = RuntimeUIKit.MakeBox($"AnimalSac_{i}", panel.transform, new Vector2(x + 4f, -292f - i * 56f), new Vector2(48f, 48f), SlotColor);
+            // Two columns of small slots: up to ten animals wait in the bag.
+            var slot = RuntimeUIKit.MakeBox($"AnimalSac_{i}", panel.transform, new Vector2(x + 2f + (i % 2) * 42f, -292f - (i / 2) * 42f), new Vector2(38f, 38f), SlotColor);
             collectionIcons[i] = AddIcon(slot);
             slot.gameObject.AddComponent<Button>().onClick.AddListener(() => UseCollectionSlot(captured));
             var hover = slot.gameObject.AddComponent<BagSlotHover>();

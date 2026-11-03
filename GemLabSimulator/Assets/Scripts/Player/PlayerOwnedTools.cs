@@ -22,6 +22,29 @@ public class PlayerOwnedTools : MonoBehaviour
     public bool LanternLit { get; private set; }
     public event Action OnToolsChanged;
 
+    // What makes the player faster, bought at the dealership: the sneakers, then the bicycle. One of them is worn at a time.
+    public const string SneakersId = "Baskets";
+    public const string BikeId = "Bicyclette";
+    public const float SneakersSpeed = 1.25f;
+    public const float BikeSpeed = 1.6f;
+
+    public string Mobility { get; private set; } = "";
+    public float SpeedMultiplier => Mobility == BikeId ? BikeSpeed : Mobility == SneakersId ? SneakersSpeed : 1f;
+
+    public static bool IsMobilityItem(string toolId) => toolId == SneakersId || toolId == BikeId;
+
+    private static float SpeedOf(string toolId) => toolId == BikeId ? BikeSpeed : toolId == SneakersId ? SneakersSpeed : 1f;
+
+    // Wears an item that is owned ("" takes it off).
+    public void SetMobility(string toolId)
+    {
+        toolId = toolId ?? "";
+        if (toolId != "" && (!IsMobilityItem(toolId) || !owned.Contains(toolId))) toolId = "";
+        if (Mobility == toolId) return;
+        Mobility = toolId;
+        OnToolsChanged?.Invoke();
+    }
+
     private void Awake()
     {
         if (Instance != null && Instance != this) return;
@@ -69,6 +92,8 @@ public class PlayerOwnedTools : MonoBehaviour
 
         owned.Add(toolId);
         bagSlots[slot] = toolId;
+        // A new pair of sneakers or a bicycle is worn at once, unless a faster one is already worn.
+        if (IsMobilityItem(toolId) && SpeedOf(toolId) > SpeedMultiplier) Mobility = toolId;
         OnToolsChanged?.Invoke();
         return true;
     }
@@ -79,6 +104,7 @@ public class PlayerOwnedTools : MonoBehaviour
         if (toolIds != null)
             foreach (var id in toolIds) owned.Add(id);
 
+        Mobility = "";
         for (var i = 0; i < bagSlots.Length; i++)
             bagSlots[i] = savedBagSlots != null && i < savedBagSlots.Count && !string.IsNullOrEmpty(savedBagSlots[i]) ? savedBagSlots[i] : null;
         OnToolsChanged?.Invoke();

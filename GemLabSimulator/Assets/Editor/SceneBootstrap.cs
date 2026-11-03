@@ -35,6 +35,12 @@ public static class SceneBootstrap
     private const int ShopMinY = -5;
     private const int ShopMaxY = 4;
 
+    // The pet shop is larger than the other shops.
+    private const int PetShopMinX = -12;
+    private const int PetShopMaxX = 12;
+    private const int PetShopMinY = -6;
+    private const int PetShopMaxY = 5;
+
     private const int DividerX = 6;
     private const int DoorGapY1 = -1;
     private const int DoorGapY2 = 0;
@@ -659,11 +665,11 @@ public static class SceneBootstrap
         var floorTile = GetInteriorFloorTile("market", Color.white, "labfloor_pixel", LabFloorPixel);
         var wallTile = GetInteriorSideWallTile("market", InteriorSideWallTint, "wall_pixel", WallPixel);
 
-        for (var x = ShopMinX; x <= ShopMaxX; x++)
+        for (var x = PetShopMinX; x <= PetShopMaxX; x++)
         {
-            for (var y = ShopMinY; y <= ShopMaxY; y++)
+            for (var y = PetShopMinY; y <= PetShopMaxY; y++)
             {
-                var isPerimeter = x == ShopMinX || x == ShopMaxX || y == ShopMinY || y == ShopMaxY;
+                var isPerimeter = x == PetShopMinX || x == PetShopMaxX || y == PetShopMinY || y == PetShopMaxY;
                 var cell = new Vector3Int(x, y, 0);
                 if (isPerimeter)
                     wallsTilemap.SetTile(cell, wallTile);
@@ -672,10 +678,10 @@ public static class SceneBootstrap
             }
         }
 
-        PaintInteriorTopWall(wallsTilemap, ShopMinX, ShopMaxX, ShopMaxY, "market", Color.white);
+        PaintInteriorTopWall(wallsTilemap, PetShopMinX, PetShopMaxX, PetShopMaxY, "market", Color.white);
 
         var spawnGO = new GameObject("SpawnPoint");
-        spawnGO.transform.position = new Vector3(0f, ShopMinY + 2f, 0f);
+        spawnGO.transform.position = new Vector3(0f, PetShopMinY + 2f, 0f);
 
         var playerSprite = GetPlayerSprite();
 
@@ -720,30 +726,40 @@ public static class SceneBootstrap
 
         CreateMusicManager();
 
-        CreateExitDoor(new Vector3(0, ShopMinY + 1, 0f), "SpawnPoint_Animalerie");
+        CreateExitDoor(new Vector3(0, PetShopMinY + 1, 0f), "SpawnPoint_Animalerie");
 
-        // The three displays, spaced along the back wall.
-        var standY = ShopMaxY - 1.9f;
+        // Ten displays: five along the back wall, five in a second row.
+        var standY = PetShopMaxY - 1.9f;
+        CreatePetStand("PetGrenouille", "terrarium", -9f, standY, 0.34f);
         CreatePetStand("PetChien", "petpen", -4.5f, standY, 0.42f);
         CreatePetStand("PetChat", "petbasket", 0f, standY, 0.5f);
         CreatePetStand("PetSerpent", "terrarium", 4.5f, standY, 0.34f);
+        CreatePetStand("PetTortue", "terrarium", 9f, standY, 0.34f);
+        const float rowY = -1.0f;
+        CreatePetStand("PetSinge", "monkeycage", -9f, rowY, 0.5f, 2.0f, new Vector2(2.2f, 1.9f));
+        CreatePetStand("PetMarabout", "perch", -4.5f, rowY, 0.55f, 1.8f, new Vector2(2.2f, 1.7f));
+        CreatePetStand("PetTigre", "bigcage", 0f, rowY, 0.5f, 2.0f, new Vector2(3.0f, 1.9f));
+        CreatePetStand("PetVaran", "terrarium", 4.5f, rowY, 0.34f);
+        CreatePetStand("PetCrocodile", "pond", 9f, rowY, 0.55f, 1.6f, new Vector2(2.6f, 1.6f));
 
-        // Counter on the right, the shop assistant behind it.
-        CreateShopCounter(new Vector3(5.6f, -3.0f, 0f), 3);
-        CreateTalkNpc("Vendeuse de l'animalerie", "receptionist", new Vector3(7.0f, -2.2f, 0f), new[]
+        // Counter on the left, the shop assistant beside it.
+        CreateShopCounter(new Vector3(-10.5f, -4.6f, 0f), 3);
+        CreateTalkNpc("Vendeuse de l'animalerie", "receptionist", new Vector3(-9.0f, -3.8f, 0f), new[]
         {
-            "Bienvenue à l'animalerie ! Cliquez sur un animal pour le voir, et pour l'adopter.",
+            "Bienvenue à l'animalerie, bien agrandie depuis cet été ! Cliquez sur un animal pour le voir, et pour l'adopter.",
             "Un animal adopté vous attend dans votre sac (H). Équipez-le et il vous suivra partout.",
-            "Un seul compagnon à la fois, mais vous pouvez en garder plusieurs dans votre sac.",
-            "D'autres pensionnaires plus... impressionnants arriveront bientôt. Un tigre, peut-être ?",
-        }, new Vector2(5f, 3.5f), new Vector2(-2.5f, 0.6f));
+            "Un seul compagnon à la fois, mais vous pouvez en garder jusqu'à dix dans votre sac.",
+            "Le tigre et le crocodile sont nos pensionnaires les plus impressionnants. Ne les laissez pas trop près du chien !",
+        }, new Vector2(5f, 3.5f), new Vector2(2.5f, 0.6f));
 
-        foreach (var x in new[] { -7, -2, 3, 6 }) PlaceWallDecor("window_white", x, ShopMaxY);
-        PlaceFurniture("shop_b", new Vector3(-7f, ShopMaxY - 1f, 0f));
-        PlaceFurniture("shop_d", new Vector3(7f, ShopMaxY - 1f, 0f));
-        PlaceRug("rug_gold", new Vector3(-1.0f, -1.0f, 0f));
-        PlaceFurniture("plant_small", new Vector3(-6.3f, ShopMinY + 1.1f, 0f));
-        PlaceFurniture("plant_small", new Vector3(-6.3f, -0.8f, 0f));
+        foreach (var x in new[] { -10, -5, 0, 5, 10 }) PlaceWallDecor("window_white", x, PetShopMaxY);
+        PlaceFurniture("shop_b", new Vector3(-11f, PetShopMaxY - 1f, 0f));
+        PlaceFurniture("shop_d", new Vector3(11f, PetShopMaxY - 1f, 0f));
+        PlaceRug("rug_gold", new Vector3(0f, 1.3f, 0f));
+        PlaceRug("rug_gold", new Vector3(-1.0f, -3.4f, 0f));
+        PlaceFurniture("plant_small", new Vector3(-11f, PetShopMinY + 1.1f, 0f));
+        PlaceFurniture("plant_small", new Vector3(11f, PetShopMinY + 1.1f, 0f));
+        PlaceFurniture("plant_small", new Vector3(11f, -2.4f, 0f));
 
         CreateUI(false);
 
@@ -756,7 +772,7 @@ public static class SceneBootstrap
     }
 
     // One display of the pet shop: the pen, basket or terrarium, the animal standing in it (click it to buy), and its name and price above.
-    private static void CreatePetStand(string petId, string propName, float x, float feetY, float petOffsetY)
+    private static void CreatePetStand(string petId, string propName, float x, float feetY, float petOffsetY, float labelOffset = 1.45f, Vector2? clickSize = null)
     {
         if (!PetCatalog.TryGet(petId, out var pet)) return;
 
@@ -774,8 +790,9 @@ public static class SceneBootstrap
         // Click area over the animal and its display (a trigger: it never blocks the player).
         var clickArea = animal.AddComponent<BoxCollider2D>();
         clickArea.isTrigger = true;
-        clickArea.size = new Vector2(1.9f, 1.5f);
-        clickArea.offset = new Vector2(0f, 0.65f - petOffsetY);
+        var area = clickSize ?? new Vector2(1.9f, 1.5f);
+        clickArea.size = area;
+        clickArea.offset = new Vector2(0f, area.y / 2f - 0.1f - petOffsetY);
 
         var shopItem = animal.AddComponent<ShopItem>();
         var so = new SerializedObject(shopItem);
@@ -788,7 +805,7 @@ public static class SceneBootstrap
         so.FindProperty("isPet").boolValue = true;
         so.ApplyModifiedProperties();
 
-        CreateBuildingLabel($"{pet.Name}\n{pet.Price}€", new Vector3(x, feetY + 1.45f, 0f));
+        CreateBuildingLabel($"{pet.Name}\n{pet.Price}€", new Vector3(x, feetY + labelOffset, 0f));
     }
 
     // The small display on the counter of the GemStore: three card boosters. Clicking it opens the purchase window.
@@ -1261,6 +1278,122 @@ public static class SceneBootstrap
         });
     }
 
+    // The bank of the town: a banker at his counter, who opens accounts and takes deposits (BankUI), and two clerks.
+    [MenuItem("GemLab/Setup Bank Scene")]
+    public static void CreateBankScene()
+    {
+        CreateTowerRoom("Banque", "museum", -9, 9, -5, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, -3f, 0f), true, (walls, wallTile) =>
+        {
+            CreateExitDoor(new Vector3(0, -4, 0f), "SpawnPoint_Banque");
+
+            PlaceRug("rug_gold", new Vector3(0f, -1.0f, 0f));
+
+            // Three tellers' counters along the back, the banker in the middle.
+            PlaceFurniture("reception_counter", new Vector3(-5.5f, 1.3f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
+            PlaceFurniture("reception_counter", new Vector3(5.5f, 1.3f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
+            PlaceFurniture("reception_counter", new Vector3(0f, 1.3f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
+
+            var banker = CreateTalkNpc("Banquier", "merchant3", new Vector3(0f, 2.6f, 0f), new string[0], new Vector2(5f, 3.4f), new Vector2(0f, -1.6f));
+            UnityEngine.Object.DestroyImmediate(banker.GetComponent<TalkNPC>());
+            banker.AddComponent<BankerNPC>();
+            CreateTalkNpc("Guichetière", "receptionist", new Vector3(-5.5f, 2.6f, 0f), new[]
+            {
+                "Ce guichet est réservé aux virements. Pour ouvrir un compte ou déposer, voyez le banquier, au milieu.",
+            });
+            CreateTalkNpc("Conseiller", "merchant1", new Vector3(5.5f, 2.6f, 0f), new[]
+            {
+                "Les taux changent chaque mois. Certains mois sont excellents : jusqu'à 10 % ! Mais le plafond du compte est de 20 000 €.",
+                "Les intérêts sont versés le 1er du mois, sur le solde le plus bas du mois : déposez tôt, et ne retirez pas.",
+            });
+
+            PlaceFurniture("off_sofa", new Vector3(-6.5f, -2.4f, 0f));
+            PlaceFurniture("off_sofa", new Vector3(6.5f, -2.4f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(-8.2f, 3.8f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(8.2f, 3.8f, 0f));
+            PlaceFurniture("off_cooler", new Vector3(-3.0f, 4.0f, 0f));
+            PlaceFurniture("globe", new Vector3(3.2f, 4.0f, 0f));
+            HangOnWall("off_chart", -6.5f, 5f);
+            HangOnWall("off_chart2", 6.5f, 5f);
+            HangOnWall("off_cert", -1.8f, 5f);
+            HangOnWall("off_cert2", 1.8f, 5f);
+            CreateBuildingLabel("Banque de la Ville", new Vector3(0f, 6.7f, 0f));
+        });
+    }
+
+    // The dealership: a showroom where the sneakers and the bicycle are on display. A click on an article opens the purchase window of the
+    // GemStore; what is bought goes into the bag, where it is put on or taken off.
+    [MenuItem("GemLab/Setup Dealership Scene")]
+    public static void CreateDealershipScene()
+    {
+        CreateTowerRoom("Concessionnaire", "museum", -9, 9, -5, 5, new Color(0.10f, 0.10f, 0.12f), new Vector3(0f, -3f, 0f), true, (walls, wallTile) =>
+        {
+            CreateExitDoor(new Vector3(0, -4, 0f), "SpawnPoint_Concessionnaire");
+
+            // The counter at the back with the dealer behind it.
+            PlaceFurniture("reception_counter", new Vector3(0f, 2.2f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
+            CreateTalkNpc("Concessionnaire", "merchant2", new Vector3(0f, 3.5f, 0f), new[]
+            {
+                "Bienvenue chez nous ! Cliquez sur un article pour voir son prix et l'acheter.",
+                "Les baskets vous font marcher plus vite. La bicyclette, encore plus : parfaite pour traverser la ville !",
+                "Une fois achetés, c'est dans votre sac (H) : un clic pour les enfiler, un autre pour les retirer.",
+            }, new Vector2(5f, 3.4f), new Vector2(0f, -1.6f));
+
+            // Two podiums, each on its own rug.
+            PlaceRug("rug_red", new Vector3(-4.5f, -0.6f, 0f));
+            PlaceRug("rug_red", new Vector3(4.5f, -0.6f, 0f));
+            CreateDealerItem(new Vector3(-4.5f, -0.9f, 0f), PlayerOwnedTools.SneakersId, "Baskets de course", 850,
+                "Des baskets blanches à semelle rouge : en ville, vous marchez 25 % plus vite. Elles vont dans le sac (H), et se voient sur votre personnage : un clic les enfile ou les retire. Sans effet à l'intérieur des bâtiments.",
+                "Baskets achetées ! Elles sont dans votre sac (H) et vous les portez déjà.", 1.4f);
+            CreateDealerItem(new Vector3(4.5f, -0.9f, 0f), PlayerOwnedTools.BikeId, "Bicyclette", 950,
+                "Un vélo de ville rouge, léger et fiable : en ville, vous allez 60 % plus vite qu'à pied, assis dessus. Il se range dans le sac (H) : un clic l'enfourche ou le range. Vous descendez en entrant dans un bâtiment, sans bonus de vitesse à l'intérieur.",
+                "Bicyclette achetée ! Elle est dans votre sac (H) et vous roulez déjà.", 2.2f);
+
+            PlaceWallDecorAt("window_white", -6f, 5);
+            PlaceWallDecorAt("window_white", 6f, 5);
+            HangOnWall("worldmap", -3.2f, 5f);
+            HangOnWall("off_poster", 3.2f, 5f);
+            PlaceFurniture("off_plant_big", new Vector3(-8.2f, 3.8f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(8.2f, 3.8f, 0f));
+            PlaceFurniture("off_sofa", new Vector3(-6.8f, -3.2f, 0f));
+            PlaceFurniture("off_sofa", new Vector3(6.8f, -3.2f, 0f));
+            PlaceFurniture("off_cooler", new Vector3(-8.2f, 0.8f, 0f));
+            PlaceFurniture("globe", new Vector3(8.2f, 0.8f, 0f));
+            CreateBuildingLabel("Concessionnaire", new Vector3(0f, 6.7f, 0f));
+        });
+    }
+
+    // An article of the showroom, enlarged on its rug: a click on it opens the purchase window.
+    private static void CreateDealerItem(Vector3 feet, string toolId, string displayName, int price, string description, string purchaseMessage,
+        float scale)
+    {
+        var sprite = LoadPackSpriteGrounded($"Assets/Resources/BagIcons/{toolId}.png");
+        if (sprite == null) return;
+
+        var item = new GameObject($"Article_{toolId}");
+        item.transform.position = feet;
+        item.transform.localScale = new Vector3(scale, scale, 1f);
+        var sr = item.AddComponent<SpriteRenderer>();
+        sr.sprite = sprite;
+        sr.sortingOrder = 5;
+
+        var clickArea = item.AddComponent<BoxCollider2D>();
+        clickArea.isTrigger = true;
+        clickArea.size = sprite.bounds.size + new Vector3(0.15f, 0.15f, 0f);
+        clickArea.offset = new Vector2(0f, sprite.bounds.size.y / 2f);
+
+        var shopItem = item.AddComponent<ShopItem>();
+        var so = new SerializedObject(shopItem);
+        so.FindProperty("toolId").stringValue = toolId;
+        so.FindProperty("displayName").stringValue = displayName;
+        so.FindProperty("description").stringValue = description;
+        so.FindProperty("price").intValue = price;
+        so.FindProperty("purchaseMessage").stringValue = purchaseMessage;
+        so.FindProperty("addsToBag").boolValue = true;
+        so.ApplyModifiedProperties();
+
+        CreateBuildingLabel($"{displayName}\n{price} €", feet + new Vector3(0f, sprite.bounds.size.y * scale + 0.25f, 0f));
+    }
+
     [MenuItem("GemLab/Setup Diamond Tower Scenes")]
     public static void CreateDiamondTowerScenes()
     {
@@ -1438,11 +1571,10 @@ public static class SceneBootstrap
 
             PlaceRug("rug_red", new Vector3(0f, -1.4f, 0f));
             PlaceFurniture("exec_desk", new Vector3(0f, -1.0f, 0f));
-            CreateTalkNpc("Martin Rapaport", "rapaport", new Vector3(0f, 1.2f, 0f), new[]
-            {
-                "Bienvenue dans mon bureau. Les prix des diamants, c'est mon affaire depuis toujours.",
-                "Revenez me voir quand vous aurez de quoi m'intéresser.",
-            });
+            // Martin Rapaport sells the subscription to his price list: E at his desk opens it.
+            var rapaport = CreateTalkNpc("Martin Rapaport", "rapaport", new Vector3(0f, 1.2f, 0f), new string[0], new Vector2(4.4f, 3.6f), new Vector2(0f, -1.6f));
+            UnityEngine.Object.DestroyImmediate(rapaport.GetComponent<TalkNPC>());
+            rapaport.AddComponent<RapaportNPC>();
             PlaceFurniture("off_chair_dark", new Vector3(-1.1f, -2.9f, 0f));
             PlaceFurniture("off_chair_dark", new Vector3(1.1f, -2.9f, 0f));
             PlaceFurniture("off_armchair_dark", new Vector3(-7.6f, -2.2f, 0f));
@@ -1771,7 +1903,7 @@ public static class SceneBootstrap
 
         // Decorative for now: no interior yet, the door shows the usual "not accessible" message.
         CreateRealBuilding("Bijouterie", new Vector3(-22, 7, 0f), HouseStyle.Chalet, "", false);
-        CreateRealBuilding("Banque et Encheres", new Vector3(22, 7, 0f), HouseStyle.Modern, "", false);
+        CreateRealBuilding("Banque et Encheres", new Vector3(22, 7, 0f), HouseStyle.Modern, "Banque", true);
 
         CreateDealership(new Vector3(28, -35, 0f));
         CreateVincentPardieuHouse(new Vector3(-58, 10, 0f));
@@ -1796,6 +1928,8 @@ public static class SceneBootstrap
         CreateNamedSpawnPoint("SpawnPoint_WatchStore", new Vector3(-29.75f, -17f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_GemStore", new Vector3(34f, 5f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Animalerie", new Vector3(10f, 5f, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Banque", new Vector3(21.4f, 5f, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Concessionnaire", new Vector3(27.7f, -37f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_MaisonJoueur", new Vector3(-51.2f, -52f, 0f));
 
         for (var i = 0; i < 5; i++)
@@ -3564,8 +3698,8 @@ public static class SceneBootstrap
         var sceneNameProp = so.FindProperty("sceneName");
         var implementedProp = so.FindProperty("implemented");
         var lockedProp = so.FindProperty("lockedMessage");
-        if (sceneNameProp != null) sceneNameProp.stringValue = "";
-        if (implementedProp != null) implementedProp.boolValue = false;
+        if (sceneNameProp != null) sceneNameProp.stringValue = "Concessionnaire";
+        if (implementedProp != null) implementedProp.boolValue = true;
         if (lockedProp != null) lockedProp.stringValue = "Concessionnaire Automobile : ce lieu n'est pas encore accessible.";
         so.ApplyModifiedProperties();
 
@@ -8654,8 +8788,29 @@ public static class SceneBootstrap
         for (var i = 0; i < shelves.Length; i++)
             PlaceFurniture(shelves[i], new Vector3(-12f + i * 4f, MarketMaxY - 1f, 0f));
 
-        PlaceFurniture("plant_small", new Vector3(-12.8f, MarketMinY + 1.2f, 0f));
-        PlaceFurniture("plant_small", new Vector3(12.8f, MarketMinY + 1.2f, 0f));
+        // Daylight comes in between the shelves.
+        foreach (var x in new[] { -10f, -6f, -2f, 2f, 6f, 10f }) PlaceWallDecorAt("window_white", x, MarketMaxY);
+
+        // A rug under each stall and a long one from the door along the aisle.
+        foreach (var x in new[] { -9f, -3f, 3f, 9f }) PlaceRug("rug_red", new Vector3(x, 0.3f, 0f));
+        var aisle = PlaceInteriorProp("rug_gold", new Vector3(0f, -2.4f, 0f), false, false, 1);
+        if (aisle != null) aisle.transform.localScale = new Vector3(0.9f, 1f, 1f);
+
+        // The sides of the hall: a clock, a globe, drinks for the long days of bargaining.
+        PlaceFurniture("grandfather_clock", new Vector3(-12.4f, 2.2f, 0f));
+        PlaceFurniture("globe", new Vector3(12.4f, 2.4f, 0f));
+        PlaceFurniture("off_cooler", new Vector3(-12.4f, -1.8f, 0f));
+        PlaceFurniture("off_vending", new Vector3(12.3f, -1.8f, 0f));
+
+        // Two waiting corners near the door, each with a sofa and a low table.
+        foreach (var side in new[] { -1f, 1f })
+        {
+            PlaceFurniture("off_sofa", new Vector3(side * 8.6f, -4.3f, 0f));
+            PlaceFurniture("off_wood_table", new Vector3(side * 5.6f, -4.4f, 0f));
+            PlaceInteriorProp("mug", new Vector3(side * 5.9f, -4.0f, 0f), false, false, 6);
+            PlaceInteriorProp("papers", new Vector3(side * 5.2f, -4.0f, 0f), false, false, 6);
+            PlaceFurniture("off_plant_big", new Vector3(side * 12.4f, -4.4f, 0f));
+        }
     }
 
     private static void DecorateRoughMarket()
@@ -8665,7 +8820,30 @@ public static class SceneBootstrap
         for (var i = 0; i < shelves.Length; i++)
             PlaceFurniture(shelves[i], new Vector3(xs[i], RoughMarketMaxY - 1f, 0f));
 
-        foreach (var x in new[] { -8, 0, 8 }) PlaceWallDecor("window_red", x, RoughMarketMaxY);
+        // Two red windows in each gap between the shelves, a clock in the middle one.
+        foreach (var x in new[] { -9.5f, -6.5f, -1.8f, 1.8f, 6.5f, 9.5f }) PlaceWallDecorAt("window_red", x, RoughMarketMaxY);
+        HangOnWall("wall_clock", 0f, RoughMarketMaxY);
+
+        // Rugs under the stalls, worn red ones.
+        foreach (var x in new[] { -9f, -3f, 3f, 9f }) PlaceRug("rug_red", new Vector3(x, 0.3f, 0f));
+        PlaceRug("rug_blue_tall", new Vector3(0f, -2.4f, 0f));
+
+        // The hall of the rough dealers: a world map for the origins, a clock, a drinks machine, benches by the door.
+        PlaceFurniture("grandfather_clock", new Vector3(12.4f, 2.2f, 0f));
+        PlaceFurniture("globe", new Vector3(-12.4f, 2.4f, 0f));
+        PlaceFurniture("off_cooler", new Vector3(12.4f, -1.8f, 0f));
+        PlaceFurniture("off_vending", new Vector3(-12.3f, -1.8f, 0f));
+        foreach (var side in new[] { -1f, 1f })
+        {
+            PlaceFurniture("off_sofa", new Vector3(side * 8.6f, -4.3f, 0f));
+            PlaceFurniture("off_wood_table", new Vector3(side * 5.6f, -4.4f, 0f));
+            PlaceInteriorProp("papers2", new Vector3(side * 5.6f, -4.0f, 0f), false, false, 6);
+            PlaceFurniture("palm", new Vector3(side * 12.4f, -4.5f, 0f));
+        }
+
+        // A terrarium on a table: a mineral dealer's curiosity.
+        PlaceFurniture("off_wood_table", new Vector3(-7.2f, -1.2f, 0f));
+        PlaceInteriorProp("terrarium", new Vector3(-7.2f, -0.55f, 0f), false, false, 6);
     }
 
     private static void DecorateMuseum()
@@ -8681,27 +8859,69 @@ public static class SceneBootstrap
 
     private static void DecorateManoir()
     {
+        // The back wall: wardrobe, clock, a window with its curtains, the fireplace in the middle, a library and a mirror.
+        PlaceFurniture("plant_small", new Vector3(-9.2f, ManoirMaxY - 1.5f, 0f));
+        PlaceFurniture("wardrobe_a", new Vector3(-7.4f, ManoirMaxY - 1.5f, 0f));
+        PlaceFurniture("grandfather_clock", new Vector3(-5.3f, ManoirMaxY - 1.5f, 0f));
+        PlaceWallDecorAt("window_red", -2.9f, ManoirMaxY);
+        HangOnWall("curtains", -2.9f, ManoirMaxY);
         PlaceFurniture("fireplace", new Vector3(0f, ManoirMaxY - 1.5f, 0f));
-        PlaceFurniture("wardrobe_a", new Vector3(-7f, ManoirMaxY - 1.5f, 0f));
-        PlaceFurniture("mirror", new Vector3(7f, ManoirMaxY - 1.5f, 0f));
-        PlaceWallDecor("window_red", -4, ManoirMaxY);
-        PlaceWallDecor("window_red", 3, ManoirMaxY);
-
-        PlaceRug("rug_red", new Vector3(0f, -0.5f, 0f));
+        PlaceFurniture("bookshelf", new Vector3(4.2f, ManoirMaxY - 1.5f, 0f));
+        PlaceFurniture("mirror", new Vector3(7.2f, ManoirMaxY - 1.5f, 0f));
         PlaceFurniture("palm", new Vector3(9.0f, ManoirMaxY - 1.5f, 0f));
-        PlaceFurniture("plant_small", new Vector3(-9.0f, ManoirMaxY - 1.5f, 0f));
+
+        // Rugs: one in front of the fireplace where the old couple stands, a long one from the door.
+        PlaceRug("rug_red", new Vector3(0f, 0.6f, 0f));
+        PlaceRug("rug_blue_tall", new Vector3(0f, -3.1f, 0f));
+
+        // Two armchairs turned toward the fire.
+        PlaceFurniture("off_armchair_dark", new Vector3(-2.4f, 3.0f, 0f));
+        PlaceFurniture("off_armchair_dark", new Vector3(2.4f, 3.0f, 0f));
+
+        // The collector's desk on the right, with his papers; a sofa and a low table on the left.
+        PlaceFurniture("off_chair_dark", new Vector3(6.0f, 0.5f, 0f));
+        PlaceFurniture("exec_desk", new Vector3(6.0f, -1.3f, 0f));
+        PlaceInteriorProp("papers", new Vector3(5.1f, -0.2f, 0f), false, false, 6);
+        PlaceInteriorProp("mug", new Vector3(7.0f, -0.2f, 0f), false, false, 6);
+        PlaceFurniture("off_sofa", new Vector3(-6.6f, -1.2f, 0f));
+        PlaceFurniture("off_wood_table", new Vector3(-6.6f, -2.8f, 0f));
+        PlaceInteriorProp("mug", new Vector3(-6.3f, -2.4f, 0f), false, false, 6);
+        PlaceFurniture("globe", new Vector3(-9.0f, 0.6f, 0f));
+
+        PlaceFurniture("off_plant_big", new Vector3(-9.0f, -4.4f, 0f));
+        PlaceFurniture("off_plant_big", new Vector3(9.0f, -4.4f, 0f));
     }
 
     private static void DecorateAtelier()
     {
         PlaceWallDecor("window_white", -8, AtelierMaxY);
         PlaceWallDecor("window_white", 8, AtelierMaxY);
+        PlaceWallDecorAt("window_white", 0f, AtelierMaxY);
 
+        // The back wall: workbenches with papers on both sides of the shelves.
+        PlaceFurniture("labbench", new Vector3(-6.3f, AtelierMaxY - 1f, 0f));
+        PlaceFurniture("labbench", new Vector3(6.3f, AtelierMaxY - 1f, 0f));
+        PlaceInteriorProp("papers2", new Vector3(-6.9f, AtelierMaxY - 0.4f, 0f), false, false, 6);
+        PlaceInteriorProp("mug", new Vector3(5.6f, AtelierMaxY - 0.4f, 0f), false, false, 6);
         PlaceFurniture("shelf_a", new Vector3(-3f, AtelierMaxY - 1f, 0f));
         PlaceFurniture("shelf_b", new Vector3(3f, AtelierMaxY - 1f, 0f));
         PlaceFurniture("palm", new Vector3(-8.8f, AtelierMaxY - 1.2f, 0f));
-        PlaceFurniture("plant_small", new Vector3(9.0f, AtelierMinY + 1.2f, 0f));
+
+        // The floor: the long rug in front of the desk and a second one under the cutting benches.
         PlaceRug("rug_red", new Vector3(0f, -2.0f, 0f));
+        PlaceRug("rug_red", new Vector3(-6.4f, 1.6f, 0f));
+        PlaceFurniture("labbench", new Vector3(-6.4f, 1.2f, 0f));
+        PlaceInteriorProp("folder", new Vector3(-7.2f, 1.9f, 0f), false, false, 6);
+
+        // A clock and a globe on the right, a waiting corner on the left near the door, drinks for the apprentices.
+        PlaceFurniture("grandfather_clock", new Vector3(9.0f, 2.6f, 0f));
+        PlaceFurniture("globe", new Vector3(-9.0f, -0.6f, 0f));
+        PlaceFurniture("off_sofa", new Vector3(-7.4f, -3.4f, 0f));
+        PlaceFurniture("off_wood_table", new Vector3(-4.6f, -3.6f, 0f));
+        PlaceInteriorProp("mug", new Vector3(-4.4f, -3.2f, 0f), false, false, 6);
+        PlaceFurniture("off_cooler", new Vector3(8.5f, -1.6f, 0f));
+        PlaceFurniture("off_plant_big", new Vector3(5.0f, -4.4f, 0f));
+        PlaceFurniture("plant_small", new Vector3(9.0f, AtelierMinY + 1.2f, 0f));
     }
 
     // ----- Interior dressing (LimeZu Modern Interiors / Office, pre-cut into Assets/Art/Sprites/interior_*.png) -----
@@ -8777,6 +8997,12 @@ public static class SceneBootstrap
     private static void PlaceWallDecor(string spriteName, int tileX, int wallY)
     {
         PlaceInteriorProp(spriteName, new Vector3(tileX + 0.5f, wallY + 0.5f, 0f), false, false, 1);
+    }
+
+    // Same as PlaceWallDecor, for a position that is not at the center of a tile.
+    private static void PlaceWallDecorAt(string spriteName, float x, int wallY)
+    {
+        PlaceInteriorProp(spriteName, new Vector3(x, wallY + 0.5f, 0f), false, false, 1);
     }
 
     private static void PlaceRug(string spriteName, Vector3 center)

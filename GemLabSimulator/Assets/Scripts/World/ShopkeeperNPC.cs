@@ -27,7 +27,14 @@ public class ShopkeeperNPC : MonoBehaviour
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
         Sfx.Play(Sfx.Id.Chat);
-        ToolFeedbackUI.Instance?.ShowMessage(Lines[lineIndex % Lines.Length]);
+        Speak();
+    }
+
+    // A click on the dialogue window goes on to the second line.
+    private void Speak()
+    {
+        var line = Lines[lineIndex % Lines.Length];
         lineIndex++;
+        DialogueBoxUI.Say("Vendeur", line, gameObject, lineIndex % Lines.Length != 0 ? (System.Action)Speak : null);
     }
 }
