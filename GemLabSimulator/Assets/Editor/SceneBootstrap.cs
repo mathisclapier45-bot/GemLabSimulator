@@ -1222,6 +1222,45 @@ public static class SceneBootstrap
         CreateBuildingLabel($"{houseName}\n{specialty}", new Vector3(benchX, labelY, 0f));
     }
 
+    // The laboratory of synthesis and the laboratory of treatments: two places of the lab district, still empty. Each has a researcher who says what
+    // will be done there. They are made to be developed later.
+    [MenuItem("GemLab/Setup Synthesis And Treatment Labs")]
+    public static void CreateLabAnnexScenes()
+    {
+        CreateAnnexLab("LaboSynthese", "SpawnPoint_LaboSynthese", "Laboratoire de synthèse", "Chercheuse — synthèse", "merchant1", new[]
+        {
+            "Bienvenue au laboratoire de synthèse ! Ici, on fera pousser des cristaux : Verneuil, Czochralski, hydrothermale, flux, HPHT, CVD...",
+            "Les fours et les autoclaves arrivent bientôt. Revenez quand l'installation sera terminée.",
+        });
+        CreateAnnexLab("LaboTraitements", "SpawnPoint_LaboTraitements", "Laboratoire de traitements", "Technicien — traitements", "merchant2", new[]
+        {
+            "Bienvenue au laboratoire de traitements : chauffage, huilage, remplissage, teinture, irradiation, HPHT...",
+            "Les appareils sont en cours d'installation. Passez nous voir un peu plus tard.",
+        });
+        Debug.Log("Annex laboratory scenes created: LaboSynthese, LaboTraitements.");
+    }
+
+    private static void CreateAnnexLab(string sceneName, string townSpawn, string title, string speaker, string npcSprite, string[] lines)
+    {
+        CreateTowerRoom(sceneName, "lab", -9, 9, -5, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, -3f, 0f), true, (walls, wallTile) =>
+        {
+            CreateExitDoor(new Vector3(0, -4, 0f), townSpawn);
+
+            // Benches along the back wall, ready for the equipment.
+            foreach (var benchX in new[] { -6.5f, -2.2f, 2.2f, 6.5f })
+                PlaceFurniture("labbench", new Vector3(benchX, 2.9f, 0f));
+            PlaceFurniture("off_printer", new Vector3(-8.0f, -2.2f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(8.0f, -3.0f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(-8.0f, 0.4f, 0f));
+            HangOnWall("off_chart", -6.0f, 5f);
+            HangOnWall("off_chart2", 6.0f, 5f);
+            PlaceRug("rug_blue_tall", new Vector3(0f, -1.0f, 0f));
+
+            CreateTalkNpc(speaker, npcSprite, new Vector3(4.2f, -1.4f, 0f), lines);
+            CreateBuildingLabel($"{title}\n(en cours d'aménagement)", new Vector3(0f, 6.7f, 0f));
+        });
+    }
+
     [MenuItem("GemLab/Setup Diamond Tower Scenes")]
     public static void CreateDiamondTowerScenes()
     {
@@ -1716,6 +1755,9 @@ public static class SceneBootstrap
         CreateRealBuilding("Maison & Bureau de Gemmologie", new Vector3(-55, 28, 0f), HouseStyle.Chalet, "Home", true);
         CreateThemedBuilding("Laboratoire de Gemmologie", new Vector3(-30, 28, 0f), "building_laboratoire.png", 224, "Laboratoire");
         CreateThemedBuilding("Atelier Lapidaire", new Vector3(-5, 28, 0f), "building_atelierlapidaire.png", 244, "AtelierLapidaire");
+        // The laboratories of synthesis and treatments, on the road at the bottom of the town that leads towards the home of the player.
+        CreateThemedBuilding("Laboratoire de Synthèse", new Vector3(-24f, -35, 0f), "building_laboratoiresynthese.png", 160, "LaboSynthese");
+        CreateThemedBuilding("Laboratoire de Traitements", new Vector3(-10f, -35, 0f), "building_laboratoiretraitements.png", 160, "LaboTraitements");
         CreateRealBuilding("Musee", new Vector3(20, 28, 0f), HouseStyle.Modern, "Musee", true);
         CreateDiamondTower(new Vector3(45, 28, 0f));
         CreateClothingStore(new Vector3(57.5f, 28, 0f));
@@ -1743,6 +1785,8 @@ public static class SceneBootstrap
         CreateNamedSpawnPoint("SpawnPoint_Home", new Vector3(-55, 26, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Laboratoire", new Vector3(-30, 26, 0f));
         CreateNamedSpawnPoint("SpawnPoint_AtelierLapidaire", new Vector3(-5, 26, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_LaboSynthese", new Vector3(-24f, -37f, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_LaboTraitements", new Vector3(-10f, -37f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Musee", new Vector3(20, 26, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Marche", new Vector3(-45, -17, 0f));
         CreateNamedSpawnPoint("SpawnPoint_MarcheBrutes", new Vector3(15, -17, 0f));
@@ -4640,7 +4684,7 @@ public static class SceneBootstrap
             ("Musée", 20, 28), ("Immeuble Diamantaires", 45, 28),
             ("Marché Pierres", -45, -15), ("École", -15, -15),
             ("Marché Brutes", 15, -15), ("Manoir", 45, -15),
-            ("Bijouterie", -22, 7), ("Banque", 22, 7), ("Concessionnaire", 28, -35), ("Vincent Pardieu", -58, 10), ("Aéroport", 58, 8), ("Bibliothèque", -41, 7), ("GemStore", 35, 7), ("Maison perso", -52, -50), ("Boutique de vêtements", 57, 28), ("WatchStore", -31, -15),
+            ("Bijouterie", -22, 7), ("Banque", 22, 7), ("Concessionnaire", 28, -35), ("Labo Synthèse", -24f, -35), ("Labo Traitements", -10f, -35), ("Vincent Pardieu", -58, 10), ("Aéroport", 58, 8), ("Bibliothèque", -41, 7), ("GemStore", 35, 7), ("Maison perso", -52, -50), ("Boutique de vêtements", 57, 28), ("WatchStore", -31, -15),
             ("Tunnel", 0, -50),
         };
 

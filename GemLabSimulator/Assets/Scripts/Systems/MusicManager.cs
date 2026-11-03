@@ -16,6 +16,13 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private float volume = 0.5f;
 
     private const string MutedPrefKey = "MusicMuted";
+    private const string VolumePrefKey = "MusicVolume";
+
+    private float musicVolume;
+    private bool fading;
+
+    // Volume of the music, from 0 to 1, kept between games.
+    public float MusicVolume => musicVolume;
 
     public bool IsMuted { get; private set; }
 
@@ -41,9 +48,26 @@ public class MusicManager : MonoBehaviour
         source.spatialBlend = 0f;
 
         try { IsMuted = PlayerPrefs.GetInt(MutedPrefKey, 0) == 1; } catch (System.Exception) { IsMuted = false; }
+        try { musicVolume = PlayerPrefs.GetFloat(VolumePrefKey, volume); } catch (System.Exception) { musicVolume = volume; }
         source.mute = IsMuted;
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    public void SetMusicVolume(float value)
+    {
+        musicVolume = Mathf.Clamp01(value);
+        // A music that is not fading in or out follows the slider at once, up as well as down.
+        if (source != null && !fading) source.volume = musicVolume;
+        else if (source != null && source.isPlaying) source.volume = Mathf.Min(source.volume, musicVolume);
+        try
+        {
+            PlayerPrefs.SetFloat(VolumePrefKey, musicVolume);
+            PlayerPrefs.Save();
+        }
+        catch (System.Exception)
+        {
+        }
     }
 
     public void SetMuted(bool muted)
@@ -95,6 +119,7 @@ public class MusicManager : MonoBehaviour
 
     private IEnumerator FadeToClip(AudioClip clip)
     {
+        fading = true;
         var startVolume = source.volume;
         var t = 0f;
         while (t < fadeDuration && source.volume > 0f)
@@ -106,7 +131,11 @@ public class MusicManager : MonoBehaviour
         source.volume = 0f;
         source.Stop();
 
-        if (clip == null) yield break;
+        if (clip == null)
+        {
+            fading = false;
+            yield break;
+        }
 
         source.clip = clip;
         source.Play();
@@ -115,9 +144,10 @@ public class MusicManager : MonoBehaviour
         while (t < fadeDuration)
         {
             t += Time.deltaTime;
-            source.volume = Mathf.Lerp(0f, volume, t / fadeDuration);
+            source.volume = Mathf.Lerp(0f, musicVolume, t / fadeDuration);
             yield return null;
         }
-        source.volume = volume;
+        source.volume = musicVolume;
+        fading = false;
     }
 }

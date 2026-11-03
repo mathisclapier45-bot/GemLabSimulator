@@ -84,7 +84,7 @@ public class ConductivityTesterUI : MonoBehaviour
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
         audioSource.spatialBlend = 0f;
-        audioSource.volume = 0.3f;
+        audioSource.volume = 1f;
         tickClip = MakeTone("Tick", 900f, 0.05f);
         beepClip = MakeTone("Beep", 1900f, 0.22f);
         lowClip = MakeTone("Low", 260f, 0.28f);
@@ -382,7 +382,7 @@ public class ConductivityTesterUI : MonoBehaviour
 
     private void Play(AudioClip clip)
     {
-        if (audioSource != null && clip != null) audioSource.PlayOneShot(clip);
+        if (audioSource != null && clip != null && !Sfx.Muted) audioSource.PlayOneShot(clip, Mathf.Clamp01(Sfx.Volume * 0.67f));
     }
 
     private static AudioClip MakeTone(string name, float frequency, float seconds)

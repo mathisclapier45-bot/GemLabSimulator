@@ -63,7 +63,9 @@ public class MainMenuUI : MonoBehaviour
         loadButton.onClick.AddListener(() => LoadSlot(slotNumber, data));
 
         var deleteButton = CreateButton(parent, "Supprimer", new Vector2(-100, -44), new Vector2(140, 30), 12);
-        deleteButton.onClick.AddListener(() => DeleteSlot(slotNumber));
+        deleteButton.onClick.AddListener(() => ConfirmDialog.Show("Supprimer la sauvegarde",
+            $"Voulez-vous vraiment supprimer « {data.saveName} » ?\n\n{GameCalendar.Short(data.currentDay)} — {data.money}€\n\nCette action est définitive : la partie sera perdue.",
+            "Supprimer", () => DeleteSlot(slotNumber)));
     }
 
     private void BuildEmptySlot(Transform parent, int index, int slotNumber)

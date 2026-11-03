@@ -39,9 +39,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Animalerie.unity
     guid: 0acc4a27773894cf2b3f3595a64ffe46
   - enabled: 1
-    path: Assets/Scenes/Town.unity
-    guid: 436994916875340dba60314ffa83766d
-  - enabled: 1
     path: Assets/Scenes/DiamantairesAccueil.unity
     guid: 13fb8d10fe01945d39c8b8f57b3d97fc
   - enabled: 1
@@ -71,4 +68,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Home.unity
     guid: 36909d23915df4366b99428440e99db5
+  - enabled: 1
+    path: Assets/Scenes/LaboSynthese.unity
+    guid: cf34b9f35581d46bf9916456d255228e
+  - enabled: 1
+    path: Assets/Scenes/LaboTraitements.unity
+    guid: 1822d32d35ddd4d28a21493abab2a9d4
+  - enabled: 1
+    path: Assets/Scenes/Town.unity
+    guid: 436994916875340dba60314ffa83766d
   m_configObjects: {}

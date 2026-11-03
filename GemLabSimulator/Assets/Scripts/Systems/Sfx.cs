@@ -17,14 +17,69 @@ public static class Sfx
         PageTurn, PageFlurry, BookOpen, BookClose, CardSwish, PackTear, CardFlip, RareChime, SuperChime, UltraSparkle, SecretShimmer, NewCard,
     }
 
-    // Overall volume of the effects, from 0 to 1.
-    public static float Volume = 0.45f;
+    private const string VolumeKey = "SfxVolume";
+    private static float volume = -1f;
+
+    // Overall volume of the effects, from 0 to 1, kept between games.
+    public static float Volume
+    {
+        get
+        {
+            if (volume < 0f)
+            {
+                try { volume = PlayerPrefs.GetFloat(VolumeKey, 0.45f); }
+                catch (Exception) { volume = 0.45f; }
+            }
+            return volume;
+        }
+        set
+        {
+            volume = Mathf.Clamp01(value);
+            try
+            {
+                PlayerPrefs.SetFloat(VolumeKey, volume);
+                PlayerPrefs.Save();
+            }
+            catch (Exception)
+            {
+            }
+        }
+    }
 
     private static SfxPlayer player;
 
+    private const string MutedKey = "SfxMuted";
+    private static int muted = -1;
+
+    // The effects can be switched off altogether, and the choice is kept between games.
+    public static bool Muted
+    {
+        get
+        {
+            if (muted < 0)
+            {
+                try { muted = PlayerPrefs.GetInt(MutedKey, 0); }
+                catch (Exception) { muted = 0; }
+            }
+            return muted == 1;
+        }
+        set
+        {
+            muted = value ? 1 : 0;
+            try
+            {
+                PlayerPrefs.SetInt(MutedKey, muted);
+                PlayerPrefs.Save();
+            }
+            catch (Exception)
+            {
+            }
+        }
+    }
+
     public static void Play(Id id, float volume = 1f, float pitch = 1f)
     {
-        if (!Application.isPlaying) return;
+        if (!Application.isPlaying || Muted) return;
         if (player == null)
         {
             var go = new GameObject("Sfx");
@@ -84,6 +139,7 @@ public class SfxPlayer : MonoBehaviour
 
     public void Play(Sfx.Id id, float volume, float pitch)
     {
+        if (Sfx.Muted) return;
         // The same effect never plays twice in a few hundredths of a second (a handful of gems added at once).
         var now = Time.unscaledTime;
         if (lastPlayed.TryGetValue(id, out var last) && now - last < 0.05f) return;

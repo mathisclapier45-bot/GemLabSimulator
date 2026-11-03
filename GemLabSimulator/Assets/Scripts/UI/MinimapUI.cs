@@ -41,6 +41,8 @@ public class MinimapUI : MonoBehaviour
         { "Maison & Bureau de Gemmologie", "maison" },
         { "Laboratoire de Gemmologie", "fiole" },
         { "Atelier Lapidaire", "atelier" },
+        { "Laboratoire de Synthèse", "synthese" },
+        { "Laboratoire de Traitements", "traitements" },
         { "Musee", "musee" },
         { "Immeuble des Diamantaires", "diamant" },
         { "Marche aux Pierres", "rubis_dollar" },
@@ -75,6 +77,8 @@ public class MinimapUI : MonoBehaviour
         { "Maison & Bureau de Gemmologie", "Maison & Bureau" },
         { "Immeuble des Diamantaires", "Diamantaires" },
         { "Laboratoire de Gemmologie", "Laboratoire" },
+        { "Laboratoire de Synthèse", "Labo Synthèse" },
+        { "Laboratoire de Traitements", "Labo Traitements" },
         { "Maison de Vincent Pardieu", "Maison de V. Pardieu" },
     };
 

@@ -274,12 +274,12 @@ public class BinderUI : MonoBehaviour
         close.onClick.AddListener(Close);
 
         // Jump to a series.
-        var series = new[] { CardSeries.Element, CardSeries.MasterStone, CardSeries.Gem, CardSeries.Famous };
+        var series = new[] { CardSeries.Element, CardSeries.MasterStone, CardSeries.Gem, CardSeries.Famous, CardSeries.Crystal, CardSeries.Synthesis, CardSeries.Tool };
         for (var i = 0; i < series.Length; i++)
         {
             var captured = series[i];
             var button = RuntimeUIKit.MakeButton("Series" + i, panel.transform, CardCatalog.SeriesName(series[i]), 12, ButtonColor,
-                new Vector2(34f + i * 128f, -52f), new Vector2(122f, 26f));
+                new Vector2(34f + i * 120f, -52f), new Vector2(114f, 26f));
             button.onClick.AddListener(() => JumpToSeries(captured));
         }
 

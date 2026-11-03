@@ -5,7 +5,7 @@ using UnityEngine;
 
 public enum CardRarity { Commune, Rare, SuperRare, UltraRare, Gold, Secret }
 
-public enum CardSeries { Element, MasterStone, Gem, Famous, Secret }
+public enum CardSeries { Element, MasterStone, Gem, Famous, Crystal, Synthesis, Tool, Secret }
 
 public class CardDef
 {
@@ -21,8 +21,8 @@ public class CardDef
     public Func<Sprite> Art;        // the stone drawn on the card; null for an element
 }
 
-// The collectible cards: the periodic table, the GIA master stones (colors D to Z and clarities FL to I3), the gems of the game
-// and the famous stones of history. Every card has a rarity; a booster draws cards at random according to it. The order of the
+// The collectible cards: the periodic table, the GIA master stones (colors D to Z and clarities FL to I3), the gems of the game,
+// the famous stones of history, the crystal systems, the ways of making synthetic stones, and the tools of the gemologist. Every card has a rarity; a booster draws cards at random according to it. The order of the
 // list is the order of the binder.
 public static class CardCatalog
 {
@@ -101,6 +101,9 @@ public static class CardCatalog
             case CardSeries.MasterStone: return "Master stones";
             case CardSeries.Gem: return "Gemmes";
             case CardSeries.Famous: return "Pierres célèbres";
+            case CardSeries.Crystal: return "Cristaux";
+            case CardSeries.Synthesis: return "Synthèses";
+            case CardSeries.Tool: return "Outils";
             default: return "Secrètes";
         }
     }
@@ -146,6 +149,9 @@ public static class CardCatalog
         AddMasterStones();
         AddGems();
         AddFamousStones();
+        AddCrystalSystems();
+        AddSyntheses();
+        AddTools();
 
         byId = new Dictionary<string, CardDef>();
         pools = new Dictionary<CardRarity, List<CardDef>>();
@@ -592,5 +598,151 @@ public static class CardCatalog
             CardRarity.SuperRare, "Octogone", "Mixte", new Color(0.78f, 0.84f, 0.92f));
         Famous("centenary", "Centenary", "Diamant de 273,9 ct taillé en cœur par De Beers dans un brut de 599 ct.",
             CardRarity.SuperRare, "Cœur", "Brillant", white);
+    }
+
+    // ---- Crystal systems --------------------------------------------------------------------------------------------
+
+    private static void Crystal(string slug, string name, string description, CardRarity rarity, string drawing, Color color)
+    {
+        all.Add(new CardDef
+        {
+            Id = $"cr_{slug}",
+            Series = CardSeries.Crystal,
+            Name = name,
+            Description = description,
+            Rarity = rarity,
+            Tint = new Color(0.14f, 0.22f, 0.28f),
+            Art = () => CardArt.Get(drawing, color),
+        });
+    }
+
+    private static void AddCrystalSystems()
+    {
+        Crystal("cubic", "Système cubique", "Trois axes égaux à 90°. Isotrope : une seule réfraction. Diamant, grenat, spinelle, fluorite.",
+            CardRarity.Commune, "cubic", new Color(0.45f, 0.72f, 0.95f));
+        Crystal("hexagonal", "Système hexagonal", "Trois axes égaux à 120° et un axe vertical. Uniaxe. Béryl (émeraude, aigue-marine), apatite.",
+            CardRarity.Commune, "hexagonal", new Color(0.30f, 0.78f, 0.52f));
+        Crystal("trigonal", "Système trigonal", "Symétrie d'ordre 3 autour d'un axe. Uniaxe. Quartz, corindon (rubis, saphir), tourmaline, calcite.",
+            CardRarity.Commune, "trigonal", new Color(0.88f, 0.42f, 0.55f));
+        Crystal("amorphous", "Amorphe", "Pas de réseau cristallin : les atomes sont désordonnés. Isotrope. Opale, verre, obsidienne, ambre.",
+            CardRarity.Commune, "amorphous", new Color(0.70f, 0.78f, 0.90f));
+        Crystal("tetragonal", "Système quadratique", "Deux axes égaux et un axe différent, tous à 90°. Uniaxe. Zircon, rutile, vésuvianite.",
+            CardRarity.Rare, "tetragonal", new Color(0.95f, 0.72f, 0.30f));
+        Crystal("orthorhombic", "Système orthorhombique", "Trois axes inégaux, tous à 90°. Biaxe. Topaze, péridot, chrysobéryl, tanzanite, iolite.",
+            CardRarity.Rare, "orthorhombic", new Color(0.62f, 0.50f, 0.92f));
+        Crystal("monoclinic", "Système monoclinique", "Trois axes inégaux, dont un incliné. Biaxe. Jadéite, orthose, kunzite (spodumène), malachite.",
+            CardRarity.Rare, "monoclinic", new Color(0.35f, 0.80f, 0.78f));
+        Crystal("triclinic", "Système triclinique", "Trois axes inégaux, aucun angle droit : la symétrie la plus basse. Biaxe. Turquoise, amazonite, rhodonite, labradorite.",
+            CardRarity.SuperRare, "triclinic", new Color(0.92f, 0.55f, 0.30f));
+    }
+
+    // ---- Syntheses and simulants -------------------------------------------------------------------------------------------
+
+    private static void Synthetic(string slug, string name, string description, CardRarity rarity, Func<Sprite> art)
+    {
+        all.Add(new CardDef
+        {
+            Id = $"syn_{slug}",
+            Series = CardSeries.Synthesis,
+            Name = name,
+            Description = description,
+            Rarity = rarity,
+            Tint = new Color(0.24f, 0.17f, 0.28f),
+            Art = art,
+        });
+    }
+
+    private static Func<Sprite> Brilliant(Color body) => () => GemIconFactory.GetSolid("Rond", "Brillant", body, Facet(body));
+    private static Func<Sprite> Cabochon(Color body) => () => GemIconFactory.GetSolid("Ovale", "Cabochon", body, Facet(body));
+    private static Func<Sprite> Drawing(string key, Color body) => () => CardArt.Get(key, body);
+
+    private static void AddSyntheses()
+    {
+        Synthetic("glass", "Verre", "Le plus ancien des simulants : un verre coloré aux bulles rondes et aux traces d'écoulement. Isotrope.",
+            CardRarity.Commune, Cabochon(new Color(0.30f, 0.72f, 0.52f)));
+        Synthetic("reconstituted", "Pierre reconstituée", "Poudre de pierre (turquoise, lapis) agglomérée avec de la résine, puis taillée : l'ensemble paraît pleine.",
+            CardRarity.Commune, Cabochon(new Color(0.25f, 0.72f, 0.72f)));
+        Synthetic("cz", "Zircone cubique (CZ)", "ZrO₂ stabilisé à l'yttrium, fondu en creuset froid (skull melting). Très dispersive et dense (5,7) : le simulant du diamant le plus courant.",
+            CardRarity.Commune, Brilliant(new Color(0.92f, 0.95f, 1f)));
+        Synthetic("doublet", "Doublet et triplet", "Plusieurs pièces collées : une table de vraie pierre sur un pavillon de verre, parfois un dôme de quartz au-dessus. Le collage se voit de côté.",
+            CardRarity.Rare, Drawing("layers", new Color(0.30f, 0.62f, 0.45f)));
+        Synthetic("verneuil", "Verneuil (fusion à la flamme)", "Inventée en 1902 : une poudre tombe dans une flamme d'oxhydrogène et se solidifie en boule. Rubis, saphir, spinelle. Bulles rondes et stries courbes.",
+            CardRarity.Rare, Drawing("verneuil", new Color(0.85f, 0.12f, 0.22f)));
+        Synthetic("moissanite", "Moissanite synthétique", "Carbure de silicium (SiC), plus dispersive que le diamant. Fortement biréfringente, elle conduit l'électricité : le testeur électrique la démasque.",
+            CardRarity.Rare, Drawing("moissanite", new Color(0.62f, 0.78f, 0.66f)));
+        Synthetic("yag", "YAG", "Grenat d'yttrium et d'aluminium (Y₃Al₅O₁₂), cubique, IR 1,83. Simulant du diamant des années 1970, aussi vendu en vert et en jaune.",
+            CardRarity.Rare, Brilliant(new Color(0.55f, 0.85f, 0.40f)));
+        Synthetic("ggg", "GGG", "Grenat de gadolinium et gallium, cubique, très dense (7,05) et assez tendre. Simulant du diamant abandonné après la zircone.",
+            CardRarity.Rare, Brilliant(new Color(0.88f, 0.84f, 0.68f)));
+        Synthetic("fabulite", "Fabulite", "Titanate de strontium (SrTiO₃), cubique, à fort feu. Simulant du diamant tendre et rayable, fabriqué par la méthode Verneuil.",
+            CardRarity.Rare, Brilliant(new Color(0.92f, 0.94f, 0.98f)));
+        Synthetic("rutile", "Rutile synthétique", "Oxyde de titane fabriqué par fusion à la flamme, à la dispersion exceptionnelle (0,33), jaunâtre. Biréfringence très forte, rayable.",
+            CardRarity.Rare, Brilliant(new Color(0.92f, 0.82f, 0.45f)));
+        Synthetic("czochralski", "Czochralski (tirage)", "Un germe tourne et remonte lentement hors d'un creuset de matière fondue : on tire un cylindre. Rubis, saphir, YAG, GGG, alexandrite.",
+            CardRarity.SuperRare, Drawing("czochralski", new Color(0.85f, 0.70f, 0.30f)));
+        Synthetic("hydrothermal", "Hydrothermale", "Cristallisation dans de l'eau surchauffée sous pression, dans un autoclave. Quartz (améthyste, citrine), émeraude, rubis. Voiles et « clous ».",
+            CardRarity.SuperRare, Drawing("hydrothermal", new Color(0.62f, 0.38f, 0.80f)));
+        Synthetic("gilson", "Opale synthétique Gilson", "Sphères de silice rangées en colonnes : le jeu de couleurs forme une mosaïque en « peau de lézard », avec des bords nets entre les plages.",
+            CardRarity.SuperRare, Cabochon(new Color(0.72f, 0.82f, 0.92f)));
+        Synthetic("flux", "Flux (fondant)", "La matière est dissoute dans un fondant en fusion, puis cristallise très lentement. Émeraude, rubis, saphir. Voiles de fondant et grains de platine.",
+            CardRarity.UltraRare, Drawing("flux", new Color(0.18f, 0.72f, 0.45f)));
+        Synthetic("hpht", "HPHT (haute pression)", "Le carbone cristallise sur un germe vers 5 GPa et 1 400 °C, dans une presse. Diamants jaunes ou bleus ; fluorescence en croix sous le DiamondView, inclusions métalliques.",
+            CardRarity.UltraRare, Drawing("hpht", new Color(0.96f, 0.88f, 0.45f)));
+        Synthetic("cvd", "CVD (dépôt en phase vapeur)", "Un plasma de méthane et d'hydrogène dépose le carbone couche par couche sur un germe. Diamants de type IIa, stries parallèles sous le DiamondView.",
+            CardRarity.UltraRare, Drawing("cvd", new Color(0.85f, 0.95f, 0.92f)));
+    }
+
+    // ---- Tools of the gemologist ------------------------------------------------------------------------------------------
+
+    private static void Tool(string slug, string name, string description, CardRarity rarity, string icon, string badge = null)
+    {
+        all.Add(new CardDef
+        {
+            Id = $"tool_{slug}",
+            Series = CardSeries.Tool,
+            Name = name,
+            Description = description,
+            Rarity = rarity,
+            Tint = new Color(0.20f, 0.20f, 0.16f),
+            Badge = icon == null ? badge : null,
+            SubBadge = icon == null ? "Outil de laboratoire" : null,
+            Art = icon == null ? (Func<Sprite>)null : () => Resources.Load<Sprite>(icon),
+        });
+    }
+
+    private static void AddTools()
+    {
+        // The simple tools are common; the instruments of the laboratory are ultra rare to gold.
+        Tool("cloth", "Chamoisine", "Un carré de feutre doux pour essuyer une gemme sans la rayer avant de l'observer.", CardRarity.Commune, "BagIcons/Chamoisine");
+        Tool("loupe10", "Loupe 10×", "L'outil de base du gemmologue : un triplet qui grossit dix fois pour voir les inclusions et les défauts.", CardRarity.Commune, "BagIcons/Loupe10X");
+        Tool("maglite", "Lampe torche", "Une lampe compacte pour éclairer une gemme : transparence, éclat, inclusions.", CardRarity.Commune, "BagIcons/Maglite");
+        Tool("magnet", "Aimant de gemmologie", "Un aimant au néodyme : il attire les gemmes riches en fer, comme les grenats, pour un premier tri.", CardRarity.Commune, "ToolIcons/Aimant");
+        Tool("scale", "Balance à carat", "Une balance de précision qui donne le poids d'une gemme en carats (1 ct = 0,2 g).", CardRarity.Commune, "ToolIcons/BalanceCarat");
+        Tool("gauge", "Micromètre", "Un pied à coulisse électronique qui mesure longueur, largeur et profondeur d'une pierre au centième de millimètre.", CardRarity.Commune, "ToolIcons/Micrometre");
+
+        Tool("loupe20", "Loupe 20×", "Un triplet qui grossit vingt fois : on voit les inclusions les plus fines, au prix d'un champ plus réduit.", CardRarity.Rare, "ToolIcons/Loupe");
+        Tool("dichroscope", "Dichroscope", "Deux fenêtres côte à côte : on compare les deux couleurs d'un pléochroïsme en tournant la gemme.", CardRarity.Rare, "ToolIcons/Dichroscope");
+        Tool("spectroscope", "Spectroscope", "Il décompose la lumière qui traverse la gemme et montre ses bandes d'absorption.", CardRarity.Rare, "ToolIcons/Spectroscope");
+        Tool("chelsea", "Filtre Chelsea", "Un filtre qui ne laisse passer que le rouge profond et le vert-jaune : il révèle le chrome des émeraudes et des imitations.", CardRarity.Rare, "ToolIcons/FiltreChelsea");
+        Tool("uvlamp", "Lampe UV longs", "Une lampe à 365 nm qui révèle la fluorescence : rouge du rubis, bleu du diamant.", CardRarity.Rare, "BagIcons/LampeUVLongs");
+        Tool("thermal", "Testeur thermique", "Une sonde qui mesure la conduction de la chaleur : le diamant (et la moissanite) l'évacue mieux que ses imitations.", CardRarity.Rare, "ToolIcons/TesteurThermique");
+
+        Tool("electric", "Testeur électrique", "Une sonde qui départage le diamant isolant de la moissanite, qui conduit l'électricité.", CardRarity.SuperRare, "ToolIcons/TesteurElectrique");
+        Tool("polariscope", "Polariscope", "Deux filtres polarisants croisés : il montre si une gemme est simple ou double réfringente, et sa figure d'interférence.", CardRarity.SuperRare, "ToolIcons/Polariscope");
+        Tool("refractometer", "Réfractomètre", "Un hémicylindre de verre dense : il donne l'indice de réfraction de la table d'une gemme et sa biréfringence.", CardRarity.SuperRare, "ToolIcons/Refractometre");
+        Tool("hydrostatic", "Balance hydrostatique", "Elle pèse la gemme dans l'air puis dans l'eau pour calculer sa densité relative.", CardRarity.SuperRare, "ToolIcons/BalanceHydrostatique");
+        Tool("microscope", "Microscope gemmologique", "Un microscope binoculaire à champ noir : il révèle les inclusions qui prouvent l'origine d'une pierre.", CardRarity.SuperRare, "ToolIcons/Microscope");
+        Tool("uvcabin", "Cabine UV", "Une chambre noire à lampes longues et courtes : on y observe la fluorescence sans lumière parasite.", CardRarity.SuperRare, "ToolIcons/CabineUV");
+
+        Tool("uvvisnir", "Spectrophotomètre UV-Vis-NIR", "Il mesure l'absorption d'une gemme de l'ultraviolet à l'infrarouge proche : un outil pour confirmer l'origine et la couleur.", CardRarity.UltraRare, "ToolIcons/UvVisNir");
+        Tool("ftir", "Spectromètre FTIR", "Un spectromètre infrarouge à transformée de Fourier : il détecte les remplissages, les traitements et le type d'un diamant.", CardRarity.UltraRare, "ToolIcons/FTIR");
+        Tool("diamondsure", "DiamondSure", "Un appareil de criblage par transmission UV : il écarte les diamants de type I et renvoie les autres au laboratoire.", CardRarity.UltraRare, "ToolIcons/DiamondSure");
+        Tool("diamondview", "DiamondView", "Une caméra à fluorescence UV profonde : elle montre les stries de croissance qui trahissent un diamant CVD ou HPHT.", CardRarity.UltraRare, "ToolIcons/DiamondView");
+
+        Tool("raman", "Spectromètre Raman", "Un laser qui fait vibrer les liaisons : il identifie une espèce minérale, une inclusion, un remplissage, sans toucher la pierre.", CardRarity.Gold, "ToolIcons/Raman");
+        Tool("sem", "Microscope électronique à balayage", "Un faisceau d'électrons balaie la surface : images à très fort grossissement, cathodoluminescence et analyse chimique.", CardRarity.Gold, "ToolIcons/MEB");
+        Tool("edxrf", "EDXRF", "La fluorescence X dispersive en énergie : elle donne les éléments chimiques majeurs et les traces d'une gemme.", CardRarity.Gold, "ToolIcons/EDXRF");
+        Tool("laicpms", "LA-ICP-MS", "Un laser prélève une poussière de pierre, un plasma l'ionise et un spectromètre de masse compte les atomes : l'empreinte des traces d'une origine.", CardRarity.Gold, null, "LA-ICP-MS");
+        Tool("photoluminescence", "Photoluminescence", "Un laser excite la pierre à froid et on enregistre la lumière qu'elle réémet : les défauts du réseau trahissent traitement et synthèse.", CardRarity.Gold, null, "PL");
     }
 }

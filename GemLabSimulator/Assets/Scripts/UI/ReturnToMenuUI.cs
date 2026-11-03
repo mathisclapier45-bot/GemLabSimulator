@@ -13,9 +13,10 @@ public class ReturnToMenuUI : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        BuildMusicButton();
         if (panel != null) panel.SetActive(false);
     }
+
+    public bool IsOpen => panel != null && panel.activeSelf;
 
     public void Toggle()
     {
