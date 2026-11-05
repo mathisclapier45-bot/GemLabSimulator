@@ -154,6 +154,29 @@ public static class EdxrfSpectrum
         }
     }
 
+    // The natural (or synthetic) trace elements of the stone, before any treatment, as relative weights: the other analysers (LA-ICP-MS) build on them.
+    public static Dictionary<string, float> BaseWeights(GemInstance gem, List<string> notes, out bool conclusive)
+    {
+        var def = gem.Definition;
+        var name = def.name ?? "";
+        var synthetic = gem.IsSynthetic || def.forcedSynthetic;
+        uint Hash(string salt) => StoneOptics.StableHash((gem.SpecimenId ?? "") + "|" + salt);
+
+        var weights = new Dictionary<string, float>();
+        void Add(string symbol, float weight)
+        {
+            if (weight <= 0f) return;
+            weights[symbol] = weights.TryGetValue(symbol, out var current) ? current + weight : weight;
+        }
+
+        var scratch = new EdxrfResult();
+        var sure = false;
+        Traces(gem, name, synthetic, Hash, Add, scratch, ref sure);
+        conclusive = sure;
+        if (notes != null) notes.AddRange(scratch.Analysis);
+        return weights;
+    }
+
     // One line for the stone sheet and the report.
     public static string Summary(GemInstance gem)
     {

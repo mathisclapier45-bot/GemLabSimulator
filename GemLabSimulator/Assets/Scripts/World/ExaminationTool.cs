@@ -26,7 +26,9 @@ public class ExaminationTool : MonoBehaviour
         Magnetism,
         DiamondScreening,
         DiamondGrowthImaging,
-        ElementalAnalysis
+        ElementalAnalysis,
+        TraceElements,
+        Photoluminescence
     }
 
     [SerializeField] private string toolName;
@@ -67,6 +69,8 @@ public class ExaminationTool : MonoBehaviour
         if (measurementType == MeasurementType.DiamondScreening) DiamondSureUI.Instance?.Close();
         if (measurementType == MeasurementType.GrowthStructure) MebUI.Instance?.Close();
         if (measurementType == MeasurementType.ElementalAnalysis) EdxrfUI.Instance?.Close();
+        if (measurementType == MeasurementType.TraceElements) LaIcpMsUI.Instance?.Close();
+        if (measurementType == MeasurementType.Photoluminescence) PhotoluminescenceUI.Instance?.Close();
         if (measurementType == MeasurementType.ThermalConductivity || measurementType == MeasurementType.ElectricalConductivity) ConductivityTesterUI.Instance?.Close();
         playerInRange = false;
         playerInventory = null;
@@ -135,6 +139,12 @@ public class ExaminationTool : MonoBehaviour
 
         // EDXRF: X-ray fluorescence spectrum of the trace elements (deposit, synthesis, lead glass fillings).
         if (measurementType == MeasurementType.ElementalAnalysis && EdxrfUI.TryOpen()) return;
+
+        // LA-ICP-MS: laser ablation and mass spectrometry, trace elements down to the ppm and the depth profile of beryllium.
+        if (measurementType == MeasurementType.TraceElements && LaIcpMsUI.TryOpen()) return;
+
+        // Photoluminescence: laser-excited emission of the lattice defects at 77 K (H3, NV0, NV-, Si-V, Ni), the signature of an HPHT annealing.
+        if (measurementType == MeasurementType.Photoluminescence && PhotoluminescenceUI.TryOpen()) return;
 
         // Thermal and electrical testers: drop the stone in the box, grab the tester and put its tip on the stone.
         if (measurementType == MeasurementType.ThermalConductivity && ConductivityTesterUI.TryOpen(ConductivityTesterUI.Mode.Thermal)) return;

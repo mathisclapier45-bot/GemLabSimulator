@@ -40,6 +40,8 @@ public static class LabFindings
         yield return MebKey(MebMode.Cathodoluminescence);
         yield return MebKey(MebMode.XRay);
         yield return ExaminationTool.MeasurementType.ElementalAnalysis.ToString();
+        yield return ExaminationTool.MeasurementType.TraceElements.ToString();
+        yield return ExaminationTool.MeasurementType.Photoluminescence.ToString();
     }
 
     public static List<LabEntry> Entries(GemInstance gem)
@@ -68,6 +70,8 @@ public static class LabFindings
         if (gem.HasObserved(MebKey(MebMode.XRay))) list.Add(Cached(gem, "mebxray", g => Meb(g, MebMode.XRay, 0)));
 
         if (gem.HasObserved(ExaminationTool.MeasurementType.ElementalAnalysis.ToString())) list.Add(Cached(gem, "edxrf", Edxrf));
+        if (gem.HasObserved(ExaminationTool.MeasurementType.TraceElements.ToString())) list.Add(Cached(gem, "laicpms", LaIcpMs));
+        if (gem.HasObserved(ExaminationTool.MeasurementType.Photoluminescence.ToString())) list.Add(Cached(gem, "pl", Photoluminescence));
         if (gem.HasObserved(ExaminationTool.MeasurementType.DiamondGrowthImaging.ToString())) list.Add(Cached(gem, "diamondview", DiamondView));
         if (gem.HasObserved(ExaminationTool.MeasurementType.DiamondScreening.ToString())) list.Add(Cached(gem, "diamondsure", DiamondSureEntry));
         return list;
@@ -140,6 +144,32 @@ public static class LabFindings
         var entry = new LabEntry { Icon = "EDXRF", Title = "EDXRF" };
         var r = EdxrfSpectrum.Measure(gem);
         entry.Lines.Add(r.Elements.Count == 0 ? "Aucun élément détecté (matériau trop léger)." : $"Éléments détectés : {string.Join(", ", r.Elements)}");
+        foreach (var line in r.Analysis) entry.Lines.Add(line);
+        return entry;
+    }
+
+    private static LabEntry LaIcpMs(GemInstance gem)
+    {
+        var entry = new LabEntry { Icon = "LAICPMS", Title = "LA-ICP-MS" };
+        var r = LaIcpMsAnalysis.Measure(gem);
+        var count = System.Math.Min(r.Elements.Count, 8);
+        var parts = new List<string>();
+        for (var i = 0; i < count; i++) parts.Add($"{r.Elements[i].Symbol} {LaIcpMsAnalysis.FormatPpm(r.Elements[i].Ppm)} ppm");
+        entry.Lines.Add(count == 0 ? "Aucun élément détecté." : $"Éléments détectés : {string.Join(", ", parts)}");
+        foreach (var line in r.Analysis) entry.Lines.Add(line);
+        return entry;
+    }
+
+    private static LabEntry Photoluminescence(GemInstance gem)
+    {
+        var entry = new LabEntry { Icon = "Photoluminescence", Title = "Photoluminescence (488 nm, 77 K)" };
+        var r = PhotoluminescenceSpectrum.Measure(gem);
+        if (r.Peaks.Count > 0)
+        {
+            var parts = new List<string>();
+            foreach (var peak in r.Peaks) parts.Add($"{peak.Label} {peak.Nm:0.0} nm");
+            entry.Lines.Add($"Raies : {string.Join(", ", parts)}");
+        }
         foreach (var line in r.Analysis) entry.Lines.Add(line);
         return entry;
     }

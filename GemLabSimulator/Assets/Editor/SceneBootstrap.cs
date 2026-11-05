@@ -2521,8 +2521,10 @@ public static class SceneBootstrap
         CreateDeskStation("Raman", ExaminationTool.MeasurementType.Authenticity, 0f, northBenchY, false, false, bench, benchWidth);
         CreateDeskStation("EDXRF", ExaminationTool.MeasurementType.ElementalAnalysis, 3.6f, northBenchY, false, false, bench, benchWidth);
         CreateDeskStation("MEB", ExaminationTool.MeasurementType.GrowthStructure, 7.2f, northBenchY, false, false, bench, benchWidth);
-        CreateDeskStation("DiamondView", ExaminationTool.MeasurementType.DiamondGrowthImaging, -5.4f, southBenchY, true, false, bench, benchWidth);
-        CreateDeskStation("DiamondSure", ExaminationTool.MeasurementType.DiamondScreening, 5.4f, southBenchY, true, false, bench, benchWidth);
+        CreateDeskStation("DiamondView", ExaminationTool.MeasurementType.DiamondGrowthImaging, -7.2f, southBenchY, true, false, bench, benchWidth);
+        CreateDeskStation("LAICPMS", ExaminationTool.MeasurementType.TraceElements, -3.6f, southBenchY, true, false, bench, benchWidth);
+        CreateDeskStation("Photoluminescence", ExaminationTool.MeasurementType.Photoluminescence, 3.6f, southBenchY, true, false, bench, benchWidth);
+        CreateDeskStation("DiamondSure", ExaminationTool.MeasurementType.DiamondScreening, 7.2f, southBenchY, true, false, bench, benchWidth);
 
         CreateLabTable();
         DecorateLaboratory();
@@ -9232,8 +9234,8 @@ public static class SceneBootstrap
         foreach (var x in new[] { -7, -2, 3, 8 }) PlaceWallDecor("window_white", x, LabMaxY);
 
         // The north wall belongs to the benches: plants stand in the south corners.
-        PlaceFurniture("palm", new Vector3(-8.8f, LabMinY + 1.2f, 0f));
-        PlaceFurniture("palm", new Vector3(9.0f, LabMinY + 1.2f, 0f));
+        PlaceFurniture("palm", new Vector3(-9.4f, LabMinY + 2.6f, 0f));
+        PlaceFurniture("palm", new Vector3(9.4f, LabMinY + 2.6f, 0f));
     }
 
     private static void DecorateMarket()

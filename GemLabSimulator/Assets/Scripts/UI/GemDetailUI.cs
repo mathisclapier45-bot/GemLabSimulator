@@ -118,6 +118,8 @@ public static class GemObservations
         if (Seen(ExaminationTool.MeasurementType.ConfirmedOrigin)) Add("UvVisNir", $"Origine confirmée (UV-Vis-NIR) : {gem.Origin.name}");
         if (Seen(ExaminationTool.MeasurementType.GrowthStructure)) Add("MEB", $"Structure de croissance (MEB) : {gem.GrowthStructureDescription}");
         if (Seen(ExaminationTool.MeasurementType.ElementalAnalysis)) Add("EDXRF", $"EDXRF : {EdxrfSpectrum.Summary(gem)}");
+        if (Seen(ExaminationTool.MeasurementType.TraceElements)) Add("LAICPMS", $"LA-ICP-MS : {LaIcpMsAnalysis.Summary(gem)}");
+        if (Seen(ExaminationTool.MeasurementType.Photoluminescence)) Add("Photoluminescence", $"Photoluminescence : {PhotoluminescenceSpectrum.Summary(gem)}");
         if (Seen(ExaminationTool.MeasurementType.DiamondScreening)) Add("DiamondSure", $"DiamondSure : {DiamondSure.Label(gem)}");
         if (Seen(ExaminationTool.MeasurementType.DiamondGrowthImaging))
             Add("DiamondView", $"DiamondView : {DiamondViewImage.Summary(gem)}");

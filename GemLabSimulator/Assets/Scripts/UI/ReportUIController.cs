@@ -151,6 +151,10 @@ public class ReportUIController : MonoBehaviour
             measured.Add($"Structure de croissance (MEB) : {gemInstance.GrowthStructureDescription}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ElementalAnalysis.ToString()))
             measured.Add($"EDXRF : {EdxrfSpectrum.Summary(gemInstance)}");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.TraceElements.ToString()))
+            measured.Add($"LA-ICP-MS : {LaIcpMsAnalysis.Summary(gemInstance)}");
+        if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Photoluminescence.ToString()))
+            measured.Add($"Photoluminescence : {PhotoluminescenceSpectrum.Summary(gemInstance)}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.DiamondScreening.ToString()))
             measured.Add($"DiamondSure : {DiamondSure.Label(gemInstance)}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.DiamondGrowthImaging.ToString()))

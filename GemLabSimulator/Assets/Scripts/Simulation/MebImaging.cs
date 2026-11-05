@@ -39,7 +39,7 @@ public static class MebImaging
     {
         { "C", 0.277f }, { "O", 0.525f }, { "F", 0.677f }, { "Na", 1.041f }, { "Mg", 1.254f }, { "Al", 1.487f }, { "Si", 1.740f },
         { "P", 2.013f }, { "K", 3.313f }, { "Ca", 3.691f }, { "Ti", 4.511f }, { "V", 4.952f }, { "Cr", 5.415f }, { "Mn", 5.899f },
-        { "Fe", 6.404f }, { "Co", 6.925f }, { "Cu", 8.048f }, { "Zr", 2.042f }, { "Y", 1.922f }, { "Pb", 2.346f }, { "Au", 2.123f },
+        { "Fe", 6.404f }, { "Co", 6.925f }, { "Cu", 8.048f }, { "Ni", 7.478f }, { "Zr", 2.042f }, { "Y", 1.922f }, { "Pb", 2.346f }, { "Au", 2.123f },
         { "Ga", 1.098f }, { "Gd", 1.185f },
     };
 
@@ -145,6 +145,9 @@ public static class MebImaging
             interpretation = "Aucune structure particulière à ce grossissement.";
         }
 
+        // What the treatments of the laboratory leave on the surface.
+        var st = TreatmentSurface(gem, height, w, h, rng, ref observation, ref interpretation);
+
         // Intensity: slopes facing the detector are bright, edges are bright, plus the grain of the signal.
         var intensity = new float[w * h];
         for (var y = 1; y < h - 1; y++)
@@ -161,7 +164,7 @@ public static class MebImaging
         // Fractures: filled (smooth, bright, with gas bubbles) or open (dark, sharp edges), and rutile needles in a natural corundum.
         var filler = Filler(gem);
         var openFracture = filler == null && (gem.ClarityGrade == "Fortement inclus" || gem.ClarityGrade == "Inclus") && rng.Next(100) < 50;
-        if (filler != null || openFracture)
+        if ((filler != null || openFracture) && !st.DyeFracture)
         {
             var width = Mathf.Clamp(3f / umPerPixel, 4f, 26f);
             DrawFracture(intensity, w, h, rng, width, filler != null);
@@ -181,6 +184,24 @@ public static class MebImaging
                 interpretation = "Fissure naturelle non comblée.";
             }
         }
+        else if (st.DyeFracture)
+        {
+            DrawFracture(intensity, w, h, rng, Mathf.Clamp(3f / umPerPixel, 4f, 26f), false);
+            for (var i = 0; i < 160; i++)
+            {
+                var gx = rng.Next(w);
+                var gy = rng.Next(h);
+                if (intensity[gy * w + gx] < 0.2f) intensity[gy * w + gx] = 0.55f + (float)rng.NextDouble() * 0.3f;
+            }
+            observation = "Fissure ouverte dont le fond est tapissé de grains de pigment, bords soulignés par un dépôt dense.";
+            interpretation = "Teinture : le colorant s'est logé dans les fissures. À confirmer par l'analyse X (fer, potassium, chrome).";
+        }
+        else if (st.DashedNeedles)
+        {
+            for (var i = 0; i < 3 + rng.Next(3); i++) Needle(intensity, w, h, rng, true);
+            observation = "Aiguilles de rutile cassées en pointillés, petits cratères de fusion autour des cristaux.";
+            interpretation = "Corindon chauffé : la chaleur a dissous une partie des aiguilles. Compatible avec un chauffage.";
+        }
         else if (IsCorundum(name) && !gem.IsSynthetic && rng.Next(100) < 45)
         {
             for (var i = 0; i < 3 + rng.Next(3); i++) Needle(intensity, w, h, rng);
@@ -197,7 +218,104 @@ public static class MebImaging
 
         result.Observation = observation;
         result.Interpretation = interpretation;
+        result.RecordTreatment = st.Record;
         return result;
+    }
+
+    private struct SurfaceTreatment
+    {
+        public bool Record;             // the picture settles the treatment
+        public bool DyeFracture;        // pigment in a fracture, drawn with the intensity map
+        public bool DashedNeedles;      // rutile needles broken by the heat
+    }
+
+    // The traces of the treatments on the polished surface: a coating film, acid etching, the laser channels or fissures of a diamond, the cooking of a
+    // diffusion, pigment in the fractures, broken rutile needles of a heated corundum.
+    private static SurfaceTreatment TreatmentSurface(GemInstance gem, float[] hmap, int w, int h, System.Random rng, ref string observation, ref string interpretation)
+    {
+        var st = new SurfaceTreatment();
+        if (string.IsNullOrEmpty(gem.TreatmentGrade) || gem.TreatmentGrade == "Non traité") return st;
+        var name = gem.Definition.name ?? "";
+
+        if (gem.HasTreatment(TreatmentKind.Bleached))
+        {
+            for (var i = 0; i < 36; i++)
+                Pit(hmap, w, h, (float)rng.NextDouble() * w, (float)rng.NextDouble() * h, 1.2f + (float)rng.NextDouble() * 1.4f, 0.5f + (float)rng.NextDouble() * 0.4f);
+            for (var i = 0; i < 9; i++)
+                Scratch(hmap, w, h, (float)rng.NextDouble() * w, (float)rng.NextDouble() * h, (float)rng.NextDouble() * Mathf.PI, 0.5f, 0.28f + (float)rng.NextDouble() * 0.2f);
+            observation = "Nombreuses piqûres de corrosion et micro-fissures entre les grains : la surface a été attaquée par un acide.";
+            interpretation = "Blanchiment à l'acide : la dissolution des joints de grains laisse un réseau de fissures. Compatible avec un blanchiment.";
+        }
+
+        if (gem.HasTreatment(TreatmentKind.Diffused))
+        {
+            var seed = (float)rng.NextDouble() * 400f;
+            for (var y = 0; y < h; y++)
+                for (var x = 0; x < w; x++)
+                    hmap[y * w + x] += 0.55f * (Mathf.PerlinNoise(x * 0.07f + seed, y * 0.07f + seed) - 0.5f);
+            for (var i = 0; i < 26; i++)
+                Pit(hmap, w, h, (float)rng.NextDouble() * w, (float)rng.NextDouble() * h, 1.6f + (float)rng.NextDouble() * 1.6f, 0.4f + (float)rng.NextDouble() * 0.3f);
+            observation = "Surface piquée de petites cupules de fusion, joints de grains marqués par une fine couche recristallisée.";
+            interpretation = "La surface a cuit à très haute température : compatible avec une diffusion. L'analyse X dira l'élément.";
+        }
+
+        if (gem.HasTreatment(TreatmentKind.Coated))
+        {
+            var seed = (float)rng.NextDouble() * 500f;
+            for (var y = 0; y < h; y++)
+                for (var x = 0; x < w; x++)
+                    hmap[y * w + x] += 0.6f * (Mathf.PerlinNoise(x * 0.85f + seed, y * 0.85f + seed) - 0.5f);
+            for (var i = 0; i < 8; i++)
+                Scratch(hmap, w, h, (float)rng.NextDouble() * w, (float)rng.NextDouble() * h, (float)rng.NextDouble() * Mathf.PI, 0.7f, 0.5f + (float)rng.NextDouble() * 0.3f);
+            observation = "Couche mince faite de petits grains serrés, découpée par des fissures de retrait : un film recouvre la facette.";
+            interpretation = "Revêtement de surface déposé sous vide. À confirmer par l'analyse X (or, titane, cobalt, chrome).";
+            st.Record = true;
+        }
+
+        if (gem.HasTreatment(TreatmentKind.Laser))
+        {
+            var km = gem.LaserName != null && gem.LaserName.Contains("KM");
+            if (!km)
+            {
+                var cx = w * (0.3f + 0.4f * (float)rng.NextDouble());
+                var cy = h * (0.3f + 0.4f * (float)rng.NextDouble());
+                Pit(hmap, w, h, cx, cy, 3.2f, 1.5f);
+                Scratch(hmap, w, h, cx, cy, (float)rng.NextDouble() * Mathf.PI, 0.55f, 0.9f);
+                observation = "Trou foré de quelques microns, d'où part un canal rectiligne très fin vers l'intérieur de la pierre.";
+                interpretation = "Laser classique : le canal mène à une inclusion foncée blanchie à l'acide.";
+            }
+            else
+            {
+                for (var f = 0; f < 3; f++)
+                {
+                    var x = (float)rng.NextDouble() * w;
+                    var y = (float)rng.NextDouble() * h;
+                    var angle = (float)rng.NextDouble() * Mathf.PI * 2f;
+                    for (var step = 0; step < 14; step++)
+                    {
+                        angle += ((float)rng.NextDouble() - 0.5f) * 2.1f;
+                        for (var t = 0f; t < 12f; t += 1f)
+                        {
+                            x += Mathf.Cos(angle);
+                            y += Mathf.Sin(angle);
+                            if (x < 0 || y < 0 || x >= w || y >= h) break;
+                            Pit(hmap, w, h, x, y, 0.9f, 0.55f);
+                        }
+                    }
+                }
+                observation = "Fissures irrégulières en zig-zag et en spirale qui affleurent la surface, bords éclatés.";
+                interpretation = "Laser KM : l'inclusion a été chauffée jusqu'à éclater, puis blanchie à l'acide. La pierre est fragilisée.";
+            }
+            st.Record = true;
+        }
+
+        if (gem.HasTreatment(TreatmentKind.Dyed))
+        {
+            st.DyeFracture = true;
+            st.Record = true;
+        }
+        if (gem.HasTreatment(TreatmentKind.Heated) && IsCorundum(name) && !gem.IsSynthetic) st.DashedNeedles = true;
+        return st;
     }
 
     private static void Scratch(float[] hmap, int w, int h, float px, float py, float angle, float width, float depth)
@@ -341,7 +459,7 @@ public static class MebImaging
         }
     }
 
-    private static void Needle(float[] intensity, int w, int h, System.Random rng)
+    private static void Needle(float[] intensity, int w, int h, System.Random rng, bool dashed = false)
     {
         var x0 = (float)rng.NextDouble() * w;
         var y0 = (float)rng.NextDouble() * h;
@@ -349,6 +467,7 @@ public static class MebImaging
         var length = 30f + (float)rng.NextDouble() * 80f;
         for (var t = 0f; t < length; t += 0.5f)
         {
+            if (dashed && (int)(t / 5f) % 2 == 1) continue;
             var x = Mathf.RoundToInt(x0 + Mathf.Cos(angle) * t);
             var y = Mathf.RoundToInt(y0 + Mathf.Sin(angle) * t);
             if (x < 0 || y < 0 || x >= w || y >= h) continue;
@@ -460,6 +579,8 @@ public static class MebImaging
         }
         else if (filler != null) E("C", 0.5f);
 
+        var treatmentNote = TreatmentXRay(gem, E);
+
         var result = new MebResult { Mode = MebMode.XRay, Spectrum = new float[MebResult.SpectrumPoints] };
         var scale = 3000f;
         for (var i = 0; i < result.Spectrum.Length; i++)
@@ -510,11 +631,58 @@ public static class MebImaging
         {
             result.Interpretation = "Excès de carbone dans la fissure : substance organique de comblement (résine ou huile).";
         }
+        else if (treatmentNote != null)
+        {
+            result.Interpretation = treatmentNote;
+            result.RecordTreatment = true;
+        }
         else
         {
             result.Interpretation = Describe(name, synthetic);
         }
         return result;
+    }
+
+    // The elements the treatments brought to the first micrometres, which the beam reaches. The light ones (beryllium...) stay invisible.
+    private static string TreatmentXRay(GemInstance gem, Action<string, float> e)
+    {
+        if (string.IsNullOrEmpty(gem.TreatmentGrade) || gem.TreatmentGrade == "Non traité") return null;
+
+        if (gem.HasTreatment(TreatmentKind.Coated))
+        {
+            switch (gem.CoatingName)
+            {
+                case "Aqua aura": e("Au", 0.35f); return "Or en surface bien au-delà de la métallisation du MEB : revêtement d'or (aqua aura).";
+                case "Mystic": e("Ti", 0.5f); return "Titane en surface, que la pierre ne contient pas : revêtement de titane.";
+                case "Bleu cobalt": e("Co", 0.5f); return "Cobalt en surface, que la pierre ne contient pas : revêtement de cobalt.";
+                case "Mystic feu": e("Au", 0.3f); e("Ti", 0.45f); return "Or et titane en surface : revêtement multicouche (mystic feu).";
+                case "Aqua profond": e("Au", 0.3f); e("Co", 0.45f); return "Or et cobalt en surface : revêtement multicouche (aqua profond).";
+                case "Crépuscule": e("Ti", 0.45f); e("Co", 0.45f); return "Titane et cobalt en surface : revêtement multicouche (crépuscule).";
+                case "Émeraude Lechleitner": e("Cr", 0.5f); return "Chrome en surface : surcroissance de béryl au chrome.";
+            }
+        }
+
+        if (gem.HasTreatment(TreatmentKind.Diffused))
+        {
+            switch (gem.DiffusionElement)
+            {
+                case "Fer + titane": e("Fe", 0.35f); e("Ti", 0.4f); return "Fer et titane en excès à la surface : diffusion de fer et de titane.";
+                case "Chrome": e("Cr", 0.45f); return "Chrome en excès à la surface : diffusion de chrome.";
+                case "Nickel": e("Ni", 0.4f); return "Nickel en surface dans un corindon : diffusion de nickel.";
+                case "Titane en excès": e("Ti", 0.45f); return "Titane en excès à la surface : diffusion de titane.";
+            }
+        }
+
+        if (gem.HasTreatment(TreatmentKind.Dyed))
+        {
+            switch (gem.DyeName)
+            {
+                case "Bleu de Prusse": e("Fe", 0.35f); e("K", 0.1f); return "Fer et potassium dans les fissures : bleu de Prusse, teinture minérale.";
+                case "Vert chrome": e("Cr", 0.4f); return "Chrome dans les fissures d'une pierre qui n'en contient pas : teinture au chrome.";
+                default: e("C", 0.3f); return "Excès de carbone dans les fissures : colorant organique.";
+            }
+        }
+        return null;
     }
 
     // Main elements of each species (relative weight of their strongest line).
