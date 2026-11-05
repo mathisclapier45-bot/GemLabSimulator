@@ -69,6 +69,10 @@ public class GemInstance
     public float CoatingIridescence { get; private set; }
     public bool IsCoated => !string.IsNullOrEmpty(CoatingName);
 
+    // The laser treatment of a diamond (see LaserCatalog): "" when it has none, otherwise its name. The treated stone loses its certificate.
+    public string LaserName { get; private set; }
+    public bool IsLaserTreated => !string.IsNullOrEmpty(LaserName);
+
     // The colour the irradiator gave the stone ("Quartz fumé", "Topaze bleu Londres"...), empty when it was not irradiated. An unstable colour fades
     // on FadeDay (0: stable) and the stone goes back to its first colour (see IrradiationCatalog).
     public string IrradiationName { get; private set; }
@@ -511,6 +515,7 @@ public class GemInstance
             PurchasePrice = data.purchasePrice,
             CuttingCost = data.cuttingCost,
             HeatStar = data.heatStar,
+            LaserName = string.IsNullOrEmpty(data.laserName) ? null : data.laserName,
             IrradiationName = string.IsNullOrEmpty(data.irradiationName) ? null : data.irradiationName,
             IrradiationFadeDay = data.irradiationFadeDay,
             irradiationFactor = data.irradiationFactor > 0f ? data.irradiationFactor : 1f,
@@ -619,6 +624,7 @@ public class GemInstance
             purchasePrice = PurchasePrice,
             cuttingCost = CuttingCost,
             heatStar = HeatStar,
+            laserName = LaserName,
             irradiationName = IrradiationName,
             irradiationFadeDay = IrradiationFadeDay,
             irradiationFactor = irradiationFactor,
@@ -892,6 +898,35 @@ public class GemInstance
     {
         IrradiationName = null;
         IrradiationFadeDay = 0;
+    }
+
+    // Takes what the laser did: the inclusions that were bleached change the clarity of the diamond (its hidden grade, or the certified one), the value
+    // follows, and the certificate no longer describes the stone: it has to be graded again.
+    public void ApplyLaser(LaserResult result)
+    {
+        if (result.Outcome == LaserOutcome.NoEffect) return;
+
+        HasReport = false;
+        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        var previous = TreatmentGrade;
+        var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
+        TreatmentGrade = untreated ? result.Label : $"{previous} + {result.Label.ToLowerInvariant()}";
+        TreatmentDescription = untreated ? result.Description : $"{TreatmentDescription} {result.Description}";
+        LaserName = result.Label;
+
+        var index = Mathf.Clamp(result.NewClarityIndex, 0, DiamondGrading.ClarityScale.Length - 1);
+        if (!string.IsNullOrEmpty(DiamondClarity)) DiamondClarity = DiamondGrading.Clarity(index);
+        if (RoughClarityIndex >= 0 || string.IsNullOrEmpty(DiamondClarity)) RoughClarityIndex = index;
+        var tier = DiamondGrading.GameClarityTier(index);
+        foreach (var grade in GemGrading.ClarityGrades)
+        {
+            if (grade.Name != tier) continue;
+            ClarityGrade = grade.Name;
+            ClarityDescription = grade.Description;
+            break;
+        }
+        // The old certificate described another stone: the office has to grade this one again.
+        Certificate = null;
     }
 
     public void RecordMeasurement(string propertyKey, float value)

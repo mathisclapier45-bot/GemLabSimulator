@@ -63,6 +63,7 @@ public class GemInstanceSaveData
     public int purchasePrice;       // what the player paid for the stone (0: unknown)
     public int cuttingCost;         // what its cutting cost
     public bool heatStar;           // the furnace made a star appear
+    public string laserName;        // the laser treatment of a diamond, if any
     public string irradiationName;  // the colour the irradiator gave the stone, if any
     public int irradiationFadeDay;  // the day an unstable colour fades (0: stable)
     public float irradiationFactor;
@@ -178,6 +179,18 @@ public class IrradiationJobSaveData
 }
 
 [Serializable]
+public class LaserJobSaveData
+{
+    public int startDay;
+    public int readyDay;
+    public int fee;
+    public int method;
+    public int power;
+    public int treated;
+    public GemInstanceSaveData stone;
+}
+
+[Serializable]
 public class SaveData
 {
     public string saveName = "";
@@ -229,4 +242,6 @@ public class SaveData
     public bool diffusionSamplesGiven;
     public List<IrradiationJobSaveData> irradiationJobs = new List<IrradiationJobSaveData>();
     public bool irradiationSamplesGiven;
+    public List<LaserJobSaveData> laserJobs = new List<LaserJobSaveData>();
+    public bool laserSamplesGiven;
 }

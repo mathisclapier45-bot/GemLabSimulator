@@ -159,6 +159,12 @@ public static class SaveSystem
             data.irradiationSamplesGiven = IrradiationState.Instance.SamplesGiven;
         }
 
+        if (LaserState.Instance != null)
+        {
+            data.laserJobs = LaserState.Instance.ToSaveData();
+            data.laserSamplesGiven = LaserState.Instance.SamplesGiven;
+        }
+
         File.WriteAllText(SavePath(ActiveSlot), JsonUtility.ToJson(data, true));
     }
 
@@ -269,6 +275,13 @@ public static class SaveSystem
         {
             irradiation.LoadJobs(data.irradiationJobs, RestoreGem);
             irradiation.LoadSamplesGiven(data.irradiationSamplesGiven);
+        }
+
+        var laser = LaserState.Ensure();
+        if (laser != null)
+        {
+            laser.LoadJobs(data.laserJobs, RestoreGem);
+            laser.LoadSamplesGiven(data.laserSamplesGiven);
         }
 
         if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)

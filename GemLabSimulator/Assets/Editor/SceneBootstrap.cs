@@ -1380,6 +1380,13 @@ public static class SceneBootstrap
                     AddTreatmentStation("PosteIrradiation", new Vector3(x, 3.1f, 0f), new Vector2(4.4f, 2.6f), typeof(IrradiationStation));
                     continue;
                 }
+                if (i == 3)
+                {
+                    // The laser is installed: an optical table with the laser head, the microscope and the acid bath.
+                    PlaceFurniture("laserstation", new Vector3(x, 5.0f, 0f));
+                    AddTreatmentStation("PosteLaser", new Vector3(x, 3.1f, 0f), new Vector2(4.4f, 2.6f), typeof(LaserStation));
+                    continue;
+                }
                 PlaceFurniture("labbench", new Vector3(x, 5.0f, 0f));
                 CreateBuildingLabel($"{places[i]}\n(à venir)", new Vector3(x, 1.8f, 0f));
             }
@@ -1402,7 +1409,8 @@ public static class SceneBootstrap
                 "À côté, le four de diffusion : on enterre un corindon dans une poudre d'oxydes et on le chauffe des jours entiers. Le fer et le titane donnent du bleu, le chrome du rouge, le nickel du jaune.",
                 "Mais ces éléments ne pénètrent que d'une fraction de millimètre : un repolissage emporte la couleur. Le béryllium, lui, va beaucoup plus loin et peut colorer toute la pierre.",
                 "Puis l'irradiateur : une cellule blindée où l'on bombarde la pierre de rayons gamma, d'électrons ou de neutrons. Les neutrons la rendent radioactive : elle doit refroidir des jours avant de sortir.",
-                "Le reste suivra : laser, haute pression et haute température. Les places sont déjà tracées au sol.",
+                "Plus loin, le laser : réservé aux diamants. Le laser classique perce un petit trou jusqu'à l'inclusion foncée, le KM la fait éclater en fissures. Dans les deux cas, un bain d'acide la blanchit.",
+                "Le reste suivra : la haute pression et la haute température. La place est déjà tracée au sol.",
                 "Pour le four, retenez ceci : chaque pierre a ses conditions. Le cours donne les plages, et un refroidissement trop rapide fissure presque tout.",
             });
             CreateBuildingLabel("Laboratoire de traitements — étage", new Vector3(0f, 9.7f, 0f));
