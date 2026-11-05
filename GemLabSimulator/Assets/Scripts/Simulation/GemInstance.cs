@@ -63,6 +63,11 @@ public class GemInstance
     public float DepthMm { get; private set; }
     public string TreatmentGrade { get; private set; }
     public string TreatmentDescription { get; private set; }
+
+    // The coating of the pavilion given at the treatments laboratory (see CoatingCatalog): its name, and how strongly it shows the rainbow sheen.
+    public string CoatingName { get; private set; }
+    public float CoatingIridescence { get; private set; }
+    public bool IsCoated => !string.IsNullOrEmpty(CoatingName);
     public bool IsSynthetic { get; private set; }
     public string AuthenticityGrade { get; private set; }
     public string AuthenticityDescription { get; private set; }
@@ -141,6 +146,8 @@ public class GemInstance
         get
         {
             if (IsRough) return HasColor ? GemIconFactory.GetRough(Definition, BodyColor) : Definition.GetRoughIcon();
+            if (CoatingIridescence >= 0.25f && HasColor)
+                return GemIconFactory.GetIridescent(Definition, ShapeName, CutStyleName, BodyColor, FacetColor, CoatingIridescence);
             return HasColor
                 ? GemIconFactory.Get(Definition, ShapeName, CutStyleName, BodyColor, FacetColor)
                 : GemIconFactory.Get(Definition, ShapeName, CutStyleName);
@@ -481,6 +488,8 @@ public class GemInstance
             CutQualityIndex = data.cutQuality - 1,
             PurchasePrice = data.purchasePrice,
             CuttingCost = data.cuttingCost,
+            CoatingName = string.IsNullOrEmpty(data.coatingName) ? null : data.coatingName,
+            CoatingIridescence = data.coatingIridescence,
             Certificate = string.IsNullOrEmpty(data.certificateNumber)
                 ? null
                 : new DiamondCertificate
@@ -574,6 +583,8 @@ public class GemInstance
             cutQuality = CutQualityIndex + 1,
             purchasePrice = PurchasePrice,
             cuttingCost = CuttingCost,
+            coatingName = CoatingName,
+            coatingIridescence = CoatingIridescence,
             certificateNumber = Certificate?.number,
             certificateIssuer = Certificate?.issuer,
             certificateDay = Certificate != null ? Certificate.issueDay : 0,
@@ -657,6 +668,25 @@ public class GemInstance
         FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
         TreatmentGrade = result.IsRuined ? "Teint (instable)" : wasBleached ? "Blanchi puis teint" : "Teint";
         TreatmentDescription = wasBleached ? $"{TreatmentDescription} {result.Description}" : result.Description;
+
+        if (!HasColor) return;
+        SetColor(new GemColorValue(Mathf.Repeat(result.Hue, 360f), Mathf.Clamp01(result.Saturation), Mathf.Clamp01(result.Brightness)), IsFancyDiamond);
+    }
+
+    // Takes the coating the vacuum chamber has put on the pavilion: the colour changes, the facets show a rainbow sheen if the coating is
+    // iridescent, the value follows, and the stone carries the treatment from then on. A stone whose coating failed is still coated.
+    public void ApplyCoating(CoatResult result)
+    {
+        HasReport = false;
+        TradeName = null;
+        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        var previous = TreatmentGrade;
+        var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
+        var label = result.Outcome == CoatOutcome.Fragile ? "Revêtu (fragile)" : result.Outcome == CoatOutcome.Ruined ? "Revêtu (écaillé)" : "Revêtu";
+        TreatmentGrade = untreated ? label : $"{previous} + revêtu";
+        TreatmentDescription = untreated ? result.Description : $"{TreatmentDescription} {result.Description}";
+        CoatingName = result.CoatingName;
+        CoatingIridescence = result.Iridescence;
 
         if (!HasColor) return;
         SetColor(new GemColorValue(Mathf.Repeat(result.Hue, 360f), Mathf.Clamp01(result.Saturation), Mathf.Clamp01(result.Brightness)), IsFancyDiamond);

@@ -1253,8 +1253,9 @@ public static class SceneBootstrap
         Debug.Log("Annex laboratory scenes created: LaboSynthese, LaboTraitements.");
     }
 
-    // The treatments laboratory. For now it holds the bleaching room and the dye room: two desks against the back wall with six small
-    // vats or pots on each; E in front of one opens its window (BleachingUI, DyeingUI). The other treatments will come one at a time.
+    // The treatments laboratory. For now it holds the bleaching room, the dye room and the vacuum chamber of the surface coatings: two desks
+    // with six small vats or pots on each and the chamber, against the back wall; E in front of one opens its window (BleachingUI, DyeingUI,
+    // CoatingUI). The other treatments will come one at a time.
     [MenuItem("GemLab/Setup Treatments Lab Scene")]
     public static void CreateTreatmentsLabScene()
     {
@@ -1297,17 +1298,30 @@ public static class SceneBootstrap
             dyeStation.AddComponent<DyeingStation>();
             CreateBuildingLabel("Bains de teinture (E)", new Vector3(dyeX, 0.7f, 0f));
 
-            // The fume hood at the right end of the back wall; above the desks, the hazard sign and the chart of dye colours.
-            PlaceFurniture("fumehood", new Vector3(6.4f, 3.2f, 0f));
+            // The vacuum chamber at the right end of the back wall, with a display of "mystic" stones on the wall beside it.
+            const float coatX = 6.5f;
+            PlaceFurniture("vacuumchamber", new Vector3(coatX, 2.6f, 0f));
+            PlaceInteriorProp("mysticdisplay", new Vector3(4.55f, 5.45f, 0f), false, false, 2);
+
+            var coatStation = new GameObject("PosteRevetement");
+            coatStation.transform.position = new Vector3(coatX, 1.4f, 0f);
+            var coatTrigger = coatStation.AddComponent<BoxCollider2D>();
+            coatTrigger.isTrigger = true;
+            coatTrigger.size = new Vector2(3.6f, 2.8f);
+            coatStation.AddComponent<CoatingStation>();
+            CreateBuildingLabel("Chambre de dépôt (E)", new Vector3(coatX, 0.3f, 0f));
+
+            // Above the desks, the hazard sign and the chart of dye colours.
             PlaceInteriorProp("hazardsign", new Vector3(bleachX, 5.55f, 0f), false, false, 2);
             PlaceInteriorProp("dyechart", new Vector3(dyeX, 5.55f, 0f), false, false, 2);
 
-            // Safety equipment, waste drums and the acid rack along the left wall; the drying rack of the dyed strings on the right.
-            PlaceFurniture("bottlerack", new Vector3(-7.3f, 0.6f, 0f));
-            PlaceFurniture("eyewash", new Vector3(-8.2f, -3.3f, 0f));
+            // The fume hood and the acid rack along the left wall, the safety equipment, the waste drums and the drying rack of the dyed strings.
+            PlaceFurniture("fumehood", new Vector3(-6.8f, -0.9f, 0f));
+            PlaceFurniture("bottlerack", new Vector3(-6.8f, -3.2f, 0f));
+            PlaceFurniture("eyewash", new Vector3(-8.3f, -3.3f, 0f));
             PlaceFurniture("barrel", new Vector3(8.0f, -3.6f, 0f));
             PlaceFurniture("barrel", new Vector3(7.0f, -3.9f, 0f));
-            PlaceFurniture("dryingrack", new Vector3(6.9f, 0.4f, 0f));
+            PlaceFurniture("dryingrack", new Vector3(7.9f, -1.0f, 0f));
             PlaceRug("rug_blue_tall", new Vector3(0f, -2.4f, 0f));
             PlaceFurniture("off_plant_big", new Vector3(-8.1f, 4.0f, 0f));
 
@@ -1318,6 +1332,8 @@ public static class SceneBootstrap
                 "La jadéite et l'œil-de-tigre, eux, aiment les acides : ils dissolvent les oxydes de fer qui les tachent. Mais trop fort, la pierre sort piquée.",
                 "À côté, c'est la teinture : tout ce qui est poreux ou fissuré boit la couleur. Chaque pot vous montre ce que la pierre deviendrait.",
                 "Astuce : une pierre blanchie prend la couleur plus régulièrement. Blanchir d'abord, teindre ensuite : c'est le bon ordre.",
+                "Et là-bas, la chambre sous vide : on y dépose une couche de métal si fine qu'elle irise la pierre. C'est comme ça qu'on fait la topaze « mystique ».",
+                "Attention, un revêtement reste en surface : il s'érafle, surtout sur les arêtes. Une couche épaisse tient mieux, mais elle ternit l'éclat.",
                 "Un bain prend des jours : on dépose la pierre, on revient la chercher. Les autres traitements arriveront plus tard.",
             });
             CreateBuildingLabel("Laboratoire de traitements", new Vector3(0f, 6.7f, 0f));

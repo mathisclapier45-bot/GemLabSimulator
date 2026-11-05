@@ -41,6 +41,53 @@ public static class GemIconFactory
         return sprite;
     }
 
+    // The icon of a stone whose pavilion carries a thin metal coating: the rainbow sheen of a "mystic" topaz, laid over the facets. The stronger
+    // the coating, the more the colours of the rainbow show.
+    public static Sprite GetIridescent(GemDefinition def, string shape, string cutStyle, Color body, Color facet, float strength)
+    {
+        var baseSprite = Get(def, shape, cutStyle, body, facet);
+        if (baseSprite == null || baseSprite.texture == null) return baseSprite;
+
+        var level = Mathf.Clamp(Mathf.RoundToInt(strength * 5f), 1, 5);
+        var key = $"irid|{def.name}|{shape}|{cutStyle}|{ColorUtility.ToHtmlStringRGB(Quantize(body))}|{ColorUtility.ToHtmlStringRGB(Quantize(facet))}|{level}";
+        if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
+
+        Sprite sprite;
+        try
+        {
+            var source = baseSprite.texture;
+            var pixels = source.GetPixels32();
+            var width = source.width;
+            var mix = 0.18f + 0.09f * level;
+            for (var i = 0; i < pixels.Length; i++)
+            {
+                var pixel = pixels[i];
+                if (pixel.a == 0) continue;
+                var x = i % width;
+                var y = i / width;
+                var t = (x + y * 0.7f) / (width * 1.7f);
+                var rainbow = Color.HSVToRGB(Mathf.Repeat(t * 1.3f + 0.05f, 1f), 0.8f, 1f);
+                var light = (pixel.r + pixel.g + pixel.b) / (3f * 255f);
+                var tinted = rainbow * (0.5f + 0.7f * light);
+                var original = (Color)pixel;
+                var mixed = Color.Lerp(original, tinted, mix);
+                pixels[i] = new Color32((byte)(mixed.r * 255f), (byte)(mixed.g * 255f), (byte)(mixed.b * 255f), pixel.a);
+            }
+
+            var texture = new Texture2D(width, source.height, TextureFormat.RGBA32, false) { filterMode = source.filterMode, wrapMode = TextureWrapMode.Clamp };
+            texture.SetPixels32(pixels);
+            texture.Apply();
+            sprite = Sprite.Create(texture, new Rect(0, 0, width, source.height), new Vector2(0.5f, 0.5f), baseSprite.pixelsPerUnit);
+        }
+        catch (UnityException)
+        {
+            // The texture cannot be read: the stone keeps its plain icon.
+            sprite = baseSprite;
+        }
+        Cache[key] = sprite;
+        return sprite;
+    }
+
     public static Sprite GetRough(GemDefinition def, Color body)
     {
         if (def == null) return null;

@@ -129,6 +129,12 @@ public static class SaveSystem
             data.dyeSamplesGiven = DyeingState.Instance.SamplesGiven;
         }
 
+        if (CoatingState.Instance != null)
+        {
+            data.coatJobs = CoatingState.Instance.ToSaveData();
+            data.coatSamplesGiven = CoatingState.Instance.SamplesGiven;
+        }
+
         File.WriteAllText(SavePath(ActiveSlot), JsonUtility.ToJson(data, true));
     }
 
@@ -204,6 +210,13 @@ public static class SaveSystem
         {
             dyeing.LoadJobs(data.dyeJobs, RestoreGem);
             dyeing.LoadSamplesGiven(data.dyeSamplesGiven);
+        }
+
+        var coating = CoatingState.Ensure();
+        if (coating != null)
+        {
+            coating.LoadJobs(data.coatJobs, RestoreGem);
+            coating.LoadSamplesGiven(data.coatSamplesGiven);
         }
 
         if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)
