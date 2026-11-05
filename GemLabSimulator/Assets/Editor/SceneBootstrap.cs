@@ -357,23 +357,43 @@ public static class SceneBootstrap
         wallsGO.transform.SetParent(gridGO.transform);
         var wallsTilemap = wallsGO.GetComponent<Tilemap>();
 
-        var floorTile = GetInteriorFloorTile("home", Color.white, "floor_pixel", FloorPixel);
-        var wallTile = GetInteriorSideWallTile("home", InteriorSideWallTint, "wall_pixel", WallPixel);
+        // The room in the style of Stardew Valley: staggered orange wood planks, a checkered tile entry, vertical wood slats on the back wall and a thin
+        // orange border around the room.
+        var floorTile = GetStardewTile("sdv_floor_wood");
+        var checkerTile = GetStardewTile("sdv_floor_checker");
+        var slatTile = GetStardewTile("sdv_wall_slats");
+        if (floorTile == null || checkerTile == null || slatTile == null)
+        {
+            floorTile = GetInteriorFloorTile("home", Color.white, "floor_pixel", FloorPixel);
+            checkerTile = floorTile;
+            slatTile = GetInteriorSideWallTile("home", InteriorSideWallTint, "wall_pixel", WallPixel);
+        }
 
         for (var x = HouseMinX; x <= HouseMaxX; x++)
         {
             for (var y = HouseMinY; y <= HouseMaxY; y++)
             {
-                var isPerimeter = x == HouseMinX || x == HouseMaxX || y == HouseMinY || y == HouseMaxY;
                 var cell = new Vector3Int(x, y, 0);
-                if (isPerimeter)
-                    wallsTilemap.SetTile(cell, wallTile);
-                else
-                    groundTilemap.SetTile(cell, floorTile);
+                var left = x == HouseMinX;
+                var right = x == HouseMaxX;
+                var bottom = y == HouseMinY;
+                var top = y == HouseMaxY;
+                if (!(left || right || bottom || top))
+                {
+                    // The two rows by the door are tiled, like the entry of a farmhouse.
+                    var entry = y <= HouseMinY + 2 && x >= -2 && x <= 2;
+                    groundTilemap.SetTile(cell, entry ? checkerTile : floorTile);
+                    continue;
+                }
+
+                string name;
+                if (top) name = left ? "sdv_wallcorner_L" : right ? "sdv_wallcorner_R" : null;
+                else if (bottom) name = left ? "sdv_border_LB" : right ? "sdv_border_RB" : "sdv_border_B";
+                else name = left ? "sdv_border_L" : "sdv_border_R";
+                var wall = name == null ? slatTile : GetStardewTile(name) ?? slatTile;
+                wallsTilemap.SetTile(cell, wall);
             }
         }
-
-        PaintInteriorTopWall(wallsTilemap, HouseMinX, HouseMaxX, HouseMaxY, "home", Color.white);
 
         var spawnGO = new GameObject("SpawnPoint");
         spawnGO.transform.position = new Vector3(0f, -1.2f, 0f);
@@ -422,17 +442,23 @@ public static class SceneBootstrap
 
         CreateExitDoor(new Vector3(0, HouseMinY + 1, 0f), "SpawnPoint_MaisonJoueur");
 
-        // Against the back wall: bed, wardrobe, desk, personal chest. Post box by the door.
-        CreateBed(new Vector3(-3.5f, 1.4f, 0f));
-        PlaceFurniture("wardrobe_a", new Vector3(-1.3f, HouseMaxY - 1f, 0f));
-        PlaceFurniture("desk_a", new Vector3(1.3f, HouseMaxY - 1f, 0f));
-        CreateChest(new Vector3(3.5f, 1.5f, 0f));
+        // Against the back wall: the bed on the left, the personal chest, the brick fireplace in the middle, the wardrobe and the desk. Post box by the door.
+        CreateBed(new Vector3(-3.3f, 1.85f, 0f), LoadPackSprite("Assets/Art/Sprites/interior_prop_sdv_bed.png"));
+        CreateChest(new Vector3(-1.65f, 1.6f, 0f));
+        PlaceFurniture("sdv_fireplace", new Vector3(0f, HouseMaxY - 1f, 0f));
+        PlaceFurniture("wardrobe_a", new Vector3(1.95f, HouseMaxY - 1f, 0f));
+        PlaceFurniture("desk_a", new Vector3(3.65f, HouseMaxY - 1f, 0f));
         CreateMailbox(new Vector3(3.5f, HouseMinY + 1.1f, 0f), true);
 
-        PlaceWallDecor("window_white", -3, HouseMaxY);
-        PlaceWallDecor("window_white", 3, HouseMaxY);
-        PlaceRug("rug_red", new Vector3(0f, -0.4f, 0f));
-        PlaceFurniture("plant_small", new Vector3(-4.0f, HouseMinY + 1.1f, 0f));
+        // The light of the windows on the floor, an oval rug, a round table with its stool, a fern.
+        PlaceWallDecorAt("window_white", -2.5f, HouseMaxY);
+        PlaceWallDecorAt("window_white", 3.5f, HouseMaxY);
+        PlaceInteriorProp("sdv_light", new Vector3(-2.4f, 1.0f, 0f), false, false, 2);
+        PlaceInteriorProp("sdv_light", new Vector3(3.3f, 1.0f, 0f), false, false, 2);
+        PlaceRug("sdv_rug", new Vector3(0f, -0.3f, 0f));
+        PlaceFurniture("sdv_table", new Vector3(2.9f, -1.0f, 0f));
+        PlaceFurniture("sdv_stool", new Vector3(1.7f, -1.4f, 0f));
+        PlaceFurniture("sdv_plant", new Vector3(-4.0f, HouseMinY + 1.0f, 0f));
 
         CreateUI(true);
 
@@ -3492,9 +3518,9 @@ public static class SceneBootstrap
         }
     }
 
-    private static void CreateBed(Vector3 position)
+    private static void CreateBed(Vector3 position, Sprite spriteOverride = null)
     {
-        var sprite = GetOrCreatePixelSprite("bed_pixel", BedPattern, BedPalette);
+        var sprite = spriteOverride != null ? spriteOverride : GetOrCreatePixelSprite("bed_pixel", BedPattern, BedPalette);
 
         var bed = new GameObject("Lit");
         var sr = bed.AddComponent<SpriteRenderer>();
@@ -9338,6 +9364,13 @@ public static class SceneBootstrap
         Directory.CreateDirectory("Assets/Art/Tilesets");
         AssetDatabase.CreateAsset(tile, tilePath);
         return tile;
+    }
+
+    // A tile of the Stardew-style set (Assets/Art/Sprites/<name>.png), or null when the picture is missing.
+    private static Tile GetStardewTile(string name)
+    {
+        var sprite = LoadPackSprite($"Assets/Art/Sprites/{name}.png");
+        return sprite != null ? GetOrCreateTintedTile(name, sprite, Color.white) : null;
     }
 
     private static Tile GetInteriorFloorTile(string theme, Color tint, string fallbackName, Func<int, int, Color> fallback)
