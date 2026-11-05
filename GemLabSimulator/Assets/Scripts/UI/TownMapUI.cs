@@ -89,7 +89,7 @@ public class TownMapUI : MonoBehaviour
         if (bigPanel != null) bigPanel.SetActive(false);
     }
 
-    private void Open()
+    public void Open()
     {
         // Rebuilt each time: the doors that were locked or open may have changed since the last visit.
         Build();

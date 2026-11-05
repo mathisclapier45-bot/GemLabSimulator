@@ -11,6 +11,17 @@ public class MarketVendor
     public string[] CountryKeywords;
     public float BuybackFactor;
     public int Seed;
+    public float Expertise = 1f;       // how well the vendor tests a stone: it scales the chance of finding a treatment that was not declared
+}
+
+public struct SaleOutcome
+{
+    public bool Sold;
+    public bool FoundTreatment;      // the buyer found a treatment that was not declared
+    public bool Deliberate;          // the seller knew about it and said nothing
+    public int Price;                // the price paid, or the new offer when the buyer found a treatment the seller did not know about
+    public int Fine;
+    public int ReputationLost;
 }
 
 public class MarketState : MonoBehaviour
@@ -74,6 +85,7 @@ public class MarketState : MonoBehaviour
                 CountryKeywords = country.MatchKeywords,
                 BuybackFactor = UnityEngine.Random.Range(BuybackMin, BuybackMax),
                 Seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue),
+                Expertise = UnityEngine.Random.Range(0.6f, 1.25f),
             };
             for (var j = 0; j < ItemsPerVendor; j++)
                 vendor.Stock.Add(GenerateStockItem(country, database));
@@ -134,7 +146,8 @@ public class MarketState : MonoBehaviour
         return gem != null && gem.IsIdentified && !gem.IsClientStone && !gem.IsDonation;
     }
 
-    public int GetBuybackPrice(MarketVendor vendor, GemInstance gem)
+    // What the vendor offers for the stone. A treated stone is paid for what it is when the treatment is declared, and as an untreated one when it is not.
+    public int GetBuybackPrice(MarketVendor vendor, GemInstance gem, bool declared = true)
     {
         if (vendor == null || !CanSell(gem)) return 0;
 
@@ -154,7 +167,46 @@ public class MarketState : MonoBehaviour
         factor *= 1f + ((float)rng.NextDouble() * 2f - 1f) * StoneQuirkSpread;
 
         if (gem.IsRough) factor *= RoughPenalty;
-        return Mathf.Max(1, Mathf.RoundToInt(gem.FinalValue * factor));
+        var value = !gem.IsTreated ? gem.FinalValue : declared ? TreatmentDisclosure.DeclaredValue(gem) : TreatmentDisclosure.HiddenValue(gem);
+        return Mathf.Max(1, Mathf.RoundToInt(value * factor));
+    }
+
+    // The offer shown in the list: a treatment the player does not know about cannot be declared, so the vendor is offering for an untreated stone.
+    public int GetListedOffer(MarketVendor vendor, GemInstance gem)
+    {
+        return GetBuybackPrice(vendor, gem, !gem.IsTreated || gem.IsTreatmentKnown);
+    }
+
+    // Sale without a word about the treatment. The vendor may test the stone: if the treatment is found, nothing is sold. A seller who knew about it and
+    // said nothing is fined and loses reputation; one who did not know gets a new offer, that is the declared price.
+    public SaleOutcome TrySellUndisclosed(MarketVendor vendor, GemInstance gem, PlayerInventory inventory, PlayerWallet wallet)
+    {
+        var outcome = new SaleOutcome();
+        if (vendor == null || inventory == null || wallet == null || !CanSell(gem)) return outcome;
+
+        var asked = GetBuybackPrice(vendor, gem, false);
+        var knew = gem.IsTreatmentKnown;
+        if (gem.IsTreated && TreatmentDisclosure.BuyerFinds(gem, vendor.Seed, vendor.Expertise))
+        {
+            gem.RecordObservation(ExaminationTool.MeasurementType.Treatment.ToString());
+            outcome.FoundTreatment = true;
+            outcome.Deliberate = knew;
+            if (knew)
+            {
+                outcome.Fine = Mathf.Min(wallet.Money, TreatmentDisclosure.FineOn(asked));
+                if (outcome.Fine > 0) wallet.TrySpend(outcome.Fine);
+                outcome.ReputationLost = TreatmentDisclosure.ReputationLoss;
+                ReputationState.Instance?.RemovePoints(outcome.ReputationLost);
+            }
+            else outcome.Price = GetBuybackPrice(vendor, gem, true);
+            return outcome;
+        }
+
+        inventory.RemoveGem(gem);
+        wallet.AddMoney(asked);
+        outcome.Sold = true;
+        outcome.Price = asked;
+        return outcome;
     }
 
     public bool TrySell(MarketVendor vendor, GemInstance gem, PlayerInventory inventory, PlayerWallet wallet, out int price)

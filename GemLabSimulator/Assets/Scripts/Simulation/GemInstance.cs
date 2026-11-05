@@ -83,6 +83,47 @@ public class GemInstance
     public string LaserName { get; private set; }
     public bool IsLaserTreated => !string.IsNullOrEmpty(LaserName);
 
+    // What the treatments of the laboratory did to the value (the product of their factors), and whether the player did one themselves (then the
+    // treatment is known without any instrument). The resale uses them: a buyer who is not told pays for an untreated stone.
+    private float treatmentValueFactor = 1f;
+    private bool treatmentFactorTracked;
+    public bool TreatmentDoneByPlayer { get; private set; }
+
+    private void ScaleTreatmentValue(float factor)
+    {
+        factor = Mathf.Max(0.01f, factor);
+        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * factor));
+        treatmentValueFactor *= factor;
+        treatmentFactorTracked = true;
+        TreatmentDoneByPlayer = true;
+    }
+
+    // Whether the stone has any treatment, known or not.
+    public bool IsTreated => !string.IsNullOrEmpty(TreatmentGrade) && TreatmentGrade != "Non traité";
+
+    // Whether the player knows about the treatment: an instrument found it, or the player did it.
+    public bool IsTreatmentKnown => IsTreated && (TreatmentDoneByPlayer || HasObserved(ExaminationTool.MeasurementType.Treatment.ToString()));
+
+    // What the stone would be worth without its treatments: the price a buyer who does not know pays.
+    public int UntreatedValue
+    {
+        get
+        {
+            if (!IsTreated) return FinalValue;
+            var factor = treatmentValueFactor;
+            if (!treatmentFactorTracked)
+            {
+                foreach (var grade in GemGrading.TreatmentGrades)
+                {
+                    if (grade.Name != TreatmentGrade) continue;
+                    factor = Mathf.Max(0.01f, grade.Multiplier);
+                    break;
+                }
+            }
+            return Mathf.Max(FinalValue, Mathf.RoundToInt(FinalValue / Mathf.Max(0.01f, factor)));
+        }
+    }
+
     private bool GradeHas(string text) =>
         !string.IsNullOrEmpty(TreatmentGrade) && TreatmentGrade.IndexOf(text, System.StringComparison.OrdinalIgnoreCase) >= 0;
 
@@ -574,6 +615,9 @@ public class GemInstance
             IrradiationName = string.IsNullOrEmpty(data.irradiationName) ? null : data.irradiationName,
             IrradiationFadeDay = data.irradiationFadeDay,
             irradiationFactor = data.irradiationFactor > 0f ? data.irradiationFactor : 1f,
+            treatmentValueFactor = data.treatmentValueFactor > 0f ? data.treatmentValueFactor : 1f,
+            treatmentFactorTracked = data.treatmentFactorTracked,
+            TreatmentDoneByPlayer = data.treatmentDoneByPlayer,
             irradiationOriginalHue = data.irradiationHue,
             irradiationOriginalSaturation = data.irradiationSaturation,
             irradiationOriginalBrightness = data.irradiationBrightness,
@@ -686,6 +730,9 @@ public class GemInstance
             irradiationName = IrradiationName,
             irradiationFadeDay = IrradiationFadeDay,
             irradiationFactor = irradiationFactor,
+            treatmentValueFactor = treatmentValueFactor,
+            treatmentFactorTracked = treatmentFactorTracked,
+            treatmentDoneByPlayer = TreatmentDoneByPlayer,
             irradiationHue = irradiationOriginalHue,
             irradiationSaturation = irradiationOriginalSaturation,
             irradiationBrightness = irradiationOriginalBrightness,
@@ -719,6 +766,9 @@ public class GemInstance
         }
         TreatmentGrade = GemGrading.TreatmentGrades[0].Name;
         TreatmentDescription = GemGrading.TreatmentGrades[0].Description;
+        treatmentValueFactor = 1f;
+        treatmentFactorTracked = false;
+        TreatmentDoneByPlayer = false;
     }
 
     public void MarkIdentified()
@@ -774,7 +824,7 @@ public class GemInstance
 
         HasReport = false;
         TradeName = null;
-        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        ScaleTreatmentValue(result.ValueFactor);
         TreatmentGrade = result.IsRuined ? "Blanchi (surface attaquée)" : "Blanchi";
         TreatmentDescription = result.Description;
 
@@ -793,7 +843,7 @@ public class GemInstance
         var wasBleached = !string.IsNullOrEmpty(TreatmentGrade) && TreatmentGrade.StartsWith("Blanchi");
         HasReport = false;
         TradeName = null;
-        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        ScaleTreatmentValue(result.ValueFactor);
         DyeName = result.Bath;
         TreatmentGrade = result.IsRuined ? "Teint (instable)" : wasBleached ? "Blanchi puis teint" : "Teint";
         TreatmentDescription = wasBleached ? $"{TreatmentDescription} {result.Description}" : result.Description;
@@ -808,7 +858,7 @@ public class GemInstance
     {
         HasReport = false;
         TradeName = null;
-        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        ScaleTreatmentValue(result.ValueFactor);
         var previous = TreatmentGrade;
         var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
         var label = result.Outcome == CoatOutcome.Fragile ? "Revêtu (fragile)" : result.Outcome == CoatOutcome.Ruined ? "Revêtu (écaillé)" : "Revêtu";
@@ -830,7 +880,7 @@ public class GemInstance
         HasReport = false;
         TradeName = null;
         FillerName = result.Product;
-        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        ScaleTreatmentValue(result.ValueFactor);
         var previous = TreatmentGrade;
         var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
         TreatmentGrade = untreated ? result.Label : result.Label.StartsWith("B-jade") || result.Label.StartsWith("C-jade") ? result.Label : $"{previous} + {result.Label}";
@@ -856,7 +906,7 @@ public class GemInstance
 
         HasReport = false;
         TradeName = null;
-        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        ScaleTreatmentValue(result.ValueFactor);
         var previous = TreatmentGrade;
         var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
         TreatmentGrade = untreated ? "Chauffé" : $"{previous} + chauffé";
@@ -885,7 +935,7 @@ public class GemInstance
 
         HasReport = false;
         TradeName = null;
-        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        ScaleTreatmentValue(result.ValueFactor);
         var previous = TreatmentGrade;
         var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
         var label = result.Outcome == DiffusionOutcome.Ruined ? "Diffusion (brûlé)"
@@ -924,7 +974,7 @@ public class GemInstance
 
         HasReport = false;
         TradeName = null;
-        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        ScaleTreatmentValue(result.ValueFactor);
         irradiationFactor = Mathf.Max(0.05f, result.ValueFactor);
         var previous = TreatmentGrade;
         var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
@@ -948,6 +998,7 @@ public class GemInstance
         if (HasColor)
             SetColor(new GemColorValue(irradiationOriginalHue, irradiationOriginalSaturation, irradiationOriginalBrightness), IsFancyDiamond);
         FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue / Mathf.Max(0.05f, irradiationFactor) * 0.9f));
+        treatmentValueFactor = Mathf.Max(0.01f, treatmentValueFactor / Mathf.Max(0.05f, irradiationFactor) * 0.9f);
         TreatmentGrade = "Irradié (couleur fanée)";
         TreatmentDescription = "La couleur obtenue par irradiation a fané avec le temps : la pierre est revenue à sa couleur d'origine. Le traitement était instable.";
         IrradiationName = null;
@@ -969,7 +1020,7 @@ public class GemInstance
         if (result.Outcome == LaserOutcome.NoEffect) return;
 
         HasReport = false;
-        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        ScaleTreatmentValue(result.ValueFactor);
         var previous = TreatmentGrade;
         var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
         TreatmentGrade = untreated ? result.Label : $"{previous} + {result.Label.ToLowerInvariant()}";
@@ -999,7 +1050,7 @@ public class GemInstance
 
         HasReport = false;
         TradeName = null;
-        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        ScaleTreatmentValue(result.ValueFactor);
         var previous = TreatmentGrade;
         var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
         TreatmentGrade = untreated ? result.Label : $"{previous} + {result.Label.ToLowerInvariant()}";

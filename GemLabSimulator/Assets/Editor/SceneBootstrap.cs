@@ -1470,10 +1470,10 @@ public static class SceneBootstrap
             var banker = CreateTalkNpc("Banquier", "merchant3", new Vector3(0f, 2.6f, 0f), new string[0], new Vector2(5f, 3.4f), new Vector2(0f, -1.6f));
             UnityEngine.Object.DestroyImmediate(banker.GetComponent<TalkNPC>());
             banker.AddComponent<BankerNPC>();
-            CreateTalkNpc("Guichetière", "receptionist", new Vector3(-5.5f, 2.6f, 0f), new[]
-            {
-                "Ce guichet est réservé aux virements. Pour ouvrir un compte ou déposer, voyez le banquier, au milieu.",
-            });
+            // The left counter is the auction room: the sale is every Saturday, and the house takes stones for the next one.
+            var auctioneer = CreateTalkNpc("Commissaire-priseur", "merchant2", new Vector3(-5.5f, 2.6f, 0f), new string[0], new Vector2(5f, 3.4f), new Vector2(0f, -1.6f));
+            UnityEngine.Object.DestroyImmediate(auctioneer.GetComponent<TalkNPC>());
+            auctioneer.AddComponent<AuctioneerNPC>();
             CreateTalkNpc("Conseiller", "merchant1", new Vector3(5.5f, 2.6f, 0f), new[]
             {
                 "Les taux changent chaque mois. Certains mois sont excellents : jusqu'à 10 % ! Mais le plafond du compte est de 20 000 €.",
@@ -5181,70 +5181,10 @@ public static class SceneBootstrap
         so.ApplyModifiedProperties();
     }
 
+    // The mailbox window is built at runtime by MailboxUI (envelopes, letters, gemologist's fold).
     private static void CreateMailboxUI(Transform canvasTransform)
     {
-        var panelGO = new GameObject("MailboxPanel", typeof(RectTransform), typeof(Image));
-        panelGO.transform.SetParent(canvasTransform, false);
-        var panelRect = panelGO.GetComponent<RectTransform>();
-        panelRect.anchorMin = new Vector2(0.5f, 0.5f);
-        panelRect.anchorMax = new Vector2(0.5f, 0.5f);
-        panelRect.pivot = new Vector2(0.5f, 0.5f);
-        panelRect.sizeDelta = new Vector2(460, 460);
-        panelRect.anchoredPosition = Vector2.zero;
-        panelGO.GetComponent<Image>().color = new Color(0.08f, 0.08f, 0.1f, 0.97f);
-        panelGO.SetActive(false);
-
-        CreateUIText("Title", panelGO.transform, "Boîte aux lettres",
-            new Vector2(0, -14), new Vector2(420, 26), 18, TextAnchor.UpperCenter, Color.white);
-
-        var receiveTabGO = CreateUIButton("ReceiveTab", panelGO.transform, "Récupérer",
-            new Vector2(-105, -46), new Vector2(190, 32), 13);
-        receiveTabGO.AddComponent<MailboxReceiveTabButton>();
-
-        var sendTabGO = CreateUIButton("SendTab", panelGO.transform, "Envoyer",
-            new Vector2(105, -46), new Vector2(190, 32), 13);
-        sendTabGO.AddComponent<MailboxSendTabButton>();
-
-        var hintGO = CreateUIText("TabHint", panelGO.transform, "",
-            new Vector2(0, -84), new Vector2(420, 20), 12, TextAnchor.UpperCenter, new Color(0.7f, 0.7f, 0.7f));
-
-        var scrollViewGO = new GameObject("MailboxScrollView", typeof(RectTransform), typeof(Image), typeof(Mask), typeof(ScrollRect));
-        scrollViewGO.transform.SetParent(panelGO.transform, false);
-        var scrollViewRect = scrollViewGO.GetComponent<RectTransform>();
-        scrollViewRect.anchorMin = new Vector2(0.5f, 1f);
-        scrollViewRect.anchorMax = new Vector2(0.5f, 1f);
-        scrollViewRect.pivot = new Vector2(0.5f, 1f);
-        scrollViewRect.anchoredPosition = new Vector2(0, -108);
-        scrollViewRect.sizeDelta = new Vector2(420, 300);
-        scrollViewGO.GetComponent<Image>().color = new Color(0.04f, 0.04f, 0.05f, 0.6f);
-        scrollViewGO.GetComponent<Mask>().showMaskGraphic = true;
-
-        var contentGO = new GameObject("Content", typeof(RectTransform));
-        contentGO.transform.SetParent(scrollViewGO.transform, false);
-        var contentRect = contentGO.GetComponent<RectTransform>();
-        contentRect.anchorMin = new Vector2(0.5f, 1f);
-        contentRect.anchorMax = new Vector2(0.5f, 1f);
-        contentRect.pivot = new Vector2(0.5f, 1f);
-        contentRect.sizeDelta = new Vector2(400, 300);
-        contentRect.anchoredPosition = Vector2.zero;
-
-        var scroll = scrollViewGO.GetComponent<ScrollRect>();
-        scroll.content = contentRect;
-        scroll.horizontal = false;
-        scroll.vertical = true;
-        scroll.movementType = ScrollRect.MovementType.Clamped;
-        scroll.scrollSensitivity = 24f;
-
-        var closeButtonGO = CreateUIButton("CloseButton", panelGO.transform, "Fermer",
-            new Vector2(0, -420), new Vector2(180, 32));
-        closeButtonGO.AddComponent<CloseMailboxButton>();
-
-        var mailboxUI = canvasTransform.gameObject.AddComponent<MailboxUI>();
-        var mailboxSo = new SerializedObject(mailboxUI);
-        mailboxSo.FindProperty("panel").objectReferenceValue = panelGO;
-        mailboxSo.FindProperty("content").objectReferenceValue = contentRect;
-        mailboxSo.FindProperty("tabHintText").objectReferenceValue = hintGO.GetComponent<Text>();
-        mailboxSo.ApplyModifiedProperties();
+        canvasTransform.gameObject.AddComponent<MailboxUI>();
     }
 
     private static void CreateSpectrumUI(Transform canvasTransform)

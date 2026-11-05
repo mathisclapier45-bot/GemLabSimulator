@@ -9,8 +9,8 @@ using UnityEngine.UI;
 // to follow the player, who sits at the centre. Added to the Canvas automatically in the Town scene.
 public class MinimapUI : MonoBehaviour
 {
-    private const float DiscSize = 168f;              // diameter of the map itself, in canvas units
-    private const float ViewRadius = 40f;             // world units shown from the centre to the edge
+    private const float MapSize = 120f;              // side of the map itself, in canvas units
+    private const float ViewRadius = 30f;             // world units shown from the centre to the edge
     private const int PixelsPerUnit = 4;
 
     // Must match the town bounds in SceneBootstrap.cs (cells -70..70 and -60..45, inclusive).
@@ -260,19 +260,21 @@ public class MinimapUI : MonoBehaviour
         var rootRect = root.GetComponent<RectTransform>();
         rootRect.anchorMin = rootRect.anchorMax = new Vector2(1f, 1f);
         rootRect.pivot = new Vector2(1f, 1f);
-        rootRect.sizeDelta = new Vector2(DiscSize + 24f, DiscSize + 24f);
-        rootRect.anchoredPosition = new Vector2(-16f, -16f);
+        rootRect.sizeDelta = new Vector2(MapSize + 20f, MapSize + 20f);
+        // Under the clock and the purse of the screen, aligned on their right edge.
+        rootRect.anchoredPosition = new Vector2(-ClockHudUI.Margin, -(ClockHudUI.Margin + ClockHudUI.Height + 4f + MoneyHudUI.Height + 6f));
 
-        // Frame: soft shadow, dark outer ring, gold ring, thin inner dark line.
-        MakeDisc("Shadow", root.transform, circle, DiscSize + 24f, new Color(0f, 0f, 0f, 0.35f));
-        MakeDisc("OuterRing", root.transform, circle, DiscSize + 18f, GoldDark);
-        MakeDisc("GoldRing", root.transform, circle, DiscSize + 12f, Gold);
-        MakeDisc("InnerRing", root.transform, circle, DiscSize + 4f, new Color(0.18f, 0.12f, 0.06f, 1f));
+        // A square map in the orange frame of the interface.
+        StardewKit.MakeFrame("Frame", root.transform, Vector2.zero, new Vector2(MapSize + 20f, MapSize + 20f));
 
-        // The map itself, clipped to a disc.
-        var mapGO = MakeDisc("Map", root.transform, circle, DiscSize, Color.white);
-        var mask = mapGO.gameObject.AddComponent<Mask>();
-        mask.showMaskGraphic = false;
+        // The map itself, clipped to its square.
+        var mapGO = new GameObject("Map", typeof(RectTransform), typeof(RectMask2D));
+        mapGO.transform.SetParent(root.transform, false);
+        var mapRect = mapGO.GetComponent<RectTransform>();
+        mapRect.anchorMin = mapRect.anchorMax = new Vector2(0.5f, 0.5f);
+        mapRect.pivot = new Vector2(0.5f, 0.5f);
+        mapRect.sizeDelta = new Vector2(MapSize, MapSize);
+        mapRect.anchoredPosition = Vector2.zero;
         var viewGO = new GameObject("View", typeof(RectTransform), typeof(RawImage));
         viewGO.transform.SetParent(mapGO.transform, false);
         var viewRect = viewGO.GetComponent<RectTransform>();
@@ -285,6 +287,31 @@ public class MinimapUI : MonoBehaviour
         mapView.raycastTarget = false;
 
         BuildIcons(mapGO.transform);
+
+        // The minimap is a button: a click opens the big map of the town (the same as the C key). It brightens a little under the mouse.
+        var clickGO = new GameObject("Click", typeof(RectTransform), typeof(Image), typeof(Button));
+        clickGO.transform.SetParent(mapGO.transform, false);
+        var clickRect = clickGO.GetComponent<RectTransform>();
+        clickRect.anchorMin = Vector2.zero;
+        clickRect.anchorMax = Vector2.one;
+        clickRect.offsetMin = clickRect.offsetMax = Vector2.zero;
+        clickGO.GetComponent<Image>().color = Color.white;
+        var click = clickGO.GetComponent<Button>();
+        click.transition = Selectable.Transition.ColorTint;
+        click.targetGraphic = clickGO.GetComponent<Image>();
+        var tint = click.colors;
+        tint.normalColor = new Color(1f, 1f, 1f, 0f);
+        tint.highlightedColor = new Color(1f, 1f, 1f, 0.14f);
+        tint.pressedColor = new Color(1f, 1f, 1f, 0.26f);
+        tint.selectedColor = new Color(1f, 1f, 1f, 0f);
+        tint.disabledColor = new Color(1f, 1f, 1f, 0f);
+        tint.fadeDuration = 0.08f;
+        click.colors = tint;
+        click.onClick.AddListener(() =>
+        {
+            Sfx.Play(Sfx.Id.Click);
+            if (TownMapUI.Instance != null) TownMapUI.Instance.Open();
+        });
 
         // Player marker: a pulsing dot with a white outline at the centre.
         var outline = MakeDisc("MarkerOutline", root.transform, circle, 14f, Color.white);
@@ -390,11 +417,11 @@ public class MinimapUI : MonoBehaviour
         if (player != null)
         {
             var origin = (Vector2)player.transform.position;
-            var scale = (DiscSize / 2f) / ViewRadius;
+            var scale = (MapSize / 2f) / ViewRadius;
             foreach (var (world, rect) in buildingIcons)
             {
                 var offset = (world - origin) * scale;
-                var visible = offset.magnitude < DiscSize / 2f + 16f;
+                var visible = Mathf.Abs(offset.x) < MapSize / 2f + 16f && Mathf.Abs(offset.y) < MapSize / 2f + 16f;
                 if (rect.gameObject.activeSelf != visible) rect.gameObject.SetActive(visible);
                 if (visible) rect.anchoredPosition = offset;
             }

@@ -70,6 +70,9 @@ public static class GameCalendar
 
     public static string Short(int gameDay) => Short(DateOf(gameDay));
 
+    // "mer. 3": the weekday and the day of the month, for the clock of the screen.
+    public static string DayLabel(DateTime date) => $"{WeekdayShort[(int)date.DayOfWeek]} {date.Day}";
+
     // ---- Moon ----------------------------------------------------------------------------------------------------
 
     private static readonly DateTime NewMoon = new DateTime(2000, 1, 6, 18, 14, 0, DateTimeKind.Utc);
@@ -185,6 +188,23 @@ public static class GameCalendar
         // The price list of the diamond trade comes out every Thursday.
         if (date.DayOfWeek == DayOfWeek.Thursday)
             Add(list, "Parution du Rapaport", "Le Rapaport, la liste de prix des diamants, paraît chaque jeudi : elle est dans le sac pour les abonnés.", Trade, false);
+
+        // The weekly sale of the bank, every Saturday, with its theme (the day before, a reminder).
+        if (AuctionCatalog.IsAuctionDay(date) && date.Date >= Start.Date)
+        {
+            var theme = AuctionCatalog.ThemeFor(date);
+            Add(list, "Enchères", $"Vente aux enchères de la banque, de 9h à 20h. Thème : {theme.Name}. {theme.Description}", Trade);
+        }
+        if (date.DayOfWeek == DayOfWeek.Sunday && date.Date >= Start.Date)
+        {
+            var theme = AuctionCatalog.ThemeFor(date.AddDays(1));
+            Add(list, "Bulletin des ventes", $"Le catalogue de la vente de samedi est paru (onglet Enchères du sac). Thème : {theme.Name}.", Trade);
+        }
+        if (date.DayOfWeek == DayOfWeek.Friday && date.Date >= Start.Date)
+        {
+            var theme = AuctionCatalog.ThemeFor(date.AddDays(1));
+            Add(list, "Veille de vente", $"Demain, vente aux enchères à la banque. Thème : {theme.Name}. Déposez vos pierres avant : on ne prend plus rien le jour de la vente.", Trade, false);
+        }
 
         // The bank pays its interest on the first of the month.
         if (day == 1) Add(list, "Versement des intérêts", "La banque verse les intérêts du mois écoulé sur les comptes ouverts.", Trade, false);
@@ -311,7 +331,10 @@ public class CalendarAnnouncer : MonoBehaviour
         var date = GameCalendar.DateOf(day);
         var notable = new List<string>();
         foreach (var calendarEvent in GameCalendar.EventsOn(date))
-            if (calendarEvent.Notable) notable.Add(calendarEvent.Name);
+        {
+            if (!calendarEvent.Notable) continue;
+            notable.Add(calendarEvent.Name == "Enchères" ? $"Enchères à la banque : {AuctionCatalog.ThemeFor(date).Name}" : calendarEvent.Name);
+        }
         if (date.DayOfWeek == DayOfWeek.Thursday && RapaportState.HasAccess) notable.Add("Le Rapaport est paru (onglet du sac)");
         if (notable.Count == 0) return;
         ToolFeedbackUI.Instance.ShowMessage($"Aujourd'hui, {GameCalendar.Long(date)} : {string.Join(" · ", notable)}.");

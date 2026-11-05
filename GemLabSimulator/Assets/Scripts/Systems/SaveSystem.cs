@@ -171,6 +171,8 @@ public static class SaveSystem
             data.hphtSamplesGiven = HphtState.Instance.SamplesGiven;
         }
 
+        if (AuctionState.Instance != null) AuctionState.Instance.WriteSave(data);
+
         File.WriteAllText(SavePath(ActiveSlot), JsonUtility.ToJson(data, true));
     }
 
@@ -296,6 +298,9 @@ public static class SaveSystem
             hpht.LoadJobs(data.hphtJobs, RestoreGem);
             hpht.LoadSamplesGiven(data.hphtSamplesGiven);
         }
+
+        var auction = AuctionState.Ensure();
+        if (auction != null) auction.ReadSave(data, RestoreGem);
 
         if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)
             SceneManager.LoadScene(data.sceneName);

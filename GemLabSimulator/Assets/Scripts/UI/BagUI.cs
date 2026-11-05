@@ -31,6 +31,7 @@ public class BagUI : MonoBehaviour
     private RectTransform panelRect;
     private CalendarTabUI calendar;
     private RapaportTabUI rapaport;
+    private AuctionBulletinTabUI bulletin;
 
     // The tabs of the panel: the bag, the calendar, the grimoire of the gems, the card binder and, for a subscriber, the Rapaport price list.
     private class BagTab
@@ -367,12 +368,14 @@ public class BagUI : MonoBehaviour
 
         calendar = new CalendarTabUI(panel.transform);
         rapaport = new RapaportTabUI(panel.transform);
+        bulletin = new AuctionBulletinTabUI(panel.transform);
 
         AddTab("Sac", KeyCode.H, bagContent, 90f, PanelHeight, null, null, null);
         AddTab("Calendrier (K)", KeyCode.K, calendar.Root, 130f, PanelHeight, calendar.Show, null, null);
         if (AdoptGrimoire())
-            AddTab("Grimoire (G)", KeyCode.G, null, 120f, 624f, () => GrimoireUI.Instance.OpenInBag(), () => GrimoireUI.Instance.Close(), null);
-        AddTab("Rapaport", KeyCode.None, rapaport.Root, 110f, PanelHeight, rapaport.Show, null, () => RapaportState.HasAccess);
+            AddTab("Grimoire (G)", KeyCode.G, null, 112f, 624f, () => GrimoireUI.Instance.OpenInBag(), () => GrimoireUI.Instance.Close(), null);
+        AddTab("Enchères", KeyCode.None, bulletin.Root, 90f, PanelHeight, bulletin.Show, null, null);
+        AddTab("Rapaport", KeyCode.None, rapaport.Root, 100f, PanelHeight, rapaport.Show, null, () => RapaportState.HasAccess);
         LayoutTabs();
         SelectTab(0);
     }
@@ -380,7 +383,11 @@ public class BagUI : MonoBehaviour
     private void AddTab(string label, KeyCode key, GameObject content, float width, float height, Action onShow, Action onHide, Func<bool> visible,
         float panelWidth = PanelWidth, float offsetX = -190f, int insertAt = -1)
     {
-        var button = RuntimeUIKit.MakeButton("Tab" + label, panel.transform, label, 14, SlotColor, Vector2.zero, new Vector2(width, 30f));
+        // A tab with a logo is narrow: the logo replaces the title, which shows when the mouse is over it.
+        var logo = BagTabIcons.For(label);
+        if (logo != null) width = 46f;
+        var button = RuntimeUIKit.MakeButton("Tab" + label, panel.transform, logo != null ? "" : label, 14, SlotColor, Vector2.zero, new Vector2(width, 30f));
+        if (logo != null) DecorateTab(button, logo, label, key);
         var tab = new BagTab
         {
             Label = label, Key = key, Content = content, Button = button, Image = button.GetComponent<Image>(), Width = width, Height = height,
@@ -389,6 +396,32 @@ public class BagUI : MonoBehaviour
         button.onClick.AddListener(() => SelectTab(tabs.IndexOf(tab)));
         if (insertAt >= 0 && insertAt <= tabs.Count) tabs.Insert(insertAt, tab);
         else tabs.Add(tab);
+    }
+
+    private Text tabHint;
+
+    // The logo of a tab, the letter of its key in the corner and the title shown on hover.
+    private void DecorateTab(Button button, Sprite logo, string label, KeyCode key)
+    {
+        var icon = new GameObject("Logo", typeof(RectTransform), typeof(Image));
+        icon.transform.SetParent(button.transform, false);
+        var rect = icon.GetComponent<RectTransform>();
+        rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.sizeDelta = new Vector2(26f, 26f);
+        rect.anchoredPosition = Vector2.zero;
+        var image = icon.GetComponent<Image>();
+        image.sprite = logo;
+        image.preserveAspect = true;
+        image.raycastTarget = false;
+
+        if (tabHint == null)
+        {
+            tabHint = RuntimeUIKit.MakeText("TabHint", panel.transform, "", 11, TextAnchor.UpperLeft, Gold, new Vector2(124f, -44f), new Vector2(300f, 14f));
+            tabHint.gameObject.SetActive(false);
+        }
+        var hover = button.gameObject.AddComponent<BagTabHint>();
+        hover.Target = tabHint;
+        hover.Message = label;
     }
 
     // The card binder moves into the bag as a tab, just before the Rapaport one. It is adopted in Start, once every interface exists.

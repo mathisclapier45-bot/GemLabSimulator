@@ -159,6 +159,12 @@ public class ExaminationTool : MonoBehaviour
 
         var gem = gemInstance.Definition;
 
+        if (measurementType == MeasurementType.RefractiveIndex && gemInstance.IsRough)
+        {
+            ToolFeedbackUI.Instance.ShowMessage($"{toolName} — Une pierre brute n'a pas de facette polie : impossible de lire son indice. Faites-la tailler d'abord.");
+            return;
+        }
+
         switch (measurementType)
         {
             case MeasurementType.RefractiveIndex when gem.refractiveIndex > 1.81f:

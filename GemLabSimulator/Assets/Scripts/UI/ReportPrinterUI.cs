@@ -25,13 +25,15 @@ public static class ReportRequirements
         Add(GemObservation.Validated, "Identifiée par le professeur", gem.IsIdentified);
         Add("BalanceCarat", "Poids", Seen(ExaminationTool.MeasurementType.Weight));
         Add("Micrometre", "Dimensions (3 mesures)", Seen(ExaminationTool.MeasurementType.Dimensions));
-        Add("Refractometre", "Indice de réfraction", gem.HasMeasured(refractiveKey) || gem.HasObserved("RefractiveIndexOTL"));
+        // A rough stone has no polished facet: the refractometer cannot read it, so the index is not asked for.
+        if (!gem.IsRough) Add("Refractometre", "Indice de réfraction", gem.HasMeasured(refractiveKey) || gem.HasObserved("RefractiveIndexOTL"));
         Add("BalanceHydrostatique", "Densité", gem.HasMeasured(densityKey));
         Add("Loupe", "Examen visuel", Seen(ExaminationTool.MeasurementType.VisualExamination));
         Add("Loupe", "Examen à la loupe", gem.HasObserved("LoupeInspection"));
         Add("Dichroscope", "Pléochroïsme", Seen(ExaminationTool.MeasurementType.Pleochroism));
         Add("Polariscope", "Caractère optique", Seen(ExaminationTool.MeasurementType.OpticalCharacter));
-        Add("Polariscope", "Figure d'interférence", Seen(ExaminationTool.MeasurementType.InterferenceFigure));
+        // The conoscope tells nothing of an opaque stone: its interference figure is not required.
+        if (!IsOpaque(gem)) Add("Polariscope", "Figure d'interférence", Seen(ExaminationTool.MeasurementType.InterferenceFigure));
         Add("Spectroscope", "Spectre d'absorption", Seen(ExaminationTool.MeasurementType.AbsorptionSpectrum));
         Add("Microscope", "Inclusions", Seen(ExaminationTool.MeasurementType.Inclusions));
         Add("CabineUV", "Fluorescence UV longues", Seen(ExaminationTool.MeasurementType.FluorescenceLongWave));
@@ -39,6 +41,12 @@ public static class ReportRequirements
         Add("FiltreChelsea", "Filtre Chelsea", Seen(ExaminationTool.MeasurementType.ChelseaFilter));
         Add("Aimant", "Réaction à l'aimant", Seen(ExaminationTool.MeasurementType.Magnetism));
         return list;
+    }
+
+    public static bool IsOpaque(GemInstance gem)
+    {
+        var definition = gem.Definition;
+        return definition.opticalCharacterClass == GemDefinition.OpticalCharacterClass.Opaque || definition.Diaphaneity == Diaphaneity.Opaque;
     }
 
     public static bool AllDone(List<ReportRequirement> requirements)

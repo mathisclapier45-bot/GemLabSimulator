@@ -68,6 +68,9 @@ public class GemInstanceSaveData
     public string irradiationName;  // the colour the irradiator gave the stone, if any
     public int irradiationFadeDay;  // the day an unstable colour fades (0: stable)
     public float irradiationFactor;
+    public float treatmentValueFactor;      // the product of the value factors of the laboratory treatments (0: none)
+    public bool treatmentFactorTracked;
+    public bool treatmentDoneByPlayer;      // the player treated the stone themselves: they know about it
     public float irradiationHue;    // the colour before the irradiation
     public float irradiationSaturation;
     public float irradiationBrightness;
@@ -194,6 +197,41 @@ public class LaserJobSaveData
 }
 
 [Serializable]
+public class AuctionLotSaveData
+{
+    public GemInstanceSaveData stone;
+    public int number;
+    public int honesty;
+    public int seed;
+    public int hammer;
+    public bool sold;
+    public bool toPlayer;
+}
+
+[Serializable]
+public class AuctionConsignmentSaveData
+{
+    public GemInstanceSaveData stone;
+    public int reserve;
+    public int honesty;
+    public int auctionDay;
+    public int seed;
+    public bool knew;
+}
+
+[Serializable]
+public class AuctionResultSaveData
+{
+    public GemInstanceSaveData stone;      // the stone that comes back when it was not sold
+    public string name;
+    public bool sold;
+    public int proceeds;
+    public int fine;
+    public int reputationLost;
+    public string message;
+}
+
+[Serializable]
 public class HphtJobSaveData
 {
     public int startDay;
@@ -261,4 +299,8 @@ public class SaveData
     public bool laserSamplesGiven;
     public List<HphtJobSaveData> hphtJobs = new List<HphtJobSaveData>();
     public bool hphtSamplesGiven;
+    public int auctionLotsDay;
+    public List<AuctionLotSaveData> auctionLots = new List<AuctionLotSaveData>();
+    public List<AuctionConsignmentSaveData> auctionConsignments = new List<AuctionConsignmentSaveData>();
+    public List<AuctionResultSaveData> auctionResults = new List<AuctionResultSaveData>();
 }

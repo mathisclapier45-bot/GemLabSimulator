@@ -170,9 +170,10 @@ public class MarketUI : MonoBehaviour
         for (var i = 0; i < sellable.Count; i++)
         {
             var gem = sellable[i];
-            var offer = MarketState.Instance.GetBuybackPrice(currentVendor, gem);
+            var offer = MarketState.Instance.GetListedOffer(currentVendor, gem);
             var state = gem.IsRough ? "brute" : $"{gem.ShapeName}, {gem.CutStyleName.ToLowerInvariant()}";
-            var label = $"{gem.Definition.displayName} — {gem.CaratWeight:F2} ct ({state})\nOffre : {offer}€";
+            var note = gem.IsTreated && gem.IsTreatmentKnown ? " (traitement déclaré)" : "";
+            var label = $"{gem.Definition.displayName} — {gem.CaratWeight:F2} ct ({state})\nOffre : {offer}€{note}";
             CreateRow(i, label, "Vendre", () => Sell(gem));
         }
         return sellable.Count;
@@ -315,13 +316,73 @@ public class MarketUI : MonoBehaviour
             ToolFeedbackUI.Instance?.ShowMessage($"Achat : {item.Definition.displayName} pour {price}€.");
     }
 
+    // An untreated stone is simply sold. A treated one the player knows about is sold declared or not, as they choose. A treated one the player does
+    // not know about goes without a word: the buyer may find the treatment.
     private void Sell(GemInstance gem)
     {
         if (currentVendor == null || PlayerInventory.Instance == null || PlayerWallet.Instance == null || MarketState.Instance == null)
             return;
 
+        if (!gem.IsTreated)
+        {
+            SellDeclared(gem);
+            return;
+        }
+
+        if (!gem.IsTreatmentKnown)
+        {
+            SellUndisclosed(gem);
+            return;
+        }
+
+        var declared = MarketState.Instance.GetBuybackPrice(currentVendor, gem, true);
+        var hidden = MarketState.Instance.GetBuybackPrice(currentVendor, gem, false);
+        var risk = TreatmentDisclosure.RiskLabel(TreatmentDisclosure.ChanceFor(gem, currentVendor.Expertise));
+        ConfirmDialog.ShowChoice("Pierre traitée",
+            $"{gem.TreatmentGrade}\nDéclarer le traitement : {declared}€\nNe rien dire : {hidden}€ (risque de contrôle {risk})",
+            "Déclarer", () => SellDeclared(gem),
+            "Ne rien dire", () => SellUndisclosed(gem));
+    }
+
+    private void SellDeclared(GemInstance gem)
+    {
+        if (currentVendor == null || PlayerInventory.Instance == null || PlayerWallet.Instance == null || MarketState.Instance == null)
+            return;
+
         var name = gem.Definition.displayName;
+        var treated = gem.IsTreated;
         if (MarketState.Instance.TrySell(currentVendor, gem, PlayerInventory.Instance, PlayerWallet.Instance, out var price))
-            ToolFeedbackUI.Instance?.ShowMessage($"Vente : {name} pour {price}€ ({currentVendor.CountryName}).");
+            ToolFeedbackUI.Instance?.ShowMessage($"Vente : {name} pour {price}€ ({currentVendor.CountryName}){(treated ? ", traitement déclaré" : "")}.");
+    }
+
+    private void SellUndisclosed(GemInstance gem)
+    {
+        if (currentVendor == null || PlayerInventory.Instance == null || PlayerWallet.Instance == null || MarketState.Instance == null)
+            return;
+
+        var name = gem.Definition.displayName;
+        var asked = MarketState.Instance.GetBuybackPrice(currentVendor, gem, false);
+        var outcome = MarketState.Instance.TrySellUndisclosed(currentVendor, gem, PlayerInventory.Instance, PlayerWallet.Instance);
+
+        if (outcome.Sold)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage($"Vente : {name} pour {outcome.Price}€ ({currentVendor.CountryName}).");
+            return;
+        }
+
+        if (!outcome.FoundTreatment) return;
+
+        if (outcome.Deliberate)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage($"Le marchand a testé la pierre : {gem.TreatmentGrade} non déclaré ! Vente annulée, amende de {outcome.Fine}€ et {outcome.ReputationLost} points de réputation perdus.");
+            Refresh();
+            return;
+        }
+
+        var newOffer = outcome.Price;
+        ConfirmDialog.Show("Traitement trouvé",
+            $"Le marchand a trouvé un traitement dont vous ignoriez l'existence : {gem.TreatmentGrade}.\nNouvelle offre : {newOffer}€ (au lieu de {asked}€).",
+            "Accepter", () => SellDeclared(gem));
+        Refresh();
     }
 }

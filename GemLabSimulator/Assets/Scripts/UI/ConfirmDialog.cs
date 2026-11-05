@@ -12,17 +12,34 @@ public class ConfirmDialog : MonoBehaviour
     private Text messageText;
     private Text confirmLabel;
     private Action onConfirm;
+    private Action onSecond;
+    private Button confirmButton;
+    private Button secondButton;
+    private Text secondLabel;
+    private Button cancelButton;
 
     public static void Show(string title, string message, string confirmLabel, Action onConfirm)
+    {
+        if (!Ensure()) return;
+        instance.Open(title, message, confirmLabel, onConfirm, null, null);
+    }
+
+    // Two ways to go on, and a cancel button: the first label runs `onConfirm`, the second one `onSecond`.
+    public static void ShowChoice(string title, string message, string confirmLabel, Action onConfirm, string secondLabel, Action onSecond)
+    {
+        if (!Ensure()) return;
+        instance.Open(title, message, confirmLabel, onConfirm, secondLabel, onSecond);
+    }
+
+    private static bool Ensure()
     {
         if (instance == null)
         {
             var canvas = GameObject.Find("Canvas");
-            if (canvas == null) return;
+            if (canvas == null) return false;
             instance = canvas.GetComponent<ConfirmDialog>() ?? canvas.AddComponent<ConfirmDialog>();
         }
-
-        instance.Open(title, message, confirmLabel, onConfirm);
+        return true;
     }
 
     private void Awake()
@@ -44,12 +61,28 @@ public class ConfirmDialog : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) Confirm();
     }
 
-    private void Open(string title, string message, string confirmText, Action confirmAction)
+    private void Open(string title, string message, string confirmText, Action confirmAction, string secondText, Action secondAction)
     {
         titleText.text = title;
         messageText.text = message;
         confirmLabel.text = confirmText;
         onConfirm = confirmAction;
+        onSecond = secondAction;
+
+        var two = secondAction != null;
+        secondButton.gameObject.SetActive(two);
+        if (two)
+        {
+            secondLabel.text = secondText;
+            RuntimeUIKit.SetTopLeft(confirmButton.GetComponent<RectTransform>(), new Vector2(12f, -154f), new Vector2(132f, 38f));
+            RuntimeUIKit.SetTopLeft(secondButton.GetComponent<RectTransform>(), new Vector2(154f, -154f), new Vector2(132f, 38f));
+            RuntimeUIKit.SetTopLeft(cancelButton.GetComponent<RectTransform>(), new Vector2(296f, -154f), new Vector2(132f, 38f));
+        }
+        else
+        {
+            RuntimeUIKit.SetTopLeft(confirmButton.GetComponent<RectTransform>(), new Vector2(50f, -154f), new Vector2(160f, 38f));
+            RuntimeUIKit.SetTopLeft(cancelButton.GetComponent<RectTransform>(), new Vector2(230f, -154f), new Vector2(160f, 38f));
+        }
         root.transform.SetAsLastSibling();
         root.SetActive(true);
     }
@@ -57,6 +90,13 @@ public class ConfirmDialog : MonoBehaviour
     private void Confirm()
     {
         var action = onConfirm;
+        Close();
+        action?.Invoke();
+    }
+
+    private void ConfirmSecond()
+    {
+        var action = onSecond;
         Close();
         action?.Invoke();
     }
@@ -69,6 +109,7 @@ public class ConfirmDialog : MonoBehaviour
     private void Close()
     {
         onConfirm = null;
+        onSecond = null;
         root.SetActive(false);
     }
 
@@ -102,9 +143,17 @@ public class ConfirmDialog : MonoBehaviour
             new Vector2(50f, -154f), new Vector2(160f, 38f));
         confirm.onClick.AddListener(Confirm);
         confirmLabel = confirm.GetComponentInChildren<Text>();
+        confirmButton = confirm;
+
+        secondButton = RuntimeUIKit.MakeButton("Second", box.transform, "", 15, new Color(0.45f, 0.35f, 0.12f, 1f),
+            new Vector2(154f, -154f), new Vector2(132f, 38f));
+        secondButton.onClick.AddListener(ConfirmSecond);
+        secondLabel = secondButton.GetComponentInChildren<Text>();
+        secondButton.gameObject.SetActive(false);
 
         var cancel = RuntimeUIKit.MakeButton("Cancel", box.transform, "Annuler", 15, new Color(0.40f, 0.22f, 0.20f, 1f),
             new Vector2(230f, -154f), new Vector2(160f, 38f));
         cancel.onClick.AddListener(Cancel);
+        cancelButton = cancel;
     }
 }

@@ -10,8 +10,8 @@ public class MoneyHudUI : MonoBehaviour
 {
     public static MoneyHudUI Instance { get; private set; }
 
-    private const float Width = 200f;
-    private const float Height = 46f;
+    private const float Width = ClockHudUI.Width;
+    public const float Height = 36f;
 
     private class Floater
     {
@@ -66,33 +66,30 @@ public class MoneyHudUI : MonoBehaviour
         root.transform.SetParent(transform, false);
         root.transform.SetSiblingIndex(1);
         var rect = root.GetComponent<RectTransform>();
-        rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
-        rect.pivot = new Vector2(0f, 1f);
-        rect.anchoredPosition = new Vector2(16f, -16f);
+        // Hangs under the clock, at the top right, as in Stardew Valley.
+        rect.anchorMin = rect.anchorMax = new Vector2(1f, 1f);
+        rect.pivot = new Vector2(1f, 1f);
+        rect.anchoredPosition = new Vector2(-ClockHudUI.Margin, -(ClockHudUI.Margin + ClockHudUI.Height + 4f));
         rect.sizeDelta = new Vector2(Width, Height);
 
-        // Gold edge, dark purse, and a faint light along the top.
-        RuntimeUIKit.MakeBox("Edge", root.transform, Vector2.zero, new Vector2(Width, Height), new Color(0.80f, 0.64f, 0.26f, 1f)).raycastTarget = false;
-        RuntimeUIKit.MakeBox("Purse", root.transform, new Vector2(2f, -2f), new Vector2(Width - 4f, Height - 4f), new Color(0.07f, 0.08f, 0.12f, 0.93f)).raycastTarget = false;
-        RuntimeUIKit.MakeBox("Light", root.transform, new Vector2(6f, -4f), new Vector2(Width - 12f, 10f), new Color(1f, 1f, 1f, 0.06f)).raycastTarget = false;
+        // An orange frame holding the coin and a cream cell for the figure.
+        StardewKit.MakeFrame("Frame", root.transform, Vector2.zero, new Vector2(Width, Height));
+        StardewKit.MakeInset("Cell", root.transform, new Vector2(42f, -7f), new Vector2(Width - 54f, 22f));
 
         var coin = new GameObject("Coin", typeof(RectTransform), typeof(Image));
         coin.transform.SetParent(root.transform, false);
         coinRect = coin.GetComponent<RectTransform>();
-        RuntimeUIKit.SetTopLeft(coinRect, new Vector2(8f, -7f), new Vector2(32f, 32f));
+        RuntimeUIKit.SetTopLeft(coinRect, new Vector2(8f, -5f), new Vector2(26f, 26f));
         coinRect.pivot = new Vector2(0.5f, 0.5f);
-        coinRect.anchoredPosition = new Vector2(24f, -23f);
+        coinRect.anchoredPosition = new Vector2(21f, -18f);
         var coinImage = coin.GetComponent<Image>();
         coinImage.sprite = MakeCoinSprite();
         coinImage.raycastTarget = false;
-        var euro = RuntimeUIKit.MakeText("Euro", coin.transform, "€", 17, TextAnchor.MiddleCenter, new Color(0.50f, 0.33f, 0.04f), Vector2.zero, new Vector2(32f, 32f));
+        var euro = RuntimeUIKit.MakeText("Euro", coin.transform, "€", 14, TextAnchor.MiddleCenter, new Color(0.50f, 0.33f, 0.04f), Vector2.zero, new Vector2(26f, 26f));
         euro.fontStyle = FontStyle.Bold;
 
-        amountText = RuntimeUIKit.MakeText("Amount", root.transform, "0", 24, TextAnchor.MiddleLeft, new Color(1f, 0.94f, 0.74f), new Vector2(50f, -6f), new Vector2(Width - 58f, 34f));
+        amountText = RuntimeUIKit.MakeText("Amount", root.transform, "0", 17, TextAnchor.MiddleRight, StardewKit.Digits, new Vector2(48f, -7f), new Vector2(Width - 66f, 22f));
         amountText.fontStyle = FontStyle.Bold;
-        var shadow = amountText.gameObject.AddComponent<Shadow>();
-        shadow.effectColor = new Color(0f, 0f, 0f, 0.55f);
-        shadow.effectDistance = new Vector2(1.5f, -1.5f);
 
         floaterRoot = new GameObject("Floaters", typeof(RectTransform)).GetComponent<RectTransform>();
         floaterRoot.SetParent(root.transform, false);

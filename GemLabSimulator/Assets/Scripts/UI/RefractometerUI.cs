@@ -258,6 +258,16 @@ public class RefractometerUI : MonoBehaviour
 
     private void SetStone(GemInstance gem)
     {
+        // A rough stone has no polished facet to lay on the glass: the refractometer cannot read it.
+        if (gem != null && gem.IsRough)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage("Réfractomètre — Une pierre brute n'a pas de facette polie à poser sur le verre : impossible de lire son indice. Faites-la tailler d'abord.");
+            Sfx.Play(Sfx.Id.Error);
+            stone = null;
+            Refresh();
+            return;
+        }
+
         stone = gem;
         SetupOptics(gem);
         ResetTracking();

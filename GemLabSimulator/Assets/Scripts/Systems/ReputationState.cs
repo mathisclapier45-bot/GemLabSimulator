@@ -23,6 +23,13 @@ public class ReputationState : MonoBehaviour
         OnReputationChanged?.Invoke();
     }
 
+    public void RemovePoints(int amount)
+    {
+        Points = Mathf.Max(0, Points - Mathf.Max(0, amount));
+        RecomputeLevel();
+        OnReputationChanged?.Invoke();
+    }
+
     public void SetPoints(int points)
     {
         Points = Mathf.Max(0, points);

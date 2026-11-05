@@ -8,6 +8,7 @@ public class MailboxState : MonoBehaviour
 
     private const int MaxPendingLetters = 4;
     private const int DailyLetterLimit = 5;
+    private const float RoughLetterChance = 0.3f;
 
     private readonly List<GemInstance> pendingLetters = new List<GemInstance>();
     public IReadOnlyList<GemInstance> PendingLetters => pendingLetters;
@@ -54,7 +55,12 @@ public class MailboxState : MonoBehaviour
             } while (definition.isTunnelExclusive);
 
             var letter = new GemInstance(definition);
-            if (!letter.IsDonation) letter.MarkAsClientStone();
+            if (!letter.IsDonation)
+            {
+                letter.MarkAsClientStone();
+                // Some clients send a rough crystal: found in a river, a field, a family mine. A diamond is not sent rough this way.
+                if (!(definition.name ?? "").StartsWith("Diamant") && UnityEngine.Random.value < RoughLetterChance) letter.MarkAsRough();
+            }
             pendingLetters.Add(letter);
             changed = true;
         }
