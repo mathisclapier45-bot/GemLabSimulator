@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Corail
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Corail
+  description: "Squelette calcaire d'une colonie de polypes (Corallium) : calcite
+    magn\xE9sienne en fines baguettes, du rose p\xE2le au rouge sang. Il effervesce
+    au contact d'un acide."
+  icon: {fileID: 21300000, guid: 03898fb4446c74dff8edadf6887b4ea1, type: 3}
+  roughIcon: {fileID: 21300000, guid: 021c5a36902b14bd885233bb6bf0c5bd, type: 3}
+  iconColor: {r: 0.85, g: 0.25, b: 0.22, a: 1}
+  iconFacetColor: {r: 0.98, g: 0.55, b: 0.48, a: 1}
+  refractiveIndex: 1.56
+  density: 2.68
+  hardness: 3.5
+  lengthMm: 10
+  widthMm: 8
+  depthMm: 8
+  weightCarats: 3
+  luster: "Vitreux \xE0 cireux"
+  color: Rouge
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: Opaque
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Inerte \xE0 rose p\xE2le faible selon la teinte."
+  fluorescenceShortWave: Inerte.
+  opticalCharacter: "Agr\xE9gat opaque de calcite : pas de lecture optique exploitable."
+  opticalCharacterClass: 3
+  birefringence: 0.17
+  isQuartzFamily: 0
+  isPolycrystalline: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: Pas de spectre net.
+  spectrumLines: []
+  inclusions: "Fines stries parall\xE8les et motif ondul\xE9 du squelette, petits
+    pores ronds."
+  interferenceFigure: "Non exploitable : mat\xE9riau organique opaque."
+  chelseaFilterReaction: "Aucune r\xE9action."
+  magnetism: "Aucune r\xE9action \xE0 l'aimant."
+  baseValue: 110
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: "M\xE9diterran\xE9e"
+    rarityWeight: 55
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Japon (momo)
+    rarityWeight: 25
+    valueMultiplier: 1.5
+    inclusionOverride: 
+  - name: "Ta\xEFwan"
+    rarityWeight: 20
+    valueMultiplier: 1.2
+    inclusionOverride: 

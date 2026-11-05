@@ -627,6 +627,41 @@ public class GemInstance
         FitDimensionsToShape();
     }
 
+    // Takes what a bleaching bath did to the stone: its colour is lightened (or dulled when the bath attacked it), its value follows, and it
+    // carries the treatment from then on. A bath without effect leaves the stone as it was.
+    public void ApplyBleaching(BleachResult result)
+    {
+        if (result.Outcome == BleachOutcome.NoEffect) return;
+
+        HasReport = false;
+        TradeName = null;
+        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        TreatmentGrade = result.IsRuined ? "Blanchi (surface attaquée)" : "Blanchi";
+        TreatmentDescription = result.Description;
+
+        if (!HasColor) return;
+        var saturation = result.IsRuined ? ColorSaturation * 0.8f : ColorSaturation * (1f - 0.7f * result.Quality);
+        var brightness = result.IsRuined ? Mathf.Max(0.05f, ColorBrightness - 0.1f) : ColorBrightness + (1f - ColorBrightness) * 0.55f * result.Quality;
+        SetColor(new GemColorValue(ColorHue, Mathf.Clamp01(saturation), Mathf.Clamp01(brightness)), IsFancyDiamond);
+    }
+
+    // Takes what a dye bath did to the stone: the dye colours it (unevenly in a compact material), its value follows, and it carries the
+    // treatment from then on, after the bleaching it may have had. A bath without effect leaves the stone as it was.
+    public void ApplyDyeing(DyeResult result)
+    {
+        if (result.Outcome == DyeOutcome.NoEffect) return;
+
+        var wasBleached = !string.IsNullOrEmpty(TreatmentGrade) && TreatmentGrade.StartsWith("Blanchi");
+        HasReport = false;
+        TradeName = null;
+        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        TreatmentGrade = result.IsRuined ? "Teint (instable)" : wasBleached ? "Blanchi puis teint" : "Teint";
+        TreatmentDescription = wasBleached ? $"{TreatmentDescription} {result.Description}" : result.Description;
+
+        if (!HasColor) return;
+        SetColor(new GemColorValue(Mathf.Repeat(result.Hue, 360f), Mathf.Clamp01(result.Saturation), Mathf.Clamp01(result.Brightness)), IsFancyDiamond);
+    }
+
     public void RecordMeasurement(string propertyKey, float value)
     {
         measuredValues[propertyKey] = value;

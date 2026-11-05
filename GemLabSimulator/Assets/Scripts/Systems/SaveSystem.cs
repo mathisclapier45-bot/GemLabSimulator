@@ -117,6 +117,18 @@ public static class SaveSystem
         if (DiamondCuttingState.Instance != null)
             data.diamondCutJobs = DiamondCuttingState.Instance.ToSaveData();
 
+        if (BleachingState.Instance != null)
+        {
+            data.bleachJobs = BleachingState.Instance.ToSaveData();
+            data.bleachSamplesGiven = BleachingState.Instance.SamplesGiven;
+        }
+
+        if (DyeingState.Instance != null)
+        {
+            data.dyeJobs = DyeingState.Instance.ToSaveData();
+            data.dyeSamplesGiven = DyeingState.Instance.SamplesGiven;
+        }
+
         File.WriteAllText(SavePath(ActiveSlot), JsonUtility.ToJson(data, true));
     }
 
@@ -179,6 +191,20 @@ public static class SaveSystem
 
         var diamondCutting = DiamondCuttingState.Ensure();
         if (diamondCutting != null) diamondCutting.LoadJobs(data.diamondCutJobs, RestoreGem);
+
+        var bleaching = BleachingState.Ensure();
+        if (bleaching != null)
+        {
+            bleaching.LoadJobs(data.bleachJobs, RestoreGem);
+            bleaching.LoadSamplesGiven(data.bleachSamplesGiven);
+        }
+
+        var dyeing = DyeingState.Ensure();
+        if (dyeing != null)
+        {
+            dyeing.LoadJobs(data.dyeJobs, RestoreGem);
+            dyeing.LoadSamplesGiven(data.dyeSamplesGiven);
+        }
 
         if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)
             SceneManager.LoadScene(data.sceneName);

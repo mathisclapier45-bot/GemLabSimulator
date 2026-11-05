@@ -85,6 +85,26 @@ public class DiamondCutJobSaveData
 }
 
 [Serializable]
+public class BleachJobSaveData
+{
+    public int vatIndex;
+    public int startDay;
+    public int readyDay;
+    public int fee;
+    public GemInstanceSaveData stone;
+}
+
+[Serializable]
+public class DyeJobSaveData
+{
+    public int potIndex;
+    public int startDay;
+    public int readyDay;
+    public int fee;
+    public GemInstanceSaveData stone;
+}
+
+[Serializable]
 public class SaveData
 {
     public string saveName = "";
@@ -122,4 +142,8 @@ public class SaveData
     public int reputationPoints;
     public List<LapidaryJobSaveData> lapidaryJobs = new List<LapidaryJobSaveData>();
     public List<DiamondCutJobSaveData> diamondCutJobs = new List<DiamondCutJobSaveData>();
+    public List<BleachJobSaveData> bleachJobs = new List<BleachJobSaveData>();
+    public bool bleachSamplesGiven;
+    public List<DyeJobSaveData> dyeJobs = new List<DyeJobSaveData>();
+    public bool dyeSamplesGiven;
 }

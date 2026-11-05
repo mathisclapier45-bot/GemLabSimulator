@@ -1249,12 +1249,79 @@ public static class SceneBootstrap
             "Bienvenue au laboratoire de synthèse ! Ici, on fera pousser des cristaux : Verneuil, Czochralski, hydrothermale, flux, HPHT, CVD...",
             "Les fours et les autoclaves arrivent bientôt. Revenez quand l'installation sera terminée.",
         });
-        CreateAnnexLab("LaboTraitements", "SpawnPoint_LaboTraitements", "Laboratoire de traitements", "Technicien — traitements", "merchant2", new[]
-        {
-            "Bienvenue au laboratoire de traitements : chauffage, huilage, remplissage, teinture, irradiation, HPHT...",
-            "Les appareils sont en cours d'installation. Passez nous voir un peu plus tard.",
-        });
+        CreateTreatmentsLabScene();
         Debug.Log("Annex laboratory scenes created: LaboSynthese, LaboTraitements.");
+    }
+
+    // The treatments laboratory. For now it holds the bleaching room and the dye room: two desks against the back wall with six small
+    // vats or pots on each; E in front of one opens its window (BleachingUI, DyeingUI). The other treatments will come one at a time.
+    [MenuItem("GemLab/Setup Treatments Lab Scene")]
+    public static void CreateTreatmentsLabScene()
+    {
+        // The pearls, the coral and the tiger's eye the vats are for: the gem list is refreshed with the new species.
+        UpdateGemDatabase(GetOrCreateGemPool());
+        AssetDatabase.SaveAssets();
+
+        CreateTowerRoom("LaboTraitements", "lab", -9, 9, -5, 5, new Color(0.08f, 0.10f, 0.11f), new Vector3(0f, -3f, 0f), true, (walls, wallTile) =>
+        {
+            CreateExitDoor(new Vector3(0, -4, 0f), "SpawnPoint_LaboTraitements");
+
+            // The desk of the bleaching baths: the six small vats stand on it, side by side (24 pixels apart, centred on the desk).
+            const float deskY = 3.0f;
+            const float bleachX = -4.4f;
+            PlaceFurniture("acid_desk", new Vector3(bleachX, deskY, 0f));
+            for (var i = 0; i < BleachingCatalog.VatCount; i++)
+                PlaceInteriorProp($"minivat_{i}", new Vector3(bleachX + (-60f + 24f * i) / 32f, deskY + 1.25f, 0f), true, false, 5);
+            PlaceRug("hazardmat", new Vector3(bleachX, 1.6f, 0f));
+
+            var bleachStation = new GameObject("PosteBlanchiment");
+            bleachStation.transform.position = new Vector3(bleachX, 1.9f, 0f);
+            var bleachTrigger = bleachStation.AddComponent<BoxCollider2D>();
+            bleachTrigger.isTrigger = true;
+            bleachTrigger.size = new Vector2(5.4f, 2.8f);
+            bleachStation.AddComponent<BleachingStation>();
+            CreateBuildingLabel("Bains de blanchiment (E)", new Vector3(bleachX, 0.7f, 0f));
+
+            // The wooden desk of the dye pots next to it: six pots of colour, each with its stirring stick.
+            const float dyeX = 1.2f;
+            PlaceFurniture("dye_desk", new Vector3(dyeX, deskY, 0f));
+            for (var i = 0; i < DyeingCatalog.PotCount; i++)
+                PlaceInteriorProp($"dyepot_{i}", new Vector3(dyeX + (-60f + 24f * i) / 32f, deskY + 1.25f, 0f), true, false, 5);
+            PlaceRug("rug_red", new Vector3(dyeX, 1.4f, 0f));
+
+            var dyeStation = new GameObject("PosteTeinture");
+            dyeStation.transform.position = new Vector3(dyeX, 1.9f, 0f);
+            var dyeTrigger = dyeStation.AddComponent<BoxCollider2D>();
+            dyeTrigger.isTrigger = true;
+            dyeTrigger.size = new Vector2(5.4f, 2.8f);
+            dyeStation.AddComponent<DyeingStation>();
+            CreateBuildingLabel("Bains de teinture (E)", new Vector3(dyeX, 0.7f, 0f));
+
+            // The fume hood at the right end of the back wall; above the desks, the hazard sign and the chart of dye colours.
+            PlaceFurniture("fumehood", new Vector3(6.4f, 3.2f, 0f));
+            PlaceInteriorProp("hazardsign", new Vector3(bleachX, 5.55f, 0f), false, false, 2);
+            PlaceInteriorProp("dyechart", new Vector3(dyeX, 5.55f, 0f), false, false, 2);
+
+            // Safety equipment, waste drums and the acid rack along the left wall; the drying rack of the dyed strings on the right.
+            PlaceFurniture("bottlerack", new Vector3(-7.3f, 0.6f, 0f));
+            PlaceFurniture("eyewash", new Vector3(-8.2f, -3.3f, 0f));
+            PlaceFurniture("barrel", new Vector3(8.0f, -3.6f, 0f));
+            PlaceFurniture("barrel", new Vector3(7.0f, -3.9f, 0f));
+            PlaceFurniture("dryingrack", new Vector3(6.9f, 0.4f, 0f));
+            PlaceRug("rug_blue_tall", new Vector3(0f, -2.4f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(-8.1f, 4.0f, 0f));
+
+            CreateTalkNpc("Technicien — traitements", "merchant2", new Vector3(3.2f, -1.6f, 0f), new[]
+            {
+                "Ici, on blanchit : un bain de produits chimiques éclaircit ou enlève la couleur d'une gemme. Perles, corail, jadéite et œil-de-tigre, pas autre chose.",
+                "Attention au matériau ! Les perles et le corail sont du carbonate de calcium : un acide les dissout. Pour eux, l'eau oxygénée, rien d'autre.",
+                "La jadéite et l'œil-de-tigre, eux, aiment les acides : ils dissolvent les oxydes de fer qui les tachent. Mais trop fort, la pierre sort piquée.",
+                "À côté, c'est la teinture : tout ce qui est poreux ou fissuré boit la couleur. Chaque pot vous montre ce que la pierre deviendrait.",
+                "Astuce : une pierre blanchie prend la couleur plus régulièrement. Blanchir d'abord, teindre ensuite : c'est le bon ordre.",
+                "Un bain prend des jours : on dépose la pierre, on revient la chercher. Les autres traitements arriveront plus tard.",
+            });
+            CreateBuildingLabel("Laboratoire de traitements", new Vector3(0f, 6.7f, 0f));
+        });
     }
 
     private static void CreateAnnexLab(string sceneName, string townSpawn, string title, string speaker, string npcSprite, string[] lines)
@@ -4190,7 +4257,8 @@ public static class SceneBootstrap
         "Diamant Synthétique (CVD)", "Diamant Synthétique (HPHT)",
         "Painite", "Béryl Rouge (Bixbite)", "Ivoire d'Éléphant", "Ivoire de Mammouth",
         "Ivoire de Morse", "Ivoire d'Hippopotame", "Défense de Narval",
-        "Corne de Rhinocéros", "Écaille de Tortue"
+        "Corne de Rhinocéros", "Écaille de Tortue",
+        "Perle de culture", "Perle de Tahiti", "Corail", "Œil-de-tigre", "Agate", "Ambre", "Lapis-lazuli"
     };
 
     private static void CreateUI(bool includeExaminationUI)
@@ -8670,6 +8738,285 @@ public static class SceneBootstrap
                 g.origins = new List<GemOrigin>
                 {
                     new GemOrigin { name = "Caraïbes / Océan Indien", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Perle", g =>
+            {
+                g.displayName = "Perle de culture";
+                g.description = "Perle de nacre formée autour d'un noyau dans une huître d'élevage : carbonate de calcium organisé en couches, au lustre doux et nacré.";
+                g.icon = GetGemIconSprite("perle", new Color(0.93f, 0.92f, 0.88f), new Color(1.00f, 0.99f, 0.96f), "Rond", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("perle", new Color(0.93f, 0.92f, 0.88f), "Rond");
+                g.refractiveIndex = 1.60f;
+                g.density = 2.72f;
+                g.hardness = 3.0f;
+                g.lengthMm = 7.5f;
+                g.widthMm = 7.5f;
+                g.depthMm = 7.5f;
+                g.weightCarats = 7.0f;
+                g.luster = "Nacré";
+                g.color = "Blanc";
+                g.shape = "Rond";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Inerte à bleu-blanc faible (plus claire pour les perles d'eau douce).";
+                g.fluorescenceShortWave = "Inerte à très faible.";
+                g.opticalCharacter = "Agrégat opaque de cristaux d'aragonite : pas de lecture optique exploitable.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Opaque;
+                g.birefringence = 0.155f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Pas de spectre net : absorption diffuse de la nacre.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Pas d'inclusions au sens classique : lignes de croissance de la nacre, petits défauts de surface ; le noyau de nacre se voit aux rayons X.";
+                g.interferenceFigure = "Non exploitable : matériau organique opaque.";
+                g.chelseaFilterReaction = "Aucune réaction.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 160;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Japon (Akoya)", rarityWeight = 40, valueMultiplier = 1.2f },
+                    new GemOrigin { name = "Chine (eau douce)", rarityWeight = 35, valueMultiplier = 0.6f },
+                    new GemOrigin { name = "Australie (mers du Sud)", rarityWeight = 25, valueMultiplier = 1.6f },
+                };
+            }),
+            BuildGem("Perle_Tahiti", g =>
+            {
+                g.displayName = "Perle de Tahiti";
+                g.description = "Perle de culture d'une huître à lèvres noires de Polynésie : grise à noire, aux reflets verts, bleus ou aubergine ; on la traite parfois pour lui donner une teinte « chocolat ».";
+                g.icon = GetGemIconSprite("perletahiti", new Color(0.34f, 0.36f, 0.40f), new Color(0.58f, 0.62f, 0.66f), "Rond", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("perletahiti", new Color(0.34f, 0.36f, 0.40f), "Rond");
+                g.refractiveIndex = 1.60f;
+                g.density = 2.75f;
+                g.hardness = 3.0f;
+                g.lengthMm = 10.0f;
+                g.widthMm = 10.0f;
+                g.depthMm = 10.0f;
+                g.weightCarats = 12.0f;
+                g.luster = "Nacré à métallique";
+                g.color = "Gris";
+                g.shape = "Rond";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Inerte à rouge-brun faible, caractéristique de la couleur naturelle.";
+                g.fluorescenceShortWave = "Inerte.";
+                g.opticalCharacter = "Agrégat opaque de cristaux d'aragonite : pas de lecture optique exploitable.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Opaque;
+                g.birefringence = 0.155f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Absorption diffuse ; une bande vers 700 nm dans les perles de couleur naturelle.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Lignes de croissance, petites cernes et piqûres de surface ; noyau de nacre visible aux rayons X.";
+                g.interferenceFigure = "Non exploitable : matériau organique opaque.";
+                g.chelseaFilterReaction = "Aucune réaction.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 420;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Polynésie française", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Corail", g =>
+            {
+                g.displayName = "Corail";
+                g.description = "Squelette calcaire d'une colonie de polypes (Corallium) : calcite magnésienne en fines baguettes, du rose pâle au rouge sang. Il effervesce au contact d'un acide.";
+                g.icon = GetGemIconSprite("corail", new Color(0.85f, 0.25f, 0.22f), new Color(0.98f, 0.55f, 0.48f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("corail", new Color(0.85f, 0.25f, 0.22f), "Ovale");
+                g.refractiveIndex = 1.56f;
+                g.density = 2.68f;
+                g.hardness = 3.5f;
+                g.lengthMm = 10.0f;
+                g.widthMm = 8.0f;
+                g.depthMm = 8.0f;
+                g.weightCarats = 3.0f;
+                g.luster = "Vitreux à cireux";
+                g.color = "Rouge";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Inerte à rose pâle faible selon la teinte.";
+                g.fluorescenceShortWave = "Inerte.";
+                g.opticalCharacter = "Agrégat opaque de calcite : pas de lecture optique exploitable.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Opaque;
+                g.birefringence = 0.17f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Pas de spectre net.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Fines stries parallèles et motif ondulé du squelette, petits pores ronds.";
+                g.interferenceFigure = "Non exploitable : matériau organique opaque.";
+                g.chelseaFilterReaction = "Aucune réaction.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 110;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Méditerranée", rarityWeight = 55, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Japon (momo)", rarityWeight = 25, valueMultiplier = 1.5f },
+                    new GemOrigin { name = "Taïwan", rarityWeight = 20, valueMultiplier = 1.2f },
+                };
+            }),
+            BuildGem("Oeil_de_Tigre", g =>
+            {
+                g.displayName = "Œil-de-tigre";
+                g.description = "Quartz fibreux brun doré : les fibres de crocidolite ont été remplacées par du quartz et des oxydes de fer, ce qui donne un reflet soyeux mobile, la chatoyance.";
+                g.icon = GetGemIconSprite("oeiltigre", new Color(0.62f, 0.42f, 0.12f), new Color(0.88f, 0.68f, 0.28f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("oeiltigre", new Color(0.62f, 0.42f, 0.12f), "Ovale");
+                g.refractiveIndex = 1.544f;
+                g.density = 2.65f;
+                g.hardness = 7.0f;
+                g.lengthMm = 12.0f;
+                g.widthMm = 9.0f;
+                g.depthMm = 5.0f;
+                g.weightCarats = 8.0f;
+                g.luster = "Soyeux";
+                g.color = "Brun doré";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Inerte.";
+                g.fluorescenceShortWave = "Inerte.";
+                g.opticalCharacter = "Agrégat fibreux de quartz : lecture diffuse, œil de chat marqué à la lampe.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.009f;
+                g.isQuartzFamily = true;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Bandes d'absorption diffuses du fer (oxydes de fer).";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Fibres parallèles de crocidolite remplacées par des oxydes de fer, qui donnent la chatoyance soyeuse.";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat fibreux).";
+                g.chelseaFilterReaction = "Aucune réaction.";
+                g.magnetism = "Réaction très faible à l'aimant selon la teneur en fer.";
+                g.baseValue = 55;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Afrique du Sud", rarityWeight = 60, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Australie", rarityWeight = 25, valueMultiplier = 1.3f },
+                    new GemOrigin { name = "Inde", rarityWeight = 15, valueMultiplier = 0.8f },
+                };
+            }),
+            BuildGem("Agate", g =>
+            {
+                g.displayName = "Agate";
+                g.description = "Calcédoine rubanée : quartz microcristallin en couches concentriques, poreux. C'est la pierre que l'on teint depuis toujours, en bleu, vert, rouge ou noir.";
+                g.icon = GetGemIconSprite("agate", new Color(0.64f, 0.66f, 0.70f), new Color(0.86f, 0.88f, 0.92f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("agate", new Color(0.64f, 0.66f, 0.70f), "Ovale");
+                g.refractiveIndex = 1.535f;
+                g.density = 2.62f;
+                g.hardness = 6.5f;
+                g.lengthMm = 14.0f;
+                g.widthMm = 11.0f;
+                g.depthMm = 6.0f;
+                g.weightCarats = 10.0f;
+                g.luster = "Cireux à vitreux";
+                g.color = "Gris bleuté";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Inerte, parfois blanc verdâtre faible.";
+                g.fluorescenceShortWave = "Inerte.";
+                g.opticalCharacter = "Agrégat microcristallin de quartz : lecture diffuse, uniaxe positif en lumière polarisée.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.009f;
+                g.isQuartzFamily = true;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Pas de spectre net ; une teinture éventuelle donne ses propres bandes.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Bandes concentriques de calcédoine, parfois une cavité tapissée de cristaux de quartz (géode).";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat microcristallin).";
+                g.chelseaFilterReaction = "Aucune réaction (sauf teinture).";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 30;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil", rarityWeight = 50, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Madagascar", rarityWeight = 25, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "Inde", rarityWeight = 25, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Ambre", g =>
+            {
+                g.displayName = "Ambre";
+                g.description = "Résine fossile d'arbres vieux de plusieurs dizaines de millions d'années, jaune à orangé, parfois avec des insectes piégés. Très léger : il flotte dans l'eau salée.";
+                g.icon = GetGemIconSprite("ambre", new Color(0.90f, 0.58f, 0.12f), new Color(0.98f, 0.78f, 0.34f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("ambre", new Color(0.90f, 0.58f, 0.12f), "Ovale");
+                g.refractiveIndex = 1.54f;
+                g.density = 1.08f;
+                g.hardness = 2.5f;
+                g.lengthMm = 15.0f;
+                g.widthMm = 12.0f;
+                g.depthMm = 8.0f;
+                g.weightCarats = 6.0f;
+                g.luster = "Résineux";
+                g.color = "Jaune orangé";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Bleu-blanc à vert-jaune, souvent forte.";
+                g.fluorescenceShortWave = "Faible, blanc verdâtre.";
+                g.opticalCharacter = "Isotrope, avec une anomalie de biréfringence due aux tensions internes.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0f;
+                g.absorptionSpectrum = "Pas de spectre net.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Bulles d'air, débris végétaux, parfois des insectes, et des fissures circulaires dites « feuilles de tension ».";
+                g.interferenceFigure = "Croix noire déformée par les tensions (anomalie de biréfringence).";
+                g.chelseaFilterReaction = "Aucune réaction.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 45;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Baltique", rarityWeight = 60, valueMultiplier = 1.2f },
+                    new GemOrigin { name = "République dominicaine", rarityWeight = 25, valueMultiplier = 1.4f },
+                    new GemOrigin { name = "Myanmar (birmite)", rarityWeight = 15, valueMultiplier = 1.6f },
+                };
+            }),
+            BuildGem("Lapis_Lazuli", g =>
+            {
+                g.displayName = "Lapis-lazuli";
+                g.description = "Roche d'un bleu profond, faite de lazurite avec de la calcite blanche et des paillettes de pyrite dorée : la pierre bleue des pharaons.";
+                g.icon = GetGemIconSprite("lapis", new Color(0.12f, 0.22f, 0.62f), new Color(0.32f, 0.46f, 0.86f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("lapis", new Color(0.12f, 0.22f, 0.62f), "Ovale");
+                g.refractiveIndex = 1.50f;
+                g.density = 2.80f;
+                g.hardness = 5.5f;
+                g.lengthMm = 12.0f;
+                g.widthMm = 10.0f;
+                g.depthMm = 5.0f;
+                g.weightCarats = 8.0f;
+                g.luster = "Vitreux à gras";
+                g.color = "Bleu";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Inerte, parfois rose-orangé dans la calcite.";
+                g.fluorescenceShortWave = "Inerte, parfois vert-jaune faible.";
+                g.opticalCharacter = "Agrégat opaque (roche) : lecture diffuse de la lazurite, isotrope.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Opaque;
+                g.birefringence = 0f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Pas de spectre net ; absorption large dans le jaune-orangé.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Paillettes de pyrite dorée et veines de calcite blanche dans la masse bleue de lazurite.";
+                g.interferenceFigure = "Non exploitable : roche opaque.";
+                g.chelseaFilterReaction = "Aucune réaction (rougeâtre pour certaines imitations teintes).";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 70;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Afghanistan", rarityWeight = 60, valueMultiplier = 1.6f },
+                    new GemOrigin { name = "Chili", rarityWeight = 30, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Russie (Baïkal)", rarityWeight = 10, valueMultiplier = 1.2f },
                 };
             }),
         };

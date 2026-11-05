@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Oeil_de_Tigre
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "\u0152il-de-tigre"
+  description: "Quartz fibreux brun dor\xE9 : les fibres de crocidolite ont \xE9t\xE9
+    remplac\xE9es par du quartz et des oxydes de fer, ce qui donne un reflet soyeux
+    mobile, la chatoyance."
+  icon: {fileID: 21300000, guid: 9d78f927a461c489bba59738978657b8, type: 3}
+  roughIcon: {fileID: 21300000, guid: d1081b7e9cdd74401af201318b540dd7, type: 3}
+  iconColor: {r: 0.62, g: 0.42, b: 0.12, a: 1}
+  iconFacetColor: {r: 0.88, g: 0.68, b: 0.28, a: 1}
+  refractiveIndex: 1.544
+  density: 2.65
+  hardness: 7
+  lengthMm: 12
+  widthMm: 9
+  depthMm: 5
+  weightCarats: 8
+  luster: Soyeux
+  color: "Brun dor\xE9"
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: Translucide
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: Inerte.
+  fluorescenceShortWave: Inerte.
+  opticalCharacter: "Agr\xE9gat fibreux de quartz : lecture diffuse, \u0153il de
+    chat marqu\xE9 \xE0 la lampe."
+  opticalCharacterClass: 1
+  birefringence: 0.009
+  isQuartzFamily: 1
+  isPolycrystalline: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: Bandes d'absorption diffuses du fer (oxydes de fer).
+  spectrumLines: []
+  inclusions: "Fibres parall\xE8les de crocidolite remplac\xE9es par des oxydes de
+    fer, qui donnent la chatoyance soyeuse."
+  interferenceFigure: "Figure diffuse, non exploitable (agr\xE9gat fibreux)."
+  chelseaFilterReaction: "Aucune r\xE9action."
+  magnetism: "R\xE9action tr\xE8s faible \xE0 l'aimant selon la teneur en fer."
+  baseValue: 55
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: Afrique du Sud
+    rarityWeight: 60
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Australie
+    rarityWeight: 25
+    valueMultiplier: 1.3
+    inclusionOverride: 
+  - name: Inde
+    rarityWeight: 15
+    valueMultiplier: 0.8
+    inclusionOverride: 

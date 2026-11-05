@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Perle
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Perle de culture
+  description: "Perle de nacre form\xE9e autour d'un noyau dans une hu\xEEtre d'\xE9levage
+    : carbonate de calcium organis\xE9 en couches, au lustre doux et nacr\xE9."
+  icon: {fileID: 21300000, guid: 4268ce17ca58540299d902ed17dac27d, type: 3}
+  roughIcon: {fileID: 21300000, guid: 204b00c64801849388e6ead3b7b8ee3c, type: 3}
+  iconColor: {r: 0.93, g: 0.92, b: 0.88, a: 1}
+  iconFacetColor: {r: 1, g: 0.99, b: 0.96, a: 1}
+  refractiveIndex: 1.6
+  density: 2.72
+  hardness: 3
+  lengthMm: 7.5
+  widthMm: 7.5
+  depthMm: 7.5
+  weightCarats: 7
+  luster: "Nacr\xE9"
+  color: Blanc
+  shape: Rond
+  cutStyle: Cabochon
+  transparency: Opaque
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Inerte \xE0 bleu-blanc faible (plus claire pour les perles
+    d'eau douce)."
+  fluorescenceShortWave: "Inerte \xE0 tr\xE8s faible."
+  opticalCharacter: "Agr\xE9gat opaque de cristaux d'aragonite : pas de lecture optique
+    exploitable."
+  opticalCharacterClass: 3
+  birefringence: 0.155
+  isQuartzFamily: 0
+  isPolycrystalline: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: 'Pas de spectre net : absorption diffuse de la nacre.'
+  spectrumLines: []
+  inclusions: "Pas d'inclusions au sens classique : lignes de croissance de la nacre,
+    petits d\xE9fauts de surface ; le noyau de nacre se voit aux rayons X."
+  interferenceFigure: "Non exploitable : mat\xE9riau organique opaque."
+  chelseaFilterReaction: "Aucune r\xE9action."
+  magnetism: "Aucune r\xE9action \xE0 l'aimant."
+  baseValue: 160
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: Japon (Akoya)
+    rarityWeight: 40
+    valueMultiplier: 1.2
+    inclusionOverride: 
+  - name: Chine (eau douce)
+    rarityWeight: 35
+    valueMultiplier: 0.6
+    inclusionOverride: 
+  - name: Australie (mers du Sud)
+    rarityWeight: 25
+    valueMultiplier: 1.6
+    inclusionOverride: 

@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Ambre
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Ambre
+  description: "R\xE9sine fossile d'arbres vieux de plusieurs dizaines de millions
+    d'ann\xE9es, jaune \xE0 orang\xE9, parfois avec des insectes pi\xE9g\xE9s. Tr\xE8s
+    l\xE9ger : il flotte dans l'eau sal\xE9e."
+  icon: {fileID: 21300000, guid: 2816c9ff74f29436581df8b0aff569b3, type: 3}
+  roughIcon: {fileID: 21300000, guid: 6181f82b4de144fcb8494c8e1173d0d6, type: 3}
+  iconColor: {r: 0.9, g: 0.58, b: 0.12, a: 1}
+  iconFacetColor: {r: 0.98, g: 0.78, b: 0.34, a: 1}
+  refractiveIndex: 1.54
+  density: 1.08
+  hardness: 2.5
+  lengthMm: 15
+  widthMm: 12
+  depthMm: 8
+  weightCarats: 6
+  luster: "R\xE9sineux"
+  color: "Jaune orang\xE9"
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: Translucide
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Bleu-blanc \xE0 vert-jaune, souvent forte."
+  fluorescenceShortWave: "Faible, blanc verd\xE2tre."
+  opticalCharacter: "Isotrope, avec une anomalie de bir\xE9fringence due aux tensions
+    internes."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: Pas de spectre net.
+  spectrumLines: []
+  inclusions: "Bulles d'air, d\xE9bris v\xE9g\xE9taux, parfois des insectes, et des
+    fissures circulaires dites \xAB feuilles de tension \xBB."
+  interferenceFigure: "Croix noire d\xE9form\xE9e par les tensions (anomalie de bir\xE9fringence)."
+  chelseaFilterReaction: "Aucune r\xE9action."
+  magnetism: "Aucune r\xE9action \xE0 l'aimant."
+  baseValue: 45
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: Baltique
+    rarityWeight: 60
+    valueMultiplier: 1.2
+    inclusionOverride: 
+  - name: "R\xE9publique dominicaine"
+    rarityWeight: 25
+    valueMultiplier: 1.4
+    inclusionOverride: 
+  - name: Myanmar (birmite)
+    rarityWeight: 15
+    valueMultiplier: 1.6
+    inclusionOverride: 

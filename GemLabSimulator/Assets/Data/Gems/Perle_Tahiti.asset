@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Perle_Tahiti
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Perle de Tahiti
+  description: "Perle de culture d'une hu\xEEtre \xE0 l\xE8vres noires de Polyn\xE9sie
+    : grise \xE0 noire, aux reflets verts, bleus ou aubergine ; on la traite parfois
+    pour lui donner une teinte \xAB chocolat \xBB."
+  icon: {fileID: 21300000, guid: 05faef8781f664abebe66c7b59bb4c83, type: 3}
+  roughIcon: {fileID: 21300000, guid: 1eb8fb449aecf47ff9a3f33ef3cebbd1, type: 3}
+  iconColor: {r: 0.34, g: 0.36, b: 0.4, a: 1}
+  iconFacetColor: {r: 0.58, g: 0.62, b: 0.66, a: 1}
+  refractiveIndex: 1.6
+  density: 2.75
+  hardness: 3
+  lengthMm: 10
+  widthMm: 10
+  depthMm: 10
+  weightCarats: 12
+  luster: "Nacr\xE9 \xE0 m\xE9tallique"
+  color: Gris
+  shape: Rond
+  cutStyle: Cabochon
+  transparency: Opaque
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Inerte \xE0 rouge-brun faible, caract\xE9ristique de la
+    couleur naturelle."
+  fluorescenceShortWave: Inerte.
+  opticalCharacter: "Agr\xE9gat opaque de cristaux d'aragonite : pas de lecture optique
+    exploitable."
+  opticalCharacterClass: 3
+  birefringence: 0.155
+  isQuartzFamily: 0
+  isPolycrystalline: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: Absorption diffuse ; une bande vers 700 nm dans les perles
+    de couleur naturelle.
+  spectrumLines: []
+  inclusions: "Lignes de croissance, petites cernes et piq\xFBres de surface ; noyau
+    de nacre visible aux rayons X."
+  interferenceFigure: "Non exploitable : mat\xE9riau organique opaque."
+  chelseaFilterReaction: "Aucune r\xE9action."
+  magnetism: "Aucune r\xE9action \xE0 l'aimant."
+  baseValue: 420
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: "Polyn\xE9sie fran\xE7aise"
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 

@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Lapis_Lazuli
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Lapis-lazuli
+  description: "Roche d'un bleu profond, faite de lazurite avec de la calcite blanche
+    et des paillettes de pyrite dor\xE9e : la pierre bleue des pharaons."
+  icon: {fileID: 21300000, guid: da69abf5c458444319951323e24b396e, type: 3}
+  roughIcon: {fileID: 21300000, guid: 61a948f5f619c4a84a586f8ad1a51c79, type: 3}
+  iconColor: {r: 0.12, g: 0.22, b: 0.62, a: 1}
+  iconFacetColor: {r: 0.32, g: 0.46, b: 0.86, a: 1}
+  refractiveIndex: 1.5
+  density: 2.8
+  hardness: 5.5
+  lengthMm: 12
+  widthMm: 10
+  depthMm: 5
+  weightCarats: 8
+  luster: "Vitreux \xE0 gras"
+  color: Bleu
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: Opaque
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Inerte, parfois rose-orang\xE9 dans la calcite."
+  fluorescenceShortWave: Inerte, parfois vert-jaune faible.
+  opticalCharacter: "Agr\xE9gat opaque (roche) : lecture diffuse de la lazurite,
+    isotrope."
+  opticalCharacterClass: 3
+  birefringence: 0
+  isQuartzFamily: 0
+  isPolycrystalline: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Pas de spectre net ; absorption large dans le jaune-orang\xE9."
+  spectrumLines: []
+  inclusions: "Paillettes de pyrite dor\xE9e et veines de calcite blanche dans la
+    masse bleue de lazurite."
+  interferenceFigure: 'Non exploitable : roche opaque.'
+  chelseaFilterReaction: "Aucune r\xE9action (rouge\xE2tre pour certaines imitations
+    teintes)."
+  magnetism: "Aucune r\xE9action \xE0 l'aimant."
+  baseValue: 70
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: Afghanistan
+    rarityWeight: 60
+    valueMultiplier: 1.6
+    inclusionOverride: 
+  - name: Chili
+    rarityWeight: 30
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: "Russie (Ba\xEFkal)"
+    rarityWeight: 10
+    valueMultiplier: 1.2
+    inclusionOverride: 

@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Agate
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Agate
+  description: "Calc\xE9doine ruban\xE9e : quartz microcristallin en couches concentriques,
+    poreux. C'est la pierre que l'on teint depuis toujours, en bleu, vert, rouge
+    ou noir."
+  icon: {fileID: 21300000, guid: 3f2b3a4a5febe4517a2c2450b7316196, type: 3}
+  roughIcon: {fileID: 21300000, guid: 07606eff5da34427182960f3157060d8, type: 3}
+  iconColor: {r: 0.64, g: 0.66, b: 0.7, a: 1}
+  iconFacetColor: {r: 0.86, g: 0.88, b: 0.92, a: 1}
+  refractiveIndex: 1.535
+  density: 2.62
+  hardness: 6.5
+  lengthMm: 14
+  widthMm: 11
+  depthMm: 6
+  weightCarats: 10
+  luster: "Cireux \xE0 vitreux"
+  color: "Gris bleut\xE9"
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: Translucide
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Inerte, parfois blanc verd\xE2tre faible."
+  fluorescenceShortWave: Inerte.
+  opticalCharacter: "Agr\xE9gat microcristallin de quartz : lecture diffuse, uniaxe
+    positif en lumi\xE8re polaris\xE9e."
+  opticalCharacterClass: 1
+  birefringence: 0.009
+  isQuartzFamily: 1
+  isPolycrystalline: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Pas de spectre net ; une teinture \xE9ventuelle donne ses
+    propres bandes."
+  spectrumLines: []
+  inclusions: "Bandes concentriques de calc\xE9doine, parfois une cavit\xE9 tapiss\xE9e
+    de cristaux de quartz (g\xE9ode)."
+  interferenceFigure: "Figure diffuse, non exploitable (agr\xE9gat microcristallin)."
+  chelseaFilterReaction: "Aucune r\xE9action (sauf teinture)."
+  magnetism: "Aucune r\xE9action \xE0 l'aimant."
+  baseValue: 30
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: "Br\xE9sil"
+    rarityWeight: 50
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Madagascar
+    rarityWeight: 25
+    valueMultiplier: 1.1
+    inclusionOverride: 
+  - name: Inde
+    rarityWeight: 25
+    valueMultiplier: 0.9
+    inclusionOverride: 

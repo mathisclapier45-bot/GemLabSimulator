@@ -33,9 +33,6 @@ EditorBuildSettings:
     path: Assets/Scenes/LaboSynthese.unity
     guid: cf34b9f35581d46bf9916456d255228e
   - enabled: 1
-    path: Assets/Scenes/LaboTraitements.unity
-    guid: 1822d32d35ddd4d28a21493abab2a9d4
-  - enabled: 1
     path: Assets/Scenes/DiamantairesAccueil.unity
     guid: 13fb8d10fe01945d39c8b8f57b3d97fc
   - enabled: 1
@@ -83,4 +80,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Concessionnaire.unity
     guid: 460a28233df164c6d83f87a2e2bfd9da
+  - enabled: 1
+    path: Assets/Scenes/LaboTraitements.unity
+    guid: 1822d32d35ddd4d28a21493abab2a9d4
   m_configObjects: {}
