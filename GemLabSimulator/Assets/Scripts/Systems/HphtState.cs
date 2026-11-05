@@ -140,7 +140,7 @@ public class HphtState : MonoBehaviour
         for (var i = 0; i < count; i++)
         {
             GemInstance stone = null;
-            for (var attempt = 0; attempt < 60; attempt++)
+            for (var attempt = 0; attempt < 600; attempt++)
             {
                 var diameter = 6.5f * Mathf.Pow(carats[i], 1f / 3f);
                 var value = DiamondGrading.Value(carats[i], colors[i], clarities[i]);

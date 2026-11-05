@@ -9,6 +9,10 @@ public enum FeatureKind
     Scratch, Chip, Pit, Abrasion,
     // Internal, added with the inclusion atlas
     TwoPhase, ThreePhase, NegativeCrystal, HorseTail, Feather, Growth, Twinning, Cloud,
+    // The traces of the treatments of the laboratory: the channel of a laser, the fissures of a KM laser, the lenticular bursts of heated amber (internal);
+    // the colour gathered in the cracks of a dyed stone, the pale lines of a coating, the pits of an acid, the colour along the edges of a diffusion (external)
+    LaserChannel, KmFeather, Lenticular,
+    DyeVein, CoatingWear, AcidEtch, EdgeColor,
 }
 
 public class LoupeFeature
@@ -25,6 +29,7 @@ public class LoupeFeature
     public float Size;     // 0..1
     public bool Heated;    // the stone was heated: halos around crystals, silk dissolved into dashes
     public bool Filled;    // fractures filled with glass or resin: the blue/orange flash
+    public Color Tint = Color.white;    // the colour of a treatment trace (the dye in a crack, the diffused colour along an edge)
 }
 
 // What the 10x loupe shows of a stone: inclusions inside (number from its clarity, types from its species and its
@@ -60,6 +65,9 @@ public static class LoupeFeatures
             var small = gem.ClarityGrade == "Eye-clean";
             AddInternal(features, gem, rng, InternalCount(gem), 0.8f, 0.7f, small ? 0.15f : 0.25f, small ? 0.4f : 1f);
         }
+
+        // What the treatments left in the stone, inside and on its surface.
+        AddTreatmentFeatures(features, gem, true, true);
 
         // External defects.
         var defects = DefectPlan(gem, rng);
@@ -104,6 +112,7 @@ public static class LoupeFeatures
 
             var small = gem.ClarityGrade == "Loupe clean" || gem.ClarityGrade == "Eye-clean";
             AddInternal(features, gem, rng, count, 0.85f, 0.85f, minSize, small ? 0.45f : 1f);
+            AddTreatmentFeatures(features, gem, false, true);
 
             // Growth structure: curved striae in a synthetic stone, angular growth marks and zones in a natural one.
             var profile = InclusionCatalog.ProfileFor(gem);
@@ -148,8 +157,8 @@ public static class LoupeFeatures
     {
         var profile = InclusionCatalog.ProfileFor(gem);
         var axisAngle = (float)(new System.Random((int)StoneOptics.StableHash((gem.SpecimenId ?? "") + "axes")).NextDouble()) * 180f;
-        var heated = gem.TreatmentGrade == "Chauffé";
-        var filled = gem.TreatmentGrade == "Fracture comblée";
+        var heated = gem.HasTreatment(TreatmentKind.Heated);
+        var filled = gem.HasTreatment(TreatmentKind.Filled);
         var previous = new Dictionary<FeatureKind, Vector3>();
 
         for (var i = 0; i < count; i++)
@@ -182,6 +191,89 @@ public static class LoupeFeatures
                 Filled = filled,
             });
         }
+    }
+
+    // The traces of the treatments, always at the same places for the same stone. includeInternal adds what is inside (the loupe and the microscope show
+    // it), includeExternal what is on the surface.
+    private static void AddTreatmentFeatures(List<LoupeFeature> features, GemInstance gem, bool includeExternal, bool includeInternal)
+    {
+        if (string.IsNullOrEmpty(gem.TreatmentGrade) || gem.TreatmentGrade == "Non traité") return;
+        var rng = new System.Random((int)StoneOptics.StableHash((gem.SpecimenId ?? "") + "|treatment-traces"));
+        var opaque = IsOpaque(gem);
+        var color = gem.BodyColor;
+        Color.RGBToHSV(color, out var h, out var s, out var v);
+        var dye = Color.HSVToRGB(h, Mathf.Clamp01(s + 0.2f), Mathf.Clamp(v * 0.8f, 0.15f, 1f));
+        var description = gem.TreatmentDescription ?? "";
+
+        if (includeInternal && !opaque)
+        {
+            // The laser: one to three straight channels from the surface to a bleached inclusion; the KM laser: zig-zag or spiral fissures.
+            if (gem.HasTreatment(TreatmentKind.Laser))
+            {
+                var km = gem.LaserName != null && gem.LaserName.Contains("KM");
+                var count = 1 + (int)(StoneOptics.StableHash((gem.SpecimenId ?? "") + "|laser-count") % 3);
+                for (var i = 0; i < count; i++)
+                {
+                    features.Add(new LoupeFeature
+                    {
+                        Kind = km ? FeatureKind.KmFeather : FeatureKind.LaserChannel,
+                        Variant = km ? rng.Next(2) : 0,
+                        External = false,
+                        Position = new Vector3(Range(rng, -0.45f, 0.45f), Range(rng, -0.45f, 0.45f), Range(rng, 0.05f, 0.45f)),
+                        Direction = km ? RandomDirection(rng) : new Vector3(Range(rng, -0.12f, 0.12f), Range(rng, -0.12f, 0.12f), 1f).normalized,
+                        Size = Range(rng, 0.5f, 1f),
+                    });
+                }
+            }
+
+            // The fissures of a heating that was cooled too fast, and the lenticular bursts of an amber that was cooled fast on purpose.
+            if (gem.HasTreatment(TreatmentKind.Heated))
+            {
+                var lenticular = description.Contains("lenticulaires");
+                var cracked = description.Contains("fissures de tension");
+                for (var i = 0; i < (lenticular ? 4 : 0) + (cracked ? 2 : 0); i++)
+                {
+                    features.Add(new LoupeFeature
+                    {
+                        Kind = lenticular && i < 4 ? FeatureKind.Lenticular : FeatureKind.Fracture,
+                        External = false,
+                        Position = new Vector3(Range(rng, -0.6f, 0.6f), Range(rng, -0.6f, 0.6f), Range(rng, -0.4f, 0.4f)),
+                        Direction = RandomDirection(rng),
+                        Size = Range(rng, 0.4f, 0.9f),
+                        Heated = true,
+                    });
+                }
+            }
+        }
+
+        if (!includeExternal) return;
+
+        // On the surface: the colour of a dye gathered in the cracks and the pores, the pale lines of a coating, the pits of an acid, the colour of a
+        // diffusion along the edges of the facets.
+        var wanted = new List<FeatureKind>();
+        if (gem.HasTreatment(TreatmentKind.Dyed)) AddKinds(wanted, FeatureKind.DyeVein, 3 + rng.Next(3));
+        if (gem.HasTreatment(TreatmentKind.Coated)) AddKinds(wanted, FeatureKind.CoatingWear, 3 + rng.Next(3));
+        if (gem.HasTreatment(TreatmentKind.Bleached)) AddKinds(wanted, FeatureKind.AcidEtch, 3 + rng.Next(3));
+        if (gem.HasTreatment(TreatmentKind.Diffused) && gem.DiffusionDepthMm < 0.5f) AddKinds(wanted, FeatureKind.EdgeColor, 4 + rng.Next(3));
+        foreach (var kind in wanted)
+        {
+            var normal = RandomDirection(rng);
+            normal = new Vector3(normal.x * 0.7f, normal.y * 0.7f, Mathf.Abs(normal.z) + 0.55f).normalized;
+            features.Add(new LoupeFeature
+            {
+                Kind = kind,
+                External = true,
+                Position = normal,
+                Direction = RandomDirection(rng),
+                Size = Range(rng, 0.35f, 1f),
+                Tint = kind == FeatureKind.DyeVein || kind == FeatureKind.EdgeColor ? dye : Color.white,
+            });
+        }
+    }
+
+    private static void AddKinds(List<FeatureKind> list, FeatureKind kind, int count)
+    {
+        for (var i = 0; i < count; i++) list.Add(kind);
     }
 
     private static Vector3 AlignedDirection(float axisAngle, System.Random rng)
@@ -236,6 +328,31 @@ public static class LoupeFeatures
         if (counts.TryGetValue(FeatureKind.Chip, out var chips)) lines.Add(chips == 1 ? "Un petit éclat au rondiste" : $"{chips} petits éclats au rondiste");
         if (counts.TryGetValue(FeatureKind.Pit, out var pits)) lines.Add(pits == 1 ? "Une piqûre de surface" : $"{pits} piqûres de surface");
         if (counts.TryGetValue(FeatureKind.Abrasion, out var abrasions)) lines.Add(abrasions == 1 ? "Facettes légèrement émoussées" : "Facettes émoussées par endroits");
+
+        // The traces of the treatments.
+        if (counts.ContainsKey(FeatureKind.DyeVein)) lines.Add("Couleur concentrée dans les fissures et les pores de la surface");
+        if (counts.ContainsKey(FeatureKind.CoatingWear)) lines.Add("Lignes et taches plus pâles sur les arêtes des facettes (couche mince rayée)");
+        if (counts.ContainsKey(FeatureKind.AcidEtch)) lines.Add("Surface finement piquée et mate, comme rongée");
+        if (counts.ContainsKey(FeatureKind.EdgeColor)) lines.Add("Couleur plus soutenue le long des arêtes de facettes");
+        return lines;
+    }
+
+    // What the treatments left on the surface of the stone, in words (the loupe and the microscope list them with the other defects).
+    public static List<string> TreatmentTraceLines(GemInstance gem)
+    {
+        var lines = new List<string>();
+        var seen = new HashSet<FeatureKind>();
+        foreach (var f in Generate(gem))
+        {
+            if (!f.External || !seen.Add(f.Kind)) continue;
+            switch (f.Kind)
+            {
+                case FeatureKind.DyeVein: lines.Add("couleur concentrée dans les fissures et les pores (teinture)"); break;
+                case FeatureKind.CoatingWear: lines.Add("lignes et taches pâles sur les arêtes des facettes (revêtement rayé)"); break;
+                case FeatureKind.AcidEtch: lines.Add("surface finement piquée et mate (attaque acide)"); break;
+                case FeatureKind.EdgeColor: lines.Add("couleur concentrée le long des arêtes de facettes (diffusion en surface)"); break;
+            }
+        }
         return lines;
     }
 

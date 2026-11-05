@@ -20,6 +20,20 @@ public class InclusionPart
     public float Fill = -1f;         // polygon fill strength, < 0 = default
     public int Iridescence;          // 1 = interference colors of a thin film, 2 = the blue/orange flash of a filled fracture
     public float Strength = 1f;
+
+    // The same part, moved by an offset (for a part drawn around its own origin).
+    public InclusionPart Offset(Vector2 by)
+    {
+        A += by;
+        B += by;
+        if (Points != null)
+        {
+            var moved = new Vector2[Points.Length];
+            for (var i = 0; i < Points.Length; i++) moved[i] = Points[i] + by;
+            Points = moved;
+        }
+        return this;
+    }
 }
 
 // What every kind of inclusion looks like, drawn from the real shapes of the Photo Atlas of Inclusions in Gemstones:
@@ -60,6 +74,13 @@ public static class InclusionShapes
             case FeatureKind.Striae: BuildStriae(parts, f, rng); break;
             case FeatureKind.Twinning: BuildTwinning(parts, f, rng); break;
             case FeatureKind.Cloud: BuildCloud(parts, f, rng); break;
+            case FeatureKind.LaserChannel: BuildLaserChannel(parts, f, rng); break;
+            case FeatureKind.KmFeather: BuildKmFeather(parts, f, rng); break;
+            case FeatureKind.Lenticular: BuildLenticular(parts, f, rng); break;
+            case FeatureKind.DyeVein: BuildDyeVein(parts, f, rng); break;
+            case FeatureKind.CoatingWear: BuildCoatingWear(parts, f, rng); break;
+            case FeatureKind.AcidEtch: BuildAcidEtch(parts, f, rng); break;
+            case FeatureKind.EdgeColor: BuildEdgeColor(parts, f, rng); break;
             case FeatureKind.Scratch:
             {
                 var length = 0.3f + 0.8f * f.Size;
@@ -124,6 +145,13 @@ public static class InclusionShapes
             case FeatureKind.Striae: return "stries de croissance courbes";
             case FeatureKind.Twinning: return "macles polysynthétiques";
             case FeatureKind.Cloud: return "nuages de fines particules";
+            case FeatureKind.LaserChannel: return "canal droit de moins de 0,02 mm vers une inclusion blanchie (trou de laser)";
+            case FeatureKind.KmFeather: return variant == 1 ? "fissures en spirale vers une inclusion blanchie (laser KM)" : "fissures en zig-zag vers une inclusion blanchie (laser KM)";
+            case FeatureKind.Lenticular: return "éclatements lenticulaires (disques de tension)";
+            case FeatureKind.DyeVein: return "couleur concentrée dans les fissures et les pores (teinture)";
+            case FeatureKind.CoatingWear: return "lignes et taches pâles sur les arêtes (revêtement rayé)";
+            case FeatureKind.AcidEtch: return "piqûres fines de la surface (attaque acide)";
+            case FeatureKind.EdgeColor: return "couleur concentrée le long des arêtes de facettes (diffusion en surface)";
             default: return kind.ToString();
         }
     }
@@ -473,6 +501,99 @@ public static class InclusionShapes
             }
         }
         parts.Add(Tinted(Poly(Ellipse(0.045f, 0.03f, 8, rng, 0.2f), 1f), Black));
+    }
+
+    // ---- The traces of the treatments ----------------------------------------------------------------------------
+
+    // A laser hole: a very fine straight channel with parallel walls from the surface to a dark inclusion that the acid has bleached.
+    private static void BuildLaserChannel(List<InclusionPart> parts, LoupeFeature f, System.Random rng)
+    {
+        var length = 0.45f + 0.9f * f.Size;
+        parts.Add(Tinted(Line(new Vector2(-length / 2f, 0.004f), new Vector2(length / 2f, 0.004f), 0.003f, 0.9f), Salt));
+        parts.Add(Tinted(Line(new Vector2(-length / 2f, -0.004f), new Vector2(length / 2f, -0.004f), 0.003f, 0.9f), Salt));
+        parts.Add(Tinted(Ring(new Vector2(-length / 2f, 0f), 0.014f, 0.004f, 0.9f), Salt));
+        parts.Add(Tinted(Poly(Ellipse(0.07f, 0.05f, 10, rng, 0.25f), 0.9f), PaleWhite).Offset(new Vector2(length / 2f, 0f)));
+        parts.Add(Tinted(Dot(new Vector2(length / 2f, 0f), 0.03f, 0.9f), Salt));
+    }
+
+    // A KM laser: the fissures that the heated inclusion made, irregular, in zig-zag or in spiral, out to the surface, and the bleached inclusion at their end.
+    private static void BuildKmFeather(List<InclusionPart> parts, LoupeFeature f, System.Random rng)
+    {
+        var length = 0.5f + 0.9f * f.Size;
+        var points = new List<Vector2>();
+        if (f.Variant == 1)
+        {
+            // A spiral that opens as it goes out.
+            for (var i = 0; i <= 14; i++)
+            {
+                var t = i / 14f;
+                var angle = t * 600f;
+                var radius = 0.02f + 0.16f * t * (0.8f + 0.2f * f.Size);
+                points.Add(Rot(new Vector2(radius, 0f), angle));
+            }
+        }
+        else
+        {
+            for (var i = 0; i <= 8; i++)
+            {
+                var t = i / 8f;
+                points.Add(new Vector2(-length / 2f + length * t, (i % 2 == 0 ? 1f : -1f) * R(rng, 0.03f, 0.09f)));
+            }
+        }
+        for (var i = 1; i < points.Count; i++) parts.Add(Tinted(Line(points[i - 1], points[i], 0.006f, 0.95f), Silver));
+        for (var i = 1; i < points.Count - 1; i += 2) parts.Add(Tinted(Dot(points[i] + new Vector2(0f, 0.012f), 0.008f, 0.7f), Salt));
+        parts.Add(Tinted(Poly(Ellipse(0.06f, 0.045f, 10, rng, 0.3f), 0.9f), PaleWhite).Offset(points[0]));
+    }
+
+    // The lenticular bursts of an amber cooled fast: flat circular fissures, with a ring and a spoke.
+    private static void BuildLenticular(List<InclusionPart> parts, LoupeFeature f, System.Random rng)
+    {
+        var radius = 0.1f + 0.2f * f.Size;
+        parts.Add(Tinted(Ring(Vector2.zero, radius, 0.006f, 0.9f), Silver));
+        parts.Add(Tinted(Ring(Vector2.zero, radius * 0.62f, 0.004f, 0.7f), Silver));
+        parts.Add(Tinted(Dot(Vector2.zero, 0.012f, 0.8f), Black));
+        parts.Add(Tinted(Line(Vector2.zero, Rot(new Vector2(radius, 0f), R(rng, 0f, 360f)), 0.004f, 0.7f), Silver));
+    }
+
+    // The colour of a dye gathered along a crack and in the pores around it.
+    private static void BuildDyeVein(List<InclusionPart> parts, LoupeFeature f, System.Random rng)
+    {
+        var length = 0.4f + 0.9f * f.Size;
+        var path = JaggedPath(Vector2.zero, length, 6, 0.4f, rng, true);
+        for (var i = 1; i < path.Length; i++) parts.Add(Tinted(Line(path[i - 1], path[i], 0.022f, 0.9f), f.Tint));
+        for (var i = 0; i < 5; i++)
+            parts.Add(Tinted(Dot(path[rng.Next(path.Length)] + new Vector2(R(rng, -0.05f, 0.05f), R(rng, -0.05f, 0.05f)), R(rng, 0.012f, 0.028f), 0.85f), f.Tint));
+    }
+
+    // A thin coating that was scratched: pale lines and spots along the edges of the facets, where the layer has gaps.
+    private static void BuildCoatingWear(List<InclusionPart> parts, LoupeFeature f, System.Random rng)
+    {
+        var length = 0.3f + 0.8f * f.Size;
+        parts.Add(Tinted(Line(new Vector2(-length / 2f, 0f), new Vector2(length / 2f, R(rng, -0.04f, 0.04f)), 0.012f, 0.95f), Salt));
+        for (var i = 0; i < 3; i++)
+            parts.Add(Tinted(Dot(new Vector2(R(rng, -length / 2f, length / 2f), R(rng, -0.08f, 0.08f)), R(rng, 0.012f, 0.03f), 0.9f), Salt));
+    }
+
+    // The surface etched by an acid: a network of tiny dark pits.
+    private static void BuildAcidEtch(List<InclusionPart> parts, LoupeFeature f, System.Random rng)
+    {
+        var count = 7 + (int)(f.Size * 6f);
+        var previous = Vector2.zero;
+        for (var i = 0; i < count; i++)
+        {
+            var point = new Vector2(R(rng, -0.25f, 0.25f), R(rng, -0.18f, 0.18f));
+            parts.Add(new InclusionPart { Type = InclusionPart.Shape.Dot, A = point, Radius = R(rng, 0.008f, 0.02f), Dark = true });
+            if (i > 0 && rng.NextDouble() < 0.5) parts.Add(Line(previous, point, 0.004f, 0.5f));
+            previous = point;
+        }
+    }
+
+    // The colour of a surface diffusion, gathered along the edge of a facet.
+    private static void BuildEdgeColor(List<InclusionPart> parts, LoupeFeature f, System.Random rng)
+    {
+        var length = 0.4f + 0.7f * f.Size;
+        parts.Add(Tinted(new InclusionPart { Type = InclusionPart.Shape.Band, A = new Vector2(-length / 2f, 0f), B = new Vector2(length / 2f, R(rng, -0.03f, 0.03f)), Width = 0.045f, Strength = 0.85f }, f.Tint));
+        parts.Add(Tinted(Line(new Vector2(-length / 2f, 0.03f), new Vector2(length / 2f, 0.03f), 0.006f, 0.9f), f.Tint));
     }
 
     // ---- Fractures, cleavage, feathers and fingerprints --------------------------------------------------------

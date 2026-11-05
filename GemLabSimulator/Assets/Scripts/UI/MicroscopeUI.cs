@@ -24,7 +24,7 @@ public class MicroscopeUI : MonoBehaviour
     private static readonly Color ButtonColor = new Color(0.25f, 0.25f, 0.32f, 1f);
     private static readonly Color ButtonOn = new Color(0.30f, 0.55f, 0.35f, 1f);
 
-    private enum Lighting { Reflected, Darkfield }
+    private enum Lighting { Reflected, Darkfield, Immersion }
 
     private class MicroFeature
     {
@@ -46,7 +46,7 @@ public class MicroscopeUI : MonoBehaviour
     private Text focusText;
     private Text magnificationText;
     private readonly Button[] objectiveButtons = new Button[4];
-    private readonly Button[] lightingButtons = new Button[2];
+    private readonly Button[] lightingButtons = new Button[3];
     private readonly float[] magnifications = { 10f, 20f, 40f, 60f };
     private const string Objective60Id = "Objectif60X";
     private const string CameraId = "CameraMicroscope";
@@ -154,7 +154,7 @@ public class MicroscopeUI : MonoBehaviour
             gemName = stone.IsIdentified ? stone.Definition.displayName : "Spécimen non identifié",
             gemId = stone.DisplayId,
             magnification = magnifications[objective],
-            lighting = lighting == Lighting.Darkfield ? "Fond sombre" : "Lumière réfléchie",
+            lighting = lighting == Lighting.Darkfield ? "Fond sombre" : lighting == Lighting.Immersion ? "Immersion" : "Lumière réfléchie",
             day = GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1,
         });
         Destroy(image);
@@ -335,6 +335,8 @@ public class MicroscopeUI : MonoBehaviour
         var half = new Vector3(stone.LengthMm, stone.WidthMm, Mathf.Max(stone.DepthMm, 0.5f)) * 0.5f;
         GemView3D.Colors(stone, out var body, out _);
         var dark = lighting == Lighting.Darkfield;
+        var immersion = lighting == Lighting.Immersion;
+        var pattern = TreatmentSignatures.Immersion(stone);
 
         // Silhouette of the stone: the projection of its ellipsoid on the lens plane (in mm).
         float cxx = 0f, cxy = 0f, cyy = 0f;
@@ -356,7 +358,8 @@ public class MicroscopeUI : MonoBehaviour
         var sin = Mathf.Sin(-angle);
         var edgeSoft = Mathf.Max(1f, Mathf.Min(major, minor) * mmToPx * 0.05f);
 
-        var stage = dark ? new Color(0f, 0f, 0f) : new Color(0.10f, 0.10f, 0.12f);
+        // In immersion the stone sits in a pale liquid of nearly the same refractive index: the colour inside it shows whatever the treatment did to it.
+        var stage = dark ? new Color(0f, 0f, 0f) : immersion ? new Color(0.66f, 0.70f, 0.46f) : new Color(0.10f, 0.10f, 0.12f);
         var center = ViewSize * 0.5f;
 
         for (var y = 0; y < ViewSize; y++)
@@ -380,7 +383,11 @@ public class MicroscopeUI : MonoBehaviour
                     var shade = 0.55f + 0.35f * (1f - Mathf.Min(1f, d2));
                     var noise = Hash(x, y) * 0.05f;
                     Color inside;
-                    if (dark)
+                    if (immersion)
+                    {
+                        inside = ImmersionColor(body, stage, pattern, d2, rx, ry, mmX, mmY, noise);
+                    }
+                    else if (dark)
                     {
                         // Darkfield: the stone is almost black, with a faint glow along its edge.
                         var rim = Mathf.Pow(Mathf.Clamp01(Mathf.Sqrt(d2)), 6f) * 0.25f;
@@ -456,6 +463,53 @@ public class MicroscopeUI : MonoBehaviour
         }
     }
 
+    // The colour of a point of the stone seen in immersion. An untreated stone, a heated one, is evenly coloured; a surface diffusion gathers the colour
+    // along the edges of the facets, in a spider web; a beryllium treatment colours the stone in zones that follow its shape, with an orange rim; a dye
+    // lies in patches, along the cracks.
+    private static Color ImmersionColor(Color body, Color stage, ImmersionPattern pattern, float d2, float rx, float ry, float mmX, float mmY, float noise)
+    {
+        var pale = Color.Lerp(stage, Color.white, 0.55f);
+        var radius = Mathf.Sqrt(Mathf.Min(d2, 1.4f));
+        switch (pattern)
+        {
+            case ImmersionPattern.SurfaceWeb:
+            {
+                var angle = Mathf.Atan2(ry, rx);
+                var spokes = Mathf.Abs(Mathf.Sin(angle * 8f)) < 0.09f ? 1f : 0f;
+                var rings = Mathf.Abs(Mathf.Sin(radius * 9.5f)) < 0.10f ? 1f : 0f;
+                var web = Mathf.Max(spokes * Mathf.Clamp01(radius * 1.6f), rings * 0.8f);
+                var strength = Mathf.Clamp01(Mathf.Pow(radius, 4f) * 1.3f + web * 0.85f);
+                var colour = Color.Lerp(pale, body, strength) + new Color(noise, noise, noise) * 0.4f;
+                colour.a = 1f;
+                return colour;
+            }
+            case ImmersionPattern.CoreRim:
+            {
+                var rim = Mathf.Clamp01((radius - 0.62f) / 0.30f);
+                var zone = 0.5f + 0.5f * Mathf.Sin(radius * 7f + rx * 2f);
+                var inner = Color.Lerp(body, pale, 0.25f + 0.2f * zone);
+                var colour = Color.Lerp(inner, new Color(0.96f, 0.50f, 0.18f), rim * 0.85f) + new Color(noise, noise, noise) * 0.3f;
+                colour.a = 1f;
+                return colour;
+            }
+            case ImmersionPattern.Patchy:
+            {
+                var patch = Mathf.PerlinNoise(mmX * 2.2f + 11f, mmY * 2.2f + 5f);
+                var fine = Mathf.PerlinNoise(mmX * 9f, mmY * 9f);
+                var strength = Mathf.Clamp01((patch - 0.30f) * 2.4f + (fine - 0.5f) * 0.4f);
+                var colour = Color.Lerp(pale, body, strength);
+                colour.a = 1f;
+                return colour;
+            }
+            default:
+            {
+                var colour = body * (0.9f + 0.1f * (1f - Mathf.Min(1f, d2))) + new Color(noise, noise, noise) * 0.3f;
+                colour.a = 1f;
+                return colour;
+            }
+        }
+    }
+
     private static float Hash(int x, int y)
     {
         var h = Mathf.Sin(x * 12.9898f + y * 78.233f) * 43758.5453f;
@@ -476,7 +530,8 @@ public class MicroscopeUI : MonoBehaviour
         {
             hintText.text = "Déposez une gemme sur la platine";
             // Empty stage.
-            var empty = lighting == Lighting.Darkfield ? new Color32(0, 0, 0, 255) : new Color32(26, 26, 31, 255);
+            var empty = lighting == Lighting.Darkfield ? new Color32(0, 0, 0, 255)
+                : lighting == Lighting.Immersion ? new Color32(168, 178, 117, 255) : new Color32(26, 26, 31, 255);
             for (var i = 0; i < buffer.Length; i++) buffer[i] = empty;
             viewTexture.SetPixels32(buffer);
             viewTexture.Apply();
@@ -561,6 +616,15 @@ public class MicroscopeUI : MonoBehaviour
             text += "\n\nObservées :";
             foreach (var name in names) text += $"\n• {name}";
         }
+
+        // What the treatments left on the surface, and what the immersion shows.
+        var traces = LoupeFeatures.TreatmentTraceLines(stone);
+        if (traces.Count > 0)
+        {
+            text += "\n\nSurface :";
+            foreach (var trace in traces) text += $"\n• {trace}";
+        }
+        if (lighting == Lighting.Immersion) text += $"\n\nImmersion : {TreatmentSignatures.ImmersionNote(stone)}";
 
         resultText.text = text;
     }
@@ -680,19 +744,19 @@ public class MicroscopeUI : MonoBehaviour
         }
 
         RuntimeUIKit.MakeText("LightingHeader", panel.transform, "Éclairage", 14, TextAnchor.UpperLeft, Gold, new Vector2(x + 4f, -108f), new Vector2(200f, 20f));
-        var names = new[] { "Lumière réfléchie", "Fond sombre (darkfield)" };
-        for (var i = 0; i < 2; i++)
+        var names = new[] { "Lumière réfléchie", "Fond sombre (darkfield)", "Immersion (liquide d'indice)" };
+        for (var i = 0; i < 3; i++)
         {
             var captured = (Lighting)i;
             lightingButtons[i] = RuntimeUIKit.MakeButton("Lighting" + i, panel.transform, names[i], 12, ButtonColor,
-                new Vector2(x, -132f - i * 32f), new Vector2(228f, 26f));
+                new Vector2(x, -130f - i * 27f), new Vector2(228f, 25f));
             lightingButtons[i].onClick.AddListener(() => SelectLighting(captured));
         }
 
-        focusText = RuntimeUIKit.MakeText("Focus", panel.transform, "", 12, TextAnchor.UpperLeft, new Color(0.85f, 0.9f, 1f), new Vector2(x + 4f, -200f), new Vector2(160f, 16f));
-        var focusUp = RuntimeUIKit.MakeButton("FocusUp", panel.transform, "+", 13, ButtonColor, new Vector2(x + 168f, -197f), new Vector2(28f, 22f));
+        focusText = RuntimeUIKit.MakeText("Focus", panel.transform, "", 12, TextAnchor.UpperLeft, new Color(0.85f, 0.9f, 1f), new Vector2(x + 4f, -214f), new Vector2(160f, 16f));
+        var focusUp = RuntimeUIKit.MakeButton("FocusUp", panel.transform, "+", 13, ButtonColor, new Vector2(x + 168f, -211f), new Vector2(28f, 22f));
         focusUp.onClick.AddListener(() => ChangeFocus(0.05f));
-        var focusDown = RuntimeUIKit.MakeButton("FocusDown", panel.transform, "-", 13, ButtonColor, new Vector2(x + 200f, -197f), new Vector2(28f, 22f));
+        var focusDown = RuntimeUIKit.MakeButton("FocusDown", panel.transform, "-", 13, ButtonColor, new Vector2(x + 200f, -211f), new Vector2(28f, 22f));
         focusDown.onClick.AddListener(() => ChangeFocus(-0.05f));
 
         // Mini map: shows where the view sits over the stone.
@@ -700,7 +764,7 @@ public class MicroscopeUI : MonoBehaviour
         var miniGO = new GameObject("MiniMap", typeof(RectTransform), typeof(Image));
         miniGO.transform.SetParent(panel.transform, false);
         miniRect = miniGO.GetComponent<RectTransform>();
-        RuntimeUIKit.SetTopLeft(miniRect, new Vector2(x + 4f, -232f), new Vector2(88f, 88f));
+        RuntimeUIKit.SetTopLeft(miniRect, new Vector2(x + 4f, -240f), new Vector2(88f, 88f));
         miniMap = new GemView3D(48);
         var miniImage = miniGO.GetComponent<Image>();
         miniImage.sprite = miniMap.Sprite;
@@ -718,14 +782,14 @@ public class MicroscopeUI : MonoBehaviour
         fovMarker.enabled = false;
 
         RuntimeUIKit.MakeText("MapLabel", panel.transform, "Zone observée", 11, TextAnchor.UpperLeft, new Color(0.6f, 0.62f, 0.68f),
-            new Vector2(x + 102f, -236f), new Vector2(130f, 16f));
+            new Vector2(x + 102f, -244f), new Vector2(130f, 16f));
 
         // Microscope camera (bought at the GemStore): photographs the field of view and sends it to the lab computer.
         photoButton = RuntimeUIKit.MakeButton("Photo", panel.transform, "Photographier", 12, new Color(0.30f, 0.38f, 0.58f, 1f),
-            new Vector2(x + 102f, -258f), new Vector2(128f, 28f));
+            new Vector2(x + 102f, -266f), new Vector2(128f, 28f));
         photoButton.onClick.AddListener(TakePhoto);
         photoCountText = RuntimeUIKit.MakeText("PhotoCount", panel.transform, "", 11, TextAnchor.UpperLeft, new Color(0.65f, 0.72f, 0.9f),
-            new Vector2(x + 102f, -290f), new Vector2(130f, 32f));
+            new Vector2(x + 102f, -298f), new Vector2(130f, 32f));
 
         RuntimeUIKit.MakeBox("ResultBox", panel.transform, new Vector2(x - 4f, -332f), new Vector2(240f, 110f), new Color(0.04f, 0.05f, 0.07f, 1f));
         resultText = RuntimeUIKit.MakeText("Result", panel.transform, "", 11, TextAnchor.UpperLeft, new Color(0.85f, 0.92f, 1f),

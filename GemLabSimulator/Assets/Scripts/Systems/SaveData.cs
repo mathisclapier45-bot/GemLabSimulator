@@ -71,6 +71,8 @@ public class GemInstanceSaveData
     public float irradiationHue;    // the colour before the irradiation
     public float irradiationSaturation;
     public float irradiationBrightness;
+    public string dyeName;          // the dye the stone was dipped in, if any
+    public string diffusionElement; // the element that was diffused, if any
     public float diffusionDepth;    // how deep a diffused element went, in millimetres (0: not diffused)
     public float diffusionHue;      // the colour before the diffusion
     public float diffusionSaturation;

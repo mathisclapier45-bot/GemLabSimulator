@@ -47,8 +47,8 @@ public static class HphtCatalog
     public const int PressureStep = 5;
     public static readonly int[] DurationDays = { 1, 2, 3 };
 
-    // Whether the diamond has nitrogen in its structure: most do. Stable for a given stone, and readable on the infrared spectrum of the station.
-    public static bool HasNitrogen(GemInstance gem) => StoneOptics.StableHash((gem.SpecimenId ?? "") + "|nitrogen") % 100 >= 30;
+    // Whether the diamond has nitrogen in its structure: most do (type Ia). The type is the one every tool reads (infrared, DiamondSure, UV-Vis).
+    public static bool HasNitrogen(GemInstance gem) => DiamondSure.DiamondTypeOf(gem) == "Ia";
 
     public static string TypeLabel(GemInstance gem) => HasNitrogen(gem) ? "azote en agrégats (type Ia)" : "très peu d'azote (type IIa)";
 

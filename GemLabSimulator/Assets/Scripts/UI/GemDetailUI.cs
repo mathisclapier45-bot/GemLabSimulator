@@ -85,13 +85,13 @@ public static class GemObservations
 
         // Optical instruments.
         if (Seen(ExaminationTool.MeasurementType.Pleochroism))
-            Add("Dichroscope", def.pleochroic ? $"Pléochroïsme : {def.pleochroicDescription}" : "Pléochroïsme : aucun");
+            Add("Dichroscope", TreatmentSignatures.PleochroismText(gem));
         if (Seen(ExaminationTool.MeasurementType.OpticalCharacter))
             Add("Polariscope", $"Polariscope : {OpticalDescriptions.PolariscopeText(def)}");
         if (Seen(ExaminationTool.MeasurementType.InterferenceFigure))
             Add("Polariscope", $"Conoscope : {OpticalDescriptions.ConoscopeText(def)}");
         if (Seen(ExaminationTool.MeasurementType.AbsorptionSpectrum))
-            Add("Spectroscope", $"Spectroscope : {def.absorptionSpectrum}");
+            Add("Spectroscope", $"Spectroscope : {TreatmentSignatures.SpectrumDescription(gem)}");
         if (Seen(ExaminationTool.MeasurementType.Inclusions))
         {
             Add("Microscope", $"Clarté : {gem.ClarityGrade} ({gem.ClarityDescription})");

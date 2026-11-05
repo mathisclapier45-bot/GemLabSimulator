@@ -23,6 +23,9 @@ public static class InclusionWindowReport
             case FeatureKind.Healing: return "givres de guérison (fractures cicatrisées)";
             case FeatureKind.Twinning: return "macles";
             case FeatureKind.Cloud: return "nuages de fines particules";
+            case FeatureKind.LaserChannel: return "un canal droit très fin (trou de laser)";
+            case FeatureKind.KmFeather: return "des fissures irrégulières en zig-zag ou en spirale";
+            case FeatureKind.Lenticular: return "des disques de tension (éclatements lenticulaires)";
             default: return "structures de croissance (zones et stries)";
         }
     }
@@ -44,8 +47,8 @@ public static class InclusionWindowReport
         }
 
         // Treatments leave their own traces inside the stone.
-        if (gem.TreatmentGrade == "Chauffé" && !found.Contains("zones de tension (halos autour des inclusions)")) found.Add("zones de tension (halos autour des inclusions)");
-        if (gem.TreatmentGrade == "Fracture comblée" && !found.Contains("fractures et fissures")) found.Add("fractures et fissures");
+        if (gem.HasTreatment(TreatmentKind.Heated) && !found.Contains("zones de tension (halos autour des inclusions)")) found.Add("zones de tension (halos autour des inclusions)");
+        if (gem.HasTreatment(TreatmentKind.Filled) && !found.Contains("fractures et fissures")) found.Add("fractures et fissures");
 
         switch (gem.ClarityGrade)
         {

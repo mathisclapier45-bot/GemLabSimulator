@@ -115,7 +115,7 @@ public class DichroscopeUI : MonoBehaviour
     private void SetStone(GemInstance gem)
     {
         stone = gem;
-        optics = PleochroismInfo.ForGem(gem.Definition);
+        optics = TreatmentSignatures.Pleochroism(gem);
 
         // The principal directions of the indicatrix sit at a fixed, specimen-specific orientation in the stone.
         opticFrame = StoneOptics.OpticFrame(gem);

@@ -1,6 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// The treatments the detection tools look for. A stone can carry several (the history is in its treatment line), so the tools ask for each kind.
+public enum TreatmentKind { Heated, Filled, Irradiated, Bleached, Dyed, Coated, Diffused, Laser, Hpht }
+
+// What fills the fissures or the pores of a stone, as the infrared and the Raman spectra read it.
+public enum FillerFamily { None, Oil, Wax, Resin, Glass, Flux }
+
 public class GemInstance
 {
     private static int nextSpecimenNumber = 1;
@@ -77,6 +83,46 @@ public class GemInstance
     public string LaserName { get; private set; }
     public bool IsLaserTreated => !string.IsNullOrEmpty(LaserName);
 
+    private bool GradeHas(string text) =>
+        !string.IsNullOrEmpty(TreatmentGrade) && TreatmentGrade.IndexOf(text, System.StringComparison.OrdinalIgnoreCase) >= 0;
+
+    // Whether the stone went through a treatment, whatever the order: the grade is a history ("Blanchi puis teint", "Irradié + chauffé"...).
+    public bool HasTreatment(TreatmentKind kind)
+    {
+        switch (kind)
+        {
+            case TreatmentKind.Heated: return GradeHas("chauffé");
+            case TreatmentKind.Filled: return IsFilled || GradeHas("fracture comblée") || GradeHas("huilé") || GradeHas("guéri au borax");
+            case TreatmentKind.Irradiated: return IsIrradiated || (GradeHas("irradié") && !GradeHas("fanée"));
+            case TreatmentKind.Bleached: return GradeHas("blanchi");
+            case TreatmentKind.Dyed: return GradeHas("teint");
+            case TreatmentKind.Coated: return IsCoated || GradeHas("revêtu");
+            case TreatmentKind.Diffused: return DiffusionDepthMm > 0f || (GradeHas("diffusion") && !GradeHas("enlevée"));
+            case TreatmentKind.Laser: return IsLaserTreated;
+            default: return IsHphtTreated;
+        }
+    }
+
+    // The family of the substance in the fissures: the product of the autoclave, or (for the stones that came treated) oil by default.
+    public FillerFamily FillerKind
+    {
+        get
+        {
+            if (IsFilled)
+            {
+                if (FillerName.StartsWith("Huile")) return FillerFamily.Oil;
+                if (FillerName.StartsWith("Cire")) return FillerFamily.Wax;
+                if (FillerName.StartsWith("Résine")) return FillerFamily.Resin;
+                if (FillerName.StartsWith("Verre")) return FillerFamily.Glass;
+                if (FillerName.StartsWith("Borax")) return FillerFamily.Flux;
+            }
+            if (GradeHas("guéri au borax")) return FillerFamily.Flux;
+            if (GradeHas("fracture comblée")) return FillerFamily.Resin;
+            if (GradeHas("huilé")) return FillerFamily.Oil;
+            return FillerFamily.None;
+        }
+    }
+
     // The colour the irradiator gave the stone ("Quartz fumé", "Topaze bleu Londres"...), empty when it was not irradiated. An unstable colour fades
     // on FadeDay (0: stable) and the stone goes back to its first colour (see IrradiationCatalog).
     public string IrradiationName { get; private set; }
@@ -97,6 +143,10 @@ public class GemInstance
     // The product that fills the fissures or the pores of the stone, put in at the treatments laboratory (see FillingCatalog).
     public string FillerName { get; private set; }
     public bool IsFilled => !string.IsNullOrEmpty(FillerName);
+
+    // What the detection tools read of a dye and of a diffusion: the name of the pot of dye, and the element that went in (see the catalogs).
+    public string DyeName { get; private set; }
+    public string DiffusionElement { get; private set; }
     public bool IsSynthetic { get; private set; }
     public string AuthenticityGrade { get; private set; }
     public string AuthenticityDescription { get; private set; }
@@ -527,6 +577,8 @@ public class GemInstance
             irradiationOriginalHue = data.irradiationHue,
             irradiationOriginalSaturation = data.irradiationSaturation,
             irradiationOriginalBrightness = data.irradiationBrightness,
+            DyeName = string.IsNullOrEmpty(data.dyeName) ? null : data.dyeName,
+            DiffusionElement = string.IsNullOrEmpty(data.diffusionElement) ? null : data.diffusionElement,
             DiffusionDepthMm = data.diffusionDepth,
             diffusionOriginalHue = data.diffusionHue,
             diffusionOriginalSaturation = data.diffusionSaturation,
@@ -637,6 +689,8 @@ public class GemInstance
             irradiationHue = irradiationOriginalHue,
             irradiationSaturation = irradiationOriginalSaturation,
             irradiationBrightness = irradiationOriginalBrightness,
+            dyeName = DyeName,
+            diffusionElement = DiffusionElement,
             diffusionDepth = DiffusionDepthMm,
             diffusionHue = diffusionOriginalHue,
             diffusionSaturation = diffusionOriginalSaturation,
@@ -740,6 +794,7 @@ public class GemInstance
         HasReport = false;
         TradeName = null;
         FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        DyeName = result.Bath;
         TreatmentGrade = result.IsRuined ? "Teint (instable)" : wasBleached ? "Blanchi puis teint" : "Teint";
         TreatmentDescription = wasBleached ? $"{TreatmentDescription} {result.Description}" : result.Description;
 
@@ -840,6 +895,7 @@ public class GemInstance
         if (result.Outcome == DiffusionOutcome.Ruined) return;
 
         DiffusionDepthMm = Mathf.Max(0.01f, result.DepthMm);
+        DiffusionElement = result.Element;
         if (result.Star) DiffusionStar = true;
         if (!HasColor || !result.ChangesColor) return;
         diffusionOriginalHue = ColorHue;

@@ -51,6 +51,7 @@ public struct DyeResult
     public float Brightness;
     public string Description;
     public string Message;
+    public string Bath;              // the pot the stone came out of: what the detection tools read of the dye
 
     public bool IsRuined => Outcome == DyeOutcome.Ruined;
 }

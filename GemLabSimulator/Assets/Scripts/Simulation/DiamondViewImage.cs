@@ -31,7 +31,7 @@ public static class DiamondViewImage
             if (name == "Diamant_Synthetique_HPHT") return DiamondViewKind.Hpht;
             return StoneOptics.StableHash((gem.SpecimenId ?? "") + "|synth") % 2 == 0 ? DiamondViewKind.Cvd : DiamondViewKind.Hpht;
         }
-        return gem.TreatmentGrade == "Chauffé" ? DiamondViewKind.NaturalAnnealed : DiamondViewKind.Natural;
+        return gem.HasTreatment(TreatmentKind.Heated) || gem.HasTreatment(TreatmentKind.Hpht) ? DiamondViewKind.NaturalAnnealed : DiamondViewKind.Natural;
     }
 
     // One line for the stone sheet and the report.
@@ -112,7 +112,7 @@ public static class DiamondViewImage
         var squareMarks = result.Kind == DiamondViewKind.Natural && hash("square") % 100 < 45;
         var hourglass = hash("hourglass") % 2 == 0;
         var stripes = 9f + (hash("stripes") % 5);
-        var typeIIa = hash("t2a") % 100 < 4;
+        var typeIIa = DiamondSure.DiamondTypeOf(gem) == "IIa";
 
         var cx = (w - 1) * 0.5f;
         var cy = (h - 1) * 0.5f;

@@ -156,7 +156,7 @@ public class LoupeUI : MonoBehaviour
         visualObserved = false;
         inspectedLocal = false;
         uvSeen = false;
-        uvInfo = FluorescenceInfo.ForGem(gem.Definition, true);
+        uvInfo = TreatmentSignatures.Fluorescence(gem, true);
         BuildFeatureViews();
         panel.SetActive(true);
         Refresh();
@@ -255,7 +255,7 @@ public class LoupeUI : MonoBehaviour
     private void SetStone(GemInstance gem)
     {
         stone = gem;
-        uvInfo = FluorescenceInfo.ForGem(gem.Definition, true);
+        uvInfo = TreatmentSignatures.Fluorescence(gem, true);
         uvSeen = uvOn;
         orientation = Quaternion.identity;
         pan = Vector2.zero;

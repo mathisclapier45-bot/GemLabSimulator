@@ -116,6 +116,8 @@ public static class RamanLibrary
         Define("Résine époxy", "1004:5:0.6,1112:8:0.3,1186:8:0.5,1250:15:0.4,1450:15:0.6,1610:8:1,2930:40:0.5,3065:20:0.4");
         Define("Huile de cèdre", "1300:15:0.5,1440:12:0.8,1660:10:0.3,2850:15:0.6,2880:15:0.9,2930:20:1");
         Define("Verre au plomb", "150:30:0.3,350:80:0.5,970:150:1");
+        Define("Paraffine (cire)", "1063:6:0.5,1130:6:0.4,1296:8:0.6,1440:10:0.7,2850:12:1,2883:12:0.9");
+        Define("Verre borate (fondant)", "500:120:0.8,770:60:0.4,1300:80:0.5");
     }
 
     public static IEnumerable<string> Names
@@ -315,6 +317,19 @@ public static class RamanSpectrum
     // What fills the fractures, when the stone is treated.
     public static string FillerOf(GemInstance gem, string name, uint hash)
     {
+        // A stone that went through the autoclave of the laboratory has its own filler.
+        if (gem.IsFilled)
+        {
+            switch (gem.FillerKind)
+            {
+                case FillerFamily.Oil: return "Huile de cèdre";
+                case FillerFamily.Wax: return "Paraffine (cire)";
+                case FillerFamily.Resin: return "Résine époxy";
+                case FillerFamily.Glass: return "Verre au plomb";
+                case FillerFamily.Flux: return "Verre borate (fondant)";
+            }
+        }
+
         var grade = gem.TreatmentGrade;
         var filled = grade == "Huilé / imprégné" || grade == "Fracture comblée" || name == "Turquoise_Stabilisee";
         if (!filled) return null;
@@ -442,7 +457,7 @@ public static class RamanSpectrum
     {
         float nv0;
         float nvMinus;
-        if (gem.TreatmentGrade == "Chauffé" && !synthetic) { nv0 = 0.9f; nvMinus = 0.3f; }
+        if ((gem.HasTreatment(TreatmentKind.Heated) || gem.HasTreatment(TreatmentKind.Hpht)) && !synthetic) { nv0 = 0.9f; nvMinus = 0.3f; }
         else if (synthetic) { nv0 = 0.25f; nvMinus = 0.4f; }
         else { nv0 = 0.06f; nvMinus = 0.05f; }
 

@@ -114,6 +114,7 @@ public class DyeingState : MonoBehaviour
         }
 
         result = DyeingCatalog.Resolve(job.PotIndex, job.Stone);
+        result.Bath = DyeingCatalog.Baths[job.PotIndex].Name;
         job.Stone.ApplyDyeing(result);
         inventory.TryAddGem(job.Stone);
         GemCodex.Instance?.MarkDiscovered(job.Stone.Definition.name);

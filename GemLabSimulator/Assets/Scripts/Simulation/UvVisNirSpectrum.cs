@@ -654,8 +654,8 @@ public static class UvVisNirSpectrum
             return;
         }
 
-        var typeIIa = StoneOptics.StableHash((g.SpecimenId ?? "") + "|type") % 100 < 4;
-        var annealed = g.TreatmentGrade == "Chauffé";
+        var typeIIa = DiamondSure.DiamondTypeOf(g) == "IIa";
+        var annealed = g.HasTreatment(TreatmentKind.Heated) || g.HasTreatment(TreatmentKind.Hpht);
 
         if (g.IsFancyDiamond)
         {
@@ -710,7 +710,7 @@ public static class UvVisNirSpectrum
             c.Add(503.2f, 3f, 0.55f, "H3 (recuit HPHT)", "N");
             c.Add(986f, 5f, 0.22f, "H2", "N");
         }
-        else if (g.TreatmentGrade == "Irradié")
+        else if (g.HasTreatment(TreatmentKind.Irradiated))
         {
             c.Add(741f, 3f, 0.55f, "GR1 (irradiation)", "V");
             c.Add(594f, 5f, 0.2f, "Centre à 594 nm", null);
@@ -769,7 +769,14 @@ public static class UvVisNirSpectrum
     private static void Treatment(Ctx c)
     {
         if (c.Name.StartsWith("Diamant")) return;   // handled with the diamond signatures
-        if (c.Gem.TreatmentGrade == "Irradié" && !c.Synthetic)
+        // The treatments that leave a band: a dye, the colour centres of an irradiation, the layer of a coating.
+        var lines = TreatmentSignatures.TreatmentLines(c.Gem);
+        if (lines.Count > 0)
+        {
+            foreach (var line in lines) c.Add(line.Nm, Mathf.Max(4f, line.Width), 0.45f, line.Label, null);
+            return;
+        }
+        if (c.Gem.HasTreatment(TreatmentKind.Irradiated) && !c.Synthetic)
         {
             c.Add(c.Gem.ColorHue > 200f && c.Gem.ColorHue < 280f ? 620f : 470f, 130f, 0.6f, "Centres colorés", null);
         }

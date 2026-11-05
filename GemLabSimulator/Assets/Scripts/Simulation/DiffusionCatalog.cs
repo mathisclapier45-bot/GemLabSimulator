@@ -46,6 +46,7 @@ public struct DiffusionResult
     public float Hue, Saturation, Brightness;
     public string Description;
     public string Message;
+    public string Element;           // the element diffused: what the detection tools read of it
 }
 
 // The diffusion of gems, as taught in the course: the colour of a stone is changed with colouring elements that come from an outside source.

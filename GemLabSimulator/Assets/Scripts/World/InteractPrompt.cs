@@ -14,6 +14,48 @@ public class InteractPrompt : MonoBehaviour
     private SpriteRenderer key;
     private float alpha;
 
+    // Every tool, instrument and machine of the game gets the key without the scenes being regenerated: when a scene loads, the objects that react to E
+    // and have a trigger receive an InteractPrompt (the ones that already have one keep it).
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    private static void Bootstrap()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+        AttachAll();
+    }
+
+    private static void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        AttachAll();
+    }
+
+    private static void AttachAll()
+    {
+        Attach<ExaminationTool>();
+        Attach<GradingStation>();
+        Attach<ComputerInteractable>();
+        Attach<ReportPrinterInteractable>();
+        Attach<WindowPolisher>();
+        Attach<ChestInteractable>();
+        Attach<CabinetInteractable>();
+        Attach<BedInteractable>();
+        Attach<Mailbox>();
+        Attach<ElevatorInteractable>();
+    }
+
+    private static void Attach<T>() where T : MonoBehaviour
+    {
+        foreach (var component in Object.FindObjectsByType<T>(FindObjectsSortMode.None))
+        {
+            var go = component.gameObject;
+            if (go.GetComponent<InteractPrompt>() != null) continue;
+            var hasTrigger = false;
+            foreach (var collider in go.GetComponents<Collider2D>())
+                if (collider.isTrigger) hasTrigger = true;
+            if (hasTrigger) go.AddComponent<InteractPrompt>();
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;

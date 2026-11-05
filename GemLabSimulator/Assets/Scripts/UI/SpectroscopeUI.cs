@@ -96,7 +96,7 @@ public class SpectroscopeUI : MonoBehaviour
         stone = gem;
         stone.RecordObservation(ExaminationTool.MeasurementType.AbsorptionSpectrum.ToString());
         Refresh();
-        ToolFeedbackUI.Instance?.ShowMessage($"Spectroscope — {gem.Definition.absorptionSpectrum}");
+        ToolFeedbackUI.Instance?.ShowMessage($"Spectroscope — {TreatmentSignatures.SpectrumDescription(gem)}");
     }
 
     private void ClearStone()
@@ -128,12 +128,12 @@ public class SpectroscopeUI : MonoBehaviour
 
         var def = stone.Definition;
         if (spectrumImage.sprite != null && spectrumImage.sprite.texture != null) Destroy(spectrumImage.sprite.texture);
-        spectrumImage.sprite = SpectrumRenderer.BuildSpectrumSprite(def.spectrumLines, 768, 8);
+        spectrumImage.sprite = SpectrumRenderer.BuildSpectrumSprite(TreatmentSignatures.SpectrumLines(stone), 768, 8);
         spectrumImage.enabled = true;
         darkWindow.enabled = false;
 
-        descriptionText.text = def.absorptionSpectrum;
-        linesText.text = BuildLinesList(def.spectrumLines);
+        descriptionText.text = TreatmentSignatures.SpectrumDescription(stone);
+        linesText.text = BuildLinesList(TreatmentSignatures.SpectrumLines(stone));
     }
 
     private static bool ContainsGem(GemInstance gem)

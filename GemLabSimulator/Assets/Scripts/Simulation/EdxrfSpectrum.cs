@@ -49,6 +49,7 @@ public static class EdxrfSpectrum
         { "Cu", new[] { (8.05f, 1f), (8.91f, 0.15f) } },
         { "Zn", new[] { (8.64f, 1f), (9.57f, 0.15f) } },
         { "Ga", new[] { (9.25f, 1f), (10.26f, 0.15f) } },
+        { "Au", new[] { (9.71f, 1f), (11.44f, 0.55f) } },
         { "Pb", new[] { (10.55f, 1f), (12.61f, 0.8f) } },
         { "Se", new[] { (11.22f, 1f) } },
         { "Rb", new[] { (13.40f, 1f), (14.96f, 0.2f) } },
@@ -90,9 +91,67 @@ public static class EdxrfSpectrum
             result.Analysis.Add("Plomb détecté dans une pierre qui n'en contient pas : verre au plomb de comblement.");
         }
 
+        TreatmentElements(gem, Add, result);
+
         result.RecordAuthenticity = conclusive;
         Build(result, weights, rng);
         return result;
+    }
+
+    // The elements the treatments brought: the metal of a coating, the element of a surface diffusion, the colouring matter of a mineral dye. The light
+    // elements (beryllium, carbon, oxygen...) stay invisible: a beryllium diffusion, an organic dye, a heating or a laser leave nothing for this method.
+    private static void TreatmentElements(GemInstance gem, Action<string, float> add, EdxrfResult result)
+    {
+        if (string.IsNullOrEmpty(gem.TreatmentGrade) || gem.TreatmentGrade == "Non traité") return;
+
+        if (gem.HasTreatment(TreatmentKind.Coated))
+        {
+            var found = new List<string>();
+            switch (gem.CoatingName)
+            {
+                case "Aqua aura": add("Au", 0.45f); found.Add("or"); break;
+                case "Mystic": add("Ti", 0.5f); found.Add("titane"); break;
+                case "Bleu cobalt": add("Co", 0.5f); found.Add("cobalt"); break;
+                case "Mystic feu": add("Au", 0.4f); add("Ti", 0.45f); found.Add("or"); found.Add("titane"); break;
+                case "Aqua profond": add("Au", 0.4f); add("Co", 0.45f); found.Add("or"); found.Add("cobalt"); break;
+                case "Crépuscule": add("Ti", 0.45f); add("Co", 0.45f); found.Add("titane"); found.Add("cobalt"); break;
+                case "Émeraude Lechleitner": add("Cr", 0.5f); found.Add("chrome"); break;
+            }
+            if (found.Count > 0)
+            {
+                result.RecordTreatment = true;
+                result.Analysis.Add($"{string.Join(" et ", found)} en surface, que la pierre ne contient pas : revêtement déposé sous vide.");
+            }
+        }
+
+        if (gem.HasTreatment(TreatmentKind.Diffused))
+        {
+            switch (gem.DiffusionElement)
+            {
+                case "Fer + titane": add("Fe", 0.35f); add("Ti", 0.4f); break;
+                case "Chrome": add("Cr", 0.45f); break;
+                case "Nickel": add("Ni", 0.4f); break;
+                case "Titane en excès": add("Ti", 0.45f); break;
+                case "Béryllium":
+                    result.Analysis.Add("Le béryllium est un élément trop léger pour cette méthode : une diffusion à cœur n'apparaît pas.");
+                    break;
+            }
+            if (gem.DiffusionElement != null && gem.DiffusionElement != "Béryllium")
+            {
+                result.RecordTreatment = true;
+                result.Analysis.Add($"Teneur anormale en {gem.DiffusionElement.ToLowerInvariant()} dans une pierre de ce type : diffusion en surface probable.");
+            }
+        }
+
+        if (gem.HasTreatment(TreatmentKind.Dyed))
+        {
+            switch (gem.DyeName)
+            {
+                case "Bleu de Prusse": add("Fe", 0.35f); add("K", 0.1f); result.RecordTreatment = true; result.Analysis.Add("Fer et potassium en surface : bleu de Prusse, teinture minérale."); break;
+                case "Vert chrome": add("Cr", 0.4f); result.RecordTreatment = true; result.Analysis.Add("Chrome en surface dans une pierre qui n'en contient pas : teinture au chrome."); break;
+                default: result.Analysis.Add("Aucun élément de teinture visible : un colorant organique ou le carbone ne se lisent pas ici."); break;
+            }
+        }
     }
 
     // One line for the stone sheet and the report.

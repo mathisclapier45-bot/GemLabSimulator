@@ -242,7 +242,7 @@ public static class FtirSpectrum
     {
         if (c.Synthetic) return;   // anhydrous: nothing in the OH region
 
-        var heated = c.Gem.TreatmentGrade == "Chauffé";
+        var heated = c.Gem.HasTreatment(TreatmentKind.Heated);
         var lowTemperature = heated && c.Hash("lowtemp") % 3 == 0;
         var boehmite = !heated && c.Hash("boehmite") % 100 < 55;
 
@@ -348,6 +348,13 @@ public static class FtirSpectrum
         c.Add(1010, 70, 0.8f * n, "Azote (type Ia)");
         c.Add(1370, 25, 0.3f * n, "Plaquettes");
         c.Add(3107, 7, 0.25f, "Hydrogène");
+
+        // An HPHT treatment breaks the aggregates of nitrogen: the isolated nitrogen of the C centre shows at 1344 and 1130.
+        if (g.HasTreatment(TreatmentKind.Hpht))
+        {
+            c.Add(1344, 6, 0.65f, "Azote isolé (centre C, HPHT)");
+            c.Add(1130, 8, 0.45f, "Azote isolé (centre C, HPHT)");
+        }
     }
 
     // CZ, moissanite and garnets: curves that have nothing to do with a diamond's.
@@ -375,29 +382,63 @@ public static class FtirSpectrum
 
     // ---- Treatments and contamination ---------------------------------------------------------------------------
 
+    // The family of the substance in the fissures. A stone that went through the autoclave of the laboratory has its own; a stone that came treated
+    // follows the old rules (a glass in 70 % of the filled corundums, a resin in jades, turquoises and opals, oil or resin in the others).
+    private static FillerFamily FillerFamilyOf(Ctx c, HostGroup group)
+    {
+        var g = c.Gem;
+        if (g.IsFilled) return g.FillerKind;
+        var grade = g.TreatmentGrade;
+        if (group == HostGroup.Corundum && grade == "Fracture comblée" && c.Hash("glass") % 100 < 70) return FillerFamily.Glass;
+        var polymer = group == HostGroup.Jade || group == HostGroup.Turquoise || group == HostGroup.Opal
+                      || c.Name == "Turquoise_Stabilisee" || grade == "Fracture comblée" || c.Hash("resin") % 100 < 35;
+        return polymer ? FillerFamily.Resin : FillerFamily.Oil;
+    }
+
     private static void Treatments(Ctx c, HostGroup group, FtirResult result)
     {
         var g = c.Gem;
         var grade = g.TreatmentGrade;
 
-        if (group == HostGroup.Diamond && grade == "Irradié" && !c.Synthetic)
+        if (group == HostGroup.Diamond && g.HasTreatment(TreatmentKind.Irradiated) && !c.Synthetic)
         {
             c.Add(1450, 6, 0.35f, "H1a (irradiation + recuit)");
             c.Add(1405, 6, 0.15f, "H1b");
         }
 
-        var filled = grade == "Huilé / imprégné" || grade == "Fracture comblée" || c.Name == "Turquoise_Stabilisee";
+        var filled = g.HasTreatment(TreatmentKind.Filled) || c.Name == "Turquoise_Stabilisee";
         if (!filled || group == HostGroup.Organic) return;
 
-        // Corundum filled with glass: water-rich, no C-H.
-        if (group == HostGroup.Corundum && grade == "Fracture comblée" && c.Hash("glass") % 100 < 70)
+        // What fills the fissures: the product of the autoclave when the stone went through it, otherwise what the stone came with.
+        var family = FillerFamilyOf(c, group);
+
+        // A wax in the pores: the sharp C-H lines of a paraffin.
+        if (family == FillerFamily.Wax)
+        {
+            c.Add(2955, 14, 0.4f, "Cire (C-H)");
+            c.Add(2917, 12, 1.0f, "Cire (C-H)");
+            c.Add(2849, 12, 0.8f, "Cire (C-H)");
+            c.Add(1470, 12, 0.4f, "Cire (C-H)");
+            c.HasCh = true;
+            return;
+        }
+
+        // The residue of a flux: a glass, with its water and a broad borate band.
+        if (family == FillerFamily.Flux)
+        {
+            c.Add(3400, 450, 0.45f, "Fondant (verre résiduel)");
+            c.Add(1350, 150, 0.3f, "Fondant (verre résiduel)");
+            return;
+        }
+
+        // Filled with glass: water-rich, no C-H.
+        if (family == FillerFamily.Glass)
         {
             c.Add(3400, 450, 0.6f, "Verre comblant (eau)");
             return;
         }
 
-        var polymer = group == HostGroup.Jade || group == HostGroup.Turquoise || group == HostGroup.Opal
-                      || c.Name == "Turquoise_Stabilisee" || grade == "Fracture comblée" || c.Hash("resin") % 100 < 35;
+        var polymer = family == FillerFamily.Resin;
         if (polymer)
         {
             var s = group == HostGroup.Jade || group == HostGroup.Turquoise ? 1.5f : 1f;
@@ -533,27 +574,33 @@ public static class FtirSpectrum
             analysis.Add("Mesurez les pics à 3595 et 3585 cm-1 (zoom : molette).");
 
         var conclusive = true;
-        var filled = grade == "Huilé / imprégné" || grade == "Fracture comblée" || c.Name == "Turquoise_Stabilisee";
+        var filled = g.HasTreatment(TreatmentKind.Filled) || c.Name == "Turquoise_Stabilisee";
         if (filled && group != HostGroup.Organic)
         {
             var oil = false;
             var resin = false;
             var glass = false;
+            var wax = false;
+            var flux = false;
             foreach (var b in result.Bands)
             {
                 if (b.Label == null) continue;
                 if (b.Label.StartsWith("Huile")) oil = true;
                 if (b.Label.StartsWith("Résine")) resin = true;
                 if (b.Label.StartsWith("Verre comblant")) glass = true;
+                if (b.Label.StartsWith("Cire")) wax = true;
+                if (b.Label.StartsWith("Fondant")) flux = true;
             }
             analysis.Add(resin ? "Résine ou polymère détecté : comblement moderne."
                 : oil ? "Huile détectée dans les fissures."
+                : wax ? "Cire ou paraffine détectée : traitement de surface temporaire."
+                : flux ? "Verre résiduel d'un fondant (borax) : les fissures ont été guéries à chaud."
                 : glass ? "Comblement par un verre (eau en bande large)."
                 : "Substance de comblement détectée.");
         }
         else if (group == HostGroup.Corundum && !c.Synthetic)
         {
-            var heated = grade == "Chauffé";
+            var heated = g.HasTreatment(TreatmentKind.Heated);
             var boehmite = false;
             foreach (var b in result.Bands) if (b.Label == "Boehmite") boehmite = true;
             analysis.Add(heated
@@ -563,19 +610,26 @@ public static class FtirSpectrum
         }
         else if (group == HostGroup.Diamond)
         {
-            conclusive = grade == "Irradié" && !c.Synthetic;
-            analysis.Add(conclusive ? "Pic H1a (1450) : irradiation suivie d'un recuit." : "Aucun comblement : l'infrarouge ne dit rien d'autre sur le traitement.");
+            var hpht = g.HasTreatment(TreatmentKind.Hpht) && !c.Synthetic;
+            conclusive = (g.HasTreatment(TreatmentKind.Irradiated) && !c.Synthetic) || hpht;
+            analysis.Add(hpht ? "Azote isolé (centre C, 1344 et 1130) : les agrégats ont été cassés, traitement HPHT probable."
+                : conclusive ? "Pic H1a (1450) : irradiation suivie d'un recuit."
+                : "Aucun comblement : l'infrarouge ne dit rien d'autre sur le traitement.");
+            if (g.HasTreatment(TreatmentKind.Laser)) analysis.Add("Le traitement au laser ne laisse pas de trace infrarouge : cherchez le canal ou les fissures à la loupe et au microscope.");
         }
         else
         {
             analysis.Add("Aucun comblement détecté.");
             analysis.Add("Chauffage et irradiation ne laissent pas de trace infrarouge sur cette espèce.");
+            if (g.HasTreatment(TreatmentKind.Dyed)) analysis.Add("Une teinture ne se lit pas à l'infrarouge : essayez le spectroscope, l'UV-Vis ou le filtre de Chelsea.");
+            if (g.HasTreatment(TreatmentKind.Coated)) analysis.Add("Un revêtement de surface est trop mince pour l'infrarouge : voir l'EDXRF, la loupe ou le spectroscope.");
+            if (g.HasTreatment(TreatmentKind.Diffused)) analysis.Add("Une diffusion ne laisse pas de trace infrarouge : l'immersion au microscope la révèle.");
             conclusive = false;
         }
 
         // Corundum: a stone that is neither filled nor heated is conclusive as "untreated" only when the curve shows it.
-        if (group == HostGroup.Corundum && !c.Synthetic) conclusive = grade == "Chauffé" || filled || grade == "Non traité";
-        if (group == HostGroup.Corundum && !c.Synthetic && grade == "Irradié") conclusive = false;
+        if (group == HostGroup.Corundum && !c.Synthetic) conclusive = g.HasTreatment(TreatmentKind.Heated) || filled || grade == "Non traité";
+        if (group == HostGroup.Corundum && !c.Synthetic && g.HasTreatment(TreatmentKind.Irradiated)) conclusive = false;
         if (filled && group != HostGroup.Organic) conclusive = true;
         result.TreatmentConclusive = conclusive;
     }

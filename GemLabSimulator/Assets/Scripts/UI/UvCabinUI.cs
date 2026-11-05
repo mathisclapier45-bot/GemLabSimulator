@@ -142,7 +142,7 @@ public class UvCabinUI : MonoBehaviour
     {
         var def = stone.Definition;
         var longWave = lamp == Lamp.Long;
-        currentInfo = FluorescenceInfo.ForGem(def, longWave);
+        currentInfo = TreatmentSignatures.Fluorescence(stone, longWave);
 
         var key = longWave
             ? ExaminationTool.MeasurementType.FluorescenceLongWave.ToString()
@@ -192,7 +192,7 @@ public class UvCabinUI : MonoBehaviour
             stoneBase.sprite = GemIconFactory.GetSolid(shape, style, new Color(0.02f, 0.02f, 0.03f), new Color(0.07f, 0.07f, 0.09f));
             hintText.text = "";
 
-            if (lamp != Lamp.Off) currentInfo = FluorescenceInfo.ForGem(stone.Definition, lamp == Lamp.Long);
+            if (lamp != Lamp.Off) currentInfo = TreatmentSignatures.Fluorescence(stone, lamp == Lamp.Long);
             if (currentInfo.Glows)
             {
                 stoneLit.sprite = GemIconFactory.GetSolid(shape, style, currentInfo.Color, Color.Lerp(currentInfo.Color, Color.white, 0.45f));

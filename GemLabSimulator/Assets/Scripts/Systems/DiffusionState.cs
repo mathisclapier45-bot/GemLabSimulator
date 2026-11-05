@@ -109,6 +109,7 @@ public class DiffusionState : MonoBehaviour
         }
 
         result = DiffusionCatalog.Resolve(job.Dopant, job.Temperature, job.Days, job.Stone);
+        result.Element = DiffusionCatalog.Dopants[job.Dopant].Name;
         job.Stone.ApplyDiffusion(result);
         inventory.TryAddGem(job.Stone);
         GemCodex.Instance?.MarkDiscovered(job.Stone.Definition.name);

@@ -96,7 +96,7 @@ public class ChelseaFilterUI : MonoBehaviour
     private void SetStone(GemInstance gem)
     {
         stone = gem;
-        info = ChelseaInfo.ForGem(gem.Definition);
+        info = TreatmentSignatures.Chelsea(gem);
         Refresh();
     }
 
