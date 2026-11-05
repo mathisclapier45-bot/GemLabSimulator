@@ -69,6 +69,12 @@ public class GemInstance
     public float CoatingIridescence { get; private set; }
     public bool IsCoated => !string.IsNullOrEmpty(CoatingName);
 
+    // The element diffused into the stone at the treatments laboratory (see DiffusionCatalog): how deep it went, in millimetres, and the colour
+    // the stone had before, which a repolishing brings back when the colour stayed in a thin layer at the surface.
+    public float DiffusionDepthMm { get; private set; }
+    private float diffusionOriginalHue, diffusionOriginalSaturation, diffusionOriginalBrightness;
+    public bool DiffusionStar { get; private set; }
+
     // The rutile that crystallised in the furnace of the treatments laboratory: a cabochon of this stone shows a star (see HeatingCatalog).
     public bool HeatStar { get; private set; }
 
@@ -238,7 +244,7 @@ public class GemInstance
         get
         {
             if (IsRough || IsSynthetic || CutStyleName != "Cabochon") return 0;
-            if (HeatStar) return 6;
+            if (HeatStar || DiffusionStar) return 6;
             if (ClarityGrade == "Loupe clean" || ClarityGrade == "Eye-clean") return 0;
             if (InclusionCatalog.ProfileFor(this).Share(FeatureKind.Needle, 0) < 0.18f) return 0;
             if (StoneOptics.StableHash((SpecimenId ?? "") + "|star") % 100 >= 65) return 0;
@@ -497,6 +503,11 @@ public class GemInstance
             PurchasePrice = data.purchasePrice,
             CuttingCost = data.cuttingCost,
             HeatStar = data.heatStar,
+            DiffusionDepthMm = data.diffusionDepth,
+            diffusionOriginalHue = data.diffusionHue,
+            diffusionOriginalSaturation = data.diffusionSaturation,
+            diffusionOriginalBrightness = data.diffusionBrightness,
+            DiffusionStar = data.diffusionStar,
             FillerName = string.IsNullOrEmpty(data.fillerName) ? null : data.fillerName,
             CoatingName = string.IsNullOrEmpty(data.coatingName) ? null : data.coatingName,
             CoatingIridescence = data.coatingIridescence,
@@ -594,6 +605,11 @@ public class GemInstance
             purchasePrice = PurchasePrice,
             cuttingCost = CuttingCost,
             heatStar = HeatStar,
+            diffusionDepth = DiffusionDepthMm,
+            diffusionHue = diffusionOriginalHue,
+            diffusionSaturation = diffusionOriginalSaturation,
+            diffusionBrightness = diffusionOriginalBrightness,
+            diffusionStar = DiffusionStar,
             fillerName = FillerName,
             coatingName = CoatingName,
             coatingIridescence = CoatingIridescence,
@@ -643,6 +659,7 @@ public class GemInstance
     // Turns a rough stone into a cut one: weight and dimensions shrink, value is recomputed by the lapidary.
     public void ApplyCut(string shape, string style, float newCaratWeight, int newFinalValue)
     {
+        RepolishDiffusion();
         var ratio = Mathf.Max(newCaratWeight / Mathf.Max(CaratWeight, 0.001f), 0.01f);
         var dimensionFactor = Mathf.Pow(ratio, 1f / 3f);
         LengthMm *= dimensionFactor;
@@ -769,6 +786,44 @@ public class GemInstance
 
         if (HasColor && result.ChangesColor)
             SetColor(new GemColorValue(Mathf.Repeat(result.Hue, 360f), Mathf.Clamp01(result.Saturation), Mathf.Clamp01(result.Brightness)), IsFancyDiamond);
+    }
+
+    // Takes what the diffusion furnace did: the colour of the element, how deep it went, the star of a titanium surplus in a cabochon, the value, and
+    // the treatment, after the heating it may have had.
+    public void ApplyDiffusion(DiffusionResult result)
+    {
+        if (result.Outcome == DiffusionOutcome.NoEffect) return;
+
+        HasReport = false;
+        TradeName = null;
+        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        var previous = TreatmentGrade;
+        var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
+        var label = result.Outcome == DiffusionOutcome.Ruined ? "Diffusion (brûlé)"
+            : result.Depth == DiffusionDepth.Surface || result.Depth == DiffusionDepth.Shallow ? "Diffusion en surface" : "Diffusion à cœur";
+        TreatmentGrade = untreated ? label : $"{previous} + {label.ToLowerInvariant()}";
+        TreatmentDescription = untreated ? result.Description : $"{TreatmentDescription} {result.Description}";
+        if (result.Outcome == DiffusionOutcome.Ruined) return;
+
+        DiffusionDepthMm = Mathf.Max(0.01f, result.DepthMm);
+        if (result.Star) DiffusionStar = true;
+        if (!HasColor || !result.ChangesColor) return;
+        diffusionOriginalHue = ColorHue;
+        diffusionOriginalSaturation = ColorSaturation;
+        diffusionOriginalBrightness = ColorBrightness;
+        SetColor(new GemColorValue(Mathf.Repeat(result.Hue, 360f), Mathf.Clamp01(result.Saturation), Mathf.Clamp01(result.Brightness)), IsFancyDiamond);
+    }
+
+    // A repolishing of a stone whose colour went only a fraction of a millimetre deep takes it off: the stone is back to its first colour.
+    private void RepolishDiffusion()
+    {
+        if (DiffusionDepthMm <= 0f || DiffusionDepthMm >= 0.5f) return;
+        if (HasColor && (diffusionOriginalSaturation > 0f || diffusionOriginalBrightness > 0f))
+            SetColor(new GemColorValue(diffusionOriginalHue, diffusionOriginalSaturation, diffusionOriginalBrightness), IsFancyDiamond);
+        DiffusionDepthMm = 0f;
+        DiffusionStar = false;
+        TreatmentGrade = "Diffusion enlevée (repolie)";
+        TreatmentDescription = "Le repolissage a emporté la couche de couleur de la diffusion en surface : la pierre a retrouvé sa couleur d'origine.";
     }
 
     public void RecordMeasurement(string propertyKey, float value)

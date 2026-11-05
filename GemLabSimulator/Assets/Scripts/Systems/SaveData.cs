@@ -63,6 +63,11 @@ public class GemInstanceSaveData
     public int purchasePrice;       // what the player paid for the stone (0: unknown)
     public int cuttingCost;         // what its cutting cost
     public bool heatStar;           // the furnace made a star appear
+    public float diffusionDepth;    // how deep a diffused element went, in millimetres (0: not diffused)
+    public float diffusionHue;      // the colour before the diffusion
+    public float diffusionSaturation;
+    public float diffusionBrightness;
+    public bool diffusionStar;
     public string fillerName;       // what fills its fissures or its pores, if anything
     public string coatingName;      // the coating of the pavilion, if any
     public float coatingIridescence;
@@ -144,6 +149,18 @@ public class HeatJobSaveData
 }
 
 [Serializable]
+public class DiffusionJobSaveData
+{
+    public int startDay;
+    public int readyDay;
+    public int fee;
+    public int dopant;
+    public int temperature;
+    public int days;
+    public GemInstanceSaveData stone;
+}
+
+[Serializable]
 public class SaveData
 {
     public string saveName = "";
@@ -191,4 +208,6 @@ public class SaveData
     public bool fillSamplesGiven;
     public List<HeatJobSaveData> heatJobs = new List<HeatJobSaveData>();
     public bool heatSamplesGiven;
+    public List<DiffusionJobSaveData> diffusionJobs = new List<DiffusionJobSaveData>();
+    public bool diffusionSamplesGiven;
 }

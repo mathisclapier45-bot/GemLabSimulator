@@ -1366,6 +1366,13 @@ public static class SceneBootstrap
                     AddTreatmentStation("PosteChauffage", new Vector3(x, 3.1f, 0f), new Vector2(4.4f, 2.6f), typeof(HeatingStation));
                     continue;
                 }
+                if (i == 1)
+                {
+                    // The diffusion is installed: a tube furnace with the powders of the elements on its shelf.
+                    PlaceFurniture("tubefurnace", new Vector3(x, 5.0f, 0f));
+                    AddTreatmentStation("PosteDiffusion", new Vector3(x, 3.1f, 0f), new Vector2(4.4f, 2.6f), typeof(DiffusionStation));
+                    continue;
+                }
                 PlaceFurniture("labbench", new Vector3(x, 5.0f, 0f));
                 CreateBuildingLabel($"{places[i]}\n(à venir)", new Vector3(x, 1.8f, 0f));
             }
@@ -1385,7 +1392,9 @@ public static class SceneBootstrap
             CreateTalkNpc("Ingénieur — traitements", "merchant1", new Vector3(4.0f, -1.0f, 0f), new[]
             {
                 "Bienvenue à l'étage ! Le four de chauffage est installé, tout à gauche : vous réglez la température, l'atmosphère et le refroidissement.",
-                "Le reste suivra : diffusion, irradiation, laser, haute pression et haute température. Les places sont déjà tracées au sol.",
+                "À côté, le four de diffusion : on enterre un corindon dans une poudre d'oxydes et on le chauffe des jours entiers. Le fer et le titane donnent du bleu, le chrome du rouge, le nickel du jaune.",
+                "Mais ces éléments ne pénètrent que d'une fraction de millimètre : un repolissage emporte la couleur. Le béryllium, lui, va beaucoup plus loin et peut colorer toute la pierre.",
+                "Le reste suivra : irradiation, laser, haute pression et haute température. Les places sont déjà tracées au sol.",
                 "Pour le four, retenez ceci : chaque pierre a ses conditions. Le cours donne les plages, et un refroidissement trop rapide fissure presque tout.",
             });
             CreateBuildingLabel("Laboratoire de traitements — étage", new Vector3(0f, 9.7f, 0f));

@@ -147,6 +147,12 @@ public static class SaveSystem
             data.heatSamplesGiven = HeatingState.Instance.SamplesGiven;
         }
 
+        if (DiffusionState.Instance != null)
+        {
+            data.diffusionJobs = DiffusionState.Instance.ToSaveData();
+            data.diffusionSamplesGiven = DiffusionState.Instance.SamplesGiven;
+        }
+
         File.WriteAllText(SavePath(ActiveSlot), JsonUtility.ToJson(data, true));
     }
 
@@ -243,6 +249,13 @@ public static class SaveSystem
         {
             heating.LoadJobs(data.heatJobs, RestoreGem);
             heating.LoadSamplesGiven(data.heatSamplesGiven);
+        }
+
+        var diffusion = DiffusionState.Ensure();
+        if (diffusion != null)
+        {
+            diffusion.LoadJobs(data.diffusionJobs, RestoreGem);
+            diffusion.LoadSamplesGiven(data.diffusionSamplesGiven);
         }
 
         if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)
