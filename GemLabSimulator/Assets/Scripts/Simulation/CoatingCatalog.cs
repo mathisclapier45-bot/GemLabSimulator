@@ -147,6 +147,7 @@ public static class CoatingCatalog
     public static string StoneRefusal(GemInstance gem)
     {
         if (gem == null) return "Aucune pierre.";
+        if (gem.IsSet) return JewelCatalog.SetRefusal;
         var name = gem.Definition != null ? gem.Definition.name : "";
         var special = name == "Opale_Noble" || name == "Opale_De_Feu" || name == "Ambre" || name == "Goshenite" || name == "Heliodore";
         if (!FacetedCoatable(gem.Definition) && !special && !IsDiamond(gem))

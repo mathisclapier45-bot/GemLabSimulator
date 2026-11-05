@@ -170,6 +170,7 @@ public static class IrradiationCatalog
     public static string Refusal(GemInstance gem)
     {
         if (gem == null) return "Aucune pierre.";
+        if (gem.IsSet) return JewelCatalog.SetRefusal;
         var any = false;
         foreach (var _ in RecipesFor(gem)) { any = true; break; }
         if (!any)

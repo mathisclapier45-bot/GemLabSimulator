@@ -74,8 +74,55 @@ public static class RuntimeUIKit
         else if (gem.IsClientStone)
             AddBadge(slot, "EnvelopeBadge", Envelope, new Vector2(20f, 15f), new Vector2(1f, 1f));
 
+        if (gem.IsSet)
+            AddBadge(slot, "RingBadge", Ring, new Vector2(16f, 16f), new Vector2(0f, 1f));
+
         if (gem.IsIdentified)
             AddBadge(slot, "ValidatedBadge", Validated, new Vector2(16f, 16f), new Vector2(1f, 0f));
+    }
+
+    private static Sprite ring;
+
+    // A small gold ring with a stone: marks the slots that hold a set stone.
+    public static Sprite Ring
+    {
+        get
+        {
+            if (ring == null) ring = MakeRingSprite();
+            return ring;
+        }
+    }
+
+    private static Sprite MakeRingSprite()
+    {
+        const int size = 12;
+        var texture = new Texture2D(size, size, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+        var clear = new Color(0f, 0f, 0f, 0f);
+        for (var y = 0; y < size; y++)
+            for (var x = 0; x < size; x++) texture.SetPixel(x, y, clear);
+
+        var outline = new Color(0.30f, 0.20f, 0.06f, 1f);
+        var gold = new Color(0.96f, 0.78f, 0.26f, 1f);
+        var shade = new Color(0.78f, 0.56f, 0.14f, 1f);
+        var gem = new Color(0.45f, 0.70f, 1f, 1f);
+        // The band: an oval, y = 0 at the bottom.
+        for (var y = 0; y <= 7; y++)
+        {
+            for (var x = 1; x <= 10; x++)
+            {
+                var dx = (x - 5.5f) / 5f;
+                var dy = (y - 3.5f) / 4f;
+                var d = dx * dx + dy * dy;
+                if (d > 1f) continue;
+                texture.SetPixel(x, y, d > 0.8f ? outline : d > 0.5f ? (x < 5 ? gold : shade) : clear);
+            }
+        }
+        // The stone on top.
+        foreach (var (x, y) in new[] { (5, 8), (6, 8), (4, 9), (5, 9), (6, 9), (7, 9), (5, 10), (6, 10) }) texture.SetPixel(x, y, gem);
+        texture.SetPixel(5, 10, Color.white);
+        foreach (var (x, y) in new[] { (4, 8), (7, 8), (3, 9), (8, 9), (4, 10), (7, 10), (5, 11), (6, 11) }) texture.SetPixel(x, y, outline);
+        texture.Apply();
+        return Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
     }
 
     private static void AddBadge(Transform slot, string badgeName, Sprite sprite, Vector2 size, Vector2 corner)

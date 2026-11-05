@@ -102,7 +102,7 @@ public class MusicManager : MonoBehaviour
 
     private void PlayForScene(string sceneName)
     {
-        var target = sceneName == "Town" || sceneName == "GemStore" || sceneName == "WatchStore" || sceneName == "Animalerie" || sceneName == "Banque" || sceneName == "Concessionnaire" ? townMusic
+        var target = sceneName == "Town" || sceneName == "GemStore" || sceneName == "WatchStore" || sceneName == "Animalerie" || sceneName == "Banque" || sceneName == "Bijouterie" || sceneName == "Concessionnaire" ? townMusic
             : sceneName.StartsWith("Labo") || sceneName == "Home" || sceneName == "MaisonJoueur" || sceneName.StartsWith("Diamantaires") ? laboratoryMusic
             : sceneName == "MainMenu" ? mainMenuMusic
             : sceneName == "Tunnel" ? tunnelMusic

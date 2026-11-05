@@ -32,6 +32,7 @@ public class TownMapUI : MonoBehaviour
         ("LaboTraitements", -10f, -35f),
         ("Musee", 20f, 28f),
         ("Banque", 22f, 7f),
+        ("Bijouterie", -22f, 7f),
         ("Marche", -45f, -15f),
         ("MarcheBrutes", 15f, -15f),
         ("Manoir", 45f, -15f),

@@ -79,6 +79,38 @@ public class GemInstance
     public string HphtName { get; private set; }
     public bool IsHphtTreated => !string.IsNullOrEmpty(HphtName);
 
+    // The jewel the stone is set in (see JewelCatalog): a ring, a pendant or a brooch, in a metal, with a setting. A set stone cannot be tested on the
+    // refractometer or the scales, nor treated, nor sold at the markets: it goes back to the jeweller to be taken out, or to be sold as a jewel.
+    public string JewelKind { get; private set; }
+    public string JewelMetal { get; private set; }
+    public string JewelSetting { get; private set; }
+    public int JewelMetalValue { get; private set; }
+    public bool IsSet => !string.IsNullOrEmpty(JewelSetting);
+
+    public void ApplySetting(string kind, string metal, string setting, int metalValue)
+    {
+        JewelKind = kind;
+        JewelMetal = metal;
+        JewelSetting = setting;
+        JewelMetalValue = Mathf.Max(0, metalValue);
+        HasReport = false;
+    }
+
+    // A stone chipped by a claw, or a filling ruined by the heat of the soldering: it is worth less.
+    public void ApplyCraftDamage(float factor)
+    {
+        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * Mathf.Clamp(factor, 0.1f, 1f)));
+    }
+
+    // The stone is taken out of its setting: the metal stays with the jeweller.
+    public void RemoveSetting()
+    {
+        JewelKind = null;
+        JewelMetal = null;
+        JewelSetting = null;
+        JewelMetalValue = 0;
+    }
+
     // The laser treatment of a diamond (see LaserCatalog): "" when it has none, otherwise its name. The treated stone loses its certificate.
     public string LaserName { get; private set; }
     public bool IsLaserTreated => !string.IsNullOrEmpty(LaserName);
@@ -612,6 +644,10 @@ public class GemInstance
             HeatStar = data.heatStar,
             LaserName = string.IsNullOrEmpty(data.laserName) ? null : data.laserName,
             HphtName = string.IsNullOrEmpty(data.hphtName) ? null : data.hphtName,
+            JewelKind = string.IsNullOrEmpty(data.jewelKind) ? null : data.jewelKind,
+            JewelMetal = string.IsNullOrEmpty(data.jewelMetal) ? null : data.jewelMetal,
+            JewelSetting = string.IsNullOrEmpty(data.jewelSetting) ? null : data.jewelSetting,
+            JewelMetalValue = data.jewelMetalValue,
             IrradiationName = string.IsNullOrEmpty(data.irradiationName) ? null : data.irradiationName,
             IrradiationFadeDay = data.irradiationFadeDay,
             irradiationFactor = data.irradiationFactor > 0f ? data.irradiationFactor : 1f,
@@ -727,6 +763,10 @@ public class GemInstance
             heatStar = HeatStar,
             laserName = LaserName,
             hphtName = HphtName,
+            jewelKind = JewelKind,
+            jewelMetal = JewelMetal,
+            jewelSetting = JewelSetting,
+            jewelMetalValue = JewelMetalValue,
             irradiationName = IrradiationName,
             irradiationFadeDay = IrradiationFadeDay,
             irradiationFactor = irradiationFactor,

@@ -137,6 +137,7 @@ public static class DyeingCatalog
     public static string Refusal(GemInstance gem)
     {
         if (gem == null) return "Aucune pierre.";
+        if (gem.IsSet) return JewelCatalog.SetRefusal;
         if (!TryMaterial(gem.Definition, out _))
             return "Ce matériau ne se teint pas ici : il faut une matière poreuse ou fissurée (perle, corail, jade, agate, turquoise...).";
         if (gem.IsSynthetic) return "Inutile de teindre une pierre synthétique.";

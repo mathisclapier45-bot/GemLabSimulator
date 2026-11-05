@@ -81,9 +81,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Banque.unity
     guid: de8ac929566664a49a91a31b9c3bf107
   - enabled: 1
-    path: Assets/Scenes/Town.unity
-    guid: 436994916875340dba60314ffa83766d
-  - enabled: 1
     path: Assets/Scenes/MaisonJoueur.unity
     guid: aa21f5ad0c82645feb17422a2288a7cb
+  - enabled: 1
+    path: Assets/Scenes/Bijouterie.unity
+    guid: 50d91be2f05ce408d8b95d8bf0eabe1a
+  - enabled: 1
+    path: Assets/Scenes/Town.unity
+    guid: 436994916875340dba60314ffa83766d
   m_configObjects: {}

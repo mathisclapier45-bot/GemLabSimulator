@@ -156,6 +156,11 @@ public class MicrometerUI : MonoBehaviour
 
     private void SetStone(GemInstance gem)
     {
+        if (gem != null && gem.IsSet)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage(JewelCatalog.SetRefusal);
+            return;
+        }
         stone = gem;
         measuring = false;
         targetGap = MaxGap;

@@ -143,6 +143,7 @@ public static class FillingCatalog
     public static string StoneRefusal(GemInstance gem)
     {
         if (gem == null) return "Aucune pierre.";
+        if (gem.IsSet) return JewelCatalog.SetRefusal;
         var group = GroupOf(gem.Definition);
         if (group == Group.Diamond)
         {

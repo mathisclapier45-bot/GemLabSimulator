@@ -98,6 +98,7 @@ public static class DiffusionCatalog
     public static string Refusal(GemInstance gem)
     {
         if (gem == null) return "Aucune pierre.";
+        if (gem.IsSet) return JewelCatalog.SetRefusal;
         if (!IsCorundum(gem.Definition)) return "La diffusion ne se fait ici que sur les corindons : rubis et saphirs.";
         if (gem.IsRough) return "Une pierre brute ne se diffuse pas ici : il faut la tailler ou la polir d'abord.";
         if (gem.IsSynthetic) return "Inutile de diffuser une pierre synthétique.";

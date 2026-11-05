@@ -143,7 +143,7 @@ public class MarketState : MonoBehaviour
     // Only the player's own identified specimens can be sold here: client stones go back by mail, donations are kept.
     public static bool CanSell(GemInstance gem)
     {
-        return gem != null && gem.IsIdentified && !gem.IsClientStone && !gem.IsDonation;
+        return gem != null && gem.IsIdentified && !gem.IsClientStone && !gem.IsDonation && !gem.IsSet;
     }
 
     // What the vendor offers for the stone. A treated stone is paid for what it is when the treatment is declared, and as an untreated one when it is not.

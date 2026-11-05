@@ -258,6 +258,14 @@ public class RefractometerUI : MonoBehaviour
 
     private void SetStone(GemInstance gem)
     {
+        if (gem != null && gem.IsSet)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage(JewelCatalog.SetRefusal);
+            stone = null;
+            Refresh();
+            return;
+        }
+
         // A rough stone has no polished facet to lay on the glass: the refractometer cannot read it.
         if (gem != null && gem.IsRough)
         {

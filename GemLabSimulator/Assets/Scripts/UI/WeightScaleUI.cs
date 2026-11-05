@@ -118,6 +118,11 @@ public class WeightScaleUI : MonoBehaviour
 
     private void SetStone(GemInstance gem)
     {
+        if (gem != null && gem.IsSet)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage(JewelCatalog.SetRefusal);
+            return;
+        }
         if (!poweredOn)
         {
             ToolFeedbackUI.Instance?.ShowMessage("Balance éteinte : appuyez sur ON/OFF.");

@@ -1520,6 +1520,44 @@ public static class SceneBootstrap
         });
     }
 
+    // The jeweller: a bright shop with a long counter at the back where the jeweller works, shelves of jewels along the walls, a rug and a few plants.
+    [MenuItem("GemLab/Setup Jeweller Scene")]
+    public static void CreateJewelerScene()
+    {
+        CreateTowerRoom("Bijouterie", "museum", -8, 8, -5, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, -3f, 0f), true, (walls, wallTile) =>
+        {
+            CreateExitDoor(new Vector3(0, -4, 0f), "SpawnPoint_Bijouterie");
+
+            PlaceRug("rug_red", new Vector3(0f, -1.0f, 0f));
+
+            // The counter, and the jeweller behind it.
+            PlaceFurniture("reception_counter", new Vector3(0f, 1.3f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
+            var jeweler = CreateTalkNpc("Bijoutier", "merchant1", new Vector3(0f, 2.6f, 0f), new string[0], new Vector2(5f, 3.4f), new Vector2(0f, -1.6f));
+            UnityEngine.Object.DestroyImmediate(jeweler.GetComponent<TalkNPC>());
+            jeweler.AddComponent<JewelerNPC>();
+
+            // Shelves with the jewels along the back wall and the side walls.
+            var shelves = new[] { "shop_a", "shop_b", "shop_c", "shop_d", "shop_e", "shop_f" };
+            for (var i = 0; i < 2; i++)
+            {
+                PlaceFurniture(shelves[i * 2 % shelves.Length], new Vector3(-6.4f + i * 2.3f, 3.9f, 0f));
+                PlaceFurniture(shelves[(i * 2 + 1) % shelves.Length], new Vector3(6.4f - i * 2.3f, 3.9f, 0f));
+            }
+            PlaceFurniture("shop_e", new Vector3(-7.2f, -0.2f, 0f));
+            PlaceFurniture("shop_f", new Vector3(7.2f, -0.2f, 0f));
+
+            PlaceWallDecorAt("window_white", -3f, 5);
+            PlaceWallDecorAt("window_white", 3f, 5);
+            HangOnWall("off_cert", -1.8f, 5f);
+            HangOnWall("off_cert2", 1.8f, 5f);
+            PlaceFurniture("grandfather_clock", new Vector3(-4.6f, 3.9f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(4.6f, 3.9f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(-7.2f, -3.6f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(7.2f, -3.6f, 0f));
+            CreateBuildingLabel("Bijouterie de la Ville", new Vector3(0f, 6.7f, 0f));
+        });
+    }
+
     // The dealership: a showroom where the sneakers and the bicycle are on display. A click on an article opens the purchase window of the
     // GemStore; what is bought goes into the bag, where it is put on or taken off.
     [MenuItem("GemLab/Setup Dealership Scene")]
@@ -2102,7 +2140,7 @@ public static class SceneBootstrap
         CreateRealBuilding("Le Manoir", new Vector3(45, -15, 0f), HouseStyle.Chalet, "Manoir", true);
 
         // Decorative for now: no interior yet, the door shows the usual "not accessible" message.
-        CreateRealBuilding("Bijouterie", new Vector3(-22, 7, 0f), HouseStyle.Chalet, "", false);
+        CreateRealBuilding("Bijouterie", new Vector3(-22, 7, 0f), HouseStyle.Chalet, "Bijouterie", true);
         CreateRealBuilding("Banque et Encheres", new Vector3(22, 7, 0f), HouseStyle.Modern, "Banque", true);
 
         CreateDealership(new Vector3(28, -35, 0f));
@@ -2129,6 +2167,7 @@ public static class SceneBootstrap
         CreateNamedSpawnPoint("SpawnPoint_GemStore", new Vector3(34f, 5f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Animalerie", new Vector3(10f, 5f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Banque", new Vector3(21.4f, 5f, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Bijouterie", new Vector3(-22.6f, 5f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Concessionnaire", new Vector3(27.7f, -37f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_MaisonJoueur", new Vector3(-51.2f, -52f, 0f));
 

@@ -95,6 +95,7 @@ public static class LaserCatalog
     public static string Refusal(GemInstance gem)
     {
         if (gem == null) return "Aucune pierre.";
+        if (gem.IsSet) return JewelCatalog.SetRefusal;
         if (!DiamondGradeModel.CanGrade(gem)) return "Le laser ne traite ici que les diamants taillés.";
         if (gem.IsSynthetic) return "Inutile de traiter un diamant synthétique.";
         if (gem.IsLaserTreated) return "Ce diamant a déjà été traité au laser : on ne perce pas deux fois la même pierre.";

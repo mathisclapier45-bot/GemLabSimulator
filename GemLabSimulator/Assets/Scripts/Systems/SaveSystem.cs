@@ -175,6 +175,7 @@ public static class SaveSystem
         }
 
         if (AuctionState.Instance != null) AuctionState.Instance.WriteSave(data);
+        if (JewelerState.Instance != null) data.jewelJobs = JewelerState.Instance.ToSaveData();
 
         File.WriteAllText(SavePath(ActiveSlot), JsonUtility.ToJson(data, true));
     }
@@ -304,6 +305,9 @@ public static class SaveSystem
             hpht.LoadJobs(data.hphtJobs, RestoreGem);
             hpht.LoadSamplesGiven(data.hphtSamplesGiven);
         }
+
+        var jeweler = JewelerState.Ensure();
+        if (jeweler != null) jeweler.LoadJobs(data.jewelJobs, RestoreGem);
 
         var auction = AuctionState.Ensure();
         if (auction != null) auction.ReadSave(data, RestoreGem);

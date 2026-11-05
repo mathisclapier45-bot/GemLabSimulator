@@ -62,6 +62,7 @@ public static class HphtCatalog
     public static string Refusal(GemInstance gem)
     {
         if (gem == null) return "Aucune pierre.";
+        if (gem.IsSet) return JewelCatalog.SetRefusal;
         if (!DiamondGradeModel.CanGrade(gem)) return "Le HPHT ne traite ici que les diamants taillés.";
         if (gem.IsSynthetic || gem.Definition.name != "Diamant") return "Inutile de traiter un diamant synthétique.";
         if (gem.IsHphtTreated) return "Ce diamant a déjà été traité au HPHT : la presse n'a plus rien à lui apprendre.";

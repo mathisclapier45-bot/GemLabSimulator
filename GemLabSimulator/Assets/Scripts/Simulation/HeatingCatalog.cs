@@ -223,6 +223,7 @@ public static class HeatingCatalog
     public static string Refusal(GemInstance gem)
     {
         if (gem == null) return "Aucune pierre.";
+        if (gem.IsSet) return JewelCatalog.SetRefusal;
         var name = gem.Definition != null ? gem.Definition.name : "";
         var known = RecipesFor(gem).Count > 0;
         if (!known)

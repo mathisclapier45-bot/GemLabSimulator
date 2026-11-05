@@ -65,6 +65,10 @@ public class GemInstanceSaveData
     public bool heatStar;           // the furnace made a star appear
     public string laserName;        // the laser treatment of a diamond, if any
     public string hphtName;         // the HPHT treatment of a diamond, if any
+    public string jewelKind;        // the jewel the stone is set in (ring, pendant, brooch), if any
+    public string jewelMetal;
+    public string jewelSetting;
+    public int jewelMetalValue;     // what the metal of the jewel is worth
     public string irradiationName;  // the colour the irradiator gave the stone, if any
     public int irradiationFadeDay;  // the day an unstable colour fades (0: stable)
     public float irradiationFactor;
@@ -197,6 +201,18 @@ public class LaserJobSaveData
 }
 
 [Serializable]
+public class JewelJobSaveData
+{
+    public GemInstanceSaveData stone;
+    public int kind;
+    public int metal;
+    public int setting;
+    public int startDay;
+    public int readyDay;
+    public int fee;
+}
+
+[Serializable]
 public class AuctionLotSaveData
 {
     public GemInstanceSaveData stone;
@@ -302,6 +318,7 @@ public class SaveData
     public bool laserSamplesGiven;
     public List<HphtJobSaveData> hphtJobs = new List<HphtJobSaveData>();
     public bool hphtSamplesGiven;
+    public List<JewelJobSaveData> jewelJobs = new List<JewelJobSaveData>();
     public int auctionLotsDay;
     public List<AuctionLotSaveData> auctionLots = new List<AuctionLotSaveData>();
     public List<AuctionConsignmentSaveData> auctionConsignments = new List<AuctionConsignmentSaveData>();

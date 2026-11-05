@@ -88,7 +88,34 @@ public static class LoupeFeatures
             });
         }
 
+        HideBehindSetting(features, gem, false);
         return features;
+    }
+
+    // A stone in a jewel: the metal covers a part of it. Prongs hide little, a bezel the edge of the stone and the defects of the girdle, a closed back the whole
+    // pavilion with the surface defects and the traces of the laser, the fillings and the coatings that are there. The microscope looks through the table, and
+    // sees more of it. What is hidden is always the same for the same stone.
+    private static void HideBehindSetting(List<LoupeFeature> features, GemInstance gem, bool micro)
+    {
+        if (gem == null || !gem.IsSet) return;
+        var setting = JewelCatalog.SettingIndex(gem.JewelSetting);
+        features.RemoveAll(f =>
+        {
+            var radial = Mathf.Sqrt(f.Position.x * f.Position.x + f.Position.y * f.Position.y);
+            var low = f.Position.z < 0f;
+            var hash = StoneOptics.StableHash((gem.SpecimenId ?? "") + "|hide|" + f.Kind + "|" + f.Position.x.ToString("0.00") + f.Position.y.ToString("0.00"));
+            var roll = (hash % 100u) / 100f;
+            switch (setting)
+            {
+                case 0: return f.External && radial > 0.72f && roll < 0.35f;
+                case 1: return (radial > 0.7f && roll < (micro ? 0.5f : 0.85f)) || (f.External && f.Kind == FeatureKind.Chip);
+                case 2:
+                    if (f.External) return true;
+                    if (f.Kind == FeatureKind.LaserChannel || f.Kind == FeatureKind.KmFeather) return !micro || roll < 0.7f;
+                    return low && (!micro || roll < 0.6f);
+                default: return false;
+            }
+        });
     }
 
     // Features seen under the microscope: many more than with the loupe, including very fine ones (a "loupe clean"
@@ -134,6 +161,7 @@ public static class LoupeFeatures
             if (f.External) features.Add(f);
         }
 
+        HideBehindSetting(features, gem, true);
         return features;
     }
 

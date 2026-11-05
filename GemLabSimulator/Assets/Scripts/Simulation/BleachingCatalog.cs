@@ -113,6 +113,7 @@ public static class BleachingCatalog
     public static string Refusal(GemInstance gem)
     {
         if (gem == null) return "Aucune pierre.";
+        if (gem.IsSet) return JewelCatalog.SetRefusal;
         if (StuffOf(gem.Definition) == Stuff.None)
             return "Ce matériau ne se blanchit pas : on ne blanchit que les perles, le corail, la jadéite et l'œil-de-tigre.";
         if (gem.IsSynthetic) return "Inutile de blanchir une pierre synthétique.";
