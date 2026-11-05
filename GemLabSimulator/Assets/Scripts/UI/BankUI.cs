@@ -86,6 +86,7 @@ public class BankUI : MonoBehaviour
         subtitle.text = $"Aujourd'hui : {GameCalendar.Long(GameCalendar.Today)}";
         if (!bank.HasAccount) BuildOffer();
         else BuildAccount(bank);
+        StardewKit.Skin(layer);
     }
 
     private void BuildOffer()
@@ -197,9 +198,7 @@ public class BankUI : MonoBehaviour
         rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
         rect.sizeDelta = new Vector2(PanelWidth, PanelHeight);
-        panel.GetComponent<Image>().color = new Color(0.08f, 0.09f, 0.12f, 0.98f);
-
-        RuntimeUIKit.MakeBox("Edge", panel.transform, Vector2.zero, new Vector2(PanelWidth, 4f), new Color(0.80f, 0.64f, 0.26f, 1f), false).raycastTarget = false;
+        StardewKit.FramePanel(panel.GetComponent<Image>());
         var title = RuntimeUIKit.MakeText("Title", panel.transform, "Banque de la Ville", 24, TextAnchor.UpperLeft, Gold, new Vector2(30f, -18f), new Vector2(PanelWidth - 150f, 32f));
         title.fontStyle = FontStyle.Bold;
         subtitle = RuntimeUIKit.MakeText("Subtitle", panel.transform, "", 12, TextAnchor.UpperLeft, new Color(0.62f, 0.82f, 1f), new Vector2(30f, -52f), new Vector2(PanelWidth - 60f, 18f));
@@ -210,5 +209,6 @@ public class BankUI : MonoBehaviour
         layer.anchorMin = Vector2.zero;
         layer.anchorMax = Vector2.one;
         layer.offsetMin = layer.offsetMax = Vector2.zero;
+        StardewKit.Skin(panel.transform);
     }
 }

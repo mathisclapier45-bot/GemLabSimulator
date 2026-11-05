@@ -24,7 +24,12 @@ public class MarketUI : MonoBehaviour
     {
         Instance = this;
         BuildTabs();
-        if (panel != null) panel.SetActive(false);
+        if (panel != null)
+        {
+            StardewKit.FramePanel(panel.GetComponent<Image>());
+            StardewKit.Skin(panel.transform);
+            panel.SetActive(false);
+        }
     }
 
     private void Start()
@@ -132,6 +137,7 @@ public class MarketUI : MonoBehaviour
 
         var rows = selling ? BuildSellRows() : BuildBuyRows();
         content.sizeDelta = new Vector2(content.sizeDelta.x, Mathf.Max(rows * (RowHeight + RowSpacing) + 10f, 40f));
+        StardewKit.Skin(content);
     }
 
     private int BuildBuyRows()

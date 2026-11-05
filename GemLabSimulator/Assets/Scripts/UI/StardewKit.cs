@@ -83,6 +83,108 @@ public static class StardewKit
         return Sprite.Create(t, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, new Vector4(3, 3, 3, 3));
     }
 
+    private static Sprite panelFrame;
+    private static Sprite bevel;
+
+    // The frame of a window: the same orange border as the clock, around a dark wood fill, so the light and gold texts of the windows stay readable.
+    public static Sprite PanelFrame
+    {
+        get
+        {
+            if (panelFrame == null) panelFrame = BuildPanelFrame();
+            return panelFrame;
+        }
+    }
+
+    // A pixel bevel meant to be tinted: outline, a light top-left edge, a darker bottom-right one. The buttons and the boxes of the windows take their
+    // colour on it, so the colours stay and only the edges change.
+    public static Sprite Bevel
+    {
+        get
+        {
+            if (bevel == null) bevel = BuildBevel();
+            return bevel;
+        }
+    }
+
+    private static Sprite BuildPanelFrame()
+    {
+        const int n = 16;
+        var t = NewTexture(n, n);
+        for (var y = 0; y < n; y++)
+        {
+            for (var x = 0; x < n; x++)
+            {
+                var d = Mathf.Min(Mathf.Min(x, y), Mathf.Min(n - 1 - x, n - 1 - y));
+                var lit = x + (n - 1 - y) < n - 1;
+                Color c;
+                if (d == 0) c = C(0.27f, 0.10f, 0.03f);
+                else if (d == 1) c = lit ? C(1.00f, 0.76f, 0.40f) : C(0.70f, 0.33f, 0.08f);
+                else if (d <= 3) c = C(0.90f, 0.50f, 0.14f);
+                else if (d == 4) c = C(0.60f, 0.27f, 0.07f);
+                else if (d == 5) c = C(0.10f, 0.06f, 0.03f);
+                else c = C(0.16f, 0.11f, 0.08f);
+                t.SetPixel(x, y, c);
+            }
+        }
+        var clear = new Color(0f, 0f, 0f, 0f);
+        foreach (var (cx, cy) in new[] { (0, 0), (n - 1, 0), (0, n - 1), (n - 1, n - 1) }) t.SetPixel(cx, cy, clear);
+        t.Apply();
+        return Sprite.Create(t, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, new Vector4(6, 6, 6, 6));
+    }
+
+    private static Sprite BuildBevel()
+    {
+        const int n = 8;
+        var t = NewTexture(n, n);
+        for (var y = 0; y < n; y++)
+        {
+            for (var x = 0; x < n; x++)
+            {
+                var d = Mathf.Min(Mathf.Min(x, y), Mathf.Min(n - 1 - x, n - 1 - y));
+                var lit = x + (n - 1 - y) < n - 1;
+                Color c;
+                if (d == 0) c = C(0.30f, 0.30f, 0.30f);
+                else if (d == 1) c = lit ? C(1.00f, 1.00f, 1.00f) : C(0.62f, 0.62f, 0.62f);
+                else c = C(0.92f, 0.92f, 0.92f);
+                t.SetPixel(x, y, c);
+            }
+        }
+        var clear = new Color(0f, 0f, 0f, 0f);
+        foreach (var (cx, cy) in new[] { (0, 0), (n - 1, 0), (0, n - 1), (n - 1, n - 1) }) t.SetPixel(cx, cy, clear);
+        t.Apply();
+        return Sprite.Create(t, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, new Vector4(3, 3, 3, 3));
+    }
+
+    // The root of a window takes the orange frame.
+    public static void FramePanel(Image image)
+    {
+        if (image == null) return;
+        image.sprite = PanelFrame;
+        image.type = Image.Type.Sliced;
+        image.pixelsPerUnitMultiplier = 0.5f;
+        image.color = Color.white;
+    }
+
+    // The buttons and the rounded boxes of a window, and of what it will build later, get the pixel bevel. It does nothing to what already has it,
+    // so it can run again after the window rebuilds a page.
+    public static void Skin(Transform root)
+    {
+        if (root == null) return;
+        foreach (var image in root.GetComponentsInChildren<Image>(true))
+        {
+            var isButton = image.GetComponent<Button>() != null;
+            var rounded = image.sprite != null && image.sprite == RuntimeUIKit.Rounded;
+            if (!rounded && !(isButton && image.sprite == null)) continue;
+
+            var rect = image.rectTransform;
+            if (Mathf.Max(rect.rect.width, rect.sizeDelta.x) < 20f || Mathf.Max(rect.rect.height, rect.sizeDelta.y) < 20f) continue;
+            image.sprite = Bevel;
+            image.type = Image.Type.Sliced;
+            image.pixelsPerUnitMultiplier = 0.5f;
+        }
+    }
+
     private static Texture2D NewTexture(int w, int h)
     {
         return new Texture2D(w, h, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };

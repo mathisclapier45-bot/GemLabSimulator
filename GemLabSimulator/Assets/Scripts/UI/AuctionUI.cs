@@ -258,6 +258,7 @@ public class AuctionUI : MonoBehaviour
             case Tab.Consign: BuildConsign(); break;
             default: BuildMine(); break;
         }
+        StardewKit.Skin(layer);
     }
 
     private void BuildTabs()
@@ -363,6 +364,7 @@ public class AuctionUI : MonoBehaviour
             RuntimeUIKit.MakeButton("Back", layer, "Retour à la liste", 16, GreenColor, new Vector2(40f, -450f), new Vector2(250f, 52f)).onClick.AddListener(Leave);
         }
         UpdateTexts();
+        StardewKit.Skin(layer);
     }
 
     private void Leave()
@@ -545,9 +547,7 @@ public class AuctionUI : MonoBehaviour
         rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
         rect.sizeDelta = new Vector2(PanelWidth, PanelHeight);
-        panel.GetComponent<Image>().color = new Color(0.08f, 0.07f, 0.10f, 0.98f);
-
-        RuntimeUIKit.MakeBox("Edge", panel.transform, Vector2.zero, new Vector2(PanelWidth, 4f), new Color(0.72f, 0.28f, 0.30f, 1f), false).raycastTarget = false;
+        StardewKit.FramePanel(panel.GetComponent<Image>());
         var title = RuntimeUIKit.MakeText("Title", panel.transform, "Salle des ventes — Banque de la Ville", 22, TextAnchor.UpperLeft, Gold, new Vector2(30f, -16f), new Vector2(PanelWidth - 160f, 30f));
         title.fontStyle = FontStyle.Bold;
         subtitle = RuntimeUIKit.MakeText("Subtitle", panel.transform, "", 12, TextAnchor.UpperLeft, new Color(0.62f, 0.82f, 1f), new Vector2(30f, -50f), new Vector2(PanelWidth - 60f, 18f));
@@ -561,5 +561,6 @@ public class AuctionUI : MonoBehaviour
         layer.anchorMin = Vector2.zero;
         layer.anchorMax = Vector2.one;
         layer.offsetMin = layer.offsetMax = Vector2.zero;
+        StardewKit.Skin(panel.transform);
     }
 }

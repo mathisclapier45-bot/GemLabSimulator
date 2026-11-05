@@ -18,7 +18,12 @@ public class RoughMarketUI : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        if (panel != null) panel.SetActive(false);
+        if (panel != null)
+        {
+            StardewKit.FramePanel(panel.GetComponent<Image>());
+            StardewKit.Skin(panel.transform);
+            panel.SetActive(false);
+        }
     }
 
     private void Start()
@@ -66,6 +71,7 @@ public class RoughMarketUI : MonoBehaviour
         {
             CreateRow(0, "Ce marchand n'a plus rien à vendre aujourd'hui.", null);
             content.sizeDelta = new Vector2(content.sizeDelta.x, RowHeight + RowSpacing);
+            StardewKit.Skin(content);
             return;
         }
 
@@ -74,6 +80,7 @@ public class RoughMarketUI : MonoBehaviour
 
         content.sizeDelta = new Vector2(content.sizeDelta.x,
             currentVendor.Stock.Count * (RowHeight + RowSpacing) + 10f);
+        StardewKit.Skin(content);
     }
 
     private string BuildItemLabel(GemInstance item)

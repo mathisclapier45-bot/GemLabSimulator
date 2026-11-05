@@ -124,6 +124,7 @@ public class MailboxUI : MonoBehaviour
         else if (openedCatalogue) BuildCatalogueLetter();
         else if (openedLetter != null) BuildLetter(openedLetter);
         else BuildList();
+        StardewKit.Skin(layer);
     }
 
     private void Tab(string label, bool receive, float x)
@@ -357,11 +358,11 @@ public class MailboxUI : MonoBehaviour
         rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
         rect.sizeDelta = new Vector2(WindowWidth, WindowHeight);
-        window.GetComponent<Image>().color = new Color(0.13f, 0.10f, 0.08f, 0.98f);
+        StardewKit.FramePanel(window.GetComponent<Image>());
 
         // The header: the logo of the mail and the title.
-        RuntimeUIKit.MakeBox("Band", window.transform, Vector2.zero, new Vector2(WindowWidth, 72f), new Color(0.27f, 0.18f, 0.11f, 1f), false).raycastTarget = false;
-        RuntimeUIKit.MakeBox("Edge", window.transform, new Vector2(0f, -72f), new Vector2(WindowWidth, 3f), new Color(0.80f, 0.64f, 0.26f, 1f), false).raycastTarget = false;
+        RuntimeUIKit.MakeBox("Band", window.transform, new Vector2(12f, -12f), new Vector2(WindowWidth - 24f, 60f), new Color(0.27f, 0.18f, 0.11f, 1f), false).raycastTarget = false;
+        RuntimeUIKit.MakeBox("Edge", window.transform, new Vector2(12f, -72f), new Vector2(WindowWidth - 24f, 3f), new Color(0.80f, 0.64f, 0.26f, 1f), false).raycastTarget = false;
         var logo = new GameObject("Logo", typeof(RectTransform), typeof(Image));
         logo.transform.SetParent(window.transform, false);
         RuntimeUIKit.SetTopLeft(logo.GetComponent<RectTransform>(), new Vector2(24f, -10f), new Vector2(76f, 54f));
@@ -380,5 +381,6 @@ public class MailboxUI : MonoBehaviour
         layer.anchorMin = Vector2.zero;
         layer.anchorMax = Vector2.one;
         layer.offsetMin = layer.offsetMax = Vector2.zero;
+        StardewKit.Skin(window.transform);
     }
 }

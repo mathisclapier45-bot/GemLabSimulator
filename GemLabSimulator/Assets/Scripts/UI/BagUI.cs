@@ -122,6 +122,7 @@ public class BagUI : MonoBehaviour
         if (pets != null) pets.OnPetsChanged += RefreshPets;
         RefreshPets();
         AdoptBinder();
+        StardewKit.Skin(panel.transform);
     }
 
     private void OnDestroy()
@@ -334,7 +335,7 @@ public class BagUI : MonoBehaviour
         rect.sizeDelta = new Vector2(PanelWidth, PanelHeight);
         // Shifted left so the inventory panel (right side of the screen) stays reachable.
         rect.anchoredPosition = new Vector2(-190f, 0f);
-        panel.GetComponent<Image>().color = PanelColor;
+        StardewKit.FramePanel(panel.GetComponent<Image>());
 
         RuntimeUIKit.MakeText("Title", panel.transform, "Sac", 22, TextAnchor.UpperLeft, Gold, new Vector2(24f, -12f), new Vector2(200f, 30f));
         var close = RuntimeUIKit.MakeButton("Close", panel.transform, "X", 14, new Color(0.30f, 0.22f, 0.20f, 1f),
@@ -493,6 +494,7 @@ public class BagUI : MonoBehaviour
         for (var i = 0; i < tabs.Count; i++)
             tabs[i].Image.color = i == index ? new Color(0.45f, 0.35f, 0.22f, 1f) : SlotColor;
         current.OnShow?.Invoke();
+        StardewKit.Skin(panel.transform);
     }
 
     // Left: 18 slots (6 columns x 3 rows) for the field equipment.
