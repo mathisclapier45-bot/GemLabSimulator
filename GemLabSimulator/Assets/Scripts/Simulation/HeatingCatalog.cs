@@ -29,6 +29,7 @@ public struct HeatResult
     public bool Star;
     public float ValueFactor;
     public bool ChangesColor;
+    public bool Inverts;             // the heating inverted an irradiation
     public float Hue;
     public float Saturation;
     public float Brightness;
@@ -59,6 +60,7 @@ public static class HeatingCatalog
         public Need Atmosphere = Need.Any;
         public Cold Cooling = Cold.Any;
         public int MinDays = 1;
+        public string RequiresIrradiation;       // only for a stone the irradiator coloured with this name (the heating inverts the irradiation)
         public bool Relative;                    // the colour moves by SatMul and BriAdd instead of going to a target
         public float Hue, Saturation, Brightness;
         public float SatMul = 1f, BriAdd;
@@ -101,6 +103,20 @@ public static class HeatingCatalog
         new Recipe { Goal = "Obtenir une couleur orange", Species = new[] { "Saphir_Rose" }, TMin = 1600, TMax = 1900, Atmosphere = Need.Oxidizing,
             Hue = 24, Saturation = 0.90f, Brightness = 0.95f, ValueGain = 1.6f,
             Description = "Chauffage en milieu oxydant : le saphir rose est devenu orange. " + CorundumMarks },
+
+        // ---- The heating that inverts an irradiation (the "annealing") ----
+        new Recipe { Goal = "Topaze brune vers bleu Suisse", Species = new[] { "Topaze" }, TMin = 250, TMax = 450, RequiresIrradiation = "Topaze brune",
+            Hue = 205, Saturation = 0.80f, Brightness = 0.65f, ValueGain = 2.6f,
+            Description = "Topaze brune irradiée puis chauffée : un bleu beaucoup plus soutenu, le « bleu Suisse »." },
+        new Recipe { Goal = "Topaze bleue vers incolore", Species = new[] { "Topaze" }, TMin = 500, TMax = 700, RequiresIrradiation = "Topaze bleu",
+            Hue = 215, Saturation = 0.03f, Brightness = 0.97f, ValueGain = 0.5f,
+            Description = "Topaze bleue irradiée chauffée : le traitement est inversé, elle est redevenue incolore." },
+        new Recipe { Goal = "Quartz fumé vers plus pâle ou verdâtre", Species = new[] { "Quartz" }, TMin = 250, TMax = 400, RequiresIrradiation = "Quartz fumé",
+            Hue = 82, Saturation = 0.12f, Brightness = 0.85f, ValueGain = 0.8f,
+            Description = "Quartz fumé irradié chauffé : la couleur pâlit ou vire au verdâtre." },
+        new Recipe { Goal = "Béryl jaune vers incolore", Species = new[] { "Goshenite" }, TMin = 350, TMax = 500, RequiresIrradiation = "Héliodore",
+            Hue = 195, Saturation = 0.02f, Brightness = 0.97f, ValueGain = 0.5f,
+            Description = "Béryl jaune irradié chauffé : le Fe3+ reprend un électron, la couleur disparaît." },
 
         // ---- Beryl, quartz, topaz, tourmaline, zircon, tanzanite, amber ----
         new Recipe { Goal = "Aigue-marine (bleu stable)", Species = new[] { "Heliodore" }, TMin = 350, TMax = 500,
@@ -192,6 +208,8 @@ public static class HeatingCatalog
         foreach (var recipe in Recipes)
         {
             if (!Matches(recipe, name)) continue;
+            // The recipes that invert an irradiation only exist for a stone that was irradiated that way.
+            if (recipe.RequiresIrradiation != null && (!gem.IsIrradiated || !gem.IrradiationName.StartsWith(recipe.RequiresIrradiation))) continue;
             // The ruby recipes depend on its hue; the first one that fits is the one that counts.
             if (!HueFits(recipe, gem)) continue;
             found.Add(recipe);
@@ -206,14 +224,12 @@ public static class HeatingCatalog
     {
         if (gem == null) return "Aucune pierre.";
         var name = gem.Definition != null ? gem.Definition.name : "";
-        var known = false;
-        foreach (var recipe in Recipes)
-            if (Matches(recipe, name)) { known = true; break; }
+        var known = RecipesFor(gem).Count > 0;
         if (!known)
             return "Cette pierre ne se chauffe pas ici : corindon, béryl, quartz, topaze, tourmaline, zircon, tanzanite, ambre. (Fluorite, grenat, jade, spodumène : plus tard.)";
         if (gem.IsRough) return "Une pierre brute ne se chauffe pas ici : il faut la tailler ou la polir d'abord.";
         if (gem.IsSynthetic) return "Inutile de chauffer une pierre synthétique.";
-        if (!string.IsNullOrEmpty(gem.TreatmentGrade) && gem.TreatmentGrade.Contains("Chauffé"))
+        if (!gem.IsIrradiated && !string.IsNullOrEmpty(gem.TreatmentGrade) && gem.TreatmentGrade.IndexOf("chauffé", System.StringComparison.OrdinalIgnoreCase) >= 0)
             return "Cette pierre a déjà été chauffée : un second passage la fragiliserait.";
         return null;
     }
@@ -311,6 +327,7 @@ public static class HeatingCatalog
         {
             result.Outcome = score >= 0.85f ? HeatOutcome.Excellent : score >= 0.65f ? HeatOutcome.Good : HeatOutcome.Partial;
             result.Goal = recipe.Goal;
+            result.Inverts = recipe.RequiresIrradiation != null;
             result.Quality = score;
             result.ClarityGain = recipe.ClarityGain;
             result.Description = recipe.Description;

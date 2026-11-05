@@ -69,6 +69,14 @@ public class GemInstance
     public float CoatingIridescence { get; private set; }
     public bool IsCoated => !string.IsNullOrEmpty(CoatingName);
 
+    // The colour the irradiator gave the stone ("Quartz fumé", "Topaze bleu Londres"...), empty when it was not irradiated. An unstable colour fades
+    // on FadeDay (0: stable) and the stone goes back to its first colour (see IrradiationCatalog).
+    public string IrradiationName { get; private set; }
+    public bool IsIrradiated => !string.IsNullOrEmpty(IrradiationName);
+    public int IrradiationFadeDay { get; private set; }
+    private float irradiationFactor = 1f;
+    private float irradiationOriginalHue, irradiationOriginalSaturation, irradiationOriginalBrightness;
+
     // The element diffused into the stone at the treatments laboratory (see DiffusionCatalog): how deep it went, in millimetres, and the colour
     // the stone had before, which a repolishing brings back when the colour stayed in a thin layer at the surface.
     public float DiffusionDepthMm { get; private set; }
@@ -503,6 +511,12 @@ public class GemInstance
             PurchasePrice = data.purchasePrice,
             CuttingCost = data.cuttingCost,
             HeatStar = data.heatStar,
+            IrradiationName = string.IsNullOrEmpty(data.irradiationName) ? null : data.irradiationName,
+            IrradiationFadeDay = data.irradiationFadeDay,
+            irradiationFactor = data.irradiationFactor > 0f ? data.irradiationFactor : 1f,
+            irradiationOriginalHue = data.irradiationHue,
+            irradiationOriginalSaturation = data.irradiationSaturation,
+            irradiationOriginalBrightness = data.irradiationBrightness,
             DiffusionDepthMm = data.diffusionDepth,
             diffusionOriginalHue = data.diffusionHue,
             diffusionOriginalSaturation = data.diffusionSaturation,
@@ -605,6 +619,12 @@ public class GemInstance
             purchasePrice = PurchasePrice,
             cuttingCost = CuttingCost,
             heatStar = HeatStar,
+            irradiationName = IrradiationName,
+            irradiationFadeDay = IrradiationFadeDay,
+            irradiationFactor = irradiationFactor,
+            irradiationHue = irradiationOriginalHue,
+            irradiationSaturation = irradiationOriginalSaturation,
+            irradiationBrightness = irradiationOriginalBrightness,
             diffusionDepth = DiffusionDepthMm,
             diffusionHue = diffusionOriginalHue,
             diffusionSaturation = diffusionOriginalSaturation,
@@ -775,6 +795,8 @@ public class GemInstance
         TreatmentGrade = untreated ? "Chauffé" : $"{previous} + chauffé";
         TreatmentDescription = untreated ? result.Description : $"{TreatmentDescription} {result.Description}";
         if (result.Star) HeatStar = true;
+        // The heating inverts an irradiation: the colour centres are gone, the stone can be irradiated again.
+        if (result.Inverts) ClearIrradiation();
 
         if (result.ClarityGain != 0)
         {
@@ -824,6 +846,52 @@ public class GemInstance
         DiffusionStar = false;
         TreatmentGrade = "Diffusion enlevée (repolie)";
         TreatmentDescription = "Le repolissage a emporté la couche de couleur de la diffusion en surface : la pierre a retrouvé sa couleur d'origine.";
+    }
+
+    // Takes what the irradiator did: the colour of the colour centres, the value, the treatment, and the day an unstable colour will fade. A stone
+    // that went through the irradiator without any effect is left as it was.
+    public void ApplyIrradiation(IrradiationResult result, int today)
+    {
+        if (result.Outcome == IrradiationOutcome.NoEffect) return;
+
+        HasReport = false;
+        TradeName = null;
+        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        irradiationFactor = Mathf.Max(0.05f, result.ValueFactor);
+        var previous = TreatmentGrade;
+        var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
+        TreatmentGrade = untreated ? "Irradié" : $"{previous} + irradié";
+        TreatmentDescription = untreated ? result.Description : $"{TreatmentDescription} {result.Description}";
+        IrradiationName = result.Name;
+        IrradiationFadeDay = result.FadeDays > 0 ? today + result.FadeDays : 0;
+
+        if (!HasColor || !result.ChangesColor) return;
+        irradiationOriginalHue = ColorHue;
+        irradiationOriginalSaturation = ColorSaturation;
+        irradiationOriginalBrightness = ColorBrightness;
+        SetColor(new GemColorValue(Mathf.Repeat(result.Hue, 360f), Mathf.Clamp01(result.Saturation), Mathf.Clamp01(result.Brightness)), IsFancyDiamond);
+    }
+
+    // The colour of an irradiated stone fades when its day comes: it goes back to its first colour and loses what the colour added to its value.
+    public bool FadeIrradiationIfDue(int today)
+    {
+        if (!IsIrradiated || IrradiationFadeDay <= 0 || today < IrradiationFadeDay) return false;
+
+        if (HasColor)
+            SetColor(new GemColorValue(irradiationOriginalHue, irradiationOriginalSaturation, irradiationOriginalBrightness), IsFancyDiamond);
+        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue / Mathf.Max(0.05f, irradiationFactor) * 0.9f));
+        TreatmentGrade = "Irradié (couleur fanée)";
+        TreatmentDescription = "La couleur obtenue par irradiation a fané avec le temps : la pierre est revenue à sa couleur d'origine. Le traitement était instable.";
+        IrradiationName = null;
+        IrradiationFadeDay = 0;
+        return true;
+    }
+
+    // Heating a stone that was irradiated inverts the treatment: the colour centres are gone and the stone can be irradiated again.
+    public void ClearIrradiation()
+    {
+        IrradiationName = null;
+        IrradiationFadeDay = 0;
     }
 
     public void RecordMeasurement(string propertyKey, float value)

@@ -1373,6 +1373,13 @@ public static class SceneBootstrap
                     AddTreatmentStation("PosteDiffusion", new Vector3(x, 3.1f, 0f), new Vector2(4.4f, 2.6f), typeof(DiffusionStation));
                     continue;
                 }
+                if (i == 2)
+                {
+                    // The irradiator is installed: a lead-shielded concrete cell with its radiation sign.
+                    PlaceFurniture("irradiator", new Vector3(x, 5.0f, 0f));
+                    AddTreatmentStation("PosteIrradiation", new Vector3(x, 3.1f, 0f), new Vector2(4.4f, 2.6f), typeof(IrradiationStation));
+                    continue;
+                }
                 PlaceFurniture("labbench", new Vector3(x, 5.0f, 0f));
                 CreateBuildingLabel($"{places[i]}\n(à venir)", new Vector3(x, 1.8f, 0f));
             }
@@ -1394,7 +1401,8 @@ public static class SceneBootstrap
                 "Bienvenue à l'étage ! Le four de chauffage est installé, tout à gauche : vous réglez la température, l'atmosphère et le refroidissement.",
                 "À côté, le four de diffusion : on enterre un corindon dans une poudre d'oxydes et on le chauffe des jours entiers. Le fer et le titane donnent du bleu, le chrome du rouge, le nickel du jaune.",
                 "Mais ces éléments ne pénètrent que d'une fraction de millimètre : un repolissage emporte la couleur. Le béryllium, lui, va beaucoup plus loin et peut colorer toute la pierre.",
-                "Le reste suivra : irradiation, laser, haute pression et haute température. Les places sont déjà tracées au sol.",
+                "Puis l'irradiateur : une cellule blindée où l'on bombarde la pierre de rayons gamma, d'électrons ou de neutrons. Les neutrons la rendent radioactive : elle doit refroidir des jours avant de sortir.",
+                "Le reste suivra : laser, haute pression et haute température. Les places sont déjà tracées au sol.",
                 "Pour le four, retenez ceci : chaque pierre a ses conditions. Le cours donne les plages, et un refroidissement trop rapide fissure presque tout.",
             });
             CreateBuildingLabel("Laboratoire de traitements — étage", new Vector3(0f, 9.7f, 0f));

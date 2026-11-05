@@ -153,6 +153,12 @@ public static class SaveSystem
             data.diffusionSamplesGiven = DiffusionState.Instance.SamplesGiven;
         }
 
+        if (IrradiationState.Instance != null)
+        {
+            data.irradiationJobs = IrradiationState.Instance.ToSaveData();
+            data.irradiationSamplesGiven = IrradiationState.Instance.SamplesGiven;
+        }
+
         File.WriteAllText(SavePath(ActiveSlot), JsonUtility.ToJson(data, true));
     }
 
@@ -256,6 +262,13 @@ public static class SaveSystem
         {
             diffusion.LoadJobs(data.diffusionJobs, RestoreGem);
             diffusion.LoadSamplesGiven(data.diffusionSamplesGiven);
+        }
+
+        var irradiation = IrradiationState.Ensure();
+        if (irradiation != null)
+        {
+            irradiation.LoadJobs(data.irradiationJobs, RestoreGem);
+            irradiation.LoadSamplesGiven(data.irradiationSamplesGiven);
         }
 
         if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)
