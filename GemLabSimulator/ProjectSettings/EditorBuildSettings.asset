@@ -83,4 +83,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LaboTraitements.unity
     guid: 1822d32d35ddd4d28a21493abab2a9d4
+  - enabled: 1
+    path: Assets/Scenes/LaboTraitements2.unity
+    guid: 31297c99dafe44679ab0f4d746cb1145
   m_configObjects: {}

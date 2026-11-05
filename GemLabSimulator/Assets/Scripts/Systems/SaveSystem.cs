@@ -135,6 +135,12 @@ public static class SaveSystem
             data.coatSamplesGiven = CoatingState.Instance.SamplesGiven;
         }
 
+        if (FillingState.Instance != null)
+        {
+            data.fillJobs = FillingState.Instance.ToSaveData();
+            data.fillSamplesGiven = FillingState.Instance.SamplesGiven;
+        }
+
         File.WriteAllText(SavePath(ActiveSlot), JsonUtility.ToJson(data, true));
     }
 
@@ -217,6 +223,13 @@ public static class SaveSystem
         {
             coating.LoadJobs(data.coatJobs, RestoreGem);
             coating.LoadSamplesGiven(data.coatSamplesGiven);
+        }
+
+        var filling = FillingState.Ensure();
+        if (filling != null)
+        {
+            filling.LoadJobs(data.fillJobs, RestoreGem);
+            filling.LoadSamplesGiven(data.fillSamplesGiven);
         }
 
         if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)

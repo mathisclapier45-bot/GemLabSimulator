@@ -68,6 +68,10 @@ public class GemInstance
     public string CoatingName { get; private set; }
     public float CoatingIridescence { get; private set; }
     public bool IsCoated => !string.IsNullOrEmpty(CoatingName);
+
+    // The product that fills the fissures or the pores of the stone, put in at the treatments laboratory (see FillingCatalog).
+    public string FillerName { get; private set; }
+    public bool IsFilled => !string.IsNullOrEmpty(FillerName);
     public bool IsSynthetic { get; private set; }
     public string AuthenticityGrade { get; private set; }
     public string AuthenticityDescription { get; private set; }
@@ -488,6 +492,7 @@ public class GemInstance
             CutQualityIndex = data.cutQuality - 1,
             PurchasePrice = data.purchasePrice,
             CuttingCost = data.cuttingCost,
+            FillerName = string.IsNullOrEmpty(data.fillerName) ? null : data.fillerName,
             CoatingName = string.IsNullOrEmpty(data.coatingName) ? null : data.coatingName,
             CoatingIridescence = data.coatingIridescence,
             Certificate = string.IsNullOrEmpty(data.certificateNumber)
@@ -583,6 +588,7 @@ public class GemInstance
             cutQuality = CutQualityIndex + 1,
             purchasePrice = PurchasePrice,
             cuttingCost = CuttingCost,
+            fillerName = FillerName,
             coatingName = CoatingName,
             coatingIridescence = CoatingIridescence,
             certificateNumber = Certificate?.number,
@@ -592,6 +598,19 @@ public class GemInstance
             measuredValues = new List<float>(measuredValues.Values),
             observedKeys = new List<string>(observedProperties),
         };
+    }
+
+    // A stone the laboratory hands over to be treated: it has no treatment yet, and its value is the one of an untreated stone.
+    public void ClearTreatment()
+    {
+        foreach (var grade in GemGrading.TreatmentGrades)
+        {
+            if (grade.Name != TreatmentGrade) continue;
+            FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue / Mathf.Max(0.01f, grade.Multiplier)));
+            break;
+        }
+        TreatmentGrade = GemGrading.TreatmentGrades[0].Name;
+        TreatmentDescription = GemGrading.TreatmentGrades[0].Description;
     }
 
     public void MarkIdentified()
@@ -690,6 +709,33 @@ public class GemInstance
 
         if (!HasColor) return;
         SetColor(new GemColorValue(Mathf.Repeat(result.Hue, 360f), Mathf.Clamp01(result.Saturation), Mathf.Clamp01(result.Brightness)), IsFancyDiamond);
+    }
+
+    // Takes what the autoclave did: the fissures are hidden, so the stone looks cleaner (the grade shown goes up), a coloured oil deepens the colour,
+    // the value follows, and the stone carries the treatment from then on. A filling that failed leaves the stone damaged.
+    public void ApplyFilling(FillResult result)
+    {
+        if (result.Outcome == FillOutcome.NoEffect) return;
+
+        HasReport = false;
+        TradeName = null;
+        FillerName = result.Product;
+        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        var previous = TreatmentGrade;
+        var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
+        TreatmentGrade = untreated ? result.Label : result.Label.StartsWith("B-jade") || result.Label.StartsWith("C-jade") ? result.Label : $"{previous} + {result.Label}";
+        TreatmentDescription = untreated ? result.Description : $"{TreatmentDescription} {result.Description}";
+
+        if (result.ClarityGain != 0)
+        {
+            var grades = GemGrading.ClarityGrades;
+            var index = Mathf.Clamp(FillingCatalog.ClarityIndexOf(ClarityGrade) + result.ClarityGain, 0, grades.Length - 1);
+            ClarityGrade = grades[index].Name;
+            ClarityDescription = result.ClarityGain > 0 ? $"{grades[index].Description} (apparente : les fissures sont remplies)" : grades[index].Description;
+        }
+
+        if (HasColor && result.SaturationGain > 0f)
+            SetColor(new GemColorValue(ColorHue, Mathf.Clamp01(ColorSaturation + result.SaturationGain), ColorBrightness), IsFancyDiamond);
     }
 
     public void RecordMeasurement(string propertyKey, float value)

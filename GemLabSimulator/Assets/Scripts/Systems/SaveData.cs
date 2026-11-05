@@ -62,6 +62,7 @@ public class GemInstanceSaveData
     public int cutQuality;          // quality of the cut given by a diamond cutter (index + 1, 0 = none)
     public int purchasePrice;       // what the player paid for the stone (0: unknown)
     public int cuttingCost;         // what its cutting cost
+    public string fillerName;       // what fills its fissures or its pores, if anything
     public string coatingName;      // the coating of the pavilion, if any
     public float coatingIridescence;
 
@@ -118,6 +119,17 @@ public class CoatJobSaveData
 }
 
 [Serializable]
+public class FillJobSaveData
+{
+    public int startDay;
+    public int readyDay;
+    public int fee;
+    public int product;
+    public int procedure;
+    public GemInstanceSaveData stone;
+}
+
+[Serializable]
 public class SaveData
 {
     public string saveName = "";
@@ -161,4 +173,6 @@ public class SaveData
     public bool dyeSamplesGiven;
     public List<CoatJobSaveData> coatJobs = new List<CoatJobSaveData>();
     public bool coatSamplesGiven;
+    public List<FillJobSaveData> fillJobs = new List<FillJobSaveData>();
+    public bool fillSamplesGiven;
 }

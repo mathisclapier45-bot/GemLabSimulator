@@ -1150,6 +1150,7 @@ public static class SceneBootstrap
         trigger.size = new Vector2(3f, 2f);
         trigger.offset = new Vector2(-0.8f, -0.8f);
 
+        stairs.AddComponent<InteractPrompt>();
         var interact = stairs.AddComponent<StairsInteractable>();
         var so = new SerializedObject(interact);
         so.FindProperty("targetScene").stringValue = targetScene;
@@ -1253,9 +1254,9 @@ public static class SceneBootstrap
         Debug.Log("Annex laboratory scenes created: LaboSynthese, LaboTraitements.");
     }
 
-    // The treatments laboratory. For now it holds the bleaching room, the dye room and the vacuum chamber of the surface coatings: two desks
-    // with six small vats or pots on each and the chamber, against the back wall; E in front of one opens its window (BleachingUI, DyeingUI,
-    // CoatingUI). The other treatments will come one at a time.
+    // The treatments laboratory, on two floors. The ground floor, a large hall, holds the bleaching room, the dye room, the vacuum chamber of the
+    // surface coatings and the autoclave of the impregnation, against the back wall; E in front of one opens its window (BleachingUI, DyeingUI,
+    // CoatingUI, FillingUI). A staircase in the back right corner leads to the upper floor, where the next treatments will be set up one at a time.
     [MenuItem("GemLab/Setup Treatments Lab Scene")]
     public static void CreateTreatmentsLabScene()
     {
@@ -1263,69 +1264,73 @@ public static class SceneBootstrap
         UpdateGemDatabase(GetOrCreateGemPool());
         AssetDatabase.SaveAssets();
 
-        CreateTowerRoom("LaboTraitements", "lab", -9, 9, -5, 5, new Color(0.08f, 0.10f, 0.11f), new Vector3(0f, -3f, 0f), true, (walls, wallTile) =>
+        // The ground floor: x from -15 to 15, y from -6 to 7 inside the walls.
+        CreateTowerRoom("LaboTraitements", "lab", -16, 16, -7, 8, new Color(0.08f, 0.10f, 0.11f), new Vector3(0f, -4.5f, 0f), true, (walls, wallTile) =>
         {
-            CreateExitDoor(new Vector3(0, -4, 0f), "SpawnPoint_LaboTraitements");
+            CreateExitDoor(new Vector3(0, -6, 0f), "SpawnPoint_LaboTraitements");
 
             // The desk of the bleaching baths: the six small vats stand on it, side by side (24 pixels apart, centred on the desk).
-            const float deskY = 3.0f;
-            const float bleachX = -4.4f;
+            const float deskY = 5.0f;
+            const float bleachX = -12.0f;
             PlaceFurniture("acid_desk", new Vector3(bleachX, deskY, 0f));
             for (var i = 0; i < BleachingCatalog.VatCount; i++)
                 PlaceInteriorProp($"minivat_{i}", new Vector3(bleachX + (-60f + 24f * i) / 32f, deskY + 1.25f, 0f), true, false, 5);
-            PlaceRug("hazardmat", new Vector3(bleachX, 1.6f, 0f));
-
-            var bleachStation = new GameObject("PosteBlanchiment");
-            bleachStation.transform.position = new Vector3(bleachX, 1.9f, 0f);
-            var bleachTrigger = bleachStation.AddComponent<BoxCollider2D>();
-            bleachTrigger.isTrigger = true;
-            bleachTrigger.size = new Vector2(5.4f, 2.8f);
-            bleachStation.AddComponent<BleachingStation>();
-            CreateBuildingLabel("Bains de blanchiment (E)", new Vector3(bleachX, 0.7f, 0f));
+            PlaceRug("hazardmat", new Vector3(bleachX, 3.6f, 0f));
+            AddTreatmentStation("PosteBlanchiment", new Vector3(bleachX, 3.2f, 0f), new Vector2(5.4f, 2.8f), typeof(BleachingStation));
+            PlaceInteriorProp("hazardsign", new Vector3(bleachX, 8.55f, 0f), false, false, 2);
 
             // The wooden desk of the dye pots next to it: six pots of colour, each with its stirring stick.
-            const float dyeX = 1.2f;
+            const float dyeX = -5.5f;
             PlaceFurniture("dye_desk", new Vector3(dyeX, deskY, 0f));
             for (var i = 0; i < DyeingCatalog.PotCount; i++)
                 PlaceInteriorProp($"dyepot_{i}", new Vector3(dyeX + (-60f + 24f * i) / 32f, deskY + 1.25f, 0f), true, false, 5);
-            PlaceRug("rug_red", new Vector3(dyeX, 1.4f, 0f));
+            PlaceRug("rug_red", new Vector3(dyeX, 3.4f, 0f));
+            AddTreatmentStation("PosteTeinture", new Vector3(dyeX, 3.2f, 0f), new Vector2(5.4f, 2.8f), typeof(DyeingStation));
+            PlaceInteriorProp("dyechart", new Vector3(dyeX, 8.55f, 0f), false, false, 2);
+            PlaceFurniture("dryingrack", new Vector3(-2.2f, 4.7f, 0f));
 
-            var dyeStation = new GameObject("PosteTeinture");
-            dyeStation.transform.position = new Vector3(dyeX, 1.9f, 0f);
-            var dyeTrigger = dyeStation.AddComponent<BoxCollider2D>();
-            dyeTrigger.isTrigger = true;
-            dyeTrigger.size = new Vector2(5.4f, 2.8f);
-            dyeStation.AddComponent<DyeingStation>();
-            CreateBuildingLabel("Bains de teinture (E)", new Vector3(dyeX, 0.7f, 0f));
+            // The vacuum chamber of the surface coatings, with a display of "mystic" stones on the wall beside it.
+            const float coatX = 1.6f;
+            PlaceFurniture("vacuumchamber", new Vector3(coatX, 4.6f, 0f));
+            PlaceInteriorProp("mysticdisplay", new Vector3(coatX + 2.6f, 8.45f, 0f), false, false, 2);
+            AddTreatmentStation("PosteRevetement", new Vector3(coatX, 2.8f, 0f), new Vector2(3.6f, 2.8f), typeof(CoatingStation));
 
-            // The vacuum chamber at the right end of the back wall, with a display of "mystic" stones on the wall beside it.
-            const float coatX = 6.5f;
-            PlaceFurniture("vacuumchamber", new Vector3(coatX, 2.6f, 0f));
-            PlaceInteriorProp("mysticdisplay", new Vector3(4.55f, 5.45f, 0f), false, false, 2);
+            // The autoclave of the impregnation.
+            const float autoclaveX = 8.0f;
+            PlaceFurniture("autoclave", new Vector3(autoclaveX, 5.0f, 0f));
+            AddTreatmentStation("PosteImpregnation", new Vector3(autoclaveX, 3.1f, 0f), new Vector2(4.4f, 2.4f), typeof(FillingStation));
+            PlaceFurniture("bottlerack", new Vector3(11.0f, 5.0f, 0f));
 
-            var coatStation = new GameObject("PosteRevetement");
-            coatStation.transform.position = new Vector3(coatX, 1.4f, 0f);
-            var coatTrigger = coatStation.AddComponent<BoxCollider2D>();
-            coatTrigger.isTrigger = true;
-            coatTrigger.size = new Vector2(3.6f, 2.8f);
-            coatStation.AddComponent<CoatingStation>();
-            CreateBuildingLabel("Chambre de dépôt (E)", new Vector3(coatX, 0.3f, 0f));
+            // The staircase to the upper floor in the back right corner; below it, the place where the player arrives from upstairs.
+            CreateTowerStairs(new Vector3(13.6f, 5.2f, 0f), "LaboTraitements2");
+            CreateNamedSpawnPoint("SpawnPoint_Stairs", new Vector3(12.6f, 3.2f, 0f));
 
-            // Above the desks, the hazard sign and the chart of dye colours.
-            PlaceInteriorProp("hazardsign", new Vector3(bleachX, 5.55f, 0f), false, false, 2);
-            PlaceInteriorProp("dyechart", new Vector3(dyeX, 5.55f, 0f), false, false, 2);
+            // Daylight on the back wall.
+            foreach (var x in new[] { -9.0f, -3.4f, 7.6f, 11.8f }) PlaceWallDecorAt("window_white", x, 8);
 
-            // The fume hood and the acid rack along the left wall, the safety equipment, the waste drums and the drying rack of the dyed strings.
-            PlaceFurniture("fumehood", new Vector3(-6.8f, -0.9f, 0f));
-            PlaceFurniture("bottlerack", new Vector3(-6.8f, -3.2f, 0f));
-            PlaceFurniture("eyewash", new Vector3(-8.3f, -3.3f, 0f));
-            PlaceFurniture("barrel", new Vector3(8.0f, -3.6f, 0f));
-            PlaceFurniture("barrel", new Vector3(7.0f, -3.9f, 0f));
-            PlaceFurniture("dryingrack", new Vector3(7.9f, -1.0f, 0f));
-            PlaceRug("rug_blue_tall", new Vector3(0f, -2.4f, 0f));
-            PlaceFurniture("off_plant_big", new Vector3(-8.1f, 4.0f, 0f));
+            // The middle of the hall: a long rug, two work benches with their notes, the technician.
+            PlaceRug("rug_blue_tall", new Vector3(0f, -2.0f, 0f));
+            foreach (var side in new[] { -1f, 1f })
+            {
+                PlaceFurniture("labbench", new Vector3(side * 8.5f, -1.5f, 0f));
+                PlaceInteriorProp("papers2", new Vector3(side * 8.5f - 0.7f, -1.0f, 0f), false, false, 6);
+                PlaceInteriorProp("mug", new Vector3(side * 8.5f + 0.7f, -1.0f, 0f), false, false, 6);
+                PlaceFurniture("off_plant_big", new Vector3(side * 14.2f, 6.4f, 0f));
+            }
 
-            CreateTalkNpc("Technicien — traitements", "merchant2", new Vector3(3.2f, -1.6f, 0f), new[]
+            // The safety equipment, the waste drums, the acid racks along the side walls and a waiting corner by the door.
+            PlaceFurniture("eyewash", new Vector3(-14.4f, 1.2f, 0f));
+            PlaceFurniture("fumehood", new Vector3(-13.6f, -2.0f, 0f));
+            PlaceFurniture("bottlerack", new Vector3(-14.0f, -5.0f, 0f));
+            PlaceFurniture("barrel", new Vector3(14.2f, -4.8f, 0f));
+            PlaceFurniture("barrel", new Vector3(13.0f, -5.2f, 0f));
+            PlaceFurniture("bottlerack", new Vector3(13.8f, -1.6f, 0f));
+            PlaceFurniture("off_sofa", new Vector3(-6.0f, -5.0f, 0f));
+            PlaceFurniture("off_wood_table", new Vector3(-3.0f, -5.2f, 0f));
+            PlaceInteriorProp("mug", new Vector3(-2.8f, -4.8f, 0f), false, false, 6);
+            PlaceFurniture("off_cooler", new Vector3(4.0f, -5.4f, 0f));
+
+            CreateTalkNpc("Technicien — traitements", "merchant2", new Vector3(2.8f, -0.8f, 0f), new[]
             {
                 "Ici, on blanchit : un bain de produits chimiques éclaircit ou enlève la couleur d'une gemme. Perles, corail, jadéite et œil-de-tigre, pas autre chose.",
                 "Attention au matériau ! Les perles et le corail sont du carbonate de calcium : un acide les dissout. Pour eux, l'eau oxygénée, rien d'autre.",
@@ -1334,10 +1339,61 @@ public static class SceneBootstrap
                 "Astuce : une pierre blanchie prend la couleur plus régulièrement. Blanchir d'abord, teindre ensuite : c'est le bon ordre.",
                 "Et là-bas, la chambre sous vide : on y dépose une couche de métal si fine qu'elle irise la pierre. C'est comme ça qu'on fait la topaze « mystique ».",
                 "Attention, un revêtement reste en surface : il s'érafle, surtout sur les arêtes. Une couche épaisse tient mieux, mais elle ternit l'éclat.",
-                "Un bain prend des jours : on dépose la pierre, on revient la chercher. Les autres traitements arriveront plus tard.",
+                "Là, c'est l'autoclave : on y remplit les fissures et les pores. De l'huile pour l'émeraude, de la résine pour la turquoise et le jade, du verre pour un rubis médiocre.",
+                "Méfiez-vous : l'huile et la cire sont temporaires, elles s'écoulent au nettoyage. Et une opale peut craqueler si elle sèche.",
+                "L'escalier, dans le coin, mène à l'étage : c'est là que s'installeront le chauffage, la diffusion, l'irradiation, le laser et le HPHT.",
             });
-            CreateBuildingLabel("Laboratoire de traitements", new Vector3(0f, 6.7f, 0f));
+            CreateBuildingLabel("Laboratoire de traitements", new Vector3(0f, 9.7f, 0f));
         });
+
+        // The upper floor: the same size, for the treatments to come. Each has its marked place, waiting for its equipment.
+        CreateTowerRoom("LaboTraitements2", "lab", -16, 16, -7, 8, new Color(0.08f, 0.10f, 0.11f), new Vector3(12.6f, 3.2f, 0f), true, (walls, wallTile) =>
+        {
+            CreateTowerStairs(new Vector3(13.6f, 5.2f, 0f), "LaboTraitements");
+            CreateNamedSpawnPoint("SpawnPoint_Stairs", new Vector3(12.6f, 3.2f, 0f));
+
+            // The places of the treatments to come, in the order of the course, each with a striped mat and its sign.
+            var places = new[] { "Chauffage", "Diffusion", "Irradiation", "Traitement au laser", "Haute pression, haute température" };
+            for (var i = 0; i < places.Length; i++)
+            {
+                var x = -12.0f + i * 5.6f;
+                PlaceRug("hazardmat", new Vector3(x, 3.4f, 0f));
+                PlaceFurniture("labbench", new Vector3(x, 5.0f, 0f));
+                CreateBuildingLabel($"{places[i]}\n(à venir)", new Vector3(x, 1.8f, 0f));
+            }
+
+            foreach (var x in new[] { -14.0f, -8.5f, -3.0f, 2.6f, 8.2f }) PlaceWallDecorAt("window_white", x, 8);
+            PlaceInteriorProp("hazardsign", new Vector3(6.0f, 8.55f, 0f), false, false, 2);
+            PlaceRug("rug_blue_tall", new Vector3(0f, -2.0f, 0f));
+            PlaceFurniture("fumehood", new Vector3(-13.6f, -1.5f, 0f));
+            PlaceFurniture("eyewash", new Vector3(-14.4f, 1.0f, 0f));
+            PlaceFurniture("barrel", new Vector3(14.2f, -4.8f, 0f));
+            PlaceFurniture("bottlerack", new Vector3(13.8f, -1.6f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(-14.2f, 6.4f, 0f));
+            PlaceFurniture("off_sofa", new Vector3(-6.0f, -5.0f, 0f));
+            PlaceFurniture("off_wood_table", new Vector3(-3.0f, -5.2f, 0f));
+            foreach (var side in new[] { -1f, 1f }) PlaceFurniture("labbench", new Vector3(side * 8.5f, -1.5f, 0f));
+
+            CreateTalkNpc("Ingénieur — traitements", "merchant1", new Vector3(4.0f, -1.0f, 0f), new[]
+            {
+                "Bienvenue à l'étage ! Ici viendront les traitements qui demandent de la chaleur, de la pression et de la radiation.",
+                "Chauffage, diffusion, irradiation, laser, haute pression et haute température : chacun aura son poste, comme en bas.",
+                "Pour l'instant, les places sont tracées au sol. Revenez quand les appareils seront installés.",
+            });
+            CreateBuildingLabel("Laboratoire de traitements — étage", new Vector3(0f, 9.7f, 0f));
+        });
+    }
+
+    // A place to stand in front of a treatment: E there opens its window, and a small E key shows above the player's head while they are on it.
+    private static void AddTreatmentStation(string name, Vector3 position, Vector2 size, System.Type station)
+    {
+        var go = new GameObject(name);
+        go.transform.position = position;
+        var trigger = go.AddComponent<BoxCollider2D>();
+        trigger.isTrigger = true;
+        trigger.size = size;
+        go.AddComponent(station);
+        go.AddComponent<InteractPrompt>();
     }
 
     private static void CreateAnnexLab(string sceneName, string townSpawn, string title, string speaker, string npcSprite, string[] lines)
