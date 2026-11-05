@@ -69,6 +69,10 @@ public class GemInstance
     public float CoatingIridescence { get; private set; }
     public bool IsCoated => !string.IsNullOrEmpty(CoatingName);
 
+    // The high-pressure high-temperature treatment of a diamond (see HphtCatalog): its name, or empty when it has none.
+    public string HphtName { get; private set; }
+    public bool IsHphtTreated => !string.IsNullOrEmpty(HphtName);
+
     // The laser treatment of a diamond (see LaserCatalog): "" when it has none, otherwise its name. The treated stone loses its certificate.
     public string LaserName { get; private set; }
     public bool IsLaserTreated => !string.IsNullOrEmpty(LaserName);
@@ -516,6 +520,7 @@ public class GemInstance
             CuttingCost = data.cuttingCost,
             HeatStar = data.heatStar,
             LaserName = string.IsNullOrEmpty(data.laserName) ? null : data.laserName,
+            HphtName = string.IsNullOrEmpty(data.hphtName) ? null : data.hphtName,
             IrradiationName = string.IsNullOrEmpty(data.irradiationName) ? null : data.irradiationName,
             IrradiationFadeDay = data.irradiationFadeDay,
             irradiationFactor = data.irradiationFactor > 0f ? data.irradiationFactor : 1f,
@@ -625,6 +630,7 @@ public class GemInstance
             cuttingCost = CuttingCost,
             heatStar = HeatStar,
             laserName = LaserName,
+            hphtName = HphtName,
             irradiationName = IrradiationName,
             irradiationFadeDay = IrradiationFadeDay,
             irradiationFactor = irradiationFactor,
@@ -926,6 +932,49 @@ public class GemInstance
             break;
         }
         // The old certificate described another stone: the office has to grade this one again.
+        Certificate = null;
+    }
+
+    // Takes what the press did: a brown diamond with little nitrogen becomes colourless, one with nitrogen becomes an intense yellow to yellow-green
+    // (a fancy colour), and a stone that was graphitised is damaged. The colour changed: the certificate no longer describes the stone.
+    public void ApplyHpht(HphtResult result)
+    {
+        if (result.Outcome == HphtOutcome.NoEffect) return;
+
+        HasReport = false;
+        TradeName = null;
+        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        var previous = TreatmentGrade;
+        var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
+        TreatmentGrade = untreated ? result.Label : $"{previous} + {result.Label.ToLowerInvariant()}";
+        TreatmentDescription = untreated ? result.Description : $"{TreatmentDescription} {result.Description}";
+        HphtName = result.Label;
+
+        if (result.Outcome == HphtOutcome.Ruined)
+        {
+            var worst = DiamondGrading.ClarityScale.Length - 1;
+            if (!string.IsNullOrEmpty(DiamondClarity)) DiamondClarity = DiamondGrading.Clarity(worst);
+            if (RoughClarityIndex >= 0 || string.IsNullOrEmpty(DiamondClarity)) RoughClarityIndex = worst;
+            ClarityGrade = "Fortement inclus";
+            ClarityDescription = "Nombreuses inclusions visibles à l'œil nu (surface graphitisée).";
+            if (HasColor) SetColor(new GemColorValue(ColorHue, ColorSaturation * 0.6f, Mathf.Max(0.1f, ColorBrightness - 0.3f)), false);
+            Certificate = null;
+            return;
+        }
+
+        if (result.Kind == HphtKind.Decolor)
+        {
+            var index = Mathf.Clamp(result.NewColorIndex, 0, 22);
+            IsFancyDiamond = false;
+            ColorGrade = DiamondGrading.Color(index);
+            if (RoughColorIndex >= 0) RoughColorIndex = index;
+            SetDiamondLetterColor(index, DiamondGrading.ColorDescription(index));
+        }
+        else
+        {
+            ColorGrade = "Fancy";
+            SetColor(new GemColorValue(result.Hue, result.Saturation, result.Brightness), true);
+        }
         Certificate = null;
     }
 

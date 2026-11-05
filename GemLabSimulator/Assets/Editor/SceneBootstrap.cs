@@ -1387,8 +1387,9 @@ public static class SceneBootstrap
                     AddTreatmentStation("PosteLaser", new Vector3(x, 3.1f, 0f), new Vector2(4.4f, 2.6f), typeof(LaserStation));
                     continue;
                 }
-                PlaceFurniture("labbench", new Vector3(x, 5.0f, 0f));
-                CreateBuildingLabel($"{places[i]}\n(à venir)", new Vector3(x, 1.8f, 0f));
+                // The last place: the high-pressure high-temperature press, a little to the left so it stays clear of the staircase.
+                PlaceFurniture("hphtpress", new Vector3(x - 0.4f, 5.0f, 0f));
+                AddTreatmentStation("PosteHpht", new Vector3(x - 0.6f, 3.1f, 0f), new Vector2(3.2f, 2.6f), typeof(HphtStation));
             }
 
             foreach (var x in new[] { -14.0f, -8.5f, -3.0f, 2.6f, 8.2f }) PlaceWallDecorAt("window_white", x, 8);
@@ -1410,7 +1411,8 @@ public static class SceneBootstrap
                 "Mais ces éléments ne pénètrent que d'une fraction de millimètre : un repolissage emporte la couleur. Le béryllium, lui, va beaucoup plus loin et peut colorer toute la pierre.",
                 "Puis l'irradiateur : une cellule blindée où l'on bombarde la pierre de rayons gamma, d'électrons ou de neutrons. Les neutrons la rendent radioactive : elle doit refroidir des jours avant de sortir.",
                 "Plus loin, le laser : réservé aux diamants. Le laser classique perce un petit trou jusqu'à l'inclusion foncée, le KM la fait éclater en fissures. Dans les deux cas, un bain d'acide la blanchit.",
-                "Le reste suivra : la haute pression et la haute température. La place est déjà tracée au sol.",
+                "Et tout au bout, la presse HPHT : on y serre un diamant à très haute pression et très haute température. Un diamant brun à peu d'azote devient incolore, un diamant à azote jaunit.",
+                "Voilà, tous les postes sont là : chauffage, diffusion, irradiation, laser et HPHT. Avec le blanchiment, la teinture, le revêtement et l'imprégnation du rez-de-chaussée, vous avez le tour des traitements.",
                 "Pour le four, retenez ceci : chaque pierre a ses conditions. Le cours donne les plages, et un refroidissement trop rapide fissure presque tout.",
             });
             CreateBuildingLabel("Laboratoire de traitements — étage", new Vector3(0f, 9.7f, 0f));

@@ -165,6 +165,12 @@ public static class SaveSystem
             data.laserSamplesGiven = LaserState.Instance.SamplesGiven;
         }
 
+        if (HphtState.Instance != null)
+        {
+            data.hphtJobs = HphtState.Instance.ToSaveData();
+            data.hphtSamplesGiven = HphtState.Instance.SamplesGiven;
+        }
+
         File.WriteAllText(SavePath(ActiveSlot), JsonUtility.ToJson(data, true));
     }
 
@@ -282,6 +288,13 @@ public static class SaveSystem
         {
             laser.LoadJobs(data.laserJobs, RestoreGem);
             laser.LoadSamplesGiven(data.laserSamplesGiven);
+        }
+
+        var hpht = HphtState.Ensure();
+        if (hpht != null)
+        {
+            hpht.LoadJobs(data.hphtJobs, RestoreGem);
+            hpht.LoadSamplesGiven(data.hphtSamplesGiven);
         }
 
         if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)

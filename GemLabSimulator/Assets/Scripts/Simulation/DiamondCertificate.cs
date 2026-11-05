@@ -37,6 +37,9 @@ public static class DiamondGrading
         1.50f, 1.35f, 1.20f, 1.12f, 1.05f, 1.00f, 0.88f, 0.75f, 0.55f, 0.40f, 0.28f,
     };
 
+    // What a colour grade (0 = D ... 22 = Z) is worth against the reference G.
+    public static float ColorFactorOf(int index) => ColorFactor[Mathf.Clamp(index, 0, ColorFactor.Length - 1)];
+
     public static string Color(int index) => ColorScale[Mathf.Clamp(index, 0, ColorScale.Length - 1)].ToString();
 
     // Plain-language description of the D-to-Z colour scale.
