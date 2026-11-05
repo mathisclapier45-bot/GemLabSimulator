@@ -85,6 +85,95 @@ public static class StardewKit
 
     private static Sprite panelFrame;
     private static Sprite bevel;
+    private static Sprite softFrame;
+    private static Sprite softBevel;
+
+    // The softer frame, for the windows that keep their own look (the instruments of the laboratory): a thin bronze edge with no bright orange.
+    public static Sprite SoftFrame
+    {
+        get
+        {
+            if (softFrame == null) softFrame = BuildSoftFrame();
+            return softFrame;
+        }
+    }
+
+    // The softer bevel: lower contrast, thin outline.
+    public static Sprite SoftBevel
+    {
+        get
+        {
+            if (softBevel == null) softBevel = BuildSoftBevel();
+            return softBevel;
+        }
+    }
+
+    private static Sprite BuildSoftFrame()
+    {
+        const int n = 12;
+        var t = NewTexture(n, n);
+        for (var y = 0; y < n; y++)
+        {
+            for (var x = 0; x < n; x++)
+            {
+                var d = Mathf.Min(Mathf.Min(x, y), Mathf.Min(n - 1 - x, n - 1 - y));
+                var lit = x + (n - 1 - y) < n - 1;
+                Color c;
+                if (d == 0) c = C(0.20f, 0.12f, 0.06f);
+                else if (d == 1) c = lit ? C(0.86f, 0.68f, 0.46f) : C(0.52f, 0.36f, 0.20f);
+                else if (d == 2) c = C(0.70f, 0.50f, 0.29f);
+                else if (d == 3) c = C(0.45f, 0.30f, 0.16f);
+                else c = C(0.16f, 0.11f, 0.08f);
+                t.SetPixel(x, y, c);
+            }
+        }
+        var clear = new Color(0f, 0f, 0f, 0f);
+        foreach (var (cx, cy) in new[] { (0, 0), (n - 1, 0), (0, n - 1), (n - 1, n - 1) }) t.SetPixel(cx, cy, clear);
+        t.Apply();
+        return Sprite.Create(t, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, new Vector4(5, 5, 5, 5));
+    }
+
+    private static Sprite BuildSoftBevel()
+    {
+        const int n = 8;
+        var t = NewTexture(n, n);
+        for (var y = 0; y < n; y++)
+        {
+            for (var x = 0; x < n; x++)
+            {
+                var d = Mathf.Min(Mathf.Min(x, y), Mathf.Min(n - 1 - x, n - 1 - y));
+                var lit = x + (n - 1 - y) < n - 1;
+                Color c;
+                if (d == 0) c = C(0.48f, 0.48f, 0.48f);
+                else if (d == 1) c = lit ? C(0.98f, 0.98f, 0.98f) : C(0.80f, 0.80f, 0.80f);
+                else c = C(0.95f, 0.95f, 0.95f);
+                t.SetPixel(x, y, c);
+            }
+        }
+        var clear = new Color(0f, 0f, 0f, 0f);
+        foreach (var (cx, cy) in new[] { (0, 0), (n - 1, 0), (0, n - 1), (n - 1, n - 1) }) t.SetPixel(cx, cy, clear);
+        t.Apply();
+        return Sprite.Create(t, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, new Vector4(3, 3, 3, 3));
+    }
+
+    // The soft frame behind a window that has no background of its own: a bronze edge a few pixels around it.
+    public static void AddSoftBacking(Transform window)
+    {
+        if (window == null || window.Find("SoftBacking") != null) return;
+        var go = new GameObject("SoftBacking", typeof(RectTransform), typeof(Image));
+        go.transform.SetParent(window, false);
+        go.transform.SetAsFirstSibling();
+        var rect = go.GetComponent<RectTransform>();
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = new Vector2(-8f, -8f);
+        rect.offsetMax = new Vector2(8f, 8f);
+        var image = go.GetComponent<Image>();
+        image.sprite = SoftFrame;
+        image.type = Image.Type.Sliced;
+        image.pixelsPerUnitMultiplier = 0.5f;
+        image.raycastTarget = false;
+    }
 
     // The frame of a window: the same orange border as the clock, around a dark wood fill, so the light and gold texts of the windows stay readable.
     public static Sprite PanelFrame
@@ -168,7 +257,7 @@ public static class StardewKit
 
     // The buttons and the rounded boxes of a window, and of what it will build later, get the pixel bevel. It does nothing to what already has it,
     // so it can run again after the window rebuilds a page.
-    public static void Skin(Transform root)
+    public static void Skin(Transform root, bool soft = false)
     {
         if (root == null) return;
         foreach (var image in root.GetComponentsInChildren<Image>(true))
@@ -179,7 +268,7 @@ public static class StardewKit
 
             var rect = image.rectTransform;
             if (Mathf.Max(rect.rect.width, rect.sizeDelta.x) < 20f || Mathf.Max(rect.rect.height, rect.sizeDelta.y) < 20f) continue;
-            image.sprite = Bevel;
+            image.sprite = soft ? SoftBevel : Bevel;
             image.type = Image.Type.Sliced;
             image.pixelsPerUnitMultiplier = 0.5f;
         }

@@ -132,7 +132,7 @@ public class ConfirmDialog : MonoBehaviour
         boxRect.pivot = new Vector2(0.5f, 0.5f);
         boxRect.sizeDelta = new Vector2(440f, 210f);
         boxRect.anchoredPosition = Vector2.zero;
-        box.GetComponent<Image>().color = new Color(0.10f, 0.09f, 0.08f, 0.99f);
+        StardewKit.FramePanel(box.GetComponent<Image>());
 
         titleText = RuntimeUIKit.MakeText("Title", box.transform, "", 19, TextAnchor.UpperCenter, new Color(0.95f, 0.85f, 0.60f),
             new Vector2(20f, -14f), new Vector2(400f, 28f));
@@ -155,5 +155,6 @@ public class ConfirmDialog : MonoBehaviour
             new Vector2(230f, -154f), new Vector2(160f, 38f));
         cancel.onClick.AddListener(Cancel);
         cancelButton = cancel;
+        StardewKit.Skin(box.transform);
     }
 }
