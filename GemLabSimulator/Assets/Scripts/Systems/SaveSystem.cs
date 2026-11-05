@@ -141,6 +141,12 @@ public static class SaveSystem
             data.fillSamplesGiven = FillingState.Instance.SamplesGiven;
         }
 
+        if (HeatingState.Instance != null)
+        {
+            data.heatJobs = HeatingState.Instance.ToSaveData();
+            data.heatSamplesGiven = HeatingState.Instance.SamplesGiven;
+        }
+
         File.WriteAllText(SavePath(ActiveSlot), JsonUtility.ToJson(data, true));
     }
 
@@ -230,6 +236,13 @@ public static class SaveSystem
         {
             filling.LoadJobs(data.fillJobs, RestoreGem);
             filling.LoadSamplesGiven(data.fillSamplesGiven);
+        }
+
+        var heating = HeatingState.Ensure();
+        if (heating != null)
+        {
+            heating.LoadJobs(data.heatJobs, RestoreGem);
+            heating.LoadSamplesGiven(data.heatSamplesGiven);
         }
 
         if (!string.IsNullOrEmpty(data.sceneName) && SceneManager.GetActiveScene().name != data.sceneName)

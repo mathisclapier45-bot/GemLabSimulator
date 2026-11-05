@@ -1358,6 +1358,14 @@ public static class SceneBootstrap
             {
                 var x = -12.0f + i * 5.6f;
                 PlaceRug("hazardmat", new Vector3(x, 3.4f, 0f));
+                if (i == 0)
+                {
+                    // The heating is installed: an electric furnace and the three gas cylinders next to it.
+                    PlaceFurniture("furnace", new Vector3(x, 5.0f, 0f));
+                    PlaceFurniture("gascylinders", new Vector3(x - 2.3f, 4.8f, 0f));
+                    AddTreatmentStation("PosteChauffage", new Vector3(x, 3.1f, 0f), new Vector2(4.4f, 2.6f), typeof(HeatingStation));
+                    continue;
+                }
                 PlaceFurniture("labbench", new Vector3(x, 5.0f, 0f));
                 CreateBuildingLabel($"{places[i]}\n(à venir)", new Vector3(x, 1.8f, 0f));
             }
@@ -1376,9 +1384,9 @@ public static class SceneBootstrap
 
             CreateTalkNpc("Ingénieur — traitements", "merchant1", new Vector3(4.0f, -1.0f, 0f), new[]
             {
-                "Bienvenue à l'étage ! Ici viendront les traitements qui demandent de la chaleur, de la pression et de la radiation.",
-                "Chauffage, diffusion, irradiation, laser, haute pression et haute température : chacun aura son poste, comme en bas.",
-                "Pour l'instant, les places sont tracées au sol. Revenez quand les appareils seront installés.",
+                "Bienvenue à l'étage ! Le four de chauffage est installé, tout à gauche : vous réglez la température, l'atmosphère et le refroidissement.",
+                "Le reste suivra : diffusion, irradiation, laser, haute pression et haute température. Les places sont déjà tracées au sol.",
+                "Pour le four, retenez ceci : chaque pierre a ses conditions. Le cours donne les plages, et un refroidissement trop rapide fissure presque tout.",
             });
             CreateBuildingLabel("Laboratoire de traitements — étage", new Vector3(0f, 9.7f, 0f));
         });

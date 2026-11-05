@@ -69,6 +69,9 @@ public class GemInstance
     public float CoatingIridescence { get; private set; }
     public bool IsCoated => !string.IsNullOrEmpty(CoatingName);
 
+    // The rutile that crystallised in the furnace of the treatments laboratory: a cabochon of this stone shows a star (see HeatingCatalog).
+    public bool HeatStar { get; private set; }
+
     // The product that fills the fissures or the pores of the stone, put in at the treatments laboratory (see FillingCatalog).
     public string FillerName { get; private set; }
     public bool IsFilled => !string.IsNullOrEmpty(FillerName);
@@ -235,6 +238,7 @@ public class GemInstance
         get
         {
             if (IsRough || IsSynthetic || CutStyleName != "Cabochon") return 0;
+            if (HeatStar) return 6;
             if (ClarityGrade == "Loupe clean" || ClarityGrade == "Eye-clean") return 0;
             if (InclusionCatalog.ProfileFor(this).Share(FeatureKind.Needle, 0) < 0.18f) return 0;
             if (StoneOptics.StableHash((SpecimenId ?? "") + "|star") % 100 >= 65) return 0;
@@ -492,6 +496,7 @@ public class GemInstance
             CutQualityIndex = data.cutQuality - 1,
             PurchasePrice = data.purchasePrice,
             CuttingCost = data.cuttingCost,
+            HeatStar = data.heatStar,
             FillerName = string.IsNullOrEmpty(data.fillerName) ? null : data.fillerName,
             CoatingName = string.IsNullOrEmpty(data.coatingName) ? null : data.coatingName,
             CoatingIridescence = data.coatingIridescence,
@@ -588,6 +593,7 @@ public class GemInstance
             cutQuality = CutQualityIndex + 1,
             purchasePrice = PurchasePrice,
             cuttingCost = CuttingCost,
+            heatStar = HeatStar,
             fillerName = FillerName,
             coatingName = CoatingName,
             coatingIridescence = CoatingIridescence,
@@ -736,6 +742,33 @@ public class GemInstance
 
         if (HasColor && result.SaturationGain > 0f)
             SetColor(new GemColorValue(ColorHue, Mathf.Clamp01(ColorSaturation + result.SaturationGain), ColorBrightness), IsFancyDiamond);
+    }
+
+    // Takes what the furnace did: the colour moves to the one the process gives, the silk or the cracks change the clarity, a star may have
+    // appeared, the value follows, and the stone carries the treatment from then on.
+    public void ApplyHeating(HeatResult result)
+    {
+        if (result.Outcome == HeatOutcome.NoEffect) return;
+
+        HasReport = false;
+        TradeName = null;
+        FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue * result.ValueFactor));
+        var previous = TreatmentGrade;
+        var untreated = string.IsNullOrEmpty(previous) || previous == "Non traité";
+        TreatmentGrade = untreated ? "Chauffé" : $"{previous} + chauffé";
+        TreatmentDescription = untreated ? result.Description : $"{TreatmentDescription} {result.Description}";
+        if (result.Star) HeatStar = true;
+
+        if (result.ClarityGain != 0)
+        {
+            var grades = GemGrading.ClarityGrades;
+            var index = Mathf.Clamp(FillingCatalog.ClarityIndexOf(ClarityGrade) + result.ClarityGain, 0, grades.Length - 1);
+            ClarityGrade = grades[index].Name;
+            ClarityDescription = grades[index].Description;
+        }
+
+        if (HasColor && result.ChangesColor)
+            SetColor(new GemColorValue(Mathf.Repeat(result.Hue, 360f), Mathf.Clamp01(result.Saturation), Mathf.Clamp01(result.Brightness)), IsFancyDiamond);
     }
 
     public void RecordMeasurement(string propertyKey, float value)
