@@ -867,6 +867,23 @@ public class GemInstance
         CoatingName = result.CoatingName;
         CoatingIridescence = result.Iridescence;
 
+        // A diamond: a masking film moves the colour grade up, any other film makes it a fancy colour; the certificate no longer describes the stone.
+        if (result.IsDiamond)
+        {
+            Certificate = null;
+            if (result.MaskIndex >= 0)
+            {
+                IsFancyDiamond = false;
+                ColorGrade = DiamondGrading.Color(result.MaskIndex);
+                if (RoughColorIndex >= 0) RoughColorIndex = result.MaskIndex;
+                SetDiamondLetterColor(result.MaskIndex, DiamondGrading.ColorDescription(result.MaskIndex));
+                return;
+            }
+            ColorGrade = "Fancy";
+            SetColor(new GemColorValue(Mathf.Repeat(result.Hue, 360f), Mathf.Clamp01(result.Saturation), Mathf.Clamp01(result.Brightness)), true);
+            return;
+        }
+
         if (!HasColor) return;
         SetColor(new GemColorValue(Mathf.Repeat(result.Hue, 360f), Mathf.Clamp01(result.Saturation), Mathf.Clamp01(result.Brightness)), IsFancyDiamond);
     }
@@ -896,6 +913,29 @@ public class GemInstance
 
         if (HasColor && result.SaturationGain > 0f)
             SetColor(new GemColorValue(ColorHue, Mathf.Clamp01(ColorSaturation + result.SaturationGain), ColorBrightness), IsFancyDiamond);
+
+        // A diamond: the clarity of the hidden scale moves, and the certificate no longer describes the stone.
+        if (result.IsDiamond)
+        {
+            SetDiamondClarityIndex(result.NewClarityIndex);
+            Certificate = null;
+        }
+    }
+
+    // The clarity of a diamond on the diamond scale (the hidden grade, or the one of the rough), and the tier the sheets show.
+    private void SetDiamondClarityIndex(int index)
+    {
+        index = Mathf.Clamp(index, 0, DiamondGrading.ClarityScale.Length - 1);
+        if (!string.IsNullOrEmpty(DiamondClarity)) DiamondClarity = DiamondGrading.Clarity(index);
+        if (RoughClarityIndex >= 0 || string.IsNullOrEmpty(DiamondClarity)) RoughClarityIndex = index;
+        var tier = DiamondGrading.GameClarityTier(index);
+        foreach (var grade in GemGrading.ClarityGrades)
+        {
+            if (grade.Name != tier) continue;
+            ClarityGrade = grade.Name;
+            ClarityDescription = grade.Description;
+            break;
+        }
     }
 
     // Takes what the furnace did: the colour moves to the one the process gives, the silk or the cracks change the clarity, a star may have
@@ -982,6 +1022,18 @@ public class GemInstance
         TreatmentDescription = untreated ? result.Description : $"{TreatmentDescription} {result.Description}";
         IrradiationName = result.Name;
         IrradiationFadeDay = result.FadeDays > 0 ? today + result.FadeDays : 0;
+
+        if (Definition != null && Definition.name == "Diamant" && result.ChangesColor)
+        {
+            // An irradiated diamond is a diamond of a fancy colour now: the grade no longer describes it, and the certificate with it.
+            irradiationOriginalHue = ColorHue;
+            irradiationOriginalSaturation = ColorSaturation;
+            irradiationOriginalBrightness = ColorBrightness;
+            ColorGrade = "Fancy";
+            SetColor(new GemColorValue(Mathf.Repeat(result.Hue, 360f), Mathf.Clamp01(result.Saturation), Mathf.Clamp01(result.Brightness)), true);
+            Certificate = null;
+            return;
+        }
 
         if (!HasColor || !result.ChangesColor) return;
         irradiationOriginalHue = ColorHue;

@@ -287,14 +287,17 @@ public class SaveData
     public bool dyeSamplesGiven;
     public List<CoatJobSaveData> coatJobs = new List<CoatJobSaveData>();
     public bool coatSamplesGiven;
+    public bool coatDiamondSamplesGiven;
     public List<FillJobSaveData> fillJobs = new List<FillJobSaveData>();
     public bool fillSamplesGiven;
+    public bool fillDiamondSamplesGiven;
     public List<HeatJobSaveData> heatJobs = new List<HeatJobSaveData>();
     public bool heatSamplesGiven;
     public List<DiffusionJobSaveData> diffusionJobs = new List<DiffusionJobSaveData>();
     public bool diffusionSamplesGiven;
     public List<IrradiationJobSaveData> irradiationJobs = new List<IrradiationJobSaveData>();
     public bool irradiationSamplesGiven;
+    public bool irradiationDiamondSamplesGiven;
     public List<LaserJobSaveData> laserJobs = new List<LaserJobSaveData>();
     public bool laserSamplesGiven;
     public List<HphtJobSaveData> hphtJobs = new List<HphtJobSaveData>();

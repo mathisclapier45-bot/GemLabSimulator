@@ -148,6 +148,52 @@ public class FillingState : MonoBehaviour
         SamplesGiven = given;
     }
 
+    // The diamonds came later: two cut diamonds with feathers (SI1 and SI2), handed over once, even to a player who already has the first samples.
+    public bool DiamondSamplesGiven { get; private set; }
+
+    public bool TryGiveDiamondSamples(out string message)
+    {
+        message = null;
+        var inventory = PlayerInventory.Instance;
+        var database = GemDatabase.Instance;
+        const int count = 2;
+        if (DiamondSamplesGiven || inventory == null || database == null) return false;
+
+        var diamond = database.FindByAssetName(DiamondDealerState.DiamondAssetName);
+        if (diamond == null) return false;
+        if (inventory.FreeSlots < count)
+        {
+            message = $"J'ai deux diamants à remplir pour vous, mais il vous faut {count} places libres dans votre sac.";
+            return false;
+        }
+
+        var carats = new[] { 0.60f, 0.80f };
+        var colors = new[] { 6, 8 };
+        var clarities = new[] { 6, 7 };
+        for (var i = 0; i < count; i++)
+        {
+            var diameter = 6.5f * Mathf.Pow(carats[i], 1f / 3f);
+            var value = DiamondGrading.Value(carats[i], colors[i], clarities[i]);
+            GemInstance stone = null;
+            for (var attempt = 0; attempt < 300; attempt++)
+            {
+                stone = GemInstance.CreateCutDiamond(diamond, carats[i], colors[i], clarities[i], "Rond", "Brillant", diameter, diameter, diameter * 0.61f, value,
+                    "Taillerie de démonstration", 1);
+                if (FillingCatalog.DiamondFeathers(stone) > 0) break;
+            }
+            if (stone == null) continue;
+            inventory.TryAddGem(stone);
+            GemCodex.Instance?.MarkDiscovered(diamond.name);
+        }
+        DiamondSamplesGiven = true;
+        return true;
+    }
+
+    public void LoadDiamondSamplesGiven(bool given)
+    {
+        DiamondSamplesGiven = given;
+    }
+
     public List<FillJobSaveData> ToSaveData()
     {
         var result = new List<FillJobSaveData>();

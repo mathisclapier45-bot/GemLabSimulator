@@ -133,12 +133,14 @@ public static class SaveSystem
         {
             data.coatJobs = CoatingState.Instance.ToSaveData();
             data.coatSamplesGiven = CoatingState.Instance.SamplesGiven;
+            data.coatDiamondSamplesGiven = CoatingState.Instance.DiamondSamplesGiven;
         }
 
         if (FillingState.Instance != null)
         {
             data.fillJobs = FillingState.Instance.ToSaveData();
             data.fillSamplesGiven = FillingState.Instance.SamplesGiven;
+            data.fillDiamondSamplesGiven = FillingState.Instance.DiamondSamplesGiven;
         }
 
         if (HeatingState.Instance != null)
@@ -157,6 +159,7 @@ public static class SaveSystem
         {
             data.irradiationJobs = IrradiationState.Instance.ToSaveData();
             data.irradiationSamplesGiven = IrradiationState.Instance.SamplesGiven;
+            data.irradiationDiamondSamplesGiven = IrradiationState.Instance.DiamondSamplesGiven;
         }
 
         if (LaserState.Instance != null)
@@ -255,6 +258,7 @@ public static class SaveSystem
         {
             coating.LoadJobs(data.coatJobs, RestoreGem);
             coating.LoadSamplesGiven(data.coatSamplesGiven);
+            coating.LoadDiamondSamplesGiven(data.coatDiamondSamplesGiven);
         }
 
         var filling = FillingState.Ensure();
@@ -262,6 +266,7 @@ public static class SaveSystem
         {
             filling.LoadJobs(data.fillJobs, RestoreGem);
             filling.LoadSamplesGiven(data.fillSamplesGiven);
+            filling.LoadDiamondSamplesGiven(data.fillDiamondSamplesGiven);
         }
 
         var heating = HeatingState.Ensure();
@@ -283,6 +288,7 @@ public static class SaveSystem
         {
             irradiation.LoadJobs(data.irradiationJobs, RestoreGem);
             irradiation.LoadSamplesGiven(data.irradiationSamplesGiven);
+            irradiation.LoadDiamondSamplesGiven(data.irradiationDiamondSamplesGiven);
         }
 
         var laser = LaserState.Ensure();

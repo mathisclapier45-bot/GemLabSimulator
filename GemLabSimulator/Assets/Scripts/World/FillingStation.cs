@@ -29,12 +29,29 @@ public class FillingStation : MonoBehaviour
             if (state.TryGiveSamples(out message))
             {
                 Sfx.Play(Sfx.Id.Success);
-                DialogueBoxUI.Say("Technicien", "Pour essayer l'autoclave : une émeraude, un rubis, une jadéite, une turquoise, une opale et un lapis-lazuli. Ils sont dans votre sac.");
+                DialogueBoxUI.Say("Technicien", "Pour essayer l'autoclave : une émeraude, un rubis, une jadéite, une turquoise, une opale et un lapis-lazuli. Ils sont dans votre sac. Revenez me voir pour les diamants.");
                 return;
             }
             if (!string.IsNullOrEmpty(message))
             {
                 DialogueBoxUI.Say("Technicien", message);
+                return;
+            }
+        }
+
+        // The diamonds: two cut ones with feathers, once.
+        if (state != null && state.SamplesGiven && !state.DiamondSamplesGiven)
+        {
+            string diamondMessage;
+            if (state.TryGiveDiamondSamples(out diamondMessage))
+            {
+                Sfx.Play(Sfx.Id.Success);
+                DialogueBoxUI.Say("Technicien", "Nouveau : on remplit aussi les diamants à plumes, au verre au plomb. Deux diamants taillés sont dans votre sac. La plume se voit moins, la pureté monte, mais le certificat est perdu et la chaleur d'un sertissage détruit le remplissage. À la loupe, l'effet flash orange et bleu le trahit.");
+                return;
+            }
+            if (!string.IsNullOrEmpty(diamondMessage))
+            {
+                DialogueBoxUI.Say("Technicien", diamondMessage);
                 return;
             }
         }

@@ -47,7 +47,8 @@ public struct IrradiationResult
 // produces colour centres. Three sources are used: neutrons from a nuclear reactor, electrons from a linear accelerator, and gamma rays from a
 // radioisotope such as cobalt-60. The colour depends on the stone, the source and the dose; some of the colours are stable, others temporary and
 // they fade in days with heat or light. The stone has to wait until its radioactivity is gone (a long time after the neutrons), and heating can
-// invert the treatment (the "annealing"). Diamonds are left out for now.
+// invert the treatment (the "annealing"). A colourless or pale diamond turns green or blue and becomes a fancy colour, stable but traced by the GR1
+// line of the photoluminescence; the stone loses its certificate.
 public static class IrradiationCatalog
 {
     public const int MinDose = 50;
@@ -118,6 +119,17 @@ public static class IrradiationCatalog
             Hue = 210, Saturation = 0.88f, Brightness = 0.55f, ValueGain = 3.2f,
             Description = "Topaze irradiée aux neutrons : le bleu soutenu qu'on qualifie de « bleu Londres », utilisable tel quel. Elle reste radioactive pendant des semaines." },
 
+        // ---- Diamond ----
+        new Recipe { Name = "Vert pâle (diamant irradié)", Species = new[] { "Diamant" }, Source = IrradiationSource.Gamma, DoseMin = 400, DoseMax = 800,
+            Hue = 135, Saturation = 0.30f, Brightness = 0.84f, ValueGain = 1.0f,
+            Description = "Diamant pâle irradié aux rayons gamma : des lacunes dans le réseau du carbone absorbent le rouge et donnent un vert pâle, stable. L'irradiation se lit à la raie GR1 (741 nm) en photoluminescence." },
+        new Recipe { Name = "Bleu-vert (électrons)", Species = new[] { "Diamant" }, Source = IrradiationSource.Electrons, DoseMin = 200, DoseMax = 500,
+            Hue = 178, Saturation = 0.55f, Brightness = 0.68f, ValueGain = 1.6f,
+            Description = "Diamant irradié aux électrons : un bleu-vert, stable, qui reste près de la culasse. L'« effet parapluie » (un anneau plus sombre autour de la colette) et la raie GR1 trahissent le traitement." },
+        new Recipe { Name = "Vert foncé (neutrons)", Species = new[] { "Diamant" }, Source = IrradiationSource.Neutrons, DoseMin = 300, DoseMax = 700,
+            Hue = 150, Saturation = 0.85f, Brightness = 0.30f, ValueGain = 1.8f,
+            Description = "Diamant irradié aux neutrons : un vert foncé qui traverse toute la pierre. Elle reste radioactive longtemps, et la raie GR1 est très forte." },
+
         // ---- Tourmaline, pearl, corundum ----
         new Recipe { Name = "Rouge-rose intensifié", Species = new[] { "Tourmaline_Rose" }, Source = IrradiationSource.Gamma, DoseMin = 200, DoseMax = 500,
             Hue = 345, Saturation = 0.88f, Brightness = 0.70f, ValueGain = 1.6f, Sometimes = true, FadeDays = 20,
@@ -150,6 +162,8 @@ public static class IrradiationCatalog
             if (Matches(recipe, name)) yield return recipe;
     }
 
+    private static bool IsDiamond(GemInstance gem) => gem != null && gem.Definition != null && gem.Definition.name == "Diamant";
+
     public static bool CanIrradiate(GemInstance gem) => string.IsNullOrEmpty(Refusal(gem));
 
     // Why a stone cannot go into the irradiator, or null.
@@ -159,9 +173,14 @@ public static class IrradiationCatalog
         var any = false;
         foreach (var _ in RecipesFor(gem)) { any = true; break; }
         if (!any)
-            return "Cette pierre ne s'irradie pas ici : quartz, béryl, topaze, tourmaline, perle, corindon jaune. (Les diamants : pas encore au programme.)";
+            return "Cette pierre ne s'irradie pas ici : quartz, béryl, topaze, tourmaline, perle, corindon jaune, diamant.";
         if (gem.IsRough) return "Une pierre brute ne s'irradie pas ici : il faut la tailler ou la polir d'abord.";
         if (gem.IsSynthetic) return "Inutile d'irradier une pierre synthétique.";
+        if (IsDiamond(gem))
+        {
+            if (!DiamondGradeModel.CanGrade(gem)) return "L'irradiation ne traite ici que les diamants taillés.";
+            if (DiamondGradeModel.Official(gem).Fancy) return "Un diamant de couleur fancy ne s'irradie pas ici : on le perdrait.";
+        }
         if (gem.IsIrradiated) return "Cette pierre a déjà été irradiée : chauffez-la d'abord, la couleur peut être inversée.";
         return null;
     }
@@ -237,7 +256,7 @@ public static class IrradiationCatalog
             IsValid = true,
             ExposureDays = ExposureDays(dose),
             CoolingDays = cooling,
-            Fee = info.Fee + Mathf.RoundToInt(dose * 0.15f) + Mathf.RoundToInt(gem.CaratWeight * 3f),
+            Fee = info.Fee + Mathf.RoundToInt(dose * 0.15f) + Mathf.RoundToInt(gem.CaratWeight * (IsDiamond(gem) ? 40f : 3f)),
             Reaction = score,
             Overdose = overdose,
             Advice = advice,
@@ -299,6 +318,12 @@ public static class IrradiationCatalog
             ValueFactor = Mathf.Lerp(1f, recipe.ValueGain, score) * (fade > 0 ? 0.8f : 1f),
             Description = recipe.Description + (fade > 0 ? " Couleur instable : elle pâlit en quelques jours." : " Couleur stable."),
         };
+        if (IsDiamond(gem))
+        {
+            // A treated colour is worth what it adds to the body colour of the stone: a lot for a brownish one, less than the colourless value for a D.
+            var oldIndex = DiamondGradeModel.Official(gem).ColorIndex;
+            result.ValueFactor = Mathf.Clamp(Mathf.Lerp(0.5f, recipe.ValueGain, score) / Mathf.Max(0.01f, DiamondGrading.ColorFactorOf(oldIndex)) * 0.85f, 0.3f, 4f);
+        }
         result.Message = outcome == IrradiationOutcome.Excellent ? $"Remarquable : « {recipe.Name} », la couleur est franche."
             : outcome == IrradiationOutcome.Good ? $"Beau résultat : « {recipe.Name} », un peu moins soutenu qu'espéré."
             : $"La couleur n'a pris qu'à moitié : « {recipe.Name} », il aurait fallu plus de dose.";

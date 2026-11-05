@@ -39,6 +39,8 @@ public struct FillResult
     public int ClarityGain;          // grades of clarity the filling hides
     public float ValueFactor;
     public float SaturationGain;
+    public bool IsDiamond;           // a diamond: the clarity is the hidden grade of the diamond scale
+    public int NewClarityIndex;
     public string Description;
     public string Message;
 }
@@ -103,7 +105,7 @@ public static class FillingCatalog
         new[] { 0f, -1f,   -1f,   0.40f, 0.65f, 0.50f, -1f,   -1f },      // wax
         new[] { 0f, 0.85f, 0.60f, -1f,   -1f,   -1f,   0.80f, -1f },      // epoxy
         new[] { 0f, -1f,   -1f,   0.60f, 0.90f, 0.70f, -1f,   -1f },      // resin
-        new[] { 0f, -1f,   0.95f, -1f,   -1f,   -1f,   -1f,   -1f },      // lead glass
+        new[] { 0f, -1f,   0.95f, -1f,   -1f,   -1f,   -1f,   0.85f },    // lead glass
         new[] { 0f, -1f,   0.60f, -1f,   -1f,   -1f,   -1f,   -1f },      // borax
     };
 
@@ -114,7 +116,7 @@ public static class FillingCatalog
         new[] { 0f, 0f,    0f,    0.10f, 0.03f, 0.03f, 0f,    0f },
         new[] { 0f, 0.07f, 0.08f, 0f,    0f,    0f,    0.07f, 0f },
         new[] { 0f, 0f,    0f,    0.15f, 0.05f, 0.05f, 0f,    0f },
-        new[] { 0f, 0f,    0.12f, 0f,    0f,    0f,    0f,    0f },
+        new[] { 0f, 0f,    0.12f, 0f,    0f,    0f,    0f,    0.10f },
         new[] { 0f, 0f,    0.30f, 0f,    0f,    0f,    0f,    0f },
     };
 
@@ -142,7 +144,13 @@ public static class FillingCatalog
     {
         if (gem == null) return "Aucune pierre.";
         var group = GroupOf(gem.Definition);
-        if (group == Group.Diamond) return "Le remplissage des diamants se fait dans une chambre à part : pas encore au programme.";
+        if (group == Group.Diamond)
+        {
+            if (!DiamondGradeModel.CanGrade(gem)) return "Le remplissage ne traite ici que les diamants taillés.";
+            if (gem.IsSynthetic) return "Inutile d'imprégner une pierre synthétique.";
+            if (DiamondClarityIndex(gem) < 5) return "Les plumes de ce diamant ne se voient pas : le remplissage n'apporterait rien. Il faut un diamant de pureté VS2 ou moins.";
+            if (DiamondFeathers(gem) == 0) return "Pas de plume ni de fissure qui débouche en surface : il n'y a rien à remplir dans ce diamant.";
+        }
         if (group == Group.None)
             return "Ce matériau ne s'imprègne pas ici : émeraude, rubis, saphir, turquoise, jade, lapis, corail, opale, topaze, tourmaline, péridot, fluorite, feldspath...";
         if (gem.IsRough) return "Une pierre brute ne s'imprègne pas : il faut la tailler ou la polir d'abord.";
@@ -159,7 +167,7 @@ public static class FillingCatalog
         if (Eff[product][(int)group] >= 0f) return null;
         switch (product)
         {
-            case LeadGlass: return "Le verre au plomb se met dans les rubis et les saphirs, pas dans cette pierre.";
+            case LeadGlass: return "Le verre au plomb se met dans les rubis, les saphirs et les diamants à plumes, pas dans cette pierre.";
             case Borax: return "Le borax ne sert qu'à guérir les fissures du rubis et du saphir.";
             case ColoredOil: return "L'huile colorée ne convient qu'aux pierres transparentes fissurées (émeraude, rubis, topaze...).";
             case Epoxy: return "La résine époxy remplit les fissures des pierres transparentes (émeraude, rubis, topaze, tourmaline...).";
@@ -181,7 +189,7 @@ public static class FillingCatalog
         {
             IsValid = true,
             Days = Mathf.Max(1, item.Days + ExtraDays[procedure]),
-            Fee = Mathf.RoundToInt(item.Fee * FeeFactor[procedure]) + Mathf.RoundToInt(gem.CaratWeight * 3f),
+            Fee = Mathf.RoundToInt(item.Fee * FeeFactor[procedure]) + Mathf.RoundToInt(gem.CaratWeight * (group == (int)Group.Diamond ? 25f : 3f)),
             Effectiveness = Mathf.Clamp01(Eff[product][group] * EffectFactor[procedure]),
             Risk = Mathf.Clamp01(Hazard[product][group] + ExtraRisk[procedure]),
             Durable = item.Durable,
@@ -203,9 +211,23 @@ public static class FillingCatalog
                 return gem.Definition.name == "Jade_Jadeite" && gem.TreatmentGrade != null && gem.TreatmentGrade.StartsWith("Blanchi")
                     ? "Une jadéite blanchie et imprégnée de résine : c'est le « B-jade »."
                     : "La stabilisation durcit et éclaircit une matière poreuse, pour de bon.";
-            case LeadGlass: return "Très spectaculaire sur un rubis médiocre, mais le verre est plus tendre : il s'abîme à la chaleur, aux acides et aux ultrasons.";
+            case LeadGlass:
+                if (group == Group.Diamond)
+                    return "Le verre au plomb comble les plumes d'un diamant : elles ne se voient presque plus de face, mais on les trahit par l'effet flash orange et bleu. La chaleur d'un sertissage ou d'une réparation, et les acides, détruisent le remplissage. Le certificat est perdu.";
+                return "Très spectaculaire sur un rubis médiocre, mais le verre est plus tendre : il s'abîme à la chaleur, aux acides et aux ultrasons.";
             default: return "Le borax guérit certaines fissures mais laisse des résidus vitreux : on peut les confondre avec ceux d'un rubis synthétique.";
         }
+    }
+
+    private static int DiamondClarityIndex(GemInstance gem) => DiamondGradeModel.Official(gem).ClarityIndex;
+
+    // The feathers of a diamond: the fissures that reach the surface, the only ones a filling can reach.
+    public static int DiamondFeathers(GemInstance gem)
+    {
+        var count = 0;
+        foreach (var mark in DiamondGradeModel.MakePlot(gem, DiamondClarityIndex(gem)))
+            if (mark.Kind == PlotKind.Feather) count++;
+        return count;
     }
 
     public static bool UsesClarity(GemInstance gem)
@@ -234,7 +256,9 @@ public static class FillingCatalog
                 Outcome = FillOutcome.Ruined,
                 Product = item.Name,
                 Label = label + " (altéré)",
-                ClarityGain = -1,
+                ClarityGain = group == Group.Diamond ? 0 : -1,
+                IsDiamond = group == Group.Diamond,
+                NewClarityIndex = group == Group.Diamond ? Mathf.Min(DiamondGrading.ClarityScale.Length - 1, DiamondClarityIndex(gem) + 2) : 0,
                 ValueFactor = 0.45f,
                 Description = group == Group.Opal
                     ? "Opale craquelée : l'imprégnation a provoqué un réseau de fines craquelures."
@@ -250,6 +274,8 @@ public static class FillingCatalog
         if (outcome == FillOutcome.NoEffect)
             return new FillResult { Outcome = outcome, Product = item.Name, Quality = quality, ValueFactor = 1f, Description = "Imprégnation sans effet visible.",
                 Message = "Le produit est à peine entré : l'effet est invisible." };
+
+        if (group == Group.Diamond) return ResolveDiamond(product, item, gem, outcome, quality, label);
 
         var gain = outcome == FillOutcome.Excellent ? 2 : outcome == FillOutcome.Good ? 1 : 0;
         var result = new FillResult
@@ -275,6 +301,34 @@ public static class FillingCatalog
             default: result.Message = "Un léger mieux : l'éclat est un peu meilleur, rien de plus."; break;
         }
         return result;
+    }
+
+    // A diamond: the lead glass fills the feathers and the clarity goes up on the hidden diamond scale, by one to three grades, never past VVS2.
+    private static FillResult ResolveDiamond(int product, FillProduct item, GemInstance gem, FillOutcome outcome, float quality, string label)
+    {
+        var current = DiamondClarityIndex(gem);
+        var wanted = outcome == FillOutcome.Excellent ? 3 : outcome == FillOutcome.Good ? 2 : 1;
+        var target = Mathf.Max(3, current - wanted);
+        var applied = current - target;
+        if (applied <= 0)
+            return new FillResult { Outcome = FillOutcome.NoEffect, Product = item.Name, Quality = quality, ValueFactor = 1f, Description = "Imprégnation sans effet visible.",
+                Message = "Le verre est à peine entré dans les plumes : l'effet est invisible." };
+
+        var ratio = DiamondGrading.Value(1f, 4, target) / Mathf.Max(1f, DiamondGrading.Value(1f, 4, current));
+        return new FillResult
+        {
+            Outcome = outcome,
+            Product = item.Name,
+            Label = label,
+            Quality = quality,
+            IsDiamond = true,
+            NewClarityIndex = target,
+            ValueFactor = Mathf.Max(0.3f, ratio * 0.70f),
+            Description = DescriptionFor(product, gem),
+            Message = outcome == FillOutcome.Excellent ? $"Remarquable : les plumes ont presque disparu, la pureté gagne {applied} degré{(applied > 1 ? "s" : "")}."
+                : outcome == FillOutcome.Good ? $"Beau travail : les plumes sont bien moins visibles, la pureté gagne {applied} degré{(applied > 1 ? "s" : "")}."
+                : "Un léger mieux : une plume est comblée, la pureté gagne un degré.",
+        };
     }
 
     private static float ClarityFactor(GemInstance gem, int gain)
@@ -316,7 +370,10 @@ public static class FillingCatalog
             case Wax: return "Cire en surface : éclat et translucidité augmentés, la cire fond à la chaleur.";
             case Epoxy: return "Fissures remplies d'une résine époxy : reflets bleus et jaunes, bulles, lignes ondulantes et zones nuageuses dans le remplissage ; IR proche de la pierre.";
             case Resin: return "Imprégnation de résine synthétique : durcie et éclaircie, signature infrarouge du polymère.";
-            case LeadGlass: return "Remplissage au verre au plomb : très nombreuses fissures en bas relief, reflets bleus, reflet orange et bulles, éclat moindre dans le verre ; sensible à la chaleur, aux acides et aux ultrasons.";
+            case LeadGlass:
+                if (gem.Definition.name == "Diamant")
+                    return "Plumes comblées au verre au plomb : à la loupe, un effet flash orange et bleu dans les fissures, des bulles de gaz et un relief atténué ; sensible à la chaleur, aux acides et aux ultrasons. Le certificat ne décrit plus la pierre.";
+                return "Remplissage au verre au plomb : très nombreuses fissures en bas relief, reflets bleus, reflet orange et bulles, éclat moindre dans le verre ; sensible à la chaleur, aux acides et aux ultrasons.";
             default: return "Fissures guéries au borax : résidus vitreux dans les fissures et zones de moindre éclat, semblables à ceux d'un rubis synthétique au fondant.";
         }
     }

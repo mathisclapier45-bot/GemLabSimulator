@@ -24,11 +24,11 @@ public static class TreatmentDisclosure
         }
 
         Consider(TreatmentKind.Heated, 0.02f);
-        Consider(TreatmentKind.Irradiated, 0.08f);
-        Consider(TreatmentKind.Filled, gem.FillerKind == FillerFamily.Glass ? 0.18f : gem.FillerKind == FillerFamily.Flux ? 0.14f : 0.10f);
+        Consider(TreatmentKind.Irradiated, IsDiamond(gem) ? 0.22f : 0.08f);
+        Consider(TreatmentKind.Filled, IsDiamond(gem) ? 0.30f : gem.FillerKind == FillerFamily.Glass ? 0.18f : gem.FillerKind == FillerFamily.Flux ? 0.14f : 0.10f);
         Consider(TreatmentKind.Bleached, 0.12f);
         Consider(TreatmentKind.Dyed, 0.20f);
-        Consider(TreatmentKind.Coated, 0.15f);
+        Consider(TreatmentKind.Coated, IsDiamond(gem) ? 0.28f : 0.15f);
         Consider(TreatmentKind.Diffused, gem.DiffusionDepthMm >= 0.5f ? 0.08f : 0.18f);
         Consider(TreatmentKind.Laser, gem.LaserName != null && gem.LaserName.Contains("KM") ? 0.12f : 0.05f);
         Consider(TreatmentKind.Hpht, 0.10f);
@@ -53,7 +53,7 @@ public static class TreatmentDisclosure
         }
 
         Consider(TreatmentKind.Heated, 0.25f);
-        Consider(TreatmentKind.Irradiated, 0.45f);
+        Consider(TreatmentKind.Irradiated, IsDiamond(gem) ? 0.6f : 0.45f);
         Consider(TreatmentKind.Filled, gem.FillerKind == FillerFamily.Glass ? 0.85f : 0.65f);
         Consider(TreatmentKind.Bleached, 0.5f);
         Consider(TreatmentKind.Dyed, 0.85f);
@@ -65,6 +65,8 @@ public static class TreatmentDisclosure
         if (count == 0) best = 0.3f;
         return Mathf.Clamp01(best + 0.03f * Mathf.Max(0, count - 1));
     }
+
+    private static bool IsDiamond(GemInstance gem) => gem.Definition != null && (gem.Definition.name ?? "").StartsWith("Diamant");
 
     public static string RiskLabel(float chance)
     {

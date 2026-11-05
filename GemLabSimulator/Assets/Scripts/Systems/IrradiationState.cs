@@ -168,6 +168,46 @@ public class IrradiationState : MonoBehaviour
         SamplesGiven = given;
     }
 
+    // The diamonds came later: two cut diamonds, pale and faintly yellow, handed over once, even to a player who already has the first samples.
+    public bool DiamondSamplesGiven { get; private set; }
+
+    public bool TryGiveDiamondSamples(out string message)
+    {
+        message = null;
+        var inventory = PlayerInventory.Instance;
+        var database = GemDatabase.Instance;
+        const int count = 2;
+        if (DiamondSamplesGiven || inventory == null || database == null) return false;
+
+        var diamond = database.FindByAssetName(DiamondDealerState.DiamondAssetName);
+        if (diamond == null) return false;
+        if (inventory.FreeSlots < count)
+        {
+            message = $"J'ai deux diamants à irradier pour vous, mais il vous faut {count} places libres dans votre sac.";
+            return false;
+        }
+
+        var carats = new[] { 0.50f, 0.70f };
+        var colors = new[] { 7, 11 };
+        var clarities = new[] { 5, 6 };
+        for (var i = 0; i < count; i++)
+        {
+            var diameter = 6.5f * Mathf.Pow(carats[i], 1f / 3f);
+            var value = DiamondGrading.Value(carats[i], colors[i], clarities[i]);
+            var stone = GemInstance.CreateCutDiamond(diamond, carats[i], colors[i], clarities[i], "Rond", "Brillant", diameter, diameter, diameter * 0.61f, value,
+                "Taillerie de démonstration", 1);
+            inventory.TryAddGem(stone);
+            GemCodex.Instance?.MarkDiscovered(diamond.name);
+        }
+        DiamondSamplesGiven = true;
+        return true;
+    }
+
+    public void LoadDiamondSamplesGiven(bool given)
+    {
+        DiamondSamplesGiven = given;
+    }
+
     public List<IrradiationJobSaveData> ToSaveData()
     {
         var result = new List<IrradiationJobSaveData>();

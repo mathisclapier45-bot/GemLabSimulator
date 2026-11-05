@@ -29,12 +29,29 @@ public class IrradiationStation : MonoBehaviour
             if (state.TryGiveSamples(out message))
             {
                 Sfx.Play(Sfx.Id.Success);
-                DialogueBoxUI.Say("Ingénieur", "Pour vos premières irradiations : un quartz, une citrine, une goshénite, une morganite, une topaze, une tourmaline rose, une perle et un saphir incolore. Ils sont dans votre sac. Les neutrons rendent la pierre radioactive : prévoyez du temps pour qu'elle refroidisse.");
+                DialogueBoxUI.Say("Ingénieur", "Pour vos premières irradiations : un quartz, une citrine, une goshénite, une morganite, une topaze, une tourmaline rose, une perle et un saphir incolore. Ils sont dans votre sac. Revenez me voir pour les diamants. Les neutrons rendent la pierre radioactive : prévoyez du temps pour qu'elle refroidisse.");
                 return;
             }
             if (!string.IsNullOrEmpty(message))
             {
                 DialogueBoxUI.Say("Ingénieur", message);
+                return;
+            }
+        }
+
+        // The diamonds: two cut ones, once.
+        if (state != null && state.SamplesGiven && !state.DiamondSamplesGiven)
+        {
+            string diamondMessage;
+            if (state.TryGiveDiamondSamples(out diamondMessage))
+            {
+                Sfx.Play(Sfx.Id.Success);
+                DialogueBoxUI.Say("Ingénieur", "Nouveau : on irradie aussi les diamants. Deux diamants taillés, pâles, sont dans votre sac. Gamma pour un vert pâle, électrons pour un bleu-vert, neutrons pour un vert foncé. La couleur est stable, mais un diamant irradié perd son certificat et la photoluminescence le trahit.");
+                return;
+            }
+            if (!string.IsNullOrEmpty(diamondMessage))
+            {
+                DialogueBoxUI.Say("Ingénieur", diamondMessage);
                 return;
             }
         }

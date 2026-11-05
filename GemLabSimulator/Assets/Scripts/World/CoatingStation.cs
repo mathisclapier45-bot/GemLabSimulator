@@ -29,12 +29,29 @@ public class CoatingStation : MonoBehaviour
             if (state.TryGiveSamples(out message))
             {
                 Sfx.Play(Sfx.Id.Success);
-                DialogueBoxUI.Say("Technicien", "Pour vos premiers dépôts : une topaze, un quartz, une goshénite, une tanzanite, une opale et de l'ambre. Ils sont dans votre sac.");
+                DialogueBoxUI.Say("Technicien", "Pour vos premiers dépôts : une topaze, un quartz, une goshénite, une tanzanite, une opale et de l'ambre. Ils sont dans votre sac. Revenez me voir pour les diamants.");
                 return;
             }
             if (!string.IsNullOrEmpty(message))
             {
                 DialogueBoxUI.Say("Technicien", message);
+                return;
+            }
+        }
+
+        // The diamonds: two cut ones with a yellow tint, once.
+        if (state != null && state.SamplesGiven && !state.DiamondSamplesGiven)
+        {
+            string diamondMessage;
+            if (state.TryGiveDiamondSamples(out diamondMessage))
+            {
+                Sfx.Play(Sfx.Id.Success);
+                DialogueBoxUI.Say("Technicien", "Nouveau : on revêt aussi les diamants. Deux diamants taillés un peu jaunes sont dans votre sac. Un voile très fin de cobalt seul masque le jaune : la pierre paraît plus blanche. Tout autre film en fait une pierre fancy qui n'est pas naturelle. Dans les deux cas, le film s'éraille et le certificat est perdu.");
+                return;
+            }
+            if (!string.IsNullOrEmpty(diamondMessage))
+            {
+                DialogueBoxUI.Say("Technicien", diamondMessage);
                 return;
             }
         }

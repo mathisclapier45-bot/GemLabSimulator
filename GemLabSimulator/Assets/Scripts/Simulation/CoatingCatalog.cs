@@ -41,6 +41,8 @@ public struct CoatResult
     public float Hue;
     public float Saturation;
     public float Brightness;
+    public bool IsDiamond;           // a diamond: the colour is a grade of the diamond scale, or a fancy one
+    public int MaskIndex;            // the colour grade a masking film gives (-1: none, the diamond is a fancy colour now)
     public string Description;
     public string Message;
 }
@@ -50,7 +52,8 @@ public struct CoatResult
 // is only a surface treatment, not a diffusion, and its durability depends on the process: scratches and gaps in the layer show as paler lines
 // and spots, above all along the facet edges, and the spectrum is the one of the coating. The same idea gives the black paint under a
 // translucent opal, the greenish base of an amber, and the synthetic emerald grown over a pale beryl (the Lechleitner emerald), whose layer
-// tends to crack.
+// tends to crack. On a diamond, a very thin film of cobalt masks the yellow tint (the stone looks whiter), and any coloured film makes it a fancy
+// colour that is not natural; the film wears off, and the certificate no longer describes the stone.
 public static class CoatingCatalog
 {
     public const int TargetCount = 6;
@@ -134,6 +137,8 @@ public static class CoatingCatalog
         return false;
     }
 
+    private static bool IsDiamond(GemInstance gem) => gem != null && gem.Definition != null && gem.Definition.name == "Diamant";
+
     private static bool IsCabochon(GemInstance gem) => gem.CutStyleName == "Cabochon";
 
     public static bool CanCoat(GemInstance gem) => string.IsNullOrEmpty(StoneRefusal(gem));
@@ -144,8 +149,13 @@ public static class CoatingCatalog
         if (gem == null) return "Aucune pierre.";
         var name = gem.Definition != null ? gem.Definition.name : "";
         var special = name == "Opale_Noble" || name == "Opale_De_Feu" || name == "Ambre" || name == "Goshenite" || name == "Heliodore";
-        if (!FacetedCoatable(gem.Definition) && !special)
-            return "Ce matériau ne se revêt pas ici : topaze, quartz, zircone, béryl, tanzanite, kunzite, tourmaline, et, avec une laque, l'opale et l'ambre.";
+        if (!FacetedCoatable(gem.Definition) && !special && !IsDiamond(gem))
+            return "Ce matériau ne se revêt pas ici : topaze, quartz, zircone, béryl, tanzanite, kunzite, tourmaline, diamant, et, avec une laque, l'opale et l'ambre.";
+        if (IsDiamond(gem) && !gem.IsRough)
+        {
+            if (!DiamondGradeModel.CanGrade(gem)) return "Le revêtement ne traite ici que les diamants taillés.";
+            if (DiamondGradeModel.Official(gem).Fancy) return "Un diamant de couleur fancy ne se revêt pas ici : on le perdrait.";
+        }
         if (gem.IsRough) return "Une pierre brute ne se revêt pas : il faut des facettes, ou un cabochon poli.";
         if (gem.IsSynthetic && name != "CZ") return "Inutile de revêtir une pierre synthétique.";
         if (gem.IsCoated) return "Cette pierre est déjà revêtue : une seconde couche ferait des plaques.";
@@ -161,7 +171,7 @@ public static class CoatingCatalog
         if (IsMetalSet(targets))
         {
             if (targets.Count > 2) return "Deux métaux au plus dans la chambre.";
-            if (!FacetedCoatable(gem.Definition)) return "Les métaux se déposent sur les facettes de la culasse : cette pierre n'en convient pas. Essayez une laque.";
+            if (!FacetedCoatable(gem.Definition) && !IsDiamond(gem)) return "Les métaux se déposent sur les facettes de la culasse : cette pierre n'en convient pas. Essayez une laque.";
             if (IsCabochon(gem)) return "Un cabochon n'a pas de facettes de culasse : le dépôt de métal n'y accroche pas bien. Taillez-la d'abord.";
             return null;
         }
@@ -197,15 +207,22 @@ public static class CoatingCatalog
         {
             IsValid = true,
             Days = 1 + thickness + (targets.Count > 1 ? 1 : 0),
-            Fee = Mathf.RoundToInt(fee * FeeFactor[thickness]) + Mathf.RoundToInt(gem.CaratWeight * 3f),
+            Fee = Mathf.RoundToInt(fee * FeeFactor[thickness]) + Mathf.RoundToInt(gem.CaratWeight * (IsDiamond(gem) ? 35f : 3f)),
             Adhesion = adhesion,
             Iridescence = iridescence,
             CoatingName = recipe.Name,
-            Advice = AdviceFor(targets, thickness),
+            Advice = IsDiamond(gem) ? DiamondAdvice(targets, thickness) : AdviceFor(targets, thickness),
             Hue = Mathf.LerpAngle(gem.ColorHue, recipe.Hue, cover),
             Saturation = Mathf.Lerp(gem.ColorSaturation, recipe.Saturation, cover),
             Brightness = Mathf.Lerp(gem.ColorBrightness, recipe.Brightness, cover * 0.9f),
         };
+    }
+
+    private static string DiamondAdvice(IReadOnlyList<int> targets, int thickness)
+    {
+        if (targets.Count == 1 && targets[0] == Cobalt && thickness <= 1)
+            return "Un voile très fin de cobalt neutralise le jaune d'un diamant teinté : il paraît plus blanc. Il s'éraille et part à l'acide chaud. Le certificat est perdu.";
+        return "Un film coloré fait d'un diamant une pierre fancy qui n'est pas naturelle : couleur trop régulière, faible adhérence. Le certificat est perdu. Pour masquer le jaune, essayez un voile fin de cobalt seul.";
     }
 
     private static string AdviceFor(IReadOnlyList<int> targets, int thickness)
@@ -268,6 +285,31 @@ public static class CoatingCatalog
                 result.Message = "Raté : la couche n'a pas tenu, elle s'est écaillée en plaques et la pierre est tachée.";
                 break;
         }
+        return IsDiamond(gem) ? ForDiamond(result, gem, targets, thickness, recipe) : result;
+    }
+
+    // A diamond: a very thin cobalt film masks the yellow and improves the colour grade; any other film turns the diamond into a fancy colour.
+    private static CoatResult ForDiamond(CoatResult result, GemInstance gem, IReadOnlyList<int> targets, int thickness, Recipe recipe)
+    {
+        result.IsDiamond = true;
+        result.MaskIndex = -1;
+        var old = DiamondGradeModel.Official(gem).ColorIndex;
+        var masks = targets.Count == 1 && targets[0] == Cobalt && thickness <= 1 && old >= 6 && result.Outcome != CoatOutcome.Ruined;
+        if (masks)
+        {
+            var gain = result.Outcome == CoatOutcome.Excellent ? 3 : result.Outcome == CoatOutcome.Good ? 2 : 1;
+            var target = Mathf.Max(3, old - gain);
+            result.MaskIndex = target;
+            result.ValueFactor = Mathf.Clamp(DiamondGrading.ColorFactorOf(target) / Mathf.Max(0.01f, DiamondGrading.ColorFactorOf(old)) * 0.75f, 0.3f, 4f);
+            result.Description = "Voile de cobalt très fin sur la culasse : sa teinte bleutée neutralise le jaune du diamant, qui paraît plus blanc. Il s'éraille sur les arêtes des facettes et part à l'acide chaud ; le spectre est celui du revêtement ; le certificat ne décrit plus la pierre.";
+            result.Message = result.Outcome == CoatOutcome.Excellent ? $"Remarquable : le jaune a presque disparu, le diamant gagne {gain} degrés de couleur."
+                : result.Outcome == CoatOutcome.Good ? $"Beau résultat : le diamant paraît nettement plus blanc, {gain} degrés de couleur gagnés."
+                : "Un voile inégal : le diamant gagne un degré de couleur, mais la couche s'éraille déjà.";
+            return result;
+        }
+
+        result.ValueFactor = Mathf.Clamp(result.ValueFactor / Mathf.Max(0.01f, DiamondGrading.ColorFactorOf(old)) * 0.7f, 0.25f, 3f);
+        result.Description += " Sur un diamant, le film en fait une pierre de couleur fancy qui n'est pas naturelle ; le certificat ne décrit plus la pierre.";
         return result;
     }
 }

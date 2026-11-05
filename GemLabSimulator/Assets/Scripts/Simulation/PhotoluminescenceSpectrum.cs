@@ -113,10 +113,22 @@ public static class PhotoluminescenceSpectrum
             AddBand(clean, 690f, 60f, nvMinus * 0.45f);
         }
         if (siv > 0f) AddLine(clean, result, "Si-V", 737.0f, 1.8f, siv);
+
+        // An irradiated diamond shows the neutral vacancy: the GR1 line at 741 nm, strongest after neutrons.
+        var irradiated = kind != DiamondViewKind.Cvd && kind != DiamondViewKind.Hpht && gem.HasTreatment(TreatmentKind.Irradiated);
+        if (irradiated)
+        {
+            var strong = gem.IrradiationName != null && gem.IrradiationName.Contains("neutrons");
+            AddLine(clean, result, "GR1", 741.0f, 2.2f, strong ? 520f + 120f * unit("gr1") : 240f + 90f * unit("gr1"));
+            result.RecordTreatment = true;
+        }
         if (nickel > 0f) AddLine(clean, result, "Ni", 883.0f, 3f, nickel);
 
         switch (kind)
         {
+            case DiamondViewKind.Natural when irradiated:
+                result.Analysis.Add("Raie GR1 à 741 nm : la lacune neutre d'un diamant irradié. La couleur n'est pas naturelle.");
+                break;
             case DiamondViewKind.Natural:
                 result.Analysis.Add(nitrogen
                     ? "H3 faible, NV0 et NV- très faibles : diamant naturel qui n'a pas subi de recuit."
