@@ -43,6 +43,7 @@ public static class SaveSystem
             money = 0,
             currentDay = 1,
             sceneName = "Town",
+            timeOfDay = 21.5f,              // the player lands at nightfall, at 21h30
             storyStarted = true,
             storyStage = StoryState.Arrival,
         };

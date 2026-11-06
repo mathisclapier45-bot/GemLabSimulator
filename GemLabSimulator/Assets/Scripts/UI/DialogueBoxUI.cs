@@ -41,6 +41,8 @@ public class DialogueBoxUI : MonoBehaviour
     private bool visible;
     private bool sticky;                 // a line of the story: it stays until the player clicks it, whatever the player does
     private bool nextSticky;
+    private float voicePitch = 1f;       // the voice of the speaker: each one has its own pitch for the small ticks of the text
+    private float nextBlip;
     private Vector2 origin;
     private Transform player;
 
@@ -185,6 +187,7 @@ public class DialogueBoxUI : MonoBehaviour
 
         sticky = nextSticky;
         nextSticky = false;
+        voicePitch = PitchOf(speaker);
         next = onNext;
         fullText = text;
         shown = 0f;
@@ -241,6 +244,28 @@ public class DialogueBoxUI : MonoBehaviour
         root.sizeDelta = new Vector2(BoxWidth + offset, BoxHeight);
     }
 
+    // A pitch for a speaker, always the same one: between 0.85 and 1.3.
+    private static float PitchOf(string speaker)
+    {
+        if (string.IsNullOrEmpty(speaker)) return 1f;
+        var hash = 17;
+        foreach (var c in speaker) hash = hash * 31 + c;
+        return 0.85f + (Mathf.Abs(hash) % 100) / 100f * 0.45f;
+    }
+
+    // A soft tick as the letters appear: not for every letter, and not for spaces.
+    private void TypeTick(int before, int after)
+    {
+        if (after <= before || Time.unscaledTime < nextBlip) return;
+        for (var i = before; i < after && i < fullText.Length; i++)
+        {
+            if (!char.IsLetterOrDigit(fullText[i])) continue;
+            Sfx.Play(Sfx.Id.Blip, 0.5f, voicePitch * UnityEngine.Random.Range(0.94f, 1.08f));
+            nextBlip = Time.unscaledTime + 0.055f;
+            return;
+        }
+    }
+
     // A click: the first one finishes writing the line, the next one goes on to the following line or closes the window.
     private void OnClicked()
     {
@@ -279,8 +304,11 @@ public class DialogueBoxUI : MonoBehaviour
             group.alpha = Mathf.MoveTowards(group.alpha, 1f, dt * 8f);
             if (shown < fullText.Length)
             {
+                var before = Mathf.FloorToInt(shown);
                 shown = Mathf.Min(fullText.Length, shown + CharactersPerSecond * dt);
-                body.text = fullText.Substring(0, Mathf.FloorToInt(shown));
+                var after = Mathf.FloorToInt(shown);
+                body.text = fullText.Substring(0, after);
+                TypeTick(before, after);
             }
             else
             {

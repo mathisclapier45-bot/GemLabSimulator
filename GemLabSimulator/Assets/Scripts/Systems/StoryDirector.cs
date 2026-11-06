@@ -38,7 +38,7 @@ public class StoryDirector : MonoBehaviour
             Lines = new[]
             {
                 "Vous devez être la personne que Vincent attendait ! Je suis la professeure Thouvenot. J'enseigne la gemmologie ici, à Crystal Grove.",
-                "Bienvenue. Je vais vous montrer les endroits importants de la ville. Suivez-moi : je vous attends à chaque arrêt.",
+                "Bienvenue. Il se fait tard et les boutiques sont déjà fermées, mais je vais vous montrer où se trouvent les endroits importants de la ville. Suivez-moi : je vous attends à chaque arrêt.",
             },
         },
         new Stop
@@ -186,8 +186,16 @@ public class StoryDirector : MonoBehaviour
         }
 
         yield return WaitForGame();
+        MusicManager.Instance?.Refresh();
         var state = StoryState.Instance;
-        if (state == null || state.Legacy || state.Stage >= StoryState.GoHome) yield break;
+        if (state == null || state.Legacy || state.Stage >= StoryState.GoHome)
+        {
+            DayNightOverlay.Unfreeze();
+            yield break;
+        }
+
+        // The night does not move during the walk: it is nightfall, 21h30, until the player gets home.
+        DayNightOverlay.Freeze();
 
         // A game that was left before the walk began: the player is put back at the airport.
         var start = state.Stage == StoryState.Arrival || state.TourIndex <= 0;
@@ -221,6 +229,7 @@ public class StoryDirector : MonoBehaviour
         // The walk is over: the letter of Vincent is in the mailbox of the house.
         state.Receive(StoryLetters.Welcome);
         state.SetStage(StoryState.GoHome);
+        DayNightOverlay.Unfreeze();
         ToolFeedbackUI.Instance?.ShowMessage("Entrez dans votre maison : une lettre de Vincent vous attend dans la boîte aux lettres.");
 
         // She goes back to the laboratory: she fades away.

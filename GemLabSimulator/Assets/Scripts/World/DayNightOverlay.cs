@@ -13,6 +13,11 @@ public class DayNightOverlay : MonoBehaviour
     private static float dayResetTime;
     private static bool dayResetSet;
 
+    // The clock can be stopped (the prologue: the player lands at nightfall and the walk through the town does not wear the night out).
+    private static bool frozen;
+    private static float frozenPhase;
+    private static float frozenSince;
+
     private struct Keyframe
     {
         public float Time;
@@ -34,6 +39,7 @@ public class DayNightOverlay : MonoBehaviour
     // Called when the player sleeps, so Town always resumes in daylight regardless of the visual cycle's position.
     public static void ResetToDay()
     {
+        frozen = false;
         dayResetTime = Time.time - DayPhaseStart * CycleDurationSeconds;
         dayResetSet = true;
     }
@@ -41,14 +47,32 @@ public class DayNightOverlay : MonoBehaviour
     // Sets the time of the day, from 0 to 24.
     public static void SetHour(float hour)
     {
+        frozen = false;
         dayResetTime = Time.time - Mathf.Repeat(hour, 24f) / 24f * CycleDurationSeconds;
         dayResetSet = true;
     }
 
     // Available scene-wide (not just where the overlay itself exists) so any UI can show the current time of day.
+    // Stops the clock at the time it is, and starts it again from there.
+    public static void Freeze()
+    {
+        if (frozen) return;
+        frozenPhase = GetCurrentPhase();
+        frozenSince = Time.time;
+        frozen = true;
+    }
+
+    public static void Unfreeze()
+    {
+        if (!frozen) return;
+        dayResetTime += Time.time - frozenSince;
+        frozen = false;
+    }
+
     public static float GetCurrentPhase()
     {
         if (!dayResetSet) ResetToDay();
+        if (frozen) return frozenPhase;
         return Mathf.Repeat((Time.time - dayResetTime) / CycleDurationSeconds, 1f);
     }
 

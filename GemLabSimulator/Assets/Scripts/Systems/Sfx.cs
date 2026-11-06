@@ -15,6 +15,7 @@ public static class Sfx
         Coin, Spend, Pickup, GemClink, Success, Error, Flame, StepGrass, StepWood, StepStone,
         Shutter, ComputerBoot, ComputerClick, ComputerOff,
         PageTurn, PageFlurry, BookOpen, BookClose, CardSwish, PackTear, CardFlip, RareChime, SuperChime, UltraSparkle, SecretShimmer, NewCard,
+        Blip,
     }
 
     private const string VolumeKey = "SfxVolume";
@@ -201,6 +202,10 @@ public class SfxPlayer : MonoBehaviour
         var name = id.ToString();
         switch (id)
         {
+            // The small tick of a text that writes itself (the dialogues, the story): soft and short, its pitch changes with the speaker.
+            case Sfx.Id.Blip:
+                return Make(name, 0.05f, t => (Sine(560f, t) * 0.26f + Sine(1120f, t) * 0.06f) * Decay(t, 70f));
+
             case Sfx.Id.Click:
                 return Make(name, 0.06f, t => (Sine(1200f, t) * 0.35f + Sine(700f, t) * 0.25f) * Decay(t, 120f));
 

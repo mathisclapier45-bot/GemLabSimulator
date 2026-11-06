@@ -14,6 +14,15 @@ public class MainMenuUI : MonoBehaviour
     private readonly int[] pendingDays = { 15, 15, 15 };
     private readonly int[] pendingMonths = { 6, 6, 6 };
 
+    // The slots of the saves: the screens of the menu move them into their own frame.
+    public RectTransform SlotsContainer => slotsContainer;
+
+    private void Awake()
+    {
+        // The new screens of the menu (title, saves, settings) are built over the ones of the scene.
+        if (GetComponent<MainMenuFlow>() == null) gameObject.AddComponent<MainMenuFlow>();
+    }
+
     private void Start()
     {
         Refresh();
@@ -28,6 +37,7 @@ public class MainMenuUI : MonoBehaviour
 
         for (var i = 0; i < SaveSystem.SlotCount; i++)
             BuildSlot(i);
+        StardewKit.Skin(slotsContainer);
     }
 
     private void BuildSlot(int index)
@@ -44,7 +54,7 @@ public class MainMenuUI : MonoBehaviour
         rect.pivot = new Vector2(0.5f, 1f);
         rect.anchoredPosition = new Vector2(0, y);
         rect.sizeDelta = new Vector2(SlotWidth, SlotHeight);
-        panelGO.GetComponent<Image>().color = new Color(0.14f, 0.14f, 0.17f, 1f);
+        panelGO.GetComponent<Image>().color = new Color(0.15f, 0.12f, 0.10f, 1f);
 
         if (data != null)
             BuildOccupiedSlot(panelGO.transform, slotNumber, data);
@@ -59,10 +69,10 @@ public class MainMenuUI : MonoBehaviour
         CreateLabel(parent, $"{GameCalendar.Short(data.currentDay)} (jour {data.currentDay}) — {data.money}€",
             new Vector2(16, -44), new Vector2(SlotWidth - 220, 22), 13, TextAnchor.UpperLeft, new Color(0.75f, 0.75f, 0.75f));
 
-        var loadButton = CreateButton(parent, "Charger", new Vector2(-100, 0), new Vector2(140, 36));
+        var loadButton = CreateButton(parent, "Charger", new Vector2(-100, 0), new Vector2(140, 36), 14, new Color(0.25f, 0.50f, 0.30f, 1f));
         loadButton.onClick.AddListener(() => LoadSlot(slotNumber, data));
 
-        var deleteButton = CreateButton(parent, "Supprimer", new Vector2(-100, -44), new Vector2(140, 30), 12);
+        var deleteButton = CreateButton(parent, "Supprimer", new Vector2(-100, -44), new Vector2(140, 30), 12, new Color(0.48f, 0.24f, 0.22f, 1f));
         deleteButton.onClick.AddListener(() => ConfirmDialog.Show("Supprimer la sauvegarde",
             $"Voulez-vous vraiment supprimer « {data.saveName} » ?\n\n{GameCalendar.Short(data.currentDay)} — {data.money}€\n\nCette action est définitive : la partie sera perdue.",
             "Supprimer", () => DeleteSlot(slotNumber)));
@@ -109,7 +119,7 @@ public class MainMenuUI : MonoBehaviour
 
         BuildBirthdayPicker(parent, index);
 
-        var startButton = CreateButton(parent, "Commencer", new Vector2(-100, 0), new Vector2(140, 36));
+        var startButton = CreateButton(parent, "Commencer", new Vector2(-100, 0), new Vector2(140, 36), 14, new Color(0.25f, 0.50f, 0.30f, 1f));
         startButton.onClick.AddListener(() => StartNewSlot(slotNumber));
     }
 
@@ -215,7 +225,7 @@ public class MainMenuUI : MonoBehaviour
         return txt;
     }
 
-    private static Button CreateButton(Transform parent, string label, Vector2 anchoredPosition, Vector2 sizeDelta, int fontSize = 14)
+    private static Button CreateButton(Transform parent, string label, Vector2 anchoredPosition, Vector2 sizeDelta, int fontSize = 14, Color? color = null)
     {
         var go = new GameObject("Button", typeof(RectTransform), typeof(Image), typeof(Button));
         go.transform.SetParent(parent, false);
@@ -225,7 +235,7 @@ public class MainMenuUI : MonoBehaviour
         rect.pivot = new Vector2(1f, 0.5f);
         rect.anchoredPosition = anchoredPosition;
         rect.sizeDelta = sizeDelta;
-        go.GetComponent<Image>().color = new Color(0.25f, 0.25f, 0.32f, 1f);
+        go.GetComponent<Image>().color = color ?? new Color(0.25f, 0.25f, 0.32f, 1f);
 
         var textGO = new GameObject("Label", typeof(RectTransform));
         textGO.transform.SetParent(go.transform, false);

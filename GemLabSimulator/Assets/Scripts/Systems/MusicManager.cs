@@ -28,6 +28,10 @@ public class MusicManager : MonoBehaviour
 
     private AudioSource source;
     private AudioClip currentClip;
+    private AudioClip storyMusic;
+
+    // True while the cinematic of the introduction plays (it runs over the main menu).
+    public static bool IntroPlaying;
     private Coroutine fadeRoutine;
 
     private void Awake()
@@ -97,12 +101,30 @@ public class MusicManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (scene.name == "MainMenu") IntroPlaying = false;
         PlayForScene(scene.name);
+    }
+
+    // Asks the music to follow the situation again (the story has moved on).
+    public void Refresh()
+    {
+        PlayForScene(SceneManager.GetActiveScene().name);
+    }
+
+    // The music of the story: the cinematic of the introduction, the walk through the town with Professor Thouvenot, and the house of the player.
+    private AudioClip StoryClip(string sceneName)
+    {
+        var wanted = sceneName == "MaisonJoueur"
+            || (sceneName == "MainMenu" && IntroPlaying)
+            || (sceneName == "Town" && (StoryDirector.ArrivalPending || (StoryState.Instance != null && !StoryState.Instance.Legacy && StoryState.Instance.Stage <= StoryState.GoHome)));
+        if (!wanted) return null;
+        if (storyMusic == null) storyMusic = Resources.Load<AudioClip>("Music/Music_Histoire");
+        return storyMusic;
     }
 
     private void PlayForScene(string sceneName)
     {
-        var target = sceneName == "Town" || sceneName == "GemStore" || sceneName == "WatchStore" || sceneName == "Animalerie" || sceneName == "Banque" || sceneName == "Bijouterie" || sceneName == "Concessionnaire" ? townMusic
+        var target = StoryClip(sceneName) != null ? StoryClip(sceneName) : sceneName == "Town" || sceneName == "GemStore" || sceneName == "WatchStore" || sceneName == "Animalerie" || sceneName == "Banque" || sceneName == "Bijouterie" || sceneName == "Concessionnaire" ? townMusic
             : sceneName.StartsWith("Labo") || sceneName == "Home" || sceneName == "MaisonJoueur" || sceneName.StartsWith("Diamantaires") ? laboratoryMusic
             : sceneName == "MainMenu" ? mainMenuMusic
             : sceneName == "Tunnel" ? tunnelMusic

@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 // The introduction of a new game: five pictures (the flat in Paris, the taxi, the airport, the window of the plane, the landing) with a few lines of the player
 // telling why they leave for Crystal Grove, and the letter of Vincent Pardieu. A click, Space or Enter goes on; "Passer" (or Escape) skips it all.
-// Built at runtime on the Canvas of the main menu; the pictures are in Assets/Resources/Intro.
+// Built at runtime on the Canvas of the main menu; the pictures are in Assets/Resources/Intro. Its texts are set in IM Fell English (Assets/Resources/Fonts, licence
+// OFL), a font of old printed books, regular for the narration and the title, italic for the letter; the rest of the game keeps its font.
 public class IntroCinematic : MonoBehaviour
 {
     private enum Kind { Scene, Line, Letter, Title }
@@ -22,13 +23,17 @@ public class IntroCinematic : MonoBehaviour
     private static readonly Color Ink = new Color(0.22f, 0.15f, 0.10f, 1f);
     private static readonly Color Cream = new Color(0.97f, 0.94f, 0.86f, 1f);
 
+    // The fonts of the cinematic, or the font of the game if the files are missing.
+    private static Font Regular => Resources.Load<Font>("Fonts/IMFellEnglish-Regular") ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+    private static Font Italic => Resources.Load<Font>("Fonts/IMFellEnglish-Italic") ?? Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+
     private static Step Scene(int n) => new Step { Kind = Kind.Scene, Scene = n };
     private static Step Line(string text) => new Step { Kind = Kind.Line, Text = text };
 
     private static readonly List<Step> Steps = new List<Step>
     {
         Scene(1),
-        Line("Paris. Une dernière nuit dans l'appartement : demain, je quitte tout."),
+        Line("Paris. Une dernière nuit dans l'appartement, avant le grand départ."),
         Line("Il y a trois semaines, une lettre est arrivée. De mon oncle, Vincent Pardieu."),
         new Step { Kind = Kind.Letter },
         Line("Vincent a disparu. Personne ne sait où il est, ni de qui il se cache."),
@@ -57,6 +62,7 @@ public class IntroCinematic : MonoBehaviour
     private bool clicked;
     private bool skipped;
     private bool finished;
+    private float nextBlip;
 
     // Plays the cinematic over the main menu; done is called when it ends (or is skipped).
     public static void Play(Transform parent, Action done)
@@ -68,13 +74,15 @@ public class IntroCinematic : MonoBehaviour
         rect.anchorMax = Vector2.one;
         rect.offsetMin = rect.offsetMax = Vector2.zero;
         go.transform.SetAsLastSibling();
+        MusicManager.IntroPlaying = true;
+        MusicManager.Instance?.Refresh();
         var intro = go.AddComponent<IntroCinematic>();
         intro.done = done;
         intro.Build();
         intro.StartCoroutine(intro.Run());
     }
 
-    private static Text Txt(Transform parent, string name, int size, TextAnchor anchor, Color color, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)
+    private static Text Txt(Transform parent, string name, int size, TextAnchor anchor, Color color, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax, Font font = null)
     {
         var go = new GameObject(name, typeof(RectTransform), typeof(Text));
         go.transform.SetParent(parent, false);
@@ -84,7 +92,7 @@ public class IntroCinematic : MonoBehaviour
         rect.offsetMin = offsetMin;
         rect.offsetMax = offsetMax;
         var text = go.GetComponent<Text>();
-        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        text.font = font != null ? font : Regular;
         text.fontSize = size;
         text.alignment = anchor;
         text.color = color;
@@ -132,21 +140,20 @@ public class IntroCinematic : MonoBehaviour
         textGroup = textBox.gameObject.AddComponent<CanvasGroup>();
         textGroup.alpha = 0f;
         textGroup.blocksRaycasts = false;
-        narration = Txt(textBox.transform, "Text", 26, TextAnchor.MiddleLeft, Cream, Vector2.zero, Vector2.one, new Vector2(28f, 12f), new Vector2(-28f, -12f));
-        Txt(textBox.transform, "Hint", 13, TextAnchor.LowerRight, new Color(0.7f, 0.7f, 0.78f, 1f), Vector2.zero, Vector2.one, new Vector2(20f, 6f), new Vector2(-18f, -6f)).text = "clic pour continuer";
+        narration = Txt(textBox.transform, "Text", 31, TextAnchor.MiddleLeft, Cream, Vector2.zero, Vector2.one, new Vector2(28f, 12f), new Vector2(-28f, -12f));
+        Txt(textBox.transform, "Hint", 16, TextAnchor.LowerRight, new Color(0.7f, 0.7f, 0.78f, 1f), Vector2.zero, Vector2.one, new Vector2(20f, 6f), new Vector2(-18f, -6f)).text = "clic pour continuer";
 
         // The letter, on cream paper.
-        var paperEdge = Panel(transform, "LetterEdge", new Color(0.55f, 0.45f, 0.30f, 1f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-390f, -230f), new Vector2(390f, 230f));
+        var paperEdge = Panel(transform, "LetterEdge", new Color(0.55f, 0.45f, 0.30f, 1f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-400f, -250f), new Vector2(400f, 250f));
         letterGroup = paperEdge.gameObject.AddComponent<CanvasGroup>();
         letterGroup.alpha = 0f;
         letterGroup.blocksRaycasts = false;
         Panel(paperEdge.transform, "Paper", Paper, Vector2.zero, Vector2.one, new Vector2(5f, 5f), new Vector2(-5f, -5f));
-        letterText = Txt(paperEdge.transform, "Letter", 22, TextAnchor.UpperLeft, Ink, Vector2.zero, Vector2.one, new Vector2(40f, 28f), new Vector2(-40f, -28f));
-        letterText.lineSpacing = 1.1f;
+        letterText = Txt(paperEdge.transform, "Letter", 25, TextAnchor.UpperLeft, Ink, Vector2.zero, Vector2.one, new Vector2(44f, 28f), new Vector2(-44f, -28f), Italic);
+        letterText.lineSpacing = 1.05f;
 
         // The title of the game at the end.
-        var title = Txt(transform, "Title", 72, TextAnchor.MiddleCenter, Cream, new Vector2(0f, 0.38f), new Vector2(1f, 0.62f), Vector2.zero, Vector2.zero);
-        title.fontStyle = FontStyle.Bold;
+        var title = Txt(transform, "Title", 84, TextAnchor.MiddleCenter, Cream, new Vector2(0f, 0.38f), new Vector2(1f, 0.62f), Vector2.zero, Vector2.zero);
         titleGroup = title.gameObject.AddComponent<CanvasGroup>();
         titleGroup.alpha = 0f;
         var shadow = title.gameObject.AddComponent<Shadow>();
@@ -236,8 +243,15 @@ public class IntroCinematic : MonoBehaviour
         clicked = false;
         while (shown < text.Length && !skipped)
         {
+            var before = Mathf.FloorToInt(shown);
             shown += 55f * Time.unscaledDeltaTime;
-            narration.text = text.Substring(0, Mathf.Min(text.Length, Mathf.FloorToInt(shown)));
+            var after = Mathf.Min(text.Length, Mathf.FloorToInt(shown));
+            narration.text = text.Substring(0, after);
+            if (after > before && Time.unscaledTime >= nextBlip && char.IsLetterOrDigit(text[after - 1]))
+            {
+                Sfx.Play(Sfx.Id.Blip, 0.4f, UnityEngine.Random.Range(0.8f, 0.9f));
+                nextBlip = Time.unscaledTime + 0.06f;
+            }
             if (clicked)
             {
                 clicked = false;
