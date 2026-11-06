@@ -1558,6 +1558,41 @@ public static class SceneBootstrap
         });
     }
 
+    // The library: bookshelves along the walls, reading tables, and the librarian at her desk, who sells the Guide of the gemmologist.
+    [MenuItem("GemLab/Setup Library Scene")]
+    public static void CreateLibraryScene()
+    {
+        CreateTowerRoom("Bibliotheque", "manoir", -8, 8, -5, 5, new Color(0.11f, 0.11f, 0.13f), new Vector3(0f, -3f, 0f), true, (walls, wallTile) =>
+        {
+            CreateExitDoor(new Vector3(0, -4, 0f), "SpawnPoint_Bibliotheque");
+
+            PlaceRug("rug_gold", new Vector3(0f, -1.2f, 0f));
+
+            // The desk at the back, and the librarian behind it.
+            PlaceFurniture("reception_counter", new Vector3(0f, 1.3f, 0f)).GetComponent<SpriteRenderer>().sortingOrder = 5;
+            var librarian = CreateTalkNpc("Bibliothécaire", "merchant2", new Vector3(0f, 2.6f, 0f), new string[0], new Vector2(5f, 3.4f), new Vector2(0f, -1.6f));
+            UnityEngine.Object.DestroyImmediate(librarian.GetComponent<TalkNPC>());
+            librarian.AddComponent<LibrarianNPC>();
+
+            // Bookshelves along the back wall and the side walls.
+            foreach (var shelfX in new[] { -6.6f, -3.6f, 3.6f, 6.6f })
+                PlaceFurniture("bookshelf", new Vector3(shelfX, 3.7f, 0f));
+            PlaceFurniture("bookshelf", new Vector3(-7.2f, 0.4f, 0f));
+            PlaceFurniture("bookshelf", new Vector3(7.2f, 0.4f, 0f));
+            PlaceFurniture("bookshelf", new Vector3(-7.2f, -2.4f, 0f));
+            PlaceFurniture("bookshelf", new Vector3(7.2f, -2.4f, 0f));
+
+            // Two reading tables.
+            PlaceFurniture("off_wood_table", new Vector3(-3.6f, -1.8f, 0f));
+            PlaceFurniture("off_wood_table", new Vector3(3.6f, -1.8f, 0f));
+
+            HangOnWall("worldmap", 0f, 5f);
+            PlaceFurniture("off_plant_big", new Vector3(-7.2f, -3.8f, 0f));
+            PlaceFurniture("off_plant_big", new Vector3(7.2f, -3.8f, 0f));
+            CreateBuildingLabel("Bibliothèque de la Ville", new Vector3(0f, 6.7f, 0f));
+        });
+    }
+
     // The dealership: a showroom where the sneakers and the bicycle are on display. A click on an article opens the purchase window of the
     // GemStore; what is bought goes into the bag, where it is put on or taken off.
     [MenuItem("GemLab/Setup Dealership Scene")]
@@ -2168,6 +2203,7 @@ public static class SceneBootstrap
         CreateNamedSpawnPoint("SpawnPoint_Animalerie", new Vector3(10f, 5f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Banque", new Vector3(21.4f, 5f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Bijouterie", new Vector3(-22.6f, 5f, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Bibliotheque", new Vector3(-47f, 5f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Concessionnaire", new Vector3(27.7f, -37f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_MaisonJoueur", new Vector3(-51.2f, -52f, 0f));
 
@@ -3857,7 +3893,7 @@ public static class SceneBootstrap
         CreateBuildingLabel("GemStore", position + new Vector3(0f, sprite.bounds.size.y + 0.5f, 0f));
     }
 
-    // Decorative library (brick building with a clock-less tower); locked until its interior exists.
+    // The library (brick building with a clock-less tower): its door, in the tower, leads to the library, where the Guide of the gemmologist is sold.
     private static void CreateLibrary(Vector3 position)
     {
         var sprite = LoadPackSpriteGrounded("Assets/Art/Sprites/building_library.png");
@@ -3879,8 +3915,8 @@ public static class SceneBootstrap
         var sceneNameProp = so.FindProperty("sceneName");
         var implementedProp = so.FindProperty("implemented");
         var lockedProp = so.FindProperty("lockedMessage");
-        if (sceneNameProp != null) sceneNameProp.stringValue = "";
-        if (implementedProp != null) implementedProp.boolValue = false;
+        if (sceneNameProp != null) sceneNameProp.stringValue = "Bibliotheque";
+        if (implementedProp != null) implementedProp.boolValue = true;
         if (lockedProp != null) lockedProp.stringValue = "Bibliothèque : ce lieu n'est pas encore accessible.";
         so.ApplyModifiedProperties();
 

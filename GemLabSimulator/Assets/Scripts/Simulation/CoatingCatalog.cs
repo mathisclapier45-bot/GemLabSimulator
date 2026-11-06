@@ -137,6 +137,23 @@ public static class CoatingCatalog
         return false;
     }
 
+    // The names of the targets that suit a species (for the grimoire).
+    public static List<string> TargetNamesFor(GemDefinition definition)
+    {
+        var names = new List<string>();
+        var name = definition != null ? definition.name : "";
+        if (FacetedCoatable(definition) || name == "Diamant")
+        {
+            names.Add(Targets[Gold].Name);
+            names.Add(Targets[Titanium].Name);
+            names.Add(Targets[Cobalt].Name);
+        }
+        if (name == "Opale_Noble" || name == "Opale_De_Feu") names.Add(Targets[BlackLacquer].Name);
+        if (name == "Ambre") names.Add(Targets[GreenLacquer].Name);
+        if (name == "Goshenite" || name == "Heliodore") names.Add(Targets[Emerald].Name);
+        return names;
+    }
+
     private static bool IsDiamond(GemInstance gem) => gem != null && gem.Definition != null && gem.Definition.name == "Diamant";
 
     private static bool IsCabochon(GemInstance gem) => gem.CutStyleName == "Cabochon";

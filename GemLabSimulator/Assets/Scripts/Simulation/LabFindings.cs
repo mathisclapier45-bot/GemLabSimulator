@@ -18,6 +18,67 @@ public static class LabFindings
 
     private static readonly int[] Magnifications = { 20000, 5000, 1000 };
 
+    // What the instruments of the laboratory show for a species, for the sheet of the grimoire: the entries of a reference stone of that species (natural,
+    // untreated, from its first deposit). A real stone varies with its deposit, its colour and its treatments. Made once per species.
+    private static readonly Dictionary<string, List<LabEntry>> ReferenceCache = new Dictionary<string, List<LabEntry>>();
+    private static readonly Dictionary<string, string> ReferenceOrigins = new Dictionary<string, string>();
+
+    public static string ReferenceOrigin(GemDefinition def) => def != null && ReferenceOrigins.TryGetValue(def.name, out var origin) ? origin : null;
+
+    public static List<LabEntry> ReferenceEntries(GemDefinition def)
+    {
+        if (def == null) return new List<LabEntry>();
+        if (ReferenceCache.TryGetValue(def.name, out var cached)) return cached;
+
+        var list = new List<LabEntry>();
+        GemInstance gem = null;
+        try
+        {
+            var origin = def.origins != null && def.origins.Count > 0 ? def.origins[0] : null;
+            gem = origin != null ? new GemInstance(def, origin) : new GemInstance(def);
+            gem.MarkIdentified();
+            gem.ClearTreatment();
+            ReferenceOrigins[def.name] = origin != null ? origin.name : null;
+        }
+        catch (System.Exception)
+        {
+            ReferenceCache[def.name] = list;
+            return list;
+        }
+
+        void Try(System.Func<LabEntry> build)
+        {
+            try
+            {
+                var entry = build();
+                if (entry != null && entry.Lines.Count > 0) list.Add(entry);
+            }
+            catch (System.Exception)
+            {
+                // An instrument that cannot read this species adds nothing.
+            }
+        }
+
+        var diamond = (def.name ?? "").StartsWith("Diamant");
+        Try(() => UvVis(gem));
+        Try(() => Ftir(gem));
+        Try(() => Raman(gem, RamanTarget.Host));
+        Try(() => Meb(gem, MebMode.Surface, 5000));
+        Try(() => Meb(gem, MebMode.Cathodoluminescence, 0));
+        Try(() => Meb(gem, MebMode.XRay, 0));
+        Try(() => Edxrf(gem));
+        Try(() => LaIcpMs(gem));
+        Try(() => PhotoluminescenceSpectrum.Measure(gem).HasSignal ? Photoluminescence(gem) : null);
+        if (diamond)
+        {
+            Try(() => DiamondView(gem));
+            Try(() => DiamondSureEntry(gem));
+        }
+
+        ReferenceCache[def.name] = list;
+        return list;
+    }
+
     // Computing a spectrum or an image is not free: the text of an entry is built once per stone and instrument.
     private static readonly Dictionary<string, LabEntry> Cache = new Dictionary<string, LabEntry>();
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum FillOutcome { Ruined, NoEffect, Slight, Good, Excellent }
@@ -119,6 +120,17 @@ public static class FillingCatalog
         new[] { 0f, 0f,    0.12f, 0f,    0f,    0f,    0f,    0.10f },
         new[] { 0f, 0f,    0.30f, 0f,    0f,    0f,    0f,    0f },
     };
+
+    // The names of the products that suit a species (for the grimoire): the ones the matrix does not refuse for its group of materials.
+    public static List<string> ProductNamesFor(GemDefinition definition)
+    {
+        var names = new List<string>();
+        var group = GroupOf(definition);
+        if (group == Group.None) return names;
+        for (var i = 0; i < ProductCount; i++)
+            if (Eff[i][(int)group] >= 0f) names.Add(Products[i].Name);
+        return names;
+    }
 
     private static Group GroupOf(GemDefinition definition)
     {

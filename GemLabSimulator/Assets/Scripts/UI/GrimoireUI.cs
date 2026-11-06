@@ -20,6 +20,8 @@ public class GrimoireUI : MonoBehaviour
     [SerializeField] private Text detailBodyText;
     [SerializeField] private Image detailSpectrumImage;
 
+    private ScrollRect bodyScroll;
+
     private void Awake()
     {
         Instance = this;
@@ -159,8 +161,53 @@ public class GrimoireUI : MonoBehaviour
         if (detailPanel != null) detailPanel.SetActive(true);
 
         if (detailTitleText != null) detailTitleText.text = def.displayName;
-        if (detailBodyText != null) detailBodyText.text = BuildDetailText(def);
+        EnsureScroll();
+        if (detailBodyText != null)
+        {
+            detailBodyText.text = BuildDetailText(def);
+            if (bodyScroll != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(detailBodyText.rectTransform);
+                bodyScroll.verticalNormalizedPosition = 1f;
+            }
+        }
         if (detailSpectrumImage != null) detailSpectrumImage.sprite = SpectrumRenderer.BuildSpectrumSprite(def.spectrumLines);
+    }
+
+    // The sheet is long once the instruments of the laboratory are in it: the text goes into a scroll view (mouse wheel, or drag).
+    private void EnsureScroll()
+    {
+        if (bodyScroll != null || detailBodyText == null) return;
+
+        var body = detailBodyText.rectTransform;
+        var viewGO = new GameObject("BodyScroll", typeof(RectTransform), typeof(Image), typeof(RectMask2D), typeof(ScrollRect));
+        viewGO.transform.SetParent(body.parent, false);
+        var view = viewGO.GetComponent<RectTransform>();
+        view.anchorMin = body.anchorMin;
+        view.anchorMax = body.anchorMax;
+        view.pivot = body.pivot;
+        view.anchoredPosition = body.anchoredPosition;
+        view.sizeDelta = body.sizeDelta;
+        viewGO.GetComponent<Image>().color = new Color(0f, 0f, 0f, 0.001f);
+
+        body.SetParent(viewGO.transform, false);
+        body.anchorMin = new Vector2(0f, 1f);
+        body.anchorMax = new Vector2(1f, 1f);
+        body.pivot = new Vector2(0.5f, 1f);
+        body.anchoredPosition = Vector2.zero;
+        body.sizeDelta = new Vector2(-18f, 0f);
+        detailBodyText.horizontalOverflow = HorizontalWrapMode.Wrap;
+        detailBodyText.verticalOverflow = VerticalWrapMode.Overflow;
+        detailBodyText.supportRichText = true;
+        var fitter = body.gameObject.AddComponent<ContentSizeFitter>();
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        bodyScroll = viewGO.GetComponent<ScrollRect>();
+        bodyScroll.content = body;
+        bodyScroll.horizontal = false;
+        bodyScroll.vertical = true;
+        bodyScroll.movementType = ScrollRect.MovementType.Clamped;
+        bodyScroll.scrollSensitivity = 30f;
     }
 
     public void HideDetail()
@@ -175,7 +222,14 @@ public class GrimoireUI : MonoBehaviour
         if (detailPanel != null) detailPanel.SetActive(false);
     }
 
-    private static string BuildDetailText(GemDefinition def)
+    // The whole sheet of a species: its properties, the treatments that can be done to it, what the instruments of the laboratory show.
+    public static string BuildDetailText(GemDefinition def)
+    {
+        return BuildSheetText(def) + "\n\n" + BuildTreatmentsText(def) + BuildInstrumentsText(def, true);
+    }
+
+    // The properties of the species and its notes.
+    public static string BuildSheetText(GemDefinition def)
     {
         var lines = new List<string>
         {
@@ -196,12 +250,41 @@ public class GrimoireUI : MonoBehaviour
             $"Figure d'interférence : {def.interferenceFigure}",
             $"Filtre Chelsea : {def.chelseaFilterReaction}",
             $"Magnétisme : {def.magnetism}",
+            $"Conductivité thermique : {(def.isThermallyConductiveLikeDiamond ? "élevée, comme le diamant" : "faible")}",
+            $"Conductivité électrique : {(def.isElectricallyConductive ? "conductrice" : "isolante")}",
             $"Valeur de base : {def.baseValue}€/ct (avant modificateurs d'origine, pureté, taille...)",
         };
 
         var text = string.Join("\n", lines);
         if (!string.IsNullOrEmpty(def.description))
             text += $"\n\nNotes : {def.description}";
+        return text;
+    }
+
+    // The treatments the laboratory can apply to the species.
+    public static string BuildTreatmentsText(GemDefinition def)
+    {
+        var text = "<color=#F2D9A6><b>Traitements possibles</b></color>";
+        foreach (var line in TreatmentReference.Lines(def)) text += $"\n· {line}";
+        return text;
+    }
+
+    // What the advanced instruments of the laboratory show for the species (empty when there is nothing to show).
+    public static string BuildInstrumentsText(GemDefinition def, bool leadingBreak)
+    {
+        var text = "";
+        var entries = LabFindings.ReferenceEntries(def);
+        if (entries.Count > 0)
+        {
+            var origin = LabFindings.ReferenceOrigin(def);
+            text += (leadingBreak ? "\n\n" : "") + "<color=#F2D9A6><b>Instruments du laboratoire</b></color>\n";
+            text += $"<color=#9AA3B5>Pierre de référence naturelle, non traitée{(string.IsNullOrEmpty(origin) ? "" : $", d'origine {origin}")} : une pierre réelle varie selon son gisement, sa couleur et ses traitements.</color>";
+            foreach (var entry in entries)
+            {
+                text += $"\n\n<color=#F2D9A6><b>{entry.Title}</b></color>";
+                foreach (var line in entry.Lines) text += $"\n· {line}";
+            }
+        }
         return text;
     }
 }

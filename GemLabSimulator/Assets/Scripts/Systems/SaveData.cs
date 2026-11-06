@@ -280,6 +280,7 @@ public class SaveData
     public int bankMinBalance;
     public int bankLastInterest;
     public float bankLastRate;
+    public bool guideBookOwned;        // the Guide of the gemmologist, bought at the library
     public int rapaportUntilDay;       // last day of the subscription to the Rapaport price list (0: never subscribed)
     public List<string> bagSlots = new List<string>();
     public string mobility = "";

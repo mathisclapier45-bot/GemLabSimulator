@@ -63,6 +63,7 @@ public static class SaveSystem
             birthdayDay = GameCalendar.BirthdayDay,
             birthdayMonth = GameCalendar.BirthdayMonth,
             rapaportUntilDay = RapaportState.Instance != null ? RapaportState.Instance.PaidUntilDay : 0,
+            guideBookOwned = GuideBookState.HasBook,
             sceneName = SceneManager.GetActiveScene().name,
             reputationPoints = ReputationState.Instance != null ? ReputationState.Instance.Points : 0,
         };
@@ -195,6 +196,7 @@ public static class SaveSystem
 
         GameCalendar.SetBirthday(data.birthdayDay, data.birthdayMonth);
         RapaportState.Ensure()?.Load(data.rapaportUntilDay);
+        GuideBookState.Ensure()?.Load(data.guideBookOwned);
         BankState.Ensure()?.LoadFrom(data);
         if (data.timeOfDay >= 0f) DayNightOverlay.SetHour(data.timeOfDay);
         else DayNightOverlay.ResetToDay();

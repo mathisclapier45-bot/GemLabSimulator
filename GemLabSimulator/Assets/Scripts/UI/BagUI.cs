@@ -32,6 +32,8 @@ public class BagUI : MonoBehaviour
     private CalendarTabUI calendar;
     private RapaportTabUI rapaport;
     private AuctionBulletinTabUI bulletin;
+    private BooksTabUI books;
+    private bool guideShown;
 
     // The tabs of the panel: the bag, the calendar, the grimoire of the gems, the card binder and, for a subscriber, the Rapaport price list.
     private class BagTab
@@ -265,6 +267,18 @@ public class BagUI : MonoBehaviour
             if (toolOpen) returnButton.transform.SetAsLastSibling();
         }
 
+        // The arrow keys turn the pages of a book while it is open.
+        if (panel.activeSelf && activeTab >= 0 && activeTab < tabs.Count && tabs[activeTab].Label == "Livres") books.HandleKeys();
+
+        // The books tab exists once a book has been bought at the library.
+        var hasGuide = GuideBookState.HasBook;
+        if (hasGuide != guideShown)
+        {
+            guideShown = hasGuide;
+            LayoutTabs();
+            if (!hasGuide && activeTab >= 0 && !TabVisible(tabs[activeTab])) SelectTab(0);
+        }
+
         // The Rapaport tab exists only while the subscription lasts.
         var access = RapaportState.HasAccess;
         if (access != rapaportShown)
@@ -370,6 +384,7 @@ public class BagUI : MonoBehaviour
         calendar = new CalendarTabUI(panel.transform);
         rapaport = new RapaportTabUI(panel.transform);
         bulletin = new AuctionBulletinTabUI(panel.transform);
+        books = new BooksTabUI(panel.transform, ResizePanel);
 
         AddTab("Sac", KeyCode.H, bagContent, 90f, PanelHeight, null, null, null);
         AddTab("Calendrier (K)", KeyCode.K, calendar.Root, 130f, PanelHeight, calendar.Show, null, null);
@@ -377,6 +392,7 @@ public class BagUI : MonoBehaviour
             AddTab("Grimoire (G)", KeyCode.G, null, 112f, 624f, () => GrimoireUI.Instance.OpenInBag(), () => GrimoireUI.Instance.Close(), null);
         AddTab("Enchères", KeyCode.None, bulletin.Root, 90f, PanelHeight, bulletin.Show, null, null);
         AddTab("Rapaport", KeyCode.None, rapaport.Root, 100f, PanelHeight, rapaport.Show, null, () => RapaportState.HasAccess);
+        AddTab("Livres", KeyCode.None, books.Root, 90f, PanelHeight, books.Show, null, () => GuideBookState.HasBook);
         LayoutTabs();
         SelectTab(0);
     }
@@ -474,6 +490,16 @@ public class BagUI : MonoBehaviour
         var closeButton = grimoire.GridPanel.transform.Find("CloseButton");
         if (closeButton != null) closeButton.gameObject.SetActive(false);
         return true;
+    }
+
+    // A tab that changes its own size (the books: the shelf, then the open book) asks the panel to follow.
+    private void ResizePanel(float width, float height, float offsetX)
+    {
+        panelRect.sizeDelta = new Vector2(width, height);
+        panelRect.anchoredPosition = new Vector2(offsetX, 0f);
+        var closeButton = panel.transform.Find("Close");
+        if (closeButton != null)
+            RuntimeUIKit.SetTopLeft(closeButton.GetComponent<RectTransform>(), new Vector2(width - 56f, -12f), new Vector2(32f, 28f));
     }
 
     private void SelectTab(int index)
