@@ -50,3 +50,11 @@ sysinfo.txt
 
 # Third-party purchased asset pack (LimeZu Modern Exteriors, ~530MB) — kept local only, not in git history
 GemLabSimulator/Assets/Art/tileset/
+
+# Musiques : gardées en local seulement (morceaux protégés, pas redistribuables)
+GemLabSimulator/Assets/Audio/
+GemLabSimulator/Assets/Audio.meta
+GemLabSimulator/Assets/Resources/Music/
+GemLabSimulator/Assets/Resources/Music.meta
+*.mp3
+*.wav
