@@ -26,7 +26,8 @@ public class Mailbox : MonoBehaviour
         Sfx.Play(Sfx.Id.Paper);
         if (kind == MailboxKind.Personal)
         {
-            ToolFeedbackUI.Instance?.ShowMessage("Courrier personnel : rien pour le moment.");
+            if (StoryLetterUI.HasMail) StoryLetterUI.TryOpen();
+            else ToolFeedbackUI.Instance?.ShowMessage("Courrier personnel : rien pour le moment.");
             return;
         }
 

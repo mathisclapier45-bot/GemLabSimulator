@@ -34,6 +34,7 @@ public class BagUI : MonoBehaviour
     private AuctionBulletinTabUI bulletin;
     private BooksTabUI books;
     private bool guideShown;
+    private bool auctionsShown = true;
 
     // The tabs of the panel: the bag, the calendar, the grimoire of the gems, the card binder and, for a subscriber, the Rapaport price list.
     private class BagTab
@@ -270,8 +271,17 @@ public class BagUI : MonoBehaviour
         // The arrow keys turn the pages of a book while it is open.
         if (panel.activeSelf && activeTab >= 0 && activeTab < tabs.Count && tabs[activeTab].Label == "Livres") books.HandleKeys();
 
+        // The auction tab exists once the bank is open (the reputation of the player, or an old save).
+        var auctions = StoryGate.AuctionsOpen;
+        if (auctions != auctionsShown)
+        {
+            auctionsShown = auctions;
+            LayoutTabs();
+            if (!auctions && activeTab >= 0 && !TabVisible(tabs[activeTab])) SelectTab(0);
+        }
+
         // The books tab exists once a book has been bought at the library.
-        var hasGuide = GuideBookState.HasBook;
+        var hasGuide = BookShelfState.HasAny;
         if (hasGuide != guideShown)
         {
             guideShown = hasGuide;
@@ -390,9 +400,9 @@ public class BagUI : MonoBehaviour
         AddTab("Calendrier (K)", KeyCode.K, calendar.Root, 130f, PanelHeight, calendar.Show, null, null);
         if (AdoptGrimoire())
             AddTab("Grimoire (G)", KeyCode.G, null, 112f, 624f, () => GrimoireUI.Instance.OpenInBag(), () => GrimoireUI.Instance.Close(), null);
-        AddTab("Enchères", KeyCode.None, bulletin.Root, 90f, PanelHeight, bulletin.Show, null, null);
+        AddTab("Enchères", KeyCode.None, bulletin.Root, 90f, PanelHeight, bulletin.Show, null, () => StoryGate.AuctionsOpen);
         AddTab("Rapaport", KeyCode.None, rapaport.Root, 100f, PanelHeight, rapaport.Show, null, () => RapaportState.HasAccess);
-        AddTab("Livres", KeyCode.None, books.Root, 90f, PanelHeight, books.Show, null, () => GuideBookState.HasBook);
+        AddTab("Livres", KeyCode.None, books.Root, 90f, PanelHeight, books.Show, null, () => BookShelfState.HasAny);
         LayoutTabs();
         SelectTab(0);
     }

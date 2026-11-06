@@ -169,7 +169,16 @@ public class MainMenuUI : MonoBehaviour
         SaveSystem.CreateNewSave(slotNumber, name, pendingDays[index], pendingMonths[index]);
         SaveSystem.ActiveSlot = slotNumber;
         SaveSystem.PendingLoad = true;
-        SceneManager.LoadScene("MaisonJoueur");
+
+        // A new game begins with the story: the cinematic of the journey, then the arrival at the airport of Crystal Grove.
+        var canvas = GetComponentInParent<Canvas>();
+        var parent = canvas != null ? canvas.rootCanvas.transform : transform;
+        IntroCinematic.Play(parent, () =>
+        {
+            PlayerController.PendingSpawnPointName = StoryDirector.ArrivalSpawnPoint;
+            StoryDirector.ArrivalPending = true;
+            SceneManager.LoadScene("Town");
+        });
     }
 
     private void LoadSlot(int slotNumber, SaveData data)

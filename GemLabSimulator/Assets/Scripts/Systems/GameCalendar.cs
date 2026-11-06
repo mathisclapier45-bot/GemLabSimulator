@@ -186,21 +186,21 @@ public static class GameCalendar
         if (month == 12 && day == 10) Add(list, "Ouverture du marché de Noël", "Des lumières, des chalets et des bijoux jusqu'au 24.", Fun);
 
         // The price list of the diamond trade comes out every Thursday.
-        if (date.DayOfWeek == DayOfWeek.Thursday)
+        if (date.DayOfWeek == DayOfWeek.Thursday && StoryGate.RapaportOpen)
             Add(list, "Parution du Rapaport", "Le Rapaport, la liste de prix des diamants, paraît chaque jeudi : elle est dans le sac pour les abonnés.", Trade, false);
 
         // The weekly sale of the bank, every Saturday, with its theme (the day before, a reminder).
-        if (AuctionCatalog.IsAuctionDay(date) && date.Date >= Start.Date)
+        if (StoryGate.AuctionsOpen && AuctionCatalog.IsAuctionDay(date) && date.Date >= Start.Date)
         {
             var theme = AuctionCatalog.ThemeFor(date);
             Add(list, "Enchères", $"Vente aux enchères de la banque, de 9h à 20h. Thème : {theme.Name}. {theme.Description}", Trade);
         }
-        if (date.DayOfWeek == DayOfWeek.Sunday && date.Date >= Start.Date)
+        if (StoryGate.AuctionsOpen && date.DayOfWeek == DayOfWeek.Sunday && date.Date >= Start.Date)
         {
             var theme = AuctionCatalog.ThemeFor(date.AddDays(1));
             Add(list, "Bulletin des ventes", $"Le catalogue de la vente de samedi est paru (onglet Enchères du sac). Thème : {theme.Name}.", Trade);
         }
-        if (date.DayOfWeek == DayOfWeek.Friday && date.Date >= Start.Date)
+        if (StoryGate.AuctionsOpen && date.DayOfWeek == DayOfWeek.Friday && date.Date >= Start.Date)
         {
             var theme = AuctionCatalog.ThemeFor(date.AddDays(1));
             Add(list, "Veille de vente", $"Demain, vente aux enchères à la banque. Thème : {theme.Name}. Déposez vos pierres avant : on ne prend plus rien le jour de la vente.", Trade, false);

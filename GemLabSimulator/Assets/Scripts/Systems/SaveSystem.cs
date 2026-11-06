@@ -42,7 +42,9 @@ public static class SaveSystem
             birthdayMonth = birthdayMonth,
             money = 0,
             currentDay = 1,
-            sceneName = "MaisonJoueur",
+            sceneName = "Town",
+            storyStarted = true,
+            storyStage = StoryState.Arrival,
         };
         File.WriteAllText(SavePath(slot), JsonUtility.ToJson(data, true));
     }
@@ -63,7 +65,7 @@ public static class SaveSystem
             birthdayDay = GameCalendar.BirthdayDay,
             birthdayMonth = GameCalendar.BirthdayMonth,
             rapaportUntilDay = RapaportState.Instance != null ? RapaportState.Instance.PaidUntilDay : 0,
-            guideBookOwned = GuideBookState.HasBook,
+            ownedBooks = BookShelfState.ToSaveData(),
             sceneName = SceneManager.GetActiveScene().name,
             reputationPoints = ReputationState.Instance != null ? ReputationState.Instance.Points : 0,
         };
@@ -176,6 +178,7 @@ public static class SaveSystem
         }
 
         if (AuctionState.Instance != null) AuctionState.Instance.WriteSave(data);
+        if (StoryState.Instance != null) StoryState.Instance.Save(data);
         if (JewelerState.Instance != null) data.jewelJobs = JewelerState.Instance.ToSaveData();
 
         File.WriteAllText(SavePath(ActiveSlot), JsonUtility.ToJson(data, true));
@@ -196,7 +199,8 @@ public static class SaveSystem
 
         GameCalendar.SetBirthday(data.birthdayDay, data.birthdayMonth);
         RapaportState.Ensure()?.Load(data.rapaportUntilDay);
-        GuideBookState.Ensure()?.Load(data.guideBookOwned);
+        BookShelfState.Ensure()?.Load(data.ownedBooks, data.guideBookOwned);
+        StoryState.Ensure()?.Load(data);
         BankState.Ensure()?.LoadFrom(data);
         if (data.timeOfDay >= 0f) DayNightOverlay.SetHour(data.timeOfDay);
         else DayNightOverlay.ResetToDay();

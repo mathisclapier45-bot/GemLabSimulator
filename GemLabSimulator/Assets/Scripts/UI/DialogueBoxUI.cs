@@ -39,6 +39,8 @@ public class DialogueBoxUI : MonoBehaviour
     private float shown;
     private float hold;
     private bool visible;
+    private bool sticky;                 // a line of the story: it stays until the player clicks it, whatever the player does
+    private bool nextSticky;
     private Vector2 origin;
     private Transform player;
 
@@ -73,6 +75,29 @@ public class DialogueBoxUI : MonoBehaviour
             return;
         }
         Instance.Show(speaker, text, source, next);
+    }
+
+    // A line that stays on the screen until the player clicks it (or presses Enter or Space), even if the player walks away: for the story, where every line has to be read.
+    public static void SayAndWait(string speaker, string text, GameObject source, Action next)
+    {
+        if (Instance == null)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage(string.IsNullOrEmpty(speaker) ? text : $"{speaker} : {text}");
+            next?.Invoke();
+            return;
+        }
+        Instance.nextSticky = true;
+        Instance.Show(speaker, text, source, next);
+    }
+
+    public static bool IsShowing => Instance != null && Instance.visible;
+
+    // Closes the window (the story does it after its last line).
+    public static void Hide()
+    {
+        if (Instance == null) return;
+        Instance.visible = false;
+        Instance.next = null;
     }
 
     public static void Say(string combined, GameObject source = null, Action next = null)
@@ -158,6 +183,8 @@ public class DialogueBoxUI : MonoBehaviour
         text = text.Trim();
         if (text.Length >= 2 && text[0] == '"' && text[text.Length - 1] == '"') text = text.Substring(1, text.Length - 2);
 
+        sticky = nextSticky;
+        nextSticky = false;
         next = onNext;
         fullText = text;
         shown = 0f;
@@ -259,10 +286,11 @@ public class DialogueBoxUI : MonoBehaviour
             {
                 body.text = fullText;
                 hold -= dt;
-                if (hold <= 0f) visible = false;
+                if (hold <= 0f && !sticky) visible = false;
             }
 
-            if (player != null && Vector2.Distance(player.position, origin) > WalkAwayDistance) visible = false;
+            if (!sticky && player != null && Vector2.Distance(player.position, origin) > WalkAwayDistance) visible = false;
+            if (sticky && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))) OnClicked();
         }
         else
         {

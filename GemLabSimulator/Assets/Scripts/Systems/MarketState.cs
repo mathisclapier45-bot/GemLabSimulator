@@ -30,14 +30,14 @@ public class MarketState : MonoBehaviour
 
     private const int VendorCount = 4;
     private const int ItemsPerVendor = 3;
-    private const float PriceMarkup = 1.4f;
+    public const float PriceMarkup = 1.4f;
 
     // Vendors pay well below the price a customer would pay (PriceMarkup x value).
-    private const float BuybackMin = 0.35f;
-    private const float BuybackMax = 0.55f;
-    private const float HomeCountryBonus = 1.3f;
-    private const float RoughPenalty = 0.4f;
-    private const float StoneQuirkSpread = 0.15f;
+    public const float BuybackMin = 0.35f;
+    public const float BuybackMax = 0.55f;
+    public const float HomeCountryBonus = 1.3f;
+    public const float RoughPenalty = 0.4f;
+    public const float StoneQuirkSpread = 0.15f;
 
     public List<MarketVendor> Vendors { get; private set; } = new List<MarketVendor>();
 

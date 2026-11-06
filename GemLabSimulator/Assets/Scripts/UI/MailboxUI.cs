@@ -143,7 +143,7 @@ public class MailboxUI : MonoBehaviour
     {
         var index = 0;
         var auction = AuctionState.Instance;
-        if (auction != null)
+        if (auction != null && StoryGate.AuctionsOpen)
         {
             var date = auction.CatalogueDate;
             var theme = AuctionCatalog.ThemeFor(date);

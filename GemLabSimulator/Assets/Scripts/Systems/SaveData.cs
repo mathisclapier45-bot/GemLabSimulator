@@ -280,7 +280,13 @@ public class SaveData
     public int bankMinBalance;
     public int bankLastInterest;
     public float bankLastRate;
-    public bool guideBookOwned;        // the Guide of the gemmologist, bought at the library
+    public bool guideBookOwned;        // old saves: the Guide of the gemmologist was the only book
+    public List<string> ownedBooks = new List<string>();   // the books bought at the library
+    public bool storyStarted;                              // false in a save from before the story: the game is free and open
+    public int storyStage;                                 // the stage of the prologue (StoryState)
+    public int storyTourIndex;                             // where the walk with Professor Thouvenot is
+    public List<string> storyLettersReceived = new List<string>();
+    public List<string> storyLettersRead = new List<string>();
     public int rapaportUntilDay;       // last day of the subscription to the Rapaport price list (0: never subscribed)
     public List<string> bagSlots = new List<string>();
     public string mobility = "";
