@@ -1249,6 +1249,7 @@ public class GemInstance
     public void RecordMeasurement(string propertyKey, float value)
     {
         measuredValues[propertyKey] = value;
+        GemCodex.Instance?.NoteKnown(Definition != null ? Definition.name : null, propertyKey);
     }
 
     public bool HasMeasured(string propertyKey)
@@ -1264,6 +1265,18 @@ public class GemInstance
     public void RecordObservation(string propertyKey)
     {
         observedProperties.Add(propertyKey);
+        // What the instruments show of a stone is what the grimoire will know of its species.
+        GemCodex.Instance?.NoteKnown(Definition != null ? Definition.name : null, propertyKey);
+    }
+
+    // Every key of what has been observed or measured on this stone (the grimoire learns from them).
+    public System.Collections.Generic.IEnumerable<string> RecordedKeys
+    {
+        get
+        {
+            foreach (var key in observedProperties) yield return key;
+            foreach (var key in measuredValues.Keys) yield return key;
+        }
     }
 
     public bool HasObserved(string propertyKey)

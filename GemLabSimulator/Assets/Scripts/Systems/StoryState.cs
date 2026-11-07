@@ -49,6 +49,18 @@ public class StoryState : MonoBehaviour
     public string TutorialSpecimen { get; private set; } = "";
     public bool TutorialStoneTaken => !string.IsNullOrEmpty(TutorialSpecimen);
 
+    // The tutorial has three stones, one after the other: a transparent one, a translucent one, an opaque one (see TutorialStones).
+    public const int TutorialRounds = 3;
+    public int TutorialRound { get; private set; } = 1;
+
+    // The stone is identified: the next one arrives in the mailbox.
+    public void NextTutorialRound()
+    {
+        TutorialRound = Mathf.Min(TutorialRounds, TutorialRound + 1);
+        TutorialSpecimen = "";
+        SetPhase(PhaseTutorialLoupe);
+    }
+
     public bool InTutorial => !Legacy && Phase >= PhaseTutorialLoupe && Phase <= PhaseTutorialIdentify;
 
     // Until the tutorial is over, the mailbox gives one stone only.
@@ -86,6 +98,7 @@ public class StoryState : MonoBehaviour
         read.Clear();
         calls.Clear();
         TutorialSpecimen = "";
+        TutorialRound = 1;
         OnChanged?.Invoke();
     }
 
@@ -214,6 +227,7 @@ public class StoryState : MonoBehaviour
         data.storyPhase = Phase;
         data.storyCalls = new List<string>(calls);
         data.storyTutorialSpecimen = TutorialSpecimen;
+        data.storyTutorialRound = TutorialRound;
         data.storyLettersReceived = new List<string>(received);
         data.storyLettersRead = new List<string>(read);
     }
@@ -224,6 +238,7 @@ public class StoryState : MonoBehaviour
         read.Clear();
         calls.Clear();
         TutorialSpecimen = "";
+        TutorialRound = 1;
         if (!data.storyStarted)
         {
             // A save from before the story: the game is free and open.
@@ -240,6 +255,7 @@ public class StoryState : MonoBehaviour
             Phase = Stage >= Settled && data.storyPhase == 0 ? PhaseDone : data.storyPhase;
             if (data.storyCalls != null) calls.AddRange(data.storyCalls);
             TutorialSpecimen = data.storyTutorialSpecimen ?? "";
+            TutorialRound = Mathf.Clamp(data.storyTutorialRound, 1, TutorialRounds);
             if (data.storyLettersReceived != null) received.AddRange(data.storyLettersReceived);
             if (data.storyLettersRead != null) foreach (var id in data.storyLettersRead) read.Add(id);
         }
@@ -306,4 +322,32 @@ public static class StoryGate
 
     // The Rapaport price list, sold in the Diamond Quarter.
     public static bool RapaportOpen => IsOpen("Diamantaires");
+}
+
+// The three stones of the tutorial: what comes by post, and the species suggested beside it in the question of identification.
+public static class TutorialStones
+{
+    public static string Species(int round) => round == 2 ? "Jade_Nephrite" : round == 3 ? "Hematite" : "Amethyste";
+
+    // The two other species suggested with the right one (they look alike, but their density is not the same).
+    public static string[] Others(int round)
+    {
+        switch (round)
+        {
+            case 2: return new[] { "Serpentine_Bowenite", "Jade_Jadeite" };
+            case 3: return new[] { "Pyrite", "Lapis_Lazuli" };
+            default: return new[] { "Fluorite", "Tanzanite" };
+        }
+    }
+
+    // The reason the client gives in the letter.
+    public static string Reason(int round)
+    {
+        switch (round)
+        {
+            case 2: return "Cette pierre verte, polie en cabochon, vient d'un voyage de mon père. Il disait que c'était du jade, mais on m'a dit qu'il existait beaucoup d'imitations. J'aimerais savoir ce qu'il en est.";
+            case 3: return "J'ai trouvé cette pierre sombre et très lourde dans le tiroir d'un vieil établi. Elle brille comme un métal poli, mais elle ne ressemble à aucun bijou que je connaisse. Pouvez-vous me renseigner ?";
+            default: return "Cette pierre violette appartenait à ma grand-mère, qui la portait en bague depuis toujours. Personne dans la famille ne sait ce que c'est. On m'a dit que le laboratoire de Vincent Pardieu saurait me renseigner : j'espère qu'il fonctionne encore.";
+        }
+    }
 }

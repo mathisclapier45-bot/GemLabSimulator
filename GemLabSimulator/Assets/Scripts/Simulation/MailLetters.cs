@@ -90,7 +90,7 @@ public static class MailLetters
         }
 
         if (MailboxState.Instance != null && MailboxState.Instance.IsTutorialLetter(gem))
-            return $"Madame, Monsieur,\n\nCette pierre violette appartenait à ma grand-mère, qui la portait en bague depuis toujours. Personne dans la famille ne sait ce que c'est. On m'a dit que le laboratoire de Vincent Pardieu saurait me renseigner : j'espère qu'il fonctionne encore.\n\nVous trouverez la pierre dans le pli joint. Pourriez-vous l'identifier et m'envoyer un rapport ? Je vous en réglerai les frais, {gem.IdentificationReportFee} €, à réception.\n\nBien cordialement,\n{gem.ClientName}";
+            return $"Madame, Monsieur,\n\n{TutorialStones.Reason(StoryState.Instance != null ? StoryState.Instance.TutorialRound : 1)}\n\nVous trouverez la pierre dans le pli joint. Pourriez-vous l'identifier et m'envoyer un rapport ? Je vous en réglerai les frais, {gem.IdentificationReportFee} €, à réception.\n\nBien cordialement,\n{gem.ClientName}";
 
         var reason = Reasons[(int)(hash % (uint)Reasons.Length)];
         return $"Madame, Monsieur,\n\n{reason}\n\nVous trouverez la pierre dans le pli joint. Pourriez-vous l'identifier et m'envoyer un rapport ? Je vous en réglerai les frais, {gem.IdentificationReportFee} €, à réception.\n\nBien cordialement,\n{gem.ClientName}";

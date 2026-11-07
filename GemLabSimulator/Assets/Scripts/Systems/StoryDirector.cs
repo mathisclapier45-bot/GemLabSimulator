@@ -378,7 +378,7 @@ public class StoryDirector : MonoBehaviour
         {
             case StoryState.PhaseTutorialLoupe:
                 if (!state.TutorialStoneTaken)
-                    yield return Say(npc, "La pierre est arrivée par la poste ce matin. Elle est dans la boîte aux lettres, près de l'entrée : appuyez sur E devant la boîte, ouvrez la lettre, puis prenez la pierre.");
+                    yield return Say(npc, "Une pierre est arrivée par la poste pour vous. Elle est dans la boîte aux lettres, près de l'entrée : appuyez sur E devant la boîte, ouvrez la lettre, puis prenez la pierre.");
                 else
                     yield return Say(npc,
                         "Alors ? Souvenez-vous : on essuie la pierre à la chamoisine, sur le bureau de la loupe, puis on la dépose sous la loupe et on la tourne dans tous les sens.",
@@ -485,7 +485,7 @@ public class StoryDirector : MonoBehaviour
         var options = ThreeAnswers(transparency, new[] { "Transparent", "Semi-transparent", "Semi-opaque", "Opaque" }, seed + "t", out rightIndex);
         picked = -1;
         yield return Quiz(npc, "Première question : quelle est la transparence de la pierre ?", options, i => picked = i);
-        if (picked == rightIndex) { right++; yield return Say(npc, "Oui : " + transparency.ToLowerInvariant() + ". On voit à travers, ou pas."); }
+        if (picked == rightIndex) { right++; yield return Say(npc, "Oui : " + transparency.ToLowerInvariant() + (transparency == "Semi-transparent" ? " (on dit aussi translucide)." : ". On voit à travers, ou pas.")); }
         else yield return Say(npc, "Pas tout à fait : elle est " + transparency.ToLowerInvariant() + ". Regardez l'onglet « Transparence » à côté de la loupe.");
 
         // 2. The luster.
@@ -515,7 +515,7 @@ public class StoryDirector : MonoBehaviour
         yield return Say(npc, right == 4 ? "Quatre sur quatre : vous avez l'œil !" : right >= 2 ? $"{right} sur 4 : c'est un bon début. L'œil s'entraîne avec le temps." : $"{right} sur 4 : ce n'est pas grave. Les onglets sont là pour ça, servez-vous-en.");
     }
 
-    private bool loupeQuizDone;
+    private int loupeQuizRound;       // the round of the tutorial whose questions about the loupe were asked
 
     private IEnumerator TalkReturn(GameObject npc, StoryState state)
     {
@@ -526,11 +526,22 @@ public class StoryDirector : MonoBehaviour
             yield break;
         }
 
-        if (!loupeQuizDone)
+        var round = state.TutorialRound;
+        if (loupeQuizRound != round)
         {
-            yield return Say(npc, "Alors, vous avez examiné la pierre à la loupe ? Voyons ce que vous avez retenu : je vous pose quelques questions.");
+            yield return Say(npc, round == 1
+                ? "Alors, vous avez examiné la pierre à la loupe ? Voyons ce que vous avez retenu : je vous pose quelques questions."
+                : "Vous l'avez examinée ? Mêmes questions que tout à l'heure. Faites attention : celle-ci ne se laisse pas regarder comme la première.");
             yield return LoupeQuiz(npc, gem);
-            loupeQuizDone = true;
+            loupeQuizRound = round;
+        }
+
+        if (round > 1)
+        {
+            yield return Say(npc, "Pesez-la maintenant sur la balance à carats, comme la première. Revenez me dire le poids.");
+            state.SetPhase(StoryState.PhaseTutorialWeigh);
+            ToolFeedbackUI.Instance?.ShowMessage("Pesez la pierre sur la balance à carats (rangée du bas du laboratoire).");
+            yield break;
         }
 
         DialogueBoxUI.SayAndWait(Speaker, "Voulez-vous passer à la suite ?", npc, () => { });
@@ -571,6 +582,16 @@ public class StoryDirector : MonoBehaviour
             yield break;
         }
 
+        if (state.TutorialRound > 1)
+        {
+            yield return Say(npc,
+                $"Exactement : {truth:F2} carat, soit {truth * 0.2f:F2} gramme.",
+                "Maintenant, la densité : balance hydrostatique, comme tout à l'heure. Revenez me la dire.");
+            state.SetPhase(StoryState.PhaseTutorialDensity);
+            ToolFeedbackUI.Instance?.ShowMessage("Mesurez la densité sur la balance hydrostatique (rangée du haut du laboratoire).");
+            yield break;
+        }
+
         yield return Say(npc,
             $"Exactement : {truth:F2} carat, soit {truth * 0.2f:F2} gramme. Voilà votre première mesure.",
             "Avec la loupe, vous avez décrit la pierre ; avec la balance, vous l'avez mesurée. Mais le poids seul ne dit rien de la pierre : une petite pierre dense et une grosse pierre légère peuvent peser pareil.",
@@ -604,9 +625,12 @@ public class StoryDirector : MonoBehaviour
             yield break;
         }
 
-        yield return Say(npc,
-            $"Oui : {truth:F2}. C'est un nombre sans unité : la pierre pèse {truth:F2} fois plus qu'un même volume d'eau.",
-            "Chaque espèce a sa densité, ou presque. Avec la loupe et ces deux mesures, vous avez déjà de quoi éliminer beaucoup de candidates.");
+        if (state.TutorialRound > 1)
+            yield return Say(npc, $"Oui : {truth:F2}.");
+        else
+            yield return Say(npc,
+                $"Oui : {truth:F2}. C'est un nombre sans unité : la pierre pèse {truth:F2} fois plus qu'un même volume d'eau.",
+                "Chaque espèce a sa densité, ou presque. Avec la loupe et ces deux mesures, vous avez déjà de quoi éliminer beaucoup de candidates.");
         state.SetPhase(StoryState.PhaseTutorialIdentify);
         yield return TalkIdentify(npc, state);
     }
@@ -621,6 +645,7 @@ public class StoryDirector : MonoBehaviour
             yield break;
         }
 
+        var round = state.TutorialRound;
         var right = gem.Definition;
         var density = gem.HasMeasured(ExaminationTool.MeasurementType.Density.ToString())
             ? gem.GetMeasuredValue(ExaminationTool.MeasurementType.Density.ToString())
@@ -629,13 +654,12 @@ public class StoryDirector : MonoBehaviour
         // The suggestions: the species of the stone and two others of the same colour and the same look, but not the same density.
         var candidates = new System.Collections.Generic.List<GemDefinition> { right };
         var database = GemDatabase.Instance;
-        foreach (var wanted in new[] { "Fluorite", "Tanzanite", "Kunzite", "Iolite" })
+        foreach (var wanted in TutorialStones.Others(round))
         {
             if (candidates.Count >= 3 || database == null) break;
             foreach (var definition in database.allGems)
             {
                 if (definition == null || definition.name != wanted || definition == right) continue;
-                if (Mathf.Abs(definition.density - right.density) < 0.3f) continue;
                 candidates.Add(definition);
                 break;
             }
@@ -654,9 +678,12 @@ public class StoryDirector : MonoBehaviour
         for (var i = 0; i < shown.Length; i++) shown[i] = candidates[(i + shift) % candidates.Count];
         var eliminated = new bool[shown.Length];
 
-        yield return Say(npc,
-            "Vous avez décrit la pierre à la loupe, pesé, mesuré sa densité. Il est temps de conclure : de quelle pierre s'agit-il ?",
-            "Je vous en propose quelques-unes, avec leurs données à côté. Comparez-les avec ce que vous avez trouvé.");
+        if (round == 1)
+            yield return Say(npc,
+                "Vous avez décrit la pierre à la loupe, pesé, mesuré sa densité. Il est temps de conclure : de quelle pierre s'agit-il ?",
+                "Je vous en propose quelques-unes, avec leurs données à côté. Comparez-les avec ce que vous avez trouvé.");
+        else
+            yield return Say(npc, "Même question que tout à l'heure : de quelle pierre s'agit-il ? Comparez les données avec ce que vous avez trouvé.");
         DialogueBoxUI.Hide();
 
         var subtitle = $"Votre pierre : {gem.ColorName.ToLowerInvariant()}, {right.TransparencyLabel.ToLowerInvariant()}, d'éclat {right.luster.ToLowerInvariant()}, densité mesurée {density.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}.";
@@ -680,13 +707,41 @@ public class StoryDirector : MonoBehaviour
                 $"Non : {wrong.displayName.ToLowerInvariant()} a une densité de {wrong.density.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}, alors que vous avez mesuré {density.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}. Regardez bien les chiffres : la couleur ne suffit pas, c'est la mesure qui tranche.");
         }
 
+        // The identification, once right, counts like a report validated by the director: the stone is identified and gives experience.
+        gem.MarkIdentified();
+        PlayerInventory.Instance?.NotifyChanged();
+        ReputationState.Instance?.AddPoint();
+        GemCodex.Instance?.MarkDiscovered(right.name);
+        var density2 = right.density.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
+
+        if (round < StoryState.TutorialRounds)
+        {
+            if (round == 1)
+                yield return Say(npc,
+                    $"Oui, c'est cela : {right.displayName} ! Sa densité est de {density2}, comme votre mesure. Les autres avaient la même couleur, mais elles sont bien plus denses : voilà pourquoi on mesure.",
+                    "Vous venez d'identifier votre première pierre : je la valide, et vous gagnez de l'expérience. Regardez la jauge, en haut à gauche.",
+                    "Le facteur vient de passer : une autre pierre est arrivée pour vous, dans la boîte aux lettres. Celle-là ne se laisse pas traverser aussi facilement par la lumière. Même démarche : loupe, poids, densité.");
+            else
+                yield return Say(npc,
+                    $"Oui, c'est cela : {right.displayName} ! Plusieurs pierres vertes se font passer pour du jade, et la couleur ne les trahit pas : la densité, si. Ici la lumière passe mais l'image est floue : la pierre est semi-transparente, on dit aussi translucide.",
+                    "Une dernière pierre vient d'arriver dans la boîte aux lettres. Celle-là ne laisse passer aucune lumière.");
+            state.NextTutorialRound();
+            ToolFeedbackUI.Instance?.ShowMessage("Une nouvelle pierre est arrivée par la poste : prenez-la dans la boîte aux lettres du laboratoire.");
+            DialogueBoxUI.Hide();
+            yield break;
+        }
+
         yield return Say(npc,
-            $"Oui, c'est bien {right.displayName.ToLowerInvariant()} ! Sa densité est de {right.density.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}, comme votre mesure. Les autres avaient la même couleur, mais elles sont bien plus denses : voilà pourquoi on mesure.",
+            $"Oui, c'est cela : {right.displayName} ! Une pierre opaque : aucune lumière ne la traverse, on la juge donc à son éclat, ici métallique, et à sa densité très élevée ({density2}) : elle est lourde pour sa taille.",
+            "Trois pierres identifiées : votre réputation grandit, regardez la jauge en haut à gauche.",
+            "Et une chose importante : chaque fois que vous identifiez une pierre, une page s'ajoute à votre grimoire. Ouvrez-le avec la touche G : vous y avez maintenant trois pages, une par pierre que nous venons d'étudier.",
+            "Sur chaque page, vous retrouvez les informations que vous avez récoltées sur cette espèce : l'éclat, la couleur, la transparence, la densité... Ce que vous n'avez pas encore mesuré reste marqué « ??? ». Chaque mesure, sur n'importe quelle pierre de cette espèce, remplit une nouvelle ligne.",
+            "Le grimoire sera votre mémoire : consultez-le quand vous hésitez devant une pierre.",
             "Avec une seule mesure, un doute peut rester : plusieurs espèces ont la même densité. On croise donc les mesures. Le réfractomètre, juste à côté, sera la prochaine étape. Mais vous avez bien travaillé pour aujourd'hui.",
-            "Le courrier vous apportera d'autres pierres, désormais. Chaque rapport remis au directeur fait gagner de la réputation. Et si vous avez un doute, appelez-moi.");
+            "Le courrier vous apportera d'autres pierres, désormais. Chaque rapport remis au directeur fait gagner de l'XP. Et si vous avez un doute, appelez-moi.");
 
         state.SetPhase(StoryState.PhaseDone);
-        ToolFeedbackUI.Instance?.ShowMessage("Les cours de la professeure Thouvenot sont finis pour le moment : le courrier vous apportera d'autres pierres.");
+        ToolFeedbackUI.Instance?.ShowMessage("Trois pages ont été ajoutées à votre grimoire : touche G pour les consulter. Le courrier vous apportera d'autres pierres.");
         DialogueBoxUI.Hide();
 
         // She goes back to her work: she fades away.

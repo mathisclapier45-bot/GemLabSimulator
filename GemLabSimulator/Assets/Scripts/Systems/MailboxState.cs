@@ -47,9 +47,10 @@ public class MailboxState : MonoBehaviour
 
     private GemInstance MakeTutorialStone(GemDatabase database)
     {
+        var species = TutorialStones.Species(StoryState.Instance != null ? StoryState.Instance.TutorialRound : 1);
         GemDefinition amethyst = null;
         foreach (var definition in database.allGems)
-            if (definition != null && definition.name == "Amethyste") amethyst = definition;
+            if (definition != null && definition.name == species) amethyst = definition;
         if (amethyst == null) return null;
 
         GemInstance best = null;
@@ -59,7 +60,7 @@ public class MailboxState : MonoBehaviour
             best = candidate;
             if (candidate.IsDonation || candidate.IsSynthetic || candidate.TreatmentGrade != "Non traité") continue;
             if (candidate.ClarityGrade != "Eye-clean" && candidate.ClarityGrade != "Inclus") continue;
-            if (candidate.CaratWeight < 1.2f || candidate.CaratWeight > 3.5f) continue;
+            if (candidate.CaratWeight < amethyst.weightCarats * 0.7f || candidate.CaratWeight > amethyst.weightCarats * 1.8f) continue;
             break;
         }
         best.MarkAsClientStone();

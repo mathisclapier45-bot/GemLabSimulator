@@ -288,6 +288,7 @@ public class SaveData
     public int storyTourIndex;                             // where the walk with Professor Thouvenot is
     public int storyPhase;                                 // after the prologue: sleep, the phone call, the visit of the laboratory (StoryState.Phase)
     public List<string> storyCalls = new List<string>();     // the calls received, for the phone
+    public int storyTutorialRound = 1;                       // which of the three stones of the tutorial (StoryState.TutorialRound)
     public string storyTutorialSpecimen = "";                // the specimen id of the stone of the tutorial, once taken from the mailbox
     public List<string> storyLettersReceived = new List<string>();
     public List<string> storyLettersRead = new List<string>();
@@ -302,6 +303,7 @@ public class SaveData
     public int boostersToday;
     public List<MicroPhotoEntry> microPhotos = new List<MicroPhotoEntry>();
     public List<string> discoveredSpecies = new List<string>();
+    public List<string> codexKnown = new List<string>();     // "species|key": what the grimoire knows of each species
     public string sceneName;
     public float playerX;
     public float playerY;

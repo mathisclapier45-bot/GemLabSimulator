@@ -115,6 +115,8 @@ public static class SaveSystem
 
         if (GemCodex.Instance != null)
             data.discoveredSpecies = GemCodex.Instance.GetDiscoveredNames();
+        if (GemCodex.Instance != null)
+            data.codexKnown = GemCodex.Instance.GetKnown();
 
         if (LapidaryState.Instance != null)
             data.lapidaryJobs = LapidaryState.Instance.ToSaveData();
@@ -237,6 +239,8 @@ public static class SaveSystem
 
         if (GemCodex.Instance != null)
             GemCodex.Instance.LoadDiscovered(data.discoveredSpecies);
+        if (GemCodex.Instance != null)
+            GemCodex.Instance.LoadKnown(data.codexKnown);
 
         if (ReputationState.Instance != null)
             ReputationState.Instance.SetPoints(data.reputationPoints);
