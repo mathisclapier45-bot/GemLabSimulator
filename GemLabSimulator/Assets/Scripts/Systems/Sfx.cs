@@ -15,7 +15,7 @@ public static class Sfx
         Coin, Spend, Pickup, GemClink, Success, Error, Flame, StepGrass, StepWood, StepStone,
         Shutter, ComputerBoot, ComputerClick, ComputerOff,
         PageTurn, PageFlurry, BookOpen, BookClose, CardSwish, PackTear, CardFlip, RareChime, SuperChime, UltraSparkle, SecretShimmer, NewCard,
-        Blip, PhoneRing, PhoneHangUp, Rub,
+        Blip, PhoneRing, PhoneHangUp, Rub, Rooster, LightSwitch,
     }
 
     private const string VolumeKey = "SfxVolume";
@@ -210,6 +210,44 @@ public class SfxPlayer : MonoBehaviour
                     var trill = 0.55f + 0.45f * Mathf.Sin(2f * Mathf.PI * 22f * t);
                     return (Sine(880f, t) * 0.5f + Sine(1320f, t) * 0.3f) * 0.32f * burst * trill;
                 });
+
+            // The switch of a lamp: a dry little click.
+            case Sfx.Id.LightSwitch:
+            {
+                var tick = Noise(31, 0.5f);
+                return Make(name, 0.1f, t => (Sine(240f, t) * 0.35f * Decay(t, 45f)) + tick() * 0.25f * Decay(t, 90f));
+            }
+
+            // A rooster at dawn: "co-co-ri-co", four notes that rise then fall, with a raspy voice.
+            case Sfx.Id.Rooster:
+            {
+                var rasp = Noise(37, 0.6f);
+                // (start, length, from, to) of each syllable.
+                var notes = new[]
+                {
+                    new Vector4(0.00f, 0.11f, 600f, 690f),
+                    new Vector4(0.15f, 0.12f, 690f, 780f),
+                    new Vector4(0.32f, 0.34f, 780f, 1050f),
+                    new Vector4(0.70f, 0.42f, 1050f, 540f),
+                };
+                return Make(name, 1.25f, t =>
+                {
+                    var sum = 0f;
+                    foreach (var note in notes)
+                    {
+                        var local = t - note.x;
+                        if (local < 0f || local > note.y) continue;
+                        var u = local / note.y;
+                        // The phase of a glide from one pitch to another.
+                        var phase = 2f * Mathf.PI * (note.z * local + (note.w - note.z) * local * local / (2f * note.y));
+                        var vibrato = 1f + 0.03f * Mathf.Sin(local * 2f * Mathf.PI * 17f);
+                        var voice = Mathf.Sin(phase * vibrato) + 0.55f * Mathf.Sin(2f * phase) + 0.3f * Mathf.Sin(3f * phase) + 0.15f * Mathf.Sin(4f * phase);
+                        var envelope = Mathf.Min(1f, local / 0.015f) * (1f - u * u * 0.6f) * Mathf.Min(1f, (note.y - local) / 0.04f);
+                        sum += (voice * 0.2f + rasp() * 0.06f) * envelope;
+                    }
+                    return sum;
+                });
+            }
 
             // The cloth rubbing a stone: a short, soft rustle.
             case Sfx.Id.Rub:

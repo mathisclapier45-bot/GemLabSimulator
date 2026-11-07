@@ -52,8 +52,8 @@ public class TownWanderer : MonoBehaviour
         target = transform.position;
         ApplyIdle();
 
-        // Each person has their own bedtime (some stay out late) and their own hour to get up.
-        bedtime = UnityEngine.Random.Range(20.0f, 22.5f);
+        // Each person has their own bedtime and their own hour to get up. Night has fallen by 21h: everybody is home by then (the player lands at 21h30).
+        bedtime = UnityEngine.Random.Range(19.0f, 20.9f);
         wakeTime = UnityEngine.Random.Range(7.0f, 8.8f);
     }
 

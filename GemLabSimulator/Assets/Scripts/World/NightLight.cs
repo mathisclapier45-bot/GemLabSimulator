@@ -5,7 +5,8 @@ using UnityEngine;
 // player carries (a faint glow until the lantern of the bag is lit).
 public class NightLight : MonoBehaviour
 {
-    public enum Kind { Lamp, Window, Lantern }
+    // Lantern: the one the player carries (lit with the lantern of the bag). Carried: a lantern someone carries that is always lit (Professor Thouvenot at night).
+    public enum Kind { Lamp, Window, Lantern, Carried }
 
     public static readonly List<NightLight> All = new List<NightLight>();
 
@@ -18,13 +19,16 @@ public class NightLight : MonoBehaviour
     private float seed;
     private SpriteRenderer held;
 
-    private static bool LanternLit => PlayerOwnedTools.Instance != null && PlayerOwnedTools.Instance.LanternLit;
+    // The story lends the player a lit lantern for the walk through the town at night (the prologue), whatever the bag holds.
+    public static bool StoryLantern;
+
+    private static bool LanternLit => StoryLantern || (PlayerOwnedTools.Instance != null && PlayerOwnedTools.Instance.LanternLit);
 
     private void OnEnable()
     {
         All.Add(this);
         seed = Random.value * 100f;
-        if (Type == Kind.Lantern) held = CreateHeldLantern();
+        if (Type == Kind.Lantern || Type == Kind.Carried) held = CreateHeldLantern();
     }
 
     private void OnDisable()
@@ -34,8 +38,10 @@ public class NightLight : MonoBehaviour
 
     private void Update()
     {
+        // The type is set after the component is added, so the small lantern is made here, the first time it is needed.
+        if (held == null && (Type == Kind.Lantern || Type == Kind.Carried)) held = CreateHeldLantern();
         // The lantern shows in the hand of the player once it is lit and the light is falling.
-        if (held != null) held.enabled = LanternLit && DayNightLighting.Darkness > 0.08f;
+        if (held != null) held.enabled = (Type == Kind.Carried || LanternLit) && DayNightLighting.Darkness > 0.08f;
     }
 
     // Without the lantern of the bag, the player only has the faint glow of the night around him.
@@ -48,7 +54,7 @@ public class NightLight : MonoBehaviour
         if (Type == Kind.Window && !string.IsNullOrEmpty(Building) && !OpeningHours.IsOpen(Building)) level *= 0.3f;
         if (Type == Kind.Lantern && !LanternLit) level *= 0.3f;
         // The flame of a lantern and the old lamps flicker a little.
-        var flicker = Type == Kind.Lantern ? 0.94f + 0.06f * Mathf.Sin(Time.time * 7f + seed) : 0.97f + 0.03f * Mathf.Sin(Time.time * 3f + seed);
+        var flicker = Type == Kind.Lantern || Type == Kind.Carried ? 0.94f + 0.06f * Mathf.Sin(Time.time * 7f + seed) : 0.97f + 0.03f * Mathf.Sin(Time.time * 3f + seed);
         return level * flicker;
     }
 

@@ -229,6 +229,20 @@ public class StoryDirector : MonoBehaviour
         yield return new WaitForSeconds(0.6f);
     }
 
+    // A lit lantern in the hand of someone (Professor Thouvenot at night): a small lantern drawn beside them, and the light it gives.
+    private static void GiveLantern(Transform carrier)
+    {
+        if (carrier == null || carrier.GetComponentInChildren<NightLight>() != null) return;
+        var lantern = new GameObject("Lantern");
+        lantern.transform.SetParent(carrier, false);
+        lantern.transform.localPosition = new Vector3(0f, 0.6f, 0f);
+        var light = lantern.AddComponent<NightLight>();
+        light.Type = NightLight.Kind.Carried;
+        light.LightColor = new Color(1f, 0.80f, 0.48f);
+        light.Radius = 4.6f;
+        light.Intensity = 1.0f;
+    }
+
     private void SpawnThouvenot(Vector2 position)
     {
         var go = new GameObject(Speaker);
@@ -828,8 +842,12 @@ public class StoryDirector : MonoBehaviour
         if (state == null || state.Legacy || state.Stage >= StoryState.GoHome)
         {
             DayNightOverlay.Unfreeze();
+            NightLight.StoryLantern = false;
             yield break;
         }
+
+        // The walk is at night: the player carries a lantern, and so does Professor Thouvenot.
+        NightLight.StoryLantern = true;
 
         walkSpeed = TownWalkSpeed;
 
@@ -853,6 +871,7 @@ public class StoryDirector : MonoBehaviour
             from = previous.Length > 0 ? previous[previous.Length - 1] : ArrivalPoint;
         }
         SpawnThouvenot(from);
+        GiveLantern(thouvenot);
 
         for (; index < Stops.Length; index++)
         {
@@ -869,6 +888,7 @@ public class StoryDirector : MonoBehaviour
         state.Receive(StoryLetters.Welcome);
         state.SetStage(StoryState.GoHome);
         DayNightOverlay.Unfreeze();
+        NightLight.StoryLantern = false;
         ToolFeedbackUI.Instance?.ShowMessage("Entrez dans votre maison : une lettre de Vincent vous attend dans la boîte aux lettres.");
 
         // She goes back to the laboratory: she fades away.

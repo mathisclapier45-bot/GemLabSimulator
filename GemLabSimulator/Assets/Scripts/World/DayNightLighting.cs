@@ -50,6 +50,9 @@ public class DayNightLighting : MonoBehaviour
     // 0 in daylight, 1 in the dark: how much the lamps are lit.
     public static float Darkness { get; private set; }
 
+    // The night of the room when the lights are off indoors (the player goes to bed): 0 = the usual warm light, 1 = a dark blue night.
+    public static float IndoorNight;
+
     private bool indoor;
     private string sceneName;
     private Camera cam;
@@ -199,6 +202,15 @@ public class DayNightLighting : MonoBehaviour
             contrast = tunnel ? 1.18f : 1.12f;
             curve = tunnel ? 0.45f : 0.35f;
             Darkness = 0f;
+
+            // The lights are off and it is night in the room.
+            var night = Mathf.Clamp01(IndoorNight);
+            if (night > 0f)
+            {
+                ambient = Color.Lerp(ambient, new Color(0.15f, 0.20f, 0.42f), night);
+                saturation = Mathf.Lerp(saturation, 0.78f, night);
+                vignette = Mathf.Lerp(vignette, 0.80f, night);
+            }
         }
         else
         {
