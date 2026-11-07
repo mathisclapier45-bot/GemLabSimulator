@@ -19,7 +19,17 @@ public class StoryState : MonoBehaviour
     public const int PhaseSleep = 1;     // the letter has been read: the player has to sleep
     public const int PhaseCall = 2;      // the next morning: the phone rings outside, until the player answers
     public const int PhaseLab = 3;       // the player has to join Thouvenot at the laboratory (the office of gemology)
-    public const int PhaseDone = 4;      // the visit is over: the game is free
+    public const int PhaseDone = 4;      // the tutorial is over: the game is free
+
+    // The first stone (the numbers come after PhaseDone so that the saves already made keep their meaning): one easy stone comes by post, the player examines it with the loupe,
+    // takes it to Professor Thouvenot, who has it weighed, and the player tells her the weight.
+    public const int PhaseTutorialLoupe = 5;     // take the stone from the mailbox, wipe it, examine it with the loupe
+    public const int PhaseTutorialReturn = 6;    // bring the stone to Thouvenot and ask her what comes next
+    public const int PhaseTutorialWeigh = 7;     // weigh the stone on the carat balance
+    public const int PhaseTutorialReport = 8;    // tell Thouvenot the weight
+    public const int PhaseTutorialDensity = 9;   // measure the density on the hydrostatic balance (the weight in the air is known)
+    public const int PhaseTutorialDensityReport = 10;   // tell Thouvenot the density
+    public const int PhaseTutorialIdentify = 11;        // pick the species of the stone among the ones Thouvenot suggests
 
     public int Stage { get; private set; } = Settled;
     public int Phase { get; private set; } = PhaseDone;
@@ -34,6 +44,18 @@ public class StoryState : MonoBehaviour
 
     private readonly List<string> calls = new List<string>();
     public IReadOnlyList<string> Calls => calls;
+
+    // The stone of the tutorial (the specimen id of the stone taken from the mailbox).
+    public string TutorialSpecimen { get; private set; } = "";
+    public bool TutorialStoneTaken => !string.IsNullOrEmpty(TutorialSpecimen);
+
+    public bool InTutorial => !Legacy && Phase >= PhaseTutorialLoupe && Phase <= PhaseTutorialIdentify;
+
+    // Until the tutorial is over, the mailbox gives one stone only.
+    public bool MailLimited => !Legacy && Phase != PhaseDone;
+
+    // Professor Thouvenot waits in the laboratory during the tutorial.
+    public bool ThouvenotWaits => InTutorial;
 
     // The phone exists from the first call (an old save has it from the start).
     public bool PhoneUnlocked => Legacy || Phase >= PhaseCall;
@@ -63,6 +85,7 @@ public class StoryState : MonoBehaviour
         received.Clear();
         read.Clear();
         calls.Clear();
+        TutorialSpecimen = "";
         OnChanged?.Invoke();
     }
 
@@ -87,6 +110,37 @@ public class StoryState : MonoBehaviour
         if (!Legacy && Phase == PhaseSleep) SetPhase(PhaseCall);
     }
 
+    // The player takes the stone of the tutorial out of the mailbox.
+    public void OnTutorialStoneTaken(GemInstance gem)
+    {
+        TutorialSpecimen = gem.SpecimenId ?? "";
+        OnChanged?.Invoke();
+    }
+
+    public bool IsTutorialStone(GemInstance gem) => gem != null && TutorialStoneTaken && gem.SpecimenId == TutorialSpecimen;
+
+    // An instrument has recorded something about a stone: the tutorial moves on when it is the stone of the tutorial.
+    public void OnObserved(GemInstance gem, string key)
+    {
+        if (!InTutorial || !IsTutorialStone(gem)) return;
+
+        if (Phase == PhaseTutorialLoupe && gem.HasObserved(ExaminationTool.MeasurementType.VisualExamination.ToString()) && gem.HasObserved("LoupeInspection"))
+        {
+            SetPhase(PhaseTutorialReturn);
+            ToolFeedbackUI.Instance?.ShowMessage("Examen à la loupe terminé ! Rapportez la pierre à la professeure Thouvenot, dans le laboratoire.");
+        }
+        else if (Phase == PhaseTutorialWeigh && key == ExaminationTool.MeasurementType.Weight.ToString())
+        {
+            SetPhase(PhaseTutorialReport);
+            ToolFeedbackUI.Instance?.ShowMessage("Poids relevé ! Allez le dire à la professeure Thouvenot.");
+        }
+        else if (Phase == PhaseTutorialDensity && key == ExaminationTool.MeasurementType.Density.ToString())
+        {
+            SetPhase(PhaseTutorialDensityReport);
+            ToolFeedbackUI.Instance?.ShowMessage("Densité mesurée ! Allez la dire à la professeure Thouvenot.");
+        }
+    }
+
     public void AddCall(string text)
     {
         calls.Add(text);
@@ -106,6 +160,16 @@ public class StoryState : MonoBehaviour
                 case PhaseSleep: return "Dormez dans votre lit (touche E) pour passer à demain matin.";
                 case PhaseCall: return "Répondez au téléphone : il sonne.";
                 case PhaseLab: return "Rejoignez la professeure Thouvenot à la Maison et Bureau de Gemmologie.";
+                case PhaseTutorialLoupe:
+                    return TutorialStoneTaken
+                        ? "Essuyez la pierre à la chamoisine, puis examinez-la à la loupe (onglets à côté de la loupe), en la tournant dans tous les sens."
+                        : "Prenez la pierre arrivée par la poste dans la boîte aux lettres du laboratoire (touche E).";
+                case PhaseTutorialReturn: return "Rapportez la pierre à la professeure Thouvenot, dans le laboratoire, et demandez-lui la suite.";
+                case PhaseTutorialWeigh: return "Pesez la pierre sur la balance à carats (rangée du bas du laboratoire).";
+                case PhaseTutorialReport: return "Dites le poids de la pierre à la professeure Thouvenot.";
+                case PhaseTutorialDensity: return "Mesurez la densité de la pierre sur la balance hydrostatique (rangée du haut du laboratoire, près de la loupe).";
+                case PhaseTutorialDensityReport: return "Dites la densité de la pierre à la professeure Thouvenot.";
+                case PhaseTutorialIdentify: return "Retrouvez la professeure Thouvenot : choisissez, parmi les pierres qu'elle propose, celle qui correspond à vos mesures.";
                 default: return "Prenez une pierre dans la boîte aux lettres du bureau, essuyez-la à la chamoisine, puis examinez-la à la loupe.";
             }
         }
@@ -149,6 +213,7 @@ public class StoryState : MonoBehaviour
         data.storyTourIndex = TourIndex;
         data.storyPhase = Phase;
         data.storyCalls = new List<string>(calls);
+        data.storyTutorialSpecimen = TutorialSpecimen;
         data.storyLettersReceived = new List<string>(received);
         data.storyLettersRead = new List<string>(read);
     }
@@ -158,6 +223,7 @@ public class StoryState : MonoBehaviour
         received.Clear();
         read.Clear();
         calls.Clear();
+        TutorialSpecimen = "";
         if (!data.storyStarted)
         {
             // A save from before the story: the game is free and open.
@@ -173,6 +239,7 @@ public class StoryState : MonoBehaviour
             TourIndex = Mathf.Max(0, data.storyTourIndex);
             Phase = Stage >= Settled && data.storyPhase == 0 ? PhaseDone : data.storyPhase;
             if (data.storyCalls != null) calls.AddRange(data.storyCalls);
+            TutorialSpecimen = data.storyTutorialSpecimen ?? "";
             if (data.storyLettersReceived != null) received.AddRange(data.storyLettersReceived);
             if (data.storyLettersRead != null) foreach (var id in data.storyLettersRead) read.Add(id);
         }
@@ -226,7 +293,7 @@ public static class StoryGate
         {
             if (!scene.StartsWith(rule.Scene, StringComparison.Ordinal)) continue;
             if (Level >= rule.Level) return true;
-            message = rule.Message ?? $"Ce lieu ouvrira plus tard : il faut la réputation de niveau {rule.Level} (un rapport réussi au directeur du laboratoire fait gagner un point).";
+            message = rule.Message ?? $"Ce lieu ouvrira plus tard : il faut la réputation de niveau {rule.Level} (chaque pierre identifiée et validée par le directeur du laboratoire donne de l'XP).";
             return false;
         }
         return true;

@@ -169,6 +169,7 @@ public class HydrostaticBalanceUI : MonoBehaviour
             var density = MeasuredDensity(stone);
             stone.RecordMeasurement(ExaminationTool.MeasurementType.Density.ToString(), density);
             ToolFeedbackUI.Instance?.ShowMessage($"Balance hydrostatique — Densité ≈ {density:F2}");
+            StoryState.Instance?.OnObserved(stone, ExaminationTool.MeasurementType.Density.ToString());
         }
         else
         {

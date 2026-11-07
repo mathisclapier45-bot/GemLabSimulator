@@ -192,6 +192,7 @@ public class WeightScaleUI : MonoBehaviour
         ToolFeedbackUI.Instance?.ShowMessage(grams
             ? $"Balance à carats — Poids : {target * CaratInGrams:F3} g ({target:F2} ct)"
             : $"Balance à carats — Poids : {target:F2} ct");
+        StoryState.Instance?.OnObserved(stone, ExaminationTool.MeasurementType.Weight.ToString());
         settleRoutine = null;
     }
 

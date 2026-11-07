@@ -10,6 +10,14 @@ public class ReputationState : MonoBehaviour
 
     public event Action OnReputationChanged;
 
+    // A stone identified and validated by the director gives this much experience; the level follows the number of stones.
+    public const int XpPerStone = 10;
+
+    // Raised with the new level when the player goes up a level.
+    public event Action<int> OnLevelUp;
+
+    public int Xp => Points * XpPerStone;
+
     private void Awake()
     {
         if (Instance != null && Instance != this) return;
@@ -18,9 +26,11 @@ public class ReputationState : MonoBehaviour
 
     public void AddPoint()
     {
+        var before = Level;
         Points++;
         RecomputeLevel();
         OnReputationChanged?.Invoke();
+        if (Level > before) OnLevelUp?.Invoke(Level);
     }
 
     public void RemovePoints(int amount)
@@ -45,10 +55,10 @@ public class ReputationState : MonoBehaviour
         Level = level;
     }
 
-    // Cumulative points needed to reach a given level: 0, 2, 4, 8, 16, 32... (doubles from level 2 onward).
+    // Cumulative stones (points) needed to reach a given level: 0, 3, 6, 12, 24, 48... (doubles from level 3 onward).
     public static int PointsRequiredForLevel(int level)
     {
-        return level <= 1 ? 0 : (int)Mathf.Pow(2, level - 1);
+        return level <= 1 ? 0 : 3 * (int)Mathf.Pow(2, level - 2);
     }
 
     public float ProgressToNextLevel()
@@ -58,6 +68,10 @@ public class ReputationState : MonoBehaviour
         if (nextThreshold <= currentThreshold) return 1f;
         return Mathf.Clamp01((float)(Points - currentThreshold) / (nextThreshold - currentThreshold));
     }
+
+    // The same in experience points, for the gauge.
+    public int XpIntoCurrentLevel => PointsIntoCurrentLevel() * XpPerStone;
+    public int XpNeededForNextLevel => PointsNeededForNextLevel() * XpPerStone;
 
     public int PointsIntoCurrentLevel() => Points - PointsRequiredForLevel(Level);
     public int PointsNeededForNextLevel() => PointsRequiredForLevel(Level + 1) - PointsRequiredForLevel(Level);

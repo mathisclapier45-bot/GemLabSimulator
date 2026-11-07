@@ -391,7 +391,7 @@ public class JewelerUI : MonoBehaviour
 
         if (outcome.Deliberate)
         {
-            ToolFeedbackUI.Instance?.ShowMessage($"Le bijoutier a testé la pierre : {gem.TreatmentGrade} non déclaré ! Vente annulée, amende de {outcome.Fine} € et {outcome.ReputationLost} points de réputation perdus.");
+            ToolFeedbackUI.Instance?.ShowMessage($"Le bijoutier a testé la pierre : {gem.TreatmentGrade} non déclaré ! Vente annulée, amende de {outcome.Fine} € et {outcome.ReputationLost * ReputationState.XpPerStone} XP de réputation perdus.");
             Refresh();
             return;
         }

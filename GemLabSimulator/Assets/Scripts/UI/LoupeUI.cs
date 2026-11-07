@@ -10,6 +10,7 @@ public class LoupeUI : MonoBehaviour
 
     private const float PanelWidth = 620f;
     private const float PanelHeight = 512f;
+    private const float LoupeCenterX = 20f;
     private const float AreaX = 20f;
     private const float AreaY = -44f;
     private const float AreaSize = 330f;
@@ -77,6 +78,16 @@ public class LoupeUI : MonoBehaviour
     private bool clothMode;
     private bool fromBag;               // opened from the bag: the cloth is the one the player bought at the GemStore
     private const string ClothId = "Chamoisine";
+
+    // The tabs beside the loupe: one for each piece of information the loupe gives (see LoupeGuide).
+    private const float GuideTabSize = 44f;
+    private const float GuidePageWidth = 286f;
+    private GameObject guideRoot;
+    private Text guideText;
+    private ScrollRect guideScroll;
+    private LoupeGuide.Tab? guideTab;       // the tab whose page is open (none: the page is closed)
+    private GameObject guidePage;
+    private readonly List<Image> guideTabImages = new List<Image>();
     private float wipe;                 // 0 = dirty, 1 = clean
     private RawImage hazeImage;
     private Texture2D hazeTexture;
@@ -118,6 +129,7 @@ public class LoupeUI : MonoBehaviour
         Instance = this;
         BuildPanel();
         panel.SetActive(false);
+        guideRoot.SetActive(false);
     }
 
     private void Start()
@@ -136,6 +148,10 @@ public class LoupeUI : MonoBehaviour
     {
         stone = null;
         SetMode(false);
+        // The pages of the tabs are closed each time the loupe opens: a tab has to be clicked.
+        guideTab = null;
+        guidePage.SetActive(false);
+        UpdateGuideTabColors();
         panel.SetActive(true);
         InventoryUI.Instance?.Open();
         Refresh();
@@ -198,6 +214,7 @@ public class LoupeUI : MonoBehaviour
         removeButton.gameObject.SetActive(!market);
         clothMode = false;
         clothButton.gameObject.SetActive(!market);
+        guideRoot.SetActive(!market);
         tipText.gameObject.SetActive(!market && !hasTorch && !hasUv);
         UpdateToggleColors();
     }
@@ -213,6 +230,7 @@ public class LoupeUI : MonoBehaviour
     public void Close()
     {
         if (panel != null) panel.SetActive(false);
+        if (guideRoot != null) guideRoot.SetActive(false);
         GemTooltipUI.Instance?.Hide();
 
         if (marketMode)
@@ -364,8 +382,9 @@ public class LoupeUI : MonoBehaviour
         if (stone.HasObserved(InspectionKey)) return;
 
         stone.RecordObservation(InspectionKey);
-        ToolFeedbackUI.Instance?.ShowMessage("Loupe — Examen terminé : voir le résumé à droite.");
+        ToolFeedbackUI.Instance?.ShowMessage("Loupe — Examen terminé : voir le résumé à droite et les onglets.");
         UpdateTexts();
+        StoryState.Instance?.OnObserved(stone, InspectionKey);
     }
 
     private void Update()
@@ -389,6 +408,7 @@ public class LoupeUI : MonoBehaviour
                 $"Loupe — Éclat : {def.luster} | Couleur : {stone.ColorName} | " +
                 $"Transparence : {def.TransparencyLabel} | {stone.FormInline}");
             UpdateTexts();
+            StoryState.Instance?.OnObserved(stone, ExaminationTool.MeasurementType.VisualExamination.ToString());
         }
     }
 
@@ -741,6 +761,12 @@ public class LoupeUI : MonoBehaviour
 
     private void UpdateTexts()
     {
+        UpdateResultText();
+        RefreshGuide();
+    }
+
+    private void UpdateResultText()
+    {
         if (stone == null)
         {
             resultText.text = "Aucune gemme sous la loupe.";
@@ -806,8 +832,8 @@ public class LoupeUI : MonoBehaviour
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
         rect.sizeDelta = new Vector2(PanelWidth, PanelHeight);
-        // Shifted left so the inventory panel (right side of the screen) stays reachable for drag and drop.
-        rect.anchoredPosition = new Vector2(-150f, 0f);
+        // Shifted from the centre: the inventory (right side of the screen) stays reachable for drag and drop, and the tabs of the guide fit on the left.
+        rect.anchoredPosition = new Vector2(LoupeCenterX, 0f);
 
         RuntimeUIKit.MakeBox("Body", panel.transform, Vector2.zero, new Vector2(PanelWidth, PanelHeight), PanelColor);
         titleText = RuntimeUIKit.MakeText("Title", panel.transform, "Loupe ×10", 20, TextAnchor.UpperLeft, Gold,
@@ -816,6 +842,7 @@ public class LoupeUI : MonoBehaviour
         BuildViewport();
         BuildControls();
         BuildSidePanel();
+        BuildGuide();
     }
 
     private void BuildViewport()
@@ -983,6 +1010,224 @@ public class LoupeUI : MonoBehaviour
         var close = RuntimeUIKit.MakeButton("Close", panel.transform, "Fermer", 13, ButtonColor,
             new Vector2(380f, -426f), new Vector2(226f, 28f));
         close.onClick.AddListener(Close);
+    }
+
+    // ---- The tabs of the loupe ---------------------------------------------------------------------------------------
+
+    private void BuildGuide()
+    {
+        guideRoot = new GameObject("LoupeGuidePanel", typeof(RectTransform));
+        guideRoot.transform.SetParent(transform, false);
+        var rect = guideRoot.GetComponent<RectTransform>();
+        rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+        rect.pivot = new Vector2(1f, 1f);
+        rect.sizeDelta = new Vector2(GuidePageWidth + 4f + GuideTabSize, PanelHeight);
+        // To the left of the loupe, with the same top: the tabs touch the loupe, the page opens on their left.
+        rect.anchoredPosition = new Vector2(LoupeCenterX - PanelWidth / 2f - 2f, PanelHeight / 2f);
+
+        // The page (closed until a tab is clicked): a dark sheet with a scrolling text.
+        guidePage = new GameObject("Page", typeof(RectTransform));
+        guidePage.transform.SetParent(rect, false);
+        RuntimeUIKit.SetTopLeft(guidePage.GetComponent<RectTransform>(), Vector2.zero, new Vector2(GuidePageWidth, PanelHeight));
+        RuntimeUIKit.MakeBox("Sheet", guidePage.transform, Vector2.zero, new Vector2(GuidePageWidth, PanelHeight), PanelColor);
+        var viewport = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D), typeof(Image));
+        viewport.transform.SetParent(guidePage.transform, false);
+        RuntimeUIKit.SetTopLeft(viewport.GetComponent<RectTransform>(), new Vector2(12f, -10f), new Vector2(GuidePageWidth - 24f, PanelHeight - 20f));
+        viewport.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.004f);
+
+        var textGO = new GameObject("Text", typeof(RectTransform), typeof(Text), typeof(ContentSizeFitter));
+        textGO.transform.SetParent(viewport.transform, false);
+        var textRect = textGO.GetComponent<RectTransform>();
+        textRect.anchorMin = new Vector2(0f, 1f);
+        textRect.anchorMax = new Vector2(1f, 1f);
+        textRect.pivot = new Vector2(0f, 1f);
+        textRect.anchoredPosition = Vector2.zero;
+        textRect.sizeDelta = Vector2.zero;
+        guideText = textGO.GetComponent<Text>();
+        guideText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        guideText.fontSize = 12;
+        guideText.alignment = TextAnchor.UpperLeft;
+        guideText.color = Color.white;
+        guideText.supportRichText = true;
+        guideText.horizontalOverflow = HorizontalWrapMode.Wrap;
+        guideText.verticalOverflow = VerticalWrapMode.Overflow;
+        guideText.raycastTarget = false;
+        guideText.lineSpacing = 1.05f;
+        textGO.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        guideScroll = viewport.AddComponent<ScrollRect>();
+        guideScroll.viewport = viewport.GetComponent<RectTransform>();
+        guideScroll.content = textRect;
+        guideScroll.horizontal = false;
+        guideScroll.vertical = true;
+        guideScroll.movementType = ScrollRect.MovementType.Clamped;
+        guideScroll.scrollSensitivity = 28f;
+        StardewKit.Skin(guidePage.transform);
+
+        // The tabs, one under the other, each with its picture and its name.
+        const float tabHeight = 52f;
+        var tabX = GuidePageWidth + 4f;
+        for (var i = 0; i < LoupeGuide.Tabs.Length; i++)
+        {
+            var tab = LoupeGuide.Tabs[i];
+            var button = RuntimeUIKit.MakeButton("Tab_" + tab, rect, "", 9, ButtonColor, new Vector2(tabX, -i * (tabHeight + 5f)), new Vector2(GuideTabSize, tabHeight));
+            var icon = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+            icon.transform.SetParent(button.transform, false);
+            var iconRect = icon.GetComponent<RectTransform>();
+            iconRect.anchorMin = iconRect.anchorMax = new Vector2(0.5f, 1f);
+            iconRect.pivot = new Vector2(0.5f, 1f);
+            iconRect.anchoredPosition = new Vector2(0f, -4f);
+            iconRect.sizeDelta = new Vector2(28f, 28f);
+            var iconImage = icon.GetComponent<Image>();
+            iconImage.sprite = MakeGuideIcon(tab);
+            iconImage.raycastTarget = false;
+
+            var label = button.GetComponentInChildren<Text>();
+            label.text = LoupeGuide.ShortName(tab);
+            label.fontSize = 9;
+            label.alignment = TextAnchor.LowerCenter;
+            label.horizontalOverflow = HorizontalWrapMode.Overflow;
+            var labelRect = label.rectTransform;
+            labelRect.offsetMin = new Vector2(0f, 2f);
+            labelRect.offsetMax = Vector2.zero;
+
+            guideTabImages.Add(button.GetComponent<Image>());
+            var captured = tab;
+            button.onClick.AddListener(() => ToggleGuideTab(captured));
+        }
+
+        StardewKit.Skin(rect);
+        guidePage.SetActive(false);
+        UpdateGuideTabColors();
+    }
+
+    // Clicking a tab opens its page; clicking the open tab closes the page.
+    private void ToggleGuideTab(LoupeGuide.Tab tab)
+    {
+        Sfx.Play(Sfx.Id.Click, 0.5f);
+        guideTab = guideTab.HasValue && guideTab.Value == tab ? (LoupeGuide.Tab?)null : tab;
+        guidePage.SetActive(guideTab.HasValue);
+        UpdateGuideTabColors();
+        RefreshGuide();
+        if (guideScroll != null) guideScroll.verticalNormalizedPosition = 1f;
+    }
+
+    private void UpdateGuideTabColors()
+    {
+        for (var i = 0; i < guideTabImages.Count; i++)
+            guideTabImages[i].color = guideTab.HasValue && LoupeGuide.Tabs[i] == guideTab.Value ? new Color(0.62f, 0.46f, 0.20f, 1f) : ButtonColor;
+    }
+
+    private void RefreshGuide()
+    {
+        if (guideText == null || !guideTab.HasValue) return;
+        var inspected = stone != null && !marketMode && stone.HasObserved(InspectionKey);
+        guideText.text = LoupeGuide.Page(guideTab.Value, stone, stone != null && visualObserved, inspected, Dirty);
+    }
+
+    // Is the point inside a five-pointed star pointing up, with the given outer and inner radii?
+    private static bool InStar(float x, float y, float outer, float inner)
+    {
+        var points = new Vector2[10];
+        for (var i = 0; i < 10; i++)
+        {
+            var angle = Mathf.PI / 2f + i * Mathf.PI / 5f;
+            var radius = i % 2 == 0 ? outer : inner;
+            points[i] = new Vector2(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius);
+        }
+
+        var inside = false;
+        for (int i = 0, j = 9; i < 10; j = i++)
+        {
+            if ((points[i].y > y) != (points[j].y > y) && x < (points[j].x - points[i].x) * (y - points[i].y) / (points[j].y - points[i].y) + points[i].x)
+                inside = !inside;
+        }
+        return inside;
+    }
+
+    // The small picture of a tab, drawn pixel by pixel.
+    private static readonly Dictionary<LoupeGuide.Tab, Sprite> GuideIcons = new Dictionary<LoupeGuide.Tab, Sprite>();
+
+    private static Sprite MakeGuideIcon(LoupeGuide.Tab tab)
+    {
+        if (GuideIcons.TryGetValue(tab, out var cached) && cached != null) return cached;
+
+        const int n = 16;
+        var texture = new Texture2D(n, n, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+        var clear = new Color(0f, 0f, 0f, 0f);
+        var c = (n - 1) / 2f;
+        for (var y = 0; y < n; y++)
+        {
+            for (var x = 0; x < n; x++)
+            {
+                var dx = x - c;
+                var dy = y - c;
+                var color = clear;
+                switch (tab)
+                {
+                    case LoupeGuide.Tab.Luster:
+                    {
+                        // A small five-pointed star (the outline of the points is tested against the lines between the tips and the inner corners).
+                        if (InStar(dx, dy + 0.4f, 7.6f, 3.1f)) color = InStar(dx, dy + 0.4f, 3.6f, 1.5f) ? new Color(1f, 0.97f, 0.7f, 1f) : new Color(1f, 0.82f, 0.25f, 1f);
+                        break;
+                    }
+                    case LoupeGuide.Tab.Color:
+                    {
+                        // A disc of colours: the hue turns around it.
+                        var r = Mathf.Sqrt(dx * dx + dy * dy);
+                        if (r <= 7.2f)
+                        {
+                            var hue = (Mathf.Atan2(dy, dx) / (2f * Mathf.PI) + 1f) % 1f;
+                            color = Color.HSVToRGB(hue, Mathf.Clamp01(0.35f + r / 9f), 1f);
+                        }
+                        break;
+                    }
+                    case LoupeGuide.Tab.Transparency:
+                    {
+                        // A pane of glass: a pale frame, a transparent middle, two glints.
+                        var edge = Mathf.Max(Mathf.Abs(dx), Mathf.Abs(dy));
+                        if (edge <= 7.2f) color = edge >= 6f ? new Color(0.85f, 0.95f, 1f, 1f) : new Color(0.6f, 0.85f, 1f, 0.28f);
+                        if (edge < 6f && (Mathf.Abs(dx - dy - 1f) < 0.8f && dy > -4f && dy < 4f || Mathf.Abs(dx - dy + 3f) < 0.6f && dy > -2f && dy < 2f)) color = new Color(1f, 1f, 1f, 0.85f);
+                        break;
+                    }
+                    case LoupeGuide.Tab.Shape:
+                    {
+                        // A cut stone seen from the side: a flat top, a pointed bottom, a facet line.
+                        var halfTop = 7.2f - Mathf.Max(0f, dy - 0.5f) * 1.5f;
+                        var top = dy > -2f && dy <= 3.2f && Mathf.Abs(dx) <= halfTop;
+                        var bottom = dy <= -2f && dy >= -7.2f && Mathf.Abs(dx) <= (dy + 7.2f) * 1.0f;
+                        if (top || bottom)
+                        {
+                            var line = Mathf.Abs(dy + 2f) < 0.6f || (bottom && Mathf.Abs(dx) < 0.6f);
+                            color = line ? new Color(1f, 1f, 1f, 1f) : new Color(0.55f, 0.85f, 1f, 1f);
+                        }
+                        break;
+                    }
+                    case LoupeGuide.Tab.Inclusions:
+                    {
+                        // A stone with needles and dots inside.
+                        var r = Mathf.Sqrt(dx * dx + dy * dy);
+                        if (r <= 7.4f) color = r >= 6.2f ? new Color(0.85f, 0.95f, 1f, 1f) : new Color(0.50f, 0.78f, 0.95f, 0.55f);
+                        if (r < 6.2f && (Mathf.Abs(dx + dy * 1.5f + 1f) < 0.7f || Mathf.Abs(dx + dy * 1.5f - 3f) < 0.6f && dy < 3f && dy > -3f)) color = new Color(0.95f, 0.85f, 0.5f, 1f);
+                        if (r < 6.2f && ((int)Mathf.Round(dx) == 3 && (int)Mathf.Round(dy) == -3 || (int)Mathf.Round(dx) == -4 && (int)Mathf.Round(dy) == 3)) color = new Color(0.25f, 0.25f, 0.35f, 1f);
+                        break;
+                    }
+                    default:
+                    {
+                        // A facet scratched: a pale square with dark lines across it.
+                        var edge = Mathf.Max(Mathf.Abs(dx), Mathf.Abs(dy));
+                        if (edge <= 7.2f) color = new Color(0.78f, 0.92f, 1f, 1f);
+                        if (edge <= 7.2f && (Mathf.Abs(dx - dy * 0.6f + 1f) < 0.55f || Mathf.Abs(dx - dy * 0.6f - 4f) < 0.5f && dy > -2f)) color = new Color(0.30f, 0.34f, 0.46f, 1f);
+                        break;
+                    }
+                }
+                texture.SetPixel(x, y, color);
+            }
+        }
+        texture.Apply();
+        var sprite = Sprite.Create(texture, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f), 100f);
+        GuideIcons[tab] = sprite;
+        return sprite;
     }
 
     // Dark plate with a round aperture and a thin metal ring around it.

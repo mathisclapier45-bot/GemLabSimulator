@@ -287,7 +287,8 @@ public class SaveData
     public int storyStage;                                 // the stage of the prologue (StoryState)
     public int storyTourIndex;                             // where the walk with Professor Thouvenot is
     public int storyPhase;                                 // after the prologue: sleep, the phone call, the visit of the laboratory (StoryState.Phase)
-    public List<string> storyCalls = new List<string>();   // the calls received, for the phone
+    public List<string> storyCalls = new List<string>();     // the calls received, for the phone
+    public string storyTutorialSpecimen = "";                // the specimen id of the stone of the tutorial, once taken from the mailbox
     public List<string> storyLettersReceived = new List<string>();
     public List<string> storyLettersRead = new List<string>();
     public int rapaportUntilDay;       // last day of the subscription to the Rapaport price list (0: never subscribed)

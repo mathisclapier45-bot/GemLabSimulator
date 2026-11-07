@@ -211,7 +211,7 @@ public class AuctionState : MonoBehaviour
             {
                 result.Fine = TreatmentDisclosure.FineOn(hammer);
                 result.ReputationLost = TreatmentDisclosure.ReputationLoss;
-                result.Message = $"{result.Name} : l'acheteur a testé la pierre et trouvé un traitement non déclaré ({gem.TreatmentGrade}). Vente annulée, amende de {result.Fine} €, {result.ReputationLost} points de réputation en moins.";
+                result.Message = $"{result.Name} : l'acheteur a testé la pierre et trouvé un traitement non déclaré ({gem.TreatmentGrade}). Vente annulée, amende de {result.Fine} €, {result.ReputationLost * ReputationState.XpPerStone} XP de réputation en moins.";
                 result.Returned = gem;
                 return result;
             }
