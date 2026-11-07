@@ -50,6 +50,25 @@ public class RefractometerUI : MonoBehaviour
 
     private GemInstance stone;
 
+    // The drop of contact liquid: it has to be on the hemicylinder before a stone is laid on it.
+    private bool hasDrop;
+    private Image dropImage;
+    private RectTransform vialRect;
+    private Text contactText;
+    private bool dropping;
+
+    // The tabs at the left: the table of the species and their indices, then the situations that can be met.
+    private GameObject guideRoot;
+    private GameObject guidePage;
+    private RectTransform guideContent;
+    private string guideKey;
+    private ScrollRect guideScroll;
+    private RefractoGuide.Tab? guideTab;
+    private readonly System.Collections.Generic.List<Image> guideTabImages = new System.Collections.Generic.List<Image>();
+    private const float CenterX = 40f;
+    private const float GuideTabSize = 44f;
+    private const float GuidePageWidth = 340f;
+
     // Optical model of the current stone.
     private Kind kind;
     private bool polycrystalline;
@@ -85,6 +104,7 @@ public class RefractometerUI : MonoBehaviour
         Instance = this;
         BuildPanel();
         panel.SetActive(false);
+        guideRoot.SetActive(false);
     }
 
     private void Start()
@@ -100,6 +120,11 @@ public class RefractometerUI : MonoBehaviour
     public void Open()
     {
         stone = null;
+        hasDrop = false;
+        guideTab = null;
+        guidePage.SetActive(false);
+        guideRoot.SetActive(true);
+        UpdateGuideTabColors();
         panel.SetActive(true);
         InventoryUI.Instance?.Open();
         Refresh();
@@ -108,6 +133,7 @@ public class RefractometerUI : MonoBehaviour
     public void Close()
     {
         if (panel != null) panel.SetActive(false);
+        if (guideRoot != null) guideRoot.SetActive(false);
         GemTooltipUI.Instance?.Hide();
     }
 
@@ -167,10 +193,13 @@ public class RefractometerUI : MonoBehaviour
         {
             kind = Kind.Biaxial;
             nGamma = nAlpha + def.birefringence;
-            nBeta = nAlpha + def.birefringence * Mathf.Lerp(0.3f, 0.7f, Unit(speciesHash, 1));
+            // The optical sign decides where the middle index lies: nearer nα (positive) or nearer nγ (negative).
+            var positive = OpticalSigns.SignOf(def) == '+';
+            nBeta = nAlpha + def.birefringence * (positive ? Mathf.Lerp(0.2f, 0.4f, Unit(speciesHash, 1)) : Mathf.Lerp(0.6f, 0.8f, Unit(speciesHash, 1)));
         }
 
-        fixedEdgeIsLow = Unit(speciesHash, 2) > 0.5f;
+        // Uniaxial: in a positive stone the lower edge (nω) stays still and the upper one moves; in a negative stone it is the other way round.
+        fixedEdgeIsLow = OpticalSigns.SignOf(def) == '+';
         phase = Mathf.Lerp(0.6f, 1.2f, Unit(speciesHash, 3));
         offset = Unit(stoneHash, 4) * Mathf.PI;     // each specimen starts at its own orientation
         dialAngle = 0f;
@@ -276,6 +305,16 @@ public class RefractometerUI : MonoBehaviour
             return;
         }
 
+        // Without liquid there is air between the stone and the glass: no reading. The drop comes first.
+        if (gem != null && !hasDrop)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage("Réfractomètre — Déposez d'abord une goutte de liquide de contact sur l'hémicylindre (la fiole), puis la pierre : sans liquide, une lame d'air fausse la lecture.");
+            Sfx.Play(Sfx.Id.Error);
+            stone = null;
+            Refresh();
+            return;
+        }
+
         stone = gem;
         SetupOptics(gem);
         ResetTracking();
@@ -285,6 +324,7 @@ public class RefractometerUI : MonoBehaviour
         {
             stone.RecordObservation("RefractiveIndexOTL");
             ToolFeedbackUI.Instance?.ShowMessage("Réfractomètre — Indice hors limite (> 1.81) : aucune limite d'ombre.");
+            StoryState.Instance?.OnObserved(stone, "RefractiveIndex");
         }
         else
         {
@@ -297,11 +337,14 @@ public class RefractometerUI : MonoBehaviour
     {
         if (stone == null || !trackedLow) return;
         stone.RecordMeasurement(ExaminationTool.MeasurementType.RefractiveIndex.ToString(), lowMin);
+        StoryState.Instance?.OnObserved(stone, "RefractiveIndex");
     }
 
     private void ClearStone()
     {
+        // Taking the stone off wipes the glass: the next one needs its own drop.
         stone = null;
+        hasDrop = false;
         Refresh();
     }
 
@@ -312,7 +355,7 @@ public class RefractometerUI : MonoBehaviour
         if (stone == null)
         {
             gemImage.enabled = false;
-            hintText.text = "Déposez une gemme sur l'hémicylindre";
+            hintText.text = hasDrop ? "Déposez une gemme sur la goutte" : "Une goutte de liquide d'abord (fiole), puis la gemme";
         }
         else
         {
@@ -322,6 +365,7 @@ public class RefractometerUI : MonoBehaviour
         }
 
         UpdateView();
+        UpdateContact();
     }
 
     private static bool ContainsGem(GemInstance gem)
@@ -356,6 +400,7 @@ public class RefractometerUI : MonoBehaviour
         UpdateZones();
         UpdateTicks();
         UpdateReadouts();
+        RefreshGuide();
     }
 
     private void SetZone(Image zone, float top, float bottom)
@@ -476,11 +521,21 @@ public class RefractometerUI : MonoBehaviour
         birefText.text = $"Δn = {biref}";
 
         var visible = (hasLow ? 1 : 0) + (hasHigh ? 1 : 0);
-        statusText.text = visible == 0
+        var moves = "";
+        if (kind != Kind.Single && trackedHigh)
+        {
+            var lowMoves = lowMax - lowMin > 0.0005f;
+            var highMoves = highMax - highMin > 0.0005f;
+            moves = "\n" + (lowMoves && highMoves ? "Les deux limites bougent."
+                : lowMoves ? "La limite basse bouge, la haute est fixe."
+                : highMoves ? "La limite haute bouge, la basse est fixe."
+                : "Aucune limite n'a bougé : tournez la lentille.");
+        }
+        statusText.text = (visible == 0
             ? "Hors limite (OTL) : aucune limite d'ombre visible."
             : visible == 1
                 ? "1 limite d'ombre visible sur l'échelle."
-                : "2 limites d'ombre visibles sur l'échelle.";
+                : "2 limites d'ombre visibles sur l'échelle.") + moves;
     }
 
     // ---- UI construction -------------------------------------------------------------------------------------
@@ -494,8 +549,8 @@ public class RefractometerUI : MonoBehaviour
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
         rect.sizeDelta = new Vector2(PanelWidth, PanelHeight);
-        // Shifted left so the inventory panel (right side of the screen) stays reachable for drag and drop.
-        rect.anchoredPosition = new Vector2(-130f, 0f);
+        // Shifted a little to the right of the middle: the tabs of the guide fit on the left, and the inventory (right side of the screen) stays reachable for drag and drop.
+        rect.anchoredPosition = new Vector2(CenterX, 0f);
 
         RuntimeUIKit.MakeBox("Body", panel.transform, Vector2.zero, new Vector2(PanelWidth, PanelHeight), PanelColor);
         RuntimeUIKit.MakeText("Title", panel.transform, "Réfractomètre", 20, TextAnchor.UpperLeft, Gold,
@@ -505,6 +560,8 @@ public class RefractometerUI : MonoBehaviour
         BuildEyepiece();
         BuildDial();
         BuildReadouts();
+        BuildVial();
+        BuildGuide();
 
         var close = RuntimeUIKit.MakeButton("Close", panel.transform, "Fermer", 14, new Color(0.25f, 0.25f, 0.32f, 1f),
             new Vector2((PanelWidth - 160f) / 2f, -PanelHeight + 44f), new Vector2(160f, 30f));
@@ -636,6 +693,398 @@ public class RefractometerUI : MonoBehaviour
         RuntimeUIKit.MakeText("Tip", panel.transform,
             "Tournez la lentille : les limites d'ombre se déplacent. Les valeurs extrêmes observées donnent nα, nβ et nγ.",
             11, TextAnchor.UpperLeft, new Color(0.6f, 0.6f, 0.65f), new Vector2(296f, -296f), new Vector2(184f, 70f));
+    }
+
+    // ---- The contact liquid ------------------------------------------------------------------------------------------------
+
+    private void BuildVial()
+    {
+        // The bottle of contact liquid, under the readings, and the drop on the glass.
+        var vial = new GameObject("Vial", typeof(RectTransform), typeof(Image));
+        vial.transform.SetParent(panel.transform, false);
+        vialRect = vial.GetComponent<RectTransform>();
+        RuntimeUIKit.SetTopLeft(vialRect, new Vector2(302f, -378f), new Vector2(34f, 66f));
+        vialRect.pivot = new Vector2(0.5f, 0.5f);
+        vialRect.anchoredPosition = new Vector2(319f, -411f);
+        var vialImage = vial.GetComponent<Image>();
+        vialImage.sprite = MakeVialSprite();
+        vialImage.preserveAspect = true;
+        vialImage.raycastTarget = false;
+
+        RuntimeUIKit.MakeText("VialLabel", panel.transform, "Liquide de contact (n ≈ 1,81)", 11, TextAnchor.UpperLeft, new Color(0.7f, 0.85f, 0.9f),
+            new Vector2(348f, -374f), new Vector2(140f, 30f));
+        var drop = RuntimeUIKit.MakeButton("DropButton", panel.transform, "Déposer une goutte", 13, new Color(0.22f, 0.42f, 0.50f, 1f),
+            new Vector2(348f, -406f), new Vector2(136f, 30f));
+        drop.onClick.AddListener(PutDrop);
+        contactText = RuntimeUIKit.MakeText("Contact", panel.transform, "", 11, TextAnchor.UpperLeft, new Color(0.6f, 0.62f, 0.68f),
+            new Vector2(348f, -440f), new Vector2(140f, 30f));
+
+        // The drop itself, on the glass of the hemicylinder.
+        var dropGO = new GameObject("Drop", typeof(RectTransform), typeof(Image));
+        dropGO.transform.SetParent(panel.transform, false);
+        RuntimeUIKit.SetTopLeft(dropGO.GetComponent<RectTransform>(), new Vector2(130f, -76f), new Vector2(40f, 20f));
+        dropImage = dropGO.GetComponent<Image>();
+        dropImage.sprite = RuntimeUIKit.Rounded;
+        dropImage.type = Image.Type.Sliced;
+        dropImage.color = new Color(0.78f, 0.95f, 0.92f, 0.85f);
+        dropImage.raycastTarget = false;
+        dropImage.enabled = false;
+    }
+
+    // A click on the bottle: it tips, a drop falls on the glass.
+    private void PutDrop()
+    {
+        if (dropping) return;
+        if (stone != null)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage("Réfractomètre — Il y a déjà une pierre sur le verre : retirez-la (clic sur l'hémicylindre) avant de déposer une nouvelle goutte.");
+            return;
+        }
+        if (hasDrop)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage("Réfractomètre — La goutte est déjà sur le verre : déposez la pierre dessus.");
+            return;
+        }
+        StartCoroutine(DropRoutine());
+    }
+
+    private System.Collections.IEnumerator DropRoutine()
+    {
+        dropping = true;
+
+        // The bottle tips.
+        for (var t = 0f; t < 0.35f; t += Time.unscaledDeltaTime)
+        {
+            vialRect.localEulerAngles = new Vector3(0f, 0f, Mathf.SmoothStep(0f, 38f, t / 0.35f));
+            yield return null;
+        }
+
+        // The drop falls from the bottle onto the middle of the glass.
+        var fall = new GameObject("FallingDrop", typeof(RectTransform), typeof(Image));
+        fall.transform.SetParent(panel.transform, false);
+        var fallRect = fall.GetComponent<RectTransform>();
+        RuntimeUIKit.SetTopLeft(fallRect, Vector2.zero, new Vector2(8f, 12f));
+        fallRect.pivot = new Vector2(0.5f, 0.5f);
+        var fallImage = fall.GetComponent<Image>();
+        fallImage.sprite = RuntimeUIKit.Rounded;
+        fallImage.type = Image.Type.Sliced;
+        fallImage.color = new Color(0.78f, 0.95f, 0.92f, 0.95f);
+        fallImage.raycastTarget = false;
+        var from = new Vector2(150f, -44f);
+        var to = new Vector2(150f, -82f);
+        for (var t = 0f; t < 0.4f; t += Time.unscaledDeltaTime)
+        {
+            var u = t / 0.4f;
+            fallRect.anchoredPosition = Vector2.Lerp(from, to, u * u);
+            yield return null;
+        }
+        Destroy(fall);
+
+        Sfx.Play(Sfx.Id.Drop, 0.8f);
+        hasDrop = true;
+        UpdateContact();
+        Refresh();
+
+        for (var t = 0f; t < 0.3f; t += Time.unscaledDeltaTime)
+        {
+            vialRect.localEulerAngles = new Vector3(0f, 0f, Mathf.Lerp(38f, 0f, t / 0.3f));
+            yield return null;
+        }
+        vialRect.localEulerAngles = Vector3.zero;
+        dropping = false;
+    }
+
+    private void UpdateContact()
+    {
+        if (dropImage != null) dropImage.enabled = hasDrop && stone == null;
+        if (contactText != null) contactText.text = hasDrop ? "Goutte sur le verre : posez la pierre." : "Pas de goutte sur le verre.";
+    }
+
+    private static Sprite MakeVialSprite()
+    {
+        const int w = 17;
+        const int h = 33;
+        var texture = new Texture2D(w, h, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+        var pixels = new Color32[w * h];
+        for (var i = 0; i < pixels.Length; i++) pixels[i] = new Color32(0, 0, 0, 0);
+        void Put(int x, int yFromTop, Color32 c) { if (x >= 0 && x < w && yFromTop >= 0 && yFromTop < h) pixels[(h - 1 - yFromTop) * w + x] = c; }
+
+        var cap = new Color32(40, 40, 46, 255);
+        var capLight = new Color32(78, 78, 88, 255);
+        var glass = new Color32(120, 82, 40, 255);
+        var glassLight = new Color32(176, 126, 66, 255);
+        var liquid = new Color32(190, 236, 228, 255);
+        var label = new Color32(236, 230, 210, 255);
+        var ink = new Color32(70, 60, 50, 255);
+
+        // The dropper cap and the neck.
+        for (var x = 5; x <= 11; x++) { Put(x, 0, cap); Put(x, 1, cap); Put(x, 2, capLight); }
+        for (var x = 3; x <= 13; x++) Put(x, 3, cap);
+        for (var y = 4; y <= 6; y++) for (var x = 6; x <= 10; x++) Put(x, y, glass);
+        // The body: brown glass with the liquid showing at the bottom.
+        for (var y = 7; y <= 31; y++)
+            for (var x = 1; x <= 15; x++)
+            {
+                var edge = x == 1 || x == 15 || y == 31;
+                var c = edge ? glass : (x == 3 ? glassLight : glass);
+                if (y > 24 && !edge) c = new Color32(160, 214, 206, 255);
+                Put(x, y, c);
+            }
+        for (var y = 25; y <= 29; y++) for (var x = 3; x <= 13; x++) Put(x, y, liquid);
+        // The label.
+        for (var y = 12; y <= 21; y++) for (var x = 3; x <= 13; x++) Put(x, y, label);
+        for (var x = 5; x <= 11; x++) { Put(x, 15, ink); Put(x, 18, ink); }
+        texture.SetPixels32(pixels);
+        texture.Apply();
+        return Sprite.Create(texture, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 32f);
+    }
+
+    // ---- The tabs of the guide ---------------------------------------------------------------------------------------------
+
+    private void BuildGuide()
+    {
+        guideRoot = new GameObject("RefractoGuidePanel", typeof(RectTransform));
+        guideRoot.transform.SetParent(transform, false);
+        var rect = guideRoot.GetComponent<RectTransform>();
+        rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+        rect.pivot = new Vector2(1f, 1f);
+        rect.sizeDelta = new Vector2(GuidePageWidth + 4f + GuideTabSize, PanelHeight);
+        // To the left of the refractometer, with the same top: the tabs touch the panel, the page opens on their left.
+        rect.anchoredPosition = new Vector2(CenterX - PanelWidth / 2f - 2f, PanelHeight / 2f);
+
+        guidePage = new GameObject("Page", typeof(RectTransform));
+        guidePage.transform.SetParent(rect, false);
+        RuntimeUIKit.SetTopLeft(guidePage.GetComponent<RectTransform>(), Vector2.zero, new Vector2(GuidePageWidth, PanelHeight));
+        RuntimeUIKit.MakeBox("Sheet", guidePage.transform, Vector2.zero, new Vector2(GuidePageWidth, PanelHeight), PanelColor);
+        var viewport = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D), typeof(Image));
+        viewport.transform.SetParent(guidePage.transform, false);
+        RuntimeUIKit.SetTopLeft(viewport.GetComponent<RectTransform>(), new Vector2(12f, -10f), new Vector2(GuidePageWidth - 24f, PanelHeight - 20f));
+        viewport.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.004f);
+
+        // The page is a list of blocks, one under the other: texts, and the pictures of the eyepiece.
+        var contentGO = new GameObject("Content", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
+        contentGO.transform.SetParent(viewport.transform, false);
+        guideContent = contentGO.GetComponent<RectTransform>();
+        guideContent.anchorMin = new Vector2(0f, 1f);
+        guideContent.anchorMax = new Vector2(1f, 1f);
+        guideContent.pivot = new Vector2(0f, 1f);
+        guideContent.anchoredPosition = Vector2.zero;
+        guideContent.sizeDelta = Vector2.zero;
+        var layout = contentGO.GetComponent<VerticalLayoutGroup>();
+        layout.spacing = 4f;
+        layout.childControlWidth = true;
+        layout.childControlHeight = true;
+        layout.childForceExpandWidth = true;
+        layout.childForceExpandHeight = false;
+        contentGO.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        guideScroll = viewport.AddComponent<ScrollRect>();
+        guideScroll.viewport = viewport.GetComponent<RectTransform>();
+        guideScroll.content = guideContent;
+        guideScroll.horizontal = false;
+        guideScroll.vertical = true;
+        guideScroll.movementType = ScrollRect.MovementType.Clamped;
+        guideScroll.scrollSensitivity = 28f;
+        StardewKit.Skin(guidePage.transform);
+
+        const float tabHeight = 52f;
+        var tabX = GuidePageWidth + 4f;
+        for (var i = 0; i < RefractoGuide.Tabs.Length; i++)
+        {
+            var tab = RefractoGuide.Tabs[i];
+            var button = RuntimeUIKit.MakeButton("Tab_" + tab, rect, "", 9, new Color(0.25f, 0.25f, 0.32f, 1f), new Vector2(tabX, -i * (tabHeight + 5f)), new Vector2(GuideTabSize, tabHeight));
+            var icon = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+            icon.transform.SetParent(button.transform, false);
+            var iconRect = icon.GetComponent<RectTransform>();
+            iconRect.anchorMin = iconRect.anchorMax = new Vector2(0.5f, 1f);
+            iconRect.pivot = new Vector2(0.5f, 1f);
+            iconRect.anchoredPosition = new Vector2(0f, -4f);
+            iconRect.sizeDelta = new Vector2(28f, 28f);
+            var iconImage = icon.GetComponent<Image>();
+            iconImage.sprite = MakeTabIcon(tab);
+            iconImage.raycastTarget = false;
+
+            var label = button.GetComponentInChildren<Text>();
+            label.text = RefractoGuide.ShortName(tab);
+            label.fontSize = 9;
+            label.alignment = TextAnchor.LowerCenter;
+            label.horizontalOverflow = HorizontalWrapMode.Overflow;
+            label.rectTransform.offsetMin = new Vector2(0f, 2f);
+            label.rectTransform.offsetMax = Vector2.zero;
+
+            guideTabImages.Add(button.GetComponent<Image>());
+            var captured = tab;
+            button.onClick.AddListener(() => ToggleGuideTab(captured));
+        }
+
+        StardewKit.Skin(rect);
+        guidePage.SetActive(false);
+        UpdateGuideTabColors();
+    }
+
+    private void ToggleGuideTab(RefractoGuide.Tab tab)
+    {
+        Sfx.Play(Sfx.Id.Click, 0.5f);
+        guideTab = guideTab.HasValue && guideTab.Value == tab ? (RefractoGuide.Tab?)null : tab;
+        guidePage.SetActive(guideTab.HasValue);
+        UpdateGuideTabColors();
+        guideKey = null;
+        RefreshGuide();
+        if (guideScroll != null)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(guideContent);
+            guideScroll.verticalNormalizedPosition = 1f;
+        }
+    }
+
+    private void UpdateGuideTabColors()
+    {
+        for (var i = 0; i < guideTabImages.Count; i++)
+            guideTabImages[i].color = guideTab.HasValue && RefractoGuide.Tabs[i] == guideTab.Value ? new Color(0.62f, 0.46f, 0.20f, 1f) : new Color(0.25f, 0.25f, 0.32f, 1f);
+    }
+
+    private RefractoGuide.Situation CurrentSituation()
+    {
+        var s = new RefractoGuide.Situation { HasStone = stone != null };
+        if (stone == null) return s;
+        s.Read = trackedLow;
+        s.OutOfLimit = !trackedLow;
+        s.NAlpha = trackedLow ? lowMin : 0f;
+        s.NGamma = trackedHigh ? highMax : s.NAlpha;
+        s.LowMoves = trackedLow && lowMax - lowMin > 0.0005f;
+        s.HighMoves = trackedHigh && highMax - highMin > 0.0005f;
+        s.NBeta = s.LowMoves ? lowMax : 0f;
+        s.HasLowEdge = hasLow;
+        s.HasHighEdge = hasHigh && kind != Kind.Single;
+        s.CurrentLow = currentLow;
+        s.CurrentHigh = currentHigh;
+        s.AngleDegrees = Mathf.Repeat(dialAngle * Mathf.Rad2Deg, 360f);
+        s.Double = kind != Kind.Single && trackedHigh;
+        // What the player has seen decides which of the two it is: one edge that moves is uniaxial, both is biaxial.
+        s.Uniaxial = s.Double && s.LowMoves != s.HighMoves;
+        s.Biaxial = s.Double && s.LowMoves && s.HighMoves;
+        return s;
+    }
+
+    private void RefreshGuide()
+    {
+        if (guideContent == null || !guideTab.HasValue) return;
+
+        var situation = CurrentSituation();
+        var text = RefractoGuide.Page(guideTab.Value, situation);
+        // Nothing to rebuild while nothing on the page has changed.
+        var key = guideTab.Value + "|" + text.GetHashCode() + "|" + situation.HasStone + situation.CurrentLow.ToString("F3") + situation.CurrentHigh.ToString("F3") + situation.HasLowEdge + situation.HasHighEdge;
+        if (key == guideKey) return;
+        guideKey = key;
+
+        for (var i = guideContent.childCount - 1; i >= 0; i--) Destroy(guideContent.GetChild(i).gameObject);
+
+        // The text is cut at the markers of the pictures.
+        var rest = text;
+        while (rest.Length > 0)
+        {
+            var marker = rest.IndexOf("[[pic:", System.StringComparison.Ordinal);
+            if (marker < 0)
+            {
+                AddGuideText(rest);
+                break;
+            }
+
+            if (marker > 0) AddGuideText(rest.Substring(0, marker));
+            var end = rest.IndexOf("]]", marker, System.StringComparison.Ordinal);
+            if (end < 0) break;
+            var id = rest.Substring(marker + 6, end - marker - 6);
+            RefractoPictures.Build(id, guideContent, situation);
+            rest = rest.Substring(end + 2).TrimStart('\n');
+        }
+    }
+
+    private void AddGuideText(string text)
+    {
+        text = text.TrimEnd('\n');
+        if (text.Length == 0) return;
+        var go = new GameObject("Block", typeof(RectTransform), typeof(Text));
+        go.transform.SetParent(guideContent, false);
+        var label = go.GetComponent<Text>();
+        label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        label.fontSize = 12;
+        label.alignment = TextAnchor.UpperLeft;
+        label.color = Color.white;
+        label.supportRichText = true;
+        label.horizontalOverflow = HorizontalWrapMode.Wrap;
+        label.verticalOverflow = VerticalWrapMode.Overflow;
+        label.raycastTarget = false;
+        label.lineSpacing = 1.05f;
+        label.text = text;
+    }
+
+    // The small picture of a tab, drawn pixel by pixel.
+    private static readonly System.Collections.Generic.Dictionary<RefractoGuide.Tab, Sprite> TabIcons = new System.Collections.Generic.Dictionary<RefractoGuide.Tab, Sprite>();
+
+    private static Sprite MakeTabIcon(RefractoGuide.Tab tab)
+    {
+        if (TabIcons.TryGetValue(tab, out var cached) && cached != null) return cached;
+
+        const int n = 16;
+        var texture = new Texture2D(n, n, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+        var pixels = new Color[n * n];
+        for (var i = 0; i < pixels.Length; i++) pixels[i] = new Color(0f, 0f, 0f, 0f);
+        void Put(int x, int y, Color c) { if (x >= 0 && x < n && y >= 0 && y < n) pixels[y * n + x] = c; }
+        void Hline(int x0, int x1, int y, Color c) { for (var x = x0; x <= x1; x++) Put(x, y, c); }
+        void Vline(int x, int y0, int y1, Color c) { for (var y = y0; y <= y1; y++) Put(x, y, c); }
+        var ink = new Color(0.90f, 0.93f, 1f, 1f);
+        var gold = new Color(1f, 0.82f, 0.30f, 1f);
+        var teal = new Color(0.45f, 0.85f, 0.80f, 1f);
+        var dark = new Color(0.15f, 0.17f, 0.22f, 1f);
+
+        switch (tab)
+        {
+            case RefractoGuide.Tab.Stones:
+                // A list: three lines, each with a bullet.
+                for (var row = 0; row < 3; row++)
+                {
+                    var y = 12 - row * 5;
+                    Put(2, y, gold); Put(3, y, gold); Put(2, y + 1, gold); Put(3, y + 1, gold);
+                    Hline(6, 14, y, ink); Hline(6, 14, y + 1, ink);
+                }
+                break;
+            case RefractoGuide.Tab.OutOfLimit:
+                // The scale, and an arrow that goes out at the top.
+                Vline(4, 1, 14, ink);
+                for (var y = 1; y <= 13; y += 3) Hline(4, 6, y, ink);
+                Vline(11, 3, 12, gold);
+                Put(10, 11, gold); Put(12, 11, gold); Put(9, 10, gold); Put(13, 10, gold);
+                break;
+            case RefractoGuide.Tab.Single:
+                // The field of view cut by one shadow edge.
+                for (var y = 2; y <= 13; y++) Hline(2, 13, y, y > 8 ? ink : dark);
+                Hline(2, 13, 8, gold);
+                break;
+            case RefractoGuide.Tab.Double:
+                for (var y = 2; y <= 13; y++) Hline(2, 13, y, y > 10 ? ink : (y > 6 ? new Color(0.55f, 0.58f, 0.64f, 1f) : dark));
+                Hline(2, 13, 10, gold); Hline(2, 13, 6, gold);
+                break;
+            case RefractoGuide.Tab.Uniaxial:
+                // One axis.
+                Vline(8, 1, 14, teal); Vline(7, 1, 14, teal);
+                Put(6, 13, teal); Put(9, 13, teal); Put(5, 12, teal); Put(10, 12, teal);
+                break;
+            case RefractoGuide.Tab.Biaxial:
+                // Two axes opening like a V.
+                for (var i = 0; i < 13; i++) { Put(3 + i / 2, 2 + i, teal); Put(13 - i / 2, 2 + i, teal); }
+                break;
+            default:
+                // A plus and a minus.
+                Hline(2, 7, 11, gold); Vline(4, 8, 13, gold); Vline(5, 8, 13, gold);
+                Hline(9, 14, 4, ink); Hline(9, 14, 3, ink);
+                break;
+        }
+
+        texture.SetPixels(pixels);
+        texture.Apply();
+        var sprite = Sprite.Create(texture, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f), 100f);
+        TabIcons[tab] = sprite;
+        return sprite;
     }
 
     // Knurled steel knob with a marker so the rotation is visible.

@@ -14,7 +14,7 @@ public class PhoneUI : MonoBehaviour
     private const float IconWidth = 44f;
     private const float IconHeight = 70f;
     private const float PanelWidth = 380f;
-    private const float PanelHeight = 600f;
+    private const float PanelHeight = 660f;
 
     private static readonly Color Gold = new Color(0.95f, 0.85f, 0.65f);
     private static readonly Color Body = new Color(0.10f, 0.10f, 0.13f, 1f);
@@ -100,6 +100,12 @@ public class PhoneUI : MonoBehaviour
     // Says the lines of a call one after the other (each one stays until it is clicked), then calls done.
     public void Speak(string[] lines, Action done)
     {
+        Speak(Speaker, Resources.Load<Sprite>("Story/Thouvenot"), lines, done);
+    }
+
+    public void Speak(string speaker, Sprite portrait, string[] lines, Action done)
+    {
+        face.GetComponent<SpriteRenderer>().sprite = portrait;
         var index = 0;
         void Next()
         {
@@ -110,7 +116,7 @@ public class PhoneUI : MonoBehaviour
                 done?.Invoke();
                 return;
             }
-            DialogueBoxUI.SayAndWait(Speaker, lines[index++], face, Next);
+            DialogueBoxUI.SayAndWait(speaker, lines[index++], face, Next);
         }
         Next();
     }
@@ -119,6 +125,27 @@ public class PhoneUI : MonoBehaviour
     {
         var day = GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1;
         return $"{GameCalendar.Short(day)}, {DayNightOverlay.GetClockLabel()}";
+    }
+
+    // The player calls Anselme.
+    private void CallAnselme()
+    {
+        Close();
+        var state = StoryState.Instance;
+        Sfx.Play(Sfx.Id.Click);
+        state?.AddCall($"Sortant — Anselme — {Stamp()}");
+        Speak("Anselme", AnselmeSprite(), new[]
+        {
+            "Allô ? Ah, c'est vous, le neveu de Vincent ! Pas de nouvelle pierre pour l'instant, mais je garde l'œil ouvert quand je me promène près du pont.",
+            "Je vous appelle si je trouve quelque chose. Et passez le bonjour à la professeure !",
+        }, null);
+    }
+
+    private static Sprite AnselmeSprite()
+    {
+        var frames = Resources.LoadAll<Sprite>("Walkers/W3/Down");
+        System.Array.Sort(frames, (a, b) => string.CompareOrdinal(a.name, b.name));
+        return frames.Length > 0 ? frames[0] : null;
     }
 
     // The player calls Thouvenot: she says where to find her, and what to do now.
@@ -307,6 +334,24 @@ public class PhoneUI : MonoBehaviour
         return label;
     }
 
+    // A card of the list of contacts: the face, the name, the role, and the button to call.
+    private void ContactCard(string name, string label, string role, Sprite face, float y, Action call)
+    {
+        const float left = 30f;
+        const float width = PanelWidth - 60f;
+        RuntimeUIKit.MakeBox("Card_" + name, layer, new Vector2(left, -y), new Vector2(width, 64f), new Color(0.17f, 0.21f, 0.30f, 1f)).raycastTarget = false;
+        var portrait = new GameObject("Portrait_" + name, typeof(RectTransform), typeof(Image)).GetComponent<Image>();
+        portrait.transform.SetParent(layer, false);
+        RuntimeUIKit.SetTopLeft(portrait.rectTransform, new Vector2(left + 8f, -(y + 6f)), new Vector2(52f, 52f));
+        portrait.sprite = face;
+        portrait.preserveAspect = true;
+        portrait.raycastTarget = false;
+        Label("Name_" + name, label, 15, TextAnchor.UpperLeft, Color.white, left + 70f, y + 8f, width - 70f - 96f, 22f, true);
+        Label("Role_" + name, role, 11, TextAnchor.UpperLeft, new Color(0.7f, 0.76f, 0.88f), left + 70f, y + 30f, width - 70f - 96f, 18f);
+        var button = RuntimeUIKit.MakeButton("Call_" + name, layer, "Appeler", 14, Green, new Vector2(PanelWidth - 30f - 8f - 84f, -(y + 14f)), new Vector2(84f, 36f));
+        button.onClick.AddListener(() => call());
+    }
+
     private void Refresh()
     {
         for (var i = layer.childCount - 1; i >= 0; i--) Destroy(layer.GetChild(i).gameObject);
@@ -321,35 +366,36 @@ public class PhoneUI : MonoBehaviour
         Label("Date", GameCalendar.Short(day), 14, TextAnchor.UpperRight, new Color(0.75f, 0.8f, 0.9f), PanelWidth - 30f - 200f, 48f, 200f, 20f);
         Label("Title", "Téléphone", 22, TextAnchor.UpperCenter, Gold, left, 84f, width, 30f, true);
 
-        // The contacts.
-        Label("ContactsHead", "CONTACTS", 12, TextAnchor.UpperLeft, new Color(0.65f, 0.75f, 0.9f), left, 130f, width, 18f, true);
-        RuntimeUIKit.MakeBox("ContactCard", layer, new Vector2(left, -152f), new Vector2(width, 64f), new Color(0.17f, 0.21f, 0.30f, 1f)).raycastTarget = false;
-        var portrait = new GameObject("Portrait", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
-        portrait.transform.SetParent(layer, false);
-        RuntimeUIKit.SetTopLeft(portrait.rectTransform, new Vector2(left + 8f, -158f), new Vector2(52f, 52f));
-        portrait.sprite = Resources.Load<Sprite>("Story/Thouvenot");
-        portrait.preserveAspect = true;
-        portrait.raycastTarget = false;
-        Label("ContactName", Speaker, 15, TextAnchor.UpperLeft, Color.white, left + 70f, 160f, width - 70f - 96f, 22f, true);
-        Label("ContactRole", "Gemmologue, enseignante", 11, TextAnchor.UpperLeft, new Color(0.7f, 0.76f, 0.88f), left + 70f, 182f, width - 70f - 96f, 18f);
-        var call = RuntimeUIKit.MakeButton("Call", layer, "Appeler", 14, Green, new Vector2(PanelWidth - 30f - 8f - 84f, -166f), new Vector2(84f, 36f));
-        call.onClick.AddListener(CallThouvenot);
+        // The contacts: Thouvenot, and the people whose number the player has been given.
+        var y = 130f;
+        Label("ContactsHead", "CONTACTS", 12, TextAnchor.UpperLeft, new Color(0.65f, 0.75f, 0.9f), left, y, width, 18f, true);
+        y += 22f;
+        ContactCard("Thouvenot", Speaker, "Gemmologue, enseignante", Resources.Load<Sprite>("Story/Thouvenot"), y, CallThouvenot);
+        y += 70f;
+        if (state != null && state.HasContact("anselme"))
+        {
+            ContactCard("Anselme", "Anselme", "Habitant de Crystal Grove", AnselmeSprite(), y, CallAnselme);
+            y += 70f;
+        }
 
         // The objective of the moment.
-        Label("ObjectiveHead", "OBJECTIF", 12, TextAnchor.UpperLeft, new Color(0.65f, 0.75f, 0.9f), left, 232f, width, 18f, true);
-        RuntimeUIKit.MakeBox("ObjectiveCard", layer, new Vector2(left, -254f), new Vector2(width, 104f), new Color(0.17f, 0.21f, 0.30f, 1f)).raycastTarget = false;
-        Label("Objective", state != null ? state.Objective : "", 14, TextAnchor.UpperLeft, Color.white, left + 12f, 264f, width - 24f, 84f);
+        y += 4f;
+        Label("ObjectiveHead", "OBJECTIF", 12, TextAnchor.UpperLeft, new Color(0.65f, 0.75f, 0.9f), left, y, width, 18f, true);
+        y += 22f;
+        RuntimeUIKit.MakeBox("ObjectiveCard", layer, new Vector2(left, -y), new Vector2(width, 96f), new Color(0.17f, 0.21f, 0.30f, 1f)).raycastTarget = false;
+        Label("Objective", state != null ? state.Objective : "", 14, TextAnchor.UpperLeft, Color.white, left + 12f, y + 10f, width - 24f, 78f);
+        y += 108f;
 
         // The calls received.
-        Label("CallsHead", "APPELS", 12, TextAnchor.UpperLeft, new Color(0.65f, 0.75f, 0.9f), left, 374f, width, 18f, true);
-        var y = 396f;
+        Label("CallsHead", "APPELS", 12, TextAnchor.UpperLeft, new Color(0.65f, 0.75f, 0.9f), left, y, width, 18f, true);
+        y += 22f;
         if (state == null || state.Calls.Count == 0)
         {
             Label("NoCall", "Aucun appel pour l'instant.", 13, TextAnchor.UpperLeft, new Color(0.65f, 0.7f, 0.8f), left, y, width, 20f);
         }
         else
         {
-            for (var i = state.Calls.Count - 1; i >= 0 && i >= state.Calls.Count - 5; i--)
+            for (var i = state.Calls.Count - 1; i >= 0 && i >= state.Calls.Count - 3; i--)
             {
                 Label("Call", state.Calls[i], 12, TextAnchor.UpperLeft, new Color(0.85f, 0.9f, 1f), left, y, width, 32f);
                 y += 34f;

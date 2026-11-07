@@ -76,7 +76,7 @@ public class GuideArrow : MonoBehaviour
         if (scene == "MaisonJoueur")
         {
             if (state.Stage == StoryState.GoHome && state.UnreadCount > 0) return GameObject.Find("Boite aux lettres perso");
-            if (state.Stage >= StoryState.Settled && phase == StoryState.PhaseSleep)
+            if (state.Stage >= StoryState.Settled && (phase == StoryState.PhaseSleep || phase == StoryState.PhaseStoneSleep))
             {
                 var bed = Object.FindFirstObjectByType<BedInteractable>();
                 return bed != null ? bed.gameObject : null;
@@ -84,8 +84,12 @@ public class GuideArrow : MonoBehaviour
             return null;
         }
 
-        var toLab = phase == StoryState.PhaseLab || state.InTutorial;
-        if (scene == "Town") return toLab ? HomeDoor() : null;
+        var toLab = phase == StoryState.PhaseLab || state.InTutorial || state.StoneQuest;
+        if (scene == "Town")
+        {
+            if (phase == StoryState.PhaseRest || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseStoneReturn) return DoorTo("MaisonJoueur");
+            return toLab ? DoorTo("Home") : null;
+        }
 
         if (scene == "Home")
         {
@@ -97,21 +101,29 @@ public class GuideArrow : MonoBehaviour
                 case StoryState.PhaseTutorialReport:
                 case StoryState.PhaseTutorialDensityReport:
                 case StoryState.PhaseTutorialIdentify:
+                case StoryState.PhaseStoneLab:
+                case StoryState.PhaseStoneValidate:
                 {
                     var npc = Object.FindFirstObjectByType<ThouvenotNPC>();
                     return npc != null ? npc.gameObject : null;
                 }
                 case StoryState.PhaseTutorialWeigh: return GameObject.Find("BalanceCarat");
                 case StoryState.PhaseTutorialDensity: return GameObject.Find("BalanceHydrostatique");
+                case StoryState.PhaseRefractometer: return GameObject.Find("Refractometre");
+                case StoryState.PhaseStoneIdentify:
+                {
+                    var director = Object.FindFirstObjectByType<DirectorNPC>();
+                    return director != null ? director.gameObject : null;
+                }
             }
         }
         return null;
     }
 
-    private static GameObject HomeDoor()
+    private static GameObject DoorTo(string scene)
     {
         foreach (var door in Object.FindObjectsByType<DoorTrigger>(FindObjectsSortMode.None))
-            if (door.TargetScene == "Home") return door.gameObject;
+            if (door.TargetScene == scene) return door.gameObject;
         return null;
     }
 

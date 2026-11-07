@@ -31,6 +31,16 @@ public class StoryState : MonoBehaviour
     public const int PhaseTutorialDensityReport = 10;   // tell Thouvenot the density
     public const int PhaseTutorialIdentify = 11;        // pick the species of the stone among the ones Thouvenot suggests
 
+    // The stone of the stranger (the next day): a man of the town gives the player a stone found on the ground and promises a reward if they identify it;
+    // Thouvenot introduces the refractometer; the player finds the species by themself and reports it to the director.
+    public const int PhaseRest = 12;               // the tutorial is over: go home to rest (on the way, a man of the town stops the player)
+    public const int PhaseStoneSleep = 13;         // the man has given a stone: go to sleep
+    public const int PhaseStoneLab = 14;           // the next morning: show the stone to Thouvenot, in the laboratory
+    public const int PhaseRefractometer = 15;      // measure the index of the stone with the refractometer (the drop of liquid first)
+    public const int PhaseStoneIdentify = 16;      // identify the stone and report it to the director
+    public const int PhaseStoneValidate = 17;      // the director has validated: tell Thouvenot, who confirms the answer and lets the player keep the stone
+    public const int PhaseStoneReturn = 18;        // give the stone back to the man in the evening, on the way home
+
     public int Stage { get; private set; } = Settled;
     public int Phase { get; private set; } = PhaseDone;
     public int TourIndex { get; private set; }
@@ -64,10 +74,41 @@ public class StoryState : MonoBehaviour
     public bool InTutorial => !Legacy && Phase >= PhaseTutorialLoupe && Phase <= PhaseTutorialIdentify;
 
     // Until the tutorial is over, the mailbox gives one stone only.
-    public bool MailLimited => !Legacy && Phase != PhaseDone;
+    public bool MailLimited => !Legacy && Phase != PhaseDone && Phase < PhaseRest;
 
-    // Professor Thouvenot waits in the laboratory during the tutorial.
-    public bool ThouvenotWaits => InTutorial;
+    // The stone given by the man of the town (the specimen id), and the quest of that stone.
+    public string StrangerSpecimen { get; private set; } = "";
+    public bool StoneQuest => !Legacy && Phase >= PhaseStoneLab && Phase <= PhaseStoneValidate;
+
+    // Professor Thouvenot waits in the laboratory during the tutorial and the next day.
+    public bool ThouvenotWaits => InTutorial || StoneQuest;
+
+    public void OnStrangerGave(GemInstance gem)
+    {
+        StrangerSpecimen = gem.SpecimenId ?? "";
+        SetPhase(PhaseStoneSleep);
+    }
+
+    public bool IsStrangerStone(GemInstance gem) => gem != null && !string.IsNullOrEmpty(StrangerSpecimen) && gem.SpecimenId == StrangerSpecimen;
+
+    // The director has validated the identification of a stone: for the one of the stranger, Thouvenot has to confirm the answer.
+    public void OnStoneIdentified(GemInstance gem)
+    {
+        if (Legacy || Phase != PhaseStoneIdentify || !IsStrangerStone(gem)) return;
+        SetPhase(PhaseStoneValidate);
+        ToolFeedbackUI.Instance?.ShowMessage("Identification validée ! Allez la confirmer à la professeure Thouvenot.");
+    }
+
+    // The people whose number the player has (Thouvenot is always there once the phone exists).
+    private readonly HashSet<string> contacts = new HashSet<string>();
+    public IEnumerable<string> Contacts => contacts;
+
+    public bool HasContact(string id) => id == "thouvenot" ? PhoneUnlocked : contacts.Contains(id);
+
+    public void AddContact(string id)
+    {
+        if (contacts.Add(id)) OnChanged?.Invoke();
+    }
 
     // The phone exists from the first call (an old save has it from the start).
     public bool PhoneUnlocked => Legacy || Phase >= PhaseCall;
@@ -99,6 +140,8 @@ public class StoryState : MonoBehaviour
         calls.Clear();
         TutorialSpecimen = "";
         TutorialRound = 1;
+        StrangerSpecimen = "";
+        contacts.Clear();
         OnChanged?.Invoke();
     }
 
@@ -120,7 +163,13 @@ public class StoryState : MonoBehaviour
     // The player has slept: the first morning begins, with the call of Thouvenot.
     public void OnSlept()
     {
-        if (!Legacy && Phase == PhaseSleep) SetPhase(PhaseCall);
+        if (Legacy) return;
+        if (Phase == PhaseSleep) SetPhase(PhaseCall);
+        else if (Phase == PhaseStoneSleep)
+        {
+            SetPhase(PhaseStoneLab);
+            ToolFeedbackUI.Instance?.ShowMessage("Un nouveau jour : allez présenter la pierre à la professeure Thouvenot, au laboratoire.");
+        }
     }
 
     // The player takes the stone of the tutorial out of the mailbox.
@@ -135,6 +184,16 @@ public class StoryState : MonoBehaviour
     // An instrument has recorded something about a stone: the tutorial moves on when it is the stone of the tutorial.
     public void OnObserved(GemInstance gem, string key)
     {
+        if (Legacy) return;
+
+        // The stone of the stranger: its index has been read with the refractometer.
+        if (Phase == PhaseRefractometer && IsStrangerStone(gem) && key == "RefractiveIndex")
+        {
+            SetPhase(PhaseStoneIdentify);
+            ToolFeedbackUI.Instance?.ShowMessage("Indice relevé ! Tournez la lentille pour lire toutes les valeurs, consultez les onglets à gauche du réfractomètre, puis identifiez la pierre et remettez votre rapport au directeur.");
+            return;
+        }
+
         if (!InTutorial || !IsTutorialStone(gem)) return;
 
         if (Phase == PhaseTutorialLoupe && gem.HasObserved(ExaminationTool.MeasurementType.VisualExamination.ToString()) && gem.HasObserved("LoupeInspection"))
@@ -182,6 +241,13 @@ public class StoryState : MonoBehaviour
                 case PhaseTutorialReport: return "Dites le poids de la pierre à la professeure Thouvenot.";
                 case PhaseTutorialDensity: return "Mesurez la densité de la pierre sur la balance hydrostatique (rangée du haut du laboratoire, près de la loupe).";
                 case PhaseTutorialDensityReport: return "Dites la densité de la pierre à la professeure Thouvenot.";
+                case PhaseRest: return "Vous avez bien travaillé : rentrez vous reposer chez vous.";
+                case PhaseStoneSleep: return "Allez dormir dans votre lit : demain, présentez la pierre trouvée à la professeure Thouvenot, au laboratoire.";
+                case PhaseStoneLab: return "Présentez la pierre à la professeure Thouvenot, au laboratoire (Maison et Bureau de Gemmologie).";
+                case PhaseRefractometer: return "Mesurez l'indice de réfraction de la pierre avec le réfractomètre : une goutte de liquide sur l'hémicylindre d'abord, la pierre ensuite.";
+                case PhaseStoneIdentify: return "Identifiez la pierre (onglets à gauche du réfractomètre, loupe, densité...) puis remettez votre rapport au directeur.";
+                case PhaseStoneValidate: return "Allez confirmer votre réponse à la professeure Thouvenot, au laboratoire.";
+                case PhaseStoneReturn: return "Rendez la pierre à Anselme ce soir, en rentrant chez vous (il vous attend du côté de votre maison). En attendant, passez vos autres gemmes au réfractomètre pour compléter votre grimoire.";
                 case PhaseTutorialIdentify: return "Retrouvez la professeure Thouvenot : choisissez, parmi les pierres qu'elle propose, celle qui correspond à vos mesures.";
                 default: return "Prenez une pierre dans la boîte aux lettres du bureau, essuyez-la à la chamoisine, puis examinez-la à la loupe.";
             }
@@ -228,6 +294,8 @@ public class StoryState : MonoBehaviour
         data.storyCalls = new List<string>(calls);
         data.storyTutorialSpecimen = TutorialSpecimen;
         data.storyTutorialRound = TutorialRound;
+        data.storyStrangerSpecimen = StrangerSpecimen;
+        data.storyContacts = new List<string>(contacts);
         data.storyLettersReceived = new List<string>(received);
         data.storyLettersRead = new List<string>(read);
     }
@@ -239,6 +307,8 @@ public class StoryState : MonoBehaviour
         calls.Clear();
         TutorialSpecimen = "";
         TutorialRound = 1;
+        StrangerSpecimen = "";
+        contacts.Clear();
         if (!data.storyStarted)
         {
             // A save from before the story: the game is free and open.
@@ -256,6 +326,8 @@ public class StoryState : MonoBehaviour
             if (data.storyCalls != null) calls.AddRange(data.storyCalls);
             TutorialSpecimen = data.storyTutorialSpecimen ?? "";
             TutorialRound = Mathf.Clamp(data.storyTutorialRound, 1, TutorialRounds);
+            StrangerSpecimen = data.storyStrangerSpecimen ?? "";
+            if (data.storyContacts != null) foreach (var id in data.storyContacts) contacts.Add(id);
             if (data.storyLettersReceived != null) received.AddRange(data.storyLettersReceived);
             if (data.storyLettersRead != null) foreach (var id in data.storyLettersRead) read.Add(id);
         }

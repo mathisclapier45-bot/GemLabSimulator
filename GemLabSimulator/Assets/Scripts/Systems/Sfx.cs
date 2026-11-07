@@ -15,7 +15,7 @@ public static class Sfx
         Coin, Spend, Pickup, GemClink, Success, Error, Flame, StepGrass, StepWood, StepStone,
         Shutter, ComputerBoot, ComputerClick, ComputerOff,
         PageTurn, PageFlurry, BookOpen, BookClose, CardSwish, PackTear, CardFlip, RareChime, SuperChime, UltraSparkle, SecretShimmer, NewCard,
-        Blip, PhoneRing, PhoneHangUp, Rub, Rooster, LightSwitch,
+        Blip, PhoneRing, PhoneHangUp, Rub, Rooster, LightSwitch, Drop,
     }
 
     private const string VolumeKey = "SfxVolume";
@@ -210,6 +210,10 @@ public class SfxPlayer : MonoBehaviour
                     var trill = 0.55f + 0.45f * Mathf.Sin(2f * Mathf.PI * 22f * t);
                     return (Sine(880f, t) * 0.5f + Sine(1320f, t) * 0.3f) * 0.32f * burst * trill;
                 });
+
+            // A drop of liquid that falls on glass: a small, soft "plop".
+            case Sfx.Id.Drop:
+                return Make(name, 0.16f, t => Sine(620f - 380f * t / 0.16f, t) * 0.4f * Decay(t, 22f));
 
             // The switch of a lamp: a dry little click.
             case Sfx.Id.LightSwitch:

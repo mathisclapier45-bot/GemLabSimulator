@@ -263,6 +263,7 @@ public class ReportUIController : MonoBehaviour
             gemInstance.MarkIdentified();
             PlayerInventory.Instance?.NotifyChanged();
             ReputationState.Instance?.AddPoint();
+            StoryState.Instance?.OnStoneIdentified(gemInstance);
 
             var isNewDiscovery = GemCodex.Instance != null && !GemCodex.Instance.IsDiscovered(gem.name);
             GemCodex.Instance?.MarkDiscovered(gem.name);

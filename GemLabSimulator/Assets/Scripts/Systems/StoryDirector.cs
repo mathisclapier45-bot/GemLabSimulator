@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -199,6 +201,7 @@ public class StoryDirector : MonoBehaviour
         {
             StartCoroutine(RunTown());
             StartCoroutine(RunMorningCall());
+            StartCoroutine(RunStranger());
         }
         else if (scene.name == "MaisonJoueur") StartCoroutine(RunHouse());
         else if (scene.name == "Home")
@@ -385,7 +388,7 @@ public class StoryDirector : MonoBehaviour
     private IEnumerator TalkRoutine(GameObject npc)
     {
         var state = StoryState.Instance;
-        if (state == null || !state.InTutorial) yield break;
+        if (state == null || !state.ThouvenotWaits) yield break;
         talking = true;
 
         switch (state.Phase)
@@ -425,6 +428,26 @@ public class StoryDirector : MonoBehaviour
 
             case StoryState.PhaseTutorialIdentify:
                 yield return TalkIdentify(npc, state);
+                break;
+
+            case StoryState.PhaseStoneLab:
+                yield return TalkStoneLab(npc, state);
+                break;
+
+            case StoryState.PhaseStoneValidate:
+                yield return TalkStoneValidate(npc, state);
+                break;
+
+            case StoryState.PhaseRefractometer:
+                yield return Say(npc,
+                    "Le réfractomètre est sur la rangée du haut, à côté de la loupe. N'oubliez pas : une goutte de liquide de contact sur l'hémicylindre d'abord, la pierre ensuite, puis tournez la lentille.",
+                    "Les onglets, à gauche de l'instrument, vous donnent la liste des pierres avec leurs indices et le signe optique, et expliquent les situations possibles.");
+                break;
+
+            case StoryState.PhaseStoneIdentify:
+                yield return Say(npc,
+                    "Alors, qu'avez-vous trouvé ? Croisez vos mesures : l'indice, la densité, l'éclat, la couleur. Les onglets du réfractomètre listent les pierres possibles.",
+                    "Quand vous serez sûr de vous, remettez votre rapport au directeur : c'est lui qui valide l'identification.");
                 break;
         }
 
@@ -751,11 +774,10 @@ public class StoryDirector : MonoBehaviour
             "Et une chose importante : chaque fois que vous identifiez une pierre, une page s'ajoute à votre grimoire. Ouvrez-le avec la touche G : vous y avez maintenant trois pages, une par pierre que nous venons d'étudier.",
             "Sur chaque page, vous retrouvez les informations que vous avez récoltées sur cette espèce : l'éclat, la couleur, la transparence, la densité... Ce que vous n'avez pas encore mesuré reste marqué « ??? ». Chaque mesure, sur n'importe quelle pierre de cette espèce, remplit une nouvelle ligne.",
             "Le grimoire sera votre mémoire : consultez-le quand vous hésitez devant une pierre.",
-            "Avec une seule mesure, un doute peut rester : plusieurs espèces ont la même densité. On croise donc les mesures. Le réfractomètre, juste à côté, sera la prochaine étape. Mais vous avez bien travaillé pour aujourd'hui.",
-            "Le courrier vous apportera d'autres pierres, désormais. Chaque rapport remis au directeur fait gagner de l'XP. Et si vous avez un doute, appelez-moi.");
+            "Vous avez très bien travaillé aujourd'hui. Il est temps de vous reposer : rentrez chez vous, dormez, et nous reprendrons demain. À bientôt !");
 
-        state.SetPhase(StoryState.PhaseDone);
-        ToolFeedbackUI.Instance?.ShowMessage("Trois pages ont été ajoutées à votre grimoire : touche G pour les consulter. Le courrier vous apportera d'autres pierres.");
+        state.SetPhase(StoryState.PhaseRest);
+        ToolFeedbackUI.Instance?.ShowMessage("Trois pages ont été ajoutées à votre grimoire (touche G). Vous avez bien travaillé : rentrez vous reposer chez vous.");
         DialogueBoxUI.Hide();
 
         // She goes back to her work: she fades away.
@@ -766,6 +788,273 @@ public class StoryDirector : MonoBehaviour
             yield return null;
         }
         if (npc != null) Destroy(npc);
+    }
+
+    // ---- The next day: the stone of the stranger -----------------------------------------------------------------------------------
+
+    // The stone given by the man of the town: a pink tourmaline, cut, natural and untreated, that can be found with the refractometer (uniaxial, negative).
+    private static GemInstance MakeStrangerStone()
+    {
+        var database = GemDatabase.Instance;
+        if (database == null) return null;
+        GemDefinition tourmaline = null;
+        foreach (var definition in database.allGems)
+            if (definition != null && definition.name == "Tourmaline_Rose") tourmaline = definition;
+        if (tourmaline == null) return null;
+
+        GemInstance best = null;
+        for (var i = 0; i < 300; i++)
+        {
+            var candidate = new GemInstance(tourmaline);
+            best = candidate;
+            if (candidate.IsDonation || candidate.IsSynthetic || candidate.TreatmentGrade != "Non traité") continue;
+            if (candidate.ClarityGrade != "Eye-clean" && candidate.ClarityGrade != "Inclus") continue;
+            if (candidate.CaratWeight < 0.8f || candidate.CaratWeight > 2.6f) continue;
+            break;
+        }
+        return best;
+    }
+
+    private static GemInstance StrangerGem()
+    {
+        var state = StoryState.Instance;
+        if (state == null || PlayerInventory.Instance == null) return null;
+        foreach (var gem in PlayerInventory.Instance.Gems)
+            if (state.IsStrangerStone(gem)) return gem;
+        return null;
+    }
+
+    private IEnumerator SayAs(string speaker, GameObject source, params string[] lines)
+    {
+        foreach (var line in lines)
+        {
+            var advanced = false;
+            DialogueBoxUI.SayAndWait(speaker, line, source, () => advanced = true);
+            while (!advanced) yield return null;
+        }
+    }
+
+    private static readonly Dictionary<string, Sprite[]> StrangerFrames = new Dictionary<string, Sprite[]>();
+
+    private static Sprite[] StrangerFramesOf(string direction)
+    {
+        if (!StrangerFrames.TryGetValue(direction, out var frames) || frames == null || frames.Length == 0)
+        {
+            frames = Resources.LoadAll<Sprite>($"Walkers/W3/{direction}");
+            System.Array.Sort(frames, (a, b) => string.CompareOrdinal(a.name, b.name));
+            StrangerFrames[direction] = frames;
+        }
+        return frames;
+    }
+
+    // Walks a person (a townsman with a Walkers sprite) toward a point, with the walking frames of the right side. Returns when there.
+    private IEnumerator WalkPerson(Transform person, Func<Vector2> target, float stopDistance, float speed)
+    {
+        var renderer = person.GetComponent<SpriteRenderer>();
+        var clock = 0f;
+        while (person != null)
+        {
+            var goal = target();
+            var position = (Vector2)person.position;
+            var delta = goal - position;
+            if (delta.magnitude <= stopDistance) break;
+
+            var step = Mathf.Min(delta.magnitude - stopDistance, speed * Time.deltaTime);
+            person.position = position + delta.normalized * step;
+            clock += Time.deltaTime;
+
+            var direction = Mathf.Abs(delta.x) > Mathf.Abs(delta.y) ? (delta.x >= 0f ? "Right" : "Left") : (delta.y >= 0f ? "Up" : "Down");
+            var frames = StrangerFramesOf(direction);
+            if (renderer != null && frames.Length > 0) renderer.sprite = frames[(int)(clock / 0.11f) % frames.Length];
+            yield return null;
+        }
+
+        if (renderer != null)
+        {
+            var idle = StrangerFramesOf("Down");
+            if (idle.Length > 0) renderer.sprite = idle[0];
+        }
+    }
+
+    // After the lessons, on the way home: a man of the town stops the player, welcomes them, and gives them a stone he found on the ground.
+    private IEnumerator RunStranger()
+    {
+        yield return WaitForGame();
+        var state = StoryState.Instance;
+        if (state == null || state.Legacy) yield break;
+
+        if (state.Phase == StoryState.PhaseRest) yield return StrangerFirstMeeting(state);
+        else if (state.Phase == StoryState.PhaseStoneReturn) yield return StrangerReturn(state);
+    }
+
+    private static readonly Vector2 StrangerMeet = new Vector2(-52f, -30f);
+
+    // The man appears out of sight, south of the street of the house, and walks up to the player.
+    private IEnumerator StrangerAppears(System.Action<GameObject> created)
+    {
+        var man = new GameObject("Anselme");
+        var manRenderer = man.AddComponent<SpriteRenderer>();
+        manRenderer.sortingOrder = 4;
+        var idleFrames = StrangerFramesOf("Up");
+        if (idleFrames.Length > 0) manRenderer.sprite = idleFrames[0];
+        man.transform.position = new Vector3(StrangerMeet.x, StrangerMeet.y - 10f, 0f);
+        created(man);
+        yield return WalkPerson(man.transform, () => PlayerTransform != null ? (Vector2)PlayerTransform.position : StrangerMeet, 3.4f, 5.5f);
+    }
+
+    private IEnumerator StrangerLeaves(GameObject man)
+    {
+        if (man == null) yield break;
+        var away = new Vector2(man.transform.position.x + 14f, man.transform.position.y - 6f);
+        yield return WalkPerson(man.transform, () => away, 0.3f, 5f);
+        if (man != null) Destroy(man);
+    }
+
+    // In the evening, on the way home: the player gives the stone back to the man, who thanks them with 50 euros and gives their number.
+    private IEnumerator StrangerReturn(StoryState state)
+    {
+        // He is there when the evening comes and the player walks toward their house.
+        while (state.Phase == StoryState.PhaseStoneReturn && (OpeningHours.CurrentHour < 17.5f || DistanceToPlayer(StrangerMeet) > 15f)) yield return null;
+        if (state.Phase != StoryState.PhaseStoneReturn) yield break;
+
+        GameObject man = null;
+        yield return StrangerAppears(created => man = created);
+
+        var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
+        var gem = StrangerGem();
+        if (gem == null)
+        {
+            yield return SayAs("Anselme", man, "Ah, vous voilà ! Et ma pierre ? Vous ne l'avez plus sur vous ? Rapportez-la-moi quand vous l'aurez retrouvée : je suis souvent par ici le soir.");
+            DialogueBoxUI.Hide();
+            yield return StrangerLeaves(man);
+            yield break;
+        }
+
+        yield return SayAs("Anselme", man, "Ah, vous voilà ! Alors, cette pierre : vous avez trouvé ce que c'était ?");
+        yield return SayAs("Vous", player, "Oui : c'est une tourmaline rose. Tenez, elle est à vous.");
+        PlayerInventory.Instance?.RemoveGem(gem);
+        Sfx.Play(Sfx.Id.Pickup);
+        yield return SayAs("Anselme", man,
+            "Une tourmaline ! Ça alors... Et moi qui la prenais pour un simple caillou. Vous êtes bien le neveu de Vincent : vous avez l'œil.",
+            "Tenez, voici 50 €, comme promis. Merci beaucoup, vraiment.");
+        PlayerWallet.Instance?.AddMoney(50);
+        Sfx.Play(Sfx.Id.Coin);
+        ToolFeedbackUI.Instance?.ShowMessage("Récompense reçue : 50 €.");
+        yield return SayAs("Anselme", man,
+            "Et prenez aussi mon numéro, au cas où. Si je tombe sur d'autres pierres, ou s'il vous faut un coup de main en ville, appelez-moi.");
+        state.AddContact("anselme");
+        ToolFeedbackUI.Instance?.ShowMessage("Nouveau contact dans votre téléphone : Anselme.");
+        yield return SayAs("Vous", player, "Merci, Anselme. À bientôt !");
+        yield return SayAs("Anselme", man, "Bonne soirée, et bienvenue à Crystal Grove !");
+        DialogueBoxUI.Hide();
+        state.SetPhase(StoryState.PhaseDone);
+        yield return StrangerLeaves(man);
+    }
+
+    private IEnumerator StrangerFirstMeeting(StoryState state)
+    {
+        // He shows up when the player is near the street of their house.
+        var meet = StrangerMeet;
+        while (DistanceToPlayer(meet) > 15f)
+        {
+            if (state.Phase != StoryState.PhaseRest) yield break;
+            yield return null;
+        }
+
+        // He walks up to the player.
+        GameObject man = null;
+        yield return StrangerAppears(created => man = created);
+
+        var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
+        yield return SayAs("Anselme", man,
+            "Tiens, bonjour ! Je ne vous avais jamais vu dans le coin. Bienvenue à Crystal Grove !");
+        yield return SayAs("Vous", player,
+            "Merci. Je suis arrivé hier soir : je viens reprendre le laboratoire de mon oncle, Vincent Pardieu.");
+        yield return SayAs("Anselme", man,
+            "Le neveu de Vincent ! Alors c'est vous... Quelle histoire. Mais vous tombez bien : justement, j'ai trouvé cette pierre par terre, près du pont, et j'aimerais bien savoir ce que c'est.",
+            "Tenez, prenez-la. Si vous parvenez à l'identifier, je vous promets une belle récompense.");
+
+        // He gives the stone.
+        var gem = MakeStrangerStone();
+        if (gem != null && PlayerInventory.Instance != null)
+        {
+            while (!PlayerInventory.Instance.TryAddGem(gem))
+            {
+                ToolFeedbackUI.Instance?.ShowMessage("Votre inventaire est plein : faites de la place pour recevoir la pierre.");
+                yield return new WaitForSeconds(2.5f);
+            }
+            Sfx.Play(Sfx.Id.Pickup);
+            state.OnStrangerGave(gem);
+            ToolFeedbackUI.Instance?.ShowMessage("Vous avez reçu une pierre trouvée par terre.");
+        }
+        else state.SetPhase(StoryState.PhaseStoneSleep);
+
+        yield return SayAs("Vous", player, "Je ferai de mon mieux. Merci !");
+        yield return SayAs("Anselme", man, "À bientôt, alors. Et reposez-vous : vous avez l'air fatigué.");
+        DialogueBoxUI.Hide();
+        ToolFeedbackUI.Instance?.ShowMessage("Rentrez vous coucher : demain, vous présenterez la pierre à la professeure Thouvenot.");
+
+        // He goes his way and is gone.
+        yield return StrangerLeaves(man);
+    }
+
+    // The next morning: the player shows the stone to Thouvenot, who knows it at first sight, but wants the player to find it with the tests, and teaches the refractometer.
+    private IEnumerator TalkStoneLab(GameObject npc, StoryState state)
+    {
+        var gem = StrangerGem();
+        if (gem == null)
+        {
+            yield return Say(npc, "Bonjour ! On m'a dit qu'un habitant vous avait confié une pierre. Où est-elle ? Il me faut l'avoir sous les yeux : elle doit être dans votre inventaire.");
+            yield break;
+        }
+
+        var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
+        yield return Say(npc, "Bonjour ! Vous avez l'air de tenir quelque chose d'important. Une pierre ? Montrez-moi.");
+        yield return SayAs("Vous", player, "Un habitant me l'a donnée hier soir : il l'a trouvée par terre, et il m'a promis une récompense si je l'identifie.");
+        yield return Say(npc,
+            "Anselme, bien sûr : il ramasse tout ce qui brille au bord de la rivière. Voyons...",
+            "Oh. Je sais ce que c'est, dès le premier coup d'œil.");
+        yield return SayAs("Vous", player, "Alors dites-le-moi !");
+        yield return Say(npc,
+            "Non. Un gemmologue ne se fie jamais à son œil : il doit prouver ce qu'il avance. Je vous propose de la trouver vous-même, avec les tests.",
+            "Vous avez déjà la loupe, la balance et la densité. Il vous manque un outil essentiel : le réfractomètre, sur la rangée du haut. C'est un instrument délicat : avant de vous en servir, laissez-moi vous expliquer comment il fonctionne.");
+
+        // The lesson, with the light drawn.
+        DialogueBoxUI.Hide();
+        var finished = false;
+        RefractionLessonUI.Show(() => finished = true);
+        while (!finished) yield return null;
+
+        yield return Say(npc,
+            "Voilà pour le principe. En pratique : prenez la fiole de liquide de contact, déposez une goutte sur l'hémicylindre, puis posez la pierre dessus.",
+            "Tournez la lentille d'un tour complet en suivant les limites d'ombre : notez les valeurs extrêmes, nα, nβ, nγ.",
+            "À gauche de l'instrument, des onglets vous aideront : la liste des pierres avec leurs indices et leur signe optique, et les situations possibles (hors limite, une ou deux lectures, uniaxe ou biaxe, positif ou négatif).",
+            "Je vous laisse chercher. Quand vous saurez, remettez votre rapport au directeur. Bonne chance !");
+        state.SetPhase(StoryState.PhaseRefractometer);
+        ToolFeedbackUI.Instance?.ShowMessage("Mesurez l'indice de la pierre au réfractomètre (rangée du haut) : la goutte d'abord, la pierre ensuite.");
+    }
+
+    // The director has validated the identification: Thouvenot confirms the answer, explains how the measures lead to it, and lets the player keep the stone to give it back.
+    private IEnumerator TalkStoneValidate(GameObject npc, StoryState state)
+    {
+        var gem = StrangerGem();
+        if (gem == null)
+        {
+            yield return Say(npc, "Alors, votre pierre ? Il me faut l'avoir sous les yeux pour confirmer votre réponse : elle doit être dans votre inventaire.");
+            yield break;
+        }
+
+        var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
+        yield return Say(npc, "Alors, cette pierre ? Le directeur m'a dit que vous aviez remis votre rapport. Quelle est votre réponse ?");
+        yield return SayAs("Vous", player, $"Une {gem.Definition.displayName.ToLowerInvariant()}.");
+        yield return Say(npc,
+            "C'est exact ! Et c'est ce que j'avais vu du premier coup d'œil. Mais maintenant, vous savez le prouver.",
+            "Un indice vers 1,625, deux lectures, une seule limite qui bouge, la basse : c'est un uniaxe négatif. La densité autour de 3,06 et la couleur rose confirment : une tourmaline. Retenez bien cette méthode : une mesure ne suffit jamais, c'est leur accord qui fait la certitude.",
+            "Gardez la pierre un moment : elle n'est pas à vous. Anselme vous a promis une récompense, et il serait ravi de la revoir. Rendez-la-lui ce soir, en rentrant chez vous : il se promène souvent par là.",
+            "En attendant, profitez du réfractomètre : passez-y les autres gemmes de votre inventaire, une par une, avec une goutte de liquide chacune. Chaque indice relevé, chaque limite d'ombre observée complète les pages de votre grimoire.",
+            "Plus vous mesurez, plus vos pages se remplissent. Et quand un doute reste, vous saurez quoi mesurer pour le lever.");
+        state.SetPhase(StoryState.PhaseStoneReturn);
+        ToolFeedbackUI.Instance?.ShowMessage("Ce soir, rendez la pierre à Anselme. D'ici là, passez vos autres gemmes au réfractomètre pour compléter votre grimoire.");
     }
 
     // The chamois cloth lies on the desk of the loupe (the scene has no such prop): a folded piece of yellow leather.
