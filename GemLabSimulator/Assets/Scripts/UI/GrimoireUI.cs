@@ -255,6 +255,10 @@ public class GrimoireUI : MonoBehaviour
             $"Valeur de base : {def.baseValue}€/ct (avant modificateurs d'origine, pureté, taille...)",
         };
 
+        // The habits a crystal of the species can have when it is rough (nothing for a species that does not grow in crystals).
+        var habits = CrystalHabits.NamesFor(def);
+        if (!string.IsNullOrEmpty(habits)) lines.Insert(3, $"Habitus cristallins : {habits}");
+
         var text = string.Join("\n", lines);
         if (!string.IsNullOrEmpty(def.description))
             text += $"\n\nNotes : {def.description}";

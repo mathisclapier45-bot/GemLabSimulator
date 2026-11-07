@@ -418,7 +418,7 @@ public class AuctionUI : MonoBehaviour
             var gem = sellable[index];
             var y = -190f - i * (RowHeight + 3f);
             Row(y);
-            var state0 = gem.IsRough ? "brute" : $"{gem.ShapeName}, {gem.CutStyleName.ToLowerInvariant()}";
+            var state0 = gem.IsRough ? gem.RoughLabel : $"{gem.ShapeName}, {gem.CutStyleName.ToLowerInvariant()}";
             var note = gem.IsTreated && gem.IsTreatmentKnown ? "  ·  traitement connu" : "";
             Txt("Stone", $"{gem.Definition.displayName} — {gem.CaratWeight:F2} ct ({state0}){note}\nValeur : {gem.FinalValue:N0} €", 12, new Vector2(40f, y - 6f), new Vector2(520f, 40f), Color.white);
             var captured = gem;

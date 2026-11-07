@@ -18,6 +18,10 @@ public class GemInstance
     public string DisplayId => $"{SpecimenId} — {ClientName}";
     public bool IsDonation { get; private set; }
     public bool IsRough { get; private set; }
+
+    // A new stone is dirty: whitish stains cover its surface, and it has to be wiped with the chamois cloth before it is looked at under the loupe.
+    // A saved game from before the cloth had no stain (the field is missing: false).
+    public bool NeedsCleaning { get; set; } = true;
     // Stones that arrive by mail belong to a client: they are only identified/appraised, then sent back.
     // Every other stone is one of the player's own specimens.
     public bool IsClientStone { get; private set; }
@@ -293,11 +297,74 @@ public class GemInstance
     public string ShapeName => CutShape ?? Definition.shape;
     public string CutStyleName => CutStyle ?? Definition.cutStyle;
 
+    // A rough stone has no shape or cut style: it is "brut", and, if its species grows in crystals, it has a habit (octahedron, prism...).
+    // The habit comes from the number of the specimen, so it is always the same; once the stone is cut it is gone.
+    private CrystalHabit habit;
+    private bool habitKnown;
+
+    public CrystalHabit Habit
+    {
+        get
+        {
+            if (!IsRough) return null;
+            if (!habitKnown && Definition != null && SpecimenId != null)
+            {
+                habit = CrystalHabits.Pick(Definition, SpecimenId);
+                habitKnown = true;
+            }
+            return habit;
+        }
+    }
+
+    // What the sheets show for the shape and the cut style of a stone.
+    public string ShapeDisplay => IsRough ? "Brut" : ShapeName;
+    public string CutDisplay => IsRough ? "Non taillée" : CutStyleName;
+
+    // The shape of a stone as a line of the loupe ("Forme : ... | Style de taille : ..."), or "Forme : brut | Habitus : ..." for a rough stone.
+    public string FormInline
+    {
+        get
+        {
+            if (!IsRough) return $"Forme : {ShapeName} | Style de taille : {CutStyleName}";
+            var h = Habit;
+            return h != null ? $"Forme : brut | Habitus : {h.Name.ToLowerInvariant()}" : "Forme : brut";
+        }
+    }
+
+    // The same on separate lines, ending with a line break.
+    public string FormBlock
+    {
+        get
+        {
+            if (!IsRough) return $"Forme : {ShapeName}\nTaille : {CutStyleName}\n";
+            var h = Habit;
+            return h != null ? $"Forme : brut\nHabitus : {h.Name.ToLowerInvariant()}\n" : "Forme : brut\n";
+        }
+    }
+
+    // "brute", or "brute (octaèdre)" when it has a habit: for the lists.
+    public string RoughLabel
+    {
+        get
+        {
+            var h = Habit;
+            return h != null ? $"brute ({h.Name.ToLowerInvariant()})" : "brute";
+        }
+    }
+
     public Sprite DisplaySprite
     {
         get
         {
-            if (IsRough) return HasColor ? GemIconFactory.GetRough(Definition, BodyColor) : Definition.GetRoughIcon();
+            if (IsRough)
+            {
+                var crystal = Habit;
+                if (crystal != null && Definition.iconColor.a > 0f)
+                    return HasColor
+                        ? GemIconFactory.GetHabit(Definition, crystal.Id, BodyColor, FacetColor)
+                        : GemIconFactory.GetHabit(Definition, crystal.Id, Definition.iconColor, Definition.iconFacetColor);
+                return HasColor ? GemIconFactory.GetRough(Definition, BodyColor) : Definition.GetRoughIcon();
+            }
             if (CoatingIridescence >= 0.25f && HasColor)
                 return GemIconFactory.GetIridescent(Definition, ShapeName, CutStyleName, BodyColor, FacetColor, CoatingIridescence);
             return HasColor
@@ -605,6 +672,7 @@ public class GemInstance
             ClientName = string.IsNullOrEmpty(data.clientName) ? ClientNames.GetRandom() : data.clientName,
             IsDonation = data.isDonation,
             IsRough = data.isRough,
+            NeedsCleaning = data.needsCleaning,
             // Older saves have no flag: anything that is not rough or a donation is treated as a client's stone.
             IsClientStone = !data.isPersonalSpecimen && !data.isRough && !data.isDonation,
             IsIdentified = data.isIdentified,
@@ -719,6 +787,7 @@ public class GemInstance
             clientName = ClientName,
             isDonation = IsDonation,
             isRough = IsRough,
+            needsCleaning = NeedsCleaning,
             isPersonalSpecimen = !IsClientStone,
             isIdentified = IsIdentified,
             hasWindow = HasWindow,

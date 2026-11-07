@@ -165,7 +165,8 @@ public class GemReportUI : MonoBehaviour
         Detail("Description de l'objet", gem.IsRough ? "Une pierre brute" : "Une pierre taillée");
         Detail("Poids", $"{gem.CaratWeight:F2} carats");
         Detail("Dimensions", $"{MeasuredOrActual(DimensionReport.LengthKey, gem.LengthMm):F2} x {MeasuredOrActual(DimensionReport.WidthKey, gem.WidthMm):F2} x {MeasuredOrActual(DimensionReport.DepthKey, gem.DepthMm):F2} mm");
-        Detail("Forme", gem.ShapeName);
+        Detail("Forme", gem.ShapeDisplay);
+        if (gem.IsRough && gem.Habit != null) Detail("Habitus", gem.Habit.Name.ToLowerInvariant());
         Detail("Couleur", gem.ColorGrade != null ? $"{gem.ColorGrade} — {gem.ColorName}" : gem.ColorName);
         Detail("Transparence", def.TransparencyLabel);
         Detail("Style de taille", gem.IsRough ? "Non taillée" : gem.CutStyleName);

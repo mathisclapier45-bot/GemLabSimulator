@@ -61,6 +61,7 @@ public static class BookContents
                 RightHead = "Physique, traitements et instruments",
                 Icon = species.GetIcon(),
                 Spectrum = species.spectrumLines,
+                LeftStrip = HabitStrip(species),
                 LeftBuilder = () => { SheetPages(species, out var left, out _); return left; },
                 RightBuilder = () =>
                 {
@@ -71,6 +72,21 @@ public static class BookContents
         }
         book.TitleNote = book.Entries.Count + " espèces";
         return book;
+    }
+
+    // The habits of a species as small pictures, one under the other of the sheet (null for a species that does not grow in crystals).
+    private static BookStrip HabitStrip(GemDefinition def)
+    {
+        if (def == null || def.iconColor.a <= 0f) return null;
+        var chances = CrystalHabits.For(def);
+        if (chances.Count == 0) return null;
+
+        var strip = new BookStrip();
+        foreach (var chance in chances)
+            strip.Icons.Add(new BookIcon { Sprite = GemIconFactory.GetHabit(def, chance.Habit.Id, def.iconColor, def.iconFacetColor), Label = chance.Habit.Short });
+        strip.Title = chances.Count > 1 ? "Habitus cristallins" : "Habitus cristallin";
+        strip.Labeled = true;
+        return strip;
     }
 
     // The sheet of a species cut into themes: the look and the optics for the left page, the physics, the inclusions and the notes for the right one.
@@ -94,7 +110,7 @@ public static class BookContents
         }
 
         left = Blocks(
-            Group("Aspect", "Éclat", "Couleur", "Forme", "Transparence"),
+            Group("Aspect", "Éclat", "Couleur", "Forme", "Habitus cristallins", "Transparence"),
             Group("Optique", "Indice de réfraction", "Biréfringence", "Caractère optique", "Pléochroïsme", "Figure d'interférence", "Filtre Chelsea", "Spectre d'absorption"),
             Group("Fluorescence", "Fluorescence UV longue onde", "Fluorescence UV courte onde"));
 

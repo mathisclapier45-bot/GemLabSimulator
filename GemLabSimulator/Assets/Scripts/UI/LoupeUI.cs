@@ -9,7 +9,7 @@ public class LoupeUI : MonoBehaviour
     public static LoupeUI Instance { get; private set; }
 
     private const float PanelWidth = 620f;
-    private const float PanelHeight = 480f;
+    private const float PanelHeight = 512f;
     private const float AreaX = 20f;
     private const float AreaY = -44f;
     private const float AreaSize = 330f;
@@ -71,6 +71,18 @@ public class LoupeUI : MonoBehaviour
     private Text tipText;
     private float featureVisibility = 1f;
 
+    // The chamois cloth: a stone that was never wiped is covered with whitish traces, and nothing can be seen through them until it is rubbed with the cloth.
+    private Button clothButton;
+    private Text clothLabel;
+    private bool clothMode;
+    private bool fromBag;               // opened from the bag: the cloth is the one the player bought at the GemStore
+    private const string ClothId = "Chamoisine";
+    private float wipe;                 // 0 = dirty, 1 = clean
+    private RawImage hazeImage;
+    private Texture2D hazeTexture;
+    private Color32[] hazeBuffer;
+    private const float WipeLength = 1100f;    // pixels of rubbing needed to clean a stone
+
     private GemInstance stone;
     private Quaternion orientation = Quaternion.identity;
     private Vector2 pan;
@@ -79,7 +91,7 @@ public class LoupeUI : MonoBehaviour
     private bool visualObserved;
 
     // `power`: magnification of the lens (10 at the lab desk; 10 or 20 for the bag loupes; 0 for no lens).
-    public static bool TryOpen(float power = 10f)
+    public static bool TryOpen(float power = 10f, bool fromBag = false)
     {
         if (Instance == null)
         {
@@ -90,6 +102,7 @@ public class LoupeUI : MonoBehaviour
 
         if (Instance == null) return false;
         Instance.loupePower = power;
+        Instance.fromBag = fromBag;
         Instance.Open();
         return true;
     }
@@ -116,6 +129,7 @@ public class LoupeUI : MonoBehaviour
     {
         if (PlayerInventory.Instance != null) PlayerInventory.Instance.OnInventoryChanged -= RefreshIfOpen;
         if (overlayTexture != null) Destroy(overlayTexture);
+        if (hazeTexture != null) Destroy(hazeTexture);
     }
 
     public void Open()
@@ -182,11 +196,19 @@ public class LoupeUI : MonoBehaviour
         magliteToggle.gameObject.SetActive(hasTorch);
         uvToggle.gameObject.SetActive(hasUv);
         removeButton.gameObject.SetActive(!market);
+        clothMode = false;
+        clothButton.gameObject.SetActive(!market);
         tipText.gameObject.SetActive(!market && !hasTorch && !hasUv);
         UpdateToggleColors();
     }
 
     public bool IsOpen => panel != null && panel.activeSelf;
+
+    // The stone under the lens is covered with traces (the viewer of the market shows stones as they are sold, cleaned by the vendor).
+    // At the desk of the laboratory the cloth lies on the table; in the field, the player needs to have bought it.
+    private bool HasCloth => !fromBag || Owns(ClothId);
+
+    private bool Dirty => stone != null && !marketMode && stone.NeedsCleaning;
 
     public void Close()
     {
@@ -255,6 +277,8 @@ public class LoupeUI : MonoBehaviour
     private void SetStone(GemInstance gem)
     {
         stone = gem;
+        wipe = 0f;
+        clothMode = false;
         uvInfo = TreatmentSignatures.Fluorescence(gem, true);
         uvSeen = uvOn;
         orientation = Quaternion.identity;
@@ -282,6 +306,11 @@ public class LoupeUI : MonoBehaviour
     private void OnTilt(Vector2 delta)
     {
         if (stone == null) return;
+        if (clothMode)
+        {
+            Wipe(delta.magnitude);
+            return;
+        }
 
         var yaw = Quaternion.AngleAxis(-delta.x * 0.7f, Vector3.up);
         var pitch = Quaternion.AngleAxis(delta.y * 0.7f, Vector3.right);
@@ -320,7 +349,7 @@ public class LoupeUI : MonoBehaviour
 
     private void CheckInspection()
     {
-        if (stone == null || explored < InspectionRotation) return;
+        if (stone == null || explored < InspectionRotation || Dirty) return;
         // Without a lens nothing small can be seen, so the examination does not count.
         if (!marketMode && !loupeOn) return;
 
@@ -343,6 +372,7 @@ public class LoupeUI : MonoBehaviour
     {
         if (panel == null || !panel.activeSelf || stone == null) return;
 
+        if (Dirty) return;
         watched += Time.deltaTime;
         if (!visualObserved && watched >= ObservationTime)
         {
@@ -357,9 +387,134 @@ public class LoupeUI : MonoBehaviour
             stone.RecordObservation(ExaminationTool.MeasurementType.VisualExamination.ToString());
             ToolFeedbackUI.Instance?.ShowMessage(
                 $"Loupe — Éclat : {def.luster} | Couleur : {stone.ColorName} | " +
-                $"Transparence : {def.TransparencyLabel} | Forme : {stone.ShapeName} | Style de taille : {stone.CutStyleName}");
+                $"Transparence : {def.TransparencyLabel} | {stone.FormInline}");
             UpdateTexts();
         }
+    }
+
+    // ---- The chamois cloth -----------------------------------------------------------------------------------
+
+    private void ToggleCloth()
+    {
+        if (stone == null)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage("Déposez d'abord une gemme sous la loupe.");
+            return;
+        }
+        if (!stone.NeedsCleaning)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage("Cette pierre est déjà propre.");
+            return;
+        }
+        if (!HasCloth)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage("Vous n'avez pas de chamoisine dans votre sac : on en vend au GemStore. Au laboratoire, il y en a une sur le bureau de la loupe.");
+            return;
+        }
+
+        clothMode = !clothMode;
+        Sfx.Play(Sfx.Id.Click, 0.6f);
+        UpdateClothButton();
+    }
+
+    private void UpdateClothButton()
+    {
+        if (clothButton == null) return;
+        var needs = Dirty;
+        clothLabel.text = !HasCloth && needs ? "Pas de chamoisine (à acheter au GemStore)" : clothMode ? "Chamoisine en main : frottez la pierre"
+            : needs ? "Prendre la chamoisine (pierre sale)" : "Chamoisine (pierre propre)";
+        clothButton.GetComponent<Image>().color = !HasCloth ? new Color(0.30f, 0.27f, 0.27f, 1f) : clothMode ? new Color(0.62f, 0.48f, 0.22f, 1f) : needs ? new Color(0.45f, 0.36f, 0.18f, 1f) : ButtonColor;
+    }
+
+    // The cloth rubs the stone: the traces fade as the hand moves over it.
+    private void Wipe(float distance)
+    {
+        if (!Dirty || !HasCloth) return;
+
+        wipe = Mathf.Min(1f, wipe + distance / WipeLength);
+        Sfx.Play(Sfx.Id.Rub, 0.8f, Random.Range(0.85f, 1.15f));
+        if (wipe >= 1f)
+        {
+            stone.NeedsCleaning = false;
+            clothMode = false;
+            Sfx.Play(Sfx.Id.Success, 0.5f);
+            ToolFeedbackUI.Instance?.ShowMessage("La pierre est propre : vous pouvez l'examiner à la loupe.");
+            Refresh();
+            return;
+        }
+        UpdateView();
+    }
+
+    private static float Hash01(int x, int y, int seed)
+    {
+        unchecked
+        {
+            var h = (uint)(x * 374761393 + y * 668265263 + seed * 1274126177);
+            h = (h ^ (h >> 13)) * 1274126177u;
+            return ((h ^ (h >> 16)) & 0xFFFF) / 65535f;
+        }
+    }
+
+    private static float ValueNoise(float x, float y, int seed)
+    {
+        var xi = Mathf.FloorToInt(x);
+        var yi = Mathf.FloorToInt(y);
+        var fx = x - xi;
+        var fy = y - yi;
+        fx = fx * fx * (3f - 2f * fx);
+        fy = fy * fy * (3f - 2f * fy);
+        var top = Mathf.Lerp(Hash01(xi, yi, seed), Hash01(xi + 1, yi, seed), fx);
+        var bottom = Mathf.Lerp(Hash01(xi, yi + 1, seed), Hash01(xi + 1, yi + 1, seed), fx);
+        return Mathf.Lerp(top, bottom, fy);
+    }
+
+    // The whitish traces: blotches of milky white over the stone only, which shrink and vanish as the cloth passes.
+    private void UpdateHaze(float side)
+    {
+        UpdateClothButton();
+        if (!Dirty)
+        {
+            hazeImage.enabled = false;
+            return;
+        }
+
+        var source = view3D.Pixels;
+        var size = view3D.Size;
+        if (hazeTexture == null || hazeTexture.width != size)
+        {
+            if (hazeTexture != null) Destroy(hazeTexture);
+            hazeTexture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+            {
+                filterMode = FilterMode.Point,
+                wrapMode = TextureWrapMode.Clamp,
+            };
+            hazeBuffer = new Color32[size * size];
+            hazeImage.texture = hazeTexture;
+        }
+
+        var seed = (int)StoneOptics.StableHash(stone.SpecimenId ?? "") & 0x7FFFFFFF;
+        var threshold = 0.42f + wipe * 0.62f;
+        for (var y = 0; y < size; y++)
+        {
+            for (var x = 0; x < size; x++)
+            {
+                var i = y * size + x;
+                if (source[i].a < 8)
+                {
+                    hazeBuffer[i] = new Color32(0, 0, 0, 0);
+                    continue;
+                }
+
+                var n = 0.62f * ValueNoise(x / 7f, y / 7f, seed) + 0.38f * ValueNoise(x / 2.6f, y / 2.6f, seed + 7);
+                var alpha = Mathf.Clamp01((n - threshold) * 5.5f) * 0.82f;
+                hazeBuffer[i] = new Color32(236, 236, 230, (byte)(alpha * 255f));
+            }
+        }
+
+        hazeTexture.SetPixels32(hazeBuffer);
+        hazeTexture.Apply();
+        hazeImage.rectTransform.sizeDelta = new Vector2(side, side);
+        hazeImage.enabled = true;
     }
 
     // ---- Feature drawing -------------------------------------------------------------------------------------
@@ -397,12 +552,15 @@ public class LoupeUI : MonoBehaviour
         {
             stoneImage.enabled = false;
             overlayImage.enabled = false;
+            hazeImage.enabled = false;
+            clothMode = false;
+            UpdateClothButton();
             hintText.text = "Déposez une gemme sous la loupe";
         }
         else
         {
             stoneImage.enabled = true;
-            hintText.text = "";
+            hintText.text = Dirty ? (HasCloth ? "Traces blanchâtres : essuyez la pierre à la chamoisine" : "Traces blanchâtres : il faut une chamoisine") : "";
         }
 
         UpdateView();
@@ -449,9 +607,10 @@ public class LoupeUI : MonoBehaviour
         }
 
         // Inclusions and surface defects need the loupe; the torch makes them stand out, UV hides them.
-        featureVisibility = !marketMode ? ((loupeOn && !uvOn) ? 1f : 0f) : (loupeOn && !uvOn) ? (maglite ? 1f : 0.5f) : 0f;
+        featureVisibility = Dirty ? 0f : !marketMode ? ((loupeOn && !uvOn) ? 1f : 0f) : (loupeOn && !uvOn) ? (maglite ? 1f : 0.5f) : 0f;
 
         UpdateFeatures(half);
+        UpdateHaze(side);
 
         rotationText.text = $"Parcouru : {Mathf.Min(explored, 360f):F0}° / 360°";
     }
@@ -588,12 +747,21 @@ public class LoupeUI : MonoBehaviour
             return;
         }
 
+        if (Dirty)
+        {
+            var advice = HasCloth
+                ? "Prenez la chamoisine (bouton en bas à gauche), puis frottez la pierre en glissant dessus, avant de la regarder."
+                : "Vous n'avez pas de chamoisine sur vous : achetez-en une au GemStore, ou essuyez la pierre au laboratoire, où il y en a une sur le bureau de la loupe.";
+            resultText.text = "La pierre est couverte de traces blanchâtres (poussière, gras des doigts) : on ne distingue rien à travers.\n\n" + advice;
+            return;
+        }
+
         var def = stone.Definition;
         var text = marketMode ? $"Poids : {stone.CaratWeight:F2} ct\n\n" : "";
         if (visualObserved)
         {
             text += $"Éclat : {def.luster}\nCouleur : {stone.ColorName}\nTransparence : {def.TransparencyLabel}\n" +
-                    $"Forme : {stone.ShapeName}\nTaille : {stone.CutStyleName}\n" +
+                    stone.FormBlock +
                     (stone.FacetSummary != null ? $"Facettes : {stone.FacetSummary}\n" : "") + "\n";
         }
 
@@ -718,6 +886,16 @@ public class LoupeUI : MonoBehaviour
         litImage.raycastTarget = false;
         litImage.enabled = false;
 
+        // The whitish traces of a stone that was not wiped, on top of everything that is in the stone.
+        var hazeGO = new GameObject("Haze", typeof(RectTransform), typeof(RawImage));
+        hazeGO.transform.SetParent(content, false);
+        var hazeRect = hazeGO.GetComponent<RectTransform>();
+        hazeRect.anchorMin = hazeRect.anchorMax = new Vector2(0.5f, 0.5f);
+        hazeRect.pivot = new Vector2(0.5f, 0.5f);
+        hazeImage = hazeGO.GetComponent<RawImage>();
+        hazeImage.raycastTarget = false;
+        hazeImage.enabled = false;
+
         var tintGO = new GameObject("UvTint", typeof(RectTransform), typeof(Image));
         tintGO.transform.SetParent(clip.transform, false);
         var tintRect = tintGO.GetComponent<RectTransform>();
@@ -764,6 +942,11 @@ public class LoupeUI : MonoBehaviour
         MakePanButton("PanUp", "^", new Vector2(AreaX + 174f, row), new Vector2(0f, step));
         MakePanButton("PanDown", "v", new Vector2(AreaX + 208f, row), new Vector2(0f, -step));
         MakePanButton("PanRight", ">", new Vector2(AreaX + 242f, row), new Vector2(step, 0f));
+
+        // The chamois cloth (third row): it has to be used on a stone before looking at it.
+        clothButton = RuntimeUIKit.MakeButton("Cloth", panel.transform, "Chamoisine", 13, ButtonColor, new Vector2(AreaX, row - 36f), new Vector2(AreaSize, 30f));
+        clothLabel = clothButton.GetComponentInChildren<Text>();
+        clothButton.onClick.AddListener(ToggleCloth);
     }
 
     private void MakePanButton(string name, string label, Vector2 position, Vector2 delta)

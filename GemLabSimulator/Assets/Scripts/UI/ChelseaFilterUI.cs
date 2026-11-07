@@ -148,10 +148,10 @@ public class ChelseaFilterUI : MonoBehaviour
             stoneBase.enabled = true;
             stoneDull.enabled = true;
             stoneReaction.enabled = info.Reacts;
-            stoneBase.sprite = GemIconFactory.GetSolid(shape, style, new Color(0.02f, 0.03f, 0.02f), new Color(0.06f, 0.08f, 0.06f));
-            stoneDull.sprite = GemIconFactory.GetSolid(shape, style, DullGreen, Color.Lerp(DullGreen, Color.white, 0.25f));
+            stoneBase.sprite = SolidOf(stone, shape, style, new Color(0.02f, 0.03f, 0.02f), new Color(0.06f, 0.08f, 0.06f));
+            stoneDull.sprite = SolidOf(stone, shape, style, DullGreen, Color.Lerp(DullGreen, Color.white, 0.25f));
             if (info.Reacts)
-                stoneReaction.sprite = GemIconFactory.GetSolid(shape, style, info.Color, Color.Lerp(info.Color, Color.white, 0.4f));
+                stoneReaction.sprite = SolidOf(stone, shape, style, info.Color, Color.Lerp(info.Color, Color.white, 0.4f));
             hintText.text = "";
         }
 
@@ -345,5 +345,13 @@ public class ChelseaFilterUI : MonoBehaviour
 
         texture.Apply();
         return Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
+    }
+
+    // The flat sprite of a stone for the effects of the lamps: a rough crystal shows its habit, the other stones their shape and cut style.
+    private static Sprite SolidOf(GemInstance stone, string shape, string style, Color body, Color facet)
+    {
+        var habit = stone != null && stone.IsRough ? stone.Habit : null;
+        var crystal = habit != null ? GemIconFactory.GetHabitSolid(habit.Id, body, facet) : null;
+        return crystal != null ? crystal : GemIconFactory.GetSolid(shape, style, body, facet);
     }
 }

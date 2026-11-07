@@ -593,6 +593,18 @@ public class GemMesh
         return mesh;
     }
 
+    // The mesh of a crystal habit (octahedron, cube, prism...), for a rough stone that has one; null for an unknown habit.
+    public static GemMesh GetHabit(string habitId)
+    {
+        if (string.IsNullOrEmpty(habitId)) return null;
+        var key = $"habit|{habitId}";
+        if (Cache.TryGetValue(key, out var cached)) return cached;
+
+        var mesh = HabitMesh.Build(habitId);
+        Cache[key] = mesh;
+        return mesh;
+    }
+
     // Lumpy, angular rock for rough stones.
     public static GemMesh GetRough(int seed)
     {

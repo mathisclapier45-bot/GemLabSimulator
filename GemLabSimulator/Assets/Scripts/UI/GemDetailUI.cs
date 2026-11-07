@@ -73,8 +73,16 @@ public static class GemObservations
             Add("Loupe", $"Éclat : {def.luster}");
             Add("Loupe", $"Couleur : {gem.ColorDescription}");
             Add("Loupe", $"Transparence : {def.TransparencyLabel}");
-            Add("Loupe", $"Forme : {gem.ShapeName}");
-            Add("Loupe", $"Style de taille : {gem.CutStyleName}");
+            if (gem.IsRough)
+            {
+                Add("Loupe", "Forme : brut");
+                if (gem.Habit != null) Add("Loupe", $"Habitus : {gem.Habit.Name.ToLowerInvariant()}");
+            }
+            else
+            {
+                Add("Loupe", $"Forme : {gem.ShapeName}");
+                Add("Loupe", $"Style de taille : {gem.CutStyleName}");
+            }
             if (gem.FacetSummary != null) Add("Loupe", $"Facettes : {gem.FacetSummary}");
         }
         if (gem.HasObserved("LoupeInspection"))

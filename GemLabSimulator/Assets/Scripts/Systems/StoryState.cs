@@ -15,7 +15,14 @@ public class StoryState : MonoBehaviour
     public const int GoHome = 2;         // the walk is over: the letter of Vincent is waiting in the mailbox of the house
     public const int Settled = 3;        // the letter has been read: the game is free
 
+    // After the prologue, the first morning: the player sleeps, the phone rings, the player goes to the laboratory where Thouvenot shows the place.
+    public const int PhaseSleep = 1;     // the letter has been read: the player has to sleep
+    public const int PhaseCall = 2;      // the next morning: the phone rings outside, until the player answers
+    public const int PhaseLab = 3;       // the player has to join Thouvenot at the laboratory (the office of gemology)
+    public const int PhaseDone = 4;      // the visit is over: the game is free
+
     public int Stage { get; private set; } = Settled;
+    public int Phase { get; private set; } = PhaseDone;
     public int TourIndex { get; private set; }
     public bool Legacy { get; private set; } = true;       // a save from before the story: everything is open
 
@@ -24,6 +31,12 @@ public class StoryState : MonoBehaviour
     private readonly HashSet<string> read = new HashSet<string>();
 
     public IReadOnlyList<string> Received => received;
+
+    private readonly List<string> calls = new List<string>();
+    public IReadOnlyList<string> Calls => calls;
+
+    // The phone exists from the first call (an old save has it from the start).
+    public bool PhoneUnlocked => Legacy || Phase >= PhaseCall;
 
     public event Action OnChanged;
 
@@ -45,9 +58,11 @@ public class StoryState : MonoBehaviour
     {
         Legacy = false;
         Stage = Arrival;
+        Phase = 0;
         TourIndex = 0;
         received.Clear();
         read.Clear();
+        calls.Clear();
         OnChanged?.Invoke();
     }
 
@@ -59,6 +74,42 @@ public class StoryState : MonoBehaviour
     }
 
     public bool PrologueOver => Stage >= Settled;
+
+    public void SetPhase(int phase)
+    {
+        Phase = phase;
+        OnChanged?.Invoke();
+    }
+
+    // The player has slept: the first morning begins, with the call of Thouvenot.
+    public void OnSlept()
+    {
+        if (!Legacy && Phase == PhaseSleep) SetPhase(PhaseCall);
+    }
+
+    public void AddCall(string text)
+    {
+        calls.Add(text);
+        OnChanged?.Invoke();
+    }
+
+    // What the player has to do now, for the phone.
+    public string Objective
+    {
+        get
+        {
+            if (Legacy) return "Examinez les pierres du courrier avec les instruments du laboratoire.";
+            if (Stage == Arrival || Stage == Tour) return "Suivez la professeure Thouvenot dans la ville.";
+            if (Stage == GoHome) return "Entrez dans votre maison et lisez la lettre de Vincent, dans la boîte aux lettres.";
+            switch (Phase)
+            {
+                case PhaseSleep: return "Dormez dans votre lit (touche E) pour passer à demain matin.";
+                case PhaseCall: return "Répondez au téléphone : il sonne.";
+                case PhaseLab: return "Rejoignez la professeure Thouvenot à la Maison et Bureau de Gemmologie.";
+                default: return "Prenez une pierre dans la boîte aux lettres du bureau, essuyez-la à la chamoisine, puis examinez-la à la loupe.";
+            }
+        }
+    }
 
     // ---- Letters ---------------------------------------------------------------------------------------------------------
 
@@ -96,6 +147,8 @@ public class StoryState : MonoBehaviour
         data.storyStarted = !Legacy;
         data.storyStage = Stage;
         data.storyTourIndex = TourIndex;
+        data.storyPhase = Phase;
+        data.storyCalls = new List<string>(calls);
         data.storyLettersReceived = new List<string>(received);
         data.storyLettersRead = new List<string>(read);
     }
@@ -104,11 +157,13 @@ public class StoryState : MonoBehaviour
     {
         received.Clear();
         read.Clear();
+        calls.Clear();
         if (!data.storyStarted)
         {
             // A save from before the story: the game is free and open.
             Legacy = true;
             Stage = Settled;
+            Phase = PhaseDone;
             TourIndex = 0;
         }
         else
@@ -116,6 +171,8 @@ public class StoryState : MonoBehaviour
             Legacy = false;
             Stage = Mathf.Clamp(data.storyStage, Arrival, Settled);
             TourIndex = Mathf.Max(0, data.storyTourIndex);
+            Phase = Stage >= Settled && data.storyPhase == 0 ? PhaseDone : data.storyPhase;
+            if (data.storyCalls != null) calls.AddRange(data.storyCalls);
             if (data.storyLettersReceived != null) received.AddRange(data.storyLettersReceived);
             if (data.storyLettersRead != null) foreach (var id in data.storyLettersRead) read.Add(id);
         }

@@ -213,7 +213,7 @@ public class DyeingUI : MonoBehaviour
         var body = GemColorSystem.BodyColor(value);
         var facet = GemColorSystem.FacetColor(value);
         var sprite = stone.IsRough
-            ? GemIconFactory.GetRough(stone.Definition, body)
+            ? (stone.Habit != null ? GemIconFactory.GetHabit(stone.Definition, stone.Habit.Id, body, facet) : GemIconFactory.GetRough(stone.Definition, body))
             : GemIconFactory.Get(stone.Definition, stone.ShapeName, stone.CutStyleName, body, facet);
         previews[pot] = sprite;
         return sprite;

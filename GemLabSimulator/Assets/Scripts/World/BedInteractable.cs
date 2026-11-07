@@ -20,6 +20,7 @@ public class BedInteractable : MonoBehaviour
 
         Sfx.Play(Sfx.Id.Sleep);
         GameClock.Instance?.AdvanceDay();
+        StoryState.Instance?.OnSlept();
         DayNightOverlay.ResetToDay();
         SaveSystem.Save();
         ToolFeedbackUI.Instance?.ShowMessage("Partie sauvegardée. Bonne nuit ! Vous vous réveillez à 7h.");

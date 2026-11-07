@@ -177,7 +177,7 @@ public class MarketUI : MonoBehaviour
         {
             var gem = sellable[i];
             var offer = MarketState.Instance.GetListedOffer(currentVendor, gem);
-            var state = gem.IsRough ? "brute" : $"{gem.ShapeName}, {gem.CutStyleName.ToLowerInvariant()}";
+            var state = gem.IsRough ? gem.RoughLabel : $"{gem.ShapeName}, {gem.CutStyleName.ToLowerInvariant()}";
             var note = gem.IsTreated && gem.IsTreatmentKnown ? " (traitement déclaré)" : "";
             var label = $"{gem.Definition.displayName} — {gem.CaratWeight:F2} ct ({state})\nOffre : {offer}€{note}";
             CreateRow(i, label, "Vendre", () => Sell(gem));

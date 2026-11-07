@@ -23,11 +23,11 @@ public static class BagToolLauncher
     {
         switch (toolId)
         {
-            case "Loupe10X": return Track(LoupeUI.TryOpen(10f), () => LoupeUI.Instance != null && LoupeUI.Instance.IsOpen, () => LoupeUI.Instance.Close());
-            case "Loupe20X": return Track(LoupeUI.TryOpen(20f), () => LoupeUI.Instance != null && LoupeUI.Instance.IsOpen, () => LoupeUI.Instance.Close());
+            case "Loupe10X": return Track(LoupeUI.TryOpen(10f, true), () => LoupeUI.Instance != null && LoupeUI.Instance.IsOpen, () => LoupeUI.Instance.Close());
+            case "Loupe20X": return Track(LoupeUI.TryOpen(20f, true), () => LoupeUI.Instance != null && LoupeUI.Instance.IsOpen, () => LoupeUI.Instance.Close());
             // The torch and the UV lamp are used with the loupe viewer, with the best lens the player owns.
             case "Maglite":
-            case "LampeUVLongs": return Track(LoupeUI.TryOpen(BestLens()), () => LoupeUI.Instance != null && LoupeUI.Instance.IsOpen, () => LoupeUI.Instance.Close());
+            case "LampeUVLongs": return Track(LoupeUI.TryOpen(BestLens(), true), () => LoupeUI.Instance != null && LoupeUI.Instance.IsOpen, () => LoupeUI.Instance.Close());
             case "DichroscopeCalcite":
             case "DichroscopeLondres": return Track(DichroscopeUI.TryOpen(), () => DichroscopeUI.Instance != null && DichroscopeUI.Instance.IsOpen, () => DichroscopeUI.Instance.Close());
             case "SpectroscopePoche": return Track(SpectroscopeUI.TryOpen(), () => SpectroscopeUI.Instance != null && SpectroscopeUI.Instance.IsOpen, () => SpectroscopeUI.Instance.Close());
@@ -65,7 +65,7 @@ public static class BagToolLauncher
                 return false;
             }
             case "Chamoisine":
-                ToolFeedbackUI.Instance?.ShowMessage("Chamoisine : elle servira à nettoyer les gemmes (bientôt).");
+                ToolFeedbackUI.Instance?.ShowMessage("Chamoisine : ouvrez une loupe du sac, déposez la gemme dessous et frottez-la avec la chamoisine avant de l'examiner.");
                 return false;
             default:
                 return false;

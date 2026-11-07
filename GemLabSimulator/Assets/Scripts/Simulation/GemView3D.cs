@@ -41,9 +41,12 @@ public class GemView3D
 
     public static GemMesh MeshFor(GemInstance gem)
     {
-        return gem.IsRough
-            ? GemMesh.GetRough((int)StoneOptics.StableHash(gem.Definition.name))
-            : GemMesh.Get(gem.ShapeName, gem.CutStyleName, gem.HasOpenCulet);
+        if (!gem.IsRough) return GemMesh.Get(gem.ShapeName, gem.CutStyleName, gem.HasOpenCulet);
+
+        // A rough crystal has the mesh of its habit; a lump of rock the one of its species.
+        var habit = gem.Habit;
+        var mesh = habit != null ? GemMesh.GetHabit(habit.Id) : null;
+        return mesh ?? GemMesh.GetRough((int)StoneOptics.StableHash(gem.Definition.name));
     }
 
     // Half sizes of the stone in mm. Length and width are fitted to the proportions of the shape, so a stone drawn as
@@ -52,6 +55,13 @@ public class GemView3D
     {
         var length = Mathf.Max(gem.LengthMm, 0.1f);
         var width = Mathf.Max(gem.WidthMm, 0.1f);
+
+        // A crystal habit fits in the unit sphere: its largest dimension is the largest of the three.
+        if (gem.IsRough && gem.Habit != null && GemMesh.GetHabit(gem.Habit.Id) != null)
+        {
+            var biggest = Mathf.Max(length, width, Mathf.Max(gem.DepthMm, 0.1f));
+            return Vector3.one * biggest * 0.5f;
+        }
         if (!gem.IsRough)
         {
             var ratio = GemMesh.AspectRatio(gem.ShapeName);

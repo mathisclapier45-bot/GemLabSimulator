@@ -189,13 +189,13 @@ public class UvCabinUI : MonoBehaviour
             var shape = stone.IsRough ? "Rond" : stone.ShapeName;
             var style = stone.IsRough ? "" : stone.CutStyleName;
             stoneBase.enabled = true;
-            stoneBase.sprite = GemIconFactory.GetSolid(shape, style, new Color(0.02f, 0.02f, 0.03f), new Color(0.07f, 0.07f, 0.09f));
+            stoneBase.sprite = SolidOf(stone, shape, style, new Color(0.02f, 0.02f, 0.03f), new Color(0.07f, 0.07f, 0.09f));
             hintText.text = "";
 
             if (lamp != Lamp.Off) currentInfo = TreatmentSignatures.Fluorescence(stone, lamp == Lamp.Long);
             if (currentInfo.Glows)
             {
-                stoneLit.sprite = GemIconFactory.GetSolid(shape, style, currentInfo.Color, Color.Lerp(currentInfo.Color, Color.white, 0.45f));
+                stoneLit.sprite = SolidOf(stone, shape, style, currentInfo.Color, Color.Lerp(currentInfo.Color, Color.white, 0.45f));
                 glowImage.color = new Color(currentInfo.Color.r, currentInfo.Color.g, currentInfo.Color.b, 0f);
             }
         }
@@ -343,5 +343,13 @@ public class UvCabinUI : MonoBehaviour
         var close = RuntimeUIKit.MakeButton("Close", panel.transform, "Fermer", 13, ButtonOff,
             new Vector2(380f, -334f), new Vector2(200f, 28f));
         close.onClick.AddListener(Close);
+    }
+
+    // The flat sprite of a stone for the effects of the lamps: a rough crystal shows its habit, the other stones their shape and cut style.
+    private static Sprite SolidOf(GemInstance stone, string shape, string style, Color body, Color facet)
+    {
+        var habit = stone != null && stone.IsRough ? stone.Habit : null;
+        var crystal = habit != null ? GemIconFactory.GetHabitSolid(habit.Id, body, facet) : null;
+        return crystal != null ? crystal : GemIconFactory.GetSolid(shape, style, body, facet);
     }
 }

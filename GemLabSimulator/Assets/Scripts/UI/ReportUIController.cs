@@ -105,8 +105,16 @@ public class ReportUIController : MonoBehaviour
             measured.Add($"Éclat : {gem.luster}");
             measured.Add($"Couleur : {gemInstance.ColorDescription}");
             measured.Add($"Transparence : {gem.TransparencyLabel}");
-            measured.Add($"Forme : {gemInstance.ShapeName}");
-            measured.Add($"Style de taille : {gemInstance.CutStyleName}");
+            if (gemInstance.IsRough)
+            {
+                measured.Add("Forme : brut");
+                if (gemInstance.Habit != null) measured.Add($"Habitus : {gemInstance.Habit.Name.ToLowerInvariant()}");
+            }
+            else
+            {
+                measured.Add($"Forme : {gemInstance.ShapeName}");
+                measured.Add($"Style de taille : {gemInstance.CutStyleName}");
+            }
         }
         if (gemInstance.HasObserved("LoupeInspection"))
         {

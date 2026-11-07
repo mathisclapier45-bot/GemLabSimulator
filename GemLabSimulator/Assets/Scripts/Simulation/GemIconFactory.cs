@@ -117,10 +117,32 @@ public static class GemIconFactory
         return view.Sprite;
     }
 
+    // Icon of a rough crystal with its habit (an octahedron, a prism...): the habit seen from the side that shows it best, with the colours of the stone.
+    public static Sprite GetHabit(GemDefinition def, string habitId, Color body, Color facet)
+    {
+        if (def == null) return null;
+        var mesh = GemMesh.GetHabit(habitId);
+        if (mesh == null) return GetRough(def, body);
+
+        body = Quantize(body);
+        facet = Quantize(facet);
+        var key = $"{def.name}|habit|{habitId}|{ColorUtility.ToHtmlStringRGB(body)}|{ColorUtility.ToHtmlStringRGB(facet)}";
+        if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
+
+        var view = new GemView3D(GemPixelArt.Size);
+        view.Draw(mesh, Vector3.one, HabitMesh.IconOrientation(habitId), body, facet, def.Diaphaneity);
+        Cache[key] = view.Sprite;
+        return view.Sprite;
+    }
+
     public static Sprite GetRough(GemDefinition def)
     {
         if (def == null) return null;
         if (def.iconColor.a <= 0f) return def.roughIcon;
+
+        // A species that grows in crystals shows its most common habit.
+        var primary = CrystalHabits.Primary(def);
+        if (primary != null) return GetHabit(def, primary.Id, def.iconColor, def.iconFacetColor);
 
         var key = $"{def.name}|rough";
         if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
@@ -128,6 +150,21 @@ public static class GemIconFactory
         var sprite = ToSprite(GemPixelArt.RenderRough(def.iconColor, (int)StoneOptics.StableHash(def.name), def.Diaphaneity));
         Cache[key] = sprite;
         return sprite;
+    }
+
+    // Flat-colored version of the habit of a rough crystal, like GetSolid for a cut stone.
+    public static Sprite GetHabitSolid(string habitId, Color body, Color facet)
+    {
+        var mesh = GemMesh.GetHabit(habitId);
+        if (mesh == null) return null;
+
+        var key = $"solidhabit|{habitId}|{ColorUtility.ToHtmlStringRGB(body)}|{ColorUtility.ToHtmlStringRGB(facet)}";
+        if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
+
+        var view = new GemView3D(GemPixelArt.Size);
+        view.Draw(mesh, Vector3.one, HabitMesh.IconOrientation(habitId), body, facet);
+        Cache[key] = view.Sprite;
+        return view.Sprite;
     }
 
     // Flat-colored version of a shape/style, used for effects such as UV luminescence (body = main color,

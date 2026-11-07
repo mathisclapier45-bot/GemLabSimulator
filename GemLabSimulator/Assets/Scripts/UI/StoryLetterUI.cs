@@ -136,7 +136,8 @@ public class StoryLetterUI : MonoBehaviour
             if (selected == StoryLetters.Welcome && state.Stage == StoryState.GoHome)
             {
                 state.SetStage(StoryState.Settled);
-                ToolFeedbackUI.Instance?.ShowMessage("Vincent vous a tout expliqué. À vous de jouer : rendez-vous au bureau de gemmologie.");
+                state.SetPhase(StoryState.PhaseSleep);
+                ToolFeedbackUI.Instance?.ShowMessage("Il est tard : dormez dans votre lit (touche E), la journée de demain sera longue.");
             }
         }
     }

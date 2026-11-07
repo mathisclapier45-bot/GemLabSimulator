@@ -9,6 +9,7 @@ public class GemInstanceSaveData
     public string clientName;
     public bool isDonation;
     public bool isRough;
+    public bool needsCleaning;      // whitish stains: the stone has not been wiped with the chamois cloth yet
     public bool isPersonalSpecimen;
     public bool isIdentified;
     public bool hasWindow;
@@ -285,6 +286,8 @@ public class SaveData
     public bool storyStarted;                              // false in a save from before the story: the game is free and open
     public int storyStage;                                 // the stage of the prologue (StoryState)
     public int storyTourIndex;                             // where the walk with Professor Thouvenot is
+    public int storyPhase;                                 // after the prologue: sleep, the phone call, the visit of the laboratory (StoryState.Phase)
+    public List<string> storyCalls = new List<string>();   // the calls received, for the phone
     public List<string> storyLettersReceived = new List<string>();
     public List<string> storyLettersRead = new List<string>();
     public int rapaportUntilDay;       // last day of the subscription to the Rapaport price list (0: never subscribed)

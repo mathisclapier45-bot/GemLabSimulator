@@ -17,7 +17,9 @@ public class StoryDirector : MonoBehaviour
     private static readonly Vector2 ArrivalPoint = new Vector2(55f, 4f);
 
     private const string Speaker = "Professeure Thouvenot";
-    private const float WalkSpeed = 5.5f;
+    private const float TownWalkSpeed = 8f;            // in the streets (the player walks at 6.4 in town; she went at 5.5 before)
+    private const float LabWalkSpeed = 5.5f;           // inside the office the rooms are small
+    private float walkSpeed = TownWalkSpeed;
     private const float FollowDistance = 13f;
     private const float TalkDistance = 6.5f;
 
@@ -94,6 +96,61 @@ public class StoryDirector : MonoBehaviour
         },
     };
 
+    // The visit of the office of gemology (the morning after the arrival). The route is in the coordinates of the scene "Home": the entrance room with the mailbox and
+    // the wardrobes, the door in the divider (x = 6, y between -1 and 1), and the desks of the instruments along the north wall of the lab.
+    private static readonly Vector2 LabStart = new Vector2(1.6f, -0.6f);
+    private static readonly Stop[] LabStops =
+    {
+        new Stop
+        {
+            Route = new Vector2[0],
+            Lines = new[]
+            {
+                "Ah, vous voilà ! Bienvenue dans la Maison et Bureau de Gemmologie. Hier soir, tout allait trop vite pour que je vous montre quoi que ce soit : prenons le temps, maintenant.",
+                "La gemmologie, c'est d'abord de la patience. On ne devine pas une pierre : on la mesure, instrument après instrument, et on conclut seulement à la fin.",
+            },
+        },
+        new Stop
+        {
+            Route = new[] { new Vector2(3.2f, -1.3f) },
+            Lines = new[]
+            {
+                "Voici la boîte aux lettres du laboratoire. Les gens y envoient des pierres à identifier, avec un mot pour vous dire ce qu'ils attendent. Regardez-la chaque matin.",
+                "Quand vous prenez une pierre, elle va dans votre inventaire. Et c'est de là que vous la déposerez sous un instrument.",
+            },
+        },
+        new Stop
+        {
+            Route = new[] { new Vector2(0.6f, 1.4f) },
+            Lines = new[]
+            {
+                "Et ici, les armoires. Les deux armoires bleues gardent les commandes des clients : les pierres qu'on vous a confiées pour un travail précis.",
+                "Les armoires en bois accueillent vos dons et vos pierres de côté. Rangez-y ce que vous ne voulez pas garder dans les poches : l'inventaire n'est pas extensible.",
+            },
+        },
+        new Stop
+        {
+            Route = new[] { new Vector2(0.6f, 0f), new Vector2(6.5f, 0f), new Vector2(8.6f, 1.3f) },
+            Remark = "Passez par la porte du fond : c'est là que vivent les instruments.",
+            Lines = new[]
+            {
+                "Commençons par le plus important : la loupe. C'est le premier regard sur une pierre. Éclat, transparence, inclusions, défauts de surface : on y apprend déjà beaucoup.",
+                "Un conseil que Vincent me répétait sans cesse : essuyez toujours la pierre à la chamoisine avant de la regarder. Cette peau de chamois est posée sur le bureau, à côté de la loupe.",
+                "Sans cela, la poussière et le gras des doigts laissent des traces blanchâtres sur la surface, et vous ne verrez rien d'utile. Dans la fenêtre de la loupe, prenez la chamoisine et frottez la pierre jusqu'à ce qu'elle soit nette.",
+            },
+        },
+        new Stop
+        {
+            Route = new[] { new Vector2(12.5f, 1.3f) },
+            Lines = new[]
+            {
+                "Ensuite, le réfractomètre, qui donne l'indice de réfraction, et la balance hydrostatique, qui donne la densité. Avec la loupe, ce sont vos trois outils principaux : ils suffisent à identifier la plupart des pierres courantes.",
+                "Les autres instruments, plus loin sur cette rangée, se découvrent avec le temps. Avancez doucement : chaque mesure compte.",
+                "Voilà ! Prenez une pierre dans la boîte aux lettres, essuyez-la, observez-la à la loupe. Et si vous avez besoin de moi, appelez-moi sur votre téléphone. Bon courage !",
+            },
+        },
+    };
+
     private Transform thouvenot;
     private SpriteRenderer thouvenotSprite;
     private Vector2 basePosition;
@@ -124,8 +181,17 @@ public class StoryDirector : MonoBehaviour
         DialogueBoxUI.Hide();
         thouvenot = null;
 
-        if (scene.name == "Town") StartCoroutine(RunTown());
+        if (scene.name == "Town")
+        {
+            StartCoroutine(RunTown());
+            StartCoroutine(RunMorningCall());
+        }
         else if (scene.name == "MaisonJoueur") StartCoroutine(RunHouse());
+        else if (scene.name == "Home")
+        {
+            AddLoupeCloth();
+            StartCoroutine(RunLab());
+        }
     }
 
     // ---- Helpers ---------------------------------------------------------------------------------------------------------
@@ -158,6 +224,114 @@ public class StoryDirector : MonoBehaviour
         go.transform.position = position;
         thouvenot = go.transform;
         basePosition = position;
+    }
+
+    // ---- The morning call --------------------------------------------------------------------------------------------------
+
+    // The morning after the arrival, as soon as the player is out of the house: the phone rings until it is clicked.
+    private IEnumerator RunMorningCall()
+    {
+        yield return WaitForGame();
+        var state = StoryState.Instance;
+        if (state == null || state.Legacy || state.Phase != StoryState.PhaseCall) yield break;
+
+        yield return new WaitForSeconds(2.5f);
+        for (var i = 0; i < 120 && PhoneUI.Instance == null; i++) yield return null;
+        if (PhoneUI.Instance == null || state.Phase != StoryState.PhaseCall) yield break;
+
+        ToolFeedbackUI.Instance?.ShowMessage("Votre téléphone sonne : cliquez sur le petit téléphone, en haut à droite.");
+        PhoneUI.Instance.Ring(Speaker, () => StartCoroutine(AnswerMorningCall(state)));
+    }
+
+    private IEnumerator AnswerMorningCall(StoryState state)
+    {
+        var lines = new[]
+        {
+            "Allô ? Bonjour, c'est la professeure Thouvenot. J'espère que vous avez bien dormi : hier soir, la journée a été longue pour vous.",
+            "Je vous appelle parce que j'aimerais vous proposer quelque chose. Venez au laboratoire, la Maison et Bureau de Gemmologie, et nous commencerons ensemble l'étude de la gemmologie. Vincent l'aurait voulu.",
+            "C'est au nord-ouest de la ville, tout au bout de la grande route du nord. Votre minimap vous aidera. Je vous attends là-bas. À tout de suite !",
+        };
+        var finished = false;
+        PhoneUI.Instance.Speak(lines, () => finished = true);
+        while (!finished) yield return null;
+
+        state.AddCall($"Entrant — {Speaker} — {DayNightOverlay.GetClockLabel()}");
+        state.SetPhase(StoryState.PhaseLab);
+        ToolFeedbackUI.Instance?.ShowMessage("Rendez-vous à la Maison et Bureau de Gemmologie, au nord-ouest de la ville.");
+    }
+
+    // ---- The visit of the laboratory -----------------------------------------------------------------------------------------
+
+    private IEnumerator RunLab()
+    {
+        yield return WaitForGame();
+        var state = StoryState.Instance;
+        if (state == null || state.Legacy || state.Phase != StoryState.PhaseLab) yield break;
+
+        walkSpeed = LabWalkSpeed;
+        SpawnThouvenot(LabStart);
+        var from = LabStart;
+        for (var index = 0; index < LabStops.Length; index++)
+        {
+            var stop = LabStops[index];
+            if (stop.Route.Length > 0) yield return WalkRoute(from, stop);
+            yield return WaitForPlayer(TalkDistance);
+            yield return Talk(stop.Lines);
+            if (stop.Route.Length > 0) from = stop.Route[stop.Route.Length - 1];
+        }
+
+        // The visit is over: the game is free, she goes back to her work.
+        state.SetPhase(StoryState.PhaseDone);
+        ToolFeedbackUI.Instance?.ShowMessage("Prenez une pierre dans la boîte aux lettres, essuyez-la à la chamoisine, puis observez-la à la loupe.");
+        for (var t = 0f; t < 1.2f && thouvenotSprite != null; t += Time.deltaTime)
+        {
+            thouvenotSprite.color = new Color(1f, 1f, 1f, 1f - t / 1.2f);
+            yield return null;
+        }
+        if (thouvenot != null) Destroy(thouvenot.gameObject);
+    }
+
+    // The chamois cloth lies on the desk of the loupe (the scene has no such prop): a folded piece of yellow leather.
+    private static Texture2D clothTexture;
+
+    private static void AddLoupeCloth()
+    {
+        if (GameObject.Find("Chamoisine") != null) return;
+        var desk = GameObject.Find("Bureau_Loupe");
+        if (desk == null) return;
+
+        if (clothTexture == null)
+        {
+            const int w = 14;
+            const int h = 9;
+            clothTexture = new Texture2D(w, h, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+            var leather = new Color(0.86f, 0.70f, 0.30f, 1f);
+            var shade = new Color(0.68f, 0.52f, 0.20f, 1f);
+            var light = new Color(0.95f, 0.82f, 0.45f, 1f);
+            for (var y = 0; y < h; y++)
+            {
+                for (var x = 0; x < w; x++)
+                {
+                    // A rounded rectangle, folded in two (a darker line across it), thicker at its lower edge.
+                    var dx = Mathf.Min(x, w - 1 - x);
+                    var dy = Mathf.Min(y, h - 1 - y);
+                    var corner = dx + dy < 2;
+                    if (corner) { clothTexture.SetPixel(x, y, Color.clear); continue; }
+                    var color = leather;
+                    if (y == 0 || x == w - 1) color = shade;
+                    else if (y == h - 1 || x == 0) color = light;
+                    else if (y == 4) color = shade;
+                    clothTexture.SetPixel(x, y, color);
+                }
+            }
+            clothTexture.Apply();
+        }
+
+        var go = new GameObject("Chamoisine");
+        var sr = go.AddComponent<SpriteRenderer>();
+        sr.sprite = Sprite.Create(clothTexture, new Rect(0, 0, clothTexture.width, clothTexture.height), new Vector2(0.5f, 0f), 32f);
+        sr.sortingOrder = 6;
+        go.transform.position = desk.transform.position + new Vector3(0.52f, 0.9f, 0f);
     }
 
     // ---- The house -------------------------------------------------------------------------------------------------------
@@ -193,6 +367,8 @@ public class StoryDirector : MonoBehaviour
             DayNightOverlay.Unfreeze();
             yield break;
         }
+
+        walkSpeed = TownWalkSpeed;
 
         // The night does not move during the walk: it is nightfall, 21h30, until the player gets home.
         DayNightOverlay.Freeze();
@@ -272,7 +448,7 @@ public class StoryDirector : MonoBehaviour
                     continue;
                 }
 
-                var step = Mathf.Min(Vector2.Distance(position, point), WalkSpeed * Time.deltaTime);
+                var step = Mathf.Min(Vector2.Distance(position, point), walkSpeed * Time.deltaTime);
                 position = Vector2.MoveTowards(position, point, step);
                 walked += step;
                 walkClock += Time.deltaTime;

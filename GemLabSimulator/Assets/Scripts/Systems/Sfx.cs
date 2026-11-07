@@ -15,7 +15,7 @@ public static class Sfx
         Coin, Spend, Pickup, GemClink, Success, Error, Flame, StepGrass, StepWood, StepStone,
         Shutter, ComputerBoot, ComputerClick, ComputerOff,
         PageTurn, PageFlurry, BookOpen, BookClose, CardSwish, PackTear, CardFlip, RareChime, SuperChime, UltraSparkle, SecretShimmer, NewCard,
-        Blip,
+        Blip, PhoneRing, PhoneHangUp, Rub,
     }
 
     private const string VolumeKey = "SfxVolume";
@@ -202,6 +202,25 @@ public class SfxPlayer : MonoBehaviour
         var name = id.ToString();
         switch (id)
         {
+            // The ring of the phone: two trills of a double tone, then a silence (it is played again as long as the phone rings).
+            case Sfx.Id.PhoneRing:
+                return Make(name, 1.5f, t =>
+                {
+                    var burst = (t < 0.42f || (t > 0.58f && t < 1.0f)) ? 1f : 0f;
+                    var trill = 0.55f + 0.45f * Mathf.Sin(2f * Mathf.PI * 22f * t);
+                    return (Sine(880f, t) * 0.5f + Sine(1320f, t) * 0.3f) * 0.32f * burst * trill;
+                });
+
+            // The cloth rubbing a stone: a short, soft rustle.
+            case Sfx.Id.Rub:
+            {
+                var rustle = Noise(23, 0.18f);
+                return Make(name, 0.16f, t => rustle() * 0.32f * Mathf.Sin(Mathf.PI * Mathf.Clamp01(t / 0.16f)));
+            }
+
+            case Sfx.Id.PhoneHangUp:
+                return Make(name, 0.28f, t => (Sine(520f - 280f * t, t) * 0.4f) * Decay(t, 9f));
+
             // The small tick of a text that writes itself (the dialogues, the story): soft and short, its pitch changes with the speaker.
             case Sfx.Id.Blip:
                 return Make(name, 0.05f, t => (Sine(560f, t) * 0.26f + Sine(1120f, t) * 0.06f) * Decay(t, 70f));

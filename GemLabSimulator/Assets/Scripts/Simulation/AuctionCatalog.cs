@@ -213,7 +213,7 @@ public static class AuctionCatalog
     public static string Catalog(AuctionLot lot)
     {
         var gem = lot.Gem;
-        var state = gem.IsRough ? "brute" : $"{gem.ShapeName}, {gem.CutStyleName.ToLowerInvariant()}";
+        var state = gem.IsRough ? gem.RoughLabel : $"{gem.ShapeName}, {gem.CutStyleName.ToLowerInvariant()}";
         return $"{gem.Definition.displayName} — {gem.CaratWeight:F2} ct ({state})\nOrigine : {gem.Origin.name}\n{TreatmentLine(lot)}";
     }
 

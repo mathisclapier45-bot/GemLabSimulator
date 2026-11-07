@@ -94,7 +94,7 @@ public class AuctionBulletinTabUI
         number.fontStyle = FontStyle.Bold;
 
         var gem = lot.Gem;
-        var state = gem.IsRough ? "brute" : $"{gem.ShapeName}, {gem.CutStyleName.ToLowerInvariant()}";
+        var state = gem.IsRough ? gem.RoughLabel : $"{gem.ShapeName}, {gem.CutStyleName.ToLowerInvariant()}";
         var name = Txt("Name", lot.Name, 13, TextAnchor.UpperLeft, Color.white, new Vector2(x + 82f, y - 6f), new Vector2(CardW - 90f, 16f));
         name.fontStyle = FontStyle.Bold;
         Txt("Detail", $"{gem.CaratWeight:F2} ct, {state}  ·  {gem.Origin.name}", 10, TextAnchor.UpperLeft, Ink, new Vector2(x + 82f, y - 24f), new Vector2(CardW - 90f, 14f));
