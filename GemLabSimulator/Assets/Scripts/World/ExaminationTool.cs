@@ -81,6 +81,14 @@ public class ExaminationTool : MonoBehaviour
     {
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
+        // The instruments open one after the other, as Professor Thouvenot presents them.
+        var story = StoryState.Instance;
+        if (story != null && !story.ToolUnlocked(measurementType))
+        {
+            ToolFeedbackUI.Instance?.ShowMessage($"{toolName} — Vous ne savez pas encore vous en servir : la professeure Thouvenot ne vous a pas encore présenté cet instrument.");
+            return;
+        }
+
         Sfx.Play(Sfx.Id.ToolOpen);
         // The carat balance has its own drag-and-drop interface.
         if (measurementType == MeasurementType.Weight && WeightScaleUI.TryOpen()) return;

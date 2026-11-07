@@ -110,6 +110,7 @@ public class StoryDirector : MonoBehaviour
             {
                 "Ah, vous voilà ! Bienvenue dans la Maison et Bureau de Gemmologie. Hier soir, tout allait trop vite pour que je vous montre quoi que ce soit : prenons le temps, maintenant.",
                 "La gemmologie, c'est d'abord de la patience. On ne devine pas une pierre : on la mesure, instrument après instrument, et on conclut seulement à la fin.",
+                "Mais avant de toucher le moindre instrument, une question toute simple : qu'est-ce qui fait qu'une pierre est une gemme ? Regardez.",
             },
         },
         new Stop
@@ -207,6 +208,7 @@ public class StoryDirector : MonoBehaviour
         else if (scene.name == "Home")
         {
             AddLoupeCloth();
+            LessonBoard.Place();
             StartCoroutine(RunLab());
         }
     }
@@ -320,6 +322,17 @@ public class StoryDirector : MonoBehaviour
             yield return WaitForPlayer(TalkDistance);
             yield return Talk(stop.Lines);
             if (stop.Route.Length > 0) from = stop.Route[stop.Route.Length - 1];
+
+            // At the first stop, the lesson on what a gemstone is.
+            if (index == 0)
+            {
+                yield return PlayLesson("gemmes");
+                yield return Talk(new[]
+                {
+                    "Retenez ces cinq mots : beauté, rareté, durabilité, valeur, acceptabilité. Une pierre qui les réunit est une gemme ; c'est avec eux que vous jugerez, plus tard, ce qu'on vous apportera.",
+                    "Et ce n'est pas tout : toutes mes leçons, celle-ci comme celles des instruments, sont affichées sur le panneau, dans l'entrée du laboratoire. Revenez les lire quand vous voulez.",
+                });
+            }
         }
 
         // The visit is over: the first stone is in the mailbox. She goes to her post in the laboratory and waits there.
@@ -327,6 +340,15 @@ public class StoryDirector : MonoBehaviour
         ToolFeedbackUI.Instance?.ShowMessage("Prenez la pierre arrivée par la poste dans la boîte aux lettres (touche E), essuyez-la, puis examinez-la à la loupe.");
         yield return WalkRoute(from, new Stop { Route = new[] { LabPost } });
         MakeThouvenotNpc();
+    }
+
+    // A lesson of the board, played in the middle of a conversation: the dialogue goes away, and comes back when the lesson is closed.
+    private IEnumerator PlayLesson(string id)
+    {
+        DialogueBoxUI.Hide();
+        var finished = false;
+        if (!LessonUI.Show(id, () => finished = true)) yield break;
+        while (!finished) yield return null;
     }
 
     // Where she waits during the tutorial, in the middle of the laboratory, near the loupe.

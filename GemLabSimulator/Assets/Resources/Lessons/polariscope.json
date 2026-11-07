@@ -1,0 +1,64 @@
+{
+  "id": "polariscope",
+  "kind": "tool",
+  "title": "Le polariscope et le conoscope",
+  "unlock": "OpticalCharacter",
+  "animation": "",
+  "tool": {
+    "name": "Polariscope et conoscope",
+    "measures": "le caractère optique (isotrope, anisotrope, agrégat) et la figure d'interférence (uniaxe ou biaxe)",
+    "where": "Maison et Bureau de Gemmologie, laboratoire",
+    "records": [
+      "Caractère optique",
+      "Figure d'interférence"
+    ],
+    "tips": [
+      "Tourner la pierre d'un tour complet",
+      "Observer à la fois la pierre sombre et la pierre claire"
+    ]
+  },
+  "steps": [
+    {
+      "title": "La lumière polarisée",
+      "text": "La lumière ordinaire vibre dans tous les plans. Un <b>filtre polarisant</b> ne laisse passer qu'un plan de vibration.\n\nAvec <b>deux filtres croisés</b> (le polariseur et l'analyseur), plus aucune lumière ne passe : on voit du noir. Une pierre placée entre les deux peut changer cela.",
+      "figure": "polariscope",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Pierre isotrope",
+      "text": "Une pierre <b>isotrope</b> (cubique ou amorphe : grenat, spinelle, verre) ne change pas la polarisation de la lumière. Entre les filtres croisés, elle reste <b>sombre</b> quand on la tourne.\n\nAttention : certaines pierres isotropes très contraintes montrent des taches ou une croix (double réfraction anormale).",
+      "figure": "polariscope",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "Pierre anisotrope",
+      "text": "Une pierre <b>anisotrope</b> (uniaxe ou biaxe) sépare la lumière en deux rayons. Quand on la tourne d'un tour complet, elle s'éclaire et s'éteint <b>quatre fois</b>, tous les 90°.\n\nC'est le signe d'un monocristal doublement réfringent : quartz, corindon, béryl, topaze...",
+      "figure": "polariscope",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "Agrégat",
+      "text": "Un <b>agrégat</b> est fait de petits cristaux orientés dans tous les sens (jade, calcédoine, lapis-lazuli). Il reste <b>clair</b> quelle que soit la position.\n\nRésumé : sombre tout le temps = isotrope ; quatre éclairs = anisotrope ; clair tout le temps = agrégat.",
+      "figure": "polariscope",
+      "focus": 3,
+      "image": ""
+    },
+    {
+      "title": "Le conoscope : pierre uniaxe",
+      "text": "En ajoutant une lentille, le polariscope devient un <b>conoscope</b>. On regarde la pierre sous la lumière convergente, dans la direction de l'axe optique, et l'on voit une <b>figure d'interférence</b>.\n\nUne pierre <b>uniaxe</b> montre une <b>croix noire</b> entourée d'anneaux colorés.",
+      "figure": "polariscope",
+      "focus": 4,
+      "image": ""
+    },
+    {
+      "title": "Le conoscope : pierre biaxe",
+      "text": "Une pierre <b>biaxe</b> montre deux « yeux » : les deux axes optiques. Les branches noires deviennent des hyperboles quand on tourne la pierre.\n\nAvec une lame auxiliaire, on lit aussi le <b>signe optique</b>, positif ou négatif : c'est le même signe que celui donné par le réfractomètre.",
+      "figure": "polariscope",
+      "focus": 5,
+      "image": ""
+    }
+  ]
+}

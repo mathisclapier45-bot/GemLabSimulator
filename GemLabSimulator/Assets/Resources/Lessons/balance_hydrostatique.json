@@ -1,0 +1,49 @@
+{
+  "id": "balance_hydrostatique",
+  "kind": "tool",
+  "title": "La balance hydrostatique",
+  "unlock": "Density",
+  "animation": "",
+  "tool": {
+    "name": "Balance hydrostatique",
+    "measures": "le poids de la pierre dans l'eau, et sa densité",
+    "where": "Maison et Bureau de Gemmologie, rangée du haut, près de la loupe",
+    "records": [
+      "Densité"
+    ],
+    "tips": [
+      "Peser d'abord la pierre dans l'air",
+      "Pas de bulle sur la pierre"
+    ]
+  },
+  "steps": [
+    {
+      "title": "Le principe d'Archimède",
+      "text": "Plongée dans l'eau, une pierre paraît <b>plus légère</b> : l'eau la pousse vers le haut. Cette poussée est égale au poids de l'eau déplacée.\n\nPlus la pierre est dense, moins la poussée la soulage par rapport à son poids.",
+      "figure": "hydro",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Deux pesées",
+      "text": "1. Pesez la pierre dans l'air (balance à carats) : <b>P air</b>.\n2. Déposez-la dans le panier plongé dans l'eau : la balance donne <b>P eau</b>.\n\nLa pierre doit être bien sèche au départ, et sans bulle d'air accrochée.",
+      "figure": "hydro",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "La densité",
+      "text": "La densité se calcule avec les deux poids :\n\n<b>d = P air ÷ (P air − P eau)</b>\n\nPar exemple, 2,00 ct dans l'air et 1,45 ct dans l'eau donnent 2,00 ÷ 0,55 ≈ <b>3,64</b>. Comme vous avez déjà pesé la pierre, la balance fait le calcul toute seule.",
+      "figure": "hydro",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "Lire la densité",
+      "text": "Chaque espèce a sa densité : quartz autour de 2,65, béryl 2,7, corindon 4,0, diamant 3,52, grenat 3,6 à 4,3.\n\nLa densité seule ne suffit pas : plusieurs espèces se ressemblent. C'est le croisement des mesures qui donne la réponse.",
+      "figure": "hydro",
+      "focus": 2,
+      "image": ""
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "id": "refractometre",
+  "kind": "tool",
+  "title": "Le réfractomètre",
+  "unlock": "RefractiveIndex",
+  "animation": "RefractionLessonUI",
+  "tool": {
+    "name": "Réfractomètre",
+    "measures": "l'indice de réfraction de la pierre, la biréfringence et le signe optique",
+    "where": "Maison et Bureau de Gemmologie, rangée du haut, à côté de la loupe",
+    "records": [
+      "Indice de réfraction",
+      "Biréfringence",
+      "Signe optique",
+      "Caractère optique"
+    ],
+    "tips": [
+      "La goutte de liquide d'abord, la pierre ensuite",
+      "Tourner la lentille d'un tour complet"
+    ]
+  },
+  "steps": [
+    {
+      "title": "La réfraction",
+      "text": "Quand la lumière passe d'un milieu à un autre, elle change de direction : c'est la <b>réfraction</b>. Loi de Descartes : n₁ × sin θ₁ = n₂ × sin θ₂.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "La réflexion",
+      "text": "Une partie de la lumière est <b>réfléchie</b>, avec le même angle que le rayon qui arrive.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "De l'indice fort à l'indice faible",
+      "text": "Dans le réfractomètre, la lumière arrive par le verre (indice 1,81) et rencontre la pierre, d'indice plus faible. Il existe un <b>angle critique</b>.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "L'angle critique",
+      "text": "Au-delà de l'angle critique, toute la lumière est renvoyée dans le verre : c'est la <b>réflexion totale</b>.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "La limite d'ombre",
+      "text": "La frontière entre la zone claire et la zone sombre est la <b>limite d'ombre</b> : sa position sur l'échelle donne directement l'indice.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "La goutte de liquide",
+      "text": "Une goutte de <b>liquide de contact</b> remplit l'espace entre le verre et la pierre. La goutte d'abord, la pierre ensuite.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Une ou deux limites",
+      "text": "Une pierre isotrope a une seule limite d'ombre ; une pierre anisotrope en a deux, qui se déplacent quand on tourne la lentille. On note les valeurs extrêmes : nα, nβ, nγ.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    }
+  ]
+}

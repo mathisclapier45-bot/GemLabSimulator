@@ -290,6 +290,7 @@ public class SaveData
     public List<string> storyCalls = new List<string>();     // the calls received, for the phone
     public int storyTutorialRound = 1;                       // which of the three stones of the tutorial (StoryState.TutorialRound)
     public List<string> storyContacts = new List<string>();  // the people whose number the player has (besides Thouvenot)
+    public List<string> storyTools = new List<string>();     // the instruments of the laboratory that Thouvenot has presented (MeasurementType names)
     public string storyStrangerSpecimen = "";                // the specimen id of the stone given by the man of the town
     public string storyTutorialSpecimen = "";                // the specimen id of the stone of the tutorial, once taken from the mailbox
     public List<string> storyLettersReceived = new List<string>();

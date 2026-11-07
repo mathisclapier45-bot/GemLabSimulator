@@ -110,6 +110,64 @@ public class StoryState : MonoBehaviour
         if (contacts.Add(id)) OnChanged?.Invoke();
     }
 
+    // ---- The instruments of the laboratory --------------------------------------------------------------------------------
+    // They are not all usable from the start: each one opens when Professor Thouvenot has told the player about it (the loupe for the first stone,
+    // then the carat balance, the hydrostatic balance and the refractometer; the other classic instruments of the office wait for a later chapter).
+    private readonly HashSet<string> tools = new HashSet<string>();
+
+    private static readonly ExaminationTool.MeasurementType[] LaterTools =
+    {
+        ExaminationTool.MeasurementType.OpticalCharacter,
+        ExaminationTool.MeasurementType.Pleochroism,
+        ExaminationTool.MeasurementType.FluorescenceLongWave,
+        ExaminationTool.MeasurementType.FluorescenceShortWave,
+        ExaminationTool.MeasurementType.ChelseaFilter,
+        ExaminationTool.MeasurementType.Magnetism,
+        ExaminationTool.MeasurementType.Dimensions,
+        ExaminationTool.MeasurementType.Inclusions,
+        ExaminationTool.MeasurementType.AbsorptionSpectrum,
+        ExaminationTool.MeasurementType.InterferenceFigure,
+    };
+
+    private static bool IsLockedByStory(ExaminationTool.MeasurementType type)
+    {
+        switch (type)
+        {
+            case ExaminationTool.MeasurementType.VisualExamination:
+            case ExaminationTool.MeasurementType.Weight:
+            case ExaminationTool.MeasurementType.Density:
+            case ExaminationTool.MeasurementType.RefractiveIndex:
+                return true;
+        }
+        return Array.IndexOf(LaterTools, type) >= 0;
+    }
+
+    // Can the player use this instrument yet? A save from before the story, and the instruments of the big laboratories, are always open.
+    public bool ToolUnlocked(ExaminationTool.MeasurementType type)
+    {
+        if (Legacy || !IsLockedByStory(type)) return true;
+        return tools.Contains(type.ToString());
+    }
+
+    public void UnlockTool(ExaminationTool.MeasurementType type)
+    {
+        if (tools.Add(type.ToString())) OnChanged?.Invoke();
+    }
+
+    // What Thouvenot has presented so far, from where the story is (the instruments stay open once they are).
+    private void GrantToolsForPhase()
+    {
+        if (Legacy || !PrologueOver) return;
+        var p = Phase;
+        var finished = p == PhaseDone || p >= PhaseStoneReturn;
+        var later = TutorialRound >= 2;
+        if (finished || p >= PhaseTutorialLoupe) tools.Add(ExaminationTool.MeasurementType.VisualExamination.ToString());
+        if (finished || later || p >= PhaseTutorialWeigh) tools.Add(ExaminationTool.MeasurementType.Weight.ToString());
+        if (finished || later || p >= PhaseTutorialDensity) tools.Add(ExaminationTool.MeasurementType.Density.ToString());
+        if (finished || p >= PhaseRefractometer) tools.Add(ExaminationTool.MeasurementType.RefractiveIndex.ToString());
+        // The other instruments (LaterTools) stay closed until a later chapter of the tutorial presents them: it calls UnlockTool.
+    }
+
     // The phone exists from the first call (an old save has it from the start).
     public bool PhoneUnlocked => Legacy || Phase >= PhaseCall;
 
@@ -142,6 +200,7 @@ public class StoryState : MonoBehaviour
         TutorialRound = 1;
         StrangerSpecimen = "";
         contacts.Clear();
+        tools.Clear();
         OnChanged?.Invoke();
     }
 
@@ -157,6 +216,7 @@ public class StoryState : MonoBehaviour
     public void SetPhase(int phase)
     {
         Phase = phase;
+        GrantToolsForPhase();
         OnChanged?.Invoke();
     }
 
@@ -296,6 +356,7 @@ public class StoryState : MonoBehaviour
         data.storyTutorialRound = TutorialRound;
         data.storyStrangerSpecimen = StrangerSpecimen;
         data.storyContacts = new List<string>(contacts);
+        data.storyTools = new List<string>(tools);
         data.storyLettersReceived = new List<string>(received);
         data.storyLettersRead = new List<string>(read);
     }
@@ -309,6 +370,7 @@ public class StoryState : MonoBehaviour
         TutorialRound = 1;
         StrangerSpecimen = "";
         contacts.Clear();
+        tools.Clear();
         if (!data.storyStarted)
         {
             // A save from before the story: the game is free and open.
@@ -328,6 +390,8 @@ public class StoryState : MonoBehaviour
             TutorialRound = Mathf.Clamp(data.storyTutorialRound, 1, TutorialRounds);
             StrangerSpecimen = data.storyStrangerSpecimen ?? "";
             if (data.storyContacts != null) foreach (var id in data.storyContacts) contacts.Add(id);
+            if (data.storyTools != null) foreach (var id in data.storyTools) tools.Add(id);
+            GrantToolsForPhase();
             if (data.storyLettersReceived != null) received.AddRange(data.storyLettersReceived);
             if (data.storyLettersRead != null) foreach (var id in data.storyLettersRead) read.Add(id);
         }

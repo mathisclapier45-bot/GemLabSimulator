@@ -1,0 +1,93 @@
+{
+  "id": "gemmes",
+  "kind": "concept",
+  "title": "Qu'est-ce qu'une gemme ?",
+  "unlock": "VisualExamination",
+  "animation": "",
+  "steps": [
+    {
+      "title": "Une gemme, ce n'est pas n'importe quelle pierre",
+      "text": "Une <b>gemme</b> est un matériau, le plus souvent un minéral, qui réunit assez de qualités pour être porté en bijou ou collectionné.\n\nTous les minéraux ne sont pas des gemmes. Et toutes les gemmes ne viennent pas de la terre : il en existe de plusieurs sortes. Voyons comment on les classe.",
+      "figure": "taxonomy",
+      "focus": 3,
+      "image": ""
+    },
+    {
+      "title": "La famille des gemmes",
+      "text": "On distingue deux grandes familles :\n\n• les gemmes <b>naturelles</b>, formées sans l'homme ;\n• les gemmes <b>non naturelles</b>, fabriquées ou assemblées par l'homme.\n\nChacune se divise à son tour. Suivez l'arbre.",
+      "figure": "taxonomy",
+      "focus": 0,
+      "image": "gemme_arbre"
+    },
+    {
+      "title": "Les gemmes naturelles",
+      "text": "Elles se sont formées dans la nature, même si l'homme les a ensuite taillées ou traitées.\n\n• <b>Cristallines</b> : les atomes sont rangés en un motif régulier. Ce sont les <b>minéraux</b> : diamant, rubis, émeraude, quartz...\n• <b>Non cristallines</b> : pas d'ordre régulier. Soit <b>amorphes</b> (opale, obsidienne), soit des <b>matières organiques</b> produites par des êtres vivants (perle, ambre, corail, jais).",
+      "figure": "taxonomy",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "Les gemmes non naturelles",
+      "text": "Elles sont faites par l'homme :\n\n• <b>synthétiques</b> : même composition et même structure qu'une gemme naturelle (un rubis de synthèse est un vrai corindon rouge) ;\n• <b>sans contrepartie dans la nature</b> : elles n'existent pas à l'état naturel (YAG, zircone cubique) ;\n• <b>gemmes assemblées</b> : plusieurs morceaux collés ensemble (doublets, triplets).",
+      "figure": "taxonomy",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "Cinq qualités pour faire une gemme",
+      "text": "Naturelle ou non, une pierre devient une gemme quand elle réunit cinq qualités : la <b>beauté</b>, la <b>rareté</b>, la <b>durabilité</b>, la <b>valeur</b> et l'<b>acceptabilité</b>.\n\nPassons-les en revue.",
+      "figure": "criteria",
+      "focus": -1,
+      "image": ""
+    },
+    {
+      "title": "La beauté",
+      "text": "C'est la première qualité, celle qu'on voit : la <b>couleur</b>, la <b>transparence</b>, l'<b>éclat</b> et, pour certaines pierres, le feu ou les effets de lumière (chatoiement, astérisme, opalescence).\n\nUne belle pierre attire le regard avant tout autre mesure.",
+      "figure": "criteria",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "La rareté",
+      "text": "Plus une pierre est rare, plus elle est recherchée. Le quartz se trouve partout ; le rubis ou l'émeraude de belle qualité, très peu.\n\nLa rareté se joue aussi à l'intérieur d'une espèce : une grosse pierre, très pure, d'une couleur parfaite, est bien plus rare qu'une petite pierre ordinaire.",
+      "figure": "criteria",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "La durabilité",
+      "text": "Un bijou se porte tous les jours : la pierre doit résister. Trois choses comptent :\n\n• la <b>dureté</b> (résister aux rayures, échelle de Mohs : le diamant est à 10, le corindon à 9),\n• la <b>ténacité</b> (résister aux chocs, aux éclats),\n• la <b>stabilité</b> (résister à la lumière, à la chaleur, aux produits chimiques).\n\nUne opale ou une perle sont belles, mais fragiles.",
+      "figure": "criteria",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "La valeur",
+      "text": "La valeur est le résultat des autres qualités, mais elle dépend aussi de la <b>taille</b>, du <b>poids</b> en carats, du <b>traitement</b>, de l'<b>origine</b> et du marché : de l'offre et de la demande.\n\nDeux pierres de la même espèce peuvent valoir cent fois plus ou moins l'une que l'autre.",
+      "figure": "criteria",
+      "focus": 3,
+      "image": ""
+    },
+    {
+      "title": "L'acceptabilité",
+      "text": "Il faut enfin que le marché accepte la pierre : que les clients la désirent, que la mode ou la tradition l'adoptent, et surtout qu'ils <b>puissent lui faire confiance</b>.\n\nUn traitement non déclaré ou une pierre synthétique vendue pour naturelle détruisent cette confiance. C'est pour cela qu'on a besoin de gemmologues.",
+      "figure": "criteria",
+      "focus": 4,
+      "image": ""
+    },
+    {
+      "title": "Votre rôle",
+      "text": "On ne devine pas ces qualités : on les <b>mesure</b>. Les instruments du laboratoire servent à reconnaître l'espèce, à repérer les traitements et les imitations, et à vérifier la qualité.\n\nCommençons par le premier regard sur une pierre : la loupe.",
+      "figure": "criteria",
+      "focus": -1,
+      "image": ""
+    }
+  ],
+  "tool": {
+    "name": "",
+    "measures": "",
+    "where": "",
+    "records": [],
+    "tips": []
+  }
+}
