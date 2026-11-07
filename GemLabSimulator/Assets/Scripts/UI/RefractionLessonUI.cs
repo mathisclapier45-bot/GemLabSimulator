@@ -77,52 +77,7 @@ public class RefractionLessonUI : MonoBehaviour
             Title = "Une ou deux limites", Mode = 6, N1 = 1.81f, N2 = 1.54f, Top = "Pierre isotrope", Bottom = "Pierre anisotrope",
             Text = "Une pierre <b>isotrope</b> (grenat, spinelle, verre) a un seul indice : une seule limite d'ombre, qui ne bouge pas.\\n\\n" +
                    "Une pierre <b>anisotrope</b> a plusieurs indices selon la direction : on voit <b>deux limites</b> qui se déplacent quand on tourne la lentille. On note les valeurs extrêmes : ce sont nα, nβ, nγ.\\n\\n" +
-                   "Voyons maintenant en détail chaque situation, avec ce que montre l'oculaire.",
-        },
-        new Step
-        {
-            Title = "La biréfringence", Mode = 8, N1 = 1.00f, N2 = 1.55f, Top = "Air  (n = 1,00)", Bottom = "Cristal anisotrope",
-            Text = "Dans un cristal anisotrope, la lumière se <b>dédouble</b> : deux rayons, polarisés perpendiculairement, qui ne vont pas à la même vitesse. Chacun a donc son propre indice.\n\n" +
-                   "L'écart entre le plus grand et le plus petit est la <b>biréfringence</b> : <b>Δn = nγ − nα</b>. Elle caractérise l'espèce : environ 0,006 pour l'émeraude, 0,009 pour le quartz, 0,018 pour la tourmaline, 0,036 pour le péridot, 0,059 pour le zircon. Une pierre isotrope (grenat, spinelle, verre) a Δn = 0.\n\n" +
-                   "<i>(L'écart est exagéré sur le dessin.)</i> Au réfractomètre, ce dédoublement donne <b>deux limites d'ombre</b>.",
-        },
-        new Step
-        {
-            Title = "Hors limite et lecture simple", Mode = 7, Pics = new[] { "otl-sr" },
-            Text = "<b>Hors limite (OTL)</b> : l'indice de la pierre dépasse 1,81. Il n'y a aucune limite d'ombre : tout le champ reste clair. C'est le cas du diamant, du zircon, de la zircone cubique...\n\n" +
-                   "<b>Une lecture (SR)</b> : une seule limite d'ombre, qui ne bouge pas quand on tourne la lentille. La pierre est isotrope (grenat, spinelle, verre) ou c'est un agrégat. Sombre au-dessus de la limite, clair en dessous.",
-        },
-        new Step
-        {
-            Title = "Deux lectures (DR)", Mode = 7, Pics = new[] { "dr" },
-            Text = "<b>Deux lectures (DR)</b> : deux limites d'ombre, qui se déplacent quand on tourne la lentille.\n\n" +
-                   "Le champ est <b>sombre</b> au-dessus de la première limite, <b>gris</b> entre les deux, <b>clair</b> sous la seconde.\n\n" +
-                   "On tourne d'un tour complet et on note les valeurs extrêmes de chaque limite : nα (le plus bas), nγ (le plus haut) et, pour un biaxe, nβ. La biréfringence est nγ − nα.",
-        },
-        new Step
-        {
-            Title = "Uniaxe : signe négatif", Mode = 7, Pics = new[] { "uni-neg" },
-            Text = "Un cristal <b>uniaxe</b> a deux indices : nω (ordinaire) et nε (extraordinaire). Une des deux limites <b>reste immobile</b>, l'autre bouge.\n\n" +
-                   "<b>Signe négatif (−)</b> : nε est plus petit que nω. La limite <b>haute</b> (nω) reste fixe, la limite <b>basse</b> se déplace vers elle, puis revient. Exemples : tourmaline, béryl, corindon.",
-        },
-        new Step
-        {
-            Title = "Uniaxe : signe positif", Mode = 7, Pics = new[] { "uni-pos" },
-            Text = "<b>Signe positif (+)</b> : nε est plus grand que nω. La limite <b>basse</b> (nω) reste fixe, la limite <b>haute</b> se déplace vers elle, puis revient. Exemples : quartz, zircon.\n\n" +
-                   "Le signe se lit donc sur la limite qui bouge : la basse pour un signe négatif, la haute pour un signe positif.",
-        },
-        new Step
-        {
-            Title = "Biaxe", Mode = 7, Pics = new[] { "bi" },
-            Text = "Un cristal <b>biaxe</b> a trois indices : nα, nβ et nγ. <b>Les deux limites bougent</b>.\n\n" +
-                   "La limite basse va de nα à nβ, la haute de nβ à nγ. On lit nα (le plus bas de la limite basse), nγ (le plus haut de la haute) et nβ (l'extrême de la limite basse). Exemples : péridot, topaze, tanzanite, kunzite.",
-        },
-        new Step
-        {
-            Title = "Le signe optique", Mode = 7, Pics = new[] { "sign-uni", "sign-bi" },
-            Text = "<b>Uniaxe</b> : négatif si c'est la limite basse qui bouge, positif si c'est la haute.\n\n" +
-                   "<b>Biaxe</b> : on compare nβ aux deux autres. Positif si nβ est plus proche de nα, négatif s'il est plus proche de nγ.\n\n" +
-                   "Avec l'indice, la biréfringence et le signe, il ne reste que quelques espèces possibles : l'onglet « Pierres et indices » les liste. À vous de jouer !",
+                   "Les onglets, à gauche du réfractomètre, vous aideront à interpréter vos relevés.",
         },
     };
 
