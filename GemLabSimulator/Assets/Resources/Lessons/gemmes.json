@@ -56,7 +56,7 @@
     },
     {
       "title": "La durabilité",
-      "text": "Un bijou se porte tous les jours : la pierre doit résister. Trois choses comptent :\n\n• la <b>dureté</b> (résister aux rayures, échelle de Mohs : le diamant est à 10, le corindon à 9),\n• la <b>ténacité</b> (résister aux chocs, aux éclats),\n• la <b>stabilité</b> (résister à la lumière, à la chaleur, aux produits chimiques).\n\nUne opale ou une perle sont belles, mais fragiles.",
+      "text": "Un bijou se porte tous les jours : la pierre doit résister. Trois choses comptent :\n\n• la <b>dureté</b> (résister aux rayures),\n• la <b>ténacité</b> (résister aux chocs, aux éclats),\n• la <b>stabilité</b> (résister à la lumière, à la chaleur, aux produits chimiques).\n\nUne opale ou une perle sont belles, mais fragiles. Chacune de ces trois formes a sa leçon, juste après celle-ci sur le panneau.",
       "figure": "criteria",
       "focus": 2,
       "image": ""
@@ -74,6 +74,13 @@
       "figure": "criteria",
       "focus": 4,
       "image": ""
+    },
+    {
+      "title": "L'acceptabilité : la loi",
+      "figure": "criteria",
+      "focus": 4,
+      "image": "",
+      "text": "L'acceptabilité est aussi une question de <b>loi</b>. Certains matériaux ne se vendent pas librement, ou plus du tout :\n\n• l'<b>ivoire d'éléphant</b> : son commerce international est interdit depuis 1989 (Convention de Washington, CITES) ; il en va de même pour la <b>corne de rhinocéros</b> ;\n• l'<b>écaille de tortue de mer</b>, la <b>défense de narval</b>, certains <b>coraux</b> : très strictement réglementés ;\n• l'<b>ivoire de mammouth</b>, fossile, est en revanche autorisé dans beaucoup de pays.\n\nLes règles changent d'un pays à l'autre : un vendeur doit pouvoir prouver l'<b>origine</b> de la matière, avec un certificat. Les <b>diamants de conflit</b> sont eux aussi bannis : le processus de Kimberley garantit leur provenance.\n\nUn gemmologue doit donc savoir reconnaître ces matériaux, et refuser de les authentifier sans papiers."
     },
     {
       "title": "Votre rôle",

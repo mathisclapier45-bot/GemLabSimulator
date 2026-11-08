@@ -108,6 +108,13 @@ public class StoryLetterUI : MonoBehaviour
         scrollGO.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.004f);
 
         var text = RuntimeUIKit.MakeText("Text", scrollGO.transform, "<b><color=#7A2E2A>" + current.Title + "</color></b>\n\n" + current.Body, 16, TextAnchor.UpperLeft, Ink, Vector2.zero, new Vector2(100f, 10f));
+        // The letters are written in the hand of the intro cinematic (IM Fell English Italic), a little bigger since this face is small.
+        var handwriting = Resources.Load<Font>("Fonts/IMFellEnglish-Italic");
+        if (handwriting != null)
+        {
+            text.font = handwriting;
+            text.fontSize = 21;
+        }
         text.horizontalOverflow = HorizontalWrapMode.Wrap;
         text.verticalOverflow = VerticalWrapMode.Overflow;
         text.supportRichText = true;

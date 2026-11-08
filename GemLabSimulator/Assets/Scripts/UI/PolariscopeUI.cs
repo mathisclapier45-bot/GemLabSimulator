@@ -191,6 +191,7 @@ public class PolariscopeUI : MonoBehaviour
         {
             stone.RecordObservation(key);
             ToolFeedbackUI.Instance?.ShowMessage($"Polariscope — {OpticalDescriptions.PolariscopeText(stone.Definition)}");
+            StoryState.Instance?.OnObserved(stone, key);
         }
 
         UpdateView();
@@ -330,6 +331,7 @@ public class PolariscopeUI : MonoBehaviour
         {
             stone.RecordObservation(key);
             ToolFeedbackUI.Instance?.ShowMessage($"Conoscope — {OpticalDescriptions.ConoscopeText(stone.Definition)}");
+            StoryState.Instance?.OnObserved(stone, key);
         }
     }
 

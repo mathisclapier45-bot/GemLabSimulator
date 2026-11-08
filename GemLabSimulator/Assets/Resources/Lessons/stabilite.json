@@ -1,0 +1,51 @@
+{
+  "id": "stabilite",
+  "kind": "concept",
+  "title": "La stabilité",
+  "unlock": "VisualExamination",
+  "animation": "",
+  "tool": {
+    "name": "",
+    "measures": "",
+    "where": "",
+    "records": [],
+    "tips": []
+  },
+  "steps": [
+    {
+      "title": "Tenir dans le temps",
+      "text": "La <b>stabilité</b> est la résistance d'une pierre à son environnement : la lumière, la chaleur, les produits chimiques et l'humidité. C'est la troisième forme de la durabilité, avec la dureté et la ténacité.\n\nUne pierre dure et tenace peut pourtant changer de couleur ou se dégrader avec le temps.",
+      "figure": "stability",
+      "focus": 3,
+      "image": ""
+    },
+    {
+      "title": "La lumière",
+      "text": "Certaines couleurs <b>pâlissent à la lumière</b> : la kunzite, l'améthyste, certains saphirs jaunes, certaines tourmalines roses. Une exposition prolongée au soleil les ternit.\n\nOn range ces pierres à l'abri de la lumière et on les évite sur un bijou toujours exposé.",
+      "figure": "stability",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "La chaleur",
+      "text": "La chaleur peut <b>changer la couleur</b> (une améthyste chauffée devient jaune), <b>fendre</b> une pierre (un choc thermique brise la topaze), <b>ramollir</b> l'ambre ou <b>déshydrater</b> l'opale, qui se craquelle.\n\nLe chauffage est aussi un traitement : il faut savoir qu'une pierre qui a trop chauffé n'est plus la même.",
+      "figure": "stability",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "Les produits chimiques et l'humidité",
+      "text": "Les acides, les parfums, les laques, les produits de nettoyage attaquent les pierres tendres ou poreuses : la perle, le corail, la turquoise, l'opale. Même la sueur les ternit à la longue.\n\nLes émeraudes huilées ou remplies de résine ne supportent pas non plus un bain à ultrasons, qui chasse le remplissage.",
+      "figure": "stability",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• La stabilité regroupe la lumière, la chaleur, les produits chimiques et l'humidité.\n• Les trois formes de la durabilité sont : la <b>dureté</b> (rayures), la <b>ténacité</b> (chocs) et la <b>stabilité</b> (environnement).\n• Une belle pierre se juge sur les trois : c'est ce qui décide du bijou dans lequel on la sertit.",
+      "figure": "stability",
+      "focus": 3,
+      "image": ""
+    }
+  ]
+}

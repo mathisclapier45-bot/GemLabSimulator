@@ -20,6 +20,9 @@ public static class LessonFigures
         {
             case "criteria": Criteria(c, focus, t); break;
             case "taxonomy": Taxonomy(c, focus, t); break;
+            case "hardness": Hardness(c, focus, t); break;
+            case "tenacity": Tenacity(c, focus, t); break;
+            case "stability": Stability(c, focus, t); break;
             case "loupe": Loupe(c, focus, t); break;
             case "carat": Carat(c, focus, t); break;
             case "hydro": Hydro(c, focus, t); break;
@@ -168,6 +171,306 @@ public static class LessonFigures
             c.Label("rubis de synthèse", new Vector2(160f, -30f), 12, exampleColor, 140f);
             c.Label("YAG, zircone cubique", new Vector2(160f, -78f), 12, exampleColor, 140f);
             c.Label("doublets, triplets", new Vector2(160f, -126f), 12, exampleColor, 140f);
+        }
+    }
+
+    // ---- Hardness: Mohs, the absolute scale, the scratch, the hardness pencils ---------------------------------------------------
+
+    private static readonly string[] MohsNames = { "Talc", "Gypse", "Calcite", "Fluorite", "Apatite", "Orthose", "Quartz", "Topaze", "Corindon", "Diamant" };
+
+    // The absolute hardness (Knoop, approximate values) of the ten minerals of the scale.
+    private static readonly float[] Knoop = { 1f, 32f, 135f, 163f, 430f, 560f, 820f, 1340f, 2100f, 7000f };
+
+    // focus 0: the relative scale of Mohs; 1: the absolute scale; 2: a harder stone scratches a softer one; 3: the hardness pencils.
+    private static void Hardness(LessonCanvas c, int focus, float t)
+    {
+        if (focus == 2) { ScratchRule(c, t); return; }
+        if (focus == 3) { Pencils(c, t); return; }
+        if (focus == 4) { TestPlaces(c, t); return; }
+
+        var absolute = focus == 1;
+        const float baseY = -112f;
+        for (var i = 0; i < 10; i++)
+        {
+            var x = -189f + i * 42f;
+            var full = absolute ? Mathf.Max(3f, Knoop[i] / 7000f * 215f) : (i + 1) * 21.5f;
+            var grow = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t * 1.2f - i * 0.06f));
+            var height = full * grow;
+            var color = Color.Lerp(new Color(0.45f, 0.75f, 0.95f, 1f), new Color(0.95f, 0.80f, 0.35f, 1f), i / 9f);
+            c.Rect(new Vector2(x, baseY + height / 2f), new Vector2(30f, height), color);
+            var label = absolute ? (i >= 6 ? Knoop[i].ToString("F0") : "") : (i + 1).ToString();
+            c.Label(label, new Vector2(x, baseY + height + 11f), 12, Ink, 46f);
+            c.Label(MohsNames[i], new Vector2(x, baseY - 14f), 10, Ink, 46f);
+        }
+
+        c.Label(absolute ? "Dureté absolue (Knoop, valeurs approchées)" : "Échelle de Mohs (relative : de 1 à 10)", new Vector2(0f, 152f), 15, Gold, 470f);
+        if (absolute) c.Label("le diamant est environ 3 fois plus dur que le corindon", new Vector2(-30f, 105f), 12, Ink, 300f);
+        else c.Label("chaque minéral raye ceux qui le précèdent", new Vector2(-70f, 105f), 12, Ink, 300f);
+    }
+
+    // A corundum scratches a quartz, but a quartz cannot scratch a corundum.
+    private static void ScratchRule(LessonCanvas c, float t)
+    {
+        var cycle = (t % 4f) / 4f;
+        var travel = Mathf.Clamp01(cycle / 0.6f);
+        for (var row = 0; row < 2; row++)
+        {
+            var y = row == 0 ? 70f : -75f;
+            var scratches = row == 0;
+            var left = new Vector2(-110f, y);
+            c.Rect(new Vector2(0f, y - 22f), new Vector2(260f, 44f), row == 0 ? new Color(0.62f, 0.52f, 0.78f, 1f) : new Color(0.85f, 0.35f, 0.40f, 1f));
+            c.Label(row == 0 ? "Quartz (7)" : "Corindon (9)", new Vector2(-170f, y - 22f), 12, Ink, 90f);
+            if (scratches && travel > 0f) c.Line(left + new Vector2(0f, -3f), left + new Vector2(220f * travel, -3f), 3f, new Color(1f, 1f, 1f, 0.9f));
+
+            // The tip that is drawn across.
+            var tip = left + new Vector2(220f * travel, 0f);
+            c.Rect(tip + new Vector2(0f, 14f), new Vector2(14f, 30f), row == 0 ? new Color(0.85f, 0.35f, 0.40f, 1f) : new Color(0.62f, 0.52f, 0.78f, 1f), 0f);
+            c.Circle(tip, 5f, Ink);
+            c.Label(row == 0 ? "pointe de corindon (9)  →  raye" : "pointe de quartz (7)  →  ne raye pas", new Vector2(40f, y + 34f), 12, row == 0 ? Gold : Dim, 300f);
+        }
+        c.Label("La pierre la plus dure raye la plus tendre", new Vector2(0f, 152f), 15, Gold, 450f);
+    }
+
+    // The hardness test scratches: it is done on a rough stone, or under the base of a cabochon, never on a cut stone.
+    private static void TestPlaces(LessonCanvas c, float t)
+    {
+        var green = new Color(0.40f, 0.90f, 0.50f, 1f);
+        var red = new Color(0.95f, 0.35f, 0.30f, 1f);
+        var background = new Color(0.05f, 0.06f, 0.09f, 1f);
+        var pulse = 0.5f + 0.5f * Mathf.Sin(t * 4f);
+
+        // A rough crystal.
+        c.Rect(new Vector2(-150f, 20f), new Vector2(70f, 46f), Stone, 18f);
+        c.Rect(new Vector2(-138f, 38f), new Vector2(40f, 34f), StoneLight, -14f);
+        c.Rect(new Vector2(-165f, 6f), new Vector2(34f, 30f), new Color(0.50f, 0.28f, 0.68f, 1f), 30f);
+
+        // A cabochon: a dome on a flat base, tested under the base.
+        c.Circle(new Vector2(0f, 14f), 36f, Stone);
+        c.Rect(new Vector2(0f, -22f), new Vector2(90f, 44f), background);
+        c.Rect(new Vector2(0f, -5f), new Vector2(76f, 12f), new Color(0.50f, 0.28f, 0.68f, 1f));
+        c.Circle(new Vector2(-12f, 30f), 8f, new Color(1f, 1f, 1f, 0.35f));
+
+        // A faceted stone.
+        c.Rect(new Vector2(150f, 15f), new Vector2(70f, 70f), Stone, 45f);
+        c.Rect(new Vector2(150f, 15f), new Vector2(40f, 40f), StoneLight, 45f);
+
+        // The marks: good for the two first, forbidden for the cut stone.
+        for (var i = 0; i < 2; i++)
+        {
+            var x = -150f + i * 150f;
+            c.Line(new Vector2(x - 14f, -72f), new Vector2(x - 4f, -84f), 5f, green);
+            c.Line(new Vector2(x - 4f, -84f), new Vector2(x + 16f, -60f), 5f, green);
+        }
+        c.Circle(new Vector2(150f, -72f), 22f + 3f * pulse, WithAlpha(red, 0.25f));
+        c.Line(new Vector2(136f, -58f), new Vector2(164f, -86f), 5f, red);
+        c.Line(new Vector2(136f, -86f), new Vector2(164f, -58f), 5f, red);
+
+        c.Label("Brut", new Vector2(-150f, 85f), 15, Gold, 120f);
+        c.Label("Cabochon", new Vector2(0f, 85f), 15, Gold, 120f);
+        c.Label("Pierre taillée", new Vector2(150f, 85f), 15, Gold, 140f);
+        c.Label("sur n'importe quelle face", new Vector2(-150f, -108f), 11, Ink, 130f);
+        c.Label("sous la base", new Vector2(0f, -108f), 11, Ink, 130f);
+        c.Label("jamais : elle serait rayée", new Vector2(150f, -108f), 11, red, 140f);
+        c.Label("Un test destructif", new Vector2(0f, 148f), 16, Gold, 440f);
+    }
+
+    // The hardness pencils: points of known hardness are drawn across the stone; the first one that leaves a scratch gives the hardness.
+    private static void Pencils(LessonCanvas c, float t)
+    {
+        const float stoneHardness = 6.5f;
+        var pencilHardness = new[] { 5f, 6f, 7f, 8f };
+        var cycle = t % 14f;
+        c.Rect(new Vector2(0f, -45f), new Vector2(300f, 92f), new Color(0.62f, 0.52f, 0.78f, 1f));
+        c.Label("Pierre à tester", new Vector2(-190f, -45f), 12, Ink, 70f);
+
+        string result = "";
+        for (var k = 0; k < 4; k++)
+        {
+            var rowY = -17f - k * 21f;
+            var start = k * 3f;
+            var progress = Mathf.Clamp01((cycle - start) / 1.6f);
+            var scratches = pencilHardness[k] > stoneHardness;
+            if (cycle >= start)
+            {
+                var done = cycle >= start + 1.6f;
+                if (scratches && progress > 0f) c.Line(new Vector2(-130f, rowY), new Vector2(-130f + 260f * progress, rowY), 3f, new Color(1f, 1f, 1f, 0.9f));
+                if (!done || cycle < start + 3f)
+                    result = $"Crayon {pencilHardness[k]:0} : " + (scratches ? "raye la pierre" : "ne raye pas");
+            }
+            if (cycle >= start && cycle < start + 1.8f)
+            {
+                // The pencil, tilted, its tip on the stone.
+                var tip = new Vector2(-130f + 260f * progress, rowY);
+                var direction = new Vector2(Mathf.Cos(35f * Mathf.Deg2Rad), Mathf.Sin(35f * Mathf.Deg2Rad));
+                c.Rect(tip + direction * 40f, new Vector2(80f, 10f), new Color(0.90f, 0.72f, 0.30f, 1f), 35f);
+                c.Rect(tip + direction * 4f, new Vector2(10f, 6f), Dark, 35f);
+            }
+        }
+
+        // The set of pencils, the one in use lit.
+        for (var k = 0; k < 4; k++)
+        {
+            var active = cycle >= k * 3f && cycle < k * 3f + 3f;
+            var x = -105f + k * 70f;
+            c.Rect(new Vector2(x, 112f), new Vector2(54f, 30f), active ? Gold : new Color(0.30f, 0.33f, 0.40f, 1f));
+            c.Label(pencilHardness[k].ToString("0"), new Vector2(x, 112f), 16, active ? Dark : Ink, 54f);
+        }
+        c.Label("Crayons de dureté", new Vector2(-190f, 112f), 11, Dim, 80f);
+        c.Label(result, new Vector2(0f, -122f), 15, Gold, 440f);
+        if (cycle > 10.5f) c.Label("Le 6 ne raye pas, le 7 raye : la dureté est entre 6 et 7", new Vector2(0f, -148f), 13, Ink, 460f);
+    }
+
+    // ---- Tenacity: the shock, the cleavage, the fracture ---------------------------------------------------------------------------
+
+    private static readonly string[] TenacityNames = { "Exceptionnelle", "Très bonne", "Bonne", "Moyenne", "Faible" };
+    private static readonly string[] TenacityExamples = { "jade néphrite", "jadéite, corindon", "diamant, quartz", "émeraude, topaze", "opale, fluorite, kunzite" };
+
+    // focus 0: a hard stone that breaks; 1: cleavage; 2: fracture; 3: the scale; 4: a tough stone.
+    private static void Tenacity(LessonCanvas c, int focus, float t)
+    {
+        if (focus == 3)
+        {
+            for (var i = 0; i < 5; i++)
+            {
+                var y = 100f - i * 48f;
+                var width = 260f - i * 40f;
+                c.Label(TenacityNames[i], new Vector2(-165f, y), 13, Ink, 110f);
+                c.Rect(new Vector2(-95f + width / 2f, y), new Vector2(width, 30f), Color.Lerp(new Color(0.35f, 0.75f, 0.45f, 1f), new Color(0.85f, 0.35f, 0.35f, 1f), i / 4f));
+                c.Label(TenacityExamples[i], new Vector2(-95f + width / 2f, y), 12, Color.white, width - 6f);
+            }
+            c.Label("Plus la barre est longue, plus la pierre encaisse les chocs", new Vector2(0f, -145f), 13, Gold, 460f);
+            return;
+        }
+
+        var cycle = t % 4.5f;
+        var stonePos = new Vector2(0f, -40f);
+        var hit = cycle > 0.7f && cycle < 4f;
+        var baseColor = focus == 4 ? new Color(0.30f, 0.62f, 0.42f, 1f) : Stone;
+
+        // The hammer falls, hits and bounces up.
+        var hammerY = cycle < 0.7f ? Mathf.Lerp(135f, 9f, cycle / 0.7f) : Mathf.Lerp(9f, 135f, Mathf.Clamp01((cycle - 0.9f) / 0.9f));
+        if (focus == 4 && cycle >= 0.7f) hammerY = Mathf.Lerp(9f, 135f, Mathf.Clamp01((cycle - 0.75f) / 0.5f));
+        c.Rect(new Vector2(0f, hammerY + 60f), new Vector2(10f, 90f), Wood);
+        c.Rect(new Vector2(0f, hammerY), new Vector2(76f, 28f), new Color(0.65f, 0.68f, 0.74f, 1f));
+
+        if (focus == 1)
+        {
+            // Cleavage: the stone splits along a flat plane, in one piece after the other.
+            var shift = hit ? Mathf.Min(10f, (cycle - 0.7f) * 40f) : 0f;
+            c.Rect(stonePos + new Vector2(-31f - shift, 0f), new Vector2(58f, 70f), baseColor);
+            c.Rect(stonePos + new Vector2(31f + shift, 0f), new Vector2(58f, 70f), baseColor);
+            if (!hit)
+                for (var i = -2; i <= 2; i++) c.Line(stonePos + new Vector2(i * 22f, -34f), stonePos + new Vector2(i * 22f, 34f), 1.5f, new Color(1f, 1f, 1f, 0.35f));
+            c.Label("Clivage : la pierre se fend selon un plan lisse", new Vector2(0f, -122f), 14, Gold, 450f);
+            return;
+        }
+
+        c.Rect(stonePos, new Vector2(120f, 70f), baseColor);
+        if (hit && focus == 0)
+        {
+            // Cracks that start at the point of impact and spread.
+            var top = stonePos + new Vector2(0f, 34f);
+            c.Line(top, stonePos + new Vector2(-20f, 5f), 2.5f, Dark);
+            c.Line(stonePos + new Vector2(-20f, 5f), stonePos + new Vector2(-34f, -22f), 2.5f, Dark);
+            c.Line(top, stonePos + new Vector2(18f, 4f), 2.5f, Dark);
+            c.Line(stonePos + new Vector2(18f, 4f), stonePos + new Vector2(30f, -24f), 2.5f, Dark);
+            c.Label("Très dure, mais elle casse au choc", new Vector2(0f, -122f), 14, Gold, 450f);
+        }
+        else if (hit && focus == 2)
+        {
+            // Fracture: arcs like the inside of a shell, where a chip has come off.
+            var corner = stonePos + new Vector2(42f, 12f);
+            for (var r = 30; r >= 8; r -= 7)
+            {
+                c.Circle(corner, r, Dark);
+                c.Circle(corner, r - 2f, baseColor);
+            }
+            c.Label("Cassure en coquille : un éclat irrégulier", new Vector2(0f, -122f), 14, Gold, 450f);
+        }
+        else if (focus == 4)
+        {
+            if (hit && cycle < 2.2f) c.Label("Rebond : rien ne se passe", new Vector2(0f, 6f), 12, Ink, 200f);
+            c.Label("Une pierre tenace encaisse le choc sans casser", new Vector2(0f, -122f), 14, Gold, 450f);
+        }
+        else if (focus == 0)
+        {
+            c.Label("Dureté et ténacité ne sont pas la même chose", new Vector2(0f, -122f), 14, Gold, 450f);
+        }
+        else if (focus == 2)
+        {
+            c.Label("Cassure : la pierre se brise de façon irrégulière", new Vector2(0f, -122f), 14, Gold, 450f);
+        }
+    }
+
+    // ---- Stability: light, heat, chemicals ------------------------------------------------------------------------------------------
+
+    // focus 0: light; 1: heat; 2: chemicals and humidity; 3: the three together.
+    private static void Stability(LessonCanvas c, int focus, float t)
+    {
+        if (focus == 3)
+        {
+            var titles = new[] { "Lumière", "Chaleur", "Produits chimiques\net humidité" };
+            var colors = new[] { new Color(0.95f, 0.80f, 0.30f, 1f), new Color(0.90f, 0.45f, 0.25f, 1f), new Color(0.35f, 0.65f, 0.90f, 1f) };
+            for (var i = 0; i < 3; i++)
+            {
+                var x = (i - 1) * 158f;
+                c.Rect(new Vector2(x, 0f), new Vector2(146f, 220f), WithAlpha(colors[i], 0.25f));
+                c.Circle(new Vector2(x, 50f), 34f, colors[i]);
+                c.Label(titles[i], new Vector2(x, -50f), 15, Ink, 140f);
+            }
+            c.Label("La stabilité : tenir dans le temps", new Vector2(0f, 140f), 15, Gold, 440f);
+            return;
+        }
+
+        var stone = new Vector2(0f, -25f);
+        var phase = Mathf.Clamp01((t % 6f) / 5f);
+        var rich = Stone;
+        var pale = new Color(0.78f, 0.74f, 0.82f, 1f);
+
+        if (focus == 0)
+        {
+            var sun = new Vector2(-170f, 100f);
+            c.Circle(sun, 26f, new Color(1f, 0.88f, 0.35f, 1f));
+            for (var i = 0; i < 10; i++)
+            {
+                var angle = i * 36f * Mathf.Deg2Rad;
+                c.Line(sun + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * 34f, sun + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * 48f, 3f, new Color(1f, 0.88f, 0.35f, 1f));
+            }
+            c.Line(sun + new Vector2(30f, -22f), stone + new Vector2(-30f, 30f), 3f, new Color(1f, 0.95f, 0.6f, 0.5f));
+            c.Rect(stone, new Vector2(100f, 100f), Color.Lerp(rich, pale, phase), 45f);
+            c.Rect(new Vector2(-150f, -120f), new Vector2(44f, 30f), rich);
+            c.Rect(new Vector2(150f, -120f), new Vector2(44f, 30f), Color.Lerp(rich, pale, phase));
+            c.Label("avant", new Vector2(-150f, -146f), 12, Ink, 70f);
+            c.Label("après", new Vector2(150f, -146f), 12, Ink, 70f);
+            c.Label("La lumière fait pâlir certaines couleurs", new Vector2(0f, 148f), 14, Gold, 440f);
+        }
+        else if (focus == 1)
+        {
+            c.Rect(stone, new Vector2(100f, 100f), Color.Lerp(rich, new Color(0.45f, 0.30f, 0.45f, 1f), phase), 45f);
+            var flicker = 1f + 0.12f * Mathf.Sin(t * 14f);
+            c.Circle(new Vector2(0f, -100f), 26f * flicker, new Color(0.95f, 0.45f, 0.15f, 1f));
+            c.Circle(new Vector2(0f, -94f), 16f * flicker, new Color(1f, 0.82f, 0.30f, 1f));
+            if (phase > 0.6f)
+            {
+                c.Line(stone + new Vector2(-10f, 40f), stone + new Vector2(6f, 5f), 3f, Dark);
+                c.Line(stone + new Vector2(6f, 5f), stone + new Vector2(-4f, -25f), 3f, Dark);
+            }
+            c.Rect(new Vector2(150f, -20f), new Vector2(16f, 150f), new Color(0.85f, 0.85f, 0.90f, 1f));
+            c.Rect(new Vector2(150f, -95f + 75f * phase), new Vector2(10f, 150f * phase), new Color(0.90f, 0.25f, 0.20f, 1f));
+            c.Label("La chaleur ternit, fend ou ramollit", new Vector2(0f, 148f), 14, Gold, 440f);
+        }
+        else
+        {
+            c.Rect(stone, new Vector2(100f, 100f), rich, 45f);
+            var dropY = Mathf.Lerp(140f, 20f, Mathf.Clamp01((t % 3f) / 1.2f));
+            if ((t % 3f) < 1.4f) c.Circle(new Vector2(0f, dropY), 10f, new Color(0.35f, 0.75f, 0.95f, 1f));
+            var damage = Mathf.Clamp01(((t % 6f) - 1.2f) / 3.5f);
+            for (var i = 0; i < 6; i++)
+            {
+                var offset = new Vector2(Mathf.Sin(i * 2.1f) * 28f, Mathf.Cos(i * 1.7f) * 24f - 25f);
+                c.Circle(offset, 2f + 6f * damage, new Color(0.88f, 0.86f, 0.80f, 0.85f));
+            }
+            c.Label("Acides, parfums, nettoyants, eau : la surface est attaquée", new Vector2(0f, 148f), 14, Gold, 450f);
         }
     }
 

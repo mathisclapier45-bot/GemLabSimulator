@@ -124,8 +124,9 @@ public class ShopUI : MonoBehaviour
         }
         else
         {
-            statusText.text = $"Votre argent : {money}€";
-            var canAfford = money >= item.Price;
+            var credit = wallet != null ? wallet.StoreCredit : 0;
+            statusText.text = credit > 0 ? $"Votre argent : {money}€  ·  Avoir : {credit}€" : $"Votre argent : {money}€";
+            var canAfford = wallet != null && wallet.CanAffordAtShop(item.Price);
             statusText.color = canAfford ? new Color(0.85f, 0.85f, 0.85f) : new Color(0.95f, 0.45f, 0.40f);
             buyLabel.text = canAfford ? "Acheter" : "Fonds insuffisants";
             buyButton.interactable = canAfford;
@@ -148,7 +149,7 @@ public class ShopUI : MonoBehaviour
         }
         if (item == null || tools == null || wallet == null || tools.Has(item.ToolId)) return;
         if (item.AddsToBag && !tools.BagHasRoom) return;
-        if (!wallet.TrySpend(item.Price)) return;
+        if (!wallet.TrySpendAtShop(item.Price)) return;
 
         if (item.AddsToBag) tools.TryAddToBag(item.ToolId);
         else tools.Add(item.ToolId);
@@ -168,7 +169,18 @@ public class ShopUI : MonoBehaviour
         var money = wallet != null ? wallet.Money : 0;
         var left = cards != null ? cards.BoostersLeftToday : 0;
 
-        statusText.text = $"Boosters du jour : {left}   ·   Argent : {money}€";
+        // The booster goes on sale once the player has the binder to keep the cards in.
+        if (!StoryState.BinderOpen)
+        {
+            statusText.text = "Pas encore en rayon.";
+            statusText.color = new Color(0.95f, 0.45f, 0.40f);
+            buyLabel.text = "Indisponible";
+            buyButton.interactable = false;
+            return;
+        }
+
+        var boosterCredit = wallet != null ? wallet.StoreCredit : 0;
+        statusText.text = boosterCredit > 0 ? $"Boosters du jour : {left}   ·   Argent : {money}€ + avoir {boosterCredit}€" : $"Boosters du jour : {left}   ·   Argent : {money}€";
         if (left <= 0)
         {
             statusText.color = new Color(0.95f, 0.45f, 0.40f);
@@ -177,7 +189,7 @@ public class ShopUI : MonoBehaviour
             return;
         }
 
-        var canAfford = money >= item.Price;
+        var canAfford = wallet != null && wallet.CanAffordAtShop(item.Price);
         statusText.color = canAfford ? new Color(0.85f, 0.85f, 0.85f) : new Color(0.95f, 0.45f, 0.40f);
         buyLabel.text = canAfford ? "Acheter" : "Fonds insuffisants";
         buyButton.interactable = canAfford;
@@ -186,8 +198,8 @@ public class ShopUI : MonoBehaviour
     private void BuyBooster(PlayerWallet wallet)
     {
         var cards = PlayerCards.Ensure();
-        if (cards == null || wallet == null || cards.BoostersLeftToday <= 0) return;
-        if (!wallet.TrySpend(item.Price)) return;
+        if (cards == null || wallet == null || cards.BoostersLeftToday <= 0 || !StoryState.BinderOpen) return;
+        if (!wallet.TrySpendAtShop(item.Price)) return;
 
         var draws = cards.OpenBooster();
         Close();
@@ -199,7 +211,7 @@ public class ShopUI : MonoBehaviour
     {
         var pets = PlayerPets.Ensure();
         if (pets == null || wallet == null || pets.Has(item.ToolId) || !pets.HasRoom) return;
-        if (!wallet.TrySpend(item.Price)) return;
+        if (!wallet.TrySpendAtShop(item.Price)) return;
 
         pets.TryAdd(item.ToolId);
         ToolFeedbackUI.Instance?.ShowMessage(!string.IsNullOrEmpty(item.PurchaseMessage)

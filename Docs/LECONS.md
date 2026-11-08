@@ -7,12 +7,15 @@ Chaque leçon est un fichier JSON dans `GemLabSimulator/Assets/Resources/Lessons
 | Fichier | Leçon | S'ouvre avec |
 |---|---|---|
 | `gemmes.json` | Qu'est-ce qu'une gemme ? (jouée aussi pendant la première visite du labo) | la loupe |
+| `durete.json` | La dureté (Mohs, dureté absolue, crayons de dureté, test destructif) | la loupe |
+| `tenacite.json` | La ténacité (clivage, cassure) | la loupe |
+| `stabilite.json` | La stabilité (lumière, chaleur, produits chimiques) | la loupe |
 | `loupe.json` | La loupe et la chamoisine | la loupe |
 | `balance_carats.json` | La balance à carats | la balance |
 | `balance_hydrostatique.json` | La balance hydrostatique | la densité |
 | `refractometre.json` | Le réfractomètre (animation `RefractionLessonUI`, le JSON sert de fiche) | le réfractomètre |
-| `systemes_cristallins.json` | Les systèmes cristallins | le polariscope (plus tard dans l'histoire) |
-| `polariscope.json` | Polariscope et conoscope | le polariscope (plus tard dans l'histoire) |
+| `systemes_cristallins.json` | Les systèmes cristallins | le polariscope (chapitre 2, présenté par Thouvenot) |
+| `polariscope.json` | Polariscope et conoscope | le polariscope (chapitre 2, présenté par Thouvenot) |
 
 ## Format
 
@@ -33,7 +36,7 @@ Chaque leçon est un fichier JSON dans `GemLabSimulator/Assets/Resources/Lessons
 }
 ```
 
-- `figure` : le schéma provisoire dessiné par le code (`criteria`, `loupe`, `carat`, `hydro`, `systems`, `polariscope`). `focus` choisit ce qu'il montre (le critère, le système cristallin...).
+- `figure` : le schéma provisoire dessiné par le code (`criteria`, `taxonomy`, `hardness`, `tenacity`, `stability`, `loupe`, `carat`, `hydro`, `systems`, `polariscope`). `focus` choisit ce qu'il montre (le critère, le système cristallin...).
 - `image` : le nom (sans extension) d'une image de l'artiste, placée dans `Assets/Resources/Lessons/Images/` et importée comme **Sprite**. Si elle existe, elle **remplace** le schéma de l'étape. Exemple : `gemme_arbre` pour la deuxième étape de `gemmes.json`.
 - Pour ajouter une leçon : un nouveau JSON, et son id dans `LessonLibrary.Order`.
 

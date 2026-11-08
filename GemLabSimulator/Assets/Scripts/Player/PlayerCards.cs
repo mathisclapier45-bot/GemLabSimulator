@@ -73,15 +73,19 @@ public class PlayerCards : MonoBehaviour
     public int BoostersLeftToday => CurrentDay != boosterDay ? BoostersPerDay : Mathf.Max(0, BoostersPerDay - boostersToday);
 
     // Draws the cards of a booster and adds them to the binder. The caller has already taken the money.
-    public List<CardDraw> OpenBooster()
+    public List<CardDraw> OpenBooster(bool gift = false)
     {
-        var day = CurrentDay;
-        if (day != boosterDay)
+        // A booster that is given does not count among the boosters of the day.
+        if (!gift)
         {
-            boosterDay = day;
-            boostersToday = 0;
+            var day = CurrentDay;
+            if (day != boosterDay)
+            {
+                boosterDay = day;
+                boostersToday = 0;
+            }
+            boostersToday++;
         }
-        boostersToday++;
 
         var draws = new List<CardDraw>();
         foreach (var card in CardCatalog.DrawBooster(CardsPerBooster))

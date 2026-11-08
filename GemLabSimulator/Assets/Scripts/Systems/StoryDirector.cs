@@ -466,6 +466,39 @@ public class StoryDirector : MonoBehaviour
                     "Les onglets, à gauche de l'instrument, vous donnent la liste des pierres avec leurs indices et le signe optique, et expliquent les situations possibles.");
                 break;
 
+            case StoryState.PhaseTwinsLab:
+                yield return TalkTwinsLab(npc, state);
+                break;
+
+            case StoryState.PhaseTwinsRefracto:
+                yield return Say(npc,
+                    "Mesurez l'indice des deux pierres au réfractomètre, sur la rangée du haut : la pierre du client et ma pierre de référence. N'oubliez pas la goutte de liquide pour chacune.",
+                    "Revenez me voir quand vous aurez les deux.");
+                break;
+
+            case StoryState.PhaseTwinsLesson:
+                yield return TalkTwinsLesson(npc, state);
+                break;
+
+            case StoryState.PhaseTwinsPolariscope:
+                yield return Say(npc,
+                    "Le polariscope est sur la rangée du haut, à droite. Passez-y les deux pierres, et tournez chacune d'un tour complet entre les filtres croisés.",
+                    "Puis prenez le conoscope et placez-le devant la pierre du client, en la regardant le long d'un axe optique. Revenez me dire ce que vous avez vu.");
+                break;
+
+            case StoryState.PhaseTwinsReport:
+                yield return TalkTwinsReport(npc, state);
+                break;
+
+            case StoryState.PhaseTwinsIdentify:
+                yield return Say(npc,
+                    "Alors, c'est un spinelle bleu ou non ? Réfléchissez à ce que vous avez vu : indice, polariscope, conoscope. Quand vous êtes sûr, remettez votre rapport au directeur.");
+                break;
+
+            case StoryState.PhaseTwinsValidate:
+                yield return TalkTwinsValidate(npc, state);
+                break;
+
             case StoryState.PhaseStoneIdentify:
                 yield return Say(npc,
                     "Alors, qu'avez-vous trouvé ? Croisez vos mesures : l'indice, la densité, l'éclat, la couleur. Les onglets du réfractomètre listent les pierres possibles.",
@@ -817,21 +850,27 @@ public class StoryDirector : MonoBehaviour
     // The stone given by the man of the town: a pink tourmaline, cut, natural and untreated, that can be found with the refractometer (uniaxial, negative).
     private static GemInstance MakeStrangerStone()
     {
+        return MakeStone("Tourmaline_Rose", 0.8f, 2.6f);
+    }
+
+    // A cut stone of the species, natural and untreated, of a weight between the two limits (the best of a few tries).
+    private static GemInstance MakeStone(string speciesName, float minCarat, float maxCarat)
+    {
         var database = GemDatabase.Instance;
         if (database == null) return null;
-        GemDefinition tourmaline = null;
+        GemDefinition species = null;
         foreach (var definition in database.allGems)
-            if (definition != null && definition.name == "Tourmaline_Rose") tourmaline = definition;
-        if (tourmaline == null) return null;
+            if (definition != null && definition.name == speciesName) species = definition;
+        if (species == null) return null;
 
         GemInstance best = null;
         for (var i = 0; i < 300; i++)
         {
-            var candidate = new GemInstance(tourmaline);
+            var candidate = new GemInstance(species);
             best = candidate;
-            if (candidate.IsDonation || candidate.IsSynthetic || candidate.TreatmentGrade != "Non traité") continue;
+            if (candidate.IsDonation || candidate.IsSynthetic || candidate.IsRough || candidate.TreatmentGrade != "Non traité") continue;
             if (candidate.ClarityGrade != "Eye-clean" && candidate.ClarityGrade != "Inclus") continue;
-            if (candidate.CaratWeight < 0.8f || candidate.CaratWeight > 2.6f) continue;
+            if (candidate.CaratWeight < minCarat || candidate.CaratWeight > maxCarat) continue;
             break;
         }
         return best;
@@ -932,23 +971,39 @@ public class StoryDirector : MonoBehaviour
         if (man != null) Destroy(man);
     }
 
-    // In the evening, on the way home: the player gives the stone back to the man, who thanks them with 50 euros and gives their number.
+    // Anselme waits at the end of the footbridge on the way to the player's house, at any hour. When the player comes, he walks up to them: the player gives the stone
+    // back, and he thanks them with 50 euros and gives their number.
     private IEnumerator StrangerReturn(StoryState state)
     {
-        // He is there when the evening comes and the player walks toward their house.
-        while (state.Phase == StoryState.PhaseStoneReturn && (OpeningHours.CurrentHour < 17.5f || DistanceToPlayer(StrangerMeet) > 15f)) yield return null;
-        if (state.Phase != StoryState.PhaseStoneReturn) yield break;
-
-        GameObject man = null;
-        yield return StrangerAppears(created => man = created);
+        var post = new Vector2(StrangerMeet.x, StrangerMeet.y - 1.5f);
+        var man = new GameObject("Anselme");
+        var manRenderer = man.AddComponent<SpriteRenderer>();
+        manRenderer.sortingOrder = 4;
+        var idleFrames = StrangerFramesOf("Up");
+        if (idleFrames.Length > 0) manRenderer.sprite = idleFrames[0];
+        man.transform.position = new Vector3(post.x, post.y, 0f);
 
         var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
-        var gem = StrangerGem();
-        if (gem == null)
+        GemInstance gem = null;
+        while (state.Phase == StoryState.PhaseStoneReturn)
         {
-            yield return SayAs("Anselme", man, "Ah, vous voilà ! Et ma pierre ? Vous ne l'avez plus sur vous ? Rapportez-la-moi quand vous l'aurez retrouvée : je suis souvent par ici le soir.");
+            if (man == null) yield break;
+            if (DistanceToPlayer(post) > 7f) { yield return null; continue; }
+
+            // He comes to meet the player.
+            yield return WalkPerson(man.transform, () => PlayerTransform != null ? (Vector2)PlayerTransform.position : post, 3.4f, 5.5f);
+            gem = StrangerGem();
+            if (gem != null) break;
+
+            // Without the stone: he says so, goes back to his place and waits until the player has gone away and comes back.
+            yield return SayAs("Anselme", man, "Ah, vous voilà ! Et ma pierre ? Vous ne l'avez plus sur vous ? Rapportez-la-moi quand vous l'aurez retrouvée : je reste souvent près de la passerelle.");
             DialogueBoxUI.Hide();
-            yield return StrangerLeaves(man);
+            yield return WalkPerson(man.transform, () => post, 0.3f, 4f);
+            while (state.Phase == StoryState.PhaseStoneReturn && DistanceToPlayer(post) < 12f) yield return null;
+        }
+        if (state.Phase != StoryState.PhaseStoneReturn || gem == null)
+        {
+            if (man != null) Destroy(man);
             yield break;
         }
 
@@ -967,9 +1022,10 @@ public class StoryDirector : MonoBehaviour
         state.AddContact("anselme");
         ToolFeedbackUI.Instance?.ShowMessage("Nouveau contact dans votre téléphone : Anselme.");
         yield return SayAs("Vous", player, "Merci, Anselme. À bientôt !");
-        yield return SayAs("Anselme", man, "Bonne soirée, et bienvenue à Crystal Grove !");
+        yield return SayAs("Anselme", man, "Bonne journée, et bienvenue à Crystal Grove !");
         DialogueBoxUI.Hide();
-        state.SetPhase(StoryState.PhaseDone);
+        state.SetPhase(StoryState.PhaseTwinsSleep);
+        ToolFeedbackUI.Instance?.ShowMessage("Rentrez vous coucher : demain, la professeure Thouvenot vous attend au laboratoire.");
         yield return StrangerLeaves(man);
     }
 
@@ -1072,11 +1128,236 @@ public class StoryDirector : MonoBehaviour
         yield return Say(npc,
             "C'est exact ! Et c'est ce que j'avais vu du premier coup d'œil. Mais maintenant, vous savez le prouver.",
             "Un indice vers 1,625, deux lectures, une seule limite qui bouge, la basse : c'est un uniaxe négatif. La densité autour de 3,06 et la couleur rose confirment : une tourmaline. Retenez bien cette méthode : une mesure ne suffit jamais, c'est leur accord qui fait la certitude.",
-            "Gardez la pierre un moment : elle n'est pas à vous. Anselme vous a promis une récompense, et il serait ravi de la revoir. Rendez-la-lui ce soir, en rentrant chez vous : il se promène souvent par là.",
+            "Gardez la pierre un moment : elle n'est pas à vous. Anselme vous a promis une récompense, et il serait ravi de la revoir. Rendez-la-lui en rentrant chez vous : il vous attend près de la passerelle, du côté de votre maison.",
             "En attendant, profitez du réfractomètre : passez-y les autres gemmes de votre inventaire, une par une, avec une goutte de liquide chacune. Chaque indice relevé, chaque limite d'ombre observée complète les pages de votre grimoire.",
-            "Plus vous mesurez, plus vos pages se remplissent. Et quand un doute reste, vous saurez quoi mesurer pour le lever.");
+            "Plus vous mesurez, plus vos pages se remplissent. Et quand un doute reste, vous saurez quoi mesurer pour le lever.",
+            "Autre chose : passez donc au GemStore. Léa, la vendeuse, a quelque chose à vous remettre de la part de Vincent. Elle vous attend.");
+        state.SetPhase(StoryState.PhaseLeaVisit);
+        ToolFeedbackUI.Instance?.ShowMessage("Passez vos autres gemmes au réfractomètre, puis rendez visite à Léa, au GemStore : elle a quelque chose pour vous.");
+    }
+
+    // ---- The visit to Léa, at the GemStore --------------------------------------------------------------------------------------------
+
+    public void TalkToLea(GameObject npc)
+    {
+        if (talking) return;
+        StartCoroutine(TalkLeaRoutine(npc));
+    }
+
+    // Léa tells about Vincent, gives the credit he left, his card binder (and a booster in it) and says that a booster arrives every morning.
+    private IEnumerator TalkLeaRoutine(GameObject npc)
+    {
+        var state = StoryState.Instance;
+        if (state == null || state.Phase != StoryState.PhaseLeaVisit) yield break;
+        talking = true;
+
+        var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
+        yield return SayAs("Léa", npc,
+            "Bonjour ! Vous êtes le neveu de Vincent, n'est-ce pas ? La professeure Thouvenot m'a prévenue que vous passeriez. Je suis Léa, je tiens le GemStore.",
+            "Votre oncle était l'un de mes meilleurs clients... et un ami. Il venait presque tous les jours, il restait des heures devant les vitrines. Il parlait souvent de vous.");
+        yield return SayAs("Vous", player, "Il ne m'a jamais dit qu'il venait ici si souvent.");
+        yield return SayAs("Léa", npc,
+            "Il était comme ça, discret. Avant de partir, il m'a laissé deux choses pour vous. Je les ai gardées bien au chaud.",
+            "D'abord, un avoir de 60 € à dépenser ici. Il disait que vous auriez besoin d'une bonne loupe : la Loupe 10× est sur l'étagère du fond, elle coûte 59 €. Votre avoir couvre presque tout.");
+
+        PlayerWallet.Instance?.AddStoreCredit(60);
+        Sfx.Play(Sfx.Id.Coin);
+        ToolFeedbackUI.Instance?.ShowMessage("Avoir de 60 € reçu : il sera déduit de vos achats au GemStore.");
+
+        yield return SayAs("Léa", npc,
+            "Et puis ceci. Vincent était un grand collectionneur : des cartes, surtout. Il raffolait des boosters, il en ouvrait un chaque matin avant de commencer sa journée !",
+            "Il vous laisse son classeur. Il est vide pour l'instant : il vous revient de le remplir. Et pour bien commencer, voici un booster offert.");
+
+        state.UnlockBinder();
+        Sfx.Play(Sfx.Id.Pickup);
+        ToolFeedbackUI.Instance?.ShowMessage("Le classeur de Vincent est dans votre sac : onglet « Classeur », touche B.");
+
+        // The booster opens on the screen.
+        var cards = PlayerCards.Ensure();
+        if (cards != null)
+        {
+            var draws = cards.OpenBooster(true);
+            DialogueBoxUI.Hide();
+            BoosterUI.Show(draws);
+            yield return null;
+            while (BoosterUI.IsShowing) yield return null;
+        }
+
+        yield return SayAs("Léa", npc,
+            "Voilà un bon début de collection ! Un conseil : les cartes se rangent toutes seules dans le classeur, par pages.",
+            "Et une bonne nouvelle : un booster est livré au magasin chaque matin. Un seul par jour, alors ne tardez pas : il est sur le comptoir, à 11 €.",
+            "Passez quand vous voulez. Et si vous avez des nouvelles de Vincent... dites-le-moi, d'accord ?");
+        DialogueBoxUI.Hide();
+
         state.SetPhase(StoryState.PhaseStoneReturn);
-        ToolFeedbackUI.Instance?.ShowMessage("Ce soir, rendez la pierre à Anselme. D'ici là, passez vos autres gemmes au réfractomètre pour compléter votre grimoire.");
+        ToolFeedbackUI.Instance?.ShowMessage("Rendez la pierre à Anselme : il vous attend près de la passerelle, vers votre maison. En attendant, la Loupe 10× vous attend au GemStore.");
+        talking = false;
+    }
+
+    // ---- Chapter 2: the stones that look alike ---------------------------------------------------------------------------------------
+
+    private static string Fr(float value, string format)
+    {
+        return value.ToString(format, System.Globalization.CultureInfo.GetCultureInfo("fr-FR"));
+    }
+
+    // Thouvenot gives the client's stone (a kyanite that was sold as a blue spinel) and a reference spinel from her collection.
+    private IEnumerator TalkTwinsLab(GameObject npc, StoryState state)
+    {
+        yield return Say(npc,
+            "Bonjour ! Bien dormi ? Tant mieux : j'ai une affaire un peu particulière pour vous ce matin.",
+            "Un client m'a apporté une pierre bleue. Il l'a achetée comme un spinelle bleu, et il voudrait savoir si c'est vrai.",
+            "Pour que vous puissiez comparer, voici aussi une pierre de référence tirée de ma collection : un vrai spinelle bleu. Je vous la prête, ne la perdez pas.");
+
+        var client = MakeStone("Kyanite", 0.8f, 2.8f);
+        var reference = MakeStone("Spinelle_Bleu", 0.8f, 2.8f);
+        if (client == null || reference == null || PlayerInventory.Instance == null)
+        {
+            yield return Say(npc, "Hmm, je ne retrouve plus mes pierres... Repassez me voir dans un instant.");
+            yield break;
+        }
+        reference.MarkIdentified();
+
+        while (PlayerInventory.Instance.FreeSlots < 2)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage("Votre inventaire est plein : faites de la place pour deux pierres.");
+            yield return new WaitForSeconds(2.5f);
+        }
+        PlayerInventory.Instance.TryAddGem(client);
+        PlayerInventory.Instance.TryAddGem(reference);
+        Sfx.Play(Sfx.Id.Pickup);
+        state.OnTwinsGiven(client, reference);
+        ToolFeedbackUI.Instance?.ShowMessage("Vous avez reçu deux pierres bleues : la pierre du client et la pierre de référence.");
+
+        yield return Say(npc,
+            "Commencez comme hier : le réfractomètre. Mesurez l'indice des deux pierres, avec la goutte de liquide de contact pour chacune.",
+            "Revenez me voir quand vous aurez les deux indices.");
+    }
+
+    // The two indices are alike: the refractometer cannot tell them apart. The lessons on the crystal systems and the polariscope, then the polariscope opens.
+    private IEnumerator TalkTwinsLesson(GameObject npc, StoryState state)
+    {
+        var client = state.TwinGem;
+        var reference = state.ReferenceGem;
+        if (client == null || reference == null)
+        {
+            yield return Say(npc, "Il me faut les deux pierres sous les yeux : la pierre du client et ma pierre de référence doivent être dans votre inventaire.");
+            yield break;
+        }
+
+        var key = ExaminationTool.MeasurementType.RefractiveIndex.ToString();
+        var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
+        yield return Say(npc, "Alors ? Qu'est-ce que le réfractomètre a donné ?");
+        yield return SayAs("Vous", player,
+            $"{Fr(reference.GetMeasuredValue(key), "F2")} pour la pierre de référence, {Fr(client.GetMeasuredValue(key), "F2")} pour celle du client. C'est presque pareil...");
+        yield return Say(npc,
+            "Exactement. Les deux indices sont presque identiques : le réfractomètre seul ne tranche pas. Et la densité n'est guère plus parlante.",
+            "Il faut interroger la pierre autrement. Pour cela, il faut comprendre comment un cristal est construit : c'est ce qui décide de la façon dont il traite la lumière.");
+
+        DialogueBoxUI.Hide();
+        yield return PlayLesson("systemes_cristallins");
+
+        yield return Say(npc,
+            "Une pierre cubique est isotrope : la lumière s'y comporte de la même façon dans toutes les directions. Les autres systèmes sont anisotropes : la lumière s'y sépare en deux rayons.",
+            "Pour voir cette différence, voici un nouvel instrument : le polariscope, avec son conoscope. Laissez-moi vous le présenter.");
+
+        DialogueBoxUI.Hide();
+        yield return PlayLesson("polariscope");
+
+        state.SetPhase(StoryState.PhaseTwinsPolariscope);
+        yield return Say(npc,
+            "Le polariscope est maintenant à vous : sur la rangée du haut, à droite. Passez-y les deux pierres, et tournez chacune d'un tour complet entre les filtres croisés.",
+            "Puis servez-vous du conoscope sur la pierre du client. Vous retrouverez ces explications sur le panneau des leçons, dans l'entrée du laboratoire. Revenez me dire ce que vous avez vu.");
+        ToolFeedbackUI.Instance?.ShowMessage("Passez les deux pierres au polariscope (rangée du haut, à droite), puis la pierre du client au conoscope.");
+    }
+
+    // What the polariscope and the conoscope have shown: three questions, and the conclusion.
+    private IEnumerator TalkTwinsReport(GameObject npc, StoryState state)
+    {
+        var client = state.TwinGem;
+        var reference = state.ReferenceGem;
+        if (client == null || reference == null)
+        {
+            yield return Say(npc, "Il me faut les deux pierres sous les yeux : elles doivent être dans votre inventaire.");
+            yield break;
+        }
+
+        var dark = "Elle reste sombre : isotrope";
+        var flashes = "Elle s'éclaire quatre fois par tour : anisotrope";
+        var bright = "Elle reste claire : agrégat";
+        var seed = client.SpecimenId ?? "";
+
+        yield return Say(npc, "Alors ? Qu'est-ce que le polariscope vous a montré ? Commençons par ma pierre de référence, le spinelle.");
+        var picked = -1;
+        yield return Quiz(npc, "Entre les filtres croisés, que fait le spinelle quand on le tourne ?", ThreeAnswers(dark, new[] { dark, flashes, bright }, seed + "p1", out var rightIndex), i => picked = i);
+        if (picked != rightIndex)
+        {
+            yield return Say(npc, "Non : retournez au polariscope et regardez le spinelle faire un tour complet. Un spinelle est cubique, et une pierre cubique...  Revenez me le dire.");
+            yield break;
+        }
+        yield return Say(npc, "Oui : sombre, quel que soit l'angle. Le spinelle est cubique, donc isotrope : il ne change pas la lumière polarisée.");
+
+        picked = -1;
+        yield return Quiz(npc, "Et la pierre du client, entre les filtres croisés ?", ThreeAnswers(flashes, new[] { dark, flashes, bright }, seed + "p2", out rightIndex), i => picked = i);
+        if (picked != rightIndex)
+        {
+            yield return Say(npc, "Non : retournez au polariscope et faites tourner la pierre du client d'un tour complet. Regardez bien : s'éclaire-t-elle ?");
+            yield break;
+        }
+        yield return Say(npc,
+            "Oui : elle s'éclaire et s'éteint quatre fois par tour. C'est donc une pierre anisotrope. Ce n'est déjà plus un spinelle !",
+            "Reste à savoir de quelle sorte d'anisotrope il s'agit : uniaxe ou biaxe. C'est le travail du conoscope.");
+
+        var biaxial = "Deux « yeux » : biaxe";
+        var uniaxial = "Une croix noire entourée d'anneaux : uniaxe";
+        var none = "Aucune figure : isotrope";
+        picked = -1;
+        yield return Quiz(npc, "Que montre le conoscope sur la pierre du client ?", ThreeAnswers(biaxial, new[] { biaxial, uniaxial, none }, seed + "p3", out rightIndex), i => picked = i);
+        if (picked != rightIndex)
+        {
+            yield return Say(npc, "Non : reprenez le conoscope devant la pierre du client, en la regardant le long d'un axe optique. Comptez les « yeux » : un ou deux ?");
+            yield break;
+        }
+
+        state.SetPhase(StoryState.PhaseTwinsIdentify);
+        yield return Say(npc,
+            "Oui : deux axes optiques, donc une pierre biaxe. Pas un spinelle, donc : le spinelle est isotrope, la pierre du client est biaxe.",
+            "Un indice vers 1,72, une densité autour de 3,7, une couleur bleue, des propriétés biaxes : à vous de trouver laquelle. Les onglets du réfractomètre listent les pierres possibles.",
+            "Quand vous serez sûr de vous, remettez votre rapport au directeur.");
+        ToolFeedbackUI.Instance?.ShowMessage("Identifiez la pierre du client et remettez votre rapport au directeur.");
+    }
+
+    // The director has validated: Thouvenot confirms the answer, shows where the stone came from, and gives a first clue about Vincent.
+    private IEnumerator TalkTwinsValidate(GameObject npc, StoryState state)
+    {
+        var client = state.TwinGem;
+        var reference = state.ReferenceGem;
+        if (client == null)
+        {
+            yield return Say(npc, "Alors, la pierre du client ? Il me faut l'avoir sous les yeux pour confirmer votre réponse : elle doit être dans votre inventaire.");
+            yield break;
+        }
+
+        var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
+        yield return Say(npc, "Le directeur m'a dit que votre rapport est validé. Alors, quelle est votre réponse ?");
+        yield return SayAs("Vous", player, $"Une {client.Definition.displayName.ToLowerInvariant()}.");
+        yield return Say(npc,
+            "C'est exact ! Un disthène, comme on l'appelle aussi. Bleue comme un spinelle, mais elle n'a rien de cubique : c'est un cristal triclinique, qui se laisse rayer dans un sens et pas dans l'autre. Même sa dureté dépend de la direction.",
+            "Vous voyez pourquoi j'ai tenu à vous faire comprendre les systèmes cristallins : une pierre se reconnaît à ce qu'elle est à l'intérieur, pas seulement à sa couleur ni à son indice.");
+        yield return Say(npc,
+            "Il y a autre chose. Dans le sachet du client, j'ai trouvé un petit cachet : « Valmont ». Il avait acheté la pierre sous le nom de spinelle bleu à cette maison.",
+            "Ce nom me dit quelque chose. Vincent l'avait souligné dans son carnet, la semaine avant de disparaître. Je ne sais pas encore ce que cela veut dire, mais gardez l'œil ouvert.");
+        yield return SayAs("Vous", player, "Valmont... Je m'en souviendrai.");
+        yield return Say(npc,
+            "Je reprends les deux pierres : je rendrai la sienne au client, avec votre conclusion. Il vous envoie 60 € pour votre peine.");
+
+        PlayerInventory.Instance?.RemoveGem(client);
+        if (reference != null) PlayerInventory.Instance?.RemoveGem(reference);
+        PlayerWallet.Instance?.AddMoney(60);
+        Sfx.Play(Sfx.Id.Coin);
+        ToolFeedbackUI.Instance?.ShowMessage("Récompense reçue : 60 €.");
+        state.SetPhase(StoryState.PhaseTwinsDone);
+        yield return Say(npc, "Bon travail. Vous venez de faire votre premier pas contre ceux qui vendent une pierre pour une autre.");
     }
 
     // The chamois cloth lies on the desk of the loupe (the scene has no such prop): a folded piece of yellow leather.

@@ -61,6 +61,7 @@ public static class SaveSystem
         {
             saveName = string.IsNullOrEmpty(existingName) ? $"Partie {ActiveSlot}" : existingName,
             money = PlayerWallet.Instance.Money,
+            storeCredit = PlayerWallet.Instance.StoreCredit,
             currentDay = GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1,
             timeOfDay = OpeningHours.CurrentHour,
             birthdayDay = GameCalendar.BirthdayDay,
@@ -196,6 +197,8 @@ public static class SaveSystem
 
         if (PlayerWallet.Instance != null)
             PlayerWallet.Instance.SetMoney(data.money);
+        if (PlayerWallet.Instance != null)
+            PlayerWallet.Instance.SetStoreCredit(data.storeCredit);
 
         if (GameClock.Instance != null)
             GameClock.Instance.SetDay(data.currentDay);

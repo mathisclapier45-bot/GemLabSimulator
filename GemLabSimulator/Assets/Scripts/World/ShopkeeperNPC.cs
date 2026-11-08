@@ -27,6 +27,15 @@ public class ShopkeeperNPC : MonoBehaviour
         if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
 
         Sfx.Play(Sfx.Id.Chat);
+
+        // The visit of the story: Léa has something left by Vincent.
+        var story = StoryState.Instance;
+        if (story != null && !story.Legacy && story.Phase == StoryState.PhaseLeaVisit && StoryDirector.Instance != null)
+        {
+            if (!DialogueBoxUI.IsShowing && !PlayerController.InputLocked) StoryDirector.Instance.TalkToLea(gameObject);
+            return;
+        }
+
         Speak();
     }
 
@@ -35,6 +44,6 @@ public class ShopkeeperNPC : MonoBehaviour
     {
         var line = Lines[lineIndex % Lines.Length];
         lineIndex++;
-        DialogueBoxUI.Say("Vendeur", line, gameObject, lineIndex % Lines.Length != 0 ? (System.Action)Speak : null);
+        DialogueBoxUI.Say("Léa", line, gameObject, lineIndex % Lines.Length != 0 ? (System.Action)Speak : null);
     }
 }

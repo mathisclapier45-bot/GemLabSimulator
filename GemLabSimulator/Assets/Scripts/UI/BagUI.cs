@@ -289,6 +289,15 @@ public class BagUI : MonoBehaviour
             if (!hasGuide && activeTab >= 0 && !TabVisible(tabs[activeTab])) SelectTab(0);
         }
 
+        // The binder tab appears once Léa has given the binder of Vincent.
+        var binderOpen = StoryState.BinderOpen;
+        if (binderOpen != binderShown)
+        {
+            binderShown = binderOpen;
+            LayoutTabs();
+            if (!binderOpen && activeTab >= 0 && !TabVisible(tabs[activeTab])) SelectTab(0);
+        }
+
         // The Rapaport tab exists only while the subscription lasts.
         var access = RapaportState.HasAccess;
         if (access != rapaportShown)
@@ -425,6 +434,7 @@ public class BagUI : MonoBehaviour
         else tabs.Add(tab);
     }
 
+    private bool binderShown = true;
     private Text tabHint;
 
     // The logo of a tab, the letter of its key in the corner and the title shown on hover.
@@ -459,7 +469,7 @@ public class BagUI : MonoBehaviour
 
         binder.AttachToBag(panel.transform);
         var before = tabs.FindIndex(t => t.Label.StartsWith("Rapaport"));
-        AddTab("Classeur (B)", KeyCode.B, binder.Panel, 120f, 690f, binder.ShowInBag, binder.HideInBag, null, 900f, -150f, before);
+        AddTab("Classeur (B)", KeyCode.B, binder.Panel, 120f, 690f, binder.ShowInBag, binder.HideInBag, () => StoryState.BinderOpen, 900f, -150f, before);
         LayoutTabs();
     }
 

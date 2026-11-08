@@ -265,6 +265,7 @@ public class SaveData
 {
     public string saveName = "";
     public int money;
+    public int storeCredit;                                // the credit left by Vincent at the GemStore
     public int currentDay = 1;
     public int birthdayDay;            // birthday of the player, chosen when the game is created (0: none)
     public int birthdayMonth;
@@ -290,6 +291,9 @@ public class SaveData
     public List<string> storyCalls = new List<string>();     // the calls received, for the phone
     public int storyTutorialRound = 1;                       // which of the three stones of the tutorial (StoryState.TutorialRound)
     public List<string> storyContacts = new List<string>();  // the people whose number the player has (besides Thouvenot)
+    public bool storyBinder;                               // Léa has given the card binder
+    public string storyTwinSpecimen = "";                  // chapter 2: the client's stone
+    public string storyTwinReference = "";                 // chapter 2: the reference stone lent by Thouvenot
     public List<string> storyTools = new List<string>();     // the instruments of the laboratory that Thouvenot has presented (MeasurementType names)
     public string storyStrangerSpecimen = "";                // the specimen id of the stone given by the man of the town
     public string storyTutorialSpecimen = "";                // the specimen id of the stone of the tutorial, once taken from the mailbox

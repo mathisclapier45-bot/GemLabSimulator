@@ -17,6 +17,37 @@ public class SleepSequence : MonoBehaviour
     private SpriteRenderer playerRenderer;
     private readonly List<SpriteRenderer> zs = new List<SpriteRenderer>();
     private bool morning;
+    private Text author;
+    private float fadeAlpha;
+    private readonly List<Image> stars = new List<Image>();
+    private readonly List<Vector4> starData = new List<Vector4>();     // x, y, phase, speed of each star
+
+    // The words of the night: a different one each night.
+    private static readonly string[][] Quotes =
+    {
+        new[] { "La nuit porte conseil.", "proverbe" },
+        new[] { "Rien ne sert de courir ; il faut partir à point.", "Jean de La Fontaine" },
+        new[] { "Dans les champs de l'observation, le hasard ne favorise que les esprits préparés.", "Louis Pasteur" },
+        new[] { "On ne voit bien qu'avec le cœur. L'essentiel est invisible pour les yeux.", "Antoine de Saint-Exupéry" },
+        new[] { "Patience et longueur de temps font plus que force ni que rage.", "Jean de La Fontaine" },
+        new[] { "Le vrai voyage de découverte ne consiste pas à chercher de nouveaux paysages, mais à avoir de nouveaux yeux.", "Marcel Proust" },
+        new[] { "Un voyage de mille lieues commence toujours par un premier pas.", "Lao Tseu" },
+        new[] { "Le doute n'est pas une condition agréable, mais la certitude est absurde.", "Voltaire" },
+        new[] { "La nature ne fait pas de sauts.", "Gottfried Wilhelm Leibniz" },
+        new[] { "Il faut cultiver notre jardin.", "Voltaire" },
+        new[] { "Ce qui est simple est toujours faux. Ce qui ne l'est pas est inutilisable.", "Paul Valéry" },
+        new[] { "Qui veut voyager loin ménage sa monture.", "Jean Racine" },
+        new[] { "Rien ne se perd, rien ne se crée, tout se transforme.", "d'après Antoine Lavoisier" },
+        new[] { "L'imagination est plus importante que la connaissance.", "Albert Einstein" },
+        new[] { "Tout vient à point à qui sait attendre.", "proverbe" },
+        new[] { "Le temps est un grand maître, dit-on ; le malheur est qu'il tue ses élèves.", "Hector Berlioz" },
+    };
+
+    private static string[] QuoteOfTheNight()
+    {
+        var day = GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1;
+        return Quotes[Mathf.Abs(day - 1) % Quotes.Length];
+    }
 
     public static void Begin(Transform bed)
     {
@@ -107,12 +138,54 @@ public class SleepSequence : MonoBehaviour
 
     private void SetFade(float alpha)
     {
+        fadeAlpha = alpha;
         if (fade != null) fade.color = new Color(0f, 0f, 0f, alpha);
     }
 
     private void SetTitle(float alpha)
     {
         if (title != null) title.color = new Color(0.96f, 0.90f, 0.74f, alpha);
+        if (author != null) author.color = new Color(0.80f, 0.74f, 0.60f, alpha);
+    }
+
+    // The stars twinkle and drift a little, once the screen is dark.
+    private void Update()
+    {
+        for (var i = 0; i < stars.Count; i++)
+        {
+            if (stars[i] == null) continue;
+            var data = starData[i];
+            var time = Time.unscaledTime * data.w + data.z;
+            var twinkle = 0.25f + 0.75f * (0.5f + 0.5f * Mathf.Sin(time * 2.2f));
+            stars[i].rectTransform.anchoredPosition = new Vector2(data.x + Mathf.Sin(time * 0.7f) * 7f, data.y + Mathf.Cos(time * 0.5f) * 5f);
+            var white = Color.Lerp(new Color(0.85f, 0.90f, 1f, 1f), new Color(1f, 0.95f, 0.75f, 1f), Mathf.Repeat(data.z, 1f));
+            stars[i].color = new Color(white.r, white.g, white.b, twinkle * fadeAlpha);
+        }
+    }
+
+    // A field of small stars on the black of the night.
+    private void BuildStars(Transform parent)
+    {
+        var random = new System.Random(20261108);
+        for (var i = 0; i < 110; i++)
+        {
+            var go = new GameObject("Star", typeof(RectTransform), typeof(Image));
+            go.transform.SetParent(parent, false);
+            var rect = go.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            var size = random.NextDouble() < 0.15 ? 5f : (random.NextDouble() < 0.5 ? 3f : 2f);
+            rect.sizeDelta = new Vector2(size, size);
+            var image = go.GetComponent<Image>();
+            image.raycastTarget = false;
+            image.color = new Color(1f, 1f, 1f, 0f);
+            stars.Add(image);
+            starData.Add(new Vector4(
+                (float)(random.NextDouble() * 1240.0 - 620.0),
+                (float)(random.NextDouble() * 680.0 - 340.0),
+                (float)(random.NextDouble() * 6.28),
+                0.6f + (float)random.NextDouble() * 1.2f));
+        }
     }
 
     // The black screen and its words, over everything on the canvas.
@@ -132,12 +205,27 @@ public class SleepSequence : MonoBehaviour
         fade.color = new Color(0f, 0f, 0f, 0f);
         fade.raycastTarget = false;
 
-        title = RuntimeUIKit.MakeText("SleepTitle", go.transform, "La nuit porte conseil.", 40, TextAnchor.MiddleCenter, new Color(0.96f, 0.90f, 0.74f, 0f), Vector2.zero, new Vector2(900f, 80f));
+        BuildStars(go.transform);
+
+        // The words of the night, in the hand of the intro (IM Fell English), with the name of who said it.
+        var quote = QuoteOfTheNight();
+        var italic = Resources.Load<Font>("Fonts/IMFellEnglish-Italic");
+        title = RuntimeUIKit.MakeText("SleepTitle", go.transform, "« " + quote[0] + " »", 38, TextAnchor.MiddleCenter, new Color(0.96f, 0.90f, 0.74f, 0f), Vector2.zero, new Vector2(900f, 200f));
         var titleRect = title.rectTransform;
         titleRect.anchorMin = titleRect.anchorMax = new Vector2(0.5f, 0.5f);
         titleRect.pivot = new Vector2(0.5f, 0.5f);
-        titleRect.anchoredPosition = Vector2.zero;
-        title.fontStyle = FontStyle.Italic;
+        titleRect.anchoredPosition = new Vector2(0f, 20f);
+        title.horizontalOverflow = HorizontalWrapMode.Wrap;
+        title.verticalOverflow = VerticalWrapMode.Overflow;
+        if (italic != null) title.font = italic;
+        else title.fontStyle = FontStyle.Italic;
+
+        author = RuntimeUIKit.MakeText("SleepAuthor", go.transform, "— " + quote[1], 24, TextAnchor.MiddleCenter, new Color(0.80f, 0.74f, 0.60f, 0f), Vector2.zero, new Vector2(900f, 40f));
+        var authorRect = author.rectTransform;
+        authorRect.anchorMin = authorRect.anchorMax = new Vector2(0.5f, 0.5f);
+        authorRect.pivot = new Vector2(0.5f, 0.5f);
+        authorRect.anchoredPosition = new Vector2(0f, -85f);
+        if (italic != null) author.font = italic;
     }
 
     // ---- The sleeper -----------------------------------------------------------------------------------------------------

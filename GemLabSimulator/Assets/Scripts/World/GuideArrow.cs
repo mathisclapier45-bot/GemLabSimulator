@@ -76,7 +76,7 @@ public class GuideArrow : MonoBehaviour
         if (scene == "MaisonJoueur")
         {
             if (state.Stage == StoryState.GoHome && state.UnreadCount > 0) return GameObject.Find("Boite aux lettres perso");
-            if (state.Stage >= StoryState.Settled && (phase == StoryState.PhaseSleep || phase == StoryState.PhaseStoneSleep))
+            if (state.Stage >= StoryState.Settled && (phase == StoryState.PhaseSleep || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseTwinsSleep))
             {
                 var bed = Object.FindFirstObjectByType<BedInteractable>();
                 return bed != null ? bed.gameObject : null;
@@ -84,10 +84,18 @@ public class GuideArrow : MonoBehaviour
             return null;
         }
 
-        var toLab = phase == StoryState.PhaseLab || state.InTutorial || state.StoneQuest;
+        if (scene == "GemStore")
+        {
+            if (phase != StoryState.PhaseLeaVisit) return null;
+            var clerk = Object.FindFirstObjectByType<ShopkeeperNPC>();
+            return clerk != null ? clerk.gameObject : null;
+        }
+
+        var toLab = phase == StoryState.PhaseLab || state.InTutorial || state.StoneQuest || state.TwinsQuest;
         if (scene == "Town")
         {
-            if (phase == StoryState.PhaseRest || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseStoneReturn) return DoorTo("MaisonJoueur");
+            if (phase == StoryState.PhaseLeaVisit) return DoorTo("GemStore");
+            if (phase == StoryState.PhaseRest || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseStoneReturn || phase == StoryState.PhaseTwinsSleep) return DoorTo("MaisonJoueur");
             return toLab ? DoorTo("Home") : null;
         }
 
@@ -103,14 +111,22 @@ public class GuideArrow : MonoBehaviour
                 case StoryState.PhaseTutorialIdentify:
                 case StoryState.PhaseStoneLab:
                 case StoryState.PhaseStoneValidate:
+                case StoryState.PhaseTwinsLab:
+                case StoryState.PhaseTwinsLesson:
+                case StoryState.PhaseTwinsReport:
+                case StoryState.PhaseTwinsValidate:
                 {
                     var npc = Object.FindFirstObjectByType<ThouvenotNPC>();
                     return npc != null ? npc.gameObject : null;
                 }
                 case StoryState.PhaseTutorialWeigh: return GameObject.Find("BalanceCarat");
                 case StoryState.PhaseTutorialDensity: return GameObject.Find("BalanceHydrostatique");
-                case StoryState.PhaseRefractometer: return GameObject.Find("Refractometre");
+                case StoryState.PhaseRefractometer:
+                case StoryState.PhaseTwinsRefracto:
+                    return GameObject.Find("Refractometre");
+                case StoryState.PhaseTwinsPolariscope: return GameObject.Find("Polariscope");
                 case StoryState.PhaseStoneIdentify:
+                case StoryState.PhaseTwinsIdentify:
                 {
                     var director = Object.FindFirstObjectByType<DirectorNPC>();
                     return director != null ? director.gameObject : null;

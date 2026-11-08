@@ -39,7 +39,22 @@ public class StoryState : MonoBehaviour
     public const int PhaseRefractometer = 15;      // measure the index of the stone with the refractometer (the drop of liquid first)
     public const int PhaseStoneIdentify = 16;      // identify the stone and report it to the director
     public const int PhaseStoneValidate = 17;      // the director has validated: tell Thouvenot, who confirms the answer and lets the player keep the stone
-    public const int PhaseStoneReturn = 18;        // give the stone back to the man in the evening, on the way home
+    public const int PhaseStoneReturn = 18;        // give the stone back to the man, who waits at the footbridge on the way home (any hour)
+
+    // Chapter 2, "the stones that look alike": the next day Thouvenot gives the player a client's stone (a kyanite sold as a blue spinel) and a reference spinel. The two
+    // have almost the same index: the lesson on the crystal systems and the polariscope (with the conoscope) tell them apart.
+    public const int PhaseTwinsSleep = 19;         // Anselme has his stone back: go to sleep
+    public const int PhaseTwinsLab = 20;           // the next morning: Thouvenot gives the two stones
+    public const int PhaseTwinsRefracto = 21;      // measure the index of both stones with the refractometer
+    public const int PhaseTwinsLesson = 22;        // the two indices are alike: Thouvenot gives the lessons (crystal systems, polariscope) and opens the polariscope
+    public const int PhaseTwinsPolariscope = 23;   // examine both stones with the polariscope, and the client's stone with the conoscope
+    public const int PhaseTwinsReport = 24;        // tell Thouvenot what the polariscope showed (questions)
+    public const int PhaseTwinsIdentify = 25;      // identify the client's stone and report it to the director
+    public const int PhaseTwinsValidate = 26;      // the director has validated: tell Thouvenot
+    public const int PhaseTwinsDone = 27;          // chapter 2 is over
+
+    // After the stone of Anselme is confirmed: Léa, the clerk of the GemStore, has something left by Vincent (a store credit, the card binder and a booster).
+    public const int PhaseLeaVisit = 28;
 
     public int Stage { get; private set; } = Settled;
     public int Phase { get; private set; } = PhaseDone;
@@ -80,8 +95,34 @@ public class StoryState : MonoBehaviour
     public string StrangerSpecimen { get; private set; } = "";
     public bool StoneQuest => !Legacy && Phase >= PhaseStoneLab && Phase <= PhaseStoneValidate;
 
-    // Professor Thouvenot waits in the laboratory during the tutorial and the next day.
-    public bool ThouvenotWaits => InTutorial || StoneQuest;
+    // The stones of chapter 2: the client's stone and the reference stone lent by Thouvenot (specimen ids).
+    public string TwinSpecimen { get; private set; } = "";
+    public string TwinReference { get; private set; } = "";
+    public bool TwinsQuest => !Legacy && Phase >= PhaseTwinsLab && Phase <= PhaseTwinsValidate;
+
+    public bool IsTwinStone(GemInstance gem) => gem != null && !string.IsNullOrEmpty(TwinSpecimen) && gem.SpecimenId == TwinSpecimen;
+    public bool IsTwinReference(GemInstance gem) => gem != null && !string.IsNullOrEmpty(TwinReference) && gem.SpecimenId == TwinReference;
+
+    public void OnTwinsGiven(GemInstance client, GemInstance reference)
+    {
+        TwinSpecimen = client.SpecimenId ?? "";
+        TwinReference = reference.SpecimenId ?? "";
+        SetPhase(PhaseTwinsRefracto);
+    }
+
+    private static GemInstance FindGem(string specimen)
+    {
+        if (string.IsNullOrEmpty(specimen) || PlayerInventory.Instance == null) return null;
+        foreach (var gem in PlayerInventory.Instance.Gems)
+            if (gem.SpecimenId == specimen) return gem;
+        return null;
+    }
+
+    public GemInstance TwinGem => FindGem(TwinSpecimen);
+    public GemInstance ReferenceGem => FindGem(TwinReference);
+
+    // Professor Thouvenot waits in the laboratory during the tutorial and the next days.
+    public bool ThouvenotWaits => InTutorial || StoneQuest || TwinsQuest;
 
     public void OnStrangerGave(GemInstance gem)
     {
@@ -94,9 +135,28 @@ public class StoryState : MonoBehaviour
     // The director has validated the identification of a stone: for the one of the stranger, Thouvenot has to confirm the answer.
     public void OnStoneIdentified(GemInstance gem)
     {
-        if (Legacy || Phase != PhaseStoneIdentify || !IsStrangerStone(gem)) return;
+        if (Legacy) return;
+        if (Phase == PhaseTwinsIdentify && IsTwinStone(gem))
+        {
+            SetPhase(PhaseTwinsValidate);
+            ToolFeedbackUI.Instance?.ShowMessage("Identification validée ! Allez la confirmer à la professeure Thouvenot.");
+            return;
+        }
+        if (Phase != PhaseStoneIdentify || !IsStrangerStone(gem)) return;
         SetPhase(PhaseStoneValidate);
         ToolFeedbackUI.Instance?.ShowMessage("Identification validée ! Allez la confirmer à la professeure Thouvenot.");
+    }
+
+    // The card binder of Vincent, given by Léa: its tab appears in the bag once it is given. A save that is past that visit has it already.
+    public bool BinderUnlocked { get; private set; }
+
+    public static bool BinderOpen => Instance == null || Instance.Legacy || Instance.BinderUnlocked;
+
+    public void UnlockBinder()
+    {
+        if (BinderUnlocked) return;
+        BinderUnlocked = true;
+        OnChanged?.Invoke();
     }
 
     // The people whose number the player has (Thouvenot is always there once the phone exists).
@@ -165,6 +225,7 @@ public class StoryState : MonoBehaviour
         if (finished || later || p >= PhaseTutorialWeigh) tools.Add(ExaminationTool.MeasurementType.Weight.ToString());
         if (finished || later || p >= PhaseTutorialDensity) tools.Add(ExaminationTool.MeasurementType.Density.ToString());
         if (finished || p >= PhaseRefractometer) tools.Add(ExaminationTool.MeasurementType.RefractiveIndex.ToString());
+        if (p >= PhaseTwinsPolariscope) tools.Add(ExaminationTool.MeasurementType.OpticalCharacter.ToString());
         // The other instruments (LaterTools) stay closed until a later chapter of the tutorial presents them: it calls UnlockTool.
     }
 
@@ -199,6 +260,9 @@ public class StoryState : MonoBehaviour
         TutorialSpecimen = "";
         TutorialRound = 1;
         StrangerSpecimen = "";
+        TwinSpecimen = "";
+        TwinReference = "";
+        BinderUnlocked = false;
         contacts.Clear();
         tools.Clear();
         OnChanged?.Invoke();
@@ -225,6 +289,11 @@ public class StoryState : MonoBehaviour
     {
         if (Legacy) return;
         if (Phase == PhaseSleep) SetPhase(PhaseCall);
+        else if (Phase == PhaseTwinsSleep)
+        {
+            SetPhase(PhaseTwinsLab);
+            ToolFeedbackUI.Instance?.ShowMessage("Un nouveau jour : la professeure Thouvenot vous attend au laboratoire.");
+        }
         else if (Phase == PhaseStoneSleep)
         {
             SetPhase(PhaseStoneLab);
@@ -251,6 +320,33 @@ public class StoryState : MonoBehaviour
         {
             SetPhase(PhaseStoneIdentify);
             ToolFeedbackUI.Instance?.ShowMessage("Indice relevé ! Tournez la lentille pour lire toutes les valeurs, consultez les onglets à gauche du réfractomètre, puis identifiez la pierre et remettez votre rapport au directeur.");
+            return;
+        }
+
+        // Chapter 2: both indices read, then both stones seen at the polariscope (and the client's one at the conoscope).
+        if (Phase == PhaseTwinsRefracto && key == "RefractiveIndex" && (IsTwinStone(gem) || IsTwinReference(gem)))
+        {
+            var client = TwinGem;
+            var reference = ReferenceGem;
+            var refractive = ExaminationTool.MeasurementType.RefractiveIndex.ToString();
+            if (client != null && reference != null && client.HasMeasured(refractive) && reference.HasMeasured(refractive))
+            {
+                SetPhase(PhaseTwinsLesson);
+                ToolFeedbackUI.Instance?.ShowMessage("Les deux indices sont relevés... et ils sont presque identiques ! Allez en parler à la professeure Thouvenot.");
+            }
+            return;
+        }
+        if (Phase == PhaseTwinsPolariscope && (IsTwinStone(gem) || IsTwinReference(gem)))
+        {
+            var client = TwinGem;
+            var reference = ReferenceGem;
+            var optical = ExaminationTool.MeasurementType.OpticalCharacter.ToString();
+            var figure = ExaminationTool.MeasurementType.InterferenceFigure.ToString();
+            if (client != null && reference != null && client.HasObserved(optical) && reference.HasObserved(optical) && client.HasObserved(figure))
+            {
+                SetPhase(PhaseTwinsReport);
+                ToolFeedbackUI.Instance?.ShowMessage("Polariscope et conoscope : vous avez tout observé. Allez dire à la professeure Thouvenot ce que vous avez vu.");
+            }
             return;
         }
 
@@ -307,7 +403,16 @@ public class StoryState : MonoBehaviour
                 case PhaseRefractometer: return "Mesurez l'indice de réfraction de la pierre avec le réfractomètre : une goutte de liquide sur l'hémicylindre d'abord, la pierre ensuite.";
                 case PhaseStoneIdentify: return "Identifiez la pierre (onglets à gauche du réfractomètre, loupe, densité...) puis remettez votre rapport au directeur.";
                 case PhaseStoneValidate: return "Allez confirmer votre réponse à la professeure Thouvenot, au laboratoire.";
-                case PhaseStoneReturn: return "Rendez la pierre à Anselme ce soir, en rentrant chez vous (il vous attend du côté de votre maison). En attendant, passez vos autres gemmes au réfractomètre pour compléter votre grimoire.";
+                case PhaseStoneReturn: return "Rendez la pierre à Anselme : il vous attend près de la passerelle, sur le chemin de votre maison. En attendant, passez vos autres gemmes au réfractomètre pour compléter votre grimoire.";
+                case PhaseLeaVisit: return "Passez vos anciennes pierres au réfractomètre pour compléter votre grimoire, puis rendez visite à Léa, la vendeuse du GemStore : elle a quelque chose à vous remettre de la part de Vincent.";
+                case PhaseTwinsSleep: return "Rentrez chez vous et dormez : demain, la professeure Thouvenot vous attend au laboratoire.";
+                case PhaseTwinsLab: return "Retrouvez la professeure Thouvenot au laboratoire : elle a une affaire pour vous.";
+                case PhaseTwinsRefracto: return "Mesurez l'indice de réfraction des deux pierres bleues (la pierre du client et la pierre de référence) avec le réfractomètre.";
+                case PhaseTwinsLesson: return "Les deux indices sont presque identiques : allez en parler à la professeure Thouvenot.";
+                case PhaseTwinsPolariscope: return "Passez les deux pierres au polariscope (tournez-les d'un tour complet), puis la pierre du client au conoscope.";
+                case PhaseTwinsReport: return "Dites à la professeure Thouvenot ce que le polariscope et le conoscope ont montré.";
+                case PhaseTwinsIdentify: return "Identifiez la pierre du client (est-ce bien un spinelle bleu ?) et remettez votre rapport au directeur.";
+                case PhaseTwinsValidate: return "Allez confirmer votre réponse à la professeure Thouvenot, au laboratoire.";
                 case PhaseTutorialIdentify: return "Retrouvez la professeure Thouvenot : choisissez, parmi les pierres qu'elle propose, celle qui correspond à vos mesures.";
                 default: return "Prenez une pierre dans la boîte aux lettres du bureau, essuyez-la à la chamoisine, puis examinez-la à la loupe.";
             }
@@ -356,6 +461,9 @@ public class StoryState : MonoBehaviour
         data.storyTutorialRound = TutorialRound;
         data.storyStrangerSpecimen = StrangerSpecimen;
         data.storyContacts = new List<string>(contacts);
+        data.storyTwinSpecimen = TwinSpecimen;
+        data.storyBinder = BinderUnlocked;
+        data.storyTwinReference = TwinReference;
         data.storyTools = new List<string>(tools);
         data.storyLettersReceived = new List<string>(received);
         data.storyLettersRead = new List<string>(read);
@@ -369,6 +477,9 @@ public class StoryState : MonoBehaviour
         TutorialSpecimen = "";
         TutorialRound = 1;
         StrangerSpecimen = "";
+        TwinSpecimen = "";
+        TwinReference = "";
+        BinderUnlocked = false;
         contacts.Clear();
         tools.Clear();
         if (!data.storyStarted)
@@ -390,6 +501,13 @@ public class StoryState : MonoBehaviour
             TutorialRound = Mathf.Clamp(data.storyTutorialRound, 1, TutorialRounds);
             StrangerSpecimen = data.storyStrangerSpecimen ?? "";
             if (data.storyContacts != null) foreach (var id in data.storyContacts) contacts.Add(id);
+            TwinSpecimen = data.storyTwinSpecimen ?? "";
+            TwinReference = data.storyTwinReference ?? "";
+            BinderUnlocked = data.storyBinder;
+            // A save that had finished the stone of Anselme goes on with chapter 2.
+            if (Phase == PhaseDone && contacts.Contains("anselme")) Phase = PhaseTwinsSleep;
+            // A save that is already past the visit of Léa keeps the binder.
+            if (Phase == PhaseDone || Phase >= PhaseStoneReturn && Phase != PhaseLeaVisit) BinderUnlocked = true;
             if (data.storyTools != null) foreach (var id in data.storyTools) tools.Add(id);
             GrantToolsForPhase();
             if (data.storyLettersReceived != null) received.AddRange(data.storyLettersReceived);
