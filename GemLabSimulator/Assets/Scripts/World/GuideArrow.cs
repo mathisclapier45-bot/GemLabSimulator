@@ -76,7 +76,7 @@ public class GuideArrow : MonoBehaviour
         if (scene == "MaisonJoueur")
         {
             if (state.Stage == StoryState.GoHome && state.UnreadCount > 0) return GameObject.Find("Boite aux lettres perso");
-            if (state.Stage >= StoryState.Settled && (phase == StoryState.PhaseSleep || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseTwinsSleep))
+            if (state.Stage >= StoryState.Settled && (phase == StoryState.PhaseSleep || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseTwinsSleep || phase == StoryState.PhasePleoSleep))
             {
                 var bed = Object.FindFirstObjectByType<BedInteractable>();
                 return bed != null ? bed.gameObject : null;
@@ -91,16 +91,29 @@ public class GuideArrow : MonoBehaviour
             return clerk != null ? clerk.gameObject : null;
         }
 
-        var toLab = phase == StoryState.PhaseLab || state.InTutorial || state.StoneQuest || state.TwinsQuest;
+        var toLab = phase == StoryState.PhaseLab || state.InTutorial || state.StoneQuest || state.TwinsQuest || state.PleoQuest;
         if (scene == "Town")
         {
             if (phase == StoryState.PhaseLeaVisit) return DoorTo("GemStore");
-            if (phase == StoryState.PhaseRest || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseStoneReturn || phase == StoryState.PhaseTwinsSleep) return DoorTo("MaisonJoueur");
+            if (phase == StoryState.PhaseRest || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseStoneReturn || phase == StoryState.PhaseTwinsSleep || phase == StoryState.PhasePleoSleep) return DoorTo("MaisonJoueur");
             return toLab ? DoorTo("Home") : null;
         }
 
         if (scene == "Home")
         {
+            // Chapter 3: the dichroscope, the director for the report, Thouvenot for the rest.
+            if (state.PleoQuest)
+            {
+                if (state.PleoStep == 0) return GameObject.Find("Dichroscope");
+                if (state.PleoStep == 2)
+                {
+                    var director = Object.FindFirstObjectByType<DirectorNPC>();
+                    return director != null ? director.gameObject : null;
+                }
+                var professor = Object.FindFirstObjectByType<ThouvenotNPC>();
+                return professor != null ? professor.gameObject : null;
+            }
+
             switch (phase)
             {
                 case StoryState.PhaseTutorialLoupe:

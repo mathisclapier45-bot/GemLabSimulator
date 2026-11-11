@@ -21,6 +21,8 @@ public static class LessonFigures
             case "criteria": Criteria(c, focus, t); break;
             case "taxonomy": Taxonomy(c, focus, t); break;
             case "hardness": Hardness(c, focus, t); break;
+            case "dichro": Dichroscope(c, focus, t); break;
+            case "interf": Interference(c, focus, t); break;
             case "tenacity": Tenacity(c, focus, t); break;
             case "stability": Stability(c, focus, t); break;
             case "loupe": Loupe(c, focus, t); break;
@@ -318,6 +320,244 @@ public static class LessonFigures
         c.Label("Crayons de dureté", new Vector2(-190f, 112f), 11, Dim, 80f);
         c.Label(result, new Vector2(0f, -122f), 15, Gold, 440f);
         if (cycle > 10.5f) c.Label("Le 6 ne raye pas, le 7 raye : la dureté est entre 6 et 7", new Vector2(0f, -148f), 13, Ink, 460f);
+    }
+
+    // ---- The interference figures of the conoscope ---------------------------------------------------------------------------------
+
+    // focus 4: uniaxial; 5: biaxial, the stone turning; 6: the bull's eye of the quartz; 7: three views of a biaxial stone.
+    private static void Interference(LessonCanvas c, int focus, float t)
+    {
+        if (focus == 7)
+        {
+            // Both axes in the field with the optic plane along a polarizer, the same turned by 45 degrees, and only one axis in the field.
+            var far = new Vector2(2.4f, 0.9f);
+            var views = new[]
+            {
+                InterferenceImages.Get("bi_a", false, new Vector2(-0.42f, 0f), new Vector2(0.42f, 0f), true, false, 3200f),
+                InterferenceImages.Get("bi_b", false, Rotate(new Vector2(-0.42f, 0f), 45f), Rotate(new Vector2(0.42f, 0f), 45f), true, false, 3200f),
+                InterferenceImages.Get("bi_c", false, new Vector2(0.12f, 0.05f), far, true, false, 3200f),
+            };
+            var names = new[] { "a  deux axes : une croix", "b  la « moustache »", "c  un seul axe visible" };
+            for (var i = 0; i < 3; i++)
+            {
+                var x = (i - 1) * 158f;
+                c.Circle(new Vector2(x, 10f), 74f, new Color(0.75f, 0.78f, 0.85f, 1f));
+                c.Picture(views[i], new Vector2(x, 10f), new Vector2(144f, 144f));
+                c.Label(names[i], new Vector2(x, -86f), 13, Ink, 150f);
+            }
+            c.Label("Les figures d'une pierre biaxe", new Vector2(0f, 148f), 16, Gold, 440f);
+            c.Label("selon la position de la pierre sur la lentille", new Vector2(0f, -140f), 13, Dim, 440f);
+            return;
+        }
+
+        c.Circle(new Vector2(0f, 8f), 124f, new Color(0.75f, 0.78f, 0.85f, 1f));
+        if (focus == 5)
+        {
+            // The stone turns: the cross opens into two curved branches, then closes again.
+            var angle = Mathf.Repeat(t * 14f, 90f);
+            var sprite = InterferenceImages.Get("bi_anim", true, Rotate(new Vector2(-0.42f, 0f), angle), Rotate(new Vector2(0.42f, 0f), angle), true, false, 3200f);
+            c.Picture(sprite, new Vector2(0f, 8f), new Vector2(240f, 240f));
+            var openness = Mathf.Abs(angle - 45f) < 22f ? "les branches s'écartent : la « moustache »" : "les branches se rejoignent : une croix";
+            c.Label(openness, new Vector2(0f, -140f), 14, Gold, 440f);
+            c.Label("Biaxe : on tourne la pierre", new Vector2(0f, 150f), 15, Gold, 440f);
+            return;
+        }
+
+        var wobble = 1f + 0.04f * Mathf.Sin(t * 1.5f);
+        var quartz = focus == 6;
+        var uniaxial = InterferenceImages.Get(quartz ? "uni_quartz" : "uni", true, Vector2.zero, Vector2.zero, false, quartz, 3600f * wobble);
+        c.Picture(uniaxial, new Vector2(0f, 8f), new Vector2(240f, 240f));
+        c.Label(quartz ? "Quartz : l'œil-de-taureau (bull's eye)" : "Uniaxe : croix noire et anneaux colorés", new Vector2(0f, 150f), 15, Gold, 440f);
+        c.Label(quartz ? "le centre de la croix est une tache ronde, pâle" : "la croix ne bouge pas quand on tourne la pierre", new Vector2(0f, -140f), 13, Ink, 440f);
+    }
+
+    private static Vector2 Rotate(Vector2 v, float degrees)
+    {
+        var a = degrees * Mathf.Deg2Rad;
+        return new Vector2(v.x * Mathf.Cos(a) - v.y * Mathf.Sin(a), v.x * Mathf.Sin(a) + v.y * Mathf.Cos(a));
+    }
+
+    // ---- The dichroscope: pleochroism, the calcite that splits the light, the two windows ---------------------------------------------
+
+    private static readonly Color RubyA = new Color(0.82f, 0.10f, 0.20f, 1f);
+    private static readonly Color RubyB = new Color(0.95f, 0.42f, 0.18f, 1f);
+    private static readonly Color Blue = new Color(0.18f, 0.28f, 0.85f, 1f);
+    private static readonly Color Violet = new Color(0.55f, 0.28f, 0.80f, 1f);
+    private static readonly Color RedBrown = new Color(0.55f, 0.25f, 0.20f, 1f);
+    private static readonly Color PaleYellow = new Color(0.90f, 0.85f, 0.55f, 1f);
+
+    // focus 0: the colour changes with the direction; 1: the calcite splits the light; 2: none, two or three colours; 3: turning the stone;
+    // 4: the models; 5: examples.
+    private static void Dichroscope(LessonCanvas c, int focus, float t)
+    {
+        switch (focus)
+        {
+            case 0: PleoCrystal(c, t); break;
+            case 1: CalciteSplit(c, t); break;
+            case 2: PleoFamilies(c, t); break;
+            case 3: PleoRotation(c, t); break;
+            case 4: PleoDevices(c); break;
+            default: PleoExamples(c); break;
+        }
+    }
+
+    private static void Window(LessonCanvas c, Vector2 center, Vector2 size, Color color, string label)
+    {
+        c.Rect(center, size + new Vector2(6f, 6f), new Color(0.75f, 0.78f, 0.85f, 1f));
+        c.Rect(center, size, color);
+        if (!string.IsNullOrEmpty(label)) c.Label(label, center + new Vector2(-size.x / 2f - 16f, 0f), 14, Ink, 24f);
+    }
+
+    // A crystal that is seen from different sides: its colour is not the same.
+    private static void PleoCrystal(LessonCanvas c, float t)
+    {
+        var spin = 0.5f + 0.5f * Mathf.Sin(t * 1.1f);
+        var color = Color.Lerp(RubyA, RubyB, spin);
+        var width = Mathf.Lerp(50f, 96f, spin);
+        c.Circle(new Vector2(-175f, 0f), 18f, Ink);
+        c.Circle(new Vector2(-170f, 0f), 7f, Dark);
+        c.Label("l'œil", new Vector2(-175f, -34f), 12, Dim, 60f);
+        c.Line(new Vector2(-150f, 0f), new Vector2(-70f, 0f), 2f, new Color(1f, 1f, 1f, 0.5f));
+        c.Rect(new Vector2(0f, 0f), new Vector2(width, 150f), color);
+        c.Rect(new Vector2(0f, 0f), new Vector2(width * 0.55f, 120f), Color.Lerp(color, Color.white, 0.25f));
+        c.Label(spin < 0.5f ? "vue dans cette direction : rouge" : "vue dans cette direction : rouge orangé", new Vector2(140f, 40f), 14, Gold, 200f);
+        c.Label("Le cristal tourne : sa couleur change", new Vector2(0f, 148f), 15, Gold, 440f);
+        c.Label("c'est le pléochroïsme", new Vector2(0f, -140f), 14, Ink, 300f);
+    }
+
+    // The rhomb of calcite splits the light of the stone into two polarised beams, one for each window.
+    private static void CalciteSplit(LessonCanvas c, float t)
+    {
+        var stone = new Vector2(-195f, 0f);
+        var rhomb = new Vector2(-45f, 0f);
+        var windowA = new Vector2(150f, 42f);
+        var windowB = new Vector2(150f, -42f);
+        c.Rect(stone, new Vector2(46f, 46f), Stone, 45f);
+        c.Line(stone + new Vector2(30f, 0f), rhomb + new Vector2(-34f, 0f), 4f, new Color(1f, 1f, 1f, 0.8f));
+        c.Rect(rhomb, new Vector2(72f, 56f), new Color(0.55f, 0.85f, 1f, 0.55f), 18f);
+        c.Label("calcite", rhomb + new Vector2(0f, -48f), 13, Cyan, 90f);
+        c.Line(rhomb + new Vector2(30f, 6f), windowA + new Vector2(-30f, 0f), 4f, RubyA);
+        c.Line(rhomb + new Vector2(30f, -6f), windowB + new Vector2(-30f, 0f), 4f, RubyB);
+        for (var i = 0; i < 3; i++)
+        {
+            var u = Mathf.Repeat(t * 0.5f + i / 3f, 1f);
+            c.Circle(Vector2.Lerp(stone + new Vector2(30f, 0f), rhomb + new Vector2(-34f, 0f), u), 4f, Color.white);
+            c.Circle(Vector2.Lerp(rhomb + new Vector2(30f, 6f), windowA + new Vector2(-30f, 0f), u), 4f, Color.white);
+            c.Circle(Vector2.Lerp(rhomb + new Vector2(30f, -6f), windowB + new Vector2(-30f, 0f), u), 4f, Color.white);
+        }
+        Window(c, windowA, new Vector2(56f, 56f), RubyA, "A");
+        Window(c, windowB, new Vector2(56f, 56f), RubyB, "B");
+        c.Label("dichroscope de Londres : deux faisceaux polarisés", new Vector2(10f, 120f), 14, Gold, 440f);
+        c.Label("Une image par fenêtre : on compare les deux couleurs", new Vector2(0f, -140f), 14, Ink, 460f);
+    }
+
+    // No colour change, two colours, three colours.
+    private static void PleoFamilies(LessonCanvas c, float t)
+    {
+        var titles = new[] { "Isotrope", "Uniaxe", "Biaxe" };
+        var notes = new[] { "la même couleur", "2 couleurs", "3 couleurs" };
+        var wave = 0.5f + 0.5f * Mathf.Sin(t * 1.6f);
+        var step = Mathf.FloorToInt(t / 1.2f) % 3;
+        var smooth = Mathf.SmoothStep(0f, 1f, Mathf.Repeat(t / 1.2f, 1f));
+        var threeColors = new[] { Blue, Violet, RedBrown };
+        for (var i = 0; i < 3; i++)
+        {
+            var x = (i - 1) * 158f;
+            Color a, b;
+            if (i == 0) { a = RubyA; b = RubyA; }
+            else if (i == 1) { a = Color.Lerp(RubyA, RubyB, wave); b = Color.Lerp(RubyB, RubyA, wave); }
+            else { a = Color.Lerp(threeColors[step], threeColors[(step + 1) % 3], smooth); b = Color.Lerp(threeColors[(step + 1) % 3], threeColors[(step + 2) % 3], smooth); }
+            c.Rect(new Vector2(x, 0f), new Vector2(146f, 250f), new Color(1f, 1f, 1f, 0.07f));
+            c.Label(titles[i], new Vector2(x, 100f), 17, Gold, 140f);
+            Window(c, new Vector2(x + 10f, 40f), new Vector2(60f, 46f), a, "");
+            Window(c, new Vector2(x + 10f, -20f), new Vector2(60f, 46f), b, "");
+            c.Label(notes[i], new Vector2(x, -88f), 14, Ink, 140f);
+        }
+        c.Label("Cubique : aucune   ·   uniaxe : dichroïsme   ·   biaxe : trichroïsme", new Vector2(0f, -140f), 12, Dim, 470f);
+    }
+
+    // The stone turned in front of the two windows.
+    private static void PleoRotation(LessonCanvas c, float t)
+    {
+        var angle = t * 40f;
+        var s = 0.5f + 0.5f * Mathf.Sin(t * 1.4f);
+        var colorA = Color.Lerp(RubyA, RubyB, s);
+        var colorB = Color.Lerp(RubyB, RubyA, s);
+        c.Rect(new Vector2(-135f, 0f), new Vector2(96f, 96f), Stone, 45f + angle);
+        c.Rect(new Vector2(-135f, 0f), new Vector2(54f, 54f), StoneLight, 45f + angle);
+        c.Circle(new Vector2(-135f, 0f), 6f, Dark);
+        c.Label("on tourne la pierre", new Vector2(-135f, -85f), 13, Gold, 150f);
+        c.Line(new Vector2(-70f, 0f), new Vector2(80f, 0f), 2f, new Color(1f, 1f, 1f, 0.4f));
+        Window(c, new Vector2(150f, 34f), new Vector2(64f, 56f), colorA, "A");
+        Window(c, new Vector2(150f, -34f), new Vector2(64f, 56f), colorB, "B");
+        var different = Mathf.Abs(s - 0.5f) > 0.3f;
+        c.Label(different ? "A et B sont différentes : pléochroïsme !" : "A et B se ressemblent : on continue à tourner", new Vector2(10f, 125f), 14, different ? Gold : Dim, 440f);
+        c.Label("Regardez dans plusieurs directions, sur un tour complet", new Vector2(0f, -140f), 13, Ink, 460f);
+    }
+
+    // The models: the tube of London, which is the one of the laboratory and the one the player uses, drawn big and labelled; the portable calcite one, small.
+    private static void PleoDevices(LessonCanvas c)
+    {
+        var steel = new Color(0.60f, 0.64f, 0.72f, 1f);
+        var rhomb = new Color(0.55f, 0.85f, 1f, 0.6f);
+
+        // The tube of London.
+        c.Rect(new Vector2(0f, 62f), new Vector2(300f, 44f), steel);
+        c.Rect(new Vector2(0f, 62f), new Vector2(300f, 6f), new Color(0.75f, 0.78f, 0.86f, 1f));
+        c.Circle(new Vector2(-160f, 62f), 22f, new Color(0.30f, 0.33f, 0.40f, 1f));
+        c.Circle(new Vector2(-160f, 62f), 12f, new Color(0.70f, 0.85f, 1f, 1f));
+        c.Rect(new Vector2(0f, 62f), new Vector2(84f, 32f), rhomb, 18f);
+        c.Rect(new Vector2(160f, 62f), new Vector2(18f, 34f), new Color(0.10f, 0.12f, 0.16f, 1f));
+        c.Rect(new Vector2(160f, 62f), new Vector2(11f, 22f), new Color(0.85f, 0.92f, 1f, 1f));
+        c.Label("lentille (l'œil)", new Vector2(-160f, 100f), 12, Gold, 110f);
+        c.Label("rhomboèdre de calcite", new Vector2(0f, 100f), 12, Cyan, 160f);
+        c.Label("hublot carré", new Vector2(160f, 100f), 12, Gold, 110f);
+        c.Label("Dichroscope de Londres : celui du laboratoire", new Vector2(0f, 20f), 16, Gold, 440f);
+
+        // The portable one, and the lamp of the laboratory.
+        c.Rect(new Vector2(-110f, -62f), new Vector2(110f, 24f), steel);
+        c.Circle(new Vector2(-160f, -62f), 13f, new Color(0.30f, 0.33f, 0.40f, 1f));
+        c.Rect(new Vector2(-110f, -62f), new Vector2(30f, 14f), rhomb, 18f);
+        c.Rect(new Vector2(-55f, -62f), new Vector2(10f, 18f), new Color(0.80f, 0.90f, 1f, 1f));
+        c.Label("Dichroscope à calcite (portable, pour le sac)", new Vector2(-95f, -96f), 12, Ink, 230f);
+
+        c.Rect(new Vector2(120f, -62f), new Vector2(18f, 30f), Wood);
+        c.Circle(new Vector2(120f, -38f), 12f, new Color(1f, 0.92f, 0.5f, 1f));
+        c.Label("lampe du laboratoire", new Vector2(120f, -96f), 12, Ink, 150f);
+        c.Label("Même principe : la calcite sépare la lumière en deux", new Vector2(0f, -140f), 13, Dim, 460f);
+    }
+
+    // What each stone shows.
+    private static void PleoExamples(LessonCanvas c)
+    {
+        var rows = new[]
+        {
+            new[] { "Rubis", "r", "o" }, new[] { "Saphir bleu", "b", "g" }, new[] { "Émeraude", "g2", "y" },
+            new[] { "Tanzanite", "b", "v", "rb" }, new[] { "Iolite", "b", "v", "py" }, new[] { "Spinelle rouge", "r" },
+        };
+        for (var i = 0; i < rows.Length; i++)
+        {
+            var y = 125f - i * 46f;
+            c.Label(rows[i][0], new Vector2(-135f, y), 14, Ink, 140f);
+            for (var k = 1; k < rows[i].Length; k++)
+            {
+                Color color;
+                switch (rows[i][k])
+                {
+                    case "r": color = RubyA; break;
+                    case "o": color = RubyB; break;
+                    case "b": color = Blue; break;
+                    case "g": color = new Color(0.15f, 0.55f, 0.65f, 1f); break;
+                    case "g2": color = new Color(0.10f, 0.60f, 0.50f, 1f); break;
+                    case "y": color = new Color(0.60f, 0.75f, 0.20f, 1f); break;
+                    case "v": color = Violet; break;
+                    case "rb": color = RedBrown; break;
+                    default: color = PaleYellow; break;
+                }
+                c.Rect(new Vector2(-20f + (k - 1) * 52f, y), new Vector2(44f, 30f), color);
+            }
+            if (rows[i].Length == 2) c.Label("aucun changement", new Vector2(95f, y), 12, Dim, 140f);
+        }
     }
 
     // ---- Tenacity: the shock, the cleavage, the fracture ---------------------------------------------------------------------------

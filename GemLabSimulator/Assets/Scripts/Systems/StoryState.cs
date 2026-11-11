@@ -53,6 +53,16 @@ public class StoryState : MonoBehaviour
     public const int PhaseTwinsValidate = 26;      // the director has validated: tell Thouvenot
     public const int PhaseTwinsDone = 27;          // chapter 2 is over
 
+    // Chapter 3, "the colour does not lie" (the dichroscope): two cases, each with a client's stone and a reference stone lent by Thouvenot.
+    // Case 1: a red spinel sold as a ruby. Case 2: an iolite sold as a tanzanite. The phases of a case are Observe, Report, Identify, Validate (four numbers each).
+    public const int PhasePleoSleep = 30;          // chapter 2 is over: go to sleep
+    public const int PhasePleoLab = 31;            // the next morning: Thouvenot teaches the dichroscope and gives the first two stones
+    public const int PhasePleoObserve = 32;        // case 1: examine both stones with the dichroscope (+4 for case 2)
+    public const int PhasePleoReport = 33;         // tell Thouvenot what the dichroscope showed (questions)
+    public const int PhasePleoIdentify = 34;       // identify the client's stone and report it to the director
+    public const int PhasePleoValidate = 35;       // the director has validated: tell Thouvenot (she gives the second case after the first one)
+    public const int PhasePleoDone = 40;           // chapter 3 is over (the dichroscope for now)
+
     // After the stone of Anselme is confirmed: Léa, the clerk of the GemStore, has something left by Vincent (a store credit, the card binder and a booster).
     public const int PhaseLeaVisit = 28;
 
@@ -121,8 +131,32 @@ public class StoryState : MonoBehaviour
     public GemInstance TwinGem => FindGem(TwinSpecimen);
     public GemInstance ReferenceGem => FindGem(TwinReference);
 
+    // The stones of chapter 3: for each of the two cases, the client's stone then the reference stone (specimen ids).
+    private readonly string[] pleoStones = { "", "", "", "" };
+
+    public bool PleoQuest => !Legacy && Phase >= PhasePleoLab && Phase <= PhasePleoValidate + 4;
+
+    // The case (0 or 1) and the step (0 observe, 1 report, 2 identify, 3 validate) of the phase, or -1.
+    public int PleoCase => Phase >= PhasePleoObserve && Phase <= PhasePleoValidate + 4 ? (Phase - PhasePleoObserve) / 4 : -1;
+    public int PleoStep => Phase >= PhasePleoObserve && Phase <= PhasePleoValidate + 4 ? (Phase - PhasePleoObserve) % 4 : -1;
+
+    public static int PleoPhase(int pleoCase, int step) => PhasePleoObserve + pleoCase * 4 + step;
+
+    public bool IsPleoClient(int pleoCase, GemInstance gem) => gem != null && !string.IsNullOrEmpty(pleoStones[pleoCase * 2]) && gem.SpecimenId == pleoStones[pleoCase * 2];
+    public bool IsPleoReference(int pleoCase, GemInstance gem) => gem != null && !string.IsNullOrEmpty(pleoStones[pleoCase * 2 + 1]) && gem.SpecimenId == pleoStones[pleoCase * 2 + 1];
+    public GemInstance PleoClientGem(int pleoCase) => FindGem(pleoStones[pleoCase * 2]);
+    public GemInstance PleoReferenceGem(int pleoCase) => FindGem(pleoStones[pleoCase * 2 + 1]);
+
+    // Thouvenot gives the two stones of a case: the examination with the dichroscope begins.
+    public void OnPleoGiven(int pleoCase, GemInstance client, GemInstance reference)
+    {
+        pleoStones[pleoCase * 2] = client.SpecimenId ?? "";
+        pleoStones[pleoCase * 2 + 1] = reference.SpecimenId ?? "";
+        SetPhase(PleoPhase(pleoCase, 0));
+    }
+
     // Professor Thouvenot waits in the laboratory during the tutorial and the next days.
-    public bool ThouvenotWaits => InTutorial || StoneQuest || TwinsQuest;
+    public bool ThouvenotWaits => InTutorial || StoneQuest || TwinsQuest || PleoQuest;
 
     public void OnStrangerGave(GemInstance gem)
     {
@@ -139,6 +173,12 @@ public class StoryState : MonoBehaviour
         if (Phase == PhaseTwinsIdentify && IsTwinStone(gem))
         {
             SetPhase(PhaseTwinsValidate);
+            ToolFeedbackUI.Instance?.ShowMessage("Identification validée ! Allez la confirmer à la professeure Thouvenot.");
+            return;
+        }
+        if (PleoStep == 2 && IsPleoClient(PleoCase, gem))
+        {
+            SetPhase(Phase + 1);
             ToolFeedbackUI.Instance?.ShowMessage("Identification validée ! Allez la confirmer à la professeure Thouvenot.");
             return;
         }
@@ -226,6 +266,7 @@ public class StoryState : MonoBehaviour
         if (finished || later || p >= PhaseTutorialDensity) tools.Add(ExaminationTool.MeasurementType.Density.ToString());
         if (finished || p >= PhaseRefractometer) tools.Add(ExaminationTool.MeasurementType.RefractiveIndex.ToString());
         if (p >= PhaseTwinsPolariscope) tools.Add(ExaminationTool.MeasurementType.OpticalCharacter.ToString());
+        if (p >= PhasePleoObserve) tools.Add(ExaminationTool.MeasurementType.Pleochroism.ToString());
         // The other instruments (LaterTools) stay closed until a later chapter of the tutorial presents them: it calls UnlockTool.
     }
 
@@ -262,6 +303,7 @@ public class StoryState : MonoBehaviour
         StrangerSpecimen = "";
         TwinSpecimen = "";
         TwinReference = "";
+        for (var i = 0; i < pleoStones.Length; i++) pleoStones[i] = "";
         BinderUnlocked = false;
         contacts.Clear();
         tools.Clear();
@@ -289,6 +331,11 @@ public class StoryState : MonoBehaviour
     {
         if (Legacy) return;
         if (Phase == PhaseSleep) SetPhase(PhaseCall);
+        else if (Phase == PhasePleoSleep)
+        {
+            SetPhase(PhasePleoLab);
+            ToolFeedbackUI.Instance?.ShowMessage("Un nouveau jour : la professeure Thouvenot vous attend au laboratoire.");
+        }
         else if (Phase == PhaseTwinsSleep)
         {
             SetPhase(PhaseTwinsLab);
@@ -350,6 +397,24 @@ public class StoryState : MonoBehaviour
             return;
         }
 
+        // Chapter 3: both stones of the case seen with the dichroscope.
+        if (PleoStep == 0 && key == ExaminationTool.MeasurementType.Pleochroism.ToString())
+        {
+            var pleoCase = PleoCase;
+            if (IsPleoClient(pleoCase, gem) || IsPleoReference(pleoCase, gem))
+            {
+                var client = PleoClientGem(pleoCase);
+                var reference = PleoReferenceGem(pleoCase);
+                var seen = ExaminationTool.MeasurementType.Pleochroism.ToString();
+                if (client != null && reference != null && client.HasObserved(seen) && reference.HasObserved(seen))
+                {
+                    SetPhase(Phase + 1);
+                    ToolFeedbackUI.Instance?.ShowMessage("Dichroscope : vous avez observé les deux pierres. Allez dire à la professeure Thouvenot ce que vous avez vu.");
+                }
+            }
+            return;
+        }
+
         if (!InTutorial || !IsTutorialStone(gem)) return;
 
         if (Phase == PhaseTutorialLoupe && gem.HasObserved(ExaminationTool.MeasurementType.VisualExamination.ToString()) && gem.HasObserved("LoupeInspection"))
@@ -404,6 +469,8 @@ public class StoryState : MonoBehaviour
                 case PhaseStoneIdentify: return "Identifiez la pierre (onglets à gauche du réfractomètre, loupe, densité...) puis remettez votre rapport au directeur.";
                 case PhaseStoneValidate: return "Allez confirmer votre réponse à la professeure Thouvenot, au laboratoire.";
                 case PhaseStoneReturn: return "Rendez la pierre à Anselme : il vous attend près de la passerelle, sur le chemin de votre maison. En attendant, passez vos autres gemmes au réfractomètre pour compléter votre grimoire.";
+                case PhasePleoSleep: return "Reposez-vous : demain, la professeure Thouvenot vous attend au laboratoire. Dormez dans votre lit.";
+                case PhasePleoLab: return "Retrouvez la professeure Thouvenot au laboratoire : elle va vous apprendre à lire la couleur d'une pierre.";
                 case PhaseLeaVisit: return "Passez vos anciennes pierres au réfractomètre pour compléter votre grimoire, puis rendez visite à Léa, la vendeuse du GemStore : elle a quelque chose à vous remettre de la part de Vincent.";
                 case PhaseTwinsSleep: return "Rentrez chez vous et dormez : demain, la professeure Thouvenot vous attend au laboratoire.";
                 case PhaseTwinsLab: return "Retrouvez la professeure Thouvenot au laboratoire : elle a une affaire pour vous.";
@@ -463,6 +530,7 @@ public class StoryState : MonoBehaviour
         data.storyContacts = new List<string>(contacts);
         data.storyTwinSpecimen = TwinSpecimen;
         data.storyBinder = BinderUnlocked;
+        data.storyPleoStones = new List<string>(pleoStones);
         data.storyTwinReference = TwinReference;
         data.storyTools = new List<string>(tools);
         data.storyLettersReceived = new List<string>(received);
@@ -479,6 +547,7 @@ public class StoryState : MonoBehaviour
         StrangerSpecimen = "";
         TwinSpecimen = "";
         TwinReference = "";
+        for (var i = 0; i < pleoStones.Length; i++) pleoStones[i] = "";
         BinderUnlocked = false;
         contacts.Clear();
         tools.Clear();
@@ -504,6 +573,10 @@ public class StoryState : MonoBehaviour
             TwinSpecimen = data.storyTwinSpecimen ?? "";
             TwinReference = data.storyTwinReference ?? "";
             BinderUnlocked = data.storyBinder;
+            if (data.storyPleoStones != null)
+                for (var i = 0; i < pleoStones.Length && i < data.storyPleoStones.Count; i++) pleoStones[i] = data.storyPleoStones[i] ?? "";
+            // A save that had finished chapter 2 goes on with chapter 3.
+            if (Phase == PhaseTwinsDone) Phase = PhasePleoSleep;
             // A save that had finished the stone of Anselme goes on with chapter 2.
             if (Phase == PhaseDone && contacts.Contains("anselme")) Phase = PhaseTwinsSleep;
             // A save that is already past the visit of Léa keeps the binder.

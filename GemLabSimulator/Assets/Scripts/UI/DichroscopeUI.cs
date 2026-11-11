@@ -167,6 +167,7 @@ public class DichroscopeUI : MonoBehaviour
     {
         observed = true;
         stone.RecordObservation(ExaminationTool.MeasurementType.Pleochroism.ToString());
+        StoryState.Instance?.OnObserved(stone, ExaminationTool.MeasurementType.Pleochroism.ToString());
         var def = stone.Definition;
         ToolFeedbackUI.Instance?.ShowMessage(
             $"Dichroscope — {(def.pleochroic ? def.pleochroicDescription : "Aucun pléochroïsme visible.")}");

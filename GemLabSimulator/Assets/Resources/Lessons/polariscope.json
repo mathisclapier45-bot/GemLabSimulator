@@ -48,16 +48,30 @@
     },
     {
       "title": "Le conoscope : pierre uniaxe",
-      "text": "En ajoutant une lentille, le polariscope devient un <b>conoscope</b>. On regarde la pierre sous la lumière convergente, dans la direction de l'axe optique, et l'on voit une <b>figure d'interférence</b>.\n\nUne pierre <b>uniaxe</b> montre une <b>croix noire</b> entourée d'anneaux colorés.",
-      "figure": "polariscope",
+      "text": "En ajoutant une lentille, le polariscope devient un <b>conoscope</b>. On regarde la pierre sous une lumière convergente, le long de la direction de l'axe optique, et l'on voit une <b>figure d'interférence</b>.\n\nUne pierre <b>uniaxe</b> (un seul axe optique) montre une <b>croix noire</b> entourée d'<b>anneaux colorés</b>. Si l'on tourne la pierre sur elle-même, la croix <b>ne bouge pas</b> : l'axe optique reste en face des filtres.",
+      "figure": "interf",
       "focus": 4,
       "image": ""
     },
     {
-      "title": "Le conoscope : pierre biaxe",
-      "text": "Une pierre <b>biaxe</b> montre deux « yeux » : les deux axes optiques. Les branches noires deviennent des hyperboles quand on tourne la pierre.\n\nAvec une lame auxiliaire, on lit aussi le <b>signe optique</b>, positif ou négatif : c'est le même signe que celui donné par le réfractomètre.",
-      "figure": "polariscope",
+      "title": "Le quartz : l'œil-de-taureau",
+      "text": "Dans le <b>quartz</b> (améthyste, citrine, quartz fumé, prasiolite...), et seulement dans lui, la figure uniaxe a un centre particulier : la croix ne se croise pas nettement au milieu, on voit à la place une <b>tache ronde, de couleur pâle</b>. C'est l'<b>œil-de-taureau</b> (<i>bull's eye</i> en anglais).\n\nIl vient du fait que le quartz fait tourner le plan de la lumière polarisée le long de son axe. Sur un corindon ou une tourmaline, la croix se croise franchement : c'est un moyen de reconnaître un quartz.",
+      "figure": "interf",
+      "focus": 6,
+      "image": ""
+    },
+    {
+      "title": "Biaxe : la croix qui s'ouvre",
+      "text": "Une pierre <b>biaxe</b> a deux axes optiques. Sa figure montre deux « yeux » entourés d'anneaux, traversés par des bandes sombres.\n\nQuand on <b>tourne la pierre</b>, la croix noire <b>s'ouvre</b> en deux branches courbes, qui s'écartent vers l'extérieur : on les appelle parfois la <b>« moustache »</b>. Un peu plus loin, les branches reviennent vers le centre et reforment une croix. Le cycle recommence tous les 90°.",
+      "figure": "interf",
       "focus": 5,
+      "image": ""
+    },
+    {
+      "title": "Les figures de la biaxie",
+      "text": "La figure d'une pierre biaxe dépend de la <b>position de la pierre</b> sur la lentille :\n\n• <b>a</b> : les deux axes sont dans le champ, la bande sombre forme une <b>croix</b> avec deux « yeux » ;\n• <b>b</b> : la pierre tournée de 45°, la croix s'est ouverte en <b>moustache</b>, deux branches courbes qui entourent les yeux ;\n• <b>c</b> : un seul axe est dans le champ : on ne voit qu'une branche courbe et un seul œil.\n\nAvec une lame auxiliaire, on lit aussi le <b>signe optique</b>, positif ou négatif : c'est le même que celui du réfractomètre.",
+      "figure": "interf",
+      "focus": 7,
       "image": ""
     }
   ]

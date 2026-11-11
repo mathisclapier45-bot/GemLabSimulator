@@ -29,7 +29,7 @@ public static class OpticalDescriptions
                 return "Aucune figure d'interférence (gemme isotrope).";
             case GemDefinition.OpticalCharacterClass.Uniaxial:
                 return gem.isQuartzFamily
-                    ? "Figure uniaxe, motif caractéristique en \"œil-de-bœuf\" (bull's eye)."
+                    ? "Figure uniaxe, avec l'\"œil-de-taureau\" (bull's eye) caractéristique du quartz : le centre de la croix est une tache ronde, pâle."
                     : "Figure uniaxe.";
             default:
                 return "Figure biaxe.";

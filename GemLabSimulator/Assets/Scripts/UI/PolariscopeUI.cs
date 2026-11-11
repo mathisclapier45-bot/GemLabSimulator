@@ -406,6 +406,7 @@ public class PolariscopeUI : MonoBehaviour
         var depth = stone != null ? Mathf.Max(stone.DepthMm, 1f) : 4f;
         var edgeRetardation = Mathf.Clamp(birefringence * depth * 40000f, 700f, 7000f);
 
+        var bullsEye = !biaxial && stone != null && stone.Definition != null && stone.Definition.isQuartzFamily;
         var pixels = new Color32[FigureSize * FigureSize];
         for (var y = 0; y < FigureSize; y++)
         {
@@ -440,6 +441,15 @@ public class PolariscopeUI : MonoBehaviour
                 var cr = Channel(retardation, 650f) * brush;
                 var cg = Channel(retardation, 550f) * brush;
                 var cb = Channel(retardation, 450f) * brush;
+
+                // A quartz (and only a quartz) shows the bull's eye: the middle of the cross is a pale round spot.
+                if (bullsEye)
+                {
+                    var spot = Mathf.Exp(-rel1.sqrMagnitude / 0.012f);
+                    cr = Mathf.Max(cr, spot * 0.80f);
+                    cg = Mathf.Max(cg, spot * 0.72f);
+                    cb = Mathf.Max(cb, spot * 0.78f);
+                }
 
                 var alpha = Mathf.Clamp01((1f - r) * FigureSize * 0.5f);
                 pixels[y * FigureSize + x] = new Color32(

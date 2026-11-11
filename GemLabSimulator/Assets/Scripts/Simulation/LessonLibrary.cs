@@ -41,7 +41,7 @@ public static class LessonLibrary
     // The order of the board.
     public static readonly string[] Order =
     {
-        "gemmes", "durete", "tenacite", "stabilite", "loupe", "balance_carats", "balance_hydrostatique", "refractometre", "systemes_cristallins", "polariscope",
+        "gemmes", "durete", "tenacite", "stabilite", "loupe", "balance_carats", "balance_hydrostatique", "refractometre", "systemes_cristallins", "polariscope", "dichroscope",
     };
 
     private static readonly Dictionary<string, LessonData> cache = new Dictionary<string, LessonData>();

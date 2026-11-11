@@ -413,7 +413,8 @@ public class StoryDirector : MonoBehaviour
         if (state == null || !state.ThouvenotWaits) yield break;
         talking = true;
 
-        switch (state.Phase)
+        if (state.PleoQuest) yield return TalkPleo(npc, state);
+        else switch (state.Phase)
         {
             case StoryState.PhaseTutorialLoupe:
                 if (!state.TutorialStoneTaken)
@@ -1356,8 +1357,219 @@ public class StoryDirector : MonoBehaviour
         PlayerWallet.Instance?.AddMoney(60);
         Sfx.Play(Sfx.Id.Coin);
         ToolFeedbackUI.Instance?.ShowMessage("Récompense reçue : 60 €.");
-        state.SetPhase(StoryState.PhaseTwinsDone);
-        yield return Say(npc, "Bon travail. Vous venez de faire votre premier pas contre ceux qui vendent une pierre pour une autre.");
+        state.SetPhase(StoryState.PhasePleoSleep);
+        yield return Say(npc,
+            "Bon travail. Vous venez de faire votre premier pas contre ceux qui vendent une pierre pour une autre.",
+            "Reposez-vous : demain, je vous apprendrai à lire la couleur d'une pierre. Elle ne ment pas, si on sait la regarder dans tous les sens.");
+        ToolFeedbackUI.Instance?.ShowMessage("Rentrez vous coucher : demain, la professeure Thouvenot vous attend au laboratoire.");
+    }
+
+    // ---- Chapter 3: the colour does not lie (the dichroscope) -----------------------------------------------------------------------
+
+    // The two cases: the species of the client's stone (what it really is) and of the reference stone (what the client believes).
+    private static readonly string[] PleoClientSpecies = { "Spinelle", "Iolite" };
+    private static readonly string[] PleoReferenceSpecies = { "Corindon_Rubis", "Tanzanite" };
+
+    private IEnumerator TalkPleo(GameObject npc, StoryState state)
+    {
+        if (state.Phase == StoryState.PhasePleoLab)
+        {
+            yield return TalkPleoLab(npc, state);
+            yield break;
+        }
+
+        var pleoCase = state.PleoCase;
+        switch (state.PleoStep)
+        {
+            case 0:
+                yield return Say(npc,
+                    "Le dichroscope est sur la rangée du haut, au milieu du laboratoire. Posez une pierre sur la lampe, regardez les deux fenêtres, et tournez la pierre dans tous les sens.",
+                    "Faites les deux pierres, la pierre du client et la pierre de référence, puis revenez me dire ce que vous avez vu.");
+                break;
+            case 1:
+                yield return TalkPleoReport(npc, state, pleoCase);
+                break;
+            case 2:
+                yield return Say(npc,
+                    "Alors, de quelle pierre s'agit-il ? Réfléchissez à ce que le dichroscope vous a montré. Quand vous êtes sûr, remettez votre rapport au directeur.");
+                break;
+            case 3:
+                yield return TalkPleoValidate(npc, state, pleoCase);
+                break;
+        }
+    }
+
+    // Makes the two stones of a case, waits for room in the inventory, gives them. Returns true when they have been given.
+    private IEnumerator GivePleoStones(StoryState state, int pleoCase, System.Action<bool> given)
+    {
+        var client = MakeStone(PleoClientSpecies[pleoCase], 0.8f, 2.8f);
+        var reference = MakeStone(PleoReferenceSpecies[pleoCase], 0.8f, 2.8f);
+        if (client == null || reference == null || PlayerInventory.Instance == null)
+        {
+            given(false);
+            yield break;
+        }
+        reference.MarkIdentified();
+
+        while (PlayerInventory.Instance.FreeSlots < 2)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage("Votre inventaire est plein : faites de la place pour deux pierres.");
+            yield return new WaitForSeconds(2.5f);
+        }
+        PlayerInventory.Instance.TryAddGem(client);
+        PlayerInventory.Instance.TryAddGem(reference);
+        Sfx.Play(Sfx.Id.Pickup);
+        state.OnPleoGiven(pleoCase, client, reference);
+        ToolFeedbackUI.Instance?.ShowMessage("Vous avez reçu deux pierres : la pierre du client et la pierre de référence.");
+        given(true);
+    }
+
+    // The lesson on the dichroscope, then the first case: a red stone sold as a ruby.
+    private IEnumerator TalkPleoLab(GameObject npc, StoryState state)
+    {
+        yield return Say(npc,
+            "Bonjour ! Aujourd'hui, la couleur. Une pierre colorée n'a pas toujours la même couleur selon le côté par lequel on la regarde : c'est le pléochroïsme.",
+            "Il se voit à l'œil nu sur certaines pierres, mais le plus souvent il faut un instrument : le dichroscope de Londres, un petit tube à calcite. Laissez-moi vous le présenter.");
+
+        DialogueBoxUI.Hide();
+        yield return PlayLesson("dichroscope");
+
+        var ok = false;
+        yield return Say(npc,
+            "Le dichroscope de Londres est maintenant à vous : sur la rangée du haut, au milieu du laboratoire. Il a un grand avantage : il ne touche pas la pierre, et il marche même sur une pierre sertie.",
+            "Un cas pour vous exercer. Un client m'a apporté une pierre rouge, achetée comme un rubis. Il voudrait savoir si c'est vrai.",
+            "Voici aussi un vrai rubis de ma collection, pour comparer. Je vous les confie toutes les deux.");
+        yield return GivePleoStones(state, 0, given => ok = given);
+        if (!ok)
+        {
+            yield return Say(npc, "Hmm, je ne retrouve plus mes pierres... Repassez me voir dans un instant.");
+            yield break;
+        }
+
+        yield return Say(npc,
+            "Passez-les au dichroscope l'une après l'autre : tournez chaque pierre dans tous les sens, et comparez les deux fenêtres.",
+            "Revenez me dire ce que vous avez vu. Vous retrouverez la leçon sur le panneau, dans l'entrée du laboratoire.");
+        ToolFeedbackUI.Instance?.ShowMessage("Passez les deux pierres rouges au dichroscope (rangée du haut) et tournez-les dans tous les sens.");
+    }
+
+    // What the dichroscope has shown: two questions, and the conclusion.
+    private IEnumerator TalkPleoReport(GameObject npc, StoryState state, int pleoCase)
+    {
+        var client = state.PleoClientGem(pleoCase);
+        var reference = state.PleoReferenceGem(pleoCase);
+        if (client == null || reference == null)
+        {
+            yield return Say(npc, "Il me faut les deux pierres sous les yeux : elles doivent être dans votre inventaire.");
+            yield break;
+        }
+
+        var seed = client.SpecimenId ?? "";
+        string[] referenceAnswers, clientAnswers;
+        string referenceRight, clientRight;
+        string referenceQuestion, clientQuestion;
+        if (pleoCase == 0)
+        {
+            referenceRight = "Deux couleurs : rouge et rouge orangé";
+            clientRight = "Toujours la même couleur";
+            referenceAnswers = new[] { referenceRight, "Trois couleurs bien différentes", clientRight };
+            clientAnswers = new[] { clientRight, referenceRight, "Trois couleurs bien différentes" };
+            referenceQuestion = "Que montre le dichroscope sur le vrai rubis, quand on le tourne ?";
+            clientQuestion = "Et sur la pierre du client ?";
+        }
+        else
+        {
+            referenceRight = "Bleu, violet et rouge-brun";
+            clientRight = "Bleu, violet et jaune pâle";
+            referenceAnswers = new[] { referenceRight, clientRight, "Deux couleurs : bleu et bleu-vert" };
+            clientAnswers = new[] { clientRight, referenceRight, "Deux couleurs : bleu et bleu-vert" };
+            referenceQuestion = "Que montre le dichroscope sur la tanzanite de référence ?";
+            clientQuestion = "Et sur la pierre du client ?";
+        }
+
+        yield return Say(npc, "Alors ? Qu'est-ce que le dichroscope vous a montré ? Commençons par la pierre de référence.");
+        var picked = -1;
+        yield return Quiz(npc, referenceQuestion, ThreeAnswers(referenceRight, referenceAnswers, seed + "o1", out var rightIndex), i => picked = i);
+        if (picked != rightIndex)
+        {
+            yield return Say(npc, "Non : retournez au dichroscope, posez la pierre de référence et tournez-la lentement dans tous les sens, en comparant les deux fenêtres. Revenez me le dire.");
+            yield break;
+        }
+        yield return Say(npc, pleoCase == 0
+            ? "Oui : un rubis est un corindon, uniaxe : il montre deux couleurs selon la direction, un rouge et un rouge orangé."
+            : "Oui : la tanzanite est biaxe : trois directions, trois couleurs. Retenez la troisième : un rouge-brun.");
+
+        picked = -1;
+        yield return Quiz(npc, clientQuestion, ThreeAnswers(clientRight, clientAnswers, seed + "o2", out rightIndex), i => picked = i);
+        if (picked != rightIndex)
+        {
+            yield return Say(npc, "Non : retournez au dichroscope avec la pierre du client, et tournez-la dans tous les sens. Comptez bien les couleurs, et regardez la troisième.");
+            yield break;
+        }
+
+        state.SetPhase(StoryState.PleoPhase(pleoCase, 2));
+        if (pleoCase == 0)
+            yield return Say(npc,
+                "Oui : elle ne change jamais de couleur. Un rubis, lui, change : jamais un rubis ne se comporte ainsi.",
+                "Une pierre rouge qui montre toujours la même couleur est isotrope : elle n'est pas un corindon. Quelle pierre rouge, cubique, ressemble tant à un rubis ? À vous de trouver. Remettez votre rapport au directeur.");
+        else
+            yield return Say(npc,
+                "Oui : trois couleurs aussi. Les deux pierres sont trichroïques, la couleur seule ne tranche pas. Mais la troisième trahit la pierre : rouge-brun pour la tanzanite, jaune pâle pour une autre pierre bleu-violet.",
+                "Laquelle ? Cherchez dans le grimoire et dans les onglets des instruments, puis remettez votre rapport au directeur.");
+        ToolFeedbackUI.Instance?.ShowMessage("Identifiez la pierre du client et remettez votre rapport au directeur.");
+    }
+
+    // The director has validated a case: Thouvenot confirms, takes the stones back, and gives the next case (after the second one, the chapter is over).
+    private IEnumerator TalkPleoValidate(GameObject npc, StoryState state, int pleoCase)
+    {
+        var client = state.PleoClientGem(pleoCase);
+        var reference = state.PleoReferenceGem(pleoCase);
+        if (client == null)
+        {
+            yield return Say(npc, "Alors, la pierre du client ? Il me faut l'avoir sous les yeux pour confirmer votre réponse : elle doit être dans votre inventaire.");
+            yield break;
+        }
+
+        var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
+        yield return Say(npc, "Le directeur m'a dit que votre rapport est validé. Alors, quelle est votre réponse ?");
+        yield return SayAs("Vous", player, $"Une {client.Definition.displayName.ToLowerInvariant()}.");
+
+        if (pleoCase == 0)
+        {
+            yield return Say(npc,
+                "C'est exact ! Un spinelle rouge. Il ressemble tant à un rubis qu'on les a confondus pendant des siècles : le célèbre « rubis du Prince Noir », dans la couronne d'Angleterre, est en réalité un spinelle.",
+                "La différence se voit pourtant très bien : un rubis est dichroïque, un spinelle non. Et vous n'avez même pas eu à toucher la pierre.",
+                "Je reprends les deux pierres. Et voilà le deuxième cas, plus subtil : deux pierres bleu-violet.");
+            PlayerInventory.Instance?.RemoveGem(client);
+            if (reference != null) PlayerInventory.Instance?.RemoveGem(reference);
+
+            var ok = false;
+            yield return Say(npc,
+                "Un autre client m'a apporté une pierre bleu-violet, achetée comme une tanzanite. Voici ma tanzanite de référence pour comparer.",
+                "Cette fois, les deux pierres sont dichroïques. Il faudra regarder de plus près.");
+            yield return GivePleoStones(state, 1, given => ok = given);
+            if (!ok)
+            {
+                yield return Say(npc, "Hmm, je ne retrouve plus mes pierres... Repassez me voir dans un instant.");
+                yield break;
+            }
+            yield return Say(npc, "Au dichroscope, les deux pierres. Tournez-les dans tous les sens, et notez bien les couleurs.");
+            ToolFeedbackUI.Instance?.ShowMessage("Passez les deux pierres bleu-violet au dichroscope.");
+            yield break;
+        }
+
+        yield return Say(npc,
+            "C'est exact ! Une iolite. On l'appelle parfois « saphir d'eau », et elle est bien moins chère que la tanzanite : la tentation est grande de la faire passer pour l'autre.",
+            "Les deux pierres sont trichroïques, mais la troisième couleur trahit la vôtre : jaune pâle pour l'iolite, rouge-brun pour la tanzanite. Vous voyez que la couleur ne ment pas, si on sait où regarder.",
+            "Je reprends les deux pierres. Le client vous envoie 80 € pour votre peine.");
+        PlayerInventory.Instance?.RemoveGem(client);
+        if (reference != null) PlayerInventory.Instance?.RemoveGem(reference);
+        PlayerWallet.Instance?.AddMoney(80);
+        Sfx.Play(Sfx.Id.Coin);
+        ToolFeedbackUI.Instance?.ShowMessage("Récompense reçue : 80 €.");
+        state.SetPhase(StoryState.PhasePleoDone);
+        yield return Say(npc,
+            "Encore une pierre vendue pour une autre... On dirait que cela devient une habitude, dans la région.",
+            "Vous avez maintenant le dichroscope. Pour d'autres indices, il faudra regarder ce que la pierre absorbe : nous verrons cela une prochaine fois.");
     }
 
     // The chamois cloth lies on the desk of the loupe (the scene has no such prop): a folded piece of yellow leather.

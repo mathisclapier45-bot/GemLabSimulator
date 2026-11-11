@@ -108,6 +108,18 @@ public class LessonCanvas
         rect.localEulerAngles = Vector3.zero;
     }
 
+    // A picture (a sprite) drawn on the board.
+    public void Picture(Sprite sprite, Vector2 center, Vector2 size)
+    {
+        var image = NextImage();
+        image.sprite = sprite;
+        image.color = Color.white;
+        var rect = image.rectTransform;
+        rect.anchoredPosition = center;
+        rect.sizeDelta = size;
+        rect.localEulerAngles = Vector3.zero;
+    }
+
     public void Label(string content, Vector2 center, int size, Color color, float width = 220f)
     {
         if (usedTexts == texts.Count)
