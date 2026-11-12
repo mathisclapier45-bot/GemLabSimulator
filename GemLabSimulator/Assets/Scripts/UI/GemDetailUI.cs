@@ -463,7 +463,7 @@ public class GemDetailUI : MonoBehaviour
     // Name, number and value of the stone.
     private static string BuildSummary(GemInstance stone)
     {
-        var title = stone.IsIdentified ? stone.Definition.displayName : "Gemme non identifiée";
+        var title = stone.IsIdentified ? stone.Definition.FullName : "Gemme non identifiée";
         var text = $"<size=16><b>{title}</b></size>\nN° {stone.DisplayId}\n";
 
         if (stone.IsDonation) text += "Don — à conserver, non destiné à être renvoyé";

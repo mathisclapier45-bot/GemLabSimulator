@@ -75,7 +75,7 @@ public static class LessonFigures
     // ---- The family tree of the gemstones ------------------------------------------------------------------------------------------
 
     private static readonly Color NaturalColor = new Color(0.30f, 0.62f, 0.38f, 1f);
-    private static readonly Color ArtificialColor = new Color(0.30f, 0.48f, 0.82f, 1f);
+    private static readonly Color ArtificialColor = new Color(0.80f, 0.25f, 0.25f, 1f);
 
     private static void TreeNode(LessonCanvas c, string label, Vector2 center, Vector2 size, Color color, bool dim, int fontSize = 14)
     {
@@ -171,7 +171,7 @@ public static class LessonFigures
         {
             var exampleColor = dimArtificial ? WithAlpha(Dim, 0.4f) : Ink;
             c.Label("rubis de synthèse", new Vector2(160f, -30f), 12, exampleColor, 140f);
-            c.Label("YAG, zircone cubique", new Vector2(160f, -78f), 12, exampleColor, 140f);
+            c.Label("YAG, cubic zirconia", new Vector2(160f, -78f), 12, exampleColor, 140f);
             c.Label("doublets, triplets", new Vector2(160f, -126f), 12, exampleColor, 140f);
         }
     }

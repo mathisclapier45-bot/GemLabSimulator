@@ -19,6 +19,9 @@ public class GemDefinition : ScriptableObject
         return iconColor.a > 0f ? GemIconFactory.Get(this, shape, cutStyle) : icon;
     }
 
+    // The long name of the species, where there is room (the grimoire, the sheets): the short name ("CZ") stays in the lists and the reports.
+    public string FullName => name == "CZ" ? "Cubic zirconia" : displayName;
+
     // The four levels the sprites and the sheets show, from the species' gemological wording (field `transparency`).
     public Diaphaneity Diaphaneity => GemDiaphaneity.Parse(transparency);
     public string TransparencyLabel => GemDiaphaneity.Label(Diaphaneity);

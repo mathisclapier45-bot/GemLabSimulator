@@ -233,7 +233,7 @@ public static class RefractoGuide
     private static void OutOfLimitPage(StringBuilder sb, Situation s)
     {
         Para(sb, "Le liquide de contact et le verre du réfractomètre ne vont pas au-delà de 1,81. Si l'indice de la pierre est plus élevé, la lumière ne fait jamais la réflexion totale : il n'y a aucune limite d'ombre sur l'échelle, tout le champ reste clair. On note « OTL » (over the limit, hors limite).");
-        Para(sb, "<b>Ce que ça apprend :</b> la pierre a un indice supérieur à 1,81. Dans la pratique, cela ne laisse que quelques espèces : le diamant, le zircon, la moissanite, certains grenats, les imitations comme la zircone cubique, le GGG et le YAG. Il faudra d'autres mesures pour trancher.");
+        Para(sb, "<b>Ce que ça apprend :</b> la pierre a un indice supérieur à 1,81. Dans la pratique, cela ne laisse que quelques espèces : le diamant, le zircon, la moissanite, certains grenats, les imitations comme le cubic zirconia (CZ), le GGG et le YAG. Il faudra d'autres mesures pour trancher.");
         sb.Append("<color=").Append(TitleColor).Append("><b>Ce que l'on voit sur l'échelle</b></color>\n");
         Pic(sb, "otl");
         sb.Append("\n");

@@ -134,7 +134,7 @@ public class GrimoireUI : MonoBehaviour
         nameRect.anchoredPosition = new Vector2(0, 2f);
         nameRect.sizeDelta = new Vector2(0, 22f);
         var nameText = nameGO.AddComponent<Text>();
-        nameText.text = discovered ? def.displayName : "???";
+        nameText.text = discovered ? def.FullName : "???";
         nameText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         nameText.fontSize = 10;
         nameText.alignment = TextAnchor.MiddleCenter;
@@ -160,7 +160,7 @@ public class GrimoireUI : MonoBehaviour
         if (gridPanel != null) gridPanel.SetActive(false);
         if (detailPanel != null) detailPanel.SetActive(true);
 
-        if (detailTitleText != null) detailTitleText.text = def.displayName;
+        if (detailTitleText != null) detailTitleText.text = def.FullName;
         BuildPage(def);
         if (detailSpectrumImage != null)
         {

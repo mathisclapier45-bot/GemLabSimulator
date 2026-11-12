@@ -98,8 +98,9 @@ public class StoryState : MonoBehaviour
 
     public bool InTutorial => !Legacy && Phase >= PhaseTutorialLoupe && Phase <= PhaseTutorialIdentify;
 
-    // Until the tutorial is over, the mailbox gives one stone only.
-    public bool MailLimited => !Legacy && Phase != PhaseDone && Phase < PhaseRest;
+    // During the story chapters (the tutorial, the lessons, the cases of Thouvenot) the mailbox gives no client letters: the only stone it holds is the one of the
+    // tutorial. The letters come back once the current chapters are over (and in an old save, always).
+    public bool MailLimited => !Legacy && Phase != PhaseDone && Phase != PhasePleoDone;
 
     // The stone given by the man of the town (the specimen id), and the quest of that stone.
     public string StrangerSpecimen { get; private set; } = "";

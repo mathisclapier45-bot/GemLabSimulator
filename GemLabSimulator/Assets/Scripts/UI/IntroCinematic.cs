@@ -144,13 +144,18 @@ public class IntroCinematic : MonoBehaviour
         Txt(textBox.transform, "Hint", 16, TextAnchor.LowerRight, new Color(0.7f, 0.7f, 0.78f, 1f), Vector2.zero, Vector2.one, new Vector2(20f, 6f), new Vector2(-18f, -6f)).text = "clic pour continuer";
 
         // The letter, on cream paper.
-        var paperEdge = Panel(transform, "LetterEdge", new Color(0.55f, 0.45f, 0.30f, 1f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-400f, -250f), new Vector2(400f, 250f));
+        var paperEdge = Panel(transform, "LetterEdge", new Color(0.55f, 0.45f, 0.30f, 1f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(-430f, -290f), new Vector2(430f, 290f));
         letterGroup = paperEdge.gameObject.AddComponent<CanvasGroup>();
         letterGroup.alpha = 0f;
         letterGroup.blocksRaycasts = false;
         Panel(paperEdge.transform, "Paper", Paper, Vector2.zero, Vector2.one, new Vector2(5f, 5f), new Vector2(-5f, -5f));
         letterText = Txt(paperEdge.transform, "Letter", 25, TextAnchor.UpperLeft, Ink, Vector2.zero, Vector2.one, new Vector2(44f, 28f), new Vector2(-44f, -28f), Italic);
         letterText.lineSpacing = 1.05f;
+        // The letter always fits on the paper, down to the signature: the text shrinks if it is too long.
+        letterText.verticalOverflow = VerticalWrapMode.Truncate;
+        letterText.resizeTextForBestFit = true;
+        letterText.resizeTextMinSize = 16;
+        letterText.resizeTextMaxSize = 25;
 
         // The title of the game at the end.
         var title = Txt(transform, "Title", 84, TextAnchor.MiddleCenter, Cream, new Vector2(0f, 0.38f), new Vector2(1f, 0.62f), Vector2.zero, Vector2.zero);

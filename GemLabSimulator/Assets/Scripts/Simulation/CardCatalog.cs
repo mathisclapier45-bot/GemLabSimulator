@@ -258,7 +258,7 @@ public static class CardCatalog
         "37|Rb|Rubidium|Métal alcalin mou, présent en traces dans certaines émeraudes.",
         "38|Sr|Strontium|Métal alcalino-terreux dont les flammes sont rouge vif.",
         "39|Y|Yttrium|Métal du grenat synthétique YAG.",
-        "40|Zr|Zirconium|Base du zircon et de la zircone cubique.",
+        "40|Zr|Zirconium|Base du zircon et du cubic zirconia (CZ).",
         "41|Nb|Niobium|Métal qui prend des couleurs irisées par anodisation, utilisé en bijouterie.",
         "42|Mo|Molybdène|Métal des fondants utilisés pour synthétiser des émeraudes.",
         "43|Tc|Technétium|Premier élément synthétisé par l'homme, radioactif.",
@@ -662,7 +662,7 @@ public static class CardCatalog
             CardRarity.Commune, Cabochon(new Color(0.30f, 0.72f, 0.52f)));
         Synthetic("reconstituted", "Pierre reconstituée", "Poudre de pierre (turquoise, lapis) agglomérée avec de la résine, puis taillée : l'ensemble paraît pleine.",
             CardRarity.Commune, Cabochon(new Color(0.25f, 0.72f, 0.72f)));
-        Synthetic("cz", "Zircone cubique (CZ)", "ZrO₂ stabilisé à l'yttrium, fondu en creuset froid (skull melting). Très dispersive et dense (5,7) : le simulant du diamant le plus courant.",
+        Synthetic("cz", "Cubic zirconia (CZ)", "ZrO₂ stabilisé à l'yttrium, fondu en creuset froid (skull melting). Très dispersive et dense (5,7) : le simulant du diamant le plus courant.",
             CardRarity.Commune, Brilliant(new Color(0.92f, 0.95f, 1f)));
         Synthetic("doublet", "Doublet et triplet", "Plusieurs pièces collées : une table de vraie pierre sur un pavillon de verre, parfois un dôme de quartz au-dessus. Le collage se voit de côté.",
             CardRarity.Rare, Drawing("layers", new Color(0.30f, 0.62f, 0.45f)));
@@ -672,7 +672,7 @@ public static class CardCatalog
             CardRarity.Rare, Drawing("moissanite", new Color(0.62f, 0.78f, 0.66f)));
         Synthetic("yag", "YAG", "Grenat d'yttrium et d'aluminium (Y₃Al₅O₁₂), cubique, IR 1,83. Simulant du diamant des années 1970, aussi vendu en vert et en jaune.",
             CardRarity.Rare, Brilliant(new Color(0.55f, 0.85f, 0.40f)));
-        Synthetic("ggg", "GGG", "Grenat de gadolinium et gallium, cubique, très dense (7,05) et assez tendre. Simulant du diamant abandonné après la zircone.",
+        Synthetic("ggg", "GGG", "Grenat de gadolinium et gallium, cubique, très dense (7,05) et assez tendre. Simulant du diamant abandonné après le cubic zirconia.",
             CardRarity.Rare, Brilliant(new Color(0.88f, 0.84f, 0.68f)));
         Synthetic("fabulite", "Fabulite", "Titanate de strontium (SrTiO₃), cubique, à fort feu. Simulant du diamant tendre et rayable, fabriqué par la méthode Verneuil.",
             CardRarity.Rare, Brilliant(new Color(0.92f, 0.94f, 0.98f)));

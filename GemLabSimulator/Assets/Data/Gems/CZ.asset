@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CZ
   m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
   displayName: CZ
-  description: "Zircone cubique : un simulant synth\xE9tique du diamant, bon march\xE9
+  description: "Cubic zirconia (CZ) : un simulant synth\xE9tique du diamant, bon march\xE9
     mais tr\xE8s diff\xE9rent physiquement."
   icon: {fileID: 21300000, guid: 69076c8c0da694fd6aadd2e9e1cf1cb5, type: 3}
   roughIcon: {fileID: 21300000, guid: 47a39fa0ab435410fbe153b0cd6d34ea, type: 3}

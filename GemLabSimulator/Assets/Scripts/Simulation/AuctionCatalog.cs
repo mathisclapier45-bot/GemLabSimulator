@@ -78,7 +78,7 @@ public static class AuctionCatalog
             OriginKeyword = "Colombie", Matches = d => Natural(d) },
         new AuctionTheme { Name = "Le grand déballage : pierres traitées", Description = "Toutes les pierres de cette vente ont subi un traitement. Les catalogues disent-ils toute la vérité ?",
             TreatedOnly = true, Matches = d => Natural(d) },
-        new AuctionTheme { Name = "Synthèses et imitations", Description = "Zircones, YAG, verres, corindons et diamants de laboratoire : l'envers du décor.",
+        new AuctionTheme { Name = "Synthèses et imitations", Description = "Cubic zirconia, YAG, verres, corindons et diamants de laboratoire : l'envers du décor.",
             Matches = d => d.forcedSynthetic || (d.name ?? "").Contains("Synthetique") || d.name == "CZ" || d.name == "YAG" || d.name == "GGG" || d.name == "Verre" },
     };
 

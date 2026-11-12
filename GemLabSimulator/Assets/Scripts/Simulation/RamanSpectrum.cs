@@ -99,7 +99,7 @@ public static class RamanLibrary
         Define("Ivoire / matière organique", "960:8:1,1070:10:0.3,1450:20:0.5,1670:40:0.5,2940:50:0.6");
 
         // Synthetics and imitations.
-        Define("Zircone cubique (CZ)", "260:60:0.5,470:60:0.5,620:70:1");
+        Define("Cubic zirconia (CZ)", "260:60:0.5,470:60:0.5,620:70:1");
         Define("Moissanite (SiC)", "766:6:0.6,789:6:1,797:6:0.5,967:8:0.4");
         Define("YAG", "162:6:0.3,261:8:0.4,372:8:1,690:12:0.35,783:10:0.4");
         Define("GGG", "175:8:0.4,300:10:0.5,375:8:0.4,550:10:0.3,745:12:1");
@@ -379,7 +379,7 @@ public static class RamanSpectrum
             case "Pyrite": return "Pyrite";
             case "Ivoire_Elephant": case "Ivoire_Hippopotame": case "Ivoire_Mammouth": case "Ivoire_Morse": case "Defense_Narval":
             case "Ecaille_Tortue": case "Corne_Rhinoceros": return "Ivoire / matière organique";
-            case "CZ": return "Zircone cubique (CZ)";
+            case "CZ": return "Cubic zirconia (CZ)";
             case "Moissanite_Synthetique": return "Moissanite (SiC)";
             case "YAG": return "YAG";
             case "GGG": return "GGG";

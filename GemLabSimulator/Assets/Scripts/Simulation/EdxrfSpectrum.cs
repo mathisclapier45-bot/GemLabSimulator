@@ -284,7 +284,7 @@ public static class EdxrfSpectrum
             case "Moissanite_Synthetique":
                 result.Analysis.Add("Silicium et carbone, trop légers : aucun élément détecté.");
                 break;
-            case "CZ": add("Zr", 1f); add("Y", 0.2f); add("Hf", 0.03f); conclusive = true; result.Analysis.Add("Zirconium et yttrium : zircone cubique, matériau de synthèse."); break;
+            case "CZ": add("Zr", 1f); add("Y", 0.2f); add("Hf", 0.03f); conclusive = true; result.Analysis.Add("Zirconium et yttrium : cubic zirconia (CZ), matériau de synthèse."); break;
             case "YAG": add("Y", 1f); conclusive = true; result.Analysis.Add("Yttrium : grenat de synthèse (YAG)."); break;
             case "GGG": add("Gd", 1f); add("Ga", 0.9f); conclusive = true; result.Analysis.Add("Gadolinium et gallium : grenat de synthèse (GGG)."); break;
             case "Verre":

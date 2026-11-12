@@ -5,8 +5,8 @@ public class DayNightOverlay : MonoBehaviour
 {
     [SerializeField] private Image overlayImage;
 
-    // A full 24h in-game day takes 14 real minutes, matching Stardew Valley's day length.
-    private const float CycleDurationSeconds = 840f;
+    // A full 24h in-game day takes 20 real minutes (it was 14, the length of a day in Stardew Valley).
+    private const float CycleDurationSeconds = 1200f;      // one game day, in real seconds (20 minutes; it was 14)
     // The player wakes up at 7h, after sleeping and when a game is loaded; a new game starts at 7h too.
     private const float DayPhaseStart = 7f / 24f;
 

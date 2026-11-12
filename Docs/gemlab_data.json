@@ -493,7 +493,7 @@
     {
       "id": "CZ",
       "displayName": "CZ",
-      "description": "Zircone cubique : un simulant synthétique du diamant, bon marché mais très différent physiquement.",
+      "description": "Cubic zirconia (CZ) : un simulant synthétique du diamant, bon marché mais très différent physiquement.",
       "iconColor": "#D9E6F2",
       "iconFacetColor": "#F2F7FF",
       "refractiveIndex": 2.16,
@@ -6015,7 +6015,7 @@
     {
       "id": "YAG",
       "displayName": "YAG",
-      "description": "Grenat d'yttrium-aluminium synthétique, un des premiers simulants de diamant utilisés en joaillerie avant l'arrivée de la zircone cubique.",
+      "description": "Grenat d'yttrium-aluminium synthétique, un des premiers simulants de diamant utilisés en joaillerie avant l'arrivée du cubic zirconia (CZ).",
       "iconColor": "#D9DEE6",
       "iconFacetColor": "#F5F7FC",
       "refractiveIndex": 1.833,
@@ -7319,7 +7319,7 @@
         },
         {
           "Name": "Synthèses et imitations",
-          "Description": "Zircones, YAG, verres, corindons et diamants de laboratoire : l'envers du décor."
+          "Description": "Cubic zirconia, YAG, verres, corindons et diamants de laboratoire : l'envers du décor."
         }
       ],
       "note": "Une vente chaque samedi, à la banque ; le catalogue peut taire ou nier un traitement."

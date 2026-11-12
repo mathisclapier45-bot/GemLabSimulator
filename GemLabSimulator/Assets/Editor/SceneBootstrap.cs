@@ -6730,7 +6730,7 @@ public static class SceneBootstrap
             BuildGem("CZ", g =>
             {
                 g.displayName = "CZ";
-                g.description = "Zircone cubique : un simulant synthétique du diamant, bon marché mais très différent physiquement.";
+                g.description = "Cubic zirconia (CZ) : un simulant synthétique du diamant, bon marché mais très différent physiquement.";
                 g.icon = GetGemIconSprite("cz", new Color(0.85f, 0.90f, 0.95f), new Color(0.95f, 0.97f, 1.00f), "Rond", "Brillant");
                 g.roughIcon = GetRoughGemIconSprite("cz", new Color(0.85f, 0.90f, 0.95f), "Rond");
                 g.refractiveIndex = 2.16f;
@@ -7374,7 +7374,7 @@ public static class SceneBootstrap
             BuildGem("YAG", g =>
             {
                 g.displayName = "YAG";
-                g.description = "Grenat d'yttrium-aluminium synthétique, un des premiers simulants de diamant utilisés en joaillerie avant l'arrivée de la zircone cubique.";
+                g.description = "Grenat d'yttrium-aluminium synthétique, un des premiers simulants de diamant utilisés en joaillerie avant l'arrivée du cubic zirconia (CZ).";
                 g.icon = GetGemIconSprite("yag", new Color(0.85f, 0.87f, 0.90f), new Color(0.96f, 0.97f, 0.99f), "Rond", "Brillant");
                 g.roughIcon = GetRoughGemIconSprite("yag", new Color(0.85f, 0.87f, 0.90f), "Rond");
                 g.refractiveIndex = 1.833f;
