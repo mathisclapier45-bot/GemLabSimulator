@@ -622,7 +622,7 @@ public static class SceneBootstrap
             "Deux fenêtres côte à côte à travers un cristal de calcite : on compare les deux couleurs d'un pléochroïsme en tournant la gemme. Se glisse dans le sac.",
             "", true);
         CreateShopItem(sideShelves[2], "Slot_1", "DichroscopeLondres", "Dichroscope de Londres", 90,
-            "Dichroscope tubulaire classique (modèle londonien) : il sépare la lumière en deux faisceaux polarisés pour révéler le pléochroïsme. Se glisse dans le sac.",
+            "Dichroscope de Londres : deux filtres polarisants collés à angle droit dans une loupe pliante. Chaque moitié ne laisse passer qu'une direction de vibration : on voit les deux couleurs d'un pléochroïsme côte à côte. Se glisse dans le sac.",
             "", true);
 
         CreateShopItem(backShelves[1], "Slot_0", "Objectif60X", "Objectif ×60 pour microscope", 6499,

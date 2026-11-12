@@ -425,30 +425,52 @@ public static class LessonFigures
         c.Label("c'est le pléochroïsme", new Vector2(0f, -140f), 14, Ink, 300f);
     }
 
-    // The rhomb of calcite splits the light of the stone into two polarised beams, one for each window.
+    // The dichroscope of London: two polarizing filters glued at right angles, one in each half of the lens. Each half lets through one direction of vibration only.
     private static void CalciteSplit(LessonCanvas c, float t)
     {
-        var stone = new Vector2(-195f, 0f);
-        var rhomb = new Vector2(-45f, 0f);
-        var windowA = new Vector2(150f, 42f);
-        var windowB = new Vector2(150f, -42f);
-        c.Rect(stone, new Vector2(46f, 46f), Stone, 45f);
-        c.Line(stone + new Vector2(30f, 0f), rhomb + new Vector2(-34f, 0f), 4f, new Color(1f, 1f, 1f, 0.8f));
-        c.Rect(rhomb, new Vector2(72f, 56f), new Color(0.55f, 0.85f, 1f, 0.55f), 18f);
-        c.Label("calcite", rhomb + new Vector2(0f, -48f), 13, Cyan, 90f);
-        c.Line(rhomb + new Vector2(30f, 6f), windowA + new Vector2(-30f, 0f), 4f, RubyA);
-        c.Line(rhomb + new Vector2(30f, -6f), windowB + new Vector2(-30f, 0f), 4f, RubyB);
-        for (var i = 0; i < 3; i++)
+        var stone = new Vector2(-190f, 0f);
+        var lens = new Vector2(10f, 0f);
+        var view = new Vector2(165f, 0f);
+        var line = new Color(0.12f, 0.14f, 0.20f, 1f);
+        var s = 0.5f + 0.5f * Mathf.Sin(t * 1.3f);
+        var colorA = Color.Lerp(RubyA, RubyB, s);
+        var colorB = Color.Lerp(RubyB, RubyA, s);
+
+        // The stone on the lit surface.
+        c.Rect(stone + new Vector2(0f, -4f), new Vector2(80f, 80f), new Color(1f, 1f, 0.92f, 1f));
+        c.Rect(stone, new Vector2(40f, 40f), Stone, 45f);
+        c.Label("pierre sur la lampe", stone + new Vector2(0f, -58f), 12, Ink, 130f);
+
+        // The two directions of vibration go through the two halves of the lens.
+        c.Line(stone + new Vector2(42f, 12f), lens + new Vector2(-40f, 28f), 3f, colorA);
+        c.Line(stone + new Vector2(42f, -12f), lens + new Vector2(-40f, -28f), 3f, colorB);
+
+        // The lens: round, in a black case; horizontal lines in the upper half, vertical lines in the lower half.
+        c.Circle(lens, 60f, new Color(0.10f, 0.11f, 0.14f, 1f));
+        c.Circle(lens, 55f, new Color(0.80f, 0.84f, 0.90f, 1f));
+        for (var y = 10; y <= 46; y += 12)
+            c.Rect(lens + new Vector2(0f, y), new Vector2(2f * Mathf.Sqrt(55f * 55f - y * y) - 6f, 2f), line);
+        for (var x = -42; x <= 42; x += 14)
         {
-            var u = Mathf.Repeat(t * 0.5f + i / 3f, 1f);
-            c.Circle(Vector2.Lerp(stone + new Vector2(30f, 0f), rhomb + new Vector2(-34f, 0f), u), 4f, Color.white);
-            c.Circle(Vector2.Lerp(rhomb + new Vector2(30f, 6f), windowA + new Vector2(-30f, 0f), u), 4f, Color.white);
-            c.Circle(Vector2.Lerp(rhomb + new Vector2(30f, -6f), windowB + new Vector2(-30f, 0f), u), 4f, Color.white);
+            var height = Mathf.Sqrt(55f * 55f - x * x) - 6f;
+            c.Rect(lens + new Vector2(x, -height / 2f - 2f), new Vector2(2f, height), line);
         }
-        Window(c, windowA, new Vector2(56f, 56f), RubyA, "A");
-        Window(c, windowB, new Vector2(56f, 56f), RubyB, "B");
-        c.Label("dichroscope de Londres : deux faisceaux polarisés", new Vector2(10f, 120f), 14, Gold, 440f);
-        c.Label("Une image par fenêtre : on compare les deux couleurs", new Vector2(0f, -140f), 14, Ink, 460f);
+        c.Rect(lens, new Vector2(110f, 3f), new Color(0.10f, 0.11f, 0.14f, 1f));
+        c.Label("filtre ↔", lens + new Vector2(0f, 76f), 12, Gold, 90f);
+        c.Label("filtre ↕", lens + new Vector2(0f, -76f), 12, Gold, 90f);
+
+        // What the eye sees: the stone in the two halves, in two colours.
+        c.Circle(view, 52f, new Color(0.10f, 0.11f, 0.14f, 1f));
+        c.Circle(view, 48f, colorA);
+        for (var y = -2; y > -48; y -= 4)
+            c.Rect(view + new Vector2(0f, y - 2f), new Vector2(2f * Mathf.Sqrt(48f * 48f - y * y), 4f), colorB);
+        c.Rect(view, new Vector2(100f, 3f), new Color(0.10f, 0.11f, 0.14f, 1f));
+        c.Label("A", view + new Vector2(70f, 24f), 14, Ink, 24f);
+        c.Label("B", view + new Vector2(70f, -24f), 14, Ink, 24f);
+        c.Label("ce que voit l'œil", view + new Vector2(0f, -72f), 12, Gold, 130f);
+
+        c.Label("Deux filtres polarisants collés à angle droit", new Vector2(0f, 148f), 15, Gold, 450f);
+        c.Label("Chaque moitié montre l'une des deux couleurs de la pierre", new Vector2(0f, -140f), 13, Ink, 460f);
     }
 
     // No colour change, two colours, three colours.
@@ -495,36 +517,37 @@ public static class LessonFigures
         c.Label("Regardez dans plusieurs directions, sur un tour complet", new Vector2(0f, -140f), 13, Ink, 460f);
     }
 
-    // The models: the tube of London, which is the one of the laboratory and the one the player uses, drawn big and labelled; the portable calcite one, small.
+    // The models: the dichroscope of London (the one of the laboratory), drawn big, open like a folding loupe with its lens in two halves; the portable one with a calcite, small.
     private static void PleoDevices(LessonCanvas c)
     {
         var steel = new Color(0.60f, 0.64f, 0.72f, 1f);
+        var black = new Color(0.10f, 0.11f, 0.14f, 1f);
         var rhomb = new Color(0.55f, 0.85f, 1f, 0.6f);
 
-        // The tube of London.
-        c.Rect(new Vector2(0f, 62f), new Vector2(300f, 44f), steel);
-        c.Rect(new Vector2(0f, 62f), new Vector2(300f, 6f), new Color(0.75f, 0.78f, 0.86f, 1f));
-        c.Circle(new Vector2(-160f, 62f), 22f, new Color(0.30f, 0.33f, 0.40f, 1f));
-        c.Circle(new Vector2(-160f, 62f), 12f, new Color(0.70f, 0.85f, 1f, 1f));
-        c.Rect(new Vector2(0f, 62f), new Vector2(84f, 32f), rhomb, 18f);
-        c.Rect(new Vector2(160f, 62f), new Vector2(18f, 34f), new Color(0.10f, 0.12f, 0.16f, 1f));
-        c.Rect(new Vector2(160f, 62f), new Vector2(11f, 22f), new Color(0.85f, 0.92f, 1f, 1f));
-        c.Label("lentille (l'œil)", new Vector2(-160f, 100f), 12, Gold, 110f);
-        c.Label("rhomboèdre de calcite", new Vector2(0f, 100f), 12, Cyan, 160f);
-        c.Label("hublot carré", new Vector2(160f, 100f), 12, Gold, 110f);
-        c.Label("Dichroscope de Londres : celui du laboratoire", new Vector2(0f, 20f), 16, Gold, 440f);
+        // The dichroscope of London: the folding case, a round lens in two halves with filters at right angles.
+        var lens = new Vector2(-95f, 62f);
+        c.Rect(new Vector2(25f, 62f), new Vector2(190f, 52f), black, -8f);
+        c.Circle(lens, 46f, black);
+        c.Circle(lens, 38f, new Color(0.80f, 0.84f, 0.90f, 1f));
+        c.Rect(lens + new Vector2(0f, -20f), new Vector2(76f, 36f), new Color(0.58f, 0.62f, 0.70f, 1f));
+        for (var i = -2; i <= 2; i++) c.Rect(lens + new Vector2(i * 13f, -20f), new Vector2(2f, 30f), black);
+        for (var i = 0; i < 3; i++) c.Rect(lens + new Vector2(0f, 12f + i * 9f), new Vector2(54f - i * 12f, 2f), black);
+        c.Line(lens + new Vector2(-38f, 0f), lens + new Vector2(38f, 0f), 2f, Color.white);
+        c.Circle(new Vector2(100f, 66f), 5f, steel);
+        c.Label("deux filtres polarisants collés à angle droit", new Vector2(40f, 112f), 13, Gold, 340f);
+        c.Label("Dichroscope de Londres : celui du laboratoire", new Vector2(0f, 14f), 16, Gold, 440f);
 
-        // The portable one, and the lamp of the laboratory.
+        // The portable dichroscope with a calcite, and the lamp of the laboratory.
         c.Rect(new Vector2(-110f, -62f), new Vector2(110f, 24f), steel);
         c.Circle(new Vector2(-160f, -62f), 13f, new Color(0.30f, 0.33f, 0.40f, 1f));
         c.Rect(new Vector2(-110f, -62f), new Vector2(30f, 14f), rhomb, 18f);
         c.Rect(new Vector2(-55f, -62f), new Vector2(10f, 18f), new Color(0.80f, 0.90f, 1f, 1f));
-        c.Label("Dichroscope à calcite (portable, pour le sac)", new Vector2(-95f, -96f), 12, Ink, 230f);
+        c.Label("Dichroscope à calcite (un cristal, deux images)", new Vector2(-95f, -96f), 12, Ink, 230f);
 
-        c.Rect(new Vector2(120f, -62f), new Vector2(18f, 30f), Wood);
-        c.Circle(new Vector2(120f, -38f), 12f, new Color(1f, 0.92f, 0.5f, 1f));
-        c.Label("lampe du laboratoire", new Vector2(120f, -96f), 12, Ink, 150f);
-        c.Label("Même principe : la calcite sépare la lumière en deux", new Vector2(0f, -140f), 13, Dim, 460f);
+        c.Rect(new Vector2(135f, -66f), new Vector2(52f, 40f), new Color(1f, 1f, 0.92f, 1f));
+        c.Rect(new Vector2(135f, -92f), new Vector2(64f, 8f), black);
+        c.Label("lampe du laboratoire", new Vector2(135f, -112f), 12, Ink, 150f);
+        c.Label("Même but : séparer les deux directions de vibration", new Vector2(0f, -140f), 13, Dim, 460f);
     }
 
     // What each stone shows.

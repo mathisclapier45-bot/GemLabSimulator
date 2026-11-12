@@ -8,7 +8,7 @@ public static class BagItemCatalog
         { "Loupe10X", ("Loupe 10× (Hastings)", "Loupe de poche à triplet aplanétique, grossissement ×10 : l'outil de base pour observer une gemme sur le terrain.") },
         { "Loupe20X", ("Loupe 20× (triplet)", "Loupe de poche à triplet, grossissement ×20 : pour distinguer les fines inclusions, au prix d'un champ plus réduit et d'une mise au point plus délicate.") },
         { "DichroscopeCalcite", ("Dichroscope à calcite", "Deux fenêtres côte à côte à travers un cristal de calcite : on y compare les deux couleurs d'un pléochroïsme en faisant tourner la gemme.") },
-        { "DichroscopeLondres", ("Dichroscope de Londres", "Dichroscope tubulaire classique (modèle londonien), à rhomboèdre de calcite : il sépare la lumière en deux faisceaux polarisés pour révéler le pléochroïsme.") },
+        { "DichroscopeLondres", ("Dichroscope de Londres", "Dichroscope de Londres : deux filtres polarisants collés à angle droit dans une loupe pliante. Chaque moitié ne laisse passer qu'une direction de vibration : on voit les deux couleurs d'un pléochroïsme côte à côte.") },
         { "SpectroscopePoche", ("Spectroscope de poche", "Spectroscope à réseau de diffraction : décompose la lumière traversant la gemme et laisse voir ses bandes d'absorption.") },
         { "Maglite", ("Maglite", "Lampe torche compacte et puissante, indispensable pour éclairer une gemme (diaphanéité, inclusions, éclat) en dehors du laboratoire.") },
         { "Chamoisine", ("Chamoisine (gem cloth)", "Carré de feutre doux pour essuyer une gemme sans la rayer : poussières, traces de doigts et résidus gras disparaissent avant l'examen.") },

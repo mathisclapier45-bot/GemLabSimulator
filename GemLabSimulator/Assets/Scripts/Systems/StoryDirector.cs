@@ -1429,7 +1429,7 @@ public class StoryDirector : MonoBehaviour
     {
         yield return Say(npc,
             "Bonjour ! Aujourd'hui, la couleur. Une pierre colorée n'a pas toujours la même couleur selon le côté par lequel on la regarde : c'est le pléochroïsme.",
-            "Il se voit à l'œil nu sur certaines pierres, mais le plus souvent il faut un instrument : le dichroscope de Londres, un petit tube à calcite. Laissez-moi vous le présenter.");
+            "Il se voit à l'œil nu sur certaines pierres, mais le plus souvent il faut un instrument : le dichroscope de Londres : deux filtres polarisants collés à angle droit. Laissez-moi vous le présenter.");
 
         DialogueBoxUI.Hide();
         yield return PlayLesson("dichroscope");
