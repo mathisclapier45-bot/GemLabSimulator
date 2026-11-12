@@ -84,6 +84,13 @@ public class GuideArrow : MonoBehaviour
             return null;
         }
 
+        if (scene == "Marche")
+        {
+            if (phase != StoryState.PhaseMarketVisit || state.FabienneStep != 0) return null;
+            var table = Object.FindFirstObjectByType<MarketVendorSpot>();
+            return table != null ? table.gameObject : null;
+        }
+
         if (scene == "GemStore")
         {
             if (phase != StoryState.PhaseLeaVisit) return null;
@@ -94,7 +101,22 @@ public class GuideArrow : MonoBehaviour
         var toLab = phase == StoryState.PhaseLab || state.InTutorial || state.StoneQuest || state.TwinsQuest || state.PleoQuest;
         if (scene == "Town")
         {
-            if (phase == StoryState.PhaseLeaVisit) return DoorTo("GemStore");
+            if (phase == StoryState.PhaseLeaVisit)
+            {
+                // First Anselme, who waits in the street of the shop, then the door of the shop.
+                if (!state.HasContact("anselme"))
+                {
+                    var anselme = GameObject.Find("Anselme");
+                    if (anselme != null) return anselme;
+                }
+                return DoorTo("GemStore");
+            }
+            if (phase == StoryState.PhaseMarketVisit)
+            {
+                if (state.FabienneStep == 0) return DoorTo("Marche");
+                if (state.FabienneStep == 3) return GameObject.Find("La Crypte");
+                return state.FabienneStep == 2 ? GameObject.Find("Fontaine") : null;
+            }
             if (phase == StoryState.PhaseRest || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseStoneReturn || phase == StoryState.PhaseTwinsSleep || phase == StoryState.PhasePleoSleep) return DoorTo("MaisonJoueur");
             return toLab ? DoorTo("Home") : null;
         }

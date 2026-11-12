@@ -10,7 +10,7 @@ using UnityEngine.Tilemaps;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 
-public static class SceneBootstrap
+public static partial class SceneBootstrap
 {
     private const int PixelsPerUnit = 32;
 
@@ -2186,6 +2186,8 @@ public static class SceneBootstrap
         CreateAirport(new Vector3(58, 8, 0f), new Vector3(46, 8, 0f), new Vector3(59, -5, 0f));
 
         CreateTunnelEntrance(new Vector3(0, -50, 0f));
+        // The entrance of the crypt, far from the town, in the south-east corner (SceneBootstrap.Crypt.cs).
+        CreateCryptEntrance(new Vector3(60f, -47f, 0f));
 
         CreateNamedSpawnPoint("SpawnPoint_Home", new Vector3(-55, 26, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Laboratoire", new Vector3(-30, 26, 0f));
@@ -2197,6 +2199,7 @@ public static class SceneBootstrap
         CreateNamedSpawnPoint("SpawnPoint_MarcheBrutes", new Vector3(15, -17, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Manoir", new Vector3(45, -17, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Tunnel", new Vector3(0, -47, 0f));
+        CreateNamedSpawnPoint("SpawnPoint_Crypte", new Vector3(60f, -50f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_Diamantaires", new Vector3(45f, 26f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_WatchStore", new Vector3(-29.75f, -17f, 0f));
         CreateNamedSpawnPoint("SpawnPoint_GemStore", new Vector3(34f, 5f, 0f));
@@ -5097,7 +5100,7 @@ public static class SceneBootstrap
             ("Marché Pierres", -45, -15), ("École", -15, -15),
             ("Marché Brutes", 15, -15), ("Manoir", 45, -15),
             ("Bijouterie", -22, 7), ("Banque", 22, 7), ("Concessionnaire", 28, -35), ("Labo Synthèse", -24f, -35), ("Labo Traitements", -10f, -35), ("Vincent Pardieu", -58, 10), ("Aéroport", 58, 8), ("Bibliothèque", -41, 7), ("GemStore", 35, 7), ("Maison perso", -52, -50), ("Boutique de vêtements", 57, 28), ("WatchStore", -31, -15),
-            ("Tunnel", 0, -50),
+            ("Tunnel", 0, -50), ("Crypte", 60, -47),
         };
 
         var mapWidth = mapAreaRect.sizeDelta.x;

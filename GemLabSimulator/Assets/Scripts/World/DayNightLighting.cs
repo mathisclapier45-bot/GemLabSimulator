@@ -89,8 +89,38 @@ public class DayNightLighting : MonoBehaviour
 
         // Indoors the picture is only graded (contrast, soft vignette); outdoors the hour colours it and the lamps are lit.
         Active = outdoor && lighting.Ready;
-        if (!outdoor) return;
+        if (!outdoor)
+        {
+            if (scene.name == "Crypte") AddCryptLights();
+            return;
+        }
         AddLights();
+    }
+
+    // The crypt is lit by its torches, its candles and its cauldron (the objects of the scene are named after them).
+    private static void AddCryptLights()
+    {
+        foreach (var renderer in FindObjectsByType<SpriteRenderer>(FindObjectsSortMode.None))
+        {
+            var name = renderer.gameObject.name;
+            Color color;
+            float radius, intensity;
+            if (name == "Torche") { color = new Color(1f, 0.62f, 0.28f); radius = 6.5f; intensity = 1.1f; }
+            else if (name == "Candelabre") { color = new Color(1f, 0.74f, 0.40f); radius = 4.5f; intensity = 0.95f; }
+            else if (name == "Bougies") { color = new Color(1f, 0.76f, 0.44f); radius = 3.5f; intensity = 0.85f; }
+            else if (name == "Chaudron") { color = new Color(0.45f, 1f, 0.60f); radius = 4f; intensity = 0.85f; }
+            else continue;
+            if (renderer.GetComponentInChildren<NightLight>() != null) continue;
+
+            var lightObject = new GameObject("Light");
+            lightObject.transform.SetParent(renderer.transform, false);
+            lightObject.transform.position = renderer.bounds.center + new Vector3(0f, renderer.bounds.extents.y * 0.25f, 0f);
+            var light = lightObject.AddComponent<NightLight>();
+            light.Type = NightLight.Kind.Torch;
+            light.LightColor = color;
+            light.Radius = radius;
+            light.Intensity = intensity;
+        }
     }
 
     // Street lamps, shop fronts and the lantern of the player get their light.
@@ -196,12 +226,15 @@ public class DayNightLighting : MonoBehaviour
         {
             // Inside: a warm, even light, a gentle vignette, and the tunnel is darker and colder.
             var tunnel = sceneName == "Tunnel";
-            ambient = tunnel ? new Color(0.62f, 0.66f, 0.84f) : new Color(1.00f, 0.97f, 0.92f);
-            saturation = tunnel ? 0.92f : 1.06f;
-            vignette = tunnel ? 0.55f : 0.30f;
-            contrast = tunnel ? 1.18f : 1.12f;
-            curve = tunnel ? 0.45f : 0.35f;
-            Darkness = 0f;
+            var crypt = sceneName == "Crypte";
+            ambient = crypt ? new Color(0.26f, 0.28f, 0.42f) : tunnel ? new Color(0.62f, 0.66f, 0.84f) : new Color(1.00f, 0.97f, 0.92f);
+            saturation = crypt ? 0.88f : tunnel ? 0.92f : 1.06f;
+            vignette = crypt ? 0.68f : tunnel ? 0.55f : 0.30f;
+            contrast = crypt ? 1.22f : tunnel ? 1.18f : 1.12f;
+            curve = crypt ? 0.5f : tunnel ? 0.45f : 0.35f;
+            // The crypt is always dark: its torches are lit.
+            Darkness = crypt ? 1f : 0f;
+            if (crypt) count = GatherLights();
 
             // The lights are off and it is night in the room.
             var night = Mathf.Clamp01(IndoorNight);

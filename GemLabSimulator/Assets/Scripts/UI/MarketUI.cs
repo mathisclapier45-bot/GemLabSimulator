@@ -104,6 +104,7 @@ public class MarketUI : MonoBehaviour
         selling = false;
         if (panel != null) panel.SetActive(true);
         Refresh();
+        StoryState.Instance?.OnMarketOpened();
     }
 
     public void Close()

@@ -30,7 +30,7 @@ public class ShopkeeperNPC : MonoBehaviour
 
         // The visit of the story: Léa has something left by Vincent.
         var story = StoryState.Instance;
-        if (story != null && !story.Legacy && story.Phase == StoryState.PhaseLeaVisit && StoryDirector.Instance != null)
+        if (story != null && !story.Legacy && story.Phase == StoryState.PhaseLeaVisit && StoryDirector.Instance != null && story.HasContact("anselme"))
         {
             if (!DialogueBoxUI.IsShowing && !PlayerController.InputLocked) StoryDirector.Instance.TalkToLea(gameObject);
             return;

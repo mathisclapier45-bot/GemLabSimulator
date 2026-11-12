@@ -29,6 +29,7 @@ public class MusicManager : MonoBehaviour
     private AudioSource source;
     private AudioClip currentClip;
     private AudioClip storyMusic;
+    private AudioClip cryptMusic;
 
     // True while the cinematic of the introduction plays (it runs over the main menu).
     public static bool IntroPlaying;
@@ -114,6 +115,13 @@ public class MusicManager : MonoBehaviour
     // The music of the story: the cinematic of the introduction, the walk through the town with Professor Thouvenot, and the house of the player.
     private AudioClip StoryClip(string sceneName)
     {
+        // The crypt, and the walk that leads to it (the procession of Fabienne), have their own music.
+        if (sceneName == "Crypte" || (sceneName == "Town" && StoryDirector.CryptMusic))
+        {
+            if (cryptMusic == null) cryptMusic = Resources.Load<AudioClip>("Music/Music_Crypte");
+            if (cryptMusic != null) return cryptMusic;
+        }
+
         var wanted = sceneName == "MaisonJoueur"
             || (sceneName == "MainMenu" && IntroPlaying)
             || (sceneName == "Town" && (StoryDirector.ArrivalPending || (StoryState.Instance != null && !StoryState.Instance.Legacy && StoryState.Instance.Stage <= StoryState.GoHome)));
@@ -127,7 +135,7 @@ public class MusicManager : MonoBehaviour
         var target = StoryClip(sceneName) != null ? StoryClip(sceneName) : sceneName == "Town" || sceneName == "GemStore" || sceneName == "WatchStore" || sceneName == "Animalerie" || sceneName == "Banque" || sceneName == "Bijouterie" || sceneName == "Concessionnaire" ? townMusic
             : sceneName.StartsWith("Labo") || sceneName == "Home" || sceneName == "MaisonJoueur" || sceneName.StartsWith("Diamantaires") ? laboratoryMusic
             : sceneName == "MainMenu" ? mainMenuMusic
-            : sceneName == "Tunnel" ? tunnelMusic
+            : sceneName == "Tunnel" || sceneName == "Crypte" ? tunnelMusic
             : sceneName == "Manoir" ? manoirMusic
             : sceneName == "Marche" || sceneName == "MarcheBrutes" ? marketMusic
             : null;

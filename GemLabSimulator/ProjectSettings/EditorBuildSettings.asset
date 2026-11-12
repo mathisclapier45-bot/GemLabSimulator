@@ -87,9 +87,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Bijouterie.unity
     guid: 50d91be2f05ce408d8b95d8bf0eabe1a
   - enabled: 1
-    path: Assets/Scenes/Town.unity
-    guid: 436994916875340dba60314ffa83766d
-  - enabled: 1
     path: Assets/Scenes/Bibliotheque.unity
     guid: 920a0f263617c4658a84d2cfc2a2a2a2
+  - enabled: 1
+    path: Assets/Scenes/Crypte.unity
+    guid: a3e5a05cd94f94fc6ab898c29fa97144
+  - enabled: 1
+    path: Assets/Scenes/Town.unity
+    guid: 436994916875340dba60314ffa83766d
   m_configObjects: {}

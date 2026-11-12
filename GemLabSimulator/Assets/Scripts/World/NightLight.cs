@@ -6,7 +6,7 @@ using UnityEngine;
 public class NightLight : MonoBehaviour
 {
     // Lantern: the one the player carries (lit with the lantern of the bag). Carried: a lantern someone carries that is always lit (Professor Thouvenot at night).
-    public enum Kind { Lamp, Window, Lantern, Carried }
+    public enum Kind { Lamp, Window, Lantern, Carried, Torch }
 
     public static readonly List<NightLight> All = new List<NightLight>();
 
@@ -54,7 +54,9 @@ public class NightLight : MonoBehaviour
         if (Type == Kind.Window && !string.IsNullOrEmpty(Building) && !OpeningHours.IsOpen(Building)) level *= 0.3f;
         if (Type == Kind.Lantern && !LanternLit) level *= 0.3f;
         // The flame of a lantern and the old lamps flicker a little.
-        var flicker = Type == Kind.Lantern || Type == Kind.Carried ? 0.94f + 0.06f * Mathf.Sin(Time.time * 7f + seed) : 0.97f + 0.03f * Mathf.Sin(Time.time * 3f + seed);
+        // A torch of the crypt flickers a lot more than a lamp.
+        var flicker = Type == Kind.Torch ? 0.82f + 0.12f * Mathf.Sin(Time.time * 9f + seed) + 0.06f * Mathf.Sin(Time.time * 23f + seed * 1.7f)
+            : Type == Kind.Lantern || Type == Kind.Carried ? 0.94f + 0.06f * Mathf.Sin(Time.time * 7f + seed) : 0.97f + 0.03f * Mathf.Sin(Time.time * 3f + seed);
         return level * flicker;
     }
 

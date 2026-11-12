@@ -63,6 +63,9 @@ public class StoryState : MonoBehaviour
     public const int PhasePleoValidate = 35;       // the director has validated: tell Thouvenot (she gives the second case after the first one)
     public const int PhasePleoDone = 40;           // chapter 3 is over (the dichroscope for now)
 
+    // After Léa: a visit to the market of cut stones, where Camille explains how it works and warns about the traps.
+    public const int PhaseMarketVisit = 29;
+
     // After the stone of Anselme is confirmed: Léa, the clerk of the GemStore, has something left by Vincent (a store credit, the card binder and a booster).
     public const int PhaseLeaVisit = 28;
 
@@ -193,6 +196,51 @@ public class StoryState : MonoBehaviour
 
     public static bool BinderOpen => Instance == null || Instance.Legacy || Instance.BinderUnlocked;
 
+    // During the market visit (PhaseMarketVisit): 0 = the market is to be seen, 1 = Fabienne is about to call (the phone rings), 2 = she waits for the player at the fountain
+    // when the night falls, 3 = she has been met. Then Anselme waits for his stone.
+    public int FabienneStep { get; private set; }
+
+    // The player has opened the table of a vendor of the market: the visit is done, and the phone rings (Fabienne).
+    public void OnMarketOpened()
+    {
+        if (Legacy || Phase != PhaseMarketVisit || FabienneStep != 0) return;
+        FabienneStep = 1;
+        OnChanged?.Invoke();
+    }
+
+    public void SetFabienneStep(int step)
+    {
+        FabienneStep = step;
+        OnChanged?.Invoke();
+    }
+
+    // The procession has led the player to the crypt: the hooded figures have gone in, it is the turn of the player.
+    public void OnFountainMet()
+    {
+        if (Legacy || Phase != PhaseMarketVisit) return;
+        FabienneStep = 3;
+        OnChanged?.Invoke();
+        ToolFeedbackUI.Instance?.ShowMessage("Entrez dans la crypte, à votre tour.");
+    }
+
+    // The meeting in the crypt is over: the player goes home and sleeps.
+    public void OnCryptMeetingDone()
+    {
+        if (Legacy || Phase != PhaseMarketVisit || FabienneStep != 3) return;
+        FabienneStep = 4;
+        // The stone of Anselme is normally already given back (before the shop): the night comes. An older save still has to give it back.
+        if (HasContact("anselme"))
+        {
+            SetPhase(PhaseTwinsSleep);
+            ToolFeedbackUI.Instance?.ShowMessage("Rentrez chez vous et allez vous coucher : demain, la professeure Thouvenot vous attend au laboratoire.");
+        }
+        else
+        {
+            SetPhase(PhaseStoneReturn);
+            ToolFeedbackUI.Instance?.ShowMessage("Rentrez chez vous. Rendez la pierre à Anselme, près de la passerelle, vers votre maison.");
+        }
+    }
+
     public void UnlockBinder()
     {
         if (BinderUnlocked) return;
@@ -256,11 +304,20 @@ public class StoryState : MonoBehaviour
     }
 
     // What Thouvenot has presented so far, from where the story is (the instruments stay open once they are).
+    // Where a phase stands in the story, as a number that grows with the story: the visit of Léa and the visit of the market (28 and 29) come between the confirmation of the stone
+    // of Anselme (17) and its return (18), whatever their numbers.
+    private static float Progress(int phase)
+    {
+        if (phase == PhaseLeaVisit) return PhaseStoneValidate + 0.5f;
+        if (phase == PhaseMarketVisit) return PhaseStoneValidate + 0.6f;
+        return phase;
+    }
+
     private void GrantToolsForPhase()
     {
         if (Legacy || !PrologueOver) return;
-        var p = Phase;
-        var finished = p == PhaseDone || p >= PhaseStoneReturn;
+        var p = Progress(Phase);
+        var finished = Phase == PhaseDone || p >= PhaseStoneReturn;
         var later = TutorialRound >= 2;
         if (finished || p >= PhaseTutorialLoupe) tools.Add(ExaminationTool.MeasurementType.VisualExamination.ToString());
         if (finished || later || p >= PhaseTutorialWeigh) tools.Add(ExaminationTool.MeasurementType.Weight.ToString());
@@ -305,6 +362,7 @@ public class StoryState : MonoBehaviour
         TwinSpecimen = "";
         TwinReference = "";
         for (var i = 0; i < pleoStones.Length; i++) pleoStones[i] = "";
+        FabienneStep = 0;
         BinderUnlocked = false;
         contacts.Clear();
         tools.Clear();
@@ -472,7 +530,15 @@ public class StoryState : MonoBehaviour
                 case PhaseStoneReturn: return "Rendez la pierre à Anselme : il vous attend près de la passerelle, sur le chemin de votre maison. En attendant, passez vos autres gemmes au réfractomètre pour compléter votre grimoire.";
                 case PhasePleoSleep: return "Reposez-vous : demain, la professeure Thouvenot vous attend au laboratoire. Dormez dans votre lit.";
                 case PhasePleoLab: return "Retrouvez la professeure Thouvenot au laboratoire : elle va vous apprendre à lire la couleur d'une pierre.";
-                case PhaseLeaVisit: return "Passez vos anciennes pierres au réfractomètre pour compléter votre grimoire, puis rendez visite à Léa, la vendeuse du GemStore : elle a quelque chose à vous remettre de la part de Vincent.";
+                case PhaseMarketVisit:
+                    if (FabienneStep == 1) return "Répondez au téléphone : il sonne.";
+                    if (FabienneStep == 3) return "Entrez dans la crypte, au sud-est de la ville : les silhouettes vous attendent.";
+                    if (FabienneStep >= 2) return "Retrouvez Fabienne devant la fontaine du parc, à l'est de la ville, à la tombée de la nuit (vers 19h30). N'en parlez à personne.";
+                    return "Faites un tour au Marché aux pierres (à l'ouest de la ville) : approchez-vous d'une table et appuyez sur E pour voir les pierres du marchand.";
+                case PhaseLeaVisit:
+                    return HasContact("anselme")
+                        ? "Rendez visite à Léa, la vendeuse du GemStore : elle a quelque chose à vous remettre de la part de Vincent. (Passez vos anciennes pierres au réfractomètre pour compléter votre grimoire.)"
+                        : "Rendez la pierre à Anselme, qui traîne dans la rue du GemStore, puis rendez visite à Léa, la vendeuse : elle a quelque chose à vous remettre de la part de Vincent.";
                 case PhaseTwinsSleep: return "Rentrez chez vous et dormez : demain, la professeure Thouvenot vous attend au laboratoire.";
                 case PhaseTwinsLab: return "Retrouvez la professeure Thouvenot au laboratoire : elle a une affaire pour vous.";
                 case PhaseTwinsRefracto: return "Mesurez l'indice de réfraction des deux pierres bleues (la pierre du client et la pierre de référence) avec le réfractomètre.";
@@ -531,6 +597,7 @@ public class StoryState : MonoBehaviour
         data.storyContacts = new List<string>(contacts);
         data.storyTwinSpecimen = TwinSpecimen;
         data.storyBinder = BinderUnlocked;
+        data.storyFabienne = FabienneStep;
         data.storyPleoStones = new List<string>(pleoStones);
         data.storyTwinReference = TwinReference;
         data.storyTools = new List<string>(tools);
@@ -549,6 +616,7 @@ public class StoryState : MonoBehaviour
         TwinSpecimen = "";
         TwinReference = "";
         for (var i = 0; i < pleoStones.Length; i++) pleoStones[i] = "";
+        FabienneStep = 0;
         BinderUnlocked = false;
         contacts.Clear();
         tools.Clear();
@@ -574,6 +642,7 @@ public class StoryState : MonoBehaviour
             TwinSpecimen = data.storyTwinSpecimen ?? "";
             TwinReference = data.storyTwinReference ?? "";
             BinderUnlocked = data.storyBinder;
+            FabienneStep = Mathf.Clamp(data.storyFabienne, 0, 4);
             if (data.storyPleoStones != null)
                 for (var i = 0; i < pleoStones.Length && i < data.storyPleoStones.Count; i++) pleoStones[i] = data.storyPleoStones[i] ?? "";
             // A save that had finished chapter 2 goes on with chapter 3.

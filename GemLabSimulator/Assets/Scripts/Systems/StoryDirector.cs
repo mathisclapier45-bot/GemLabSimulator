@@ -189,9 +189,24 @@ public class StoryDirector : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    // True during the procession to the crypt: the town plays the music of the crypt (see MusicManager).
+    public static bool CryptMusic;
+
+    // True while the procession holds the player (the lock is released if the scene is left).
+    private bool procLocked;
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         StopAllCoroutines();
+        fabienneBusy = false;
+        CryptMusic = false;
+        if (procLocked) { PlayerController.InputLocked = false; procLocked = false; }
+        // The way out of the crypt leads to the front of the door, on the south side of the entrance (the town may have been generated with another point).
+        if (scene.name == "Town")
+        {
+            var exit = GameObject.Find("SpawnPoint_Crypte");
+            if (exit != null) exit.transform.position = new Vector3(CryptDoor.x, CryptDoor.y - 1.6f, 0f);
+        }
         talking = false;
         StoryChoiceUI.Close();
         StoryStonePickerUI.Close();
@@ -203,8 +218,11 @@ public class StoryDirector : MonoBehaviour
             StartCoroutine(RunTown());
             StartCoroutine(RunMorningCall());
             StartCoroutine(RunStranger());
+            StartCoroutine(RunFountain());
         }
         else if (scene.name == "MaisonJoueur") StartCoroutine(RunHouse());
+        else if (scene.name == "Marche") StartCoroutine(RunMarket());
+        else if (scene.name == "Crypte") StartCoroutine(RunCrypt());
         else if (scene.name == "Home")
         {
             AddLoupeCloth();
@@ -898,19 +916,20 @@ public class StoryDirector : MonoBehaviour
 
     private static readonly Dictionary<string, Sprite[]> StrangerFrames = new Dictionary<string, Sprite[]>();
 
-    private static Sprite[] StrangerFramesOf(string direction)
+    private static Sprite[] StrangerFramesOf(string direction, string set = "W3")
     {
-        if (!StrangerFrames.TryGetValue(direction, out var frames) || frames == null || frames.Length == 0)
+        var key = set + "/" + direction;
+        if (!StrangerFrames.TryGetValue(key, out var frames) || frames == null || frames.Length == 0)
         {
-            frames = Resources.LoadAll<Sprite>($"Walkers/W3/{direction}");
+            frames = Resources.LoadAll<Sprite>($"Walkers/{set}/{direction}");
             System.Array.Sort(frames, (a, b) => string.CompareOrdinal(a.name, b.name));
-            StrangerFrames[direction] = frames;
+            StrangerFrames[key] = frames;
         }
         return frames;
     }
 
     // Walks a person (a townsman with a Walkers sprite) toward a point, with the walking frames of the right side. Returns when there.
-    private IEnumerator WalkPerson(Transform person, Func<Vector2> target, float stopDistance, float speed)
+    private IEnumerator WalkPerson(Transform person, Func<Vector2> target, float stopDistance, float speed, string set = "W3")
     {
         var renderer = person.GetComponent<SpriteRenderer>();
         var clock = 0f;
@@ -926,14 +945,14 @@ public class StoryDirector : MonoBehaviour
             clock += Time.deltaTime;
 
             var direction = Mathf.Abs(delta.x) > Mathf.Abs(delta.y) ? (delta.x >= 0f ? "Right" : "Left") : (delta.y >= 0f ? "Up" : "Down");
-            var frames = StrangerFramesOf(direction);
+            var frames = StrangerFramesOf(direction, set);
             if (renderer != null && frames.Length > 0) renderer.sprite = frames[(int)(clock / 0.11f) % frames.Length];
             yield return null;
         }
 
         if (renderer != null)
         {
-            var idle = StrangerFramesOf("Down");
+            var idle = StrangerFramesOf("Down", set);
             if (idle.Length > 0) renderer.sprite = idle[0];
         }
     }
@@ -946,7 +965,10 @@ public class StoryDirector : MonoBehaviour
         if (state == null || state.Legacy) yield break;
 
         if (state.Phase == StoryState.PhaseRest) yield return StrangerFirstMeeting(state);
-        else if (state.Phase == StoryState.PhaseStoneReturn) yield return StrangerReturn(state);
+        // Before the visit of Léa, Anselme waits in the street of the GemStore: the player gives him his stone back on the way to the shop.
+        else if (state.Phase == StoryState.PhaseLeaVisit && !state.HasContact("anselme")) yield return StrangerReturn(state, ShopPost, true);
+        // An older save, at the return of the stone: he waits at the footbridge.
+        else if (state.Phase == StoryState.PhaseStoneReturn) yield return StrangerReturn(state, new Vector2(StrangerMeet.x, StrangerMeet.y - 1.5f), false);
     }
 
     private static readonly Vector2 StrangerMeet = new Vector2(-52f, -30f);
@@ -974,9 +996,13 @@ public class StoryDirector : MonoBehaviour
 
     // Anselme waits at the end of the footbridge on the way to the player's house, at any hour. When the player comes, he walks up to them: the player gives the stone
     // back, and he thanks them with 50 euros and gives their number.
-    private IEnumerator StrangerReturn(StoryState state)
+    private static readonly Vector2 ShopPost = new Vector2(30f, 3.6f);
+
+    private IEnumerator StrangerReturn(StoryState state, Vector2 post, bool atShop)
     {
-        var post = new Vector2(StrangerMeet.x, StrangerMeet.y - 1.5f);
+        // He waits as long as the stone has not been given back (at the shop: before the visit of Léa; at the footbridge: for an older save).
+        bool Waiting() => atShop ? state.Phase == StoryState.PhaseLeaVisit && !state.HasContact("anselme") : state.Phase == StoryState.PhaseStoneReturn;
+
         var man = new GameObject("Anselme");
         var manRenderer = man.AddComponent<SpriteRenderer>();
         manRenderer.sortingOrder = 4;
@@ -986,7 +1012,7 @@ public class StoryDirector : MonoBehaviour
 
         var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
         GemInstance gem = null;
-        while (state.Phase == StoryState.PhaseStoneReturn)
+        while (Waiting())
         {
             if (man == null) yield break;
             if (DistanceToPlayer(post) > 7f) { yield return null; continue; }
@@ -997,12 +1023,12 @@ public class StoryDirector : MonoBehaviour
             if (gem != null) break;
 
             // Without the stone: he says so, goes back to his place and waits until the player has gone away and comes back.
-            yield return SayAs("Anselme", man, "Ah, vous voilà ! Et ma pierre ? Vous ne l'avez plus sur vous ? Rapportez-la-moi quand vous l'aurez retrouvée : je reste souvent près de la passerelle.");
+            yield return SayAs("Anselme", man, "Ah, vous voilà ! Et ma pierre ? Vous ne l'avez plus sur vous ? Rapportez-la-moi quand vous l'aurez retrouvée : je reste souvent dans le coin.");
             DialogueBoxUI.Hide();
             yield return WalkPerson(man.transform, () => post, 0.3f, 4f);
-            while (state.Phase == StoryState.PhaseStoneReturn && DistanceToPlayer(post) < 12f) yield return null;
+            while (Waiting() && DistanceToPlayer(post) < 12f) yield return null;
         }
-        if (state.Phase != StoryState.PhaseStoneReturn || gem == null)
+        if (!Waiting() || gem == null)
         {
             if (man != null) Destroy(man);
             yield break;
@@ -1025,8 +1051,16 @@ public class StoryDirector : MonoBehaviour
         yield return SayAs("Vous", player, "Merci, Anselme. À bientôt !");
         yield return SayAs("Anselme", man, "Bonne journée, et bienvenue à Crystal Grove !");
         DialogueBoxUI.Hide();
-        state.SetPhase(StoryState.PhaseTwinsSleep);
-        ToolFeedbackUI.Instance?.ShowMessage("Rentrez vous coucher : demain, la professeure Thouvenot vous attend au laboratoire.");
+        if (atShop)
+        {
+            // The story goes on with Léa, in the shop.
+            ToolFeedbackUI.Instance?.ShowMessage("Anselme est parti. Entrez maintenant au GemStore : Léa vous attend.");
+        }
+        else
+        {
+            state.SetPhase(StoryState.PhaseTwinsSleep);
+            ToolFeedbackUI.Instance?.ShowMessage("Rentrez vous coucher : demain, la professeure Thouvenot vous attend au laboratoire.");
+        }
         yield return StrangerLeaves(man);
     }
 
@@ -1129,7 +1163,7 @@ public class StoryDirector : MonoBehaviour
         yield return Say(npc,
             "C'est exact ! Et c'est ce que j'avais vu du premier coup d'œil. Mais maintenant, vous savez le prouver.",
             "Un indice vers 1,625, deux lectures, une seule limite qui bouge, la basse : c'est un uniaxe négatif. La densité autour de 3,06 et la couleur rose confirment : une tourmaline. Retenez bien cette méthode : une mesure ne suffit jamais, c'est leur accord qui fait la certitude.",
-            "Gardez la pierre un moment : elle n'est pas à vous. Anselme vous a promis une récompense, et il serait ravi de la revoir. Rendez-la-lui en rentrant chez vous : il vous attend près de la passerelle, du côté de votre maison.",
+            "Gardez la pierre un moment : elle n'est pas à vous. Anselme vous a promis une récompense, et il serait ravi de la revoir. Rendez-la-lui : il traîne souvent dans la rue du GemStore, vous le croiserez en y allant.",
             "En attendant, profitez du réfractomètre : passez-y les autres gemmes de votre inventaire, une par une, avec une goutte de liquide chacune. Chaque indice relevé, chaque limite d'ombre observée complète les pages de votre grimoire.",
             "Plus vous mesurez, plus vos pages se remplissent. Et quand un doute reste, vous saurez quoi mesurer pour le lever.",
             "Autre chose : passez donc au GemStore. Léa, la vendeuse, a quelque chose à vous remettre de la part de Vincent. Elle vous attend.");
@@ -1187,12 +1221,459 @@ public class StoryDirector : MonoBehaviour
         yield return SayAs("Léa", npc,
             "Voilà un bon début de collection ! Un conseil : les cartes se rangent toutes seules dans le classeur, par pages.",
             "Et une bonne nouvelle : un booster est livré au magasin chaque matin. Un seul par jour, alors ne tardez pas : il est sur le comptoir, à 11 €.",
-            "Passez quand vous voulez. Et si vous avez des nouvelles de Vincent... dites-le-moi, d'accord ?");
+            "Passez quand vous voulez. Et si vous avez des nouvelles de Vincent... dites-le-moi, d'accord ?",
+            "Tant que vous êtes en ville, faites donc un tour au Marché aux pierres, à l'ouest : Vincent y passait souvent. Il y a des gemmes taillées de partout. Mais il faut savoir regarder.");
         DialogueBoxUI.Hide();
 
-        state.SetPhase(StoryState.PhaseStoneReturn);
-        ToolFeedbackUI.Instance?.ShowMessage("Rendez la pierre à Anselme : il vous attend près de la passerelle, vers votre maison. En attendant, la Loupe 10× vous attend au GemStore.");
+        state.SetPhase(StoryState.PhaseMarketVisit);
+        ToolFeedbackUI.Instance?.ShowMessage("Faites un tour au Marché aux pierres, à l'ouest de la ville. La Loupe 10× vous attend au GemStore.");
         talking = false;
+    }
+
+    // ---- Fabienne: the call, and the meeting at the fountain ---------------------------------------------------------------------------
+
+    private bool fabienneBusy;
+
+    // The point of the fountain of the east park of the town.
+    private static readonly Vector2 FountainPoint = new Vector2(9f, 11.2f);
+
+    private void Update()
+    {
+        // After the visit of the market, the phone rings (Fabienne), in any scene, until the player answers.
+        var state = StoryState.Instance;
+        if (fabienneBusy || state == null || state.Legacy || state.Phase != StoryState.PhaseMarketVisit || state.FabienneStep != 1) return;
+        if (PhoneUI.Instance == null || DialogueBoxUI.IsShowing || PlayerController.InputLocked || SceneManager.GetActiveScene().name == "MainMenu") return;
+        fabienneBusy = true;
+        StartCoroutine(RunFabienneCall(state));
+    }
+
+    private IEnumerator RunFabienneCall(StoryState state)
+    {
+        yield return new WaitForSeconds(2f);
+        if (PhoneUI.Instance == null || state.Phase != StoryState.PhaseMarketVisit || state.FabienneStep != 1) { fabienneBusy = false; yield break; }
+
+        ToolFeedbackUI.Instance?.ShowMessage("Votre téléphone sonne : cliquez sur le petit téléphone, en haut à droite.");
+        var answered = false;
+        PhoneUI.Instance.Ring("Fabienne", () => answered = true);
+        while (!answered) yield return null;
+
+        var lines = new[]
+        {
+            "Allô ? C'est Fabienne. Une amie de votre oncle. Ne cherchez pas à savoir comment j'ai votre numéro.",
+            "Écoutez-moi bien : ce soir, à la tombée de la nuit, retrouvez-moi devant la fontaine de la ville, dans le parc, à l'est. J'ai des choses à vous dire.",
+            "Venez seul. Et n'en parlez à personne : ni à Léa, ni à Anselme, ni à qui que ce soit. À personne.",
+            "À ce soir.",
+        };
+        var finished = false;
+        // The face on the phone stays empty: the player does not see who is calling.
+        PhoneUI.Instance.Speak("Fabienne", null, lines, () => finished = true);
+        while (!finished) yield return null;
+
+        state.AddCall($"Entrant — Fabienne — {DayNightOverlay.GetClockLabel()}");
+        state.SetFabienneStep(2);
+        ToolFeedbackUI.Instance?.ShowMessage("Rendez-vous devant la fontaine du parc, à l'est de la ville, à la tombée de la nuit. N'en parlez à personne.");
+        fabienneBusy = false;
+        // In the town, the wait for the night begins now (in another scene, it begins when the town is loaded).
+        if (SceneManager.GetActiveScene().name == "Town") StartCoroutine(RunFountain());
+    }
+
+    // At night, at the fountain, Fabienne (who is Professor Thouvenot under her first name) waits for the player, tells them to say nothing to anyone and goes. (A first short scene: to be written again later.)
+    private IEnumerator RunFountain()
+    {
+        yield return WaitForGame();
+        var state = StoryState.Instance;
+        if (state == null || state.Legacy || state.Phase != StoryState.PhaseMarketVisit || state.FabienneStep != 2) yield break;
+
+        var warned = false;
+        while (state.Phase == StoryState.PhaseMarketVisit && state.FabienneStep == 2)
+        {
+            var near = DistanceToPlayer(FountainPoint) <= 8f;
+            if (near && OpeningHours.CurrentHour < 19.5f && OpeningHours.CurrentHour >= 5f)
+            {
+                if (!warned)
+                {
+                    warned = true;
+                    ToolFeedbackUI.Instance?.ShowMessage("Il fait encore jour : revenez à la fontaine à la tombée de la nuit.");
+                }
+            }
+            else if (near) break;
+            yield return null;
+        }
+        if (state.Phase != StoryState.PhaseMarketVisit || state.FabienneStep != 2) yield break;
+
+        // Fabienne waits at the fountain, with a lantern.
+        var woman = new GameObject("Fabienne");
+        var renderer = woman.AddComponent<SpriteRenderer>();
+        renderer.sortingOrder = 4;
+        renderer.sprite = Resources.Load<Sprite>("Story/Thouvenot");
+        woman.transform.position = new Vector3(FountainPoint.x + 1.8f, FountainPoint.y + 1.6f, 0f);
+        GiveLantern(woman.transform);
+
+        yield return MovePerson(woman.transform, () => PlayerTransform != null ? (Vector2)PlayerTransform.position : FountainPoint, 3.2f, 3.5f);
+
+        var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
+        yield return SayAs("Fabienne", woman, "Vous êtes venu. Bien. Vous n'en avez parlé à personne ?");
+        yield return SayAs("Vous", player, "À personne.");
+        yield return SayAs("Fabienne", woman, "Alors suivez-moi. Ne dites rien, et ne vous retournez pas.");
+        DialogueBoxUI.Hide();
+
+        yield return RunProcession(state, woman);
+    }
+
+    // ---- The procession to the crypt -------------------------------------------------------------------------------------------------
+
+    // The way from the fountain to the entrance of the crypt, by the roads: the park, the main road to the south, the stone bridge, the street of the south, the east.
+    private static readonly Vector2[] ProcessionRoute =
+    {
+        new Vector2(1f, 12.5f), new Vector2(0f, 4f), new Vector2(0f, -18f), new Vector2(0f, -31f),
+        new Vector2(0f, -40f), new Vector2(30f, -40f), new Vector2(58f, -41f), new Vector2(60.2f, -43.4f),
+        new Vector2(62.7f, -44.7f), new Vector2(62.7f, -49.6f), new Vector2(60f, -50.3f),
+    };
+
+    // The door of the crypt is on the south face of its front: this is the point of the town in front of it.
+    private static readonly Vector2 CryptDoor = new Vector2(60f, -48.4f);
+
+    // Where a hooded figure steps out of the shadows when Fabienne reaches this point of the route (one after the other: five in all).
+    private static readonly Dictionary<int, Vector2> ProcessionJoins = new Dictionary<int, Vector2>
+    {
+        { 1, new Vector2(-8f, 4f) }, { 2, new Vector2(8f, -18f) }, { 3, new Vector2(-5f, -27f) },
+        { 4, new Vector2(-8f, -40f) }, { 5, new Vector2(30f, -34f) },
+    };
+
+    private readonly List<Vector2> trail = new List<Vector2>();
+    private readonly List<Transform> followers = new List<Transform>();
+    private static Sprite hoodedSprite;
+
+    // A figure in a black cloak with a hood, drawn pixel by pixel: the robe, the hood, a dark face with two pale eyes.
+    private static Sprite HoodedSprite()
+    {
+        if (hoodedSprite != null) return hoodedSprite;
+        const int w = 32;
+        const int h = 64;
+        var texture = new Texture2D(w, h, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+        for (var y = 0; y < h; y++)
+        {
+            for (var x = 0; x < w; x++)
+            {
+                var color = new Color(0f, 0f, 0f, 0f);
+                // The robe, narrow at the shoulders and wide at the feet.
+                var half = 6f + (40f - y) * 0.2f;
+                if (y >= 2 && y <= 40 && Mathf.Abs(x - 15.5f) <= half)
+                {
+                    var fold = (x + y / 6) % 5 == 0 ? 0.7f : 1f;
+                    color = new Color(0.07f * fold, 0.07f * fold, 0.10f * fold, 1f);
+                }
+                // The hood.
+                var dx = (x - 15.5f) / 8.5f;
+                var dy = (y - 46f) / 11f;
+                if (dx * dx + dy * dy <= 1f) color = new Color(0.11f, 0.11f, 0.15f, 1f);
+                // The face, a dark hollow with two pale eyes.
+                var fx = (x - 15.5f) / 4.6f;
+                var fy = (y - 45f) / 6.2f;
+                if (fx * fx + fy * fy <= 1f)
+                {
+                    color = new Color(0.01f, 0.01f, 0.02f, 1f);
+                    if (y == 47 && (x == 14 || x == 17)) color = new Color(0.85f, 0.85f, 0.7f, 1f);
+                }
+                texture.SetPixel(x, y, color);
+            }
+        }
+        texture.Apply();
+        hoodedSprite = Sprite.Create(texture, new Rect(0, 0, w, h), new Vector2(0.5f, 0f), 32f);
+        return hoodedSprite;
+    }
+
+    private Transform SpawnHooded(Vector2 position)
+    {
+        var go = new GameObject("Silhouette");
+        var renderer = go.AddComponent<SpriteRenderer>();
+        renderer.sprite = HoodedSprite();
+        renderer.sortingOrder = 4;
+        renderer.color = new Color(1f, 1f, 1f, 0f);
+        go.transform.position = position;
+        StartCoroutine(FadeSprite(renderer, 0f, 1f, 1.2f));
+        return go.transform;
+    }
+
+    private static IEnumerator FadeSprite(SpriteRenderer renderer, float from, float to, float seconds)
+    {
+        for (var t = 0f; t < seconds && renderer != null; t += Time.deltaTime)
+        {
+            renderer.color = new Color(1f, 1f, 1f, Mathf.Lerp(from, to, t / seconds));
+            yield return null;
+        }
+        if (renderer != null) renderer.color = new Color(1f, 1f, 1f, to);
+    }
+
+    // The hooded figures follow the player: each one goes to a point of the path the player has walked, a few steps behind the one before.
+    private void TickFollowers()
+    {
+        var player = PlayerTransform;
+        if (player == null) return;
+        var position = (Vector2)player.position;
+        if (trail.Count == 0 || Vector2.Distance(trail[trail.Count - 1], position) > 0.35f)
+        {
+            trail.Add(position);
+            if (trail.Count > 800) trail.RemoveRange(0, 200);
+        }
+
+        for (var i = 0; i < followers.Count; i++)
+        {
+            var follower = followers[i];
+            if (follower == null) continue;
+            var target = trail[Mathf.Max(0, trail.Count - 1 - (i + 1) * 5)];
+            var delta = target - (Vector2)follower.position;
+            var step = Mathf.Min(delta.magnitude, 7.5f * Time.deltaTime);
+            if (step > 0f) follower.position = (Vector2)follower.position + delta.normalized * step;
+        }
+    }
+
+    // Fabienne leads, by the roads, and waits for the player when they fall behind. The farther they go, the more hooded figures join them. She ends at the crypt.
+    private IEnumerator RunProcession(StoryState state, GameObject woman)
+    {
+        trail.Clear();
+        followers.Clear();
+        var leader = woman.transform;
+
+        // The music of the crypt begins with the walk.
+        CryptMusic = true;
+        MusicManager.Instance?.Refresh();
+        const float speed = 5.2f;
+        const float waitDistance = 9f;
+
+        for (var index = 0; index < ProcessionRoute.Length; index++)
+        {
+            var goal = ProcessionRoute[index];
+            while (leader != null && Vector2.Distance(leader.position, goal) > 0.4f)
+            {
+                // The player who gets ahead, or finds their own way to the door, ends the walk: she is in front of the door.
+                if (index < ProcessionRoute.Length - 1 && DistanceToPlayer(CryptDoor) <= 8f)
+                {
+                    leader.position = (Vector3)ProcessionRoute[ProcessionRoute.Length - 1];
+                    index = ProcessionRoute.Length - 1;
+                    goal = ProcessionRoute[index];
+                    break;
+                }
+                var delta = goal - (Vector2)leader.position;
+                // She waits for the player, who must not lose her.
+                if (DistanceToPlayer(leader.position) <= waitDistance)
+                    leader.position = (Vector2)leader.position + delta.normalized * Mathf.Min(delta.magnitude, speed * Time.deltaTime);
+                TickFollowers();
+                yield return null;
+            }
+
+            // A hooded figure steps out of the shadows and follows.
+            if (ProcessionJoins.TryGetValue(index, out var spawn))
+            {
+                followers.Add(SpawnHooded(spawn));
+                if (index == 1) { DialogueBoxUI.Hide(); yield return SayAs("Fabienne", woman, "Continuez à marcher."); DialogueBoxUI.Hide(); }
+                if (index == 4) { yield return SayAs("Fabienne", woman, "Ils savent qui vous êtes. Ne leur parlez pas."); DialogueBoxUI.Hide(); }
+            }
+        }
+
+        // Arrived, in front of the door: the figures gather behind the player. The crypt can be entered from now on (even if the player goes in at once).
+        state.SetFabienneStep(3);
+        for (var wait = 0f; wait < 2f; wait += Time.deltaTime)
+        {
+            TickFollowers();
+            yield return null;
+        }
+        yield return SayAs("Fabienne", woman,
+            "Nous y sommes. La crypte.",
+            "Ceux qui vous ont suivi sont des nôtres. Ils voulaient voir si vous viendriez jusqu'ici. Ils vont entrer un par un : ce sera ensuite votre tour.");
+        DialogueBoxUI.Hide();
+
+        // The figures go in one after the other (each one starts a second after the one before), and Fabienne last. The player is not held: if they go in first, the
+        // crypt shows the figures around the table anyway.
+        Debug.Log($"[Procession] arrivée devant la crypte, {followers.Count} silhouettes");
+        try
+        {
+            for (var i = 0; i < followers.Count; i++)
+                if (followers[i] != null) StartCoroutine(EnterCrypt(followers[i], i * 1.2f));
+
+            var deadline = Time.time + 8f + followers.Count * 1.2f;
+            while (Time.time < deadline && followers.Exists(f => f != null)) yield return null;
+            Debug.Log("[Procession] les silhouettes sont entrées, Fabienne entre à son tour");
+
+            yield return MovePerson(leader, () => CryptDoor, 0.3f, 4f, 8f);
+            var womanRenderer = leader != null ? leader.GetComponent<SpriteRenderer>() : null;
+            yield return FadeSprite(womanRenderer, 1f, 0f, 0.5f);
+        }
+        finally
+        {
+            // Whatever happened, nobody is left outside and the player may go in.
+            if (woman != null) Destroy(woman);
+            foreach (var follower in followers) if (follower != null) Destroy(follower.gameObject);
+            followers.Clear();
+            Debug.Log("[Procession] fin : à votre tour");
+            state.OnFountainMet();
+        }
+    }
+
+    // A hooded figure walks to the door of the crypt after a delay, and disappears into it.
+    private IEnumerator EnterCrypt(Transform figure, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (figure == null) yield break;
+        yield return MovePerson(figure, () => CryptDoor, 0.3f, 4f, 8f);
+        var renderer = figure != null ? figure.GetComponent<SpriteRenderer>() : null;
+        yield return FadeSprite(renderer, 1f, 0f, 0.5f);
+        if (figure != null) Destroy(figure.gameObject);
+    }
+
+    // ---- The meeting of the Ouroboros, in the crypt -----------------------------------------------------------------------------------
+
+    // The mayor of the town, seated at the head of the table: a grey-haired man in a dark red coat with a gold chain.
+    private static Sprite mayorSprite;
+
+    private static Sprite MayorSprite()
+    {
+        if (mayorSprite != null) return mayorSprite;
+        const int w = 32;
+        const int h = 64;
+        var texture = new Texture2D(w, h, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+        for (var y = 0; y < h; y++)
+        {
+            for (var x = 0; x < w; x++)
+            {
+                var color = new Color(0f, 0f, 0f, 0f);
+                // The coat, with shoulders.
+                var half = 7f + (40f - y) * 0.12f;
+                if (y >= 2 && y <= 38 && Mathf.Abs(x - 15.5f) <= half)
+                    color = new Color(0.43f * (0.85f + 0.15f * Mathf.Sin(y * 0.8f)), 0.10f, 0.13f, 1f);
+                // The golden chain on the chest.
+                var chain = Mathf.Sqrt((x - 15.5f) * (x - 15.5f) + (y - 36f) * (y - 36f) * 0.6f);
+                if (y <= 36 && y >= 26 && Mathf.Abs(chain - 8f) < 0.9f) color = new Color(0.90f, 0.74f, 0.28f, 1f);
+                // The head: pale skin, grey hair, a white moustache.
+                var hx = (x - 15.5f) / 6.2f;
+                var hy = (y - 46f) / 7.5f;
+                if (hx * hx + hy * hy <= 1f)
+                {
+                    color = new Color(0.89f, 0.72f, 0.60f, 1f);
+                    if (hy > 0.35f || Mathf.Abs(hx) > 0.85f) color = new Color(0.78f, 0.78f, 0.80f, 1f);
+                    if (y == 47 && (x == 13 || x == 18)) color = new Color(0.1f, 0.1f, 0.12f, 1f);
+                    if (y == 43 && x >= 12 && x <= 19) color = new Color(0.92f, 0.92f, 0.94f, 1f);
+                }
+                texture.SetPixel(x, y, color);
+            }
+        }
+        texture.Apply();
+        mayorSprite = Sprite.Create(texture, new Rect(0, 0, w, h), new Vector2(0.5f, 0f), 32f);
+        return mayorSprite;
+    }
+
+    private static GameObject SeatedFigure(string objectName, Sprite sprite, Vector2 seat)
+    {
+        var go = new GameObject(objectName);
+        var renderer = go.AddComponent<SpriteRenderer>();
+        renderer.sprite = sprite;
+        renderer.sortingOrder = 5;
+        go.transform.position = new Vector3(seat.x, seat.y - 0.5f, 0f);
+        return go;
+    }
+
+    // In the crypt, the first time: the figures are around the round table, the mayor at the head. When the player comes near, he speaks of the Ouroboros, of Valmont, of Vincent, and
+    // of what the player has to do to join them. Then the player has to go home and sleep.
+    private IEnumerator RunCrypt()
+    {
+        yield return WaitForGame();
+        var state = StoryState.Instance;
+        if (state == null || state.Legacy || state.Phase != StoryState.PhaseMarketVisit || state.FabienneStep != 3) yield break;
+
+        CryptMusic = true;
+        MusicManager.Instance?.Refresh();
+
+        // The eight seats around the table (the table is at (0, 3)): east, north-east, north, north-west, west, south-west, south, south-east.
+        var center = new Vector2(0f, 3f);
+        Vector2 Seat(int i)
+        {
+            var angle = i * 45f * Mathf.Deg2Rad;
+            return center + new Vector2(Mathf.Cos(angle) * 2.6f, Mathf.Sin(angle) * 1.7f - 0.1f);
+        }
+        var mayor = SeatedFigure("Le maire", MayorSprite(), Seat(2));
+        var fabienne = SeatedFigure("Fabienne", Resources.Load<Sprite>("Story/Thouvenot"), Seat(1));
+        foreach (var seat in new[] { 0, 3, 4, 5, 7 }) SeatedFigure("Silhouette", HoodedSprite(), Seat(seat));
+        // The seat in the south (6) is empty: it is the one of the player.
+
+        ToolFeedbackUI.Instance?.ShowMessage("Les silhouettes sont assises autour de la table. Avancez.");
+        while (DistanceToPlayer(center) > 6.5f) yield return null;
+
+        var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
+        yield return SayAs("Le maire", mayor,
+            "Approchez, approchez. Vous voilà enfin, le neveu de Vincent. Asseyez-vous parmi nous : vous êtes ici chez des amis.",
+            "Je suis le maire de Crystal Grove. Et ceux que vous voyez autour de cette table forment l'Ouroboros.",
+            "Le serpent qui se mord la queue : ce qui finit recommence. Nous sommes un petit groupe de gemmologues. Nous nous réunissons ici, à l'abri des regards, pour parler de gemmologie, des découvertes de chacun, et des tourments de la ville.");
+        yield return SayAs("Vous", player, "Des tourments ? Lesquels ?");
+        yield return SayAs("Le maire", mayor,
+            "Crystal Grove brille, mais elle a ses ombres. Un nom revient de plus en plus souvent : Valmont.",
+            "L'entreprise Valmont répand un peu partout des pierres traitées sans le dire, et des diamants de synthèse qu'on vend pour des naturels. Elle arnaque les gens avec des pierres, et elle le fait si bien que presque personne ne s'en aperçoit.",
+            "Votre oncle enquêtait probablement là-dessus. Il n'en a jamais rien dit, pas même à nous. Puis il a disparu.");
+        yield return SayAs("Vous", player, "Alors il faut retrouver ce qu'il avait trouvé.");
+        yield return SayAs("Le maire", mayor,
+            "Il faudra ouvrir l'œil. Mais surtout, devenir gemmologue : c'est la seule façon de comprendre le cheminement de son enquête. Une pierre ne se juge pas à son étiquette, vous le savez déjà.",
+            "Pour nous rejoindre, il faudra être gemmologue : vous devrez passer les différents tests, à l'école. Nous vous dirons quand.");
+        yield return SayAs("Fabienne", fabienne,
+            "Il se fait tard. Rentrez chez vous et reposez-vous : nous en reparlerons. Et pas un mot de cette réunion, à personne.");
+        yield return SayAs("Le maire", mayor, "Que le serpent veille sur vous.");
+        DialogueBoxUI.Hide();
+
+        state.OnCryptMeetingDone();
+    }
+
+    // Moves a person who has one picture (Professor Thouvenot) toward a point, until she is within stopDistance of it.
+    private IEnumerator MovePerson(Transform person, Func<Vector2> target, float stopDistance, float speed, float timeout = 20f)
+    {
+        var started = Time.time;
+        while (person != null && Time.time - started < timeout)
+        {
+            var delta = target() - (Vector2)person.position;
+            if (delta.magnitude <= stopDistance) break;
+            var step = Mathf.Min(delta.magnitude - stopDistance, speed * Time.deltaTime);
+            person.position = (Vector2)person.position + delta.normalized * step;
+            yield return null;
+        }
+    }
+
+    // ---- The visit to the market of cut stones ----------------------------------------------------------------------------------------
+
+    private static bool marketIntroSeen;
+
+    // Camille, a regular of the market, walks up to the player, tells how the market works and warns about the traps. The visit ends when the player opens a table.
+    private IEnumerator RunMarket()
+    {
+        yield return WaitForGame();
+        var state = StoryState.Instance;
+        if (state == null || state.Legacy || state.Phase != StoryState.PhaseMarketVisit) yield break;
+        yield return new WaitForSeconds(0.8f);
+
+        var guide = new GameObject("Camille");
+        var guideRenderer = guide.AddComponent<SpriteRenderer>();
+        guideRenderer.sortingOrder = 4;
+        var idle = StrangerFramesOf("Up", "W5");
+        if (idle.Length > 0) guideRenderer.sprite = idle[0];
+        guide.transform.position = new Vector3(0f, -4.2f, 0f);
+
+        yield return WalkPerson(guide.transform, () => PlayerTransform != null ? (Vector2)PlayerTransform.position : Vector2.zero, 3.2f, 4.5f, "W5");
+
+        if (!marketIntroSeen)
+        {
+            marketIntroSeen = true;
+            yield return SayAs("Camille", guide,
+                "Bienvenue au Marché aux pierres ! Vous êtes le neveu de Vincent, n'est-ce pas ? Il avait ses habitudes ici. Je m'appelle Camille, je suis là tous les jours.",
+                "Ici, des marchands de plusieurs pays vendent des gemmes taillées, chacun à sa table. Les étals changent chaque jour, alors il y a toujours quelque chose à voir.",
+                "Vous pouvez acheter, et revendre. Pour tous les budgets, et un œil exercé y fait de belles affaires. Mais faites attention : tout ce qui brille n'est pas ce qu'on vous dit.",
+                "Sur l'étiquette, vous lisez l'espèce, l'origine, le poids et le prix. Rien d'autre. Elle ne dit pas si la pierre a été traitée, ni si c'est une imitation ou une synthèse. On peut très bien vous vendre un verre teinté pour un rubis.",
+                "Et les prix sont majorés d'environ 40 % : un marchand doit bien vivre. Si vous achetez sans vous y connaître, vous payez le prix fort pour une pierre qui vaut peut-être bien moins.",
+                "Quand vous revendez, les marchands vous rachètent entre un tiers et la moitié du prix, un peu mieux quand la pierre vient de leur pays. Et si vous cachez un traitement, un bon marchand le découvre : amende, réputation perdue.",
+                "Un conseil : commencez petit. Achetez une pierre, rapportez-la au laboratoire, mesurez-la, et comparez avec ce que disait l'étiquette. C'est comme cela qu'on apprend à reconnaître les marchands honnêtes.",
+                "Allez, approchez-vous d'une table et appuyez sur E : voyez ce qu'ils proposent. Et ne vous laissez pas avoir !");
+        }
+        else
+        {
+            yield return SayAs("Camille", guide, "Vous voilà de retour ! Approchez-vous d'une table et appuyez sur E : voyez ce que les marchands proposent.");
+        }
+        DialogueBoxUI.Hide();
+        ToolFeedbackUI.Instance?.ShowMessage("Approchez-vous d'une table du marché et appuyez sur E.");
     }
 
     // ---- Chapter 2: the stones that look alike ---------------------------------------------------------------------------------------
@@ -1347,8 +1828,8 @@ public class StoryDirector : MonoBehaviour
             "Vous voyez pourquoi j'ai tenu à vous faire comprendre les systèmes cristallins : une pierre se reconnaît à ce qu'elle est à l'intérieur, pas seulement à sa couleur ni à son indice.");
         yield return Say(npc,
             "Il y a autre chose. Dans le sachet du client, j'ai trouvé un petit cachet : « Valmont ». Il avait acheté la pierre sous le nom de spinelle bleu à cette maison.",
-            "Ce nom me dit quelque chose. Vincent l'avait souligné dans son carnet, la semaine avant de disparaître. Je ne sais pas encore ce que cela veut dire, mais gardez l'œil ouvert.");
-        yield return SayAs("Vous", player, "Valmont... Je m'en souviendrai.");
+            "Vous connaissez ce nom, maintenant. Ici, au laboratoire, nous n'en dirons rien de plus : gardez l'œil ouvert, et regardez bien avant de croire.");
+        yield return SayAs("Vous", player, "Valmont... J'ouvrirai l'œil.");
         yield return Say(npc,
             "Je reprends les deux pierres : je rendrai la sienne au client, avec votre conclusion. Il vous envoie 60 € pour votre peine.");
 
