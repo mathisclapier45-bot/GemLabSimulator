@@ -68,7 +68,14 @@ public class StoryState : MonoBehaviour
     public const int PhaseSpectroSleep = 50;       // chapter 3 is over: go to sleep
     public const int PhaseSpectroLab = 51;         // the next morning: Thouvenot teaches the spectroscope and gives the first two stones
     public const int PhaseSpectroObserve = 52;     // case 1: examine both stones with the spectroscope (+4 for case 2, the Chelsea filter)
-    public const int PhaseSpectroDone = 60;        // chapter 4 is over
+    public const int PhaseSpectroDone = 60;        // chapter 4 is over (kept for the saves: it goes on with chapter 5)
+
+    // Chapter 5, "the black light" (the UV cabinet): two cases like chapter 4. Case 1: a synthetic ruby sold as a natural one (the short-wave lamp). Case 2: an HPHT synthetic
+    // diamond sold as a natural one (the long-wave lamp, and the phosphorescence).
+    public const int PhaseUvSleep = 70;            // chapter 4 is over: go to sleep
+    public const int PhaseUvLab = 71;              // the next morning: Thouvenot teaches the UV cabinet and gives the first two stones
+    public const int PhaseUvObserve = 72;          // case 1: examine both stones in the UV cabinet (+4 for case 2)
+    public const int PhaseUvDone = 80;             // chapter 5 is over
 
     // After Léa: a visit to the market of cut stones, where Camille explains how it works and warns about the traps.
     public const int PhaseMarketVisit = 29;
@@ -110,7 +117,7 @@ public class StoryState : MonoBehaviour
 
     // During the story chapters (the tutorial, the lessons, the cases of Thouvenot) the mailbox gives no client letters: the only stone it holds is the one of the
     // tutorial. The letters come back once the current chapters are over (and in an old save, always).
-    public bool MailLimited => !Legacy && Phase != PhaseDone && Phase != PhaseSpectroDone;
+    public bool MailLimited => !Legacy && Phase != PhaseDone && Phase != PhaseUvDone;
 
     // The stone given by the man of the town (the specimen id), and the quest of that stone.
     public string StrangerSpecimen { get; private set; } = "";
@@ -192,8 +199,34 @@ public class StoryState : MonoBehaviour
         SetPhase(SpectroPhase(spectroCase, 0));
     }
 
+    // The stones of chapter 5: for each of the two cases, the client's stone then the reference stone (specimen ids).
+    private readonly string[] uvStones = { "", "", "", "" };
+
+    public bool UvQuest => !Legacy && Phase >= PhaseUvLab && Phase <= PhaseUvObserve + 7;
+
+    public int UvCase => Phase >= PhaseUvObserve && Phase <= PhaseUvObserve + 7 ? (Phase - PhaseUvObserve) / 4 : -1;
+    public int UvStep => Phase >= PhaseUvObserve && Phase <= PhaseUvObserve + 7 ? (Phase - PhaseUvObserve) % 4 : -1;
+
+    public static int UvPhase(int uvCase, int step) => PhaseUvObserve + uvCase * 4 + step;
+
+    // What the cabinet records on a stone for the case: the short-wave lamp for the rubies, the long-wave one for the diamonds.
+    public static string UvKey(int uvCase) =>
+        uvCase == 0 ? ExaminationTool.MeasurementType.FluorescenceShortWave.ToString() : ExaminationTool.MeasurementType.FluorescenceLongWave.ToString();
+
+    public bool IsUvClient(int uvCase, GemInstance gem) => gem != null && !string.IsNullOrEmpty(uvStones[uvCase * 2]) && gem.SpecimenId == uvStones[uvCase * 2];
+    public bool IsUvReference(int uvCase, GemInstance gem) => gem != null && !string.IsNullOrEmpty(uvStones[uvCase * 2 + 1]) && gem.SpecimenId == uvStones[uvCase * 2 + 1];
+    public GemInstance UvClientGem(int uvCase) => FindGem(uvStones[uvCase * 2]);
+    public GemInstance UvReferenceGem(int uvCase) => FindGem(uvStones[uvCase * 2 + 1]);
+
+    public void OnUvGiven(int uvCase, GemInstance client, GemInstance reference)
+    {
+        uvStones[uvCase * 2] = client.SpecimenId ?? "";
+        uvStones[uvCase * 2 + 1] = reference.SpecimenId ?? "";
+        SetPhase(UvPhase(uvCase, 0));
+    }
+
     // Professor Thouvenot waits in the laboratory during the tutorial and the next days.
-    public bool ThouvenotWaits => InTutorial || StoneQuest || TwinsQuest || PleoQuest || SpectroQuest;
+    public bool ThouvenotWaits => InTutorial || StoneQuest || TwinsQuest || PleoQuest || SpectroQuest || UvQuest;
 
     public void OnStrangerGave(GemInstance gem)
     {
@@ -210,6 +243,12 @@ public class StoryState : MonoBehaviour
         if (Phase == PhaseTwinsIdentify && IsTwinStone(gem))
         {
             SetPhase(PhaseTwinsValidate);
+            ToolFeedbackUI.Instance?.ShowMessage("Identification validée ! Allez la confirmer à la professeure Thouvenot.");
+            return;
+        }
+        if (UvStep == 2 && IsUvClient(UvCase, gem))
+        {
+            SetPhase(Phase + 1);
             ToolFeedbackUI.Instance?.ShowMessage("Identification validée ! Allez la confirmer à la professeure Thouvenot.");
             return;
         }
@@ -238,6 +277,26 @@ public class StoryState : MonoBehaviour
     // During the market visit (PhaseMarketVisit): 0 = the market is to be seen, 1 = Fabienne is about to call (the phone rings), 2 = she waits for the player at the fountain
     // when the night falls, 3 = she has been met. Then Anselme waits for his stone.
     public int FabienneStep { get; private set; }
+
+    // The badges of the Ouroboros: the crypt, closed from the start, is open only during the night of the meeting, then only to the one who has them all. (The way
+    // to earn them is still to be written: tests at the school.)
+    public const int BadgesNeeded = 3;
+    public int Badges { get; private set; }
+    public bool HasAllBadges => Badges >= BadgesNeeded;
+
+    public void AddBadge()
+    {
+        if (Legacy || Badges >= BadgesNeeded) return;
+        Badges++;
+        OnChanged?.Invoke();
+        ToolFeedbackUI.Instance?.ShowMessage(HasAllBadges ? "Vous avez tous les insignes de l'Ouroboros : la crypte vous est ouverte." : $"Insigne de l'Ouroboros obtenu ({Badges}/{BadgesNeeded}).");
+    }
+
+    // The crypt is open during the episode of the night (once the procession has led the player to its door), and to the one who has the badges.
+    public bool CryptOpen => Legacy || (Phase == PhaseMarketVisit && FabienneStep == 3) || HasAllBadges;
+
+    // The episode of the crypt has already taken place (the door is then closed for a good reason, not just locked).
+    public bool CryptMet => Progress(Phase) > Progress(PhaseMarketVisit);
 
     // The player has opened the table of a vendor of the market: the visit is done, and the phone rings (Fabienne).
     public void OnMarketOpened()
@@ -366,6 +425,11 @@ public class StoryState : MonoBehaviour
         if (p >= PhasePleoObserve) tools.Add(ExaminationTool.MeasurementType.Pleochroism.ToString());
         if (p >= PhaseSpectroObserve) tools.Add(ExaminationTool.MeasurementType.AbsorptionSpectrum.ToString());
         if (p >= SpectroPhase(1, 0)) tools.Add(ExaminationTool.MeasurementType.ChelseaFilter.ToString());
+        if (p >= PhaseUvObserve)
+        {
+            tools.Add(ExaminationTool.MeasurementType.FluorescenceLongWave.ToString());
+            tools.Add(ExaminationTool.MeasurementType.FluorescenceShortWave.ToString());
+        }
         // The other instruments (LaterTools) stay closed until a later chapter of the tutorial presents them: it calls UnlockTool.
     }
 
@@ -404,7 +468,9 @@ public class StoryState : MonoBehaviour
         TwinReference = "";
         for (var i = 0; i < pleoStones.Length; i++) pleoStones[i] = "";
         for (var i = 0; i < spectroStones.Length; i++) spectroStones[i] = "";
+        for (var i = 0; i < uvStones.Length; i++) uvStones[i] = "";
         FabienneStep = 0;
+        Badges = 0;
         BinderUnlocked = false;
         contacts.Clear();
         tools.Clear();
@@ -432,6 +498,11 @@ public class StoryState : MonoBehaviour
     {
         if (Legacy) return;
         if (Phase == PhaseSleep) SetPhase(PhaseCall);
+        else if (Phase == PhaseUvSleep)
+        {
+            SetPhase(PhaseUvLab);
+            ToolFeedbackUI.Instance?.ShowMessage("Un nouveau jour : la professeure Thouvenot vous attend au laboratoire.");
+        }
         else if (Phase == PhaseSpectroSleep)
         {
             SetPhase(PhaseSpectroLab);
@@ -499,6 +570,24 @@ public class StoryState : MonoBehaviour
             {
                 SetPhase(PhaseTwinsReport);
                 ToolFeedbackUI.Instance?.ShowMessage("Polariscope et conoscope : vous avez tout observé. Allez dire à la professeure Thouvenot ce que vous avez vu.");
+            }
+            return;
+        }
+
+        // Chapter 5: both stones of the case seen in the UV cabinet, with the lamp of the case.
+        if (UvStep == 0 && key == UvKey(UvCase))
+        {
+            var uvCase = UvCase;
+            if (IsUvClient(uvCase, gem) || IsUvReference(uvCase, gem))
+            {
+                var client = UvClientGem(uvCase);
+                var reference = UvReferenceGem(uvCase);
+                var wanted = UvKey(uvCase);
+                if (client != null && reference != null && client.HasObserved(wanted) && reference.HasObserved(wanted))
+                {
+                    SetPhase(Phase + 1);
+                    ToolFeedbackUI.Instance?.ShowMessage("Vous avez observé les deux pierres. Allez dire à la professeure Thouvenot ce que vous avez vu.");
+                }
             }
             return;
         }
@@ -573,6 +662,7 @@ public class StoryState : MonoBehaviour
             if (Stage == Arrival || Stage == Tour) return "Suivez la professeure Thouvenot dans la ville.";
             if (Stage == GoHome) return "Entrez dans votre maison et lisez la lettre de Vincent, dans la boîte aux lettres.";
             if (PleoStep >= 0) return CaseObjective("au dichroscope de Londres (rangée du haut)", PleoStep);
+            if (UvStep >= 0) return CaseObjective(UvCase == 0 ? "à la cabine UV, sous la lampe UV courts (rangée du bas, à gauche)" : "à la cabine UV, sous la lampe UV longs, puis éteignez-la (rangée du bas, à gauche)", UvStep);
             if (SpectroStep >= 0) return CaseObjective(SpectroCase == 0 ? "au spectroscope (rangée du haut, à droite)" : "au filtre Chelsea (rangée du bas)", SpectroStep);
             switch (Phase)
             {
@@ -595,6 +685,8 @@ public class StoryState : MonoBehaviour
                 case PhaseStoneIdentify: return "Identifiez la pierre (onglets à gauche du réfractomètre, loupe, densité...) puis remettez votre rapport au directeur.";
                 case PhaseStoneValidate: return "Allez confirmer votre réponse à la professeure Thouvenot, au laboratoire.";
                 case PhaseStoneReturn: return "Rendez la pierre à Anselme : il vous attend près de la passerelle, sur le chemin de votre maison. En attendant, passez vos autres gemmes au réfractomètre pour compléter votre grimoire.";
+                case PhaseUvSleep: return "Reposez-vous : demain, la professeure Thouvenot vous attend au laboratoire. Dormez dans votre lit.";
+                case PhaseUvLab: return "Retrouvez la professeure Thouvenot au laboratoire : elle va vous montrer ce que cachent les rayons ultraviolets.";
                 case PhaseSpectroSleep: return "Reposez-vous : demain, la professeure Thouvenot vous attend au laboratoire. Dormez dans votre lit.";
                 case PhaseSpectroLab: return "Retrouvez la professeure Thouvenot au laboratoire : elle va vous apprendre à lire ce que la lumière révèle d'une pierre.";
                 case PhasePleoSleep: return "Reposez-vous : demain, la professeure Thouvenot vous attend au laboratoire. Dormez dans votre lit.";
@@ -679,8 +771,10 @@ public class StoryState : MonoBehaviour
         data.storyTwinSpecimen = TwinSpecimen;
         data.storyBinder = BinderUnlocked;
         data.storyFabienne = FabienneStep;
+        data.storyBadges = Badges;
         data.storyPleoStones = new List<string>(pleoStones);
         data.storySpectroStones = new List<string>(spectroStones);
+        data.storyUvStones = new List<string>(uvStones);
         data.storyTwinReference = TwinReference;
         data.storyTools = new List<string>(tools);
         data.storyLettersReceived = new List<string>(received);
@@ -699,7 +793,9 @@ public class StoryState : MonoBehaviour
         TwinReference = "";
         for (var i = 0; i < pleoStones.Length; i++) pleoStones[i] = "";
         for (var i = 0; i < spectroStones.Length; i++) spectroStones[i] = "";
+        for (var i = 0; i < uvStones.Length; i++) uvStones[i] = "";
         FabienneStep = 0;
+        Badges = 0;
         BinderUnlocked = false;
         contacts.Clear();
         tools.Clear();
@@ -726,13 +822,17 @@ public class StoryState : MonoBehaviour
             TwinReference = data.storyTwinReference ?? "";
             BinderUnlocked = data.storyBinder;
             FabienneStep = Mathf.Clamp(data.storyFabienne, 0, 4);
+            Badges = Mathf.Clamp(data.storyBadges, 0, BadgesNeeded);
             if (data.storyPleoStones != null)
                 for (var i = 0; i < pleoStones.Length && i < data.storyPleoStones.Count; i++) pleoStones[i] = data.storyPleoStones[i] ?? "";
+            if (data.storyUvStones != null)
+                for (var i = 0; i < uvStones.Length && i < data.storyUvStones.Count; i++) uvStones[i] = data.storyUvStones[i] ?? "";
             if (data.storySpectroStones != null)
                 for (var i = 0; i < spectroStones.Length && i < data.storySpectroStones.Count; i++) spectroStones[i] = data.storySpectroStones[i] ?? "";
             // A save that had finished chapter 2 goes on with chapter 3, and one that had finished chapter 3 with chapter 4.
             if (Phase == PhaseTwinsDone) Phase = PhasePleoSleep;
             if (Phase == PhasePleoDone) Phase = PhaseSpectroSleep;
+            if (Phase == PhaseSpectroDone) Phase = PhaseUvSleep;
             // A save that had finished the stone of Anselme goes on with chapter 2.
             if (Phase == PhaseDone && contacts.Contains("anselme")) Phase = PhaseTwinsSleep;
             // A save that is already past the visit of Léa keeps the binder.
@@ -788,6 +888,18 @@ public static class StoryGate
     {
         message = null;
         if (Everything) return true;
+
+        // The crypt: locked from the start, open during the night of the meeting, then closed again until the player has the badges.
+        if (scene == "Crypte")
+        {
+            var state = StoryState.Instance;
+            if (state.CryptOpen) return true;
+            message = state.CryptMet
+                ? "La porte de la crypte est close. Seuls ceux qui portent les insignes de l'Ouroboros peuvent entrer."
+                : "La porte de la crypte est verrouillée : un lourd cadenas la ferme.";
+            return false;
+        }
+
         foreach (var rule in Rules)
         {
             if (!scene.StartsWith(rule.Scene, StringComparison.Ordinal)) continue;

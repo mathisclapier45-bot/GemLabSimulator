@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -67,11 +68,70 @@ public class ChelseaFilterUI : MonoBehaviour
         if (PlayerInventory.Instance != null) PlayerInventory.Instance.OnInventoryChanged -= RefreshIfOpen;
     }
 
+    // ---- The index of the cases, on the left ------------------------------------------------------------------------------
+
+    private SpeciesIndexPanel index;
+
+    private static string ReactionWords(ChelseaInfo info)
+    {
+        if (!info.Reacts) return "pas de rouge";
+        Color.RGBToHSV(info.Color, out var hue, out var saturation, out _);
+        var name = hue > 0.04f && hue < 0.12f ? "orangé" : saturation < 0.65f ? "rose" : "rouge";
+        var strength = info.Intensity >= 0.9f ? "vif" : info.Intensity >= 0.6f ? "marqué" : info.Intensity >= 0.3f ? "modéré" : "faible";
+        return $"{name}, {strength}";
+    }
+
+    // What the stone looks like through the filter: the dull tint, brought toward the colour of the reaction.
+    private static Color ReactionChip(ChelseaInfo info)
+    {
+        var dull = info.Dull.a > 0f ? info.Dull : DullGreen;
+        return info.Reacts ? Color.Lerp(dull, info.Color, Mathf.Clamp01(info.Intensity)) : dull;
+    }
+
+    private void BuildIndex()
+    {
+        if (index != null) return;
+        var database = GemDatabase.Instance;
+        if (database == null) return;
+
+        index = SpeciesIndexPanel.Create(panel.transform, new Vector2(-206f, 0f), new Vector2(198f, PanelHeight), "Cas possibles",
+            "Ce que chaque pierre devient sous le filtre.", PanelColor, Gold);
+
+        var species = new HashSet<string>();
+        var stones = new List<GemDefinition>();
+        foreach (var definition in database.allGems)
+            if (definition != null) { stones.Add(definition); species.Add(definition.name); }
+
+        // The cases of the table of the course that are not a species of their own (a synthetic spinel, a blue topaz, the glasses...).
+        index.AddHeader("Cas du tableau du cours");
+        var special = new List<ChelseaEntry>();
+        foreach (var entry in ChelseaLibrary.All)
+            if (!species.Contains(entry.key)) special.Add(entry);
+        special.Sort((a, b) => string.CompareOrdinal(TextEntry.Normalize(a.key), TextEntry.Normalize(b.key)));
+        foreach (var entry in special)
+        {
+            var info = ChelseaInfo.FromEntry(entry);
+            index.AddRow(entry.key.Replace('_', ' '), new SpeciesIndexPanel.Line { Label = "Filtre", Words = ReactionWords(info), Chip = ReactionChip(info) });
+        }
+
+        stones.Sort((a, b) => string.CompareOrdinal(TextEntry.Normalize(a.displayName), TextEntry.Normalize(b.displayName)));
+        index.AddHeader("Pierres, de A à Z");
+        foreach (var definition in stones)
+        {
+            var entry = ChelseaLibrary.Entry(definition.name);
+            var info = entry != null ? ChelseaInfo.FromEntry(entry) : ChelseaInfo.ForGem(definition);
+            index.AddRow(definition.displayName, new SpeciesIndexPanel.Line { Label = "Filtre", Words = ReactionWords(info), Chip = ReactionChip(info) });
+        }
+        index.Finish();
+    }
+
     public void Open()
     {
         stone = null;
         lightOn = false;
         lightLevel = 0f;
+        BuildIndex();
+        index?.ResetSearch();
         panel.SetActive(true);
         InventoryUI.Instance?.Open();
         Refresh();
@@ -208,7 +268,7 @@ public class ChelseaFilterUI : MonoBehaviour
         rect.pivot = new Vector2(0.5f, 0.5f);
         rect.sizeDelta = new Vector2(PanelWidth, PanelHeight);
         // Shifted left so the inventory panel (right side of the screen) stays reachable for drag and drop.
-        rect.anchoredPosition = new Vector2(-140f, 0f);
+        rect.anchoredPosition = new Vector2(-80f, 0f);
 
         RuntimeUIKit.MakeBox("Body", panel.transform, Vector2.zero, new Vector2(PanelWidth, PanelHeight), PanelColor);
         RuntimeUIKit.MakeText("Title", panel.transform, "Filtre Chelsea", 20, TextAnchor.UpperLeft, Gold,

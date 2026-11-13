@@ -45,6 +45,8 @@ public static class ChelseaLibrary
         }
     }
 
+    public static IEnumerable<ChelseaEntry> All => Entries.Values;
+
     public static ChelseaEntry Entry(string key) => !string.IsNullOrEmpty(key) && Entries.TryGetValue(key, out var entry) ? entry : null;
 
     public static string Reaction(GemDefinition def)

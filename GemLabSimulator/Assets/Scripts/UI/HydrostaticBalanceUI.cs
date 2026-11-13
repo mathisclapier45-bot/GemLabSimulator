@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -63,9 +64,57 @@ public class HydrostaticBalanceUI : MonoBehaviour
         if (PlayerInventory.Instance != null) PlayerInventory.Instance.OnInventoryChanged -= RefreshIfOpen;
     }
 
+    // ---- The list of the densities, on the left ---------------------------------------------------------------------------
+
+    private SpeciesIndexPanel index;
+
+    // Every species with its density, from the lightest to the heaviest, by ranges; the search finds a name or a number (3.5 or 3,5).
+    private void BuildIndex()
+    {
+        if (index != null) return;
+        var database = GemDatabase.Instance;
+        if (database == null) return;
+
+        index = SpeciesIndexPanel.Create(panel.transform, new Vector2(-206f, 0f), new Vector2(198f, PanelHeight), "Densités",
+            "Densité de chaque pierre (g/cm³), de la plus légère à la plus lourde. Cherchez un nom ou un nombre.", PanelColor, Gold);
+
+        var stones = new List<GemDefinition>();
+        foreach (var definition in database.allGems)
+            if (definition != null && definition.density > 0f) stones.Add(definition);
+        stones.Sort((a, b) =>
+        {
+            var byDensity = a.density.CompareTo(b.density);
+            return byDensity != 0 ? byDensity : string.CompareOrdinal(TextEntry.Normalize(a.displayName), TextEntry.Normalize(b.displayName));
+        });
+
+        var ranges = new[] { (2.0f, "Moins de 2,0"), (2.6f, "2,0 à 2,6"), (3.2f, "2,6 à 3,2"), (4.0f, "3,2 à 4,0"), (5.0f, "4,0 à 5,0"), (float.MaxValue, "Plus de 5,0") };
+        var nextHeader = 0;
+        foreach (var definition in stones)
+        {
+            while (nextHeader < ranges.Length && definition.density >= ranges[nextHeader].Item1 && nextHeader < ranges.Length - 1)
+                nextHeader++;
+            // A header the first time a range is reached.
+            if (nextHeader != shownHeader)
+            {
+                shownHeader = nextHeader;
+                index.AddHeader(ranges[nextHeader].Item2);
+            }
+
+            var chip = Color.Lerp(new Color(0.86f, 0.92f, 1f), new Color(0.25f, 0.27f, 0.40f), Mathf.Clamp01((definition.density - 1f) / 6.5f));
+            var words = definition.density.ToString("F2");
+            index.AddRow(definition.displayName, words + " " + words.Replace('.', ','),
+                new[] { new SpeciesIndexPanel.Line { Label = "Dens.", Words = words, Chip = chip } });
+        }
+        index.Finish();
+    }
+
+    private int shownHeader = -1;
+
     public void Open()
     {
         stone = null;
+        BuildIndex();
+        index?.ResetSearch();
         panel.SetActive(true);
         InventoryUI.Instance?.Open();
         Refresh();

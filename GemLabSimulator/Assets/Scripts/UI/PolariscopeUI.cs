@@ -97,10 +97,74 @@ public class PolariscopeUI : MonoBehaviour
         if (PlayerInventory.Instance != null) PlayerInventory.Instance.OnInventoryChanged -= RefreshIfOpen;
     }
 
+    // ---- The index of the cases, on the left ------------------------------------------------------------------------------
+
+    private SpeciesIndexPanel index;
+
+    // What each stone does between the crossed polarizers, at the conoscope, and how strongly it splits the light.
+    private void BuildIndex()
+    {
+        if (index != null) return;
+        var database = GemDatabase.Instance;
+        if (database == null) return;
+
+        index = SpeciesIndexPanel.Create(panel.transform, new Vector2(-206f, 0f), new Vector2(198f, PanelHeight), "Cas possibles",
+            "Polariscope, conoscope et biréfringence, pierre par pierre.", PanelColor, Gold);
+
+        index.AddHeader("Les cinq cas");
+        index.AddRow("Isotrope", Line("Polar.", "reste noir", UnlitStone), Line("Cono.", "aucune figure"), Line("Biréf.", "nulle"));
+        index.AddRow("Uniaxe", Line("Polar.", "4 extinctions par tour", Half(UnlitStone, LitStone)), Line("Cono.", "croix noire et anneaux"), Line("Biréf.", "selon la pierre"));
+        index.AddRow("Biaxe", Line("Polar.", "4 extinctions par tour", Half(UnlitStone, LitStone)), Line("Cono.", "deux branches (moustache), 2V"), Line("Biréf.", "selon la pierre"));
+        index.AddRow("Agrégat polycristallin", Line("Polar.", "reste clair", LitStone), Line("Cono.", "figure diffuse, inexploitable"), Line("Biréf.", "—"));
+        index.AddRow("Opaque", Line("Polar.", "rien à lire", Color.black), Line("Cono.", "—"), Line("Biréf.", "—"));
+
+        var stones = new List<GemDefinition>();
+        foreach (var definition in database.allGems)
+            if (definition != null) stones.Add(definition);
+        stones.Sort((a, b) => string.CompareOrdinal(TextEntry.Normalize(a.displayName), TextEntry.Normalize(b.displayName)));
+        index.AddHeader("Pierres, de A à Z");
+        foreach (var definition in stones) index.AddRow(definition.displayName, IndexLines(definition));
+        index.Finish();
+    }
+
+    private static SpeciesIndexPanel.Line Line(string label, string words, Color? chip = null) => new SpeciesIndexPanel.Line { Label = label, Words = words, Chip = chip };
+
+    private static Color Half(Color a, Color b) => Color.Lerp(a, b, 0.5f);
+
+    private static SpeciesIndexPanel.Line[] IndexLines(GemDefinition def)
+    {
+        if (def.opticalCharacterClass == GemDefinition.OpticalCharacterClass.Opaque)
+            return new[] { Line("Polar.", "opaque", Color.black), Line("Cono.", "—"), Line("Biréf.", "—") };
+        if (def.isPolycrystalline)
+            return new[] { Line("Polar.", "reste clair (agrégat)", LitStone), Line("Cono.", "figure diffuse, inexploitable"), Line("Biréf.", $"{def.birefringence:F3} (lecture diffuse)") };
+
+        switch (def.opticalCharacterClass)
+        {
+            case GemDefinition.OpticalCharacterClass.Isotropic:
+                return new[] { Line("Polar.", "reste noir (isotrope)", UnlitStone), Line("Cono.", "aucune figure"), Line("Biréf.", "nulle") };
+            case GemDefinition.OpticalCharacterClass.Uniaxial:
+                return new[]
+                {
+                    Line("Polar.", "uniaxe : 4 extinctions", Half(UnlitStone, LitStone)),
+                    Line("Cono.", def.isQuartzFamily ? "croix + œil-de-taureau" : "croix noire et anneaux"),
+                    Line("Biréf.", $"{def.birefringence:F3}"),
+                };
+            default:
+                return new[]
+                {
+                    Line("Polar.", "biaxe : 4 extinctions", Half(UnlitStone, LitStone)),
+                    Line("Cono.", $"moustache, 2V ≈ {StoneOptics.HalfOpticAngle(def) * 2f:F0}°"),
+                    Line("Biréf.", $"{def.birefringence:F3}"),
+                };
+        }
+    }
+
     public void Open()
     {
         stone = null;
         conoscopeHeld = false;
+        BuildIndex();
+        index?.ResetSearch();
         panel.SetActive(true);
         InventoryUI.Instance?.Open();
         Refresh();

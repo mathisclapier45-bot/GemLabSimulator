@@ -87,6 +87,8 @@ public struct FluorescenceInfo
         else if (t.Contains("faible") || hedged || t.Contains("variable") || t.Contains("terne") || t.Contains("diffuse") || t.Contains("absente"))
             info.Intensity = 0.3f;
         else info.Intensity = 0.75f;
+        // A phosphorescent stone must show: its glow is clear, and it lasts after the lamp.
+        if (info.Phosphorescent) info.Intensity = Mathf.Max(info.Intensity, 0.55f);
         return info;
     }
 }

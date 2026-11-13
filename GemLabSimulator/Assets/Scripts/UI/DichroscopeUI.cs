@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -69,9 +70,55 @@ public class DichroscopeUI : MonoBehaviour
         if (PlayerInventory.Instance != null) PlayerInventory.Instance.OnInventoryChanged -= RefreshIfOpen;
     }
 
+    // ---- The index of the cases, on the left ------------------------------------------------------------------------------
+
+    private SpeciesIndexPanel index;
+
+    private static bool Same(Color a, Color b) => Mathf.Abs(a.r - b.r) + Mathf.Abs(a.g - b.g) + Mathf.Abs(a.b - b.b) < 0.04f;
+
+    // The colours a stone shows along its directions: none, two (dichroism) or three (trichroism), as little swatches, and the words of the species.
+    private void BuildIndex()
+    {
+        if (index != null) return;
+        var database = GemDatabase.Instance;
+        if (database == null) return;
+
+        index = SpeciesIndexPanel.Create(panel.transform, new Vector2(-206f, 0f), new Vector2(198f, PanelHeight), "Cas possibles",
+            "Les couleurs que montre chaque pierre selon la direction.", PanelColor, Gold);
+
+        index.AddHeader("Les trois cas");
+        index.AddRow("Aucune couleur de plus", new SpeciesIndexPanel.Line { Label = "Pléo.", Words = "pas de pléochroïsme : les deux fenêtres montrent la même couleur", TextRows = 3 });
+        index.AddRow("Dichroïque", new SpeciesIndexPanel.Line { Label = "Pléo.", Words = "deux couleurs différentes (pierres uniaxes)", TextRows = 2 });
+        index.AddRow("Trichroïque", new SpeciesIndexPanel.Line { Label = "Pléo.", Words = "trois couleurs différentes (pierres biaxes)", TextRows = 2 });
+
+        var stones = new List<GemDefinition>();
+        foreach (var definition in database.allGems)
+            if (definition != null) stones.Add(definition);
+        stones.Sort((a, b) => string.CompareOrdinal(TextEntry.Normalize(a.displayName), TextEntry.Normalize(b.displayName)));
+        index.AddHeader("Pierres, de A à Z");
+        foreach (var definition in stones)
+        {
+            var info = PleochroismInfo.ForGem(definition);
+            if (!info.Pleochroic)
+            {
+                index.AddRow(definition.displayName, new SpeciesIndexPanel.Line { Label = "Pléo.", Words = "aucun", Swatches = new[] { info.X } });
+                continue;
+            }
+
+            var trichroic = !Same(info.X, info.Y) && !Same(info.Y, info.Z) && !Same(info.X, info.Z);
+            var swatches = trichroic ? new[] { info.X, info.Y, info.Z } : new[] { info.X, info.Z };
+            index.AddRow(definition.displayName,
+                new SpeciesIndexPanel.Line { Label = "Pléo.", Words = trichroic ? "3 couleurs" : "2 couleurs", Swatches = swatches },
+                new SpeciesIndexPanel.Line { Label = "Texte", Words = string.IsNullOrEmpty(definition.pleochroicDescription) ? "—" : definition.pleochroicDescription, TextRows = 2 });
+        }
+        index.Finish();
+    }
+
     public void Open()
     {
         stone = null;
+        BuildIndex();
+        index?.ResetSearch();
         panel.SetActive(true);
         InventoryUI.Instance?.Open();
         Refresh();
@@ -263,7 +310,7 @@ public class DichroscopeUI : MonoBehaviour
         rect.pivot = new Vector2(0.5f, 0.5f);
         rect.sizeDelta = new Vector2(PanelWidth, PanelHeight);
         // Shifted left so the inventory panel (right side of the screen) stays reachable for drag and drop.
-        rect.anchoredPosition = new Vector2(-150f, 0f);
+        rect.anchoredPosition = new Vector2(-30f, 0f);
 
         RuntimeUIKit.MakeBox("Body", panel.transform, Vector2.zero, new Vector2(PanelWidth, PanelHeight), PanelColor);
         RuntimeUIKit.MakeText("Title", panel.transform, "Dichroscope", 20, TextAnchor.UpperLeft, Gold,

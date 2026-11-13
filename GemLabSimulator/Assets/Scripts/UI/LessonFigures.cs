@@ -25,6 +25,7 @@ public static class LessonFigures
             case "dichro": Dichroscope(c, focus, t); break;
             case "spectro": Spectro(c, focus, t); break;
             case "chelsea": ChelseaFilter(c, focus, t); break;
+            case "uv": UvCabin(c, focus, t); break;
             case "interf": Interference(c, focus, t); break;
             case "tenacity": Tenacity(c, focus, t); break;
             case "stability": Stability(c, focus, t); break;
@@ -605,6 +606,135 @@ public static class LessonFigures
             c.Label(rows[i].Name, new Vector2(-135f, y), 13, Ink, 160f);
             c.Rect(new Vector2(-30f, y), new Vector2(36f, 22f), chip);
             c.Label(rows[i].Reaction, new Vector2(125f, y), 12, Gold, 220f);
+        }
+    }
+
+    // ---- The UV cabinet: invisible rays, a stone that lights up, two lamps, the glow that lasts --------------------------------------------------
+
+    private static readonly Color UvViolet = new Color(0.55f, 0.28f, 0.95f, 1f);
+
+    // focus 0: the two lamps on the scale of light; 1: the stone absorbs UV and glows; 2: two lamps, two answers; 3: fluorescence and phosphorescence; 4: examples.
+    private static void UvCabin(LessonCanvas c, int focus, float t)
+    {
+        switch (focus)
+        {
+            case 0: UvScale(c, t); break;
+            case 1: UvGlow(c, t); break;
+            case 2: UvLamps(c); break;
+            case 3: UvAfterglow(c, t); break;
+            default: UvExamples(c); break;
+        }
+    }
+
+    // The scale of the light: the UV on the left of the violet, the two lamps at 254 and 365 nm.
+    private static void UvScale(LessonCanvas c, float t)
+    {
+        // The axis goes from 200 nm to 700 nm; the part of the UV is in violet and dark, the visible one is the spectrum.
+        const float left = -200f;
+        const float width = 400f;
+        float X(float wave) => left + (wave - 200f) / 500f * width;
+        c.Rect(new Vector2(X(300f), 40f), new Vector2(X(400f) - X(200f), 48f), new Color(0.10f, 0.05f, 0.20f, 1f));
+        c.Picture(SpectrumOf(""), new Vector2((X(400f) + X(700f)) / 2f, 40f), new Vector2(X(700f) - X(400f), 48f));
+        var pulse = 0.55f + 0.45f * Mathf.Sin(t * 4f);
+        foreach (var nm in new[] { 254f, 365f })
+        {
+            c.Line(new Vector2(X(nm), 8f), new Vector2(X(nm), 72f), 3f, new Color(UvViolet.r, UvViolet.g, UvViolet.b, pulse));
+            c.Label(nm + " nm", new Vector2(X(nm), -8f), 12, UvViolet + new Color(0.3f, 0.3f, 0.3f, 0f), 70f);
+        }
+        c.Label("UV courts", new Vector2(X(254f), -26f), 12, Gold, 80f);
+        c.Label("UV longs", new Vector2(X(365f), -26f), 12, Gold, 80f);
+        c.Label("lumière visible", new Vector2((X(400f) + X(700f)) / 2f, -8f), 12, Ink, 130f);
+        c.Label("ultraviolet : invisible", new Vector2(X(300f) - 30f, 82f), 12, UvViolet + new Color(0.3f, 0.3f, 0.3f, 0f), 160f);
+        c.Label("Des rayons que l'œil ne voit pas", new Vector2(0f, 130f), 15, Gold, 440f);
+        c.Label("Ne jamais regarder une lampe UV en face", new Vector2(0f, -80f), 13, new Color(1f, 0.55f, 0.50f, 1f), 400f);
+    }
+
+    // A UV photon comes in, the stone gives back a visible light of a longer wavelength.
+    private static void UvGlow(LessonCanvas c, float t)
+    {
+        var phase = (t * 0.8f) % 1f;
+        var stone = new Vector2(0f, 0f);
+        c.Rect(stone, new Vector2(70f, 70f), new Color(0.18f, 0.02f, 0.05f, 1f), 45f);
+        var glow = Mathf.Clamp01(Mathf.Sin(phase * Mathf.PI)) * 0.7f + 0.3f;
+        c.Rect(stone, new Vector2(70f, 70f), new Color(1f, 0.15f, 0.12f, glow), 45f);
+        c.Circle(stone, 12f + 6f * glow, new Color(1f, 0.55f, 0.50f, 0.35f * glow));
+        // The incoming UV ray, from the left.
+        var x = Mathf.Lerp(-190f, -45f, phase);
+        c.Line(new Vector2(-190f, 0f), new Vector2(-45f, 0f), 2f, new Color(UvViolet.r, UvViolet.g, UvViolet.b, 0.35f));
+        c.Circle(new Vector2(x, 0f), 7f, UvViolet);
+        // The visible rays going out, to the right.
+        for (var i = -1; i <= 1; i++)
+        {
+            var end = new Vector2(150f, i * 48f);
+            c.Line(new Vector2(45f, i * 12f), end, 2f, new Color(1f, 0.25f, 0.2f, 0.5f * glow));
+        }
+        c.Label("UV invisibles", new Vector2(-120f, -34f), 13, UvViolet + new Color(0.3f, 0.3f, 0.3f, 0f), 120f);
+        c.Label("lueur visible (ici, rouge)", new Vector2(115f, -86f), 13, new Color(1f, 0.55f, 0.50f, 1f), 190f);
+        c.Label("La pierre absorbe l'UV et le rend en lumière visible", new Vector2(0f, 130f), 14, Gold, 460f);
+        c.Label("c'est la fluorescence", new Vector2(0f, -130f), 14, Ink, 300f);
+    }
+
+    // The same two rubies under the two lamps.
+    private static void UvLamps(LessonCanvas c)
+    {
+        var names = new[] { "Rubis naturel", "Rubis de synthèse" };
+        var longs = new[] { 1.0f, 1.0f };
+        var shorts = new[] { 0.3f, 0.65f };
+        c.Label("UV longs", new Vector2(-95f, 120f), 13, Gold, 90f);
+        c.Label("UV courts", new Vector2(65f, 120f), 13, Gold, 90f);
+        for (var i = 0; i < 2; i++)
+        {
+            var y = 60f - i * 100f;
+            c.Label(names[i], new Vector2(-165f, y), 13, Ink, 120f);
+            c.Rect(new Vector2(-95f, y), new Vector2(54f, 54f), Color.Lerp(new Color(0.15f, 0.02f, 0.04f, 1f), new Color(1f, 0.15f, 0.12f, 1f), longs[i]), 45f);
+            c.Rect(new Vector2(65f, y), new Vector2(54f, 54f), Color.Lerp(new Color(0.15f, 0.02f, 0.04f, 1f), new Color(1f, 0.15f, 0.12f, 1f), shorts[i]), 45f);
+        }
+        c.Label("même lueur", new Vector2(-95f, -108f), 12, Dim, 100f);
+        c.Label("plus vive : synthèse", new Vector2(65f, -108f), 12, Dim, 150f);
+        c.Label("Essayez toujours les deux lampes", new Vector2(0f, -135f), 14, Gold, 440f);
+    }
+
+    // The lamp goes off: the fluorescence stops at once, the phosphorescence fades slowly.
+    private static void UvAfterglow(LessonCanvas c, float t)
+    {
+        var cycle = (t * 0.4f) % 1f;                 // 0..0.5 lamp on, 0.5..1 lamp off
+        var on = cycle < 0.5f;
+        var sinceOff = on ? 0f : (cycle - 0.5f) * 2f;
+        var fluo = on ? 1f : 0f;
+        var phos = on ? 1f : Mathf.Pow(1f - sinceOff, 2f);
+        c.Label(on ? "Lampe allumée" : "Lampe éteinte", new Vector2(0f, 128f), 15, on ? UvViolet + new Color(0.3f, 0.3f, 0.3f, 0f) : Dim, 300f);
+        var labels = new[] { "Fluorescence", "Phosphorescence" };
+        var values = new[] { fluo, phos };
+        var colors = new[] { new Color(0.30f, 0.50f, 1f, 1f), new Color(0.78f, 0.88f, 1f, 1f) };
+        for (var i = 0; i < 2; i++)
+        {
+            var x = -80f + i * 160f;
+            c.Rect(new Vector2(x, 20f), new Vector2(70f, 70f), Color.Lerp(new Color(0.03f, 0.03f, 0.06f, 1f), colors[i], values[i]), 45f);
+            c.Label(labels[i], new Vector2(x, -50f), 14, Ink, 150f);
+            c.Label(i == 0 ? "s'arrête aussitôt" : "continue quelques secondes", new Vector2(x, -72f), 11, Dim, 170f);
+        }
+        c.Label("Diamant naturel : rarement phosphorescent", new Vector2(0f, -112f), 13, Gold, 440f);
+        c.Label("Diamant HPHT : souvent", new Vector2(0f, -132f), 13, Gold, 440f);
+    }
+
+    private static void UvExamples(LessonCanvas c)
+    {
+        var rows = new[]
+        {
+            new { Name = "Rubis naturel", Note = "rouge, faible aux UV courts", Color = new Color(1f, 0.18f, 0.12f, 1f) },
+            new { Name = "Rubis de synthèse", Note = "rouge, vive aux UV courts", Color = new Color(1f, 0.30f, 0.22f, 1f) },
+            new { Name = "Diamant naturel", Note = "souvent bleu, s'éteint", Color = new Color(0.30f, 0.50f, 1f, 1f) },
+            new { Name = "Diamant HPHT", Note = "pâle, phosphorescent", Color = new Color(0.78f, 0.88f, 1f, 1f) },
+            new { Name = "Émeraude", Note = "inerte", Color = new Color(0.08f, 0.10f, 0.08f, 1f) },
+            new { Name = "Émeraude comblée", Note = "blanc-bleuté (résine)", Color = new Color(0.78f, 0.88f, 1f, 1f) },
+            new { Name = "Teinture rouge", Note = "lueur orangée", Color = new Color(1f, 0.55f, 0.18f, 1f) },
+        };
+        for (var i = 0; i < rows.Length; i++)
+        {
+            var y = 132f - i * 40f;
+            c.Label(rows[i].Name, new Vector2(-135f, y), 14, Ink, 150f);
+            c.Rect(new Vector2(-30f, y), new Vector2(36f, 24f), rows[i].Color);
+            c.Label(rows[i].Note, new Vector2(120f, y), 12, Gold, 200f);
         }
     }
 

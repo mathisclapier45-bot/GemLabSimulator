@@ -19,6 +19,17 @@ public static class TextEntry
         }
     }
 
+    // Lower case, no accents: "Péridot" and "peridot" are the same word; "œ" is "oe". For the sort and the search of the lists.
+    public static string Normalize(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return "";
+        var decomposed = text.ToLowerInvariant().Replace("œ", "oe").Normalize(System.Text.NormalizationForm.FormD);
+        var builder = new System.Text.StringBuilder(decomposed.Length);
+        foreach (var c in decomposed)
+            if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark) builder.Append(c);
+        return builder.ToString();
+    }
+
     // A key of the game: pressed this frame, and not typed into a text field.
     public static bool KeyDown(KeyCode key) => !Typing && Input.GetKeyDown(key);
 }

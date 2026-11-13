@@ -431,7 +431,8 @@ public class StoryDirector : MonoBehaviour
         if (state == null || !state.ThouvenotWaits) yield break;
         talking = true;
 
-        if (state.SpectroQuest) yield return TalkSpectro(npc, state);
+        if (state.UvQuest) yield return TalkUv(npc, state);
+        else if (state.SpectroQuest) yield return TalkSpectro(npc, state);
         else if (state.PleoQuest) yield return TalkPleo(npc, state);
         else switch (state.Phase)
         {
@@ -883,13 +884,16 @@ public class StoryDirector : MonoBehaviour
             if (definition != null && definition.name == speciesName) species = definition;
         if (species == null) return null;
 
+        // A synthetic species is synthetic whatever the roll; the diamonds have their own clarity grades.
+        var synthetic = species.forcedSynthetic;
+        var diamond = species.name.StartsWith("Diamant");
         GemInstance best = null;
         for (var i = 0; i < 300; i++)
         {
             var candidate = new GemInstance(species);
             best = candidate;
-            if (candidate.IsDonation || candidate.IsSynthetic || candidate.IsRough || candidate.TreatmentGrade != "Non traité") continue;
-            if (candidate.ClarityGrade != "Eye-clean" && candidate.ClarityGrade != "Inclus") continue;
+            if (candidate.IsDonation || (candidate.IsSynthetic && !synthetic) || candidate.IsRough || candidate.TreatmentGrade != "Non traité") continue;
+            if (!diamond && candidate.ClarityGrade != "Eye-clean" && candidate.ClarityGrade != "Inclus") continue;
             if (candidate.CaratWeight < minCarat || candidate.CaratWeight > maxCarat) continue;
             break;
         }
@@ -1847,10 +1851,200 @@ public class StoryDirector : MonoBehaviour
         PlayerWallet.Instance?.AddMoney(100);
         Sfx.Play(Sfx.Id.Coin);
         ToolFeedbackUI.Instance?.ShowMessage("Récompense reçue : 100 €.");
-        state.SetPhase(StoryState.PhaseSpectroDone);
+        state.SetPhase(StoryState.PhaseUvSleep);
         yield return Say(npc,
             "Un péridot pour une émeraude, un grenat pour un rubis, un spinelle pour un rubis, une iolite pour une tanzanite... Ces clients se font tous avoir de la même façon. Je commence à voir un dessin.",
-            "Vous savez maintenant lire une pierre par la lumière qui la traverse. Il en reste beaucoup à découvrir.");
+            "Vous savez maintenant lire une pierre par la lumière qui la traverse. Demain, un instrument qui travaille dans le noir : la lumière ultraviolette. Reposez-vous.");
+        ToolFeedbackUI.Instance?.ShowMessage("Rentrez vous coucher : demain, la professeure Thouvenot vous attend au laboratoire.");
+    }
+
+    // ---- Chapter 5: the black light (the UV cabinet) ---------------------------------------------------------------------------------------------
+
+    // The two cases: the species of the client's stone (what it really is) and of the reference stone (what the client believes).
+    private static readonly string[] UvClientSpecies = { "Corindon_Synthetique_Rubis", "Diamant_Synthetique_HPHT" };
+    private static readonly string[] UvReferenceSpecies = { "Corindon_Rubis", "Diamant" };
+
+    private IEnumerator TalkUv(GameObject npc, StoryState state)
+    {
+        if (state.Phase == StoryState.PhaseUvLab)
+        {
+            yield return TalkUvLab(npc, state);
+            yield break;
+        }
+
+        var uvCase = state.UvCase;
+        switch (state.UvStep)
+        {
+            case 0:
+                if (uvCase == 0)
+                    yield return Say(npc,
+                        "La cabine UV est sur la rangée du bas, à gauche. Déposez la pierre dans la cabine et allumez la lampe UV courts (254 nm). Regardez la force de la lueur rouge.",
+                        "Faites les deux pierres, la pierre du client et la pierre de référence, puis revenez me dire ce que vous avez vu. Les UV longs ne les séparent pas : ce sont les UV courts qu'il faut regarder.");
+                else
+                    yield return Say(npc,
+                        "Retournez à la cabine UV. Allumez la lampe UV longs (365 nm) sur chaque pierre, regardez la lueur... puis éteignez la lampe, et regardez encore.",
+                        "Faites les deux pierres, la pierre du client et la pierre de référence, puis revenez me dire ce que vous avez vu.");
+                break;
+            case 1:
+                yield return TalkUvReport(npc, state, uvCase);
+                break;
+            case 2:
+                yield return Say(npc,
+                    "Alors, de quelle pierre s'agit-il ? Réfléchissez à ce que vous avez vu. Quand vous êtes sûr, remettez votre rapport au directeur.");
+                break;
+            case 3:
+                yield return TalkUvValidate(npc, state, uvCase);
+                break;
+        }
+    }
+
+    // The lesson on the UV cabinet, then the first case: a ruby that is not natural.
+    private IEnumerator TalkUvLab(GameObject npc, StoryState state)
+    {
+        yield return Say(npc,
+            "Bonjour ! Aujourd'hui, un instrument qui travaille dans le noir : la cabine à ultraviolets.",
+            "Les rayons UV sont invisibles. Mais certaines pierres les absorbent et les renvoient sous forme de lumière visible : elles s'allument. C'est la fluorescence. Laissez-moi vous montrer.");
+
+        DialogueBoxUI.Hide();
+        yield return PlayLesson("cabine_uv");
+
+        var ok = false;
+        yield return Say(npc,
+            "La cabine UV est maintenant à vous : sur la rangée du bas, à gauche du laboratoire. Elle a deux lampes : les UV longs et les UV courts.",
+            "Un cas pour vous exercer. Un client a payé très cher un rubis « naturel ». Il voudrait savoir si la pierre est vraiment naturelle.",
+            "Voici aussi un vrai rubis naturel de ma collection, pour comparer. Je vous les confie tous les deux.");
+        yield return GiveStones(UvClientSpecies[0], UvReferenceSpecies[0], (client, reference) => state.OnUvGiven(0, client, reference), given => ok = given);
+        if (!ok)
+        {
+            yield return Say(npc, "Hmm, je ne retrouve plus mes pierres... Repassez me voir dans un instant.");
+            yield break;
+        }
+
+        yield return Say(npc,
+            "Le filtre Chelsea ne les séparerait pas : les deux contiennent du chrome. Passez-les dans la cabine, sous la lampe UV courts (254 nm), et comparez la lueur de chacune.",
+            "Revenez me dire ce que vous avez vu. Vous retrouverez la leçon sur le panneau, dans l'entrée du laboratoire.");
+        ToolFeedbackUI.Instance?.ShowMessage("Passez les deux rubis dans la cabine UV (rangée du bas, à gauche), sous les UV courts.");
+    }
+
+    // What the cabinet has shown: two questions, and the conclusion.
+    private IEnumerator TalkUvReport(GameObject npc, StoryState state, int uvCase)
+    {
+        var client = state.UvClientGem(uvCase);
+        var reference = state.UvReferenceGem(uvCase);
+        if (client == null || reference == null)
+        {
+            yield return Say(npc, "Il me faut les deux pierres sous les yeux : elles doivent être dans votre inventaire.");
+            yield break;
+        }
+
+        var seed = client.SpecimenId ?? "";
+        string referenceRight, clientRight, wrong1, wrong2;
+        string referenceQuestion, clientQuestion;
+        if (uvCase == 0)
+        {
+            referenceRight = "Une lueur rouge faible";
+            clientRight = "Une lueur rouge bien plus vive et régulière";
+            wrong1 = "Aucune lueur";
+            wrong2 = "Une lueur bleue";
+            referenceQuestion = "Sous les UV courts, que montre le rubis naturel de référence ?";
+            clientQuestion = "Et la pierre du client ?";
+        }
+        else
+        {
+            referenceRight = "Une lueur bleue, qui s'éteint avec la lampe";
+            clientRight = "Une lueur pâle, qui continue un moment après l'extinction";
+            wrong1 = "Aucune lueur";
+            wrong2 = "Une lueur rouge vif";
+            referenceQuestion = "Sous les UV longs, que montre le diamant naturel de référence ?";
+            clientQuestion = "Et la pierre du client ?";
+        }
+
+        yield return Say(npc, "Alors ? Qu'avez-vous vu ? Commençons par la pierre de référence.");
+        var picked = -1;
+        yield return Quiz(npc, referenceQuestion, ThreeAnswers(referenceRight, new[] { referenceRight, clientRight, wrong1 }, seed + "u1", out var rightIndex), i => picked = i);
+        if (picked != rightIndex)
+        {
+            yield return Say(npc, uvCase == 0
+                ? "Non : retournez à la cabine avec le rubis de référence. Lampe UV courts, dans le noir : quelle lueur voyez-vous ? Revenez me le dire."
+                : "Non : retournez à la cabine avec le diamant de référence. Lampe UV longs allumée, puis éteinte : que se passe-t-il ?");
+            yield break;
+        }
+        yield return Say(npc, uvCase == 0
+            ? "Oui : le fer que contient un rubis naturel étouffe en partie la lueur du chrome, surtout aux UV courts."
+            : "Oui : bien des diamants naturels brillent en bleu sous les UV longs, et la lueur s'arrête avec la lampe.");
+
+        picked = -1;
+        yield return Quiz(npc, clientQuestion, ThreeAnswers(clientRight, new[] { referenceRight, clientRight, wrong2 }, seed + "u2", out rightIndex), i => picked = i);
+        if (picked != rightIndex)
+        {
+            yield return Say(npc, uvCase == 0
+                ? "Non : retournez à la cabine avec la pierre du client, sous les UV courts. Comparez-la avec le rubis de référence."
+                : "Non : retournez à la cabine avec la pierre du client. Allumez les UV longs, puis éteignez la lampe : regardez la pierre pendant quelques secondes.");
+            yield break;
+        }
+
+        state.SetPhase(StoryState.UvPhase(uvCase, 2));
+        if (uvCase == 0)
+            yield return Say(npc,
+                "Oui : sans fer pour l'étouffer, la lueur est bien plus vive. Un rubis naturel n'est presque jamais aussi lumineux aux UV courts.",
+                "Une pierre rouge, du chrome, mais pas de fer : cela ressemble à une pierre faite en laboratoire. Quelle pierre est-ce ? Remettez votre rapport au directeur.");
+        else
+            yield return Say(npc,
+                "Oui : c'est de la phosphorescence. La pierre garde l'énergie des UV et la rend lentement. Un diamant naturel le fait très rarement.",
+                "Quel diamant garde sa lueur après l'extinction de la lampe ? À vous de trouver. Remettez votre rapport au directeur.");
+        ToolFeedbackUI.Instance?.ShowMessage("Identifiez la pierre du client et remettez votre rapport au directeur.");
+    }
+
+    // The director has validated a case: Thouvenot confirms, takes the stones back and gives the next case; after the second one, the chapter is over.
+    private IEnumerator TalkUvValidate(GameObject npc, StoryState state, int uvCase)
+    {
+        var client = state.UvClientGem(uvCase);
+        var reference = state.UvReferenceGem(uvCase);
+        if (client == null)
+        {
+            yield return Say(npc, "Alors, la pierre du client ? Il me faut l'avoir sous les yeux pour confirmer votre réponse : elle doit être dans votre inventaire.");
+            yield break;
+        }
+
+        var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
+        yield return Say(npc, "Le directeur m'a dit que votre rapport est validé. Alors, quelle est votre réponse ?");
+        yield return SayAs("Vous", player, $"Un {client.Definition.displayName.ToLowerInvariant()}.");
+
+        if (uvCase == 0)
+        {
+            yield return Say(npc,
+                "C'est exact ! Un rubis de synthèse. Il a la composition du rubis : de l'alumine et du chrome. Même dureté, même densité, même indice, même filtre Chelsea. Seule la lumière ultraviolette montre la différence.",
+                "Je reprends les deux pierres. Un deuxième cas, dans la même cabine : cette fois, un diamant.");
+            PlayerInventory.Instance?.RemoveGem(client);
+            if (reference != null) PlayerInventory.Instance?.RemoveGem(reference);
+
+            var ok = false;
+            yield return Say(npc,
+                "Un autre client a acheté un diamant « naturel » à un prix un peu trop doux. Voici un vrai diamant naturel de ma collection, pour comparer.");
+            yield return GiveStones(UvClientSpecies[1], UvReferenceSpecies[1], (c, r) => state.OnUvGiven(1, c, r), given => ok = given);
+            if (!ok)
+            {
+                yield return Say(npc, "Hmm, je ne retrouve plus mes pierres... Repassez me voir dans un instant.");
+                yield break;
+            }
+            yield return Say(npc, "Cette fois, les UV longs. Allumez la lampe, puis éteignez-la : regardez ce que fait chaque pierre.");
+            ToolFeedbackUI.Instance?.ShowMessage("Passez les deux diamants dans la cabine UV : lampe UV longs, puis éteignez-la.");
+            yield break;
+        }
+
+        yield return Say(npc,
+            "C'est exact ! Un diamant de synthèse HPHT, fabriqué à haute pression et haute température. Même carbone, même dureté, même éclat : à l'œil et à la loupe, presque impossible à distinguer d'un naturel.",
+            "Seuls les instruments le trahissent : ici, une phosphorescence que le diamant naturel n'a presque jamais. Ce sont des instruments plus lourds qui le diraient avec certitude.",
+            "Je reprends les deux pierres. Le client vous envoie 120 € pour votre peine.");
+        PlayerInventory.Instance?.RemoveGem(client);
+        if (reference != null) PlayerInventory.Instance?.RemoveGem(reference);
+        PlayerWallet.Instance?.AddMoney(120);
+        Sfx.Play(Sfx.Id.Coin);
+        ToolFeedbackUI.Instance?.ShowMessage("Récompense reçue : 120 €.");
+        state.SetPhase(StoryState.PhaseUvDone);
+        yield return Say(npc,
+            "Un rubis de synthèse pour un naturel, un diamant de synthèse pour un naturel... Ce n'est plus de la maladresse. Quelqu'un fait entrer ces pierres dans la ville, et les vend sous un faux nom.",
+            "Gardez cela pour vous, comme le reste. Nous en reparlerons.");
     }
 
     // ---- The visit to the market of cut stones ----------------------------------------------------------------------------------------

@@ -1,0 +1,72 @@
+{
+  "id": "cabine_uv",
+  "kind": "tool",
+  "title": "La cabine UV",
+  "unlock": "FluorescenceLongWave",
+  "animation": "",
+  "tool": {
+    "name": "Cabine UV",
+    "measures": "la lueur d'une pierre sous les rayons ultraviolets, longs (365 nm) et courts (254 nm)",
+    "where": "Maison et Bureau de Gemmologie, rangée du bas, tout à gauche du laboratoire",
+    "records": [
+      "Fluorescence UV longues ondes",
+      "Fluorescence UV courtes ondes"
+    ],
+    "tips": [
+      "Essayer les deux lampes",
+      "Éteindre la lampe : la lueur reste-t-elle ?",
+      "Comparer avec une pierre de référence"
+    ]
+  },
+  "steps": [
+    {
+      "title": "Une lumière invisible",
+      "text": "Au-delà du violet, il y a des rayons que l'œil ne voit pas : les <b>ultraviolets</b> (UV). La cabine a deux lampes :\n• <b>UV longs</b> : 365 nm, les plus courants ;\n• <b>UV courts</b> : 254 nm, plus énergiques.\n\nLa cabine est fermée et noire : on ne regarde jamais directement une lampe UV, elle abîme les yeux.",
+      "figure": "uv",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "La pierre s'allume",
+      "text": "Certaines pierres <b>absorbent</b> les UV et les renvoient sous forme de lumière <b>visible</b>, d'une couleur plus longue : c'est la <b>fluorescence</b>. Dans le noir, la pierre brille.\n\nLa couleur et la force de la lueur dépendent de la pierre : le rubis brille en <b>rouge</b> (le chrome), certains diamants en <b>bleu</b>.",
+      "figure": "uv",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "Deux lampes, deux réponses",
+      "text": "Une même pierre peut réagir <b>différemment</b> aux UV longs et aux UV courts. Il faut donc essayer les deux.\n\nExemple : un rubis naturel brille fort aux UV longs, mais <b>faiblement</b> aux UV courts, car son fer étouffe la lueur. Un rubis de synthèse, sans fer, brille <b>plus</b> aux UV courts.",
+      "figure": "uv",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "Fluorescence ou phosphorescence ?",
+      "text": "Quand on éteint la lampe, la <b>fluorescence</b> s'arrête aussitôt. La <b>phosphorescence</b>, elle, <b>continue</b> : la pierre garde l'énergie et la rend lentement, pendant quelques secondes.\n\nUn diamant naturel est rarement phosphorescent. Certains diamants de synthèse (HPHT) le sont : c'est un indice.",
+      "figure": "uv",
+      "focus": 3,
+      "image": ""
+    },
+    {
+      "title": "Ce que la cabine révèle",
+      "text": "• <b>Rubis</b> : rouge, mais plus vif aux UV courts s'il est de synthèse.\n• <b>Diamant naturel</b> : souvent bleu.\n• <b>Diamant HPHT</b> : lueur pâle et phosphorescence.\n• <b>Émeraude</b> : inerte ; une émeraude comblée de résine : blanc-bleuté.\n• <b>Teinture rouge</b> : lueur orangée.\n• <b>Verre</b> : variable.",
+      "figure": "uv",
+      "focus": 4,
+      "image": ""
+    },
+    {
+      "title": "Utiliser la cabine",
+      "text": "1. Déposez la pierre dans la cabine : elle est noire.\n2. Allumez la lampe UV longs, regardez la lueur.\n3. Éteignez, puis essayez les UV courts.\n4. Éteignez la lampe et regardez : la lueur reste-t-elle ?\n\nChaque pierre brille un peu plus ou moins que la moyenne de son espèce : comparez toujours avec une pierre de référence.",
+      "figure": "uv",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• Les UV font briller certaines pierres : la couleur dit souvent ce qui les colore ou les traite.\n• Il faut essayer les <b>deux</b> lampes.\n• La lueur qui <b>persiste</b> après l'extinction est de la phosphorescence.\n• C'est une indication, jamais une identification : on la croise avec les autres mesures.",
+      "figure": "uv",
+      "focus": 3,
+      "image": ""
+    }
+  ]
+}

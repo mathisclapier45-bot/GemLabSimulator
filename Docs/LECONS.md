@@ -19,6 +19,7 @@ Chaque leçon est un fichier JSON dans `GemLabSimulator/Assets/Resources/Lessons
 | `dichroscope.json` | Le dichroscope de Londres (pléochroïsme, calcite, modèles) | le dichroscope (chapitre 3, présenté par Thouvenot) |
 | `spectroscope.json` | Le spectroscope (prisme, spectre, raies du chrome et du fer) | le spectroscope (chapitre 4) |
 | `filtre_chelsea.json` | Le filtre Chelsea (deux fenêtres, le chrome rougit) | le filtre Chelsea (chapitre 4) |
+| `cabine_uv.json` | La cabine UV (fluorescence, deux lampes, phosphorescence) | la cabine UV (chapitre 5) |
 
 ## Format
 
@@ -39,7 +40,7 @@ Chaque leçon est un fichier JSON dans `GemLabSimulator/Assets/Resources/Lessons
 }
 ```
 
-- `figure` : le schéma provisoire dessiné par le code (`criteria`, `taxonomy`, `hardness`, `tenacity`, `stability`, `dichro`, `spectro`, `chelsea`, `loupe`, `carat`, `hydro`, `systems`, `polariscope`). `focus` choisit ce qu'il montre (le critère, le système cristallin...).
+- `figure` : le schéma provisoire dessiné par le code (`criteria`, `taxonomy`, `hardness`, `tenacity`, `stability`, `dichro`, `spectro`, `chelsea`, `uv`, `loupe`, `carat`, `hydro`, `systems`, `polariscope`). `focus` choisit ce qu'il montre (le critère, le système cristallin...).
 - `image` : le nom (sans extension) d'une image de l'artiste, placée dans `Assets/Resources/Lessons/Images/` et importée comme **Sprite**. Si elle existe, elle **remplace** le schéma de l'étape. Exemple : `gemme_arbre` pour la deuxième étape de `gemmes.json`.
 - Pour ajouter une leçon : un nouveau JSON, et son id dans `LessonLibrary.Order`.
 

@@ -76,7 +76,7 @@ public class GuideArrow : MonoBehaviour
         if (scene == "MaisonJoueur")
         {
             if (state.Stage == StoryState.GoHome && state.UnreadCount > 0) return GameObject.Find("Boite aux lettres perso");
-            if (state.Stage >= StoryState.Settled && (phase == StoryState.PhaseSleep || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseTwinsSleep || phase == StoryState.PhasePleoSleep || phase == StoryState.PhaseSpectroSleep))
+            if (state.Stage >= StoryState.Settled && (phase == StoryState.PhaseSleep || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseTwinsSleep || phase == StoryState.PhasePleoSleep || phase == StoryState.PhaseSpectroSleep || phase == StoryState.PhaseUvSleep))
             {
                 var bed = Object.FindFirstObjectByType<BedInteractable>();
                 return bed != null ? bed.gameObject : null;
@@ -98,7 +98,7 @@ public class GuideArrow : MonoBehaviour
             return clerk != null ? clerk.gameObject : null;
         }
 
-        var toLab = phase == StoryState.PhaseLab || state.InTutorial || state.StoneQuest || state.TwinsQuest || state.PleoQuest || state.SpectroQuest;
+        var toLab = phase == StoryState.PhaseLab || state.InTutorial || state.StoneQuest || state.TwinsQuest || state.PleoQuest || state.SpectroQuest || state.UvQuest;
         if (scene == "Town")
         {
             if (phase == StoryState.PhaseLeaVisit)
@@ -117,12 +117,25 @@ public class GuideArrow : MonoBehaviour
                 if (state.FabienneStep == 3) return GameObject.Find("La Crypte");
                 return state.FabienneStep == 2 ? GameObject.Find("Fontaine") : null;
             }
-            if (phase == StoryState.PhaseRest || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseStoneReturn || phase == StoryState.PhaseTwinsSleep || phase == StoryState.PhasePleoSleep || phase == StoryState.PhaseSpectroSleep) return DoorTo("MaisonJoueur");
+            if (phase == StoryState.PhaseRest || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseStoneReturn || phase == StoryState.PhaseTwinsSleep || phase == StoryState.PhasePleoSleep || phase == StoryState.PhaseSpectroSleep || phase == StoryState.PhaseUvSleep) return DoorTo("MaisonJoueur");
             return toLab ? DoorTo("Home") : null;
         }
 
         if (scene == "Home")
         {
+            // Chapter 5: the UV cabinet; the director for the report, Thouvenot for the rest.
+            if (state.UvQuest)
+            {
+                if (state.UvStep == 0) return GameObject.Find("CabineUV");
+                if (state.UvStep == 2)
+                {
+                    var uvBoss = Object.FindFirstObjectByType<DirectorNPC>();
+                    return uvBoss != null ? uvBoss.gameObject : null;
+                }
+                var uvTeacher = Object.FindFirstObjectByType<ThouvenotNPC>();
+                return uvTeacher != null ? uvTeacher.gameObject : null;
+            }
+
             // Chapter 4: the spectroscope, then the Chelsea filter; the director for the report, Thouvenot for the rest.
             if (state.SpectroQuest)
             {
@@ -200,9 +213,9 @@ public class GuideArrow : MonoBehaviour
             else if (state.FabienneStep == 2) goal = "obj:Fontaine";
             else if (state.FabienneStep == 3) goal = "obj:La Crypte";
         }
-        else if (phase == StoryState.PhaseRest || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseStoneReturn || phase == StoryState.PhaseTwinsSleep || phase == StoryState.PhasePleoSleep || phase == StoryState.PhaseSpectroSleep)
+        else if (phase == StoryState.PhaseRest || phase == StoryState.PhaseStoneSleep || phase == StoryState.PhaseStoneReturn || phase == StoryState.PhaseTwinsSleep || phase == StoryState.PhasePleoSleep || phase == StoryState.PhaseSpectroSleep || phase == StoryState.PhaseUvSleep)
             goal = "scene:MaisonJoueur";
-        else if (phase == StoryState.PhaseLab || state.InTutorial || state.StoneQuest || state.TwinsQuest || state.PleoQuest || state.SpectroQuest)
+        else if (phase == StoryState.PhaseLab || state.InTutorial || state.StoneQuest || state.TwinsQuest || state.PleoQuest || state.SpectroQuest || state.UvQuest)
             goal = "scene:Home";
 
         if (goal != null && goal.StartsWith("scene:") && SceneManager.GetActiveScene().name == goal.Substring(6)) return null;

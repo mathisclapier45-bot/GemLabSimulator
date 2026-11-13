@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,7 @@ public class UvCabinUI : MonoBehaviour
     private const float PanelHeight = 372f;
     private const float FadeInSpeed = 3f;
     private const float FadeOutSpeed = 3.5f;
-    private const float AfterglowSpeed = 0.3f;
+    private const float AfterglowSpeed = 0.12f;      // a phosphorescent stone keeps glowing for several seconds after the lamp
 
     private enum Lamp { Off, Long, Short }
 
@@ -77,6 +78,8 @@ public class UvCabinUI : MonoBehaviour
         lamp = Lamp.Off;
         lampLevel = 0f;
         glowLevel = 0f;
+        BuildIndex();
+        if (indexSearch != null) indexSearch.text = "";
         panel.SetActive(true);
         InventoryUI.Instance?.Open();
         Refresh();
@@ -148,6 +151,7 @@ public class UvCabinUI : MonoBehaviour
             ? ExaminationTool.MeasurementType.FluorescenceLongWave.ToString()
             : ExaminationTool.MeasurementType.FluorescenceShortWave.ToString();
         stone.RecordObservation(key);
+        StoryState.Instance?.OnObserved(stone, key);
 
         var label = longWave ? "UV longs (365 nm)" : "UV courts (254 nm)";
         var text = longWave ? def.fluorescenceLongWave : def.fluorescenceShortWave;
@@ -259,8 +263,8 @@ public class UvCabinUI : MonoBehaviour
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
         rect.sizeDelta = new Vector2(PanelWidth, PanelHeight);
-        // Shifted left so the inventory panel (right side of the screen) stays reachable for drag and drop.
-        rect.anchoredPosition = new Vector2(-150f, 0f);
+        // Shifted a little to the left so the inventory stays reachable for drag and drop; the index of the reactions sits on its left.
+        rect.anchoredPosition = new Vector2(-40f, 0f);
 
         RuntimeUIKit.MakeBox("Body", panel.transform, Vector2.zero, new Vector2(PanelWidth, PanelHeight), PanelColor);
         RuntimeUIKit.MakeText("Title", panel.transform, "Cabine UV", 20, TextAnchor.UpperLeft, Gold,
@@ -268,6 +272,188 @@ public class UvCabinUI : MonoBehaviour
 
         BuildCabin();
         BuildSidePanel();
+    }
+
+    // ---- The index of the reactions, on the left ------------------------------------------------------------------------------
+
+    private const float IndexWidth = 198f;
+    private const float RowHeight = 44f;
+
+    private struct IndexRow
+    {
+        public RectTransform Rect;
+        public string Key;          // the name without accents or capitals, for the search
+        public float Height;
+    }
+
+    private readonly List<IndexRow> indexRows = new List<IndexRow>();
+    private RectTransform indexContent;
+    private Text indexNoResult;
+    private InputField indexSearch;
+    private bool indexBuilt;
+
+    private static readonly (string name, Color color)[] GlowNames =
+    {
+        ("bleu", new Color(0.30f, 0.50f, 1f)), ("blanc-bleuté", new Color(0.78f, 0.88f, 1f)), ("violet", new Color(0.70f, 0.42f, 1f)),
+        ("rouge", new Color(1f, 0.16f, 0.10f)), ("rose", new Color(1f, 0.46f, 0.66f)), ("orangé", new Color(1f, 0.55f, 0.12f)),
+        ("jaune", new Color(1f, 0.90f, 0.25f)), ("vert", new Color(0.30f, 1f, 0.38f)),
+    };
+
+    private static string GlowText(FluorescenceInfo info)
+    {
+        if (!info.Glows || info.Intensity < 0.05f) return "inerte";
+        var best = GlowNames[0].name;
+        var bestDistance = float.MaxValue;
+        foreach (var (name, color) in GlowNames)
+        {
+            var d = (color.r - info.Color.r) * (color.r - info.Color.r) + (color.g - info.Color.g) * (color.g - info.Color.g) + (color.b - info.Color.b) * (color.b - info.Color.b);
+            if (d < bestDistance) { bestDistance = d; best = name; }
+        }
+        var strength = info.Intensity >= 0.9f ? "vive" : info.Intensity >= 0.6f ? "moyenne" : info.Intensity >= 0.25f ? "faible" : "très faible";
+        return $"{best}, {strength}" + (info.Phosphorescent ? " + phosphorescence" : "");
+    }
+
+    private static Color GlowChip(FluorescenceInfo info) =>
+        info.Glows && info.Intensity >= 0.05f ? Color.Lerp(new Color(0.06f, 0.06f, 0.08f), info.Color, Mathf.Clamp01(0.25f + info.Intensity)) : new Color(0.04f, 0.04f, 0.05f);
+
+    // The possible reactions of every stone: the name, and what each lamp shows (a chip of the colour, and the words). The treatments come first.
+    private void BuildIndex()
+    {
+        if (indexBuilt || panel == null) return;
+        var database = GemDatabase.Instance;
+        if (database == null) return;
+        indexBuilt = true;
+
+        var root = RuntimeUIKit.MakeBox("Index", panel.transform, new Vector2(-IndexWidth - 8f, 0f), new Vector2(IndexWidth, PanelHeight), PanelColor);
+        RuntimeUIKit.MakeText("IndexTitle", root.transform, "Cas possibles", 16, TextAnchor.UpperLeft, Gold, new Vector2(12f, -10f), new Vector2(IndexWidth - 20f, 22f));
+        RuntimeUIKit.MakeText("IndexHint", root.transform, "Ce que chaque lampe peut montrer, pierre par pierre.", 10, TextAnchor.UpperLeft,
+            new Color(0.6f, 0.6f, 0.65f), new Vector2(12f, -32f), new Vector2(IndexWidth - 20f, 26f));
+
+        var boxGO = new GameObject("IndexSearch", typeof(RectTransform), typeof(Image), typeof(InputField));
+        boxGO.transform.SetParent(root.transform, false);
+        RuntimeUIKit.SetTopLeft(boxGO.GetComponent<RectTransform>(), new Vector2(8f, -60f), new Vector2(IndexWidth - 16f, 24f));
+        boxGO.GetComponent<Image>().color = new Color(0.20f, 0.21f, 0.26f, 1f);
+        var text = RuntimeUIKit.MakeText("Text", boxGO.transform, "", 12, TextAnchor.MiddleLeft, Color.white, Vector2.zero, Vector2.zero);
+        var placeholder = RuntimeUIKit.MakeText("Placeholder", boxGO.transform, "Rechercher…", 12, TextAnchor.MiddleLeft, new Color(0.58f, 0.60f, 0.66f), Vector2.zero, Vector2.zero);
+        placeholder.fontStyle = FontStyle.Italic;
+        foreach (var t in new[] { text, placeholder })
+        {
+            var r = t.rectTransform;
+            r.anchorMin = Vector2.zero;
+            r.anchorMax = Vector2.one;
+            r.offsetMin = new Vector2(8f, 1f);
+            r.offsetMax = new Vector2(-8f, -1f);
+        }
+        indexSearch = boxGO.GetComponent<InputField>();
+        indexSearch.textComponent = text;
+        indexSearch.placeholder = placeholder;
+        indexSearch.characterLimit = 30;
+        indexSearch.onValueChanged.AddListener(ApplyIndexFilter);
+
+        var viewportGO = new GameObject("IndexView", typeof(RectTransform), typeof(RectMask2D), typeof(ScrollRect), typeof(Image));
+        viewportGO.transform.SetParent(root.transform, false);
+        RuntimeUIKit.SetTopLeft(viewportGO.GetComponent<RectTransform>(), new Vector2(6f, -90f), new Vector2(IndexWidth - 12f, PanelHeight - 98f));
+        viewportGO.GetComponent<Image>().color = new Color(0.04f, 0.05f, 0.07f, 1f);
+        var contentGO = new GameObject("IndexContent", typeof(RectTransform));
+        contentGO.transform.SetParent(viewportGO.transform, false);
+        indexContent = contentGO.GetComponent<RectTransform>();
+        indexContent.anchorMin = new Vector2(0f, 1f);
+        indexContent.anchorMax = new Vector2(1f, 1f);
+        indexContent.pivot = new Vector2(0.5f, 1f);
+        indexContent.anchoredPosition = Vector2.zero;
+        var scroll = viewportGO.GetComponent<ScrollRect>();
+        scroll.viewport = viewportGO.GetComponent<RectTransform>();
+        scroll.content = indexContent;
+        scroll.horizontal = false;
+        scroll.vertical = true;
+        scroll.movementType = ScrollRect.MovementType.Clamped;
+        scroll.scrollSensitivity = 24f;
+
+        // The treatments (the same reaction under both lamps), then the stones from A to Z.
+        var both = new System.Func<Color, float, bool, FluorescenceInfo>((color, intensity, phosphorescent) =>
+            new FluorescenceInfo { Glows = intensity > 0f, Color = color, Intensity = intensity, Phosphorescent = phosphorescent });
+        var bluish = new Color(0.78f, 0.88f, 1f);
+        var treatments = new[]
+        {
+            ("Teinture rouge", both(new Color(1f, 0.42f, 0.18f), 0.65f, false)),
+            ("Teinture rose", both(new Color(1f, 0.55f, 0.65f), 0.5f, false)),
+            ("Teinture violette", both(new Color(0.78f, 0.45f, 0.95f), 0.4f, false)),
+            ("Autres teintures (minérales, noires)", both(bluish, 0f, false)),
+            ("Résine ou cire dans les fissures", both(bluish, 0.4f, false)),
+            ("Perle ou corail blanchi", both(bluish, 0.4f, false)),
+            ("Diamant traité HPHT", both(new Color(0.40f, 1f, 0.25f), 1f, false)),
+        };
+        AddIndexHeader("Traitements (les deux lampes)");
+        foreach (var (name, info) in treatments) AddIndexRow(name, info, info);
+
+        var stones = new List<GemDefinition>();
+        foreach (var definition in database.allGems)
+            if (definition != null) stones.Add(definition);
+        stones.Sort((a, b) => string.CompareOrdinal(TextEntry.Normalize(a.displayName), TextEntry.Normalize(b.displayName)));
+        AddIndexHeader("Pierres, de A à Z");
+        foreach (var definition in stones)
+            AddIndexRow(definition.displayName, FluorescenceInfo.ForGem(definition, true), FluorescenceInfo.ForGem(definition, false));
+
+        indexNoResult = RuntimeUIKit.MakeText("NoResult", indexContent, "Aucune pierre ne correspond.", 12, TextAnchor.MiddleCenter, new Color(0.7f, 0.7f, 0.75f),
+            new Vector2(0f, -10f), new Vector2(IndexWidth - 24f, 24f));
+        indexNoResult.gameObject.SetActive(false);
+        ApplyIndexFilter("");
+    }
+
+    private void AddIndexHeader(string title)
+    {
+        var header = RuntimeUIKit.MakeText("Header", indexContent, title, 11, TextAnchor.MiddleLeft, Gold, Vector2.zero, new Vector2(IndexWidth - 24f, 20f));
+        header.fontStyle = FontStyle.Bold;
+        header.raycastTarget = false;
+        indexRows.Add(new IndexRow { Rect = header.rectTransform, Key = "", Height = 22f });
+    }
+
+    private void AddIndexRow(string name, FluorescenceInfo longWave, FluorescenceInfo shortWave)
+    {
+        var row = RuntimeUIKit.MakeBox("Row_" + name, indexContent, Vector2.zero, new Vector2(IndexWidth - 24f, RowHeight - 3f), new Color(0.10f, 0.11f, 0.15f, 1f));
+        row.raycastTarget = false;
+        var title = RuntimeUIKit.MakeText("Name", row.transform, name, 10, TextAnchor.UpperLeft, new Color(0.88f, 0.90f, 0.96f), new Vector2(5f, -2f), new Vector2(IndexWidth - 34f, 13f));
+        title.raycastTarget = false;
+        title.fontStyle = FontStyle.Bold;
+        for (var lamp = 0; lamp < 2; lamp++)
+        {
+            var info = lamp == 0 ? longWave : shortWave;
+            var y = -16f - lamp * 12f;
+            var label = RuntimeUIKit.MakeText("Lamp", row.transform, lamp == 0 ? "UV L" : "UV C", 9, TextAnchor.MiddleLeft, new Color(0.60f, 0.62f, 0.70f), new Vector2(5f, y), new Vector2(26f, 11f));
+            label.raycastTarget = false;
+            var chip = RuntimeUIKit.MakeBox("Chip", row.transform, new Vector2(32f, y - 1f), new Vector2(16f, 9f), GlowChip(info), false);
+            chip.raycastTarget = false;
+            var words = RuntimeUIKit.MakeText("Words", row.transform, GlowText(info), 9, TextAnchor.MiddleLeft, new Color(0.80f, 0.86f, 0.95f), new Vector2(52f, y), new Vector2(IndexWidth - 80f, 11f));
+            words.raycastTarget = false;
+        }
+        indexRows.Add(new IndexRow { Rect = row.rectTransform, Key = TextEntry.Normalize(name), Height = RowHeight });
+    }
+
+    // Keeps the rows whose name holds every word typed (the headers stay when nothing is typed), in order.
+    private void ApplyIndexFilter(string query)
+    {
+        var words = TextEntry.Normalize(query).Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+        var filtering = words.Length > 0;
+        var y = -4f;
+        var shown = 0;
+        foreach (var row in indexRows)
+        {
+            var isHeader = row.Key.Length == 0;
+            var match = !isHeader;
+            if (match)
+                foreach (var word in words)
+                    if (!row.Key.Contains(word)) { match = false; break; }
+            var visible = isHeader ? !filtering : match;
+            row.Rect.gameObject.SetActive(visible);
+            if (!visible) continue;
+
+            row.Rect.anchoredPosition = new Vector2(3f, y);
+            y -= row.Height;
+            if (!isHeader) shown++;
+        }
+        if (indexNoResult != null) indexNoResult.gameObject.SetActive(filtering && shown == 0);
+        indexContent.sizeDelta = new Vector2(0f, -y + 6f);
+        indexContent.anchoredPosition = Vector2.zero;
     }
 
     private void BuildCabin()
