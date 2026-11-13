@@ -1,0 +1,71 @@
+{
+  "id": "filtre_chelsea",
+  "kind": "tool",
+  "title": "Le filtre Chelsea",
+  "unlock": "ChelseaFilter",
+  "animation": "",
+  "tool": {
+    "name": "Filtre Chelsea",
+    "measures": "la réaction d'une pierre à un filtre qui ne laisse passer que le jaune-vert et le rouge profond",
+    "where": "Maison et Bureau de Gemmologie, rangée du bas, au milieu du laboratoire (une lampe est posée dessous)",
+    "records": [
+      "Réaction au filtre Chelsea"
+    ],
+    "tips": [
+      "Pierre sur papier blanc, forte lumière au tungstène",
+      "Tenir le filtre près de l'œil",
+      "Une indication, jamais un diagnostic"
+    ]
+  },
+  "steps": [
+    {
+      "title": "Un filtre à deux fenêtres",
+      "text": "Une pierre de couleur transmet une partie de la lumière : on peut l'analyser avec des <b>filtres</b>. Le plus important est le <b>filtre Chelsea</b>, un petit filtre coloré qui arrête presque tout le spectre.\n\nIl ne laisse passer que deux fenêtres : le <b>jaune-vert</b> et le <b>rouge profond</b>. Une pierre qui renvoie beaucoup de rouge profond y apparaît donc <b>rouge</b>.",
+      "figure": "chelsea",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Le chrome rougit",
+      "text": "Le <b>chrome</b> fait briller le rouge profond : le rubis, l'alexandrite, l'émeraude apparaissent <b>rouges</b>, ou roses, sous le filtre. Le <b>cobalt</b> rougit aussi (spinelle synthétique, verre bleu). Le <b>fer</b>, non : une pierre colorée par le fer reste verdâtre ou grisâtre.\n\nLe filtre aide à séparer des pierres de même couleur dans un lot, à repérer un <b>intrus</b> dans un bijou ou un collier, et à déceler une pierre traitée, assemblée ou synthétique.",
+      "figure": "chelsea",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "Utiliser le filtre",
+      "text": "1. Placez la pierre sur une feuille de <b>papier blanc</b>.\n2. Éclairez-la d'une forte source au <b>tungstène</b> : au laboratoire, allumez la lampe.\n3. Tenez le filtre <b>près de l'œil</b> et regardez la pierre à travers.\n4. Notez la couleur, et comparez avec une pierre de référence.\n\nPlus la couleur de la pierre est foncée, plus la réaction est difficile à voir.",
+      "figure": "chelsea",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "Ce qu'il montre",
+      "text": "• <b>Rubis</b>, naturel ou synthétique : rouge à rouge très vif.\n• <b>Émeraude</b> : rouge vif ou rose à verdâtre.\n• <b>Alexandrite</b>, <b>démantoïde</b> : rose à rouge vif.\n• <b>Spinelle bleu synthétique</b> (cobalt) : rouge vif, orange-rosé ou rose. Le spinelle bleu naturel : rougeâtre à vert de gris.\n• <b>Saphir bleu</b> : généralement vert foncé.\n• <b>Grenat almandin</b> : grisâtre à rouge foncé.\n• <b>Verre</b> rouge : rouge foncé ; bleu au cobalt : rouge intense à rose.",
+      "figure": "chelsea",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "Spinelle bleu cobalt ou saphir ?",
+      "text": "Deux pierres bleues, presque identiques à l'œil nu : un <b>spinelle bleu synthétique</b>, coloré au <b>cobalt</b>, et un <b>saphir bleu</b>, coloré par le fer.\n\nSous le filtre :\n• le spinelle au cobalt <b>rougit</b> : rouge vif, orange-rosé ou rose ;\n• le saphir reste <b>vert foncé</b>.\n\nLe cobalt, comme le chrome, laisse passer le rouge profond ; le fer, non. Le spinelle bleu naturel, lui, est rougeâtre à vert de gris : le filtre seul ne suffit pas, on le recoupe avec le spectroscope (trois bandes du cobalt) et l'indice.",
+      "figure": "chelsea",
+      "focus": 3,
+      "image": ""
+    },
+    {
+      "title": "Prudence",
+      "text": "Les résultats varient avec l'<b>intensité</b> de la couleur, et avec la concentration relative des éléments colorants quand il y en a plusieurs.\n\nUne réaction au filtre n'est jamais un résultat diagnostique : c'est une <b>indication</b>. Le test est rapide et facile, mais il faut interpréter les résultats avec circonspection, car de nouvelles variétés de pierres, naturelles ou synthétiques, peuvent réagir autrement que dans le tableau.",
+      "figure": "chelsea",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• Le filtre ne laisse passer que le jaune-vert et le rouge profond.\n• Le chrome rougit sous le filtre, le cobalt aussi ; le fer, non.\n• Il faut une forte source au tungstène, la pierre sur du papier blanc, le filtre près de l'œil.\n• Une indication, jamais une identification : il se combine au spectroscope, à l'indice et à la densité.",
+      "figure": "chelsea",
+      "focus": 1,
+      "image": ""
+    }
+  ]
+}

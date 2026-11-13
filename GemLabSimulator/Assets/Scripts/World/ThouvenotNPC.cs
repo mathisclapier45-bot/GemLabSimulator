@@ -18,7 +18,7 @@ public class ThouvenotNPC : MonoBehaviour
 
     private void Update()
     {
-        if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
+        if (!playerInRange || !TextEntry.KeyDown(KeyCode.E)) return;
         if (PlayerController.InputLocked || DialogueBoxUI.IsShowing || StoryChoiceUI.IsOpen) return;
         StoryDirector.Instance?.TalkToThouvenot(gameObject);
     }

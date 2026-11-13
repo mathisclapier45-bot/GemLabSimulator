@@ -63,6 +63,13 @@ public class StoryState : MonoBehaviour
     public const int PhasePleoValidate = 35;       // the director has validated: tell Thouvenot (she gives the second case after the first one)
     public const int PhasePleoDone = 40;           // chapter 3 is over (the dichroscope for now)
 
+    // Chapter 4, "the light that is absorbed" (the spectroscope, then the Chelsea filter): two cases like chapter 3. Case 1: a peridot sold as an emerald (the spectroscope).
+    // Case 2: a garnet sold as a ruby (the Chelsea filter). The phases of a case are Observe, Report, Identify, Validate.
+    public const int PhaseSpectroSleep = 50;       // chapter 3 is over: go to sleep
+    public const int PhaseSpectroLab = 51;         // the next morning: Thouvenot teaches the spectroscope and gives the first two stones
+    public const int PhaseSpectroObserve = 52;     // case 1: examine both stones with the spectroscope (+4 for case 2, the Chelsea filter)
+    public const int PhaseSpectroDone = 60;        // chapter 4 is over
+
     // After Léa: a visit to the market of cut stones, where Camille explains how it works and warns about the traps.
     public const int PhaseMarketVisit = 29;
 
@@ -103,7 +110,7 @@ public class StoryState : MonoBehaviour
 
     // During the story chapters (the tutorial, the lessons, the cases of Thouvenot) the mailbox gives no client letters: the only stone it holds is the one of the
     // tutorial. The letters come back once the current chapters are over (and in an old save, always).
-    public bool MailLimited => !Legacy && Phase != PhaseDone && Phase != PhasePleoDone;
+    public bool MailLimited => !Legacy && Phase != PhaseDone && Phase != PhaseSpectroDone;
 
     // The stone given by the man of the town (the specimen id), and the quest of that stone.
     public string StrangerSpecimen { get; private set; } = "";
@@ -159,8 +166,34 @@ public class StoryState : MonoBehaviour
         SetPhase(PleoPhase(pleoCase, 0));
     }
 
+    // The stones of chapter 4: for each of the two cases, the client's stone then the reference stone (specimen ids).
+    private readonly string[] spectroStones = { "", "", "", "" };
+
+    public bool SpectroQuest => !Legacy && Phase >= PhaseSpectroLab && Phase <= PhaseSpectroObserve + 7;
+
+    public int SpectroCase => Phase >= PhaseSpectroObserve && Phase <= PhaseSpectroObserve + 7 ? (Phase - PhaseSpectroObserve) / 4 : -1;
+    public int SpectroStep => Phase >= PhaseSpectroObserve && Phase <= PhaseSpectroObserve + 7 ? (Phase - PhaseSpectroObserve) % 4 : -1;
+
+    public static int SpectroPhase(int spectroCase, int step) => PhaseSpectroObserve + spectroCase * 4 + step;
+
+    // What the instrument of the case records on a stone.
+    public static string SpectroKey(int spectroCase) =>
+        spectroCase == 0 ? ExaminationTool.MeasurementType.AbsorptionSpectrum.ToString() : ExaminationTool.MeasurementType.ChelseaFilter.ToString();
+
+    public bool IsSpectroClient(int spectroCase, GemInstance gem) => gem != null && !string.IsNullOrEmpty(spectroStones[spectroCase * 2]) && gem.SpecimenId == spectroStones[spectroCase * 2];
+    public bool IsSpectroReference(int spectroCase, GemInstance gem) => gem != null && !string.IsNullOrEmpty(spectroStones[spectroCase * 2 + 1]) && gem.SpecimenId == spectroStones[spectroCase * 2 + 1];
+    public GemInstance SpectroClientGem(int spectroCase) => FindGem(spectroStones[spectroCase * 2]);
+    public GemInstance SpectroReferenceGem(int spectroCase) => FindGem(spectroStones[spectroCase * 2 + 1]);
+
+    public void OnSpectroGiven(int spectroCase, GemInstance client, GemInstance reference)
+    {
+        spectroStones[spectroCase * 2] = client.SpecimenId ?? "";
+        spectroStones[spectroCase * 2 + 1] = reference.SpecimenId ?? "";
+        SetPhase(SpectroPhase(spectroCase, 0));
+    }
+
     // Professor Thouvenot waits in the laboratory during the tutorial and the next days.
-    public bool ThouvenotWaits => InTutorial || StoneQuest || TwinsQuest || PleoQuest;
+    public bool ThouvenotWaits => InTutorial || StoneQuest || TwinsQuest || PleoQuest || SpectroQuest;
 
     public void OnStrangerGave(GemInstance gem)
     {
@@ -177,6 +210,12 @@ public class StoryState : MonoBehaviour
         if (Phase == PhaseTwinsIdentify && IsTwinStone(gem))
         {
             SetPhase(PhaseTwinsValidate);
+            ToolFeedbackUI.Instance?.ShowMessage("Identification validée ! Allez la confirmer à la professeure Thouvenot.");
+            return;
+        }
+        if (SpectroStep == 2 && IsSpectroClient(SpectroCase, gem))
+        {
+            SetPhase(Phase + 1);
             ToolFeedbackUI.Instance?.ShowMessage("Identification validée ! Allez la confirmer à la professeure Thouvenot.");
             return;
         }
@@ -325,6 +364,8 @@ public class StoryState : MonoBehaviour
         if (finished || p >= PhaseRefractometer) tools.Add(ExaminationTool.MeasurementType.RefractiveIndex.ToString());
         if (p >= PhaseTwinsPolariscope) tools.Add(ExaminationTool.MeasurementType.OpticalCharacter.ToString());
         if (p >= PhasePleoObserve) tools.Add(ExaminationTool.MeasurementType.Pleochroism.ToString());
+        if (p >= PhaseSpectroObserve) tools.Add(ExaminationTool.MeasurementType.AbsorptionSpectrum.ToString());
+        if (p >= SpectroPhase(1, 0)) tools.Add(ExaminationTool.MeasurementType.ChelseaFilter.ToString());
         // The other instruments (LaterTools) stay closed until a later chapter of the tutorial presents them: it calls UnlockTool.
     }
 
@@ -362,6 +403,7 @@ public class StoryState : MonoBehaviour
         TwinSpecimen = "";
         TwinReference = "";
         for (var i = 0; i < pleoStones.Length; i++) pleoStones[i] = "";
+        for (var i = 0; i < spectroStones.Length; i++) spectroStones[i] = "";
         FabienneStep = 0;
         BinderUnlocked = false;
         contacts.Clear();
@@ -390,6 +432,11 @@ public class StoryState : MonoBehaviour
     {
         if (Legacy) return;
         if (Phase == PhaseSleep) SetPhase(PhaseCall);
+        else if (Phase == PhaseSpectroSleep)
+        {
+            SetPhase(PhaseSpectroLab);
+            ToolFeedbackUI.Instance?.ShowMessage("Un nouveau jour : la professeure Thouvenot vous attend au laboratoire.");
+        }
         else if (Phase == PhasePleoSleep)
         {
             SetPhase(PhasePleoLab);
@@ -456,6 +503,24 @@ public class StoryState : MonoBehaviour
             return;
         }
 
+        // Chapter 4: both stones of the case seen with the instrument of the case (the spectroscope, then the Chelsea filter).
+        if (SpectroStep == 0 && key == SpectroKey(SpectroCase))
+        {
+            var spectroCase = SpectroCase;
+            if (IsSpectroClient(spectroCase, gem) || IsSpectroReference(spectroCase, gem))
+            {
+                var client = SpectroClientGem(spectroCase);
+                var reference = SpectroReferenceGem(spectroCase);
+                var wanted = SpectroKey(spectroCase);
+                if (client != null && reference != null && client.HasObserved(wanted) && reference.HasObserved(wanted))
+                {
+                    SetPhase(Phase + 1);
+                    ToolFeedbackUI.Instance?.ShowMessage("Vous avez observé les deux pierres. Allez dire à la professeure Thouvenot ce que vous avez vu.");
+                }
+            }
+            return;
+        }
+
         // Chapter 3: both stones of the case seen with the dichroscope.
         if (PleoStep == 0 && key == ExaminationTool.MeasurementType.Pleochroism.ToString())
         {
@@ -507,6 +572,8 @@ public class StoryState : MonoBehaviour
             if (Legacy) return "Examinez les pierres du courrier avec les instruments du laboratoire.";
             if (Stage == Arrival || Stage == Tour) return "Suivez la professeure Thouvenot dans la ville.";
             if (Stage == GoHome) return "Entrez dans votre maison et lisez la lettre de Vincent, dans la boîte aux lettres.";
+            if (PleoStep >= 0) return CaseObjective("au dichroscope de Londres (rangée du haut)", PleoStep);
+            if (SpectroStep >= 0) return CaseObjective(SpectroCase == 0 ? "au spectroscope (rangée du haut, à droite)" : "au filtre Chelsea (rangée du bas)", SpectroStep);
             switch (Phase)
             {
                 case PhaseSleep: return "Dormez dans votre lit (touche E) pour passer à demain matin.";
@@ -528,6 +595,8 @@ public class StoryState : MonoBehaviour
                 case PhaseStoneIdentify: return "Identifiez la pierre (onglets à gauche du réfractomètre, loupe, densité...) puis remettez votre rapport au directeur.";
                 case PhaseStoneValidate: return "Allez confirmer votre réponse à la professeure Thouvenot, au laboratoire.";
                 case PhaseStoneReturn: return "Rendez la pierre à Anselme : il vous attend près de la passerelle, sur le chemin de votre maison. En attendant, passez vos autres gemmes au réfractomètre pour compléter votre grimoire.";
+                case PhaseSpectroSleep: return "Reposez-vous : demain, la professeure Thouvenot vous attend au laboratoire. Dormez dans votre lit.";
+                case PhaseSpectroLab: return "Retrouvez la professeure Thouvenot au laboratoire : elle va vous apprendre à lire ce que la lumière révèle d'une pierre.";
                 case PhasePleoSleep: return "Reposez-vous : demain, la professeure Thouvenot vous attend au laboratoire. Dormez dans votre lit.";
                 case PhasePleoLab: return "Retrouvez la professeure Thouvenot au laboratoire : elle va vous apprendre à lire la couleur d'une pierre.";
                 case PhaseMarketVisit:
@@ -550,6 +619,18 @@ public class StoryState : MonoBehaviour
                 case PhaseTutorialIdentify: return "Retrouvez la professeure Thouvenot : choisissez, parmi les pierres qu'elle propose, celle qui correspond à vos mesures.";
                 default: return "Prenez une pierre dans la boîte aux lettres du bureau, essuyez-la à la chamoisine, puis examinez-la à la loupe.";
             }
+        }
+    }
+
+    // What to do at each step of a case (chapters 3 and 4): observe both stones, tell Thouvenot, identify the client's stone, tell her again.
+    private static string CaseObjective(string instrument, int step)
+    {
+        switch (step)
+        {
+            case 0: return $"Passez les deux pierres {instrument} : la pierre du client et la pierre de référence.";
+            case 1: return "Dites à la professeure Thouvenot ce que vous avez vu.";
+            case 2: return "Identifiez la pierre du client et remettez votre rapport au directeur.";
+            default: return "Allez confirmer votre réponse à la professeure Thouvenot, au laboratoire.";
         }
     }
 
@@ -599,6 +680,7 @@ public class StoryState : MonoBehaviour
         data.storyBinder = BinderUnlocked;
         data.storyFabienne = FabienneStep;
         data.storyPleoStones = new List<string>(pleoStones);
+        data.storySpectroStones = new List<string>(spectroStones);
         data.storyTwinReference = TwinReference;
         data.storyTools = new List<string>(tools);
         data.storyLettersReceived = new List<string>(received);
@@ -616,6 +698,7 @@ public class StoryState : MonoBehaviour
         TwinSpecimen = "";
         TwinReference = "";
         for (var i = 0; i < pleoStones.Length; i++) pleoStones[i] = "";
+        for (var i = 0; i < spectroStones.Length; i++) spectroStones[i] = "";
         FabienneStep = 0;
         BinderUnlocked = false;
         contacts.Clear();
@@ -645,8 +728,11 @@ public class StoryState : MonoBehaviour
             FabienneStep = Mathf.Clamp(data.storyFabienne, 0, 4);
             if (data.storyPleoStones != null)
                 for (var i = 0; i < pleoStones.Length && i < data.storyPleoStones.Count; i++) pleoStones[i] = data.storyPleoStones[i] ?? "";
-            // A save that had finished chapter 2 goes on with chapter 3.
+            if (data.storySpectroStones != null)
+                for (var i = 0; i < spectroStones.Length && i < data.storySpectroStones.Count; i++) spectroStones[i] = data.storySpectroStones[i] ?? "";
+            // A save that had finished chapter 2 goes on with chapter 3, and one that had finished chapter 3 with chapter 4.
             if (Phase == PhaseTwinsDone) Phase = PhasePleoSleep;
+            if (Phase == PhasePleoDone) Phase = PhaseSpectroSleep;
             // A save that had finished the stone of Anselme goes on with chapter 2.
             if (Phase == PhaseDone && contacts.Contains("anselme")) Phase = PhaseTwinsSleep;
             // A save that is already past the visit of Léa keeps the binder.

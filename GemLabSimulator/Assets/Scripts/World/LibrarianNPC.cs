@@ -19,7 +19,7 @@ public class LibrarianNPC : MonoBehaviour
 
     private void Update()
     {
-        if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
+        if (!playerInRange || !TextEntry.KeyDown(KeyCode.E)) return;
         if (LibraryUI.Instance != null && LibraryUI.Instance.IsOpen) return;
         Sfx.Play(Sfx.Id.Chat);
         LibraryUI.TryOpen();

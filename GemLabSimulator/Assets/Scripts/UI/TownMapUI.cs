@@ -51,6 +51,7 @@ public class TownMapUI : MonoBehaviour
     private RectTransform mapArea;
     private RectTransform marker;
     private RectTransform markerOutline;
+    private RectTransform goalArrow;
     private Text notice;
     private float pulse;
 
@@ -74,7 +75,7 @@ public class TownMapUI : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (TextEntry.KeyDown(KeyCode.C))
         {
             if (bigPanel != null && bigPanel.activeSelf) Close();
             else Open();
@@ -82,7 +83,11 @@ public class TownMapUI : MonoBehaviour
         else if (bigPanel != null && bigPanel.activeSelf && Input.GetKeyDown(KeyCode.Escape))
             Close();
 
-        if (bigPanel != null && bigPanel.activeSelf) UpdateMarker();
+        if (bigPanel != null && bigPanel.activeSelf)
+        {
+            UpdateMarker();
+            UpdateGoalArrow();
+        }
     }
 
     public void Close()
@@ -157,6 +162,28 @@ public class TownMapUI : MonoBehaviour
         }
 
         BuildMarker();
+
+        // The arrow of the story, over the building to go to (above its badge, tip down).
+        goalArrow = MinimapUI.MakeGoalArrow(mapArea, 1.3f);
+        goalArrow.anchorMin = goalArrow.anchorMax = new Vector2(0f, 0f);
+        goalArrow.pivot = new Vector2(0.5f, 0f);
+    }
+
+    private void UpdateGoalArrow()
+    {
+        if (goalArrow == null || mapArea == null) return;
+
+        var goal = GuideArrow.MapGoal();
+        if (goal == null || !MinimapUI.GoalPositions.TryGetValue(goal, out var world))
+        {
+            goalArrow.gameObject.SetActive(false);
+            return;
+        }
+
+        goalArrow.gameObject.SetActive(true);
+        var bob = Mathf.Abs(Mathf.Sin(Time.unscaledTime * 3.2f)) * 6f;
+        goalArrow.anchoredPosition = ToMap(world.x, world.y, mapArea.sizeDelta.x, mapArea.sizeDelta.y) + new Vector2(0f, IconSize / 2f + 6f + bob);
+        goalArrow.SetAsLastSibling();
     }
 
     private void BuildIcons(float mapWidth, float mapHeight)

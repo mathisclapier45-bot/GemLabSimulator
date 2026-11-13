@@ -19,7 +19,7 @@ public class ReportPrinterInteractable : MonoBehaviour
 
     private void Update()
     {
-        if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
+        if (!playerInRange || !TextEntry.KeyDown(KeyCode.E)) return;
         Sfx.Play(Sfx.Id.ToolOpen);
         ReportPrinterUI.Instance?.Open();
     }

@@ -24,7 +24,7 @@ public class ManoirOldLady : MonoBehaviour
 
     private void Update()
     {
-        if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
+        if (!playerInRange || !TextEntry.KeyDown(KeyCode.E)) return;
         Sfx.Play(Sfx.Id.Chat);
         DialogueBoxUI.Say(Lines[Random.Range(0, Lines.Length)], gameObject);
     }

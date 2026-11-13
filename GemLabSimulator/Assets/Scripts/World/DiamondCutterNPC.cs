@@ -21,7 +21,7 @@ public class DiamondCutterNPC : MonoBehaviour
 
     private void Update()
     {
-        if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
+        if (!playerInRange || !TextEntry.KeyDown(KeyCode.E)) return;
         Sfx.Play(Sfx.Id.Chat);
         DiamondCutterUI.TryOpen(cutterIndex);
     }

@@ -30,7 +30,7 @@ public class QuestUI : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
+        if (TextEntry.KeyDown(KeyCode.J))
             Toggle();
     }
 

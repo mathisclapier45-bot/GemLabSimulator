@@ -338,8 +338,8 @@ public class GemReportUI : MonoBehaviour
         Line("Pléochroïsme", def.pleochroic ? def.pleochroicDescription : "Aucun");
         Line("Fluorescence UV longues", def.fluorescenceLongWave);
         Line("Fluorescence UV courtes", def.fluorescenceShortWave);
-        Line("Spectre d'absorption", def.absorptionSpectrum);
-        Line("Filtre Chelsea", def.chelseaFilterReaction);
+        Line("Spectre d'absorption", SpectrumLibrary.Description(def));
+        Line("Filtre Chelsea", ChelseaLibrary.Reaction(def));
         Line("Aimant", def.magnetism);
         Line("Clarté", $"{gem.ClarityGrade} ({gem.ClarityDescription})");
         Line("Inclusions", gem.InclusionDescription);

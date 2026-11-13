@@ -110,7 +110,7 @@ public static class GemObservations
         if (Seen(ExaminationTool.MeasurementType.FluorescenceShortWave))
             Add("CabineUV", $"Fluorescence UV courtes : {def.fluorescenceShortWave}");
         if (Seen(ExaminationTool.MeasurementType.ChelseaFilter))
-            Add("FiltreChelsea", $"Filtre Chelsea : {def.chelseaFilterReaction}");
+            Add("FiltreChelsea", $"Filtre Chelsea : {ChelseaLibrary.Reaction(gem)}");
         if (Seen(ExaminationTool.MeasurementType.Magnetism))
             Add("Aimant", $"Aimant : {def.magnetism}");
 
@@ -235,7 +235,7 @@ public class GemDetailUI : MonoBehaviour
         if (!IsOpen) return;
 
         var inventory = PlayerInventory.Instance;
-        if (gem == null || (inventory != null && !Holds(inventory, gem)) || Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.H))
+        if (gem == null || (inventory != null && !Holds(inventory, gem)) || Input.GetKeyDown(KeyCode.Escape) || TextEntry.KeyDown(KeyCode.H))
         {
             Close();
             return;

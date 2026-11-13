@@ -164,7 +164,7 @@ public class GrimoireUI : MonoBehaviour
         BuildPage(def);
         if (detailSpectrumImage != null)
         {
-            detailSpectrumImage.sprite = SpectrumRenderer.BuildSpectrumSprite(def.spectrumLines);
+            detailSpectrumImage.sprite = SpectrumRenderer.BuildSpectrumSprite(SpectrumLibrary.Lines(def));
             // The spectrum is drawn on the page only once the player has seen it with the spectroscope (a save from before the story knows everything).
             var story = StoryState.Instance;
             var seen = story == null || story.Legacy || GemCodex.Instance == null || GemCodex.Instance.IsKnown(def.name, "AbsorptionSpectrum");
@@ -529,10 +529,10 @@ public class GrimoireUI : MonoBehaviour
             R("Pléochroïsme", "ToolIcons/Dichroscope", def.pleochroic ? def.pleochroicDescription : "Aucun.", new[] { "Pleochroism" }),
             R("Fluorescence UV longue onde", "ToolIcons/CabineUV", def.fluorescenceLongWave, new[] { "FluorescenceLongWave" }),
             R("Fluorescence UV courte onde", "ToolIcons/CabineUV", def.fluorescenceShortWave, new[] { "FluorescenceShortWave" }),
-            R("Spectre d'absorption", "ToolIcons/Spectroscope", def.absorptionSpectrum, new[] { "AbsorptionSpectrum" }),
+            R("Spectre d'absorption", "ToolIcons/Spectroscope", SpectrumLibrary.Description(def), new[] { "AbsorptionSpectrum" }),
             R("Inclusions typiques", Loupe, def.inclusions, InclusionKeys),
             R("Figure d'interférence", "ToolIcons/Polariscope", def.interferenceFigure, new[] { "InterferenceFigure" }),
-            R("Filtre Chelsea", "ToolIcons/FiltreChelsea", def.chelseaFilterReaction, new[] { "ChelseaFilter" }),
+            R("Filtre Chelsea", "ToolIcons/FiltreChelsea", ChelseaLibrary.Reaction(def), new[] { "ChelseaFilter" }),
             R("Magnétisme", "ToolIcons/Aimant", def.magnetism, new[] { "Magnetism" }),
             R("Conductivité thermique", "ToolIcons/TesteurThermique", def.isThermallyConductiveLikeDiamond ? "élevée, comme le diamant" : "faible", new[] { "ThermalConductivity" }),
             R("Conductivité électrique", "ToolIcons/TesteurElectrique", def.isElectricallyConductive ? "conductrice" : "isolante", new[] { "ElectricalConductivity" }),

@@ -1,0 +1,173 @@
+{
+ "entries": [
+  {
+   "key": "Corindon_Rubis",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Rouge à rouge très vif (chrome).",
+   "color": "#F7141A",
+   "intensity": 1.0
+  },
+  {
+   "key": "Corindon_Synthetique_Rubis",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Rouge à rouge très vif (chrome), comme le rubis naturel.",
+   "color": "#F7141A",
+   "intensity": 1.0
+  },
+  {
+   "key": "Emeraude",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Rouge vif ou rose à verdâtre, naturelle ou synthétique. L'intensité dépend de la teneur en chrome.",
+   "color": "#EB4059",
+   "intensity": 0.7
+  },
+  {
+   "key": "Chrysoberyl_Alexandrite",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Rose à rouge vif (chrome).",
+   "color": "#F23048",
+   "intensity": 0.8
+  },
+  {
+   "key": "Grenat_Demantoide",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Rose à rouge vif.",
+   "color": "#F23048",
+   "intensity": 0.8
+  },
+  {
+   "key": "Jade_Jadeite",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Vert terne.",
+   "color": "#F7141A",
+   "intensity": 0.0
+  },
+  {
+   "key": "Jade_Jadeite_Teinte",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Certains spécimens teints en vert peuvent présenter une nuance rougeâtre ou rosâtre.",
+   "color": "#F2607A",
+   "intensity": 0.4
+  },
+  {
+   "key": "Saphir_Bleu",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Généralement vert foncé.",
+   "color": "#F7141A",
+   "intensity": 0.0,
+   "dull": "#0A4A1E"
+  },
+  {
+   "key": "Corindon_Synthetique_Saphir",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Généralement vert foncé, comme le saphir bleu naturel.",
+   "color": "#F7141A",
+   "intensity": 0.0,
+   "dull": "#0A4A1E"
+  },
+  {
+   "key": "Spinelle_Bleu",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Rougeâtre à vert de gris (spinelle bleu naturel).",
+   "color": "#C04C48",
+   "intensity": 0.25,
+   "dull": "#2F4B38"
+  },
+  {
+   "key": "Spinelle_Bleu_Synthetique",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Rouge vif, orange-rosé ou rose : spinelle bleu synthétique, coloré au cobalt.",
+   "color": "#F7472E",
+   "intensity": 0.9
+  },
+  {
+   "key": "Topaze_Bleue",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Rose chair, ou incolore (topaze bleue irradiée et chauffée).",
+   "color": "#F2ADA3",
+   "intensity": 0.45,
+   "dull": "#4D5750"
+  },
+  {
+   "key": "Grenat_Almandin",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Grisâtre à rouge foncé : pas de rouge vif (pyrope-almandin).",
+   "color": "#80191F",
+   "intensity": 0.35,
+   "dull": "#38473D"
+  },
+  {
+   "key": "Grenat_Pyrope",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Grisâtre à rouge foncé : pas de rouge vif (pyrope-almandin).",
+   "color": "#80191F",
+   "intensity": 0.35,
+   "dull": "#38473D"
+  },
+  {
+   "key": "Verre_Rouge",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Rouge foncé.",
+   "color": "#9E0F14",
+   "intensity": 0.7
+  },
+  {
+   "key": "Verre_Bleu_Cobalt",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Rouge intense à rose (verre coloré au cobalt).",
+   "color": "#F54059",
+   "intensity": 0.9
+  },
+  {
+   "key": "Verre_Bleu_Fer",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Verdâtre à vert de gris (verre bleu coloré par le fer).",
+   "color": "#F7141A",
+   "intensity": 0.0,
+   "dull": "#334F42"
+  },
+  {
+   "key": "Verre_Vert",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Généralement vert terne, quelquefois teinté de rouge.",
+   "color": "#B02A30",
+   "intensity": 0.15
+  },
+  {
+   "key": "Zircon_Vert",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Rose à rouge.",
+   "color": "#EB4059",
+   "intensity": 0.7
+  },
+  {
+   "key": "Chrysoprase",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Vert.",
+   "color": "#F7141A",
+   "intensity": 0.0
+  },
+  {
+   "key": "Aigue_Marine",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Bleu-verdâtre.",
+   "color": "#F7141A",
+   "intensity": 0.0,
+   "dull": "#1F5A55"
+  },
+  {
+   "key": "Quartz_Synthetique_Cobalt",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "Rouge intense à rose (quartz synthétique coloré au cobalt).",
+   "color": "#F54059",
+   "intensity": 0.9
+  },
+  {
+   "key": "Doublet_Emeraude",
+   "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
+   "reaction": "La plupart des pierres présentent un vert terne.",
+   "color": "#F7141A",
+   "intensity": 0.0
+  }
+ ]
+}

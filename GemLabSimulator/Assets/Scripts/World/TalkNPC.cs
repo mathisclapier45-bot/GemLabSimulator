@@ -21,7 +21,7 @@ public class TalkNPC : MonoBehaviour
 
     private void Update()
     {
-        if (!playerInRange || !Input.GetKeyDown(KeyCode.E) || lines == null || lines.Length == 0) return;
+        if (!playerInRange || !TextEntry.KeyDown(KeyCode.E) || lines == null || lines.Length == 0) return;
 
         Sfx.Play(Sfx.Id.Chat);
         Speak();

@@ -79,7 +79,7 @@ public class ExaminationTool : MonoBehaviour
 
     private void Update()
     {
-        if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
+        if (!playerInRange || !TextEntry.KeyDown(KeyCode.E)) return;
 
         // The instruments open one after the other, as Professor Thouvenot presents them.
         var story = StoryState.Instance;
@@ -192,7 +192,7 @@ public class ExaminationTool : MonoBehaviour
                 RevealQualitative(gemInstance, "Caractère optique", OpticalDescriptions.PolariscopeText(gem));
                 break;
             case MeasurementType.AbsorptionSpectrum:
-                RevealQualitative(gemInstance, "Spectre d'absorption", gem.absorptionSpectrum);
+                RevealQualitative(gemInstance, "Spectre d'absorption", TreatmentSignatures.SpectrumDescription(gemInstance));
                 SpectrumUI.Instance?.Show(gem);
                 break;
             case MeasurementType.Inclusions when gemInstance.IsRough && !gemInstance.HasWindow:
@@ -207,7 +207,7 @@ public class ExaminationTool : MonoBehaviour
                 RevealQualitative(gemInstance, "Figure d'interférence", OpticalDescriptions.ConoscopeText(gem));
                 break;
             case MeasurementType.ChelseaFilter:
-                RevealQualitative(gemInstance, "Réaction au filtre Chelsea", gem.chelseaFilterReaction);
+                RevealQualitative(gemInstance, "Réaction au filtre Chelsea", ChelseaLibrary.Reaction(gemInstance));
                 break;
             case MeasurementType.VisualExamination:
                 RevealVisualExamination(gemInstance, gem);

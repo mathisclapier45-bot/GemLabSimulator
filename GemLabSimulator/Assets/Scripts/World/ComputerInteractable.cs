@@ -19,7 +19,7 @@ public class ComputerInteractable : MonoBehaviour
 
     private void Update()
     {
-        if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
+        if (!playerInRange || !TextEntry.KeyDown(KeyCode.E)) return;
         if (ComputerUI.Instance == null || ComputerUI.Instance.IsOpen) return;
         ComputerUI.Instance.Open();
     }

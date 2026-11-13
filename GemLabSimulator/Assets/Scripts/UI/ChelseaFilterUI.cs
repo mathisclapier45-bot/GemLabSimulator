@@ -113,7 +113,8 @@ public class ChelseaFilterUI : MonoBehaviour
         if (lightOn && stone != null)
         {
             stone.RecordObservation(ExaminationTool.MeasurementType.ChelseaFilter.ToString());
-            ToolFeedbackUI.Instance?.ShowMessage($"Filtre Chelsea — {stone.Definition.chelseaFilterReaction}");
+            StoryState.Instance?.OnObserved(stone, ExaminationTool.MeasurementType.ChelseaFilter.ToString());
+            ToolFeedbackUI.Instance?.ShowMessage($"Filtre Chelsea — {ChelseaLibrary.Reaction(stone)}");
         }
 
         Refresh();
@@ -149,7 +150,8 @@ public class ChelseaFilterUI : MonoBehaviour
             stoneDull.enabled = true;
             stoneReaction.enabled = info.Reacts;
             stoneBase.sprite = SolidOf(stone, shape, style, new Color(0.02f, 0.03f, 0.02f), new Color(0.06f, 0.08f, 0.06f));
-            stoneDull.sprite = SolidOf(stone, shape, style, DullGreen, Color.Lerp(DullGreen, Color.white, 0.25f));
+            var dull = info.Dull.a > 0f ? info.Dull : DullGreen;
+            stoneDull.sprite = SolidOf(stone, shape, style, dull, Color.Lerp(dull, Color.white, 0.25f));
             if (info.Reacts)
                 stoneReaction.sprite = SolidOf(stone, shape, style, info.Color, Color.Lerp(info.Color, Color.white, 0.4f));
             hintText.text = "";
@@ -166,7 +168,7 @@ public class ChelseaFilterUI : MonoBehaviour
         if (stone == null) return "Aucune gemme sous le filtre.";
         if (!stone.HasObserved(ExaminationTool.MeasurementType.ChelseaFilter.ToString()))
             return "Allumez la lumière réfléchie pour observer la gemme à travers le filtre.";
-        return stone.Definition.chelseaFilterReaction;
+        return ChelseaLibrary.Reaction(stone);
     }
 
     private void ApplyVisuals()

@@ -17,8 +17,8 @@ public class SpectrumUI : MonoBehaviour
 
     public void Show(GemDefinition gem)
     {
-        descriptionText.text = gem.absorptionSpectrum;
-        spectrumImage.sprite = SpectrumRenderer.BuildSpectrumSprite(gem.spectrumLines);
+        descriptionText.text = SpectrumLibrary.Description(gem);
+        spectrumImage.sprite = SpectrumRenderer.BuildSpectrumSprite(SpectrumLibrary.Lines(gem));
         panel.SetActive(true);
     }
 

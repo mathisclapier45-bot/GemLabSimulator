@@ -72,7 +72,7 @@ public class InventoryUI : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (TextEntry.KeyDown(KeyCode.Tab))
             panel.SetActive(!panel.activeSelf);
 
         if (panel.activeSelf && clockText != null)

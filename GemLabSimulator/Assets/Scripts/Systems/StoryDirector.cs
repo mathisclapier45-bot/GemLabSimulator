@@ -431,7 +431,8 @@ public class StoryDirector : MonoBehaviour
         if (state == null || !state.ThouvenotWaits) yield break;
         talking = true;
 
-        if (state.PleoQuest) yield return TalkPleo(npc, state);
+        if (state.SpectroQuest) yield return TalkSpectro(npc, state);
+        else if (state.PleoQuest) yield return TalkPleo(npc, state);
         else switch (state.Phase)
         {
             case StoryState.PhaseTutorialLoupe:
@@ -1634,6 +1635,224 @@ public class StoryDirector : MonoBehaviour
         }
     }
 
+    // ---- Chapter 4: the light that is absorbed (the spectroscope, then the Chelsea filter) ---------------------------------------------------
+
+    // The two cases: the species of the client's stone (what it really is) and of the reference stone (what the client believes).
+    private static readonly string[] SpectroClientSpecies = { "Peridot", "Grenat_Almandin" };
+    private static readonly string[] SpectroReferenceSpecies = { "Emeraude", "Corindon_Rubis" };
+
+    private IEnumerator TalkSpectro(GameObject npc, StoryState state)
+    {
+        if (state.Phase == StoryState.PhaseSpectroLab)
+        {
+            yield return TalkSpectroLab(npc, state);
+            yield break;
+        }
+
+        var spectroCase = state.SpectroCase;
+        switch (state.SpectroStep)
+        {
+            case 0:
+                if (spectroCase == 0)
+                    yield return Say(npc,
+                        "Le spectroscope est sur la rangée du haut, à droite. Posez une pierre sur la lampe : le spectre apparaît. Passez la souris sur les raies pour lire leur longueur d'onde.",
+                        "Faites les deux pierres, la pierre du client et la pierre de référence, puis revenez me dire ce que vous avez vu.");
+                else
+                    yield return Say(npc,
+                        "Le filtre Chelsea est sur la rangée du bas, au milieu. Allumez la lampe, regardez la pierre à travers le filtre, et notez la couleur qu'elle prend.",
+                        "Faites les deux pierres, la pierre du client et la pierre de référence, puis revenez me dire ce que vous avez vu.");
+                break;
+            case 1:
+                yield return TalkSpectroReport(npc, state, spectroCase);
+                break;
+            case 2:
+                yield return Say(npc,
+                    "Alors, de quelle pierre s'agit-il ? Réfléchissez à ce que vous avez vu. Quand vous êtes sûr, remettez votre rapport au directeur.");
+                break;
+            case 3:
+                yield return TalkSpectroValidate(npc, state, spectroCase);
+                break;
+        }
+    }
+
+    // Makes the two stones of a case, waits for room in the inventory, gives them.
+    private IEnumerator GiveStones(string clientSpecies, string referenceSpecies, System.Action<GemInstance, GemInstance> given, System.Action<bool> done)
+    {
+        var client = MakeStone(clientSpecies, 0.8f, 2.8f);
+        var reference = MakeStone(referenceSpecies, 0.8f, 2.8f);
+        if (client == null || reference == null || PlayerInventory.Instance == null)
+        {
+            done(false);
+            yield break;
+        }
+        reference.MarkIdentified();
+
+        while (PlayerInventory.Instance.FreeSlots < 2)
+        {
+            ToolFeedbackUI.Instance?.ShowMessage("Votre inventaire est plein : faites de la place pour deux pierres.");
+            yield return new WaitForSeconds(2.5f);
+        }
+        PlayerInventory.Instance.TryAddGem(client);
+        PlayerInventory.Instance.TryAddGem(reference);
+        Sfx.Play(Sfx.Id.Pickup);
+        given(client, reference);
+        ToolFeedbackUI.Instance?.ShowMessage("Vous avez reçu deux pierres : la pierre du client et la pierre de référence.");
+        done(true);
+    }
+
+    // The lesson on the spectroscope, then the first case: a green stone sold as an emerald.
+    private IEnumerator TalkSpectroLab(GameObject npc, StoryState state)
+    {
+        yield return Say(npc,
+            "Bonjour ! Aujourd'hui, nous allons voir ce que la lumière nous apprend d'une pierre quand elle la traverse.",
+            "Une pierre colorée garde une partie de la lumière blanche, et laisse passer le reste. Ce qu'elle garde est une véritable empreinte : on l'appelle un spectre. L'instrument qui le lit est le spectroscope. Laissez-moi vous le présenter.");
+
+        DialogueBoxUI.Hide();
+        yield return PlayLesson("spectroscope");
+
+        var ok = false;
+        yield return Say(npc,
+            "Le spectroscope est maintenant à vous : sur la rangée du haut, à droite du laboratoire.",
+            "Un cas pour vous exercer. Un client m'a apporté une pierre verte, achetée comme une émeraude. Il voudrait savoir si c'est vrai.",
+            "Voici aussi une vraie émeraude de ma collection, pour comparer. Je vous les confie toutes les deux.");
+        yield return GiveStones(SpectroClientSpecies[0], SpectroReferenceSpecies[0], (client, reference) => state.OnSpectroGiven(0, client, reference), given => ok = given);
+        if (!ok)
+        {
+            yield return Say(npc, "Hmm, je ne retrouve plus mes pierres... Repassez me voir dans un instant.");
+            yield break;
+        }
+
+        yield return Say(npc,
+            "Passez-les au spectroscope l'une après l'autre : posez la pierre sur la lampe, et passez la souris sur les raies du spectre pour lire leur longueur d'onde.",
+            "Revenez me dire ce que vous avez vu. Vous retrouverez la leçon sur le panneau, dans l'entrée du laboratoire.");
+        ToolFeedbackUI.Instance?.ShowMessage("Passez les deux pierres vertes au spectroscope (rangée du haut, à droite).");
+    }
+
+    // What the instrument has shown: two questions, and the conclusion.
+    private IEnumerator TalkSpectroReport(GameObject npc, StoryState state, int spectroCase)
+    {
+        var client = state.SpectroClientGem(spectroCase);
+        var reference = state.SpectroReferenceGem(spectroCase);
+        if (client == null || reference == null)
+        {
+            yield return Say(npc, "Il me faut les deux pierres sous les yeux : elles doivent être dans votre inventaire.");
+            yield break;
+        }
+
+        var seed = client.SpecimenId ?? "";
+        string referenceRight, clientRight, wrong1, wrong2;
+        string referenceQuestion, clientQuestion;
+        if (spectroCase == 0)
+        {
+            referenceRight = "Un doublet de raies fines dans le rouge (chrome)";
+            clientRight = "Trois raies dans le bleu (fer)";
+            wrong1 = "Un spectre continu, sans aucune raie";
+            wrong2 = "Une large bande dans le jaune";
+            referenceQuestion = "Que montre le spectroscope sur l'émeraude de référence ?";
+            clientQuestion = "Et sur la pierre du client ?";
+        }
+        else
+        {
+            referenceRight = "Rouge à rouge très vif (chrome)";
+            clientRight = "Grisâtre à rouge foncé : rien de vif";
+            wrong1 = "Il devient vert foncé";
+            wrong2 = "Il devient bleu";
+            referenceQuestion = "Sous le filtre Chelsea, que devient le rubis de référence ?";
+            clientQuestion = "Et la pierre du client ?";
+        }
+
+        yield return Say(npc, "Alors ? Qu'avez-vous vu ? Commençons par la pierre de référence.");
+        var picked = -1;
+        yield return Quiz(npc, referenceQuestion, ThreeAnswers(referenceRight, new[] { referenceRight, clientRight, wrong1 }, seed + "s1", out var rightIndex), i => picked = i);
+        if (picked != rightIndex)
+        {
+            yield return Say(npc, spectroCase == 0
+                ? "Non : retournez au spectroscope avec l'émeraude de référence, et lisez bien les raies du spectre. Revenez me le dire."
+                : "Non : retournez au filtre Chelsea avec le rubis de référence, lampe allumée, et regardez la couleur qu'il prend.");
+            yield break;
+        }
+        yield return Say(npc, spectroCase == 0
+            ? "Oui : c'est la signature du chrome, qui colore l'émeraude en vert."
+            : "Oui : le chrome du rubis capte la lumière rouge que laisse passer le filtre, et la pierre semble s'embraser.");
+
+        picked = -1;
+        yield return Quiz(npc, clientQuestion, ThreeAnswers(clientRight, new[] { referenceRight, clientRight, wrong2 }, seed + "s2", out rightIndex), i => picked = i);
+        if (picked != rightIndex)
+        {
+            yield return Say(npc, spectroCase == 0
+                ? "Non : retournez au spectroscope avec la pierre du client. Regardez où se trouvent les raies, et comptez-les."
+                : "Non : retournez au filtre Chelsea avec la pierre du client, lampe allumée. Prend-elle une couleur rouge ?");
+            yield break;
+        }
+
+        state.SetPhase(StoryState.SpectroPhase(spectroCase, 2));
+        if (spectroCase == 0)
+            yield return Say(npc,
+                "Oui : trois raies dans le bleu. C'est du fer, pas du chrome. La couleur de cette pierre n'a pas la même origine que celle d'une émeraude : ce n'est pas une émeraude.",
+                "Quelle pierre verte, d'un vert olive, doit sa couleur au fer et montre ces trois raies ? À vous de trouver. Remettez votre rapport au directeur.");
+        else
+            yield return Say(npc,
+                "Oui : grisâtre, rouge foncé, rien de vif. Pas de chrome pour l'embraser : ce n'est pas un rubis.",
+                "Une pierre rouge sombre sans chrome, c'est le fer qui la colore : au spectroscope, vous verriez de larges bandes. Quelle pierre est-ce ? Remettez votre rapport au directeur.");
+        ToolFeedbackUI.Instance?.ShowMessage("Identifiez la pierre du client et remettez votre rapport au directeur.");
+    }
+
+    // The director has validated a case: Thouvenot confirms, takes the stones back and gives the next case; after the second one, the chapter is over.
+    private IEnumerator TalkSpectroValidate(GameObject npc, StoryState state, int spectroCase)
+    {
+        var client = state.SpectroClientGem(spectroCase);
+        var reference = state.SpectroReferenceGem(spectroCase);
+        if (client == null)
+        {
+            yield return Say(npc, "Alors, la pierre du client ? Il me faut l'avoir sous les yeux pour confirmer votre réponse : elle doit être dans votre inventaire.");
+            yield break;
+        }
+
+        var player = PlayerTransform != null ? PlayerTransform.gameObject : null;
+        yield return Say(npc, "Le directeur m'a dit que votre rapport est validé. Alors, quelle est votre réponse ?");
+        yield return SayAs("Vous", player, $"Un {client.Definition.displayName.ToLowerInvariant()}.");
+
+        if (spectroCase == 0)
+        {
+            yield return Say(npc,
+                "C'est exact ! Un péridot, d'un vert olive qui lui vient du fer. L'émeraude, elle, doit sa couleur au chrome. Deux pierres vertes, deux causes de couleur : le spectroscope voit la cause.",
+                "Je reprends les deux pierres. Et maintenant, un deuxième instrument, plus simple, mais qui dit une chose précise : le filtre Chelsea. Laissez-moi vous le présenter.");
+            PlayerInventory.Instance?.RemoveGem(client);
+            if (reference != null) PlayerInventory.Instance?.RemoveGem(reference);
+
+            DialogueBoxUI.Hide();
+            yield return PlayLesson("filtre_chelsea");
+
+            var ok = false;
+            yield return Say(npc,
+                "Le filtre Chelsea est maintenant à vous : sur la rangée du bas, au milieu du laboratoire.",
+                "Un deuxième cas. Un autre client m'a apporté une pierre rouge sombre, achetée comme un rubis. Voici un vrai rubis de ma collection pour comparer.");
+            yield return GiveStones(SpectroClientSpecies[1], SpectroReferenceSpecies[1], (c, r) => state.OnSpectroGiven(1, c, r), given => ok = given);
+            if (!ok)
+            {
+                yield return Say(npc, "Hmm, je ne retrouve plus mes pierres... Repassez me voir dans un instant.");
+                yield break;
+            }
+            yield return Say(npc, "Au filtre Chelsea, les deux pierres : allumez la lampe, et regardez la couleur qu'elles prennent.");
+            ToolFeedbackUI.Instance?.ShowMessage("Passez les deux pierres rouges au filtre Chelsea (rangée du bas).");
+            yield break;
+        }
+
+        yield return Say(npc,
+            "C'est exact ! Un grenat almandin, un des grenats les plus courants, rouge sombre, coloré par le fer. Jamais un rubis : pas de chrome, donc pas de rouge vif au filtre Chelsea, seulement un grisâtre à rouge foncé.",
+            "Gardez l'idée : un instrument ne dit jamais « c'est un rubis », il dit « il y a du chrome, ou il n'y en a pas ». C'est en croisant les mesures que vous concluez.",
+            "Je reprends les deux pierres. Le client vous envoie 100 € pour votre peine.");
+        PlayerInventory.Instance?.RemoveGem(client);
+        if (reference != null) PlayerInventory.Instance?.RemoveGem(reference);
+        PlayerWallet.Instance?.AddMoney(100);
+        Sfx.Play(Sfx.Id.Coin);
+        ToolFeedbackUI.Instance?.ShowMessage("Récompense reçue : 100 €.");
+        state.SetPhase(StoryState.PhaseSpectroDone);
+        yield return Say(npc,
+            "Un péridot pour une émeraude, un grenat pour un rubis, un spinelle pour un rubis, une iolite pour une tanzanite... Ces clients se font tous avoir de la même façon. Je commence à voir un dessin.",
+            "Vous savez maintenant lire une pierre par la lumière qui la traverse. Il en reste beaucoup à découvrir.");
+    }
+
     // ---- The visit to the market of cut stones ----------------------------------------------------------------------------------------
 
     private static bool marketIntroSeen;
@@ -2047,10 +2266,11 @@ public class StoryDirector : MonoBehaviour
         PlayerWallet.Instance?.AddMoney(80);
         Sfx.Play(Sfx.Id.Coin);
         ToolFeedbackUI.Instance?.ShowMessage("Récompense reçue : 80 €.");
-        state.SetPhase(StoryState.PhasePleoDone);
+        state.SetPhase(StoryState.PhaseSpectroSleep);
         yield return Say(npc,
             "Encore une pierre vendue pour une autre... On dirait que cela devient une habitude, dans la région.",
-            "Vous avez maintenant le dichroscope. Pour d'autres indices, il faudra regarder ce que la pierre absorbe : nous verrons cela une prochaine fois.");
+            "Vous savez lire la couleur selon la direction. Demain, nous regarderons ce que la pierre absorbe de la lumière qui la traverse : elle laisse une véritable empreinte. Reposez-vous.");
+        ToolFeedbackUI.Instance?.ShowMessage("Rentrez vous coucher : demain, la professeure Thouvenot vous attend au laboratoire.");
     }
 
     // The chamois cloth lies on the desk of the loupe (the scene has no such prop): a folded piece of yellow leather.

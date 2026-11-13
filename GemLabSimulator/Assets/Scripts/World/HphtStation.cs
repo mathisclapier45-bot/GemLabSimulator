@@ -19,7 +19,7 @@ public class HphtStation : MonoBehaviour
 
     private void Update()
     {
-        if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
+        if (!playerInRange || !TextEntry.KeyDown(KeyCode.E)) return;
 
         // The first time, the technician hands over a few diamonds to treat.
         var state = HphtState.Ensure();

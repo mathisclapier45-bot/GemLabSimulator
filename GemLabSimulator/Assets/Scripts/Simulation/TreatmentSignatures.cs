@@ -72,7 +72,8 @@ public static class TreatmentSignatures
 
     public static ChelseaInfo Chelsea(GemInstance gem)
     {
-        var info = ChelseaInfo.ForGem(gem.Definition);
+        var entry = ChelseaLibrary.EntryFor(gem);
+        var info = entry != null ? ChelseaInfo.FromEntry(entry) : ChelseaInfo.ForGem(gem.Definition);
         if (string.IsNullOrEmpty(gem.TreatmentGrade) || gem.TreatmentGrade == "Non traité") return info;
 
         // The chromium of a Lechleitner emerald, of a chrome dye, shows red through the filter; a pink or a red dye shows pink.
@@ -214,7 +215,10 @@ public static class TreatmentSignatures
     // The lines of the spectroscope: the ones of the species and the ones of its treatments.
     public static List<SpectrumLine> SpectrumLines(GemInstance gem)
     {
-        var all = new List<SpectrumLine>(gem.Definition.spectrumLines);
+        var entry = SpectrumLibrary.EntryFor(gem, out var variant);
+        var all = new List<SpectrumLine>(entry != null ? entry.lines : gem.Definition.spectrumLines);
+        // A variant (dyed jadeite...) already has the lines of its dye.
+        if (variant && gem.HasTreatment(TreatmentKind.Dyed)) return all;
         foreach (var line in TreatmentLines(gem)) all.Add(new SpectrumLine { wavelengthNm = line.Nm, widthNm = Mathf.Max(4f, line.Width * 0.5f) });
         return all;
     }
@@ -222,9 +226,10 @@ public static class TreatmentSignatures
     // The sentence that goes with the spectrum, with what the treatments add to it.
     public static string SpectrumDescription(GemInstance gem)
     {
-        var text = gem.Definition.absorptionSpectrum ?? "";
+        var entry = SpectrumLibrary.EntryFor(gem, out var variant);
+        var text = (entry != null && !string.IsNullOrEmpty(entry.description) ? entry.description : gem.Definition.absorptionSpectrum) ?? "";
         var lines = TreatmentLines(gem);
-        if (lines.Count == 0) return text;
+        if (lines.Count == 0 || (variant && gem.HasTreatment(TreatmentKind.Dyed))) return text;
 
         string extra;
         if (gem.HasTreatment(TreatmentKind.Coated)) extra = "Le spectre est celui du revêtement (couche de métal ou de peinture), pas celui de la pierre.";

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +19,19 @@ public class ReportUIController : MonoBehaviour
     private GameObject dropPanel;
     private Image slotIcon;
     private Text slotHint;
+
+    // The list of species: sorted from A to Z, with a search box above it.
+    private struct SpeciesOption
+    {
+        public RectTransform Rect;
+        public string Key;          // the name without accents or capitals, for the sort and the search
+    }
+
+    private readonly List<SpeciesOption> speciesOptions = new List<SpeciesOption>();
+    private RectTransform speciesContent;
+    private InputField searchField;
+    private Text noResultText;
+    private bool indexBuilt;
 
     private void Awake()
     {
@@ -54,10 +69,118 @@ public class ReportUIController : MonoBehaviour
     {
         currentInventory = inventory;
         slotGem = null;
+        BuildSpeciesIndex();
+        if (searchField != null) searchField.text = "";
         if (dropPanel != null) dropPanel.SetActive(true);
         InventoryUI.Instance?.Open();
         RenderReport();
         panel.SetActive(true);
+    }
+
+    // ---- The list of species -----------------------------------------------------------------------------------
+
+    private const float OptionWidth = 195f;
+    private const float OptionHeight = 34f;
+    private const float OptionGap = 6f;
+    private const float ListHeight = 210f;
+
+    // Takes the buttons of the scene (they keep their clicks), sorts them from A to Z and puts a search box above them. Done once, when the panel first opens.
+    private void BuildSpeciesIndex()
+    {
+        if (indexBuilt || panel == null) return;
+
+        var scroll = panel.transform.Find("SpeciesScrollView") as RectTransform;
+        var content = scroll != null ? scroll.Find("Content") as RectTransform : null;
+        if (scroll == null || content == null) return;
+        indexBuilt = true;
+
+        speciesContent = content;
+        foreach (Transform child in content)
+        {
+            var label = child.GetComponentInChildren<Text>();
+            if (label == null) continue;
+            speciesOptions.Add(new SpeciesOption { Rect = child as RectTransform, Key = Normalize(label.text) });
+        }
+        speciesOptions.Sort((a, b) => string.CompareOrdinal(a.Key, b.Key));
+
+        // The search box takes the place of the top of the list, which gets a little shorter.
+        scroll.anchoredPosition = new Vector2(0f, -358f);
+        scroll.sizeDelta = new Vector2(420f, ListHeight);
+
+        var boxGO = new GameObject("SpeciesSearch", typeof(RectTransform), typeof(Image), typeof(InputField));
+        boxGO.transform.SetParent(panel.transform, false);
+        var boxRect = boxGO.GetComponent<RectTransform>();
+        boxRect.anchorMin = boxRect.anchorMax = new Vector2(0.5f, 1f);
+        boxRect.pivot = new Vector2(0.5f, 1f);
+        boxRect.anchoredPosition = new Vector2(0f, -324f);
+        boxRect.sizeDelta = new Vector2(420f, 28f);
+        boxGO.GetComponent<Image>().color = new Color(0.20f, 0.21f, 0.26f, 1f);
+
+        var text = RuntimeUIKit.MakeText("Text", boxGO.transform, "", 14, TextAnchor.MiddleLeft, Color.white, Vector2.zero, Vector2.zero);
+        var placeholder = RuntimeUIKit.MakeText("Placeholder", boxGO.transform, "Rechercher une pierre (ex. : gre, rubis, quartz)…", 13, TextAnchor.MiddleLeft,
+            new Color(0.58f, 0.60f, 0.66f), Vector2.zero, Vector2.zero);
+        placeholder.fontStyle = FontStyle.Italic;
+        foreach (var t in new[] { text, placeholder })
+        {
+            var r = t.rectTransform;
+            r.anchorMin = Vector2.zero;
+            r.anchorMax = Vector2.one;
+            r.offsetMin = new Vector2(10f, 2f);
+            r.offsetMax = new Vector2(-10f, -2f);
+        }
+
+        searchField = boxGO.GetComponent<InputField>();
+        searchField.textComponent = text;
+        searchField.placeholder = placeholder;
+        searchField.characterLimit = 30;
+        searchField.onValueChanged.AddListener(ApplySpeciesFilter);
+
+        noResultText = RuntimeUIKit.MakeText("NoResult", content, "Aucune pierre ne correspond.", 14, TextAnchor.MiddleCenter, new Color(0.7f, 0.7f, 0.75f),
+            new Vector2(0f, 0f), new Vector2(420f, 30f));
+        var noResultRect = noResultText.rectTransform;
+        noResultRect.anchorMin = noResultRect.anchorMax = new Vector2(0.5f, 1f);
+        noResultRect.pivot = new Vector2(0.5f, 1f);
+        noResultRect.anchoredPosition = new Vector2(0f, -20f);
+        noResultText.gameObject.SetActive(false);
+
+        ApplySpeciesFilter("");
+    }
+
+    // Keeps the species whose name holds every word typed, and packs them in two columns, in order.
+    private void ApplySpeciesFilter(string query)
+    {
+        var words = Normalize(query).Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+        var shown = 0;
+        foreach (var option in speciesOptions)
+        {
+            var match = true;
+            foreach (var word in words)
+                if (!option.Key.Contains(word)) { match = false; break; }
+
+            option.Rect.gameObject.SetActive(match);
+            if (!match) continue;
+
+            var column = shown % 2;
+            var row = shown / 2;
+            option.Rect.anchoredPosition = new Vector2(column == 0 ? -(OptionWidth + 10f) / 2f : (OptionWidth + 10f) / 2f, -8f - row * (OptionHeight + OptionGap));
+            shown++;
+        }
+
+        if (noResultText != null) noResultText.gameObject.SetActive(shown == 0);
+        var rows = Mathf.CeilToInt(shown / 2f);
+        speciesContent.sizeDelta = new Vector2(speciesContent.sizeDelta.x, Mathf.Max(ListHeight, rows * (OptionHeight + OptionGap) + 8f));
+        speciesContent.anchoredPosition = Vector2.zero;
+    }
+
+    // Lower case, no accents: "Péridot" and "peridot" are the same word; "œ" is "oe".
+    private static string Normalize(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return "";
+        var decomposed = text.ToLowerInvariant().Replace("œ", "oe").Normalize(NormalizationForm.FormD);
+        var builder = new StringBuilder(decomposed.Length);
+        foreach (var c in decomposed)
+            if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark) builder.Append(c);
+        return builder.ToString();
     }
 
     private void SetSlotGem(GemInstance gem)
@@ -133,7 +256,7 @@ public class ReportUIController : MonoBehaviour
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.OpticalCharacter.ToString()))
             measured.Add($"Polariscope : {OpticalDescriptions.PolariscopeText(gem)}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.AbsorptionSpectrum.ToString()))
-            measured.Add($"Spectroscope : {gem.absorptionSpectrum}");
+            measured.Add($"Spectroscope : {TreatmentSignatures.SpectrumDescription(gemInstance)}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Inclusions.ToString()))
         {
             measured.Add($"Clarté : {gemInstance.ClarityGrade} ({gemInstance.ClarityDescription})");
@@ -142,7 +265,7 @@ public class ReportUIController : MonoBehaviour
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.InterferenceFigure.ToString()))
             measured.Add($"Conoscope : {OpticalDescriptions.ConoscopeText(gem)}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.ChelseaFilter.ToString()))
-            measured.Add($"Filtre Chelsea : {gem.chelseaFilterReaction}");
+            measured.Add($"Filtre Chelsea : {ChelseaLibrary.Reaction(gemInstance)}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Magnetism.ToString()))
             measured.Add($"Aimant : {gem.magnetism}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Treatment.ToString()))

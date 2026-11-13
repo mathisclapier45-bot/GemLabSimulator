@@ -174,7 +174,7 @@ public class BinderUI : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.B) && !BoosterUI.IsShowing && StoryState.BinderOpen) Toggle();
+        if (TextEntry.KeyDown(KeyCode.B) && !BoosterUI.IsShowing && StoryState.BinderOpen) Toggle();
         if (!IsOpen) return;
 
         if (Input.GetKeyDown(KeyCode.Escape))

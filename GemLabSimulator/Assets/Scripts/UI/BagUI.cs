@@ -311,7 +311,7 @@ public class BagUI : MonoBehaviour
         var keyed = false;
         for (var i = 0; i < tabs.Count; i++)
         {
-            if (!Input.GetKeyDown(tabs[i].Key) || !TabVisible(tabs[i])) continue;
+            if (!TextEntry.KeyDown(tabs[i].Key) || !TabVisible(tabs[i])) continue;
             if (tabs[i].Key == KeyCode.B && BoosterUI.IsShowing) continue;
             keyed = true;
             if (panel.activeSelf && activeTab == i) ClosePanel();

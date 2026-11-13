@@ -291,6 +291,7 @@ public class SaveData
     public List<string> storyCalls = new List<string>();     // the calls received, for the phone
     public int storyTutorialRound = 1;                       // which of the three stones of the tutorial (StoryState.TutorialRound)
     public List<string> storyContacts = new List<string>();  // the people whose number the player has (besides Thouvenot)
+    public List<string> storySpectroStones = new List<string>();   // chapter 4: the stones of the two cases (client, reference, client, reference)
     public List<string> storyPleoStones = new List<string>();   // chapter 3: the stones of the two cases (client, reference, client, reference)
     public int storyFabienne;                              // the call of Fabienne and the meeting at the fountain (StoryState.FabienneStep)
     public bool storyBinder;                               // Léa has given the card binder

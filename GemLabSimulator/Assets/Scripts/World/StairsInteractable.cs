@@ -20,7 +20,7 @@ public class StairsInteractable : MonoBehaviour
 
     private void Update()
     {
-        if (!playerInRange || !Input.GetKeyDown(KeyCode.E) || string.IsNullOrEmpty(targetScene)) return;
+        if (!playerInRange || !TextEntry.KeyDown(KeyCode.E) || string.IsNullOrEmpty(targetScene)) return;
 
         Sfx.Play(Sfx.Id.Stairs);
         PlayerController.PendingSpawnPointName = targetSpawnPoint;

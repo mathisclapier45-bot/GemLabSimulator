@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // The provisional drawings of the lessons, made of rectangles, lines and circles (the board is 480 x 340, the origin in the middle). Each step of a lesson names a figure and
@@ -22,6 +23,8 @@ public static class LessonFigures
             case "taxonomy": Taxonomy(c, focus, t); break;
             case "hardness": Hardness(c, focus, t); break;
             case "dichro": Dichroscope(c, focus, t); break;
+            case "spectro": Spectro(c, focus, t); break;
+            case "chelsea": ChelseaFilter(c, focus, t); break;
             case "interf": Interference(c, focus, t); break;
             case "tenacity": Tenacity(c, focus, t); break;
             case "stability": Stability(c, focus, t); break;
@@ -375,6 +378,234 @@ public static class LessonFigures
     {
         var a = degrees * Mathf.Deg2Rad;
         return new Vector2(v.x * Mathf.Cos(a) - v.y * Mathf.Sin(a), v.x * Mathf.Sin(a) + v.y * Mathf.Cos(a));
+    }
+
+    // ---- The spectroscope: the prism, what the stone absorbs, the scale, some spectra --------------------------------------------------
+
+    private static readonly Dictionary<string, Sprite> spectrumSprites = new Dictionary<string, Sprite>();
+
+    // The spectrum strip of a species, drawn from its lines (the same one as in the grimoire); "" gives the plain spectrum of white light.
+    private static Sprite SpectrumOf(string species)
+    {
+        if (spectrumSprites.TryGetValue(species, out var cached) && cached != null) return cached;
+        List<SpectrumLine> lines = null;
+        var database = GemDatabase.Instance;
+        if (!string.IsNullOrEmpty(species) && database != null)
+            foreach (var definition in database.allGems)
+                if (definition != null && definition.name == species) lines = SpectrumLibrary.Lines(definition);
+        var sprite = SpectrumRenderer.BuildSpectrumSprite(lines, 300, 40);
+        spectrumSprites[species] = sprite;
+        return sprite;
+    }
+
+    // focus 0: the prism; 1: what a stone absorbs; 2: reading the scale; 3: some spectra.
+    private static void Spectro(LessonCanvas c, int focus, float t)
+    {
+        switch (focus)
+        {
+            case 0: SpectroPrism(c, t); break;
+            case 1: SpectroAbsorb(c); break;
+            case 2: SpectroScale(c, t); break;
+            default: SpectroExamples(c); break;
+        }
+    }
+
+    private static void SpectroPrism(LessonCanvas c, float t)
+    {
+        var rayColors = new[]
+        {
+            new Color(0.55f, 0.30f, 1f, 1f), new Color(0.25f, 0.35f, 1f, 1f), new Color(0.20f, 0.85f, 1f, 1f), new Color(0.30f, 1f, 0.40f, 1f),
+            new Color(1f, 0.95f, 0.25f, 1f), new Color(1f, 0.60f, 0.20f, 1f), new Color(1f, 0.20f, 0.20f, 1f),
+        };
+        var pulse = 0.85f + 0.15f * Mathf.Sin(t * 4f);
+        c.Circle(new Vector2(-215f, 45f), 10f, new Color(1f, 0.95f, 0.6f, 1f));
+        c.Line(new Vector2(-205f, 44f), new Vector2(-75f, 10f), 5f, new Color(1f, 1f, 1f, pulse));
+
+        // The prism: a triangle.
+        var a = new Vector2(-95f, -30f);
+        var b = new Vector2(-35f, -30f);
+        var top = new Vector2(-65f, 32f);
+        c.Line(a, b, 3f, Cyan);
+        c.Line(b, top, 3f, Cyan);
+        c.Line(top, a, 3f, Cyan);
+        c.Rect(new Vector2(-65f, -8f), new Vector2(30f, 28f), new Color(0.55f, 0.85f, 1f, 0.25f));
+
+        for (var i = 0; i < 7; i++)
+            c.Line(new Vector2(-40f, 0f), new Vector2(150f, 60f - i * 20f), 4f, rayColors[i]);
+        c.Rect(new Vector2(153f, 0f), new Vector2(6f, 150f), new Color(0.55f, 0.58f, 0.65f, 1f));
+
+        c.Picture(SpectrumOf(""), new Vector2(0f, -112f), new Vector2(330f, 38f));
+        c.Label("400 nm", new Vector2(-150f, -140f), 12, Ink, 70f);
+        c.Label("700 nm", new Vector2(150f, -140f), 12, Ink, 70f);
+        c.Label("violet", new Vector2(-150f, -88f), 11, Dim, 70f);
+        c.Label("rouge", new Vector2(150f, -88f), 11, Dim, 70f);
+        c.Label("Le prisme sépare la lumière blanche en toutes ses couleurs", new Vector2(0f, 150f), 14, Gold, 460f);
+    }
+
+    // The same white light, with and without an emerald in front of it: the stone takes some colours away.
+    private static void SpectroAbsorb(LessonCanvas c)
+    {
+        c.Label("Lumière blanche", new Vector2(-140f, 128f), 13, Gold, 160f);
+        c.Picture(SpectrumOf(""), new Vector2(20f, 105f), new Vector2(300f, 38f));
+
+        c.Rect(new Vector2(-150f, -5f), new Vector2(46f, 46f), new Color(0.12f, 0.62f, 0.36f, 1f), 45f);
+        c.Rect(new Vector2(-150f, -5f), new Vector2(26f, 26f), new Color(0.45f, 0.90f, 0.62f, 1f), 45f);
+        c.Label("À travers une émeraude", new Vector2(-140f, 38f), 13, Gold, 190f);
+        c.Picture(SpectrumOf("Emeraude"), new Vector2(20f, 12f), new Vector2(300f, 38f));
+
+        c.Label("Des couleurs manquent : des raies et des bandes sombres", new Vector2(0f, -45f), 14, Ink, 460f);
+        c.Label("Ce qui manque dépend de ce qui colore la pierre : chrome, fer, manganèse, vanadium...", new Vector2(0f, -72f), 12, Dim, 460f);
+        c.Label("Le spectre est l'empreinte de la couleur", new Vector2(0f, -120f), 15, Gold, 440f);
+    }
+
+    // The scale of the wavelengths, and a marker that reads them, as the mouse does in the instrument.
+    private static void SpectroScale(LessonCanvas c, float t)
+    {
+        const float left = -180f;
+        const float width = 360f;
+        c.Picture(SpectrumOf("Corindon_Rubis"), new Vector2(0f, 20f), new Vector2(width, 48f));
+        for (var nm = 400; nm <= 700; nm += 50)
+        {
+            var x = left + (nm - 400) / 300f * width;
+            c.Line(new Vector2(x, -8f), new Vector2(x, -18f), 2f, Ink);
+            c.Label(nm.ToString(), new Vector2(x, -30f), 12, Ink, 40f);
+        }
+
+        // The colour bands of the scale: violet 400-450, blue 450-490, green 490-560, yellow 560-590, orange 590-610, red 610-700.
+        var bandColors = new[]
+        {
+            new Color(0.50f, 0.32f, 0.95f), new Color(0.25f, 0.45f, 1f), new Color(0.32f, 0.78f, 0.30f),
+            new Color(0.95f, 0.85f, 0.20f), new Color(1f, 0.58f, 0.15f), new Color(0.92f, 0.22f, 0.20f),
+        };
+        for (var i = 0; i < SpectrumRenderer.Bands.Length; i++)
+        {
+            var band = SpectrumRenderer.Bands[i];
+            var x0 = left + (band.lo - 400f) / 300f * width;
+            var x1 = left + (band.hi - 400f) / 300f * width;
+            c.Rect(new Vector2((x0 + x1) / 2f, -44f), new Vector2(x1 - x0 - 2f, 5f), bandColors[i]);
+            c.Label(band.name, new Vector2((x0 + x1) / 2f, -57f), 10, bandColors[i], Mathf.Max(30f, x1 - x0));
+        }
+        c.Label("longueur d'onde en nanomètres (nm)", new Vector2(0f, -76f), 12, Dim, 300f);
+
+        var marker = Mathf.Lerp(400f, 700f, 0.5f + 0.5f * Mathf.Sin(t * 0.8f));
+        var markerX = left + (marker - 400f) / 300f * width;
+        c.Line(new Vector2(markerX, -2f), new Vector2(markerX, 50f), 2f, Gold);
+        c.Label(Mathf.RoundToInt(marker) + " nm", new Vector2(markerX, 68f), 14, Gold, 80f);
+
+        var rubyX = left + (694f - 400f) / 300f * width;
+        c.Line(new Vector2(rubyX, -2f), new Vector2(rubyX, -90f), 1.5f, new Color(1f, 0.5f, 0.45f, 0.7f));
+        c.Label("694 nm : la raie du chrome du rubis", new Vector2(rubyX - 70f, -102f), 12, new Color(1f, 0.65f, 0.60f, 1f), 230f);
+        c.Label("Du violet (400 nm) au rouge (700 nm)", new Vector2(0f, 150f), 15, Gold, 440f);
+    }
+
+    private static void SpectroExamples(LessonCanvas c)
+    {
+        var species = new[] { "Corindon_Rubis", "Emeraude", "Peridot", "Grenat_Almandin" };
+        var names = new[] { "Rubis", "Émeraude", "Péridot", "Grenat almandin" };
+        var notes = new[] { "raies fines du chrome dans le rouge, large bande jaune-vert", "raies du chrome dans le rouge (664 et 683 nm)", "triplet du fer dans le bleu (451, 470, 494 nm)", "bandes du fer : jaune, et deux dans le vert" };
+        for (var i = 0; i < 4; i++)
+        {
+            var y = 112f - i * 70f;
+            c.Label(names[i], new Vector2(-165f, y + 4f), 14, Gold, 120f);
+            c.Picture(SpectrumOf(species[i]), new Vector2(40f, y), new Vector2(250f, 30f));
+            c.Label(notes[i], new Vector2(40f, y - 24f), 11, Ink, 280f);
+        }
+    }
+
+    // ---- The Chelsea filter: two windows, the chromium that glows ------------------------------------------------------------------
+
+    // focus 0: what the filter lets through; 1: how stones look with and without it; 2: what it shows on some stones; 3: a cobalt spinel against a sapphire.
+    private static void ChelseaFilter(LessonCanvas c, int focus, float t)
+    {
+        if (focus == 1) { ChelseaStones(c, t); return; }
+        if (focus == 2) { ChelseaTable(c); return; }
+        if (focus == 3) { ChelseaBlue(c, t); return; }
+
+        const float left = -180f;
+        const float scale = 1.2f;
+        var pulse = 0.6f + 0.4f * Mathf.Sin(t * 3f);
+        c.Picture(SpectrumOf(""), new Vector2(0f, 40f), new Vector2(360f, 48f));
+        // The filter hides everything except two windows: yellow-green (565 to 585 nm) and deep red (680 to 700 nm).
+        var dark = new Color(0.02f, 0.02f, 0.04f, 0.9f);
+        c.Rect(new Vector2((left + left + (565f - 400f) * scale) / 2f, 40f), new Vector2((565f - 400f) * scale, 48f), dark);
+        c.Rect(new Vector2((left + (585f - 400f) * scale + left + (680f - 400f) * scale) / 2f, 40f), new Vector2((680f - 585f) * scale, 48f), dark);
+        c.Rect(new Vector2(left + (575f - 400f) * scale, 40f), new Vector2(3f, 56f * pulse), new Color(1f, 1f, 1f, 0.6f));
+        c.Rect(new Vector2(left + (690f - 400f) * scale, 40f), new Vector2(3f, 56f * pulse), new Color(1f, 0.5f, 0.5f, 0.7f));
+        c.Label("jaune-vert", new Vector2(left + (575f - 400f) * scale, -6f), 12, Gold, 90f);
+        c.Label("rouge profond", new Vector2(left + (690f - 400f) * scale - 20f, -6f), 12, new Color(1f, 0.55f, 0.50f, 1f), 110f);
+        c.Label("Le filtre Chelsea ne laisse passer que deux fenêtres de couleur", new Vector2(0f, 120f), 14, Gold, 460f);
+        c.Label("tout le reste du spectre est arrêté", new Vector2(0f, -60f), 13, Ink, 400f);
+        c.Label("Une pierre qui renvoie du rouge profond y semblera rouge", new Vector2(0f, -100f), 13, Dim, 440f);
+    }
+
+    private static void ChelseaStones(LessonCanvas c, float t)
+    {
+        var names = new[] { "Rubis", "Émeraude", "Grenat almandin" };
+        var plain = new[] { new Color(0.85f, 0.10f, 0.20f, 1f), new Color(0.12f, 0.62f, 0.36f, 1f), new Color(0.40f, 0.08f, 0.12f, 1f) };
+        var glow = 0.7f + 0.3f * Mathf.Sin(t * 3f);
+        var filtered = new[] { new Color(1f, 0.15f * glow, 0.15f * glow, 1f), new Color(0.78f, 0.28f * glow, 0.34f * glow, 1f), new Color(0.26f, 0.17f, 0.17f, 1f) };
+        var notes = new[] { "rouge très vif", "rouge vif ou rose", "grisâtre à rouge foncé" };
+        c.Label("À l'œil nu", new Vector2(-190f, 70f), 13, Gold, 70f);
+        c.Label("Sous le filtre", new Vector2(-190f, -50f), 13, Gold, 80f);
+        for (var i = 0; i < 3; i++)
+        {
+            var x = -80f + i * 110f;
+            c.Rect(new Vector2(x, 70f), new Vector2(54f, 54f), plain[i], 45f);
+            c.Rect(new Vector2(x, 70f), new Vector2(30f, 30f), Color.Lerp(plain[i], Color.white, 0.3f), 45f);
+            c.Rect(new Vector2(x, -50f), new Vector2(54f, 54f), filtered[i], 45f);
+            c.Rect(new Vector2(x, -50f), new Vector2(30f, 30f), Color.Lerp(filtered[i], Color.white, 0.18f), 45f);
+            c.Label(names[i], new Vector2(x, 12f), 12, Ink, 110f);
+            c.Label(notes[i], new Vector2(x, -92f), 11, Dim, 110f);
+        }
+        c.Label("Le chrome rougit sous le filtre ; le fer, non", new Vector2(0f, -130f), 14, Gold, 440f);
+    }
+
+    // Two blue stones that look alike: the filter tells them apart (cobalt reddens, iron does not).
+    private static void ChelseaBlue(LessonCanvas c, float t)
+    {
+        var names = new[] { "Spinelle bleu synthétique (cobalt)", "Saphir bleu (fer)" };
+        var plain = new[] { new Color(0.15f, 0.30f, 0.85f, 1f), new Color(0.14f, 0.26f, 0.78f, 1f) };
+        var glow = 0.7f + 0.3f * Mathf.Sin(t * 3f);
+        var filtered = new[] { new Color(1f, 0.28f * glow, 0.22f * glow, 1f), new Color(0.05f, 0.24f, 0.11f, 1f) };
+        var notes = new[] { "rouge vif, orange-rosé ou rose", "généralement vert foncé" };
+        c.Label("À l'œil nu", new Vector2(-195f, 70f), 13, Gold, 70f);
+        c.Label("Sous le filtre", new Vector2(-195f, -45f), 13, Gold, 80f);
+        for (var i = 0; i < 2; i++)
+        {
+            var x = -60f + i * 150f;
+            c.Rect(new Vector2(x, 70f), new Vector2(58f, 58f), plain[i], 45f);
+            c.Rect(new Vector2(x, 70f), new Vector2(32f, 32f), Color.Lerp(plain[i], Color.white, 0.3f), 45f);
+            c.Rect(new Vector2(x, -45f), new Vector2(58f, 58f), filtered[i], 45f);
+            c.Rect(new Vector2(x, -45f), new Vector2(32f, 32f), Color.Lerp(filtered[i], Color.white, 0.18f), 45f);
+            c.Label(names[i], new Vector2(x, 20f), 11, Ink, 140f);
+            c.Label(notes[i], new Vector2(x, -92f), 11, Dim, 140f);
+        }
+        c.Label("Le cobalt rougit, le fer non", new Vector2(0f, -130f), 14, Gold, 440f);
+    }
+
+    private static void ChelseaTable(LessonCanvas c)
+    {
+        var rows = new[]
+        {
+            new { Name = "Rubis", Reaction = "rouge à rouge très vif", Strength = 1.0f },
+            new { Name = "Émeraude", Reaction = "rouge vif ou rose à verdâtre", Strength = 0.75f },
+            new { Name = "Alexandrite", Reaction = "rose à rouge vif", Strength = 0.8f },
+            new { Name = "Démantoïde", Reaction = "rose à rouge vif", Strength = 0.8f },
+            new { Name = "Spinelle bleu synth.", Reaction = "rouge vif, orange-rosé ou rose", Strength = 0.9f },
+            new { Name = "Verre bleu (cobalt)", Reaction = "rouge intense à rose", Strength = 0.9f },
+            new { Name = "Grenat almandin", Reaction = "grisâtre à rouge foncé", Strength = 0.3f },
+            new { Name = "Verre rouge", Reaction = "rouge foncé", Strength = 0.6f },
+            new { Name = "Saphir bleu", Reaction = "généralement vert foncé", Strength = 0.0f },
+        };
+        for (var i = 0; i < rows.Length; i++)
+        {
+            var y = 140f - i * 33f;
+            var strength = rows[i].Strength;
+            var chip = Color.Lerp(new Color(0.08f, 0.22f, 0.12f, 1f), new Color(1f, 0.15f, 0.15f, 1f), strength);
+            c.Label(rows[i].Name, new Vector2(-135f, y), 13, Ink, 160f);
+            c.Rect(new Vector2(-30f, y), new Vector2(36f, 22f), chip);
+            c.Label(rows[i].Reaction, new Vector2(125f, y), 12, Gold, 220f);
+        }
     }
 
     // ---- The dichroscope: pleochroism, the calcite that splits the light, the two windows ---------------------------------------------

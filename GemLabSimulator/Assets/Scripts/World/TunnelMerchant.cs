@@ -27,7 +27,7 @@ public class TunnelMerchant : MonoBehaviour
     {
         Refresh();
 
-        if (!wasPresent || !playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
+        if (!wasPresent || !playerInRange || !TextEntry.KeyDown(KeyCode.E)) return;
 
         Sfx.Play(Sfx.Id.Chat);
         TunnelUI.Instance?.Open();

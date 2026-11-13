@@ -8,9 +8,23 @@ public struct ChelseaInfo
     public bool Reacts;
     public float Intensity;
     public Color Color;
+    public Color Dull;              // the colour of the stone through the filter when it does not react (alpha 0 = the default dull green)
 
     private static readonly Color Red = new Color(0.96f, 0.10f, 0.12f);
     private static readonly Color Pink = new Color(1f, 0.38f, 0.52f);
+
+    // From the table of the course (Resources/Chelsea/chelsea.json).
+    public static ChelseaInfo FromEntry(ChelseaEntry entry)
+    {
+        var info = new ChelseaInfo
+        {
+            Intensity = Mathf.Clamp01(entry.intensity),
+            Color = ChelseaLibrary.ParseColor(entry.color, Red),
+            Dull = ChelseaLibrary.ParseColor(entry.dull, new Color(0f, 0f, 0f, 0f)),
+        };
+        info.Reacts = info.Intensity >= 0.1f;
+        return info;
+    }
 
     public static ChelseaInfo ForGem(GemDefinition def)
     {

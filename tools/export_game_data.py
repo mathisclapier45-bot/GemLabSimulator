@@ -419,8 +419,58 @@ def export_economy():
 
 # ---------------------------------------------------------------------------------------------------------- main
 
+def export_spectra(species):
+    """Les spectres du spectroscope : Assets/Resources/Spectra/spectra.json remplace les raies et le texte de l'asset pour les espèces qu'il décrit."""
+    path = os.path.join(ASSETS, "Resources", "Spectra", "spectra.json")
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as f:
+        entries = json.load(f).get("entries", [])
+    by_key = {e["key"]: e for e in entries}
+    for sp in species:
+        e = by_key.get(sp["id"])
+        if e:
+            sp["spectrumLines"] = e["lines"]
+            sp["absorptionSpectrum"] = e["description"]
+            sp["spectrumFromJson"] = True
+    used = {sp["id"] for sp in species}
+    return {
+        "note": "Spectroscope à réseau (échelle linéaire 400-700 nm). Chaque raie : wavelengthNm (centre), widthNm (largeur), depth (1 = noir), edgeNm (bord doux, 0 = automatique). "
+                "Les clés qui ne sont pas des espèces sont des variantes : Zircon_Chauffe, Jade_Jadeite_Teinte, Verre_Rouge_Au/Se/TR, Verre_Bleu_Cobalt ; Corindon_Synthetique_CC est une référence sans espèce.",
+        "scale_bands": [
+            {"name": "Violet", "from_nm": 400, "to_nm": 450}, {"name": "Bleu", "from_nm": 450, "to_nm": 490}, {"name": "Vert", "from_nm": 490, "to_nm": 560},
+            {"name": "Jaune", "from_nm": 560, "to_nm": 590}, {"name": "Orange", "from_nm": 590, "to_nm": 610}, {"name": "Rouge", "from_nm": 610, "to_nm": 700},
+        ],
+        "entries": [dict(e, variant=e["key"] not in used) for e in entries],
+    }
+
+
+def export_chelsea(species):
+    """Le tableau du filtre Chelsea : Assets/Resources/Chelsea/chelsea.json remplace la phrase de l'asset pour les espèces qu'il décrit."""
+    path = os.path.join(ASSETS, "Resources", "Chelsea", "chelsea.json")
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as f:
+        entries = json.load(f).get("entries", [])
+    by_key = {e["key"]: e for e in entries}
+    for sp in species:
+        e = by_key.get(sp["id"])
+        if e:
+            sp["chelseaFilterReaction"] = e["reaction"]
+            sp["chelseaFromJson"] = True
+    used = {sp["id"] for sp in species}
+    return {
+        "note": "Filtre Chelsea (ne laisse passer que le jaune-vert et le rouge profond). Chaque entrée : reaction (le texte lu en jeu), color (couleur de la pierre quand elle réagit), "
+                "intensity (0 = rien de rouge, 1 = réaction pleine), dull (couleur sans réaction, vert terne par défaut). "
+                "Les clés qui ne sont pas des espèces sont des variantes (Spinelle_Bleu_Synthetique, Topaze_Bleue, Verre_*, Jade_Jadeite_Teinte) ou des références du tableau sans espèce dans le jeu.",
+        "entries": [dict(e, variant=e["key"] not in used) for e in entries],
+    }
+
+
 def main():
     species, habit_definitions = export_species()
+    spectra = export_spectra(species)
+    chelsea = export_chelsea(species)
     data = {
         "meta": {
             "game": "GemLab Simulator",
@@ -431,6 +481,8 @@ def main():
         },
         "species": species,
         "crystal_habits": habit_definitions,
+        "spectra": spectra,
+        "chelsea": chelsea,
         "tools": export_tools(),
         "treatments": export_treatments(),
         "books": export_books(),

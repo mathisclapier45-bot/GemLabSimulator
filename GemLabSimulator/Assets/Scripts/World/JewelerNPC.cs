@@ -19,7 +19,7 @@ public class JewelerNPC : MonoBehaviour
 
     private void Update()
     {
-        if (!playerInRange || !Input.GetKeyDown(KeyCode.E)) return;
+        if (!playerInRange || !TextEntry.KeyDown(KeyCode.E)) return;
         if (JewelerUI.Instance != null && JewelerUI.Instance.IsOpen) return;
         Sfx.Play(Sfx.Id.Chat);
         JewelerUI.TryOpen();

@@ -94,6 +94,11 @@ public class MinimapUI : MonoBehaviour
     public static Texture2D SharedMap { get; private set; }
     public static readonly List<BuildingIcon> SharedIcons = new List<BuildingIcon>();
 
+    // Where each possible goal of the story stands in the town, by the keys of GuideArrow.MapGoal ("scene:Home", "obj:La Crypte"...).
+    public static readonly Dictionary<string, Vector2> GoalPositions = new Dictionary<string, Vector2>();
+
+    private RectTransform goalArrow;
+
     private const float IconSize = 20f;
     private readonly List<(Vector2 world, RectTransform rect)> buildingIcons = new List<(Vector2, RectTransform)>();
 
@@ -126,6 +131,7 @@ public class MinimapUI : MonoBehaviour
     {
         BuildMapTexture();
         SharedIcons.Clear();
+        RegisterGoals();
         BuildFrame();
     }
 
@@ -313,6 +319,9 @@ public class MinimapUI : MonoBehaviour
             if (TownMapUI.Instance != null) TownMapUI.Instance.Open();
         });
 
+        // The arrow of the story, above the player's dot.
+        goalArrow = MakeGoalArrow(root.transform, 0.85f);
+
         // Player marker: a pulsing dot with a white outline at the centre.
         var outline = MakeDisc("MarkerOutline", root.transform, circle, 14f, Color.white);
         var dot = MakeDisc("Marker", root.transform, circle, 10f, new Color(0.95f, 0.25f, 0.20f, 1f));
@@ -330,6 +339,72 @@ public class MinimapUI : MonoBehaviour
         north.fontStyle = FontStyle.Bold;
         var shadow = north.gameObject.AddComponent<Shadow>();
         shadow.effectColor = new Color(0f, 0f, 0f, 0.8f);
+    }
+
+    private static void RegisterGoals()
+    {
+        GoalPositions.Clear();
+        foreach (var door in FindObjectsByType<DoorTrigger>(FindObjectsSortMode.None))
+        {
+            var renderer = door.GetComponent<SpriteRenderer>();
+            if (renderer == null || string.IsNullOrEmpty(door.TargetScene)) continue;
+            var bounds = renderer.bounds;
+            GoalPositions["scene:" + door.TargetScene] = new Vector2(bounds.center.x, bounds.min.y + Mathf.Min(bounds.size.y, 8f) / 2f);
+        }
+        foreach (var name in new[] { "Fontaine", "La Crypte" })
+        {
+            var go = GameObject.Find(name);
+            if (go == null) continue;
+            var renderer = go.GetComponentInChildren<Renderer>();
+            GoalPositions["obj:" + name] = renderer != null ? (Vector2)renderer.bounds.center : (Vector2)go.transform.position;
+        }
+    }
+
+    // The small orange arrow of the story, as the one that bobs in the world: over the building to go to, or at the edge of the map, pointing toward it.
+    public static RectTransform MakeGoalArrow(Transform parent, float scale)
+    {
+        var go = new GameObject("GoalArrow", typeof(RectTransform), typeof(Image));
+        go.transform.SetParent(parent, false);
+        var rect = go.GetComponent<RectTransform>();
+        rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+        rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.sizeDelta = new Vector2(15f, 20f) * scale;
+        var image = go.GetComponent<Image>();
+        image.sprite = GuideArrow.ArrowSprite();
+        image.raycastTarget = false;
+        go.SetActive(false);
+        return rect;
+    }
+
+    private void UpdateGoalArrow(Vector2 origin, float scale)
+    {
+        var goal = GuideArrow.MapGoal();
+        if (goal == null || !GoalPositions.TryGetValue(goal, out var world))
+        {
+            if (goalArrow != null && goalArrow.gameObject.activeSelf) goalArrow.gameObject.SetActive(false);
+            return;
+        }
+        if (goalArrow == null) return;
+
+        goalArrow.gameObject.SetActive(true);
+        var offset = (world - origin) * scale;
+        var half = MapSize / 2f;
+        var bob = Mathf.Abs(Mathf.Sin(Time.unscaledTime * 3.2f)) * 4f;
+        if (Mathf.Abs(offset.x) < half - 14f && Mathf.Abs(offset.y) < half - 26f)
+        {
+            // Over the badge of the building, tip down.
+            goalArrow.anchoredPosition = offset + new Vector2(0f, 26f + bob);
+            goalArrow.localRotation = Quaternion.identity;
+        }
+        else
+        {
+            // Off the view: at the edge of the map, tip toward the building.
+            var edge = half - 10f;
+            var farthest = Mathf.Max(Mathf.Abs(offset.x), Mathf.Abs(offset.y));
+            var direction = offset.normalized;
+            goalArrow.anchoredPosition = offset * (edge / Mathf.Max(farthest, 0.01f)) - direction * bob;
+            goalArrow.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90f);
+        }
     }
 
     // One small badge per building, placed over the map (clipped by the disc, so it slides in and out at the edge).
@@ -425,6 +500,7 @@ public class MinimapUI : MonoBehaviour
                 if (rect.gameObject.activeSelf != visible) rect.gameObject.SetActive(visible);
                 if (visible) rect.anchoredPosition = offset;
             }
+            UpdateGoalArrow(origin, scale);
         }
 
         // Small heartbeat so the player's dot is easy to spot.

@@ -60,7 +60,7 @@ public static class BookContents
                 LeftHead = "Guide du gemmologue",
                 RightHead = "Physique, traitements et instruments",
                 Icon = species.GetIcon(),
-                Spectrum = species.spectrumLines,
+                Spectrum = SpectrumLibrary.Lines(species),
                 LeftStrip = HabitStrip(species),
                 LeftBuilder = () => { SheetPages(species, out var left, out _); return left; },
                 RightBuilder = () =>

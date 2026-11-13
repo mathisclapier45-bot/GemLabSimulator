@@ -600,7 +600,7 @@ public static class UvVisNirSpectrum
                 break;
             default:
                 // No recipe: the lines the handheld spectroscope shows, and the body color.
-                foreach (var line in c.Def.spectrumLines)
+                foreach (var line in SpectrumLibrary.Lines(c.Def))
                     c.Add(line.wavelengthNm, Mathf.Max(3f, line.widthNm), 0.4f, null, null);
                 break;
         }

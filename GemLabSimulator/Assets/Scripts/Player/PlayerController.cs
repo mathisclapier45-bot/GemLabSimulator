@@ -142,8 +142,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        moveInput.x = InputLocked ? 0f : Input.GetAxisRaw("Horizontal");
-        moveInput.y = InputLocked ? 0f : Input.GetAxisRaw("Vertical");
+        moveInput.x = InputLocked || TextEntry.Typing ? 0f : Input.GetAxisRaw("Horizontal");
+        moveInput.y = InputLocked || TextEntry.Typing ? 0f : Input.GetAxisRaw("Vertical");
         moveInput = moveInput.normalized;
         currentMoveSpeed = sceneMoveSpeed * SpeedBonus();
         look = CurrentLookFor();

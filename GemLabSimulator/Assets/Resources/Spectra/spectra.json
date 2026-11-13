@@ -1,0 +1,577 @@
+{
+ "entries": [
+  {
+   "key": "Corindon_Rubis",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre du chrome : raies fines dans le rouge (694, 668 et 659 nm), large bande qui avale le jaune-vert (510-600 nm), le violet très absorbé et deux raies du fer dans le bleu (468 et 476 nm). La raie à 694 nm peut sembler double ou briller comme une raie d'émission.",
+   "lines": [
+    {
+     "wavelengthNm": 694,
+     "widthNm": 3,
+     "depth": 1,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 668,
+     "widthNm": 2.5,
+     "depth": 0.9,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 659,
+     "widthNm": 2,
+     "depth": 0.8,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 554,
+     "widthNm": 92,
+     "depth": 1,
+     "edgeNm": 7
+    },
+    {
+     "wavelengthNm": 428,
+     "widthNm": 64,
+     "depth": 0.6,
+     "edgeNm": 14
+    },
+    {
+     "wavelengthNm": 476,
+     "widthNm": 2.5,
+     "depth": 0.9,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 468,
+     "widthNm": 2,
+     "depth": 0.8,
+     "edgeNm": 0.0
+    }
+   ]
+  },
+  {
+   "key": "Corindon_Synthetique_Rubis",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre du chrome : raies fines dans le rouge (694, 668 et 659 nm) et large bande dans le jaune-vert. Les raies du fer dans le bleu (468 et 476 nm) manquent : un rubis de synthèse n'en contient pas.",
+   "lines": [
+    {
+     "wavelengthNm": 694,
+     "widthNm": 3,
+     "depth": 1,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 668,
+     "widthNm": 2.5,
+     "depth": 0.9,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 659,
+     "widthNm": 2,
+     "depth": 0.8,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 554,
+     "widthNm": 92,
+     "depth": 1,
+     "edgeNm": 7
+    },
+    {
+     "wavelengthNm": 428,
+     "widthNm": 64,
+     "depth": 0.6,
+     "edgeNm": 14
+    }
+   ]
+  },
+  {
+   "key": "Emeraude",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre du chrome : bandes dans le rouge plus nettes d'un côté que de l'autre (absorption de l'orangé au rouge, 590-630 nm), raies fines vers 664 et 683 nm. L'absorption dans l'orange jusqu'au jaune peut être très faible. Aucune raie évidente dans le bleu.",
+   "lines": [
+    {
+     "wavelengthNm": 683.5,
+     "widthNm": 4,
+     "depth": 1,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 664,
+     "widthNm": 2.5,
+     "depth": 0.9,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 643,
+     "widthNm": 2.5,
+     "depth": 0.45,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 611,
+     "widthNm": 46,
+     "depth": 0.7,
+     "edgeNm": 8
+    },
+    {
+     "wavelengthNm": 430,
+     "widthNm": 64,
+     "depth": 0.55,
+     "edgeNm": 14
+    }
+   ]
+  },
+  {
+   "key": "Spinelle",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre du chrome : large bande qui absorbe le vert (520-585 nm) et plusieurs raies fines dans le rouge (659, 668, 677 et 688 nm). La largeur et l'intensité des bandes varient ; le nombre de raies rouges change selon les conditions d'observation.",
+   "lines": [
+    {
+     "wavelengthNm": 659,
+     "widthNm": 2,
+     "depth": 0.8,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 667.5,
+     "widthNm": 2,
+     "depth": 0.9,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 677,
+     "widthNm": 2.2,
+     "depth": 0.9,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 687.5,
+     "widthNm": 2.5,
+     "depth": 1,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 551,
+     "widthNm": 66,
+     "depth": 0.92,
+     "edgeNm": 7
+    },
+    {
+     "wavelengthNm": 421,
+     "widthNm": 44,
+     "depth": 1,
+     "edgeNm": 6
+    }
+   ]
+  },
+  {
+   "key": "Chrysoberyl_Alexandrite",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre du chrome : le violet et le bleu sont absorbés, ainsi qu'une bande dans le jaune-orangé (550-605 nm) ; souvent une seule raie dans le rouge (680-684 nm), parfois des raies faibles vers 645 et 655 nm. Selon la couleur, la largeur et la place des raies changent un peu.",
+   "lines": [
+    {
+     "wavelengthNm": 680.5,
+     "widthNm": 2.5,
+     "depth": 1,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 684,
+     "widthNm": 2.5,
+     "depth": 1,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 655,
+     "widthNm": 2,
+     "depth": 0.35,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 645,
+     "widthNm": 2,
+     "depth": 0.3,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 578,
+     "widthNm": 56,
+     "depth": 0.85,
+     "edgeNm": 9
+    },
+    {
+     "wavelengthNm": 436,
+     "widthNm": 72,
+     "depth": 0.75,
+     "edgeNm": 6
+    }
+   ]
+  },
+  {
+   "key": "Saphir_Bleu",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre du fer : une raie fine ou une mince bande dans le bleu, vers 450 nm. Certains saphirs bleus pâles en montrent plus d'une ; les saphirs de synthèse (Verneuil) n'en montrent aucune.",
+   "lines": [
+    {
+     "wavelengthNm": 450,
+     "widthNm": 4,
+     "depth": 1,
+     "edgeNm": 0.0
+    }
+   ]
+  },
+  {
+   "key": "Saphir_Vert",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre du fer : trois bandes dans le bleu (450, 460 et 471 nm). Dans les saphirs naturels très foncés, les deux bandes les plus larges peuvent ne faire qu'une.",
+   "lines": [
+    {
+     "wavelengthNm": 450,
+     "widthNm": 6,
+     "depth": 1,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 459.5,
+     "widthNm": 4.5,
+     "depth": 0.9,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 471.5,
+     "widthNm": 3.5,
+     "depth": 0.9,
+     "edgeNm": 0.0
+    }
+   ]
+  },
+  {
+   "key": "Chrysoberyl",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre du fer : une bande centrée à 444 nm, dans le bleu-violet. Utile pour distinguer le chrysobéryl jaune à vert des saphirs bruns.",
+   "lines": [
+    {
+     "wavelengthNm": 442.5,
+     "widthNm": 10,
+     "depth": 1,
+     "edgeNm": 0.0
+    }
+   ]
+  },
+  {
+   "key": "Peridot",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre du fer : triplet de bandes dans le bleu jusqu'au bleu-vert (451, 470 et 494 nm), le plus net à 494 nm. Si l'absorption est faible, il faut ajuster la lumière ; dans certaines pierres les bandes forment une seule bande large.",
+   "lines": [
+    {
+     "wavelengthNm": 451.5,
+     "widthNm": 3.5,
+     "depth": 1,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 470.5,
+     "widthNm": 3,
+     "depth": 0.85,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 494,
+     "widthNm": 5,
+     "depth": 1,
+     "edgeNm": 0.0
+    }
+   ]
+  },
+  {
+   "key": "Grenat_Almandin",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre du fer : le jaune est absorbé (bande de 577 à 594 nm), avec des bandes plus minces dans le vert moyen et le bleu-vert (505 et 530 nm). Dans les pierres foncées ou grandes, ces bandes peuvent se fondre ; on note aussi des bandes faibles dans l'orange et le bleu.",
+   "lines": [
+    {
+     "wavelengthNm": 504.5,
+     "widthNm": 11,
+     "depth": 0.95,
+     "edgeNm": 3
+    },
+    {
+     "wavelengthNm": 530,
+     "widthNm": 9,
+     "depth": 0.8,
+     "edgeNm": 3.5
+    },
+    {
+     "wavelengthNm": 585.5,
+     "widthNm": 17,
+     "depth": 1,
+     "edgeNm": 3
+    },
+    {
+     "wavelengthNm": 628,
+     "widthNm": 3,
+     "depth": 0.3,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 432,
+     "widthNm": 70,
+     "depth": 0.45,
+     "edgeNm": 12
+    }
+   ]
+  },
+  {
+   "key": "Jade_Jadeite",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre du fer : une raie fine à 437 nm, dans le bleu-violet, quelle que soit la couleur du spécimen (même pâle).",
+   "lines": [
+    {
+     "wavelengthNm": 437,
+     "widthNm": 2.2,
+     "depth": 1,
+     "edgeNm": 0.0
+    }
+   ]
+  },
+  {
+   "key": "Jade_Jadeite_Teinte",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Jadéite teintée (fer et chrome) : la raie à 437 nm, plus une bande peu prononcée, parfois double, dans le rouge (640-650 nm), due au chrome. L'absorption dans le violet et le bleu peut être prononcée.",
+   "lines": [
+    {
+     "wavelengthNm": 437,
+     "widthNm": 2.2,
+     "depth": 1,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 646,
+     "widthNm": 22,
+     "depth": 0.5,
+     "edgeNm": 7
+    }
+   ]
+  },
+  {
+   "key": "Spinelle_Bleu",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre du cobalt : trois bandes dans le vert (537 nm), le jaune-orangé (585 nm) et le rouge-orangé (632 nm), qui se suivent « mince, épaisse, épaisse » de gauche à droite. Leur largeur varie avec la profondeur de la couleur et la taille de la pierre.",
+   "lines": [
+    {
+     "wavelengthNm": 537.5,
+     "widthNm": 6,
+     "depth": 0.95,
+     "edgeNm": 2.5
+    },
+    {
+     "wavelengthNm": 585,
+     "widthNm": 20,
+     "depth": 1,
+     "edgeNm": 6
+    },
+    {
+     "wavelengthNm": 632,
+     "widthNm": 16,
+     "depth": 0.9,
+     "edgeNm": 5
+    }
+   ]
+  },
+  {
+   "key": "Verre_Bleu_Cobalt",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Verre au cobalt : les trois bandes sont plus largement étalées que dans le spinelle ; la plus large est dans le rouge (660 nm). Sous le filtre de Chelsea, la lumière rouge passe, comme dans le spinelle cobalt.",
+   "lines": [
+    {
+     "wavelengthNm": 531,
+     "widthNm": 22,
+     "depth": 0.95,
+     "edgeNm": 6
+    },
+    {
+     "wavelengthNm": 597,
+     "widthNm": 14,
+     "depth": 0.95,
+     "edgeNm": 5
+    },
+    {
+     "wavelengthNm": 659,
+     "widthNm": 32,
+     "depth": 0.95,
+     "edgeNm": 8
+    }
+   ]
+  },
+  {
+   "key": "Apatite",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre des terres rares (didyme) : une bande fine, avec une coupure nette, dans le jaune-orangé (580-587 nm), et des raies faibles dans le vert (521 nm). Elle est rare dans les autres pierres bleues.",
+   "lines": [
+    {
+     "wavelengthNm": 583.5,
+     "widthNm": 8,
+     "depth": 1,
+     "edgeNm": 2.5
+    },
+    {
+     "wavelengthNm": 521,
+     "widthNm": 2,
+     "depth": 0.3,
+     "edgeNm": 0.0
+    }
+   ]
+  },
+  {
+   "key": "Zircon",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Spectre de l'uranium : une raie nette dans le rouge à 653 nm, accompagnée de beaucoup d'autres raies fines (590, 616, 660, 684 nm et dans le vert). Presque tous les zircons en montrent, même les incolores ; les pierres « métamictes » (zircons bas) n'ont que des bandes diffuses.",
+   "lines": [
+    {
+     "wavelengthNm": 653.5,
+     "widthNm": 2.5,
+     "depth": 1,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 659.5,
+     "widthNm": 1.5,
+     "depth": 0.55,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 589,
+     "widthNm": 4.5,
+     "depth": 0.9,
+     "edgeNm": 2
+    },
+    {
+     "wavelengthNm": 515,
+     "widthNm": 9,
+     "depth": 0.5,
+     "edgeNm": 3
+    },
+    {
+     "wavelengthNm": 615.5,
+     "widthNm": 1.5,
+     "depth": 0.5,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 683.5,
+     "widthNm": 3,
+     "depth": 0.7,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 484,
+     "widthNm": 3,
+     "depth": 0.3,
+     "edgeNm": 0.0
+    }
+   ]
+  },
+  {
+   "key": "Zircon_Chauffe",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Zircon traité par chauffage : une seule raie fine à 653 nm, parfois une autre raie plus diffuse dans le jaune et le vert. Elle se voit mieux à la lumière réfléchie sur la surface de la pierre.",
+   "lines": [
+    {
+     "wavelengthNm": 654,
+     "widthNm": 2.2,
+     "depth": 1,
+     "edgeNm": 0.0
+    }
+   ]
+  },
+  {
+   "key": "Verre_Rouge_Au",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Verre rouge à l'or (colloïdal, « verre rubis doré ») : une seule bande dans le vert, de 510 à 555 nm, qui peut être diffuse ; l'éclairage doit être bien contrôlé.",
+   "lines": [
+    {
+     "wavelengthNm": 533,
+     "widthNm": 46,
+     "depth": 0.95,
+     "edgeNm": 6
+    }
+   ]
+  },
+  {
+   "key": "Verre_Rouge_Se",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Verre rouge au sélénium : une forte marque du rouge vif, avec une absorption complète de tout ce qui n'est pas rouge jusque vers 625 nm, près de 620 nm. Aucune raie.",
+   "lines": [
+    {
+     "wavelengthNm": 512,
+     "widthNm": 226,
+     "depth": 1,
+     "edgeNm": 6
+    }
+   ]
+  },
+  {
+   "key": "Verre_Rouge_TR",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Verre rouge aux terres rares : le spectre des terres rares se superpose à celui du verre ; raies fines vers 509, 573, 588 et 591 nm et bande diffuse dans le vert (520-555 nm). Un motif qui aide à distinguer les verres des gemmes.",
+   "lines": [
+    {
+     "wavelengthNm": 538,
+     "widthNm": 36,
+     "depth": 0.8,
+     "edgeNm": 7
+    },
+    {
+     "wavelengthNm": 509,
+     "widthNm": 2,
+     "depth": 0.6,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 573,
+     "widthNm": 3,
+     "depth": 1,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 588,
+     "widthNm": 2.5,
+     "depth": 1,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 591.5,
+     "widthNm": 2,
+     "depth": 1,
+     "edgeNm": 0.0
+    }
+   ]
+  },
+  {
+   "key": "Corindon_Synthetique_CC",
+   "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
+   "description": "Saphir synthétique à changement de couleur (chrome et vanadium) : une raie fine dans le bleu à 475 nm, peu prononcée et difficile à voir, une bande dans le jaune-vert, et l'extrémité rouge absorbée.",
+   "lines": [
+    {
+     "wavelengthNm": 475,
+     "widthNm": 2,
+     "depth": 1,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 576,
+     "widthNm": 48,
+     "depth": 0.7,
+     "edgeNm": 9
+    },
+    {
+     "wavelengthNm": 697,
+     "widthNm": 40,
+     "depth": 0.9,
+     "edgeNm": 8
+    }
+   ]
+  }
+ ]
+}
