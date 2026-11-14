@@ -116,7 +116,7 @@ public static class FtirSpectrum
     private static HostGroup GroupOf(string name)
     {
         if (name.StartsWith("Corindon") || name.StartsWith("Saphir") || name == "Padparadscha") return HostGroup.Corundum;
-        if (name == "Emeraude" || name == "Goshenite" || name == "Morganite" || name == "Heliodore" || name == "Beryl_Rouge" || name == "Pezzottaite") return HostGroup.Beryl;
+        if (name == "Emeraude" || name == "Goshenite" || name == "Morganite" || name == "Heliodore" || name == "Beryl_Rouge" || name == "Pezzottaite" || name == "Aigue_Marine" || name == "Beryl_Bleu") return HostGroup.Beryl;
         if (name.StartsWith("Quartz") || name == "Amethyste" || name == "Ametrine" || name == "Citrine" || name == "Prasiolite") return HostGroup.Quartz;
         if (name.StartsWith("Diamant")) return HostGroup.Diamond;
         if (name == "CZ" || name == "Moissanite_Synthetique" || name == "YAG" || name == "GGG") return HostGroup.DiamondImitation;
@@ -218,7 +218,7 @@ public static class FtirSpectrum
         float cut = 2050f;
         if (n == "Zircon" || n == "Spinelle" || n == "Spinelle_Bleu") cut = 1900f;
         else if (n == "Peridot") cut = 1950f;
-        else if (n == "Fluorite") cut = 1200f;
+        else if (n.StartsWith("Fluorite")) cut = 1200f;
         c.Cutoff(cut, 25f);
 
         if (n == "Topaze")
@@ -233,7 +233,7 @@ public static class FtirSpectrum
         }
         else if (n == "Apatite") c.Add(3540, 16, 0.4f, "OH (apatite)");
         else if (n == "Tanzanite" || n == "Zoisite") c.Add(3480, 60, 0.4f, "OH (zoïsite)");
-        else if (n == "Kyanite" || n == "Andalousite" || n == "Iolite" || n == "Scapolite") c.Add(3560, 80, 0.12f, "OH");
+        else if (n == "Kyanite" || n == "Andalousite" || n == "Iolite" || n == "Iolite_Bloodshot" || n == "Scapolite") c.Add(3560, 80, 0.12f, "OH");
         else c.Add(3450, 400, 0.08f, "Eau");
     }
 

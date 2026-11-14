@@ -117,6 +117,8 @@ public static class DyeingCatalog
             case "Emeraude":
             case "Goshenite":
             case "Heliodore":
+            case "Aigue_Marine":
+            case "Beryl_Bleu":
             case "Morganite":
                 material = new Stuff { Porosity = 0.15f, Days = 5 };
                 return true;

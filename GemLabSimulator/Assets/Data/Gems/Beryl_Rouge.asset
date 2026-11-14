@@ -22,7 +22,7 @@ MonoBehaviour:
   iconFacetColor: {r: 0.88, g: 0.3, b: 0.38, a: 1}
   refractiveIndex: 1.57
   density: 2.68
-  hardness: 7.75
+  hardness: 7.5
   lengthMm: 4
   widthMm: 3
   depthMm: 2
@@ -49,8 +49,10 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 550
     widthNm: 10
+    depth: 1
+    edgeNm: 0
   inclusions: "Voiles de croissance et canaux allong\xE9s occasionnels, typiques
-    des b\xE9ryls."
+    des b\xE9ryls. On trouve rarement de grosses pierres de qualit\xE9 gemme."
   interferenceFigure: "Figure uniaxe centr\xE9e en lumi\xE8re convergente."
   chelseaFilterReaction: "Aucune r\xE9action marqu\xE9e au filtre Chelsea."
   magnetism: "Aucune r\xE9action \xE0 l'aimant."

@@ -47,12 +47,20 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 653
     widthNm: 6
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 620
     widthNm: 8
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 590
     widthNm: 8
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 560
     widthNm: 8
+    depth: 1
+    edgeNm: 0
   inclusions: "G\xE9n\xE9ralement propre ; d\xE9doublement net des facettes du pavillon
     visible \xE0 la loupe."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale."

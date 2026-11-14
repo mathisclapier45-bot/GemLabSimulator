@@ -15,10 +15,7 @@ public static class GemIconFactory
         var key = $"{def.name}|{shape}|{cutStyle}";
         if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
 
-        var level = def.Diaphaneity;
-        var sprite = cutStyle != "Cabochon"
-            ? FacetedIcon(shape, cutStyle, def.iconColor, def.iconFacetColor, level)
-            : ToSprite(GemPixelArt.RenderGem(shape, cutStyle, def.iconColor, def.iconFacetColor, level));
+        var sprite = FacetedIcon(shape, cutStyle, def.iconColor, def.iconFacetColor, def.Diaphaneity, GemLook.For(def));
         Cache[key] = sprite;
         return sprite;
     }
@@ -26,17 +23,20 @@ public static class GemIconFactory
     // Icon of a stone with its own color. The colors are quantized so near-identical stones share one sprite.
     public static Sprite Get(GemDefinition def, string shape, string cutStyle, Color body, Color facet)
     {
+        return Get(def, shape, cutStyle, body, facet, 0, false);
+    }
+
+    // The same, with the star of an asterism (4 or 6 rays) or the line of a cat's eye on its dome.
+    public static Sprite Get(GemDefinition def, string shape, string cutStyle, Color body, Color facet, int starRays, bool catsEye)
+    {
         if (def == null) return null;
         body = Quantize(body);
         facet = Quantize(facet);
 
-        var key = $"{def.name}|{shape}|{cutStyle}|{ColorUtility.ToHtmlStringRGB(body)}|{ColorUtility.ToHtmlStringRGB(facet)}";
+        var key = $"{def.name}|{shape}|{cutStyle}|{ColorUtility.ToHtmlStringRGB(body)}|{ColorUtility.ToHtmlStringRGB(facet)}|{starRays}|{catsEye}";
         if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
 
-        var level = def.Diaphaneity;
-        var sprite = cutStyle != "Cabochon"
-            ? FacetedIcon(shape, cutStyle, body, facet, level)
-            : ToSprite(GemPixelArt.RenderGem(shape, cutStyle, body, facet, level));
+        var sprite = FacetedIcon(shape, cutStyle, body, facet, def.Diaphaneity, GemLook.For(def), starRays, catsEye);
         Cache[key] = sprite;
         return sprite;
     }
@@ -108,12 +108,12 @@ public static class GemIconFactory
     }
 
     // Icon of a faceted cut: the top view of its real facet mesh, with the proportions of its shape, filling the icon.
-    private static Sprite FacetedIcon(string shape, string cutStyle, Color body, Color facet, Diaphaneity? level = null)
+    private static Sprite FacetedIcon(string shape, string cutStyle, Color body, Color facet, Diaphaneity? level = null, GemLook? look = null, int starRays = 0, bool catsEye = false)
     {
         var view = new GemView3D(GemPixelArt.Size);
         var aspect = GemMesh.Aspect(shape);
         var half = GemView3D.FitFraction;                      // cancels the margin the viewer keeps around the stone
-        view.Draw(GemMesh.Get(shape, cutStyle), new Vector3(aspect.x * half, aspect.y * half, half * 0.6f), Quaternion.identity, body, facet, level);
+        view.Draw(GemMesh.Get(shape, cutStyle), new Vector3(aspect.x * half, aspect.y * half, half * 0.6f), Quaternion.identity, body, facet, level, starRays, look, catsEye);
         return view.Sprite;
     }
 
@@ -130,7 +130,7 @@ public static class GemIconFactory
         if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
 
         var view = new GemView3D(GemPixelArt.Size);
-        view.Draw(mesh, Vector3.one, HabitMesh.IconOrientation(habitId), body, facet, def.Diaphaneity);
+        view.Draw(mesh, Vector3.one, HabitMesh.IconOrientation(habitId), body, facet, def.Diaphaneity, 0, GemLook.ForCrystal(def));
         Cache[key] = view.Sprite;
         return view.Sprite;
     }
@@ -162,7 +162,7 @@ public static class GemIconFactory
         if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
 
         var view = new GemView3D(GemPixelArt.Size);
-        view.Draw(mesh, Vector3.one, HabitMesh.IconOrientation(habitId), body, facet);
+        view.Draw(mesh, Vector3.one, HabitMesh.IconOrientation(habitId), body, facet, null, 0, GemLook.Crystal);
         Cache[key] = view.Sprite;
         return view.Sprite;
     }
@@ -174,9 +174,7 @@ public static class GemIconFactory
         var key = $"solid|{shape}|{cutStyle}|{ColorUtility.ToHtmlStringRGB(body)}|{ColorUtility.ToHtmlStringRGB(facet)}";
         if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
 
-        Sprite sprite;
-        if (cutStyle != "Cabochon") sprite = FacetedIcon(shape, cutStyle, body, facet);
-        else sprite = ToSprite(GemPixelArt.RenderGem(shape, cutStyle, body, facet));
+        var sprite = FacetedIcon(shape, cutStyle, body, facet);
         Cache[key] = sprite;
         return sprite;
     }

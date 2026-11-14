@@ -24,6 +24,9 @@ public class GemView3D
 
     private static readonly Vector3 HalfVector = (GemPixelArt.Light + Vector3.forward).normalized;
 
+    // A realistic view draws the faceted stones with the ray-tracing shader (see RealGemRenderer); domes and rough stones keep the pixel art.
+    public bool Realistic;
+
     public GemView3D(int size = 48)
     {
         this.size = size;
@@ -91,10 +94,34 @@ public class GemView3D
         facet = def.iconColor.a > 0f ? def.iconFacetColor : new Color(0.92f, 0.92f, 0.96f);
     }
 
-    public void Draw(GemMesh mesh, Vector3 halfExtentsMm, Quaternion orientation, Color body, Color facet, Diaphaneity? level = null, int starRays = 0)
+    private Vector3[] rotatedNormals = new Vector3[0];
+    private float[] vertexTones = new float[0];
+
+    public void Draw(GemMesh mesh, Vector3 halfExtentsMm, Quaternion orientation, Color body, Color facet, Diaphaneity? level = null, int starRays = 0, GemLook? look = null, bool catsEye = false)
     {
+        var gemLook = look ?? GemLook.Default;
+        if (Realistic && RealGemRenderer.TryRender(mesh, halfExtentsMm, orientation, body, gemLook, level, size, pixels, starRays, catsEye))
+        {
+            texture.filterMode = FilterMode.Bilinear;
+            texture.SetPixels32(pixels);
+            texture.Apply();
+            return;
+        }
+        texture.filterMode = FilterMode.Point;
         var vertexCount = mesh.Vertices.Length;
         if (rotated.Length < vertexCount) rotated = new Vector3[vertexCount];
+        smoothDome = mesh.Smooth && mesh.Normals != null;
+        if (smoothDome)
+        {
+            if (rotatedNormals.Length < vertexCount) { rotatedNormals = new Vector3[vertexCount]; vertexTones = new float[vertexCount]; }
+            var inverse = new Vector3(1f / Mathf.Max(halfExtentsMm.x, 0.001f), 1f / Mathf.Max(halfExtentsMm.y, 0.001f), 1f / Mathf.Max(halfExtentsMm.z, 0.001f));
+            for (var i = 0; i < vertexCount; i++)
+            {
+                // The normal of a stretched surface: scaled by the inverse of the stretch, then turned with the stone.
+                rotatedNormals[i] = (orientation * Vector3.Scale(mesh.Normals[i], inverse)).normalized;
+                vertexTones[i] = DomeTone(rotatedNormals[i]);
+            }
+        }
 
         var maxHalf = Mathf.Max(halfExtentsMm.x, halfExtentsMm.y, halfExtentsMm.z);
         var scale = size * FitFraction * 0.5f / maxHalf;
@@ -103,6 +130,7 @@ public class GemView3D
         for (var i = 0; i < vertexCount; i++)
             rotated[i] = orientation * Vector3.Scale(mesh.Vertices[i], halfExtentsMm) * scale;
 
+        facetNormals.Clear();
         var clear = new Color32(0, 0, 0, 0);
         for (var i = 0; i < pixels.Length; i++)
         {
@@ -123,24 +151,73 @@ public class GemView3D
             if (normal.z <= 0f) continue;                       // facing away from the viewer
             normal.Normalize();
 
+            if (smoothDome)
+            {
+                // A dome: the light is worked out at each corner and spread across the triangle, so the surface is smooth.
+                Raster(p0, p1, p2, center, vertexTones[tri[0]], vertexTones[tri[1]], vertexTones[tri[2]], 1);
+                continue;
+            }
+
             var diffuse = Vector3.Dot(normal, GemPixelArt.Light);
             var specular = Mathf.Pow(Mathf.Max(0f, Vector3.Dot(normal, HalfVector)), 28f);
-            var tone = (diffuse + 0.2f) / 1.15f + specular * 0.7f;
+            var matte = (diffuse + 0.2f) / 1.15f + specular * 0.7f;
+
+            // A brilliant stone mirrors the light: each facet shows what it reflects (a bright window, a dark corner), so neighbours differ a lot. A matte one is just lit.
+            var tone = Mathf.Lerp(matte, Mirror(normal), gemLook.Brilliance);
 
             // Every facet gets its own small brightness offset, so neighbouring facets stay readable, as on a real cut stone.
             var facetId = mesh.FacetIds[t];
-            tone += ((facetId * 73) % 11 / 10f - 0.5f) * 0.16f;
+            tone += ((facetId * 73) % 11 / 10f - 0.5f) * Mathf.Lerp(0.16f, 0.26f, gemLook.Brilliance);
+            if (gemLook.Contrast > 1f) tone = (tone - 0.5f) * gemLook.Contrast + 0.5f;
 
-            Raster(p0, p1, p2, center, tone, facetId);
+            // The normals of the facets that show, for the flashes of a fiery stone.
+            if (gemLook.Fire > 0f)
+            {
+                facetNormals.TryGetValue(facetId, out var sum);
+                facetNormals[facetId] = sum + normal;
+            }
+
+            // A big flat face (the table, the side of a prism) is a calm area of the stone, not its brightest: the flashes come from the tilted facets around it.
+            if (normal.z > 0.96f) tone = Mathf.Min(tone, 0.78f);
+            if (gemLook.ToneCap > 0f) tone = Mathf.Min(tone, gemLook.ToneCap);
+
+            Raster(p0, p1, p2, center, tone, tone, tone, facetId);
         }
 
-        Finish(body, facet, level);
+        Finish(body, facet, level, gemLook);
+        if (gemLook.Fire > 0f && !smoothDome) DrawFire(gemLook.Fire, gemLook.Seed);
         if (starRays > 0) DrawStar(starRays, orientation);
+        if (catsEye) DrawCatsEye(orientation);
         texture.SetPixels32(pixels);
         texture.Apply();
     }
 
-    private void Raster(Vector3 a, Vector3 b, Vector3 c, float center, float tone, int id)
+    private static readonly Vector3 KeyLight = new Vector3(-0.45f, 0.55f, 0.70f).normalized;
+    private static readonly Vector3 FillLight = new Vector3(0.62f, -0.40f, 0.68f).normalized;
+
+    // What a facet of normal `normal` mirrors, looking at it from the front: the reflected direction meets a big window of light at the upper left, a smaller one at the lower right,
+    // a soft glow in front, and a dark room elsewhere.
+    private static float Mirror(Vector3 normal)
+    {
+        var reflected = new Vector3(2f * normal.z * normal.x, 2f * normal.z * normal.y, 2f * normal.z * normal.z - 1f);
+        var key = Mathf.Pow(Mathf.Max(0f, Vector3.Dot(reflected, KeyLight)), 5f) * 1.05f;
+        var fill = Mathf.Pow(Mathf.Max(0f, Vector3.Dot(reflected, FillLight)), 9f) * 0.55f;
+        var glow = Mathf.Clamp01(reflected.z * 0.5f + 0.5f) * 0.34f;
+        return 0.14f + glow + key + fill;
+    }
+
+    private bool smoothDome;
+
+    // The light on a smooth dome: a soft diffuse light from the upper left, a small bright highlight, a little light bounced back at the lower right.
+    private static float DomeTone(Vector3 n)
+    {
+        var diffuse = Mathf.Max(0f, Vector3.Dot(n, GemPixelArt.Light));
+        var highlight = Mathf.Pow(Mathf.Max(0f, Vector3.Dot(n, HalfVector)), 70f) * 0.55f + Mathf.Pow(Mathf.Max(0f, Vector3.Dot(n, HalfVector)), 9f) * 0.12f;
+        var bounce = Mathf.Pow(Mathf.Max(0f, Vector3.Dot(n, FillLight)), 5f) * 0.14f;
+        return 0.14f + diffuse * 0.62f + highlight + bounce;
+    }
+
+    private void Raster(Vector3 a, Vector3 b, Vector3 c, float center, float tone0, float tone1, float tone2, int id)
     {
         var ax = a.x + center;
         var ay = a.y + center;
@@ -175,7 +252,7 @@ public class GemView3D
 
                 depth[index] = z;
                 ids[index] = id;
-                tones[index] = tone;
+                tones[index] = w0 * tone0 + w1 * tone1 + w2 * tone2;
             }
         }
     }
@@ -222,8 +299,159 @@ public class GemView3D
         }
     }
 
+    private static float PixelHash(int x, int y, int seed)
+    {
+        unchecked
+        {
+            var h = (uint)(x * 374761393 + y * 668265263 + seed * 2246822519u);
+            h = (h ^ (h >> 13)) * 1274126177u;
+            h ^= h >> 16;
+            return (h & 0xFFFF) / 65535f;
+        }
+    }
+
+    private readonly System.Collections.Generic.Dictionary<int, Vector3> facetNormals = new System.Collections.Generic.Dictionary<int, Vector3>();
+    private readonly System.Collections.Generic.Dictionary<int, System.Collections.Generic.List<int>> fireFacets = new System.Collections.Generic.Dictionary<int, System.Collections.Generic.List<int>>();
+
+    // The fire of a diamond-like stone: flashes on the facets that run from facet to facet as the stone turns. Each facet has several tiny hidden lights of its own, at slightly
+    // different directions; it flashes when it mirrors one of them toward the eye, and the flash slides across the facet as the angle changes. A flash is a white heart with
+    // four rays, tinted by one colour of the rainbow that follows the angle (blue when it is just right, then green, yellow, orange, red as the facet drifts away).
+    private void DrawFire(float fire, int seed)
+    {
+        // The pixels of each facet, away from the outline.
+        foreach (var list in fireFacets.Values) list.Clear();
+        for (var y = 1; y < size - 1; y++)
+        {
+            for (var x = 1; x < size - 1; x++)
+            {
+                var i = y * size + x;
+                if (ids[i] < 0 || ids[i - 1] < 0 || ids[i + 1] < 0 || ids[i - size] < 0 || ids[i + size] < 0) continue;
+                if (!fireFacets.TryGetValue(ids[i], out var list)) fireFacets[ids[i]] = list = new System.Collections.Generic.List<int>();
+                list.Add(i);
+            }
+        }
+
+        var scale = Mathf.Max(1f, size / 32f);                 // the flashes grow with the picture
+        var white = new Color32(255, 255, 255, 255);
+        const int lights = 6;
+        foreach (var pair in fireFacets)
+        {
+            var id = pair.Key;
+            var list = pair.Value;
+            if (list.Count < 2 || !facetNormals.TryGetValue(id, out var sum) || sum.sqrMagnitude < 1e-6f) continue;
+
+            var n = sum.normalized;
+            var reflected = new Vector3(2f * n.z * n.x, 2f * n.z * n.y, 2f * n.z * n.z - 1f);
+            float cx = 0f, cy = 0f;
+            foreach (var i in list) { cx += i % size; cy += i / size; }
+            cx /= list.Count;
+            cy /= list.Count;
+
+            for (var k = 0; k < lights; k++)
+            {
+                // The hidden light of this facet: the key light, nudged in a direction of its own.
+                var nudge = new Vector3(PixelHash(id, 21 + k, seed) - 0.5f, PixelHash(id, 31 + k, seed) - 0.5f, (PixelHash(id, 41 + k, seed) - 0.5f) * 0.5f) * 1.5f;
+                var light = (KeyLight + nudge).normalized;
+                var c = Vector3.Dot(reflected, light);
+                if (c < 0.93f) continue;
+
+                var strength = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.93f, 0.995f, c)) * fire;
+                if (strength < 0.08f) continue;
+
+                // The flash slides across the facet as the angle changes: it sits where the reflected light is off by a little.
+                var shift = new Vector2(reflected.x - light.x, reflected.y - light.y) * size * 0.35f;
+                var targetX = cx + shift.x + (PixelHash(id, 61 + k, seed) - 0.5f) * 3f * scale;
+                var targetY = cy + shift.y + (PixelHash(id, 71 + k, seed) - 0.5f) * 3f * scale;
+                var pick = list[0];
+                var best = float.MaxValue;
+                foreach (var i in list)
+                {
+                    var d = (i % size - targetX) * (i % size - targetX) + (i / size - targetY) * (i / size - targetY);
+                    if (d < best) { best = d; pick = i; }
+                }
+                var px = pick % size;
+                var py = pick / size;
+
+                // Blue when well lined up, then green, yellow, orange, red: the colours of the rainbow as the facet drifts.
+                var deviation = Mathf.InverseLerp(0.995f, 0.93f, c);
+                var hue = Mathf.Lerp(0.60f, 0.0f, Mathf.Clamp01(deviation));
+                var tint = (Color32)Color.HSVToRGB(hue, 1f, 1f);
+
+                // A pinpoint: one white pixel, with a ray of one pixel on each side when the flash is strong (two at the very strongest), tinted toward the tips. Nothing wider.
+                pixels[pick] = white;
+                var reach = Mathf.Max(1, Mathf.RoundToInt((strength > 0.85f ? 2f : 1f) * Mathf.Sqrt(scale)));
+                if (strength > 0.35f)
+                {
+                    foreach (var d in new[] { new Vector2Int(1, 0), new Vector2Int(-1, 0), new Vector2Int(0, 1), new Vector2Int(0, -1) })
+                    {
+                        for (var step = 1; step <= reach; step++)
+                        {
+                            var jx = px + d.x * step;
+                            var jy = py + d.y * step;
+                            if (jx < 0 || jx >= size || jy < 0 || jy >= size) break;
+                            var j = jy * size + jx;
+                            if (ids[j] < 0) break;
+                            var ray = step == 1 ? Color32.Lerp(white, tint, 0.25f) : tint;
+                            pixels[j] = Color32.Lerp(pixels[j], ray, step == 1 ? 0.85f : 0.65f);
+                        }
+                    }
+                }
+                else
+                {
+                    // A weak flash is just a coloured point next to the white one.
+                    var jx = px + (PixelHash(id, 81 + k, seed) > 0.5f ? 1 : -1);
+                    var j = py * size + jx;
+                    if (jx >= 0 && jx < size && ids[j] >= 0) pixels[j] = Color32.Lerp(pixels[j], tint, 0.8f);
+                }
+            }
+        }
+    }
+
+    // The cat's eye of a cabochon with parallel fibres: a thin bright line across the dome, perpendicular to the fibres, that rolls as the stone is tilted.
+    private void DrawCatsEye(Quaternion orientation)
+    {
+        var facing = (orientation * Vector3.forward).z;
+        if (facing < 0.30f) return;
+        var strength = Mathf.Clamp01((facing - 0.30f) / 0.45f);
+
+        // The fibres run along the length of the stone; the line goes across.
+        var fibre = orientation * Vector3.right;
+        var along = new Vector2(fibre.x, fibre.y);
+        if (along.sqrMagnitude < 0.0001f) along = Vector2.right;
+        along.Normalize();
+        var across = new Vector2(-along.y, along.x);
+
+        // Where the light is mirrored: the line sits on the side of the dome that faces the light, and moves when the stone turns.
+        var light = new Vector2(HalfVector.x, HalfVector.y);
+        var half = size * FitFraction * 0.5f;
+        var offset = Mathf.Clamp(Vector2.Dot(light, along) * half * 1.4f, -half * 0.45f, half * 0.45f);
+        var center = size * 0.5f;
+        var lineHalfLength = half * 0.95f;
+
+        for (var y = 0; y < size; y++)
+        {
+            for (var x = 0; x < size; x++)
+            {
+                var i = y * size + x;
+                if (ids[i] < 0) continue;
+
+                var p = new Vector2(x + 0.5f - center, y + 0.5f - center);
+                var u = Vector2.Dot(p, along) - offset;           // distance to the line, across its width
+                var v = Vector2.Dot(p, across);                   // position along the line
+                if (Mathf.Abs(v) > lineHalfLength) continue;
+
+                // Thin and sharp in the middle, a soft glow beside it, the line tapering toward its ends.
+                var taper = Mathf.Sqrt(Mathf.Max(0f, 1f - (v * v) / (lineHalfLength * lineHalfLength)));
+                var core = Mathf.Clamp01(1f - Mathf.Abs(u) / 0.95f);
+                var glow = Mathf.Clamp01(1f - Mathf.Abs(u) / 3.2f) * 0.35f;
+                var intensity = (core * 0.95f + glow) * taper * strength;
+                if (intensity > 0.03f) pixels[i] = Color32.Lerp(pixels[i], new Color32(255, 250, 235, 255), Mathf.Clamp01(intensity));
+            }
+        }
+    }
+
     // Colors, facet creases and the dark rim.
-    private void Finish(Color body, Color facet, Diaphaneity? level)
+    private void Finish(Color body, Color facet, Diaphaneity? level, GemLook look)
     {
         var half = size * 0.5f;
         for (var y = 0; y < size; y++)
@@ -248,8 +476,10 @@ public class GemView3D
                 var belowDiffers = ids[i - size] != ids[i] && Mathf.Abs(tones[i - size] - tone) < 0.08f;
                 if (leftDiffers || belowDiffers) tone -= 0.12f;
 
-                Color color = tone > 1.12f ? Color.white : GemPixelArt.Palette(Mathf.Clamp01(tone), body, facet);
+                Color color = smoothDome ? GemPixelArt.PaletteSmooth(tone, body, facet)
+                    : tone > 1.12f ? Color.white : GemPixelArt.Palette(Mathf.Clamp01(tone), body, facet);
                 if (level.HasValue) color = GemDiaphaneity.Shade(color, tone, level.Value, body, x, y);
+                if (look.Pattern != GemPattern.None) color = GemPatterns.Apply(color, x, y, size, tone, look, body);
                 pixels[i] = color;
             }
         }

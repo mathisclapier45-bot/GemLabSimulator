@@ -26,8 +26,9 @@ public static class GemPixelArt
 
     // ---- Public API ------------------------------------------------------------------------------------------
 
-    public static Texture2D RenderGem(string shape, string style, Color body, Color facet, Diaphaneity? level = null)
+    public static Texture2D RenderGem(string shape, string style, Color body, Color facet, Diaphaneity? level = null, GemLook? look = null)
     {
+        var gemLook = look ?? GemLook.Default;
         var edgeAlpha = level.HasValue ? GemDiaphaneity.EdgeAlpha(level.Value) : 1f;
         var outline = GetOutline(shape);
         var count = Size * Size;
@@ -106,6 +107,7 @@ public static class GemPixelArt
                 var lit = Mathf.Clamp01(tone[i] + edge[i]);
                 pixels[i] = Palette(lit, body, facet);
                 if (level.HasValue) pixels[i] = GemDiaphaneity.Shade(pixels[i], lit, level.Value, body, px, py);
+                if (gemLook.Pattern != GemPattern.None) pixels[i] = GemPatterns.Apply(pixels[i], px, py, Size, lit, gemLook, body);
             }
         }
 
@@ -440,13 +442,31 @@ public static class GemPixelArt
         Color color;
         switch (level)
         {
-            case 0: color = Dim(body, 0.30f); break;
-            case 1: color = Dim(body, 0.50f); break;
+            // The shadows lean toward blue-violet, as in pixel art: they stay coloured instead of turning grey.
+            case 0: color = Color.Lerp(Dim(body, 0.30f), new Color(0.10f, 0.08f, 0.24f), 0.30f); break;
+            case 1: color = Color.Lerp(Dim(body, 0.52f), new Color(0.12f, 0.10f, 0.28f), 0.16f); break;
             case 2: color = Dim(body, 0.74f); break;
             case 3: color = body; break;
             case 4: color = Color.Lerp(body, facet, 0.65f); break;
             default: color = Color.Lerp(facet, Color.white, bright ? 0.55f : 0.25f); break;
         }
+        color.a = 1f;
+        return color;
+    }
+
+    // A continuous version of the palette, for a smooth dome: the colour changes a little at every step of the tone, with no visible bands.
+    public static Color PaletteSmooth(float tone, Color body, Color facet)
+    {
+        tone = Mathf.Clamp01(tone);
+        var shadow = Color.Lerp(Dim(body, 0.30f), new Color(0.10f, 0.08f, 0.24f), 0.28f);
+        var dark = Dim(body, 0.62f);
+        var light = Color.Lerp(body, facet, 0.70f);
+        var glint = Color.Lerp(facet, Color.white, 0.70f);
+        Color color;
+        if (tone < 0.30f) color = Color.Lerp(shadow, dark, tone / 0.30f);
+        else if (tone < 0.55f) color = Color.Lerp(dark, body, (tone - 0.30f) / 0.25f);
+        else if (tone < 0.78f) color = Color.Lerp(body, light, (tone - 0.55f) / 0.23f);
+        else color = Color.Lerp(light, glint, (tone - 0.78f) / 0.22f);
         color.a = 1f;
         return color;
     }
@@ -576,9 +596,9 @@ public static class GemPixelArt
                 return Chamfered(au, av, 1.00f, 0.40f, 0.07f);
             case "Poire":
             {
-                if (u < -0.30f) return (u + 0.30f) * (u + 0.30f) + v * v <= 0.62f * 0.62f;
+                if (u < -0.30f) return (u + 0.30f) * (u + 0.30f) + v * v <= 0.66f * 0.66f;
                 if (u > 0.98f) return false;
-                var width = 0.62f * Mathf.Pow(1f - (u + 0.30f) / 1.28f, 1.3f);
+                var width = 0.66f * Mathf.Pow(1f - (u + 0.30f) / 1.28f, 0.85f);
                 return av <= width;
             }
             case "Marquise":

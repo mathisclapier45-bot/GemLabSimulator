@@ -46,6 +46,8 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 445
     widthNm: 8
+    depth: 1
+    edgeNm: 0
   inclusions: "Cristaux macl\xE9s en \"roue\", fines inclusions liquides."
   interferenceFigure: "Figure d'interf\xE9rence biaxiale."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."

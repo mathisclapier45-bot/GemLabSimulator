@@ -250,9 +250,9 @@ public class ReportUIController : MonoBehaviour
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.Pleochroism.ToString()))
             measured.Add(gem.pleochroic ? $"Pléochroïsme : {gem.pleochroicDescription}" : "Pléochroïsme : aucun");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.FluorescenceLongWave.ToString()))
-            measured.Add($"Fluorescence UV longues : {gem.fluorescenceLongWave}");
+            measured.Add($"Fluorescence UV longues : {FluorescenceLibrary.Text(gemInstance, true)}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.FluorescenceShortWave.ToString()))
-            measured.Add($"Fluorescence UV courtes : {gem.fluorescenceShortWave}");
+            measured.Add($"Fluorescence UV courtes : {FluorescenceLibrary.Text(gemInstance, false)}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.OpticalCharacter.ToString()))
             measured.Add($"Polariscope : {OpticalDescriptions.PolariscopeText(gem)}");
         if (gemInstance.HasObserved(ExaminationTool.MeasurementType.AbsorptionSpectrum.ToString()))

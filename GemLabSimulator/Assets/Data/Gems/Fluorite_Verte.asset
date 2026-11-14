@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Fluorite_Verte
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Fluorite verte
+  description: Une fluorite verte, tendre et fragile. Presque toutes les couleurs
+    existent chez la fluorite, sauf le rouge et le noir.
+  icon: {fileID: 21300000, guid: 974e082a9addc481e98951499352c4fe, type: 3}
+  roughIcon: {fileID: 21300000, guid: 9cf80414b5f3a4321a8a19e328dfb3e5, type: 3}
+  iconColor: {r: 0.3, g: 0.72, b: 0.4, a: 1}
+  iconFacetColor: {r: 0.58, g: 0.88, b: 0.62, a: 1}
+  refractiveIndex: 1.434
+  density: 3.1
+  hardness: 4
+  lengthMm: 7
+  widthMm: 5.5
+  depthMm: 3.7
+  weightCarats: 1.1
+  luster: Vitreux mat
+  color: Vert
+  shape: Rond
+  cutStyle: Brillant
+  transparency: "Transparent \xE0 translucide"
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Fluorescence bleue ou verte, parfois marqu\xE9e, sous UV
+    longue onde. Peut ne pr\xE9senter aucune r\xE9action."
+  fluorescenceShortWave: "Moins marqu\xE9e sous UV courte onde. Peut ne pr\xE9senter
+    aucune r\xE9action."
+  opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Deux et trois phases, clivages et inclusions solides telles que de
+    la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage
+    octa\xE9drique parfait peut laisser des cassures concho\xEFdales."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 15
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: Chine
+    rarityWeight: 40
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Mexique
+    rarityWeight: 30
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Espagne
+    rarityWeight: 15
+    valueMultiplier: 1.1
+    inclusionOverride: 
+  - name: "\xC9tats-Unis"
+    rarityWeight: 15
+    valueMultiplier: 0.9
+    inclusionOverride: 

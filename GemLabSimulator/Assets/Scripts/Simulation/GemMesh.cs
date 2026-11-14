@@ -9,6 +9,9 @@ public class GemMesh
     public int[][] Triangles;       // each: 3 vertex indices
     public int[] FacetIds;          // one id per triangle; triangles of the same flat facet share it
     public int FacetCount;          // number of facets of the cut (the thin girdle band is not counted); 0 for a dome or rough stone
+    public string HabitId;          // the habit of a rough crystal (corundum_barrel...), or null
+    public bool Smooth;             // a dome (cabochon): shaded from smooth vertex normals, with no visible facets
+    public Vector3[] Normals;       // one outward normal per vertex, for a smooth mesh
 
     private struct Ring
     {
@@ -35,6 +38,7 @@ public class GemMesh
             var domeKey = $"{shape}|{style}";
             if (Cache.TryGetValue(domeKey, out var dome)) return dome;
             dome = Build(shape, Profile(style), 72);
+            MakeSmooth(dome);
             Cache[domeKey] = dome;
             return dome;
         }
@@ -601,6 +605,7 @@ public class GemMesh
         if (Cache.TryGetValue(key, out var cached)) return cached;
 
         var mesh = HabitMesh.Build(habitId);
+        if (mesh != null) mesh.HabitId = habitId;
         Cache[key] = mesh;
         return mesh;
     }
@@ -608,6 +613,10 @@ public class GemMesh
     // Lumpy, angular rock for rough stones.
     public static GemMesh GetRough(int seed)
     {
+        // A convex lump, so the realistic renderer can draw it; the old lumpy mesh below stays as a fallback.
+        var lump = GetHabit("lump_" + (int)((uint)seed % 8u));
+        if (lump != null) return lump;
+
         var key = $"rough|{seed}";
         if (Cache.TryGetValue(key, out var cached)) return cached;
 
@@ -775,6 +784,23 @@ public class GemMesh
         }
 
         return Normalize(vertices, triangles, facetIds);
+    }
+
+    // Turns a mesh into a smooth one: the normal of each vertex is the mean of the faces around it, and every triangle shares one facet, so no crease shows.
+    private static void MakeSmooth(GemMesh mesh)
+    {
+        var normals = new Vector3[mesh.Vertices.Length];
+        foreach (var tri in mesh.Triangles)
+        {
+            var face = Vector3.Cross(mesh.Vertices[tri[1]] - mesh.Vertices[tri[0]], mesh.Vertices[tri[2]] - mesh.Vertices[tri[0]]);
+            normals[tri[0]] += face;
+            normals[tri[1]] += face;
+            normals[tri[2]] += face;
+        }
+        for (var i = 0; i < normals.Length; i++) normals[i] = normals[i].sqrMagnitude > 1e-10f ? normals[i].normalized : Vector3.forward;
+        mesh.Normals = normals;
+        mesh.Smooth = true;
+        for (var t = 0; t < mesh.FacetIds.Length; t++) mesh.FacetIds[t] = 1;
     }
 
     // Adds a triangle wound so that its normal points away from the middle of the stone.

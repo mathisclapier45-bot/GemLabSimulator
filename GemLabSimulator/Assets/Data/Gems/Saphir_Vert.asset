@@ -46,8 +46,12 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 460
     widthNm: 20
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 480
     widthNm: 20
+    depth: 1
+    edgeNm: 0
   inclusions: "Zonation de couleur marqu\xE9e en bandes fines altern\xE9es, fissures
     internes fr\xE9quentes."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."

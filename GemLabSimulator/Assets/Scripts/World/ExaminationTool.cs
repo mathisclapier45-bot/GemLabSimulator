@@ -183,10 +183,10 @@ public class ExaminationTool : MonoBehaviour
                     gem.pleochroic ? gem.pleochroicDescription : "Aucun pléochroïsme visible.");
                 break;
             case MeasurementType.FluorescenceLongWave:
-                RevealQualitative(gemInstance, "Fluorescence UV longues ondes", gem.fluorescenceLongWave);
+                RevealQualitative(gemInstance, "Fluorescence UV longues ondes", FluorescenceLibrary.Text(gemInstance, true));
                 break;
             case MeasurementType.FluorescenceShortWave:
-                RevealQualitative(gemInstance, "Fluorescence UV courtes ondes", gem.fluorescenceShortWave);
+                RevealQualitative(gemInstance, "Fluorescence UV courtes ondes", FluorescenceLibrary.Text(gemInstance, false));
                 break;
             case MeasurementType.OpticalCharacter:
                 RevealQualitative(gemInstance, "Caractère optique", OpticalDescriptions.PolariscopeText(gem));

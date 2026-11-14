@@ -424,6 +424,8 @@ public static class LoupeFeatures
 
         if (gem.AsterismRays > 0)
             head += $" Astérisme à {(gem.AsterismRays == 6 ? "six" : "quatre")} branches (soie dense).";
+        else if (gem.CatsEye)
+            head += " Œil-de-chat : une ligne lumineuse roule sur le dôme quand on incline la pierre (fibres parallèles).";
         return head;
     }
 

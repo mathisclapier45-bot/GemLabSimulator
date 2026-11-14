@@ -467,10 +467,33 @@ def export_chelsea(species):
     }
 
 
+def export_fluorescence(species):
+    """La table de fluorescence : Assets/Resources/Fluorescence/fluorescence.json remplace les phrases UV de l'asset pour les espèces qu'elle décrit."""
+    path = os.path.join(ASSETS, "Resources", "Fluorescence", "fluorescence.json")
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as f:
+        entries = json.load(f).get("entries", [])
+    by_key = {e["key"]: e for e in entries}
+    for sp in species:
+        e = by_key.get(sp["id"])
+        if e:
+            sp["fluorescenceLongWave"] = e["longText"]
+            sp["fluorescenceShortWave"] = e["shortText"]
+            sp["fluorescenceFromJson"] = True
+    used = {sp["id"] for sp in species}
+    return {
+        "note": "Réactions aux UV. Chaque entrée : longText / shortText (le texte lu en jeu), longColor / shortColor (couleur de la lueur), longIntensity / shortIntensity (0 = rien, 1 = vive), "
+                "phosphorescent. Une pierre synthétique prend l'entrée « <espèce>_Synthetique » quand elle existe. Les clés qui ne sont pas des espèces sont des variantes ou des références du tableau.",
+        "entries": [dict(e, variant=e["key"] not in used) for e in entries],
+    }
+
+
 def main():
     species, habit_definitions = export_species()
     spectra = export_spectra(species)
     chelsea = export_chelsea(species)
+    fluorescence = export_fluorescence(species)
     data = {
         "meta": {
             "game": "GemLab Simulator",
@@ -483,6 +506,7 @@ def main():
         "crystal_habits": habit_definitions,
         "spectra": spectra,
         "chelsea": chelsea,
+        "fluorescence": fluorescence,
         "tools": export_tools(),
         "treatments": export_treatments(),
         "books": export_books(),

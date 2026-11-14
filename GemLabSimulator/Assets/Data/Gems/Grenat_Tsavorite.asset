@@ -46,8 +46,12 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 630
     widthNm: 10
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 690
     widthNm: 8
+    depth: 1
+    edgeNm: 0
   inclusions: "Fibres d'amphibole, inclusions caract\xE9ristiques des gisements est-africains."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "R\xE9action rouge\xE2tre possible si color\xE9 au chrome."

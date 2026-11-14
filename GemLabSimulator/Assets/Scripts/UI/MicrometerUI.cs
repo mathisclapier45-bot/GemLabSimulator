@@ -143,7 +143,7 @@ public class MicrometerUI : MonoBehaviour
         }
 
         GemView3D.Colors(stone, out var body, out var facet);
-        view3D.Draw(GemView3D.MeshFor(stone), GemView3D.HalfExtents(stone), orientation, body, facet, stone.Definition.Diaphaneity);
+        view3D.Draw(GemView3D.MeshFor(stone), GemView3D.HalfExtents(stone), orientation, body, facet, stone.Definition.Diaphaneity, 0, GemLook.For(stone.Definition));
 
         var side = GemView3D.MaxDimensionMm(stone) * PxPerMm / GemView3D.FitFraction;
         gemRect.sizeDelta = new Vector2(side, side);
@@ -327,7 +327,7 @@ public class MicrometerUI : MonoBehaviour
         gemImage.raycastTarget = false;
         gemImage.preserveAspect = false;
         gemImage.enabled = false;
-        view3D = new GemView3D(48);
+        view3D = new GemView3D(48) { Realistic = true };
         gemImage.sprite = view3D.Sprite;
 
         hintText = RuntimeUIKit.MakeText("Hint", panel.transform, "", 12, TextAnchor.MiddleCenter, new Color(0.55f, 0.58f, 0.65f),

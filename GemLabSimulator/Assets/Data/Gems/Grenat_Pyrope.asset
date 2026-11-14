@@ -45,6 +45,8 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 512
     widthNm: 30
+    depth: 1
+    edgeNm: 0
   inclusions: "Parfois des cristaux de rutile en aiguilles, g\xE9n\xE9ralement peu
     abondants."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."

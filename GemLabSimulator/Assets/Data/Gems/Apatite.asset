@@ -46,10 +46,16 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 512
     widthNm: 8
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 490
     widthNm: 8
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 465
     widthNm: 8
+    depth: 1
+    edgeNm: 0
   inclusions: "Nombreuses inclusions et fractures, pierre g\xE9n\xE9ralement incluse."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."

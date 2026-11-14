@@ -1,14 +1,14 @@
 {
   "meta": {
     "game": "GemLab Simulator",
-    "generated": "2026-11-13",
+    "generated": "2026-11-14",
     "generator": "tools/export_game_data.py",
     "language": "fr",
     "note": "Données lues dans le projet Unity (pierres, outils, traitements, livres, lieux). À régénérer après un changement : python3 tools/export_game_data.py",
     "counts": {
-      "species": 91,
-      "origins": 88,
-      "crystal_habits": 15,
+      "species": 99,
+      "origins": 94,
+      "crystal_habits": 32,
       "instruments": 26,
       "bag_items": 16,
       "shop_items": 16,
@@ -80,6 +80,114 @@
         }
       ],
       "habits": []
+    },
+    {
+      "id": "Aigue_Marine",
+      "displayName": "Aigue-marine",
+      "description": "Un béryl bleu à bleu-vert pâle, coloré par le fer, comme l'eau de mer. C'est la variété bleue du béryl, presque toujours très propre.",
+      "iconColor": "#8CD1EB",
+      "iconFacetColor": "#CCF0FA",
+      "refractiveIndex": 1.577,
+      "density": 2.72,
+      "hardness": 7.5,
+      "lengthMm": 9,
+      "widthMm": 7,
+      "depthMm": 4.5,
+      "weightCarats": 2.2,
+      "luster": "Vitreux",
+      "color": "Bleu clair",
+      "shape": "Rectangle à pans coupés",
+      "cutStyle": "À degrés",
+      "transparency": "Transparent",
+      "pleochroic": true,
+      "pleochroicDescription": "Bleu clair / Incolore à bleu-vert pâle selon l'axe (faible à modéré).",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+      "opticalCharacterClassName": "Uniaxe",
+      "opticalCharacterClass": 1,
+      "birefringence": 0.006,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Spectre du fer, souvent peu net : bande faible vers 537 nm et vers 456 nm.",
+      "spectrumLines": [
+        {
+          "wavelengthNm": 537,
+          "widthNm": 10,
+          "depth": 0.3,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 456,
+          "widthNm": 12,
+          "depth": 0.4,
+          "edgeNm": 0
+        }
+      ],
+      "inclusions": "Presque toujours très propre. Fins tubes parallèles à l'axe (aspect de pluie), parfois cavités liquides, plumes et fissures.",
+      "interferenceFigure": "Figure d'interférence uniaxiale.",
+      "chelseaFilterReaction": "Bleu-verdâtre.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 60,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Brésil (Minas Gerais)",
+          "rarityWeight": 34,
+          "valueMultiplier": 1.1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Mozambique",
+          "rarityWeight": 18,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Pakistan",
+          "rarityWeight": 16,
+          "valueMultiplier": 1.1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Madagascar",
+          "rarityWeight": 14,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Nigeria",
+          "rarityWeight": 10,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Zambie",
+          "rarityWeight": 8,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "beryl_prism",
+          "weight": 50
+        },
+        {
+          "habit": "beryl_long",
+          "weight": 30
+        },
+        {
+          "habit": "beryl_short",
+          "weight": 20
+        }
+      ],
+      "chelseaFromJson": true
     },
     {
       "id": "Ambre",
@@ -425,10 +533,107 @@
       "habits": [
         {
           "habit": "hex_prism",
-          "weight": 100
+          "weight": 55
+        },
+        {
+          "habit": "hex_pencil",
+          "weight": 30
+        },
+        {
+          "habit": "hex_tabular",
+          "weight": 15
         }
       ],
       "spectrumFromJson": true
+    },
+    {
+      "id": "Beryl_Bleu",
+      "displayName": "Béryl bleu (maxixe)",
+      "description": "Un béryl d'un bleu profond, de type maxixe : sa couleur vient de centres colorés naturels et fane à la lumière. Bien plus soutenu que l'aigue-marine.",
+      "iconColor": "#1F4CC7",
+      "iconFacetColor": "#6694F2",
+      "refractiveIndex": 1.58,
+      "density": 2.72,
+      "hardness": 7.5,
+      "lengthMm": 8,
+      "widthMm": 6,
+      "depthMm": 4,
+      "weightCarats": 1.8,
+      "luster": "Vitreux",
+      "color": "Bleu royal",
+      "shape": "Ovale",
+      "cutStyle": "Brillant",
+      "transparency": "Transparent",
+      "pleochroic": true,
+      "pleochroicDescription": "Bleu profond / Incolore à bleu très pâle selon l'axe (très marqué).",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+      "opticalCharacterClassName": "Uniaxe",
+      "opticalCharacterClass": 1,
+      "birefringence": 0.007,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Bandes dans le rouge et l'orangé vers 695 nm et 628 nm, plus faible vers 550 nm.",
+      "spectrumLines": [
+        {
+          "wavelengthNm": 695,
+          "widthNm": 10,
+          "depth": 0.8,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 628,
+          "widthNm": 20,
+          "depth": 0.7,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 550,
+          "widthNm": 14,
+          "depth": 0.35,
+          "edgeNm": 0
+        }
+      ],
+      "inclusions": "Généralement propre, parfois des tubes parallèles à l'axe et des cavités liquides.",
+      "interferenceFigure": "Figure d'interférence uniaxiale.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 90,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Brésil (Maxixe)",
+          "rarityWeight": 70,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Madagascar",
+          "rarityWeight": 30,
+          "valueMultiplier": 1.2,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "beryl_prism",
+          "weight": 50
+        },
+        {
+          "habit": "beryl_long",
+          "weight": 30
+        },
+        {
+          "habit": "beryl_short",
+          "weight": 20
+        }
+      ]
     },
     {
       "id": "Beryl_Rouge",
@@ -438,7 +643,7 @@
       "iconFacetColor": "#E04C61",
       "refractiveIndex": 1.57,
       "density": 2.68,
-      "hardness": 7.75,
+      "hardness": 7.5,
       "lengthMm": 4,
       "widthMm": 3,
       "depthMm": 2,
@@ -464,10 +669,12 @@
       "spectrumLines": [
         {
           "wavelengthNm": 550,
-          "widthNm": 10
+          "widthNm": 10,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
-      "inclusions": "Voiles de croissance et canaux allongés occasionnels, typiques des béryls.",
+      "inclusions": "Voiles de croissance et canaux allongés occasionnels, typiques des béryls. On trouve rarement de grosses pierres de qualité gemme.",
       "interferenceFigure": "Figure uniaxe centrée en lumière convergente.",
       "chelseaFilterReaction": "Aucune réaction marquée au filtre Chelsea.",
       "magnetism": "Aucune réaction à l'aimant.",
@@ -486,8 +693,16 @@
       ],
       "habits": [
         {
-          "habit": "hex_prism",
-          "weight": 100
+          "habit": "beryl_prism",
+          "weight": 50
+        },
+        {
+          "habit": "beryl_long",
+          "weight": 30
+        },
+        {
+          "habit": "beryl_short",
+          "weight": 20
         }
       ]
     },
@@ -511,8 +726,8 @@
       "transparency": "Transparent",
       "pleochroic": false,
       "pleochroicDescription": "",
-      "fluorescenceLongWave": "Fluorescence variable ou absente.",
-      "fluorescenceShortWave": "Fluorescence variable ou absente.",
+      "fluorescenceLongWave": "Même réaction qu'aux UV courts, mais plus faible, ou aucune réaction.",
+      "fluorescenceShortWave": "Jaune à orange-abricot terne.",
       "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
       "opticalCharacterClassName": "Isotrope",
       "opticalCharacterClass": 0,
@@ -540,7 +755,8 @@
           "inclusionOverride": ""
         }
       ],
-      "habits": []
+      "habits": [],
+      "fluorescenceFromJson": true
     },
     {
       "id": "Chrysoberyl",
@@ -638,8 +854,8 @@
       "transparency": "Transparent",
       "pleochroic": true,
       "pleochroicDescription": "Vert / Orange / Rouge selon les trois axes (très marqué).",
-      "fluorescenceLongWave": "Fluorescence rouge faible possible sous UV longue onde.",
-      "fluorescenceShortWave": "Faible ou absente sous UV courte onde.",
+      "fluorescenceLongWave": "Rouge (chrome).",
+      "fluorescenceShortWave": "Rouge (chrome).",
       "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
       "opticalCharacterClassName": "Biaxe",
       "opticalCharacterClass": 2,
@@ -729,7 +945,8 @@
         }
       ],
       "spectrumFromJson": true,
-      "chelseaFromJson": true
+      "chelseaFromJson": true,
+      "fluorescenceFromJson": true
     },
     {
       "id": "Citrine",
@@ -882,8 +1099,8 @@
       "transparency": "Transparent",
       "pleochroic": true,
       "pleochroicDescription": "Rouge / Orangé-rouge selon l'axe d'observation.",
-      "fluorescenceLongWave": "Fluorescence rouge vif sous UV longue onde.",
-      "fluorescenceShortWave": "Fluorescence rouge plus faible sous UV courte onde.",
+      "fluorescenceLongWave": "Rouge vif (chrome). Naturel ou synthétique : la réaction est la même.",
+      "fluorescenceShortWave": "Rouge vif (chrome). Naturel ou synthétique : la réaction est la même.",
       "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
@@ -974,20 +1191,29 @@
       ],
       "habits": [
         {
-          "habit": "hex_tabular",
-          "weight": 45
-        },
-        {
-          "habit": "hex_bipyramid",
+          "habit": "corundum_prism",
           "weight": 35
         },
         {
-          "habit": "hex_prism",
-          "weight": 20
+          "habit": "corundum_plate",
+          "weight": 25
+        },
+        {
+          "habit": "corundum_pebble",
+          "weight": 15
+        },
+        {
+          "habit": "corundum_fragment",
+          "weight": 15
+        },
+        {
+          "habit": "corundum_bipyramid",
+          "weight": 10
         }
       ],
       "spectrumFromJson": true,
-      "chelseaFromJson": true
+      "chelseaFromJson": true,
+      "fluorescenceFromJson": true
     },
     {
       "id": "Corindon_Synthetique_Rubis",
@@ -1009,8 +1235,8 @@
       "transparency": "Transparent",
       "pleochroic": true,
       "pleochroicDescription": "Rouge / Orangé-rouge selon l'axe d'observation.",
-      "fluorescenceLongWave": "Fluorescence rouge vif et uniforme sous UV longue onde.",
-      "fluorescenceShortWave": "Fluorescence rouge modérée sous UV courte onde.",
+      "fluorescenceLongWave": "Rouge vif (chrome). Naturel ou synthétique : la réaction est la même.",
+      "fluorescenceShortWave": "Rouge vif (chrome). Naturel ou synthétique : la réaction est la même.",
       "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
@@ -1071,7 +1297,8 @@
       ],
       "habits": [],
       "spectrumFromJson": true,
-      "chelseaFromJson": true
+      "chelseaFromJson": true,
+      "fluorescenceFromJson": true
     },
     {
       "id": "Corindon_Synthetique_Saphir",
@@ -1093,8 +1320,8 @@
       "transparency": "Transparent",
       "pleochroic": true,
       "pleochroicDescription": "Bleu / Bleu-violacé selon l'axe d'observation.",
-      "fluorescenceLongWave": "Généralement inerte sous UV longue onde.",
-      "fluorescenceShortWave": "Inerte sous UV courte onde.",
+      "fluorescenceLongWave": "Aucune réaction.",
+      "fluorescenceShortWave": "Vert : réaction du saphir bleu de synthèse.",
       "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
@@ -1123,7 +1350,8 @@
         }
       ],
       "habits": [],
-      "chelseaFromJson": true
+      "chelseaFromJson": true,
+      "fluorescenceFromJson": true
     },
     {
       "id": "Corne_Rhinoceros",
@@ -1247,8 +1475,8 @@
       "transparency": "Transparent",
       "pleochroic": false,
       "pleochroicDescription": "",
-      "fluorescenceLongWave": "Fluorescence bleue fréquente sous UV longue onde (variable selon les spécimens).",
-      "fluorescenceShortWave": "Fluorescence plus faible sous UV courte onde.",
+      "fluorescenceLongWave": "Réaction variable, nulle à forte. Le bleu est la réaction la plus commune ; vert et jaune également.",
+      "fluorescenceShortWave": "Généralement une fluorescence plus faible qu'aux UV longs.",
       "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
       "opticalCharacterClassName": "Isotrope",
       "opticalCharacterClass": 0,
@@ -1261,7 +1489,9 @@
       "spectrumLines": [
         {
           "wavelengthNm": 415,
-          "widthNm": 10
+          "widthNm": 10,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Inclusions cristallines sombres possibles, généralement peu abondantes.",
@@ -1308,7 +1538,8 @@
           "habit": "octahedron_trigons",
           "weight": 38
         }
-      ]
+      ],
+      "fluorescenceFromJson": true
     },
     {
       "id": "Diamant_Synthetique_CVD",
@@ -1456,11 +1687,15 @@
       "spectrumLines": [
         {
           "wavelengthNm": 505,
-          "widthNm": 20
+          "widthNm": 20,
+          "depth": 1,
+          "edgeNm": 0
         },
         {
           "wavelengthNm": 690,
-          "widthNm": 15
+          "widthNm": 15,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Fines inclusions fibreuses, parfois structure en \"plumes\".",
@@ -1519,8 +1754,8 @@
       "transparency": "Translucide",
       "pleochroic": false,
       "pleochroicDescription": "",
-      "fluorescenceLongWave": "Fluorescence faible, parfois verdâtre, sous UV longue onde.",
-      "fluorescenceShortWave": "Fluorescence quasi nulle sous UV courte onde.",
+      "fluorescenceLongWave": "Blanc.",
+      "fluorescenceShortWave": "Bleu verdâtre.",
       "opticalCharacter": "Uniaxe (biréfringent), lecture diffuse typique d'un agrégat organique.",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
@@ -1548,17 +1783,18 @@
           "inclusionOverride": ""
         }
       ],
-      "habits": []
+      "habits": [],
+      "fluorescenceFromJson": true
     },
     {
       "id": "Emeraude",
       "displayName": "Émeraude",
-      "description": "Un béryl vert intense, envoyé pour authentification.",
+      "description": "Un béryl vert, coloré par le chrome (et parfois le vanadium) : l'émeraude. Fragile malgré sa dureté, elle est presque toujours fracturée et porte ses inclusions en « jardin ».",
       "iconColor": "#1A734C",
       "iconFacetColor": "#4CA673",
-      "refractiveIndex": 1.58,
+      "refractiveIndex": 1.585,
       "density": 2.72,
-      "hardness": 7.7,
+      "hardness": 7.5,
       "lengthMm": 8.2,
       "widthMm": 6.2,
       "depthMm": 4.5,
@@ -1569,13 +1805,13 @@
       "cutStyle": "Émeraude (à degrés)",
       "transparency": "Transparent",
       "pleochroic": true,
-      "pleochroicDescription": "Bleu-vert / Jaune-vert selon l'axe d'observation (marqué).",
-      "fluorescenceLongWave": "Généralement inerte sous UV longue onde.",
-      "fluorescenceShortWave": "Inerte sous UV courte onde.",
+      "pleochroicDescription": "Bleu-vert / Jaune-vert selon l'axe d'observation (faible à prononcé).",
+      "fluorescenceLongWave": "Rouge ou vert, naturelle ou synthétique.",
+      "fluorescenceShortWave": "Rouge, naturelle ou synthétique.",
       "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
-      "birefringence": 0.006,
+      "birefringence": 0.007,
       "isQuartzFamily": false,
       "isPolycrystalline": false,
       "isThermallyConductiveLikeDiamond": false,
@@ -1613,7 +1849,7 @@
           "edgeNm": 14
         }
       ],
-      "inclusions": "Inclusions en \"jardin\" (fissures et inclusions multiphases), très caractéristiques.",
+      "inclusions": "Inclusions en \"jardin\" : cavités à plusieurs phases, fissures, paillettes de mica ; elles changent selon la mine.",
       "interferenceFigure": "Figure d'interférence uniaxiale.",
       "chelseaFilterReaction": "Rouge vif ou rose à verdâtre, naturelle ou synthétique. L'intensité dépend de la teneur en chrome.",
       "magnetism": "Aucune réaction notable à l'aimant.",
@@ -1625,60 +1861,99 @@
       "origins": [
         {
           "name": "Colombie (Muzo/Chivor)",
-          "rarityWeight": 25,
+          "rarityWeight": 22,
           "valueMultiplier": 2.5,
-          "inclusionOverride": "Inclusions triphasées (liquide, gaz, cristal de halite) en \"jardin\"."
+          "inclusionOverride": "Inclusions trois-phases (Muzo), pyrite, parisite (Chivor), feldspath, mica et rhomboèdres de calcite."
         },
         {
           "name": "Zambie",
-          "rarityWeight": 35,
+          "rarityWeight": 28,
           "valueMultiplier": 1.2,
-          "inclusionOverride": ""
+          "inclusionOverride": "Particules de mica (muscovite), chrysobéryl, hématite, magnétite, limonite et prismes de rutile."
         },
         {
           "name": "Brésil",
-          "rarityWeight": 25,
+          "rarityWeight": 18,
           "valueMultiplier": 0.9,
-          "inclusionOverride": ""
+          "inclusionOverride": "Inclusions de pyrite, de limonite, de talc, de chromite, de"
         },
         {
           "name": "Afghanistan (Panjshir)",
-          "rarityWeight": 15,
+          "rarityWeight": 8,
           "valueMultiplier": 1.5,
           "inclusionOverride": ""
+        },
+        {
+          "name": "Sibérie (Oural)",
+          "rarityWeight": 6,
+          "valueMultiplier": 1.3,
+          "inclusionOverride": "Inclusions en aiguilles qui ressemblent à des tiges de bambou, aiguilles de tourmaline, fluorite et paillettes de mica biotite."
+        },
+        {
+          "name": "Zimbabwe (Sandawana)",
+          "rarityWeight": 6,
+          "valueMultiplier": 1.6,
+          "inclusionOverride": "Beau vert vif ; inclusions aciculaires courbes (actinolite)"
+        },
+        {
+          "name": "Afrique du Sud",
+          "rarityWeight": 3,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": "Souvent fracturée, avec des paillettes de mica vertes et brunes et des inclusions de molybdénite ; matériau de qualité moyenne, souvent taillé en cabochon."
+        },
+        {
+          "name": "Inde",
+          "rarityWeight": 4,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": "Cavités en forme de virgule à deux phases (liquide et bulle de gaz) et paillettes de mica."
+        },
+        {
+          "name": "Pakistan (Swat)",
+          "rarityWeight": 5,
+          "valueMultiplier": 1.1,
+          "inclusionOverride": "Paillettes de mica, inclusions à deux phases et dolomite."
         }
       ],
       "habits": [
         {
-          "habit": "hex_prism",
-          "weight": 100
+          "habit": "beryl_prism",
+          "weight": 50
+        },
+        {
+          "habit": "beryl_long",
+          "weight": 30
+        },
+        {
+          "habit": "beryl_short",
+          "weight": 20
         }
       ],
       "spectrumFromJson": true,
-      "chelseaFromJson": true
+      "chelseaFromJson": true,
+      "fluorescenceFromJson": true
     },
     {
       "id": "Fluorite",
       "displayName": "Fluorite",
-      "description": "Un minéral tendre et coloré, dont le nom a donné le mot \"fluorescence\".",
+      "description": "Une fluorite violette, minéral tendre et fragile dont le nom a donné le mot \"fluorescence\". Presque toutes les couleurs existent, sauf le rouge et le noir.",
       "iconColor": "#8C4CB2",
       "iconFacetColor": "#B880D9",
       "refractiveIndex": 1.434,
-      "density": 3.18,
+      "density": 3.1,
       "hardness": 4,
       "lengthMm": 7,
       "widthMm": 5.5,
       "depthMm": 3.7,
       "weightCarats": 1.1,
-      "luster": "Vitreux",
+      "luster": "Vitreux mat",
       "color": "Violet",
       "shape": "Ovale",
       "cutStyle": "Brillant",
-      "transparency": "Transparent",
+      "transparency": "Transparent à translucide",
       "pleochroic": false,
       "pleochroicDescription": "",
-      "fluorescenceLongWave": "Fluorescence bleue à violette souvent intense sous UV longue onde.",
-      "fluorescenceShortWave": "Fluorescence variable sous UV courte onde.",
+      "fluorescenceLongWave": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
+      "fluorescenceShortWave": "Moins marquée. Peut ne présenter aucune réaction.",
       "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
       "opticalCharacterClassName": "Isotrope",
       "opticalCharacterClass": 0,
@@ -1689,7 +1964,7 @@
       "isElectricallyConductive": false,
       "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
       "spectrumLines": "[]",
-      "inclusions": "Clivage parfait dans quatre directions, fractures internes fréquentes.",
+      "inclusions": "Deux et trois phases, clivages et inclusions solides telles que de la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage octaédrique parfait peut laisser des cassures conchoïdales.",
       "interferenceFigure": "Aucune figure d'interférence (matériau isotrope).",
       "chelseaFilterReaction": "Aucune réaction particulière.",
       "magnetism": "Aucune réaction notable à l'aimant.",
@@ -1727,17 +2002,425 @@
       "habits": [
         {
           "habit": "cube",
-          "weight": 50
-        },
-        {
-          "habit": "octahedron",
           "weight": 40
         },
         {
+          "habit": "octahedron",
+          "weight": 28
+        },
+        {
+          "habit": "cleaved_octahedron",
+          "weight": 28
+        },
+        {
           "habit": "rhombic_dodecahedron",
-          "weight": 10
+          "weight": 4
         }
-      ]
+      ],
+      "fluorescenceFromJson": true
+    },
+    {
+      "id": "Fluorite_Bandee",
+      "displayName": "Fluorite à bandes de couleur",
+      "description": "Une fluorite zonée, veinée de bandes violettes, vertes, blanches ou rosées. Chaque pierre taillée montre un dessin différent.",
+      "iconColor": "#9466A8",
+      "iconFacetColor": "#C7A8D6",
+      "refractiveIndex": 1.434,
+      "density": 3.1,
+      "hardness": 4,
+      "lengthMm": 7,
+      "widthMm": 5.5,
+      "depthMm": 3.7,
+      "weightCarats": 1.1,
+      "luster": "Vitreux mat",
+      "color": "Bandes violettes, vertes et blanches",
+      "shape": "Ovale",
+      "cutStyle": "Cabochon",
+      "transparency": "Translucide",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
+      "fluorescenceShortWave": "Moins marquée. Peut ne présenter aucune réaction.",
+      "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
+      "opticalCharacterClassName": "Isotrope",
+      "opticalCharacterClass": 0,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Deux et trois phases, clivages et inclusions solides telles que de la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage octaédrique parfait peut laisser des cassures conchoïdales.",
+      "interferenceFigure": "Aucune figure d'interférence (matériau isotrope).",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 20,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Chine",
+          "rarityWeight": 45,
+          "valueMultiplier": 1,
+          "inclusionOverride": "Fluorite de Chine à bandes de couleur, souvent veinée de rouge et de violet."
+        },
+        {
+          "name": "Mexique",
+          "rarityWeight": 30,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Angleterre",
+          "rarityWeight": 25,
+          "valueMultiplier": 1.3,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "octahedron",
+          "weight": 55
+        },
+        {
+          "habit": "spinel_twin",
+          "weight": 25
+        },
+        {
+          "habit": "octahedron_modified",
+          "weight": 20
+        }
+      ],
+      "fluorescenceFromJson": true
+    },
+    {
+      "id": "Fluorite_Bleue",
+      "displayName": "Fluorite bleue",
+      "description": "Une fluorite d'un bleu profond, tendre et fragile, au clivage octaédrique parfait.",
+      "iconColor": "#385CD1",
+      "iconFacetColor": "#809EF2",
+      "refractiveIndex": 1.434,
+      "density": 3.1,
+      "hardness": 4,
+      "lengthMm": 7,
+      "widthMm": 5.5,
+      "depthMm": 3.7,
+      "weightCarats": 1.1,
+      "luster": "Vitreux mat",
+      "color": "Bleu",
+      "shape": "Ovale",
+      "cutStyle": "Brillant",
+      "transparency": "Transparent à translucide",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
+      "fluorescenceShortWave": "Moins marquée. Peut ne présenter aucune réaction.",
+      "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
+      "opticalCharacterClassName": "Isotrope",
+      "opticalCharacterClass": 0,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Deux et trois phases, clivages et inclusions solides telles que de la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage octaédrique parfait peut laisser des cassures conchoïdales.",
+      "interferenceFigure": "Aucune figure d'interférence (matériau isotrope).",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 22,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Chine",
+          "rarityWeight": 35,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Mexique",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Angleterre",
+          "rarityWeight": 20,
+          "valueMultiplier": 1.3,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "États-Unis",
+          "rarityWeight": 20,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "cube",
+          "weight": 40
+        },
+        {
+          "habit": "octahedron",
+          "weight": 28
+        },
+        {
+          "habit": "cleaved_octahedron",
+          "weight": 28
+        },
+        {
+          "habit": "rhombic_dodecahedron",
+          "weight": 4
+        }
+      ],
+      "fluorescenceFromJson": true
+    },
+    {
+      "id": "Fluorite_Blue_John",
+      "displayName": "Blue John",
+      "description": "Le Blue John : une fluorite à bandes violettes, blanches et jaunes, propre à un gisement d'Angleterre. Très fragile, on l'imprègne de résine avant de la tailler.",
+      "iconColor": "#573894",
+      "iconFacetColor": "#B299D1",
+      "refractiveIndex": 1.434,
+      "density": 3.1,
+      "hardness": 4,
+      "lengthMm": 7,
+      "widthMm": 5.5,
+      "depthMm": 3.7,
+      "weightCarats": 1.1,
+      "luster": "Vitreux mat",
+      "color": "Bandes violettes, blanches et jaunes",
+      "shape": "Ovale",
+      "cutStyle": "Cabochon",
+      "transparency": "Translucide à opaque",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
+      "fluorescenceShortWave": "Moins marquée. Peut ne présenter aucune réaction.",
+      "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
+      "opticalCharacterClassName": "Isotrope",
+      "opticalCharacterClass": 0,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Bandes de couleur violettes, blanches et jaunes ; cavités et clivages nombreux. Imprégnation de résine fréquente avant la taille.",
+      "interferenceFigure": "Aucune figure d'interférence (matériau isotrope).",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 45,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Angleterre (Derbyshire)",
+          "rarityWeight": 100,
+          "valueMultiplier": 1.6,
+          "inclusionOverride": "Bandes de couleur violettes, blanches et jaunes. Pierre très fragile, souvent imprégnée de résine pour être travaillée."
+        }
+      ],
+      "habits": [
+        {
+          "habit": "octahedron",
+          "weight": 55
+        },
+        {
+          "habit": "spinel_twin",
+          "weight": 25
+        },
+        {
+          "habit": "octahedron_modified",
+          "weight": 20
+        }
+      ],
+      "fluorescenceFromJson": true
+    },
+    {
+      "id": "Fluorite_Jaune",
+      "displayName": "Fluorite jaune",
+      "description": "Une fluorite jaune à jaune doré, tendre et fragile. Elle ressemble à une citrine mais se raye très facilement.",
+      "iconColor": "#EDC740",
+      "iconFacetColor": "#FAE68C",
+      "refractiveIndex": 1.434,
+      "density": 3.1,
+      "hardness": 4,
+      "lengthMm": 7,
+      "widthMm": 5.5,
+      "depthMm": 3.7,
+      "weightCarats": 1.1,
+      "luster": "Vitreux mat",
+      "color": "Jaune",
+      "shape": "Rectangle à pans coupés",
+      "cutStyle": "À degrés",
+      "transparency": "Transparent à translucide",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
+      "fluorescenceShortWave": "Moins marquée. Peut ne présenter aucune réaction.",
+      "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
+      "opticalCharacterClassName": "Isotrope",
+      "opticalCharacterClass": 0,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Deux et trois phases, clivages et inclusions solides telles que de la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage octaédrique parfait peut laisser des cassures conchoïdales.",
+      "interferenceFigure": "Aucune figure d'interférence (matériau isotrope).",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 18,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Chine",
+          "rarityWeight": 35,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Mexique",
+          "rarityWeight": 35,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Espagne",
+          "rarityWeight": 15,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "États-Unis",
+          "rarityWeight": 15,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "cube",
+          "weight": 40
+        },
+        {
+          "habit": "octahedron",
+          "weight": 28
+        },
+        {
+          "habit": "cleaved_octahedron",
+          "weight": 28
+        },
+        {
+          "habit": "rhombic_dodecahedron",
+          "weight": 4
+        }
+      ],
+      "fluorescenceFromJson": true
+    },
+    {
+      "id": "Fluorite_Verte",
+      "displayName": "Fluorite verte",
+      "description": "Une fluorite verte, tendre et fragile. Presque toutes les couleurs existent chez la fluorite, sauf le rouge et le noir.",
+      "iconColor": "#4CB866",
+      "iconFacetColor": "#94E09E",
+      "refractiveIndex": 1.434,
+      "density": 3.1,
+      "hardness": 4,
+      "lengthMm": 7,
+      "widthMm": 5.5,
+      "depthMm": 3.7,
+      "weightCarats": 1.1,
+      "luster": "Vitreux mat",
+      "color": "Vert",
+      "shape": "Rond",
+      "cutStyle": "Brillant",
+      "transparency": "Transparent à translucide",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
+      "fluorescenceShortWave": "Moins marquée. Peut ne présenter aucune réaction.",
+      "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
+      "opticalCharacterClassName": "Isotrope",
+      "opticalCharacterClass": 0,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Deux et trois phases, clivages et inclusions solides telles que de la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage octaédrique parfait peut laisser des cassures conchoïdales.",
+      "interferenceFigure": "Aucune figure d'interférence (matériau isotrope).",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 15,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Chine",
+          "rarityWeight": 40,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Mexique",
+          "rarityWeight": 30,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Espagne",
+          "rarityWeight": 15,
+          "valueMultiplier": 1.1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "États-Unis",
+          "rarityWeight": 15,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "cube",
+          "weight": 40
+        },
+        {
+          "habit": "octahedron",
+          "weight": 28
+        },
+        {
+          "habit": "cleaved_octahedron",
+          "weight": 28
+        },
+        {
+          "habit": "rhombic_dodecahedron",
+          "weight": 4
+        }
+      ],
+      "fluorescenceFromJson": true
     },
     {
       "id": "GGG",
@@ -1793,12 +2476,12 @@
     {
       "id": "Goshenite",
       "displayName": "Goshénite",
-      "description": "Un béryl incolore, la variété la plus pure du groupe.",
+      "description": "Le béryl incolore : goshénite est le nom que l'on donne à un béryl sans couleur, la variété la plus pure du groupe.",
       "iconColor": "#E0E6EB",
       "iconFacetColor": "#FAFCFF",
       "refractiveIndex": 1.577,
       "density": 2.72,
-      "hardness": 7.75,
+      "hardness": 7.5,
       "lengthMm": 7.5,
       "widthMm": 5.8,
       "depthMm": 3.9,
@@ -1853,8 +2536,16 @@
       ],
       "habits": [
         {
-          "habit": "hex_prism",
-          "weight": 100
+          "habit": "beryl_prism",
+          "weight": 50
+        },
+        {
+          "habit": "beryl_long",
+          "weight": 30
+        },
+        {
+          "habit": "beryl_short",
+          "weight": 20
         }
       ]
     },
@@ -1953,11 +2644,11 @@
       "habits": [
         {
           "habit": "rhombic_dodecahedron",
-          "weight": 55
+          "weight": 90
         },
         {
           "habit": "trapezohedron",
-          "weight": 45
+          "weight": 10
         }
       ],
       "spectrumFromJson": true,
@@ -1997,7 +2688,9 @@
       "spectrumLines": [
         {
           "wavelengthNm": 440,
-          "widthNm": 45
+          "widthNm": 45,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Inclusions fibreuses radiales caractéristiques possibles.",
@@ -2032,11 +2725,11 @@
       "habits": [
         {
           "habit": "rhombic_dodecahedron",
-          "weight": 55
+          "weight": 90
         },
         {
           "habit": "trapezohedron",
-          "weight": 45
+          "weight": 10
         }
       ],
       "chelseaFromJson": true
@@ -2075,7 +2768,9 @@
       "spectrumLines": [
         {
           "wavelengthNm": 420,
-          "widthNm": 40
+          "widthNm": 40,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Aspect interne \"mélasse\" (treacle) caractéristique, tourbillons de croissance visibles au microscope.",
@@ -2110,11 +2805,11 @@
       "habits": [
         {
           "habit": "rhombic_dodecahedron",
-          "weight": 55
+          "weight": 90
         },
         {
           "habit": "trapezohedron",
-          "weight": 45
+          "weight": 10
         }
       ]
     },
@@ -2182,11 +2877,11 @@
       "habits": [
         {
           "habit": "rhombic_dodecahedron",
-          "weight": 55
+          "weight": 90
         },
         {
           "habit": "trapezohedron",
-          "weight": 45
+          "weight": 10
         }
       ]
     },
@@ -2224,11 +2919,15 @@
       "spectrumLines": [
         {
           "wavelengthNm": 520,
-          "widthNm": 20
+          "widthNm": 20,
+          "depth": 1,
+          "edgeNm": 0
         },
         {
           "wavelengthNm": 575,
-          "widthNm": 20
+          "widthNm": 20,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Cristaux d'apatite ou de zircon entourés de halos, fissures internes occasionnelles.",
@@ -2257,11 +2956,11 @@
       "habits": [
         {
           "habit": "rhombic_dodecahedron",
-          "weight": 55
+          "weight": 90
         },
         {
           "habit": "trapezohedron",
-          "weight": 45
+          "weight": 10
         }
       ]
     },
@@ -2299,7 +2998,9 @@
       "spectrumLines": [
         {
           "wavelengthNm": 512,
-          "widthNm": 30
+          "widthNm": 30,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Parfois des cristaux de rutile en aiguilles, généralement peu abondants.",
@@ -2334,11 +3035,11 @@
       "habits": [
         {
           "habit": "rhombic_dodecahedron",
-          "weight": 55
+          "weight": 90
         },
         {
           "habit": "trapezohedron",
-          "weight": 45
+          "weight": 10
         }
       ],
       "chelseaFromJson": true
@@ -2377,11 +3078,15 @@
       "spectrumLines": [
         {
           "wavelengthNm": 573,
-          "widthNm": 16
+          "widthNm": 16,
+          "depth": 1,
+          "edgeNm": 0
         },
         {
           "wavelengthNm": 526,
-          "widthNm": 16
+          "widthNm": 16,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Cristaux d'apatite ou de zircon entourés de halos, fissures internes fréquentes.",
@@ -2416,11 +3121,11 @@
       "habits": [
         {
           "habit": "rhombic_dodecahedron",
-          "weight": 55
+          "weight": 90
         },
         {
           "habit": "trapezohedron",
-          "weight": 45
+          "weight": 10
         }
       ]
     },
@@ -2458,15 +3163,21 @@
       "spectrumLines": [
         {
           "wavelengthNm": 412,
-          "widthNm": 10
+          "widthNm": 10,
+          "depth": 1,
+          "edgeNm": 0
         },
         {
           "wavelengthNm": 460,
-          "widthNm": 15
+          "widthNm": 15,
+          "depth": 1,
+          "edgeNm": 0
         },
         {
           "wavelengthNm": 485,
-          "widthNm": 15
+          "widthNm": 15,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Fissures internes possibles, généralement peu abondantes.",
@@ -2501,11 +3212,11 @@
       "habits": [
         {
           "habit": "rhombic_dodecahedron",
-          "weight": 55
+          "weight": 90
         },
         {
           "habit": "trapezohedron",
-          "weight": 45
+          "weight": 10
         }
       ]
     },
@@ -2543,11 +3254,15 @@
       "spectrumLines": [
         {
           "wavelengthNm": 630,
-          "widthNm": 10
+          "widthNm": 10,
+          "depth": 1,
+          "edgeNm": 0
         },
         {
           "wavelengthNm": 690,
-          "widthNm": 8
+          "widthNm": 8,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Fibres d'amphibole, inclusions caractéristiques des gisements est-africains.",
@@ -2582,23 +3297,23 @@
       "habits": [
         {
           "habit": "rhombic_dodecahedron",
-          "weight": 55
+          "weight": 90
         },
         {
           "habit": "trapezohedron",
-          "weight": 45
+          "weight": 10
         }
       ]
     },
     {
       "id": "Heliodore",
       "displayName": "Héliodore",
-      "description": "Un béryl jaune doré, coloré par le fer.",
+      "description": "Un béryl jaune citron à jaune doré foncé, coloré par le fer. On peut aussi l'obtenir en irradiant un béryl vert ou bleu.",
       "iconColor": "#D9AD26",
       "iconFacetColor": "#FAD966",
       "refractiveIndex": 1.575,
       "density": 2.7,
-      "hardness": 7.75,
+      "hardness": 7.5,
       "lengthMm": 8,
       "widthMm": 6,
       "depthMm": 4,
@@ -2615,14 +3330,14 @@
       "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
-      "birefringence": 0.006,
+      "birefringence": 0.007,
       "isQuartzFamily": false,
       "isPolycrystalline": false,
       "isThermallyConductiveLikeDiamond": false,
       "isElectricallyConductive": false,
       "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
       "spectrumLines": "[]",
-      "inclusions": "Inclusions liquides et fissures en \"empreintes digitales\" possibles.",
+      "inclusions": "Inclusions en \"pluie\" : fins tubes parallèles à l'axe du cristal, parfois des cavités liquides et des fissures en \"empreintes digitales\".",
       "interferenceFigure": "Figure d'interférence uniaxiale.",
       "chelseaFilterReaction": "Aucune réaction particulière.",
       "magnetism": "Aucune réaction notable à l'aimant.",
@@ -2659,8 +3374,16 @@
       ],
       "habits": [
         {
-          "habit": "hex_prism",
-          "weight": 100
+          "habit": "beryl_prism",
+          "weight": 50
+        },
+        {
+          "habit": "beryl_long",
+          "weight": 30
+        },
+        {
+          "habit": "beryl_short",
+          "weight": 20
         }
       ]
     },
@@ -2730,11 +3453,11 @@
     {
       "id": "Iolite",
       "displayName": "Iolite",
-      "description": "Une pierre bleu-violet à fort pléochroïsme, parfois appelée pierre des Vikings.",
+      "description": "La variété transparente de la cordiérite : une pierre bleu-violet à fort trichroïsme, parfois appelée pierre des Vikings. Rarement incolore ; le matériau est fragile.",
       "iconColor": "#4C4C99",
       "iconFacetColor": "#8080CC",
       "refractiveIndex": 1.545,
-      "density": 2.61,
+      "density": 2.59,
       "hardness": 7.25,
       "lengthMm": 7.5,
       "widthMm": 5.8,
@@ -2744,9 +3467,9 @@
       "color": "Bleu-violet",
       "shape": "Ovale",
       "cutStyle": "Mixte",
-      "transparency": "Transparent",
+      "transparency": "Transparent à translucide",
       "pleochroic": true,
-      "pleochroicDescription": "Bleu / Violet / Jaune pâle selon les trois axes (très marqué, visible à l'œil nu).",
+      "pleochroicDescription": "Bleu / Violet / Jaune pâle selon les trois axes (très marqué : la couleur de base peut changer complètement selon la direction d'observation).",
       "fluorescenceLongWave": "Aucune fluorescence notable.",
       "fluorescenceShortWave": "Aucune fluorescence notable.",
       "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
@@ -2757,20 +3480,48 @@
       "isPolycrystalline": false,
       "isThermallyConductiveLikeDiamond": false,
       "isElectricallyConductive": false,
-      "absorptionSpectrum": "Bandes d'absorption du fer.",
+      "absorptionSpectrum": "Deux bandes dans le jaune, une bande étroite dans le vert et trois bandes dans le bleu et le violet ; varie selon la direction d'observation.",
       "spectrumLines": [
         {
-          "wavelengthNm": 435,
-          "widthNm": 15
+          "wavelengthNm": 593,
+          "widthNm": 8,
+          "depth": 0.5,
+          "edgeNm": 0
         },
         {
-          "wavelengthNm": 585,
-          "widthNm": 20
+          "wavelengthNm": 580,
+          "widthNm": 8,
+          "depth": 0.5,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 535,
+          "widthNm": 4,
+          "depth": 0.45,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 456,
+          "widthNm": 8,
+          "depth": 0.5,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 436,
+          "widthNm": 8,
+          "depth": 0.6,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 426,
+          "widthNm": 6,
+          "depth": 0.4,
+          "edgeNm": 0
         }
       ],
-      "inclusions": "Parfois de fines paillettes orientées, donnant un effet chatoyant.",
+      "inclusions": "Minces plaquettes de magnétite et d'oxyde de fer, parfois en grand nombre ; fissures ondulantes et givres de guérison courants. Plans de macle possibles.",
       "interferenceFigure": "Figure d'interférence biaxiale nette.",
-      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "chelseaFilterReaction": "Parfois rose pâle.",
       "magnetism": "Aucune réaction notable à l'aimant.",
       "baseValue": 25,
       "forcedSynthetic": false,
@@ -2799,10 +3550,133 @@
       ],
       "habits": [
         {
-          "habit": "ortho_prism",
-          "weight": 100
+          "habit": "octahedron",
+          "weight": 55
+        },
+        {
+          "habit": "spinel_twin",
+          "weight": 25
+        },
+        {
+          "habit": "octahedron_modified",
+          "weight": 20
         }
-      ]
+      ],
+      "chelseaFromJson": true
+    },
+    {
+      "id": "Iolite_Bloodshot",
+      "displayName": "Iolite bloodshot",
+      "description": "Une iolite parsemée de plaquettes d'hématite rougeâtres : elles donnent un effet d'aventurescence et parfois un pseudo œil-de-chat. La variété s'appelle « bloodshot ».",
+      "iconColor": "#8C545C",
+      "iconFacetColor": "#C78C8C",
+      "refractiveIndex": 1.545,
+      "density": 2.59,
+      "hardness": 7.25,
+      "lengthMm": 7.5,
+      "widthMm": 5.8,
+      "depthMm": 3.8,
+      "weightCarats": 1.2,
+      "luster": "Vitreux",
+      "color": "Brun rougeâtre à bleu-violet",
+      "shape": "Ovale",
+      "cutStyle": "Cabochon",
+      "transparency": "Translucide",
+      "pleochroic": true,
+      "pleochroicDescription": "Bleu / Violet / Jaune pâle selon les trois axes (trichroïsme marqué).",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+      "opticalCharacterClassName": "Biaxe",
+      "opticalCharacterClass": 2,
+      "birefringence": 0.01,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Deux bandes dans le jaune, une bande étroite dans le vert et trois bandes dans le bleu et le violet ; varie selon la direction d'observation.",
+      "spectrumLines": [
+        {
+          "wavelengthNm": 593,
+          "widthNm": 8,
+          "depth": 0.5,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 580,
+          "widthNm": 8,
+          "depth": 0.5,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 535,
+          "widthNm": 4,
+          "depth": 0.45,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 456,
+          "widthNm": 8,
+          "depth": 0.5,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 436,
+          "widthNm": 8,
+          "depth": 0.6,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 426,
+          "widthNm": 6,
+          "depth": 0.4,
+          "edgeNm": 0
+        }
+      ],
+      "inclusions": "Innombrables plaquettes d'hématite rougeâtres : elles donnent un effet d'aventurescence et parfois un pseudo œil-de-chat. Fissures ondulantes et givres de guérison courants.",
+      "interferenceFigure": "Figure d'interférence biaxiale nette.",
+      "chelseaFilterReaction": "Parfois rose pâle.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 40,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Inde",
+          "rarityWeight": 70,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Sri Lanka",
+          "rarityWeight": 20,
+          "valueMultiplier": 1.1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Madagascar",
+          "rarityWeight": 10,
+          "valueMultiplier": 1.1,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "octahedron",
+          "weight": 55
+        },
+        {
+          "habit": "spinel_twin",
+          "weight": 25
+        },
+        {
+          "habit": "octahedron_modified",
+          "weight": 20
+        }
+      ],
+      "chelseaFromJson": true
     },
     {
       "id": "Ivoire_Elephant",
@@ -3163,8 +4037,8 @@
       "transparency": "Transparent",
       "pleochroic": true,
       "pleochroicDescription": "Rose intense / Incolore selon l'axe d'observation (marqué).",
-      "fluorescenceLongWave": "Fluorescence orangée à rosée possible sous UV longue onde.",
-      "fluorescenceShortWave": "Faible ou absente sous UV courte onde.",
+      "fluorescenceLongWave": "Orange.",
+      "fluorescenceShortWave": "Aucune réaction.",
       "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
       "opticalCharacterClassName": "Biaxe",
       "opticalCharacterClass": 2,
@@ -3209,7 +4083,8 @@
           "habit": "monoclinic_prism",
           "weight": 100
         }
-      ]
+      ],
+      "fluorescenceFromJson": true
     },
     {
       "id": "Kyanite",
@@ -3454,12 +4329,12 @@
     {
       "id": "Morganite",
       "displayName": "Morganite",
-      "description": "Un béryl rose, coloré par le manganèse.",
+      "description": "Un béryl rose pêche à rosé, coloré par le manganèse. On le chauffe souvent pour obtenir un rose pur.",
       "iconColor": "#D999A6",
       "iconFacetColor": "#F7C7D1",
       "refractiveIndex": 1.585,
       "density": 2.8,
-      "hardness": 7.75,
+      "hardness": 7.5,
       "lengthMm": 8,
       "widthMm": 6,
       "depthMm": 4,
@@ -3470,7 +4345,7 @@
       "cutStyle": "Mixte",
       "transparency": "Transparent",
       "pleochroic": true,
-      "pleochroicDescription": "Rose pâle / Bleu-rose selon l'axe (faible à modéré).",
+      "pleochroicDescription": "Rose / Rose bleuté selon l'axe (faible à modéré).",
       "fluorescenceLongWave": "Aucune fluorescence notable.",
       "fluorescenceShortWave": "Aucune fluorescence notable.",
       "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
@@ -3483,7 +4358,7 @@
       "isElectricallyConductive": false,
       "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
       "spectrumLines": "[]",
-      "inclusions": "Généralement propre, parfois inclusions liquides allongées.",
+      "inclusions": "Tubes parallèles à l'axe (aspect de pluie), inclusions liquides allongées et voiles de croissance.",
       "interferenceFigure": "Figure d'interférence uniaxiale.",
       "chelseaFilterReaction": "Aucune réaction particulière.",
       "magnetism": "Aucune réaction notable à l'aimant.",
@@ -3520,8 +4395,16 @@
       ],
       "habits": [
         {
-          "habit": "hex_prism",
-          "weight": 100
+          "habit": "beryl_prism",
+          "weight": 50
+        },
+        {
+          "habit": "beryl_long",
+          "weight": 30
+        },
+        {
+          "habit": "beryl_short",
+          "weight": 20
         }
       ]
     },
@@ -3734,8 +4617,8 @@
       "transparency": "Translucide",
       "pleochroic": false,
       "pleochroicDescription": "",
-      "fluorescenceLongWave": "Fluorescence blanchâtre à verdâtre possible sous UV longue onde.",
-      "fluorescenceShortWave": "Fluorescence faible possible sous UV courte onde.",
+      "fluorescenceLongWave": "Blanc à vert.",
+      "fluorescenceShortWave": "Blanc à vert.",
       "opticalCharacter": "Isotrope (matériau amorphe, non cristallin).",
       "opticalCharacterClassName": "Isotrope",
       "opticalCharacterClass": 0,
@@ -3769,7 +4652,8 @@
           "inclusionOverride": ""
         }
       ],
-      "habits": []
+      "habits": [],
+      "fluorescenceFromJson": true
     },
     {
       "id": "Orthose",
@@ -3861,11 +4745,15 @@
       "spectrumLines": [
         {
           "wavelengthNm": 620,
-          "widthNm": 12
+          "widthNm": 12,
+          "depth": 1,
+          "edgeNm": 0
         },
         {
           "wavelengthNm": 450,
-          "widthNm": 30
+          "widthNm": 30,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Soie de rutile fine, zonation de couleur subtile en bandes.",
@@ -3893,16 +4781,24 @@
       ],
       "habits": [
         {
-          "habit": "hex_tabular",
-          "weight": 45
-        },
-        {
-          "habit": "hex_bipyramid",
+          "habit": "corundum_pebble",
           "weight": 35
         },
         {
-          "habit": "hex_prism",
+          "habit": "corundum_prism",
           "weight": 20
+        },
+        {
+          "habit": "corundum_barrel",
+          "weight": 20
+        },
+        {
+          "habit": "corundum_fragment",
+          "weight": 15
+        },
+        {
+          "habit": "corundum_bipyramid",
+          "weight": 10
         }
       ]
     },
@@ -3940,11 +4836,15 @@
       "spectrumLines": [
         {
           "wavelengthNm": 445,
-          "widthNm": 6
+          "widthNm": 6,
+          "depth": 1,
+          "edgeNm": 0
         },
         {
           "wavelengthNm": 635,
-          "widthNm": 6
+          "widthNm": 6,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Cristaux minéraux inclus rarement observés ; fines stries de croissance parfois visibles.",
@@ -3967,7 +4867,15 @@
       "habits": [
         {
           "habit": "hex_prism",
-          "weight": 100
+          "weight": 55
+        },
+        {
+          "habit": "hex_pencil",
+          "weight": 30
+        },
+        {
+          "habit": "hex_tabular",
+          "weight": 15
         }
       ]
     },
@@ -4079,8 +4987,8 @@
       "transparency": "Opaque",
       "pleochroic": false,
       "pleochroicDescription": "",
-      "fluorescenceLongWave": "Inerte à bleu-blanc faible (plus claire pour les perles d'eau douce).",
-      "fluorescenceShortWave": "Inerte à très faible.",
+      "fluorescenceLongWave": "Blanc bleuté.",
+      "fluorescenceShortWave": "Blanc bleuté.",
       "opticalCharacter": "Agrégat opaque de cristaux d'aragonite : pas de lecture optique exploitable.",
       "opticalCharacterClassName": "Opaque",
       "opticalCharacterClass": 3,
@@ -4120,7 +5028,8 @@
           "inclusionOverride": ""
         }
       ],
-      "habits": []
+      "habits": [],
+      "fluorescenceFromJson": true
     },
     {
       "id": "Perle_Tahiti",
@@ -4176,11 +5085,11 @@
     {
       "id": "Pezzottaite",
       "displayName": "Pezzottaite",
-      "description": "Un béryl au césium, de couleur \"framboise\", découvert seulement en 2002 à Madagascar.",
+      "description": "Un béryl au césium rose à rougeâtre, translucide à transparent, découvert seulement en 2002 à Madagascar. Il est trigonal et pousse en cristaux rhomboédriques tabulaires, très inclus. Fragile malgré sa dureté de 8.",
       "iconColor": "#BF3359",
       "iconFacetColor": "#E66B8C",
       "refractiveIndex": 1.615,
-      "density": 3.13,
+      "density": 3.05,
       "hardness": 8,
       "lengthMm": 6.5,
       "widthMm": 5,
@@ -4192,20 +5101,33 @@
       "cutStyle": "Brillant",
       "transparency": "Transparent",
       "pleochroic": true,
-      "pleochroicDescription": "Rose pâle / Rouge-violet selon l'axe (modéré).",
+      "pleochroicDescription": "Rose orangé moyen / Rose violacé à violet rose (dichroïque).",
       "fluorescenceLongWave": "Aucune fluorescence notable.",
       "fluorescenceShortWave": "Aucune fluorescence notable.",
       "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
-      "birefringence": 0.008,
+      "birefringence": 0.0095,
       "isQuartzFamily": false,
       "isPolycrystalline": false,
       "isThermallyConductiveLikeDiamond": false,
       "isElectricallyConductive": false,
-      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
-      "spectrumLines": "[]",
-      "inclusions": "Cristaux maclés en étoile à trois branches, structure de croissance particulière.",
+      "absorptionSpectrum": "Une bande dans le bleu-vert vers 494 nm et une plus petite dans le vert vers 563 nm.",
+      "spectrumLines": [
+        {
+          "wavelengthNm": 494,
+          "widthNm": 14,
+          "depth": 1,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 563,
+          "widthNm": 12,
+          "depth": 0.5,
+          "edgeNm": 0
+        }
+      ],
+      "inclusions": "Matériau généralement très inclus : tubes de croissance et plumes de guérison (givres). Peut être imprégné de résine.",
       "interferenceFigure": "Figure d'interférence uniaxiale.",
       "chelseaFilterReaction": "Aucune réaction particulière.",
       "magnetism": "Aucune réaction notable à l'aimant.",
@@ -4228,7 +5150,16 @@
           "inclusionOverride": ""
         }
       ],
-      "habits": []
+      "habits": [
+        {
+          "habit": "rhombohedral_plate",
+          "weight": 80
+        },
+        {
+          "habit": "rhombohedron",
+          "weight": 20
+        }
+      ]
     },
     {
       "id": "Pierre_De_Lune",
@@ -4782,8 +5713,8 @@
       "transparency": "Transparent",
       "pleochroic": true,
       "pleochroicDescription": "Bleu / Bleu-vert selon l'axe d'observation (marqué).",
-      "fluorescenceLongWave": "Généralement inerte sous UV longue onde (le fer inhibe la fluorescence).",
-      "fluorescenceShortWave": "Inerte sous UV courte onde.",
+      "fluorescenceLongWave": "Aucune réaction.",
+      "fluorescenceShortWave": "Saphir naturel : aucune réaction, parfois un vert faible.",
       "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
@@ -4838,20 +5769,29 @@
       ],
       "habits": [
         {
-          "habit": "hex_bipyramid",
-          "weight": 55
+          "habit": "corundum_barrel",
+          "weight": 35
         },
         {
-          "habit": "hex_prism",
-          "weight": 30
+          "habit": "corundum_bipyramid",
+          "weight": 20
         },
         {
-          "habit": "hex_tabular",
+          "habit": "corundum_pebble",
+          "weight": 20
+        },
+        {
+          "habit": "corundum_prism",
           "weight": 15
+        },
+        {
+          "habit": "corundum_fragment",
+          "weight": 10
         }
       ],
       "spectrumFromJson": true,
-      "chelseaFromJson": true
+      "chelseaFromJson": true,
+      "fluorescenceFromJson": true
     },
     {
       "id": "Saphir_Incolore",
@@ -4910,16 +5850,24 @@
       ],
       "habits": [
         {
-          "habit": "hex_bipyramid",
-          "weight": 55
+          "habit": "corundum_barrel",
+          "weight": 35
         },
         {
-          "habit": "hex_prism",
-          "weight": 30
+          "habit": "corundum_bipyramid",
+          "weight": 20
         },
         {
-          "habit": "hex_tabular",
+          "habit": "corundum_pebble",
+          "weight": 20
+        },
+        {
+          "habit": "corundum_prism",
           "weight": 15
+        },
+        {
+          "habit": "corundum_fragment",
+          "weight": 10
         }
       ]
     },
@@ -4943,8 +5891,8 @@
       "transparency": "Transparent",
       "pleochroic": true,
       "pleochroicDescription": "Jaune pâle / Jaune plus soutenu selon l'axe (faible).",
-      "fluorescenceLongWave": "Généralement inerte sous UV longue onde.",
-      "fluorescenceShortWave": "Inerte sous UV courte onde.",
+      "fluorescenceLongWave": "Naturel : nulle à abricot.",
+      "fluorescenceShortWave": "Aucune réaction.",
       "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
@@ -4957,7 +5905,9 @@
       "spectrumLines": [
         {
           "wavelengthNm": 450,
-          "widthNm": 40
+          "widthNm": 40,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Zonation de couleur en bandes hexagonales, cristaux fins dispersés.",
@@ -4991,18 +5941,27 @@
       ],
       "habits": [
         {
-          "habit": "hex_bipyramid",
-          "weight": 55
+          "habit": "corundum_barrel",
+          "weight": 35
         },
         {
-          "habit": "hex_prism",
-          "weight": 30
+          "habit": "corundum_bipyramid",
+          "weight": 20
         },
         {
-          "habit": "hex_tabular",
+          "habit": "corundum_pebble",
+          "weight": 20
+        },
+        {
+          "habit": "corundum_prism",
           "weight": 15
+        },
+        {
+          "habit": "corundum_fragment",
+          "weight": 10
         }
-      ]
+      ],
+      "fluorescenceFromJson": true
     },
     {
       "id": "Saphir_Orange",
@@ -5061,16 +6020,24 @@
       ],
       "habits": [
         {
-          "habit": "hex_bipyramid",
-          "weight": 55
+          "habit": "corundum_barrel",
+          "weight": 35
         },
         {
-          "habit": "hex_prism",
-          "weight": 30
+          "habit": "corundum_bipyramid",
+          "weight": 20
         },
         {
-          "habit": "hex_tabular",
+          "habit": "corundum_pebble",
+          "weight": 20
+        },
+        {
+          "habit": "corundum_prism",
           "weight": 15
+        },
+        {
+          "habit": "corundum_fragment",
+          "weight": 10
         }
       ]
     },
@@ -5094,8 +6061,8 @@
       "transparency": "Transparent",
       "pleochroic": true,
       "pleochroicDescription": "Rose clair / Rose plus soutenu selon l'axe (modéré).",
-      "fluorescenceLongWave": "Fluorescence rouge à rose faible à modérée sous UV longue onde.",
-      "fluorescenceShortWave": "Fluorescence faible sous UV courte onde.",
+      "fluorescenceLongWave": "Rouge (chrome).",
+      "fluorescenceShortWave": "Rouge (chrome).",
       "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
@@ -5108,11 +6075,15 @@
       "spectrumLines": [
         {
           "wavelengthNm": 694,
-          "widthNm": 10
+          "widthNm": 10,
+          "depth": 1,
+          "edgeNm": 0
         },
         {
           "wavelengthNm": 620,
-          "widthNm": 14
+          "widthNm": 14,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Soie de rutile fine, légère zonation de couleur.",
@@ -5146,18 +6117,27 @@
       ],
       "habits": [
         {
-          "habit": "hex_bipyramid",
-          "weight": 55
+          "habit": "corundum_barrel",
+          "weight": 35
         },
         {
-          "habit": "hex_prism",
-          "weight": 30
+          "habit": "corundum_bipyramid",
+          "weight": 20
         },
         {
-          "habit": "hex_tabular",
+          "habit": "corundum_pebble",
+          "weight": 20
+        },
+        {
+          "habit": "corundum_prism",
           "weight": 15
+        },
+        {
+          "habit": "corundum_fragment",
+          "weight": 10
         }
-      ]
+      ],
+      "fluorescenceFromJson": true
     },
     {
       "id": "Saphir_Vert",
@@ -5241,16 +6221,24 @@
       ],
       "habits": [
         {
-          "habit": "hex_bipyramid",
-          "weight": 55
+          "habit": "corundum_barrel",
+          "weight": 35
         },
         {
-          "habit": "hex_prism",
-          "weight": 30
+          "habit": "corundum_bipyramid",
+          "weight": 20
         },
         {
-          "habit": "hex_tabular",
+          "habit": "corundum_pebble",
+          "weight": 20
+        },
+        {
+          "habit": "corundum_prism",
           "weight": 15
+        },
+        {
+          "habit": "corundum_fragment",
+          "weight": 10
         }
       ],
       "spectrumFromJson": true
@@ -5312,16 +6300,24 @@
       ],
       "habits": [
         {
-          "habit": "hex_bipyramid",
-          "weight": 55
+          "habit": "corundum_barrel",
+          "weight": 35
         },
         {
-          "habit": "hex_prism",
-          "weight": 30
+          "habit": "corundum_bipyramid",
+          "weight": 20
         },
         {
-          "habit": "hex_tabular",
+          "habit": "corundum_pebble",
+          "weight": 20
+        },
+        {
+          "habit": "corundum_prism",
           "weight": 15
+        },
+        {
+          "habit": "corundum_fragment",
+          "weight": 10
         }
       ]
     },
@@ -5345,8 +6341,8 @@
       "transparency": "Transparent",
       "pleochroic": true,
       "pleochroicDescription": "Jaune pâle / Jaune plus soutenu selon l'axe (modéré).",
-      "fluorescenceLongWave": "Fluorescence orangée à rosée possible sous UV longue onde.",
-      "fluorescenceShortWave": "Fluorescence faible possible sous UV courte onde.",
+      "fluorescenceLongWave": "Jaunâtre.",
+      "fluorescenceShortWave": "Rougeâtre.",
       "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
@@ -5391,7 +6387,8 @@
           "habit": "tetragonal_prism",
           "weight": 100
         }
-      ]
+      ],
+      "fluorescenceFromJson": true
     },
     {
       "id": "Serpentine_Bowenite",
@@ -5538,8 +6535,8 @@
       "transparency": "Transparent",
       "pleochroic": false,
       "pleochroicDescription": "",
-      "fluorescenceLongWave": "Fluorescence rouge, d'intensité modérée, sous UV longue onde.",
-      "fluorescenceShortWave": "Fluorescence rouge faible sous UV courte onde.",
+      "fluorescenceLongWave": "Rouge (chrome).",
+      "fluorescenceShortWave": "Rouge (chrome).",
       "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
       "opticalCharacterClassName": "Isotrope",
       "opticalCharacterClass": 0,
@@ -5619,10 +6616,19 @@
       "habits": [
         {
           "habit": "octahedron",
-          "weight": 100
+          "weight": 55
+        },
+        {
+          "habit": "spinel_twin",
+          "weight": 25
+        },
+        {
+          "habit": "octahedron_modified",
+          "weight": 20
         }
       ],
-      "spectrumFromJson": true
+      "spectrumFromJson": true,
+      "fluorescenceFromJson": true
     },
     {
       "id": "Spinelle_Bleu",
@@ -5644,8 +6650,8 @@
       "transparency": "Transparent",
       "pleochroic": false,
       "pleochroicDescription": "",
-      "fluorescenceLongWave": "Généralement inerte, parfois faible réaction rougeâtre en présence de traces de chrome.",
-      "fluorescenceShortWave": "Inerte sous UV courte onde.",
+      "fluorescenceLongWave": "Variable à nulle (spinelle bleu naturel).",
+      "fluorescenceShortWave": "Variable à nulle (spinelle bleu naturel).",
       "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
       "opticalCharacterClassName": "Isotrope",
       "opticalCharacterClass": 0,
@@ -5707,11 +6713,20 @@
       "habits": [
         {
           "habit": "octahedron",
-          "weight": 100
+          "weight": 55
+        },
+        {
+          "habit": "spinel_twin",
+          "weight": 25
+        },
+        {
+          "habit": "octahedron_modified",
+          "weight": 20
         }
       ],
       "spectrumFromJson": true,
-      "chelseaFromJson": true
+      "chelseaFromJson": true,
+      "fluorescenceFromJson": true
     },
     {
       "id": "Tanzanite",
@@ -5747,15 +6762,21 @@
       "spectrumLines": [
         {
           "wavelengthNm": 455,
-          "widthNm": 20
+          "widthNm": 20,
+          "depth": 1,
+          "edgeNm": 0
         },
         {
           "wavelengthNm": 528,
-          "widthNm": 20
+          "widthNm": 20,
+          "depth": 1,
+          "edgeNm": 0
         },
         {
           "wavelengthNm": 595,
-          "widthNm": 25
+          "widthNm": 25,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Généralement propre, parfois fines inclusions aciculaires.",
@@ -5858,7 +6879,11 @@
       "habits": [
         {
           "habit": "ortho_prism",
-          "weight": 100
+          "weight": 50
+        },
+        {
+          "habit": "ortho_wedge",
+          "weight": 50
         }
       ]
     },
@@ -5896,7 +6921,9 @@
       "spectrumLines": [
         {
           "wavelengthNm": 650,
-          "widthNm": 40
+          "widthNm": 40,
+          "depth": 1,
+          "edgeNm": 0
         }
       ],
       "inclusions": "Inclusions liquides, tubes et fractures cicatrisées ; pierres souvent chauffées.",
@@ -5931,7 +6958,11 @@
       "habits": [
         {
           "habit": "trigonal_prism",
-          "weight": 100
+          "weight": 55
+        },
+        {
+          "habit": "trigonal_pencil",
+          "weight": 45
         }
       ]
     },
@@ -6005,7 +7036,11 @@
       "habits": [
         {
           "habit": "trigonal_prism",
-          "weight": 100
+          "weight": 55
+        },
+        {
+          "habit": "trigonal_pencil",
+          "weight": 45
         }
       ]
     },
@@ -6149,8 +7184,8 @@
       "transparency": "Transparent",
       "pleochroic": false,
       "pleochroicDescription": "",
-      "fluorescenceLongWave": "Fluorescence variable ou absente, souvent avec des bulles visibles à la loupe.",
-      "fluorescenceShortWave": "Fluorescence variable ou absente sous UV courte onde.",
+      "fluorescenceLongWave": "Aucune réaction.",
+      "fluorescenceShortWave": "Variable : peut présenter une surface blanc crayeux.",
       "opticalCharacter": "Isotrope (matériau amorphe, non cristallin).",
       "opticalCharacterClassName": "Isotrope",
       "opticalCharacterClass": 0,
@@ -6178,7 +7213,8 @@
           "inclusionOverride": ""
         }
       ],
-      "habits": []
+      "habits": [],
+      "fluorescenceFromJson": true
     },
     {
       "id": "YAG",
@@ -6251,8 +7287,8 @@
       "transparency": "Transparent",
       "pleochroic": true,
       "pleochroicDescription": "Dichroïsme faible à modéré selon la teinte.",
-      "fluorescenceLongWave": "Fluorescence jaunâtre faible possible selon l'origine.",
-      "fluorescenceShortWave": "Généralement inerte sous UV courte onde.",
+      "fluorescenceLongWave": "Jaune-brunâtre.",
+      "fluorescenceShortWave": "Aucune réaction.",
       "opticalCharacter": "Anisotrope, uniaxial — biréfringence très élevée provoquant un dédoublement visible des arêtes des facettes arrière.",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
@@ -6335,7 +7371,8 @@
           "weight": 100
         }
       ],
-      "spectrumFromJson": true
+      "spectrumFromJson": true,
+      "fluorescenceFromJson": true
     },
     {
       "id": "Zoisite",
@@ -6468,6 +7505,96 @@
       "description": "Cristal aplati à six côtés : le rubis."
     },
     {
+      "id": "corundum_barrel",
+      "short": "Tonneau",
+      "name": "Tonneau de corindon",
+      "description": "Un long tonneau hexagonal aux extrémités étagées, strié en travers : la forme classique du saphir brut."
+    },
+    {
+      "id": "corundum_bipyramid",
+      "short": "Bipyramide courte",
+      "name": "Bipyramide courte de corindon",
+      "description": "Une bipyramide trapue, les pointes émoussées : un saphir de gisement primaire."
+    },
+    {
+      "id": "corundum_prism",
+      "short": "Prisme trapu",
+      "name": "Prisme trapu de corindon",
+      "description": "Un prisme à six pans, trapu, aux extrémités plates ou rhomboédriques, dépoli et mat : le rubis brut."
+    },
+    {
+      "id": "corundum_plate",
+      "short": "Plaque",
+      "name": "Plaque hexagonale de corindon",
+      "description": "Une plaque aplatie à six côtés, au bord biseauté : les rubis de Mong Hsu et de Madagascar."
+    },
+    {
+      "id": "corundum_pebble",
+      "short": "Galet",
+      "name": "Galet de corindon",
+      "description": "Un galet roulé par la rivière, arrondi, aux faces usées : les graviers à gemmes de Ceylan et de Madagascar."
+    },
+    {
+      "id": "corundum_fragment",
+      "short": "Fragment",
+      "name": "Fragment de corindon",
+      "description": "Un éclat anguleux aux grandes cassures plates, parfois le long des plans de séparation."
+    },
+    {
+      "id": "spinel_twin",
+      "short": "Macle du spinelle",
+      "name": "Macle du spinelle",
+      "description": "Deux octaèdres accolés et aplatis : une plaque triangulaire aux coins tronqués. C'est la macle classique du spinelle, qui lui a donné son nom de loi de macle."
+    },
+    {
+      "id": "octahedron_modified",
+      "short": "Octaèdre tronqué",
+      "name": "Octaèdre à sommets tronqués",
+      "description": "Un octaèdre dont les six pointes sont coupées par de petites faces carrées (le cube)."
+    },
+    {
+      "id": "beryl_short",
+      "short": "Prisme court de béryl",
+      "name": "Prisme hexagonal court de béryl",
+      "description": "Un prisme hexagonal régulier, trapu : six pans égaux et deux faces hexagonales plates aux extrémités (pinacoïde basal)."
+    },
+    {
+      "id": "beryl_prism",
+      "short": "Prisme de béryl",
+      "name": "Prisme hexagonal de béryl",
+      "description": "Un prisme hexagonal régulier allongé dans l'axe de croissance : six pans égaux, terminé de chaque côté par une face hexagonale plate (pinacoïde basal)."
+    },
+    {
+      "id": "beryl_long",
+      "short": "Prisme long de béryl",
+      "name": "Prisme hexagonal long de béryl",
+      "description": "Un long prisme hexagonal régulier, strié le long de l'axe, aux deux extrémités plates (pinacoïde basal) : le crayon du béryl."
+    },
+    {
+      "id": "quartz_double",
+      "short": "Quartz biterminé",
+      "name": "Quartz à deux pointes",
+      "description": "Un court prisme hexagonal pointé aux deux bouts, comme les diamants d'Herkimer : un cristal qui a poussé libre, sans support."
+    },
+    {
+      "id": "hex_pencil",
+      "short": "Crayon hexagonal",
+      "name": "Crayon hexagonal",
+      "description": "Un long cristal fin à six pans, aux fines stries le long de l'axe : l'aigue-marine, l'émeraude, l'apatite."
+    },
+    {
+      "id": "trigonal_pencil",
+      "short": "Tourmaline allongée",
+      "name": "Crayon de tourmaline",
+      "description": "Un long prisme à section de triangle aux angles arrondis, profondément strié dans sa longueur : la tourmaline."
+    },
+    {
+      "id": "ortho_wedge",
+      "short": "Prisme à coin",
+      "name": "Prisme à terminaison en coin",
+      "description": "Un prisme rectangulaire qui finit en coin, strié dans sa longueur : la topaze."
+    },
+    {
       "id": "tetragonal_prism",
       "short": "Prisme tétragonal",
       "name": "Prisme tétragonal bipyramidé",
@@ -6490,6 +7617,18 @@
       "short": "Prisme trigonal",
       "name": "Prisme trigonal",
       "description": "Prisme à section triangulaire aux angles arrondis, strié : les tourmalines."
+    },
+    {
+      "id": "cleaved_octahedron",
+      "short": "Octaèdre clivé",
+      "name": "Octaèdre clivé de fluorite",
+      "description": "Un fragment d'octaèdre taillé par le clivage parfait de la fluorite : grandes faces planes, marques en escaliers à la surface."
+    },
+    {
+      "id": "rhombohedral_plate",
+      "short": "Plaque rhomboédrique",
+      "name": "Plaque rhomboédrique",
+      "description": "Un rhomboèdre aplati entre deux grandes faces plates : la pezzottaïte, béryl au césium rose de Madagascar."
     },
     {
       "id": "rhombohedron",
@@ -7306,7 +8445,7 @@
         "color": "#F7141A",
         "intensity": 0.0,
         "dull": "#1F5A55",
-        "variant": true
+        "variant": false
       },
       {
         "key": "Quartz_Synthetique_Cobalt",
@@ -7323,6 +8462,399 @@
         "color": "#F7141A",
         "intensity": 0.0,
         "variant": true
+      },
+      {
+        "key": "Iolite",
+        "source": "Diplôme en gemmologie 2019, iolite (p. 136, note manuscrite)",
+        "reaction": "Parfois rose pâle.",
+        "color": "#E9A9B8",
+        "intensity": 0.3,
+        "variant": false
+      },
+      {
+        "key": "Iolite_Bloodshot",
+        "source": "Diplôme en gemmologie 2019, iolite (p. 136, note manuscrite)",
+        "reaction": "Parfois rose pâle.",
+        "color": "#E9A9B8",
+        "intensity": 0.3,
+        "variant": false
+      }
+    ]
+  },
+  "fluorescence": {
+    "note": "Réactions aux UV. Chaque entrée : longText / shortText (le texte lu en jeu), longColor / shortColor (couleur de la lueur), longIntensity / shortIntensity (0 = rien, 1 = vive), phosphorescent. Une pierre synthétique prend l'entrée « <espèce>_Synthetique » quand elle existe. Les clés qui ne sont pas des espèces sont des variantes ou des références du tableau.",
+    "entries": [
+      {
+        "key": "Verre",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Aucune réaction.",
+        "longColor": "#FFFFFF",
+        "longIntensity": 0,
+        "shortText": "Variable : peut présenter une surface blanc crayeux.",
+        "shortColor": "#E8EEF5",
+        "shortIntensity": 0.25,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "CZ",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Même réaction qu'aux UV courts, mais plus faible, ou aucune réaction.",
+        "longColor": "#E6A23C",
+        "longIntensity": 0.2,
+        "shortText": "Jaune à orange-abricot terne.",
+        "shortColor": "#EBA64A",
+        "shortIntensity": 0.45,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Diamant",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Réaction variable, nulle à forte. Le bleu est la réaction la plus commune ; vert et jaune également.",
+        "longColor": "#4D80FF",
+        "longIntensity": 0.55,
+        "shortText": "Généralement une fluorescence plus faible qu'aux UV longs.",
+        "shortColor": "#4D80FF",
+        "shortIntensity": 0.3,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Opale_Noble",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Blanc à vert.",
+        "longColor": "#C8F0C8",
+        "longIntensity": 0.5,
+        "shortText": "Blanc à vert.",
+        "shortColor": "#C8F0C8",
+        "shortIntensity": 0.5,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Perle",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Blanc bleuté.",
+        "longColor": "#C7E0FF",
+        "longIntensity": 0.5,
+        "shortText": "Blanc bleuté.",
+        "shortColor": "#C7E0FF",
+        "shortIntensity": 0.5,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Zircon",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Jaune-brunâtre.",
+        "longColor": "#C89A3C",
+        "longIntensity": 0.45,
+        "shortText": "Aucune réaction.",
+        "shortColor": "#FFFFFF",
+        "shortIntensity": 0,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Chrysoberyl_Alexandrite",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Rouge (chrome).",
+        "longColor": "#FF2A1A",
+        "longIntensity": 0.7,
+        "shortText": "Rouge (chrome).",
+        "shortColor": "#FF2A1A",
+        "shortIntensity": 0.7,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Emeraude",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Rouge ou vert, naturelle ou synthétique.",
+        "longColor": "#FF3A2A",
+        "longIntensity": 0.5,
+        "shortText": "Rouge, naturelle ou synthétique.",
+        "shortColor": "#FF3A2A",
+        "shortIntensity": 0.5,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Saphir_Bleu",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Aucune réaction.",
+        "longColor": "#FFFFFF",
+        "longIntensity": 0,
+        "shortText": "Saphir naturel : aucune réaction, parfois un vert faible.",
+        "shortColor": "#5CFF8A",
+        "shortIntensity": 0.12,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Corindon_Synthetique_Saphir",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Aucune réaction.",
+        "longColor": "#FFFFFF",
+        "longIntensity": 0,
+        "shortText": "Vert : réaction du saphir bleu de synthèse.",
+        "shortColor": "#4DFF7A",
+        "shortIntensity": 0.7,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Spinelle_Bleu",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Variable à nulle (spinelle bleu naturel).",
+        "longColor": "#B0C8FF",
+        "longIntensity": 0.12,
+        "shortText": "Variable à nulle (spinelle bleu naturel).",
+        "shortColor": "#B0C8FF",
+        "shortIntensity": 0.12,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Spinelle_Bleu_Synthetique",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Rouge : spinelle bleu synthétique, coloré au cobalt.",
+        "longColor": "#FF2A1A",
+        "longIntensity": 0.85,
+        "shortText": "Blanc à presque blanc.",
+        "shortColor": "#F0F4FF",
+        "shortIntensity": 0.6,
+        "phosphorescent": false,
+        "variant": true
+      },
+      {
+        "key": "Spinelle",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Rouge (chrome).",
+        "longColor": "#FF2A1A",
+        "longIntensity": 0.75,
+        "shortText": "Rouge (chrome).",
+        "shortColor": "#FF2A1A",
+        "shortIntensity": 0.75,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Corindon_Rubis",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Rouge vif (chrome). Naturel ou synthétique : la réaction est la même.",
+        "longColor": "#FF2418",
+        "longIntensity": 0.9,
+        "shortText": "Rouge vif (chrome). Naturel ou synthétique : la réaction est la même.",
+        "shortColor": "#FF2418",
+        "shortIntensity": 0.9,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Corindon_Synthetique_Rubis",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Rouge vif (chrome). Naturel ou synthétique : la réaction est la même.",
+        "longColor": "#FF2418",
+        "longIntensity": 0.9,
+        "shortText": "Rouge vif (chrome). Naturel ou synthétique : la réaction est la même.",
+        "shortColor": "#FF2418",
+        "shortIntensity": 0.9,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Saphir_Rose",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Rouge (chrome).",
+        "longColor": "#FF2A1A",
+        "longIntensity": 0.7,
+        "shortText": "Rouge (chrome).",
+        "shortColor": "#FF2A1A",
+        "shortIntensity": 0.7,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Kunzite",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Orange.",
+        "longColor": "#FF8C1F",
+        "longIntensity": 0.55,
+        "shortText": "Aucune réaction.",
+        "shortColor": "#FFFFFF",
+        "shortIntensity": 0,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Ecaille_Tortue",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Blanc.",
+        "longColor": "#F0F4FF",
+        "longIntensity": 0.5,
+        "shortText": "Bleu verdâtre.",
+        "shortColor": "#4DC8B4",
+        "shortIntensity": 0.5,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Saphir_Jaune",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Naturel : nulle à abricot.",
+        "longColor": "#FFA860",
+        "longIntensity": 0.2,
+        "shortText": "Aucune réaction.",
+        "shortColor": "#FFFFFF",
+        "shortIntensity": 0,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Saphir_Jaune_Synthetique",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Synthétique : rouge cramoisi léger.",
+        "longColor": "#E0204A",
+        "longIntensity": 0.3,
+        "shortText": "Aucune réaction.",
+        "shortColor": "#FFFFFF",
+        "shortIntensity": 0,
+        "phosphorescent": false,
+        "variant": true
+      },
+      {
+        "key": "Scapolite",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Jaunâtre.",
+        "longColor": "#FFE050",
+        "longIntensity": 0.45,
+        "shortText": "Rougeâtre.",
+        "shortColor": "#FF5040",
+        "shortIntensity": 0.45,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Corindon_Synthetique_CC",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Rouge terne.",
+        "longColor": "#C03030",
+        "longIntensity": 0.4,
+        "shortText": "Rouge terne.",
+        "shortColor": "#C03030",
+        "shortIntensity": 0.4,
+        "phosphorescent": false,
+        "variant": true
+      },
+      {
+        "key": "Imitation_Ecaille",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Aucune réaction.",
+        "longColor": "#FFFFFF",
+        "longIntensity": 0,
+        "shortText": "Jaune (plastique).",
+        "shortColor": "#FFE050",
+        "shortIntensity": 0.5,
+        "phosphorescent": false,
+        "variant": true
+      },
+      {
+        "key": "Spinelle_Synthetique",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Aucune réaction.",
+        "longColor": "#FFFFFF",
+        "longIntensity": 0,
+        "shortText": "Crayeux, bleu ou vert.",
+        "shortColor": "#9CD8C8",
+        "shortIntensity": 0.5,
+        "phosphorescent": false,
+        "variant": true
+      },
+      {
+        "key": "Zircon_Vert",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Jaune-brunâtre.",
+        "longColor": "#C89A3C",
+        "longIntensity": 0.45,
+        "shortText": "Aucune réaction.",
+        "shortColor": "#FFFFFF",
+        "shortIntensity": 0,
+        "phosphorescent": false,
+        "variant": true
+      },
+      {
+        "key": "Fluorite",
+        "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
+        "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
+        "longColor": "#5A78FF",
+        "longIntensity": 0.7,
+        "shortText": "Moins marquée. Peut ne présenter aucune réaction.",
+        "shortColor": "#5A78FF",
+        "shortIntensity": 0.35,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Fluorite_Verte",
+        "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
+        "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
+        "longColor": "#5A78FF",
+        "longIntensity": 0.7,
+        "shortText": "Moins marquée. Peut ne présenter aucune réaction.",
+        "shortColor": "#5A78FF",
+        "shortIntensity": 0.35,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Fluorite_Bleue",
+        "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
+        "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
+        "longColor": "#5A78FF",
+        "longIntensity": 0.7,
+        "shortText": "Moins marquée. Peut ne présenter aucune réaction.",
+        "shortColor": "#5A78FF",
+        "shortIntensity": 0.35,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Fluorite_Jaune",
+        "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
+        "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
+        "longColor": "#5A78FF",
+        "longIntensity": 0.7,
+        "shortText": "Moins marquée. Peut ne présenter aucune réaction.",
+        "shortColor": "#5A78FF",
+        "shortIntensity": 0.35,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Fluorite_Bandee",
+        "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
+        "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
+        "longColor": "#5A78FF",
+        "longIntensity": 0.7,
+        "shortText": "Moins marquée. Peut ne présenter aucune réaction.",
+        "shortColor": "#5A78FF",
+        "shortIntensity": 0.35,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Fluorite_Blue_John",
+        "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
+        "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
+        "longColor": "#5A78FF",
+        "longIntensity": 0.7,
+        "shortText": "Moins marquée. Peut ne présenter aucune réaction.",
+        "shortColor": "#5A78FF",
+        "shortIntensity": 0.35,
+        "phosphorescent": false,
+        "variant": false
       }
     ]
   },

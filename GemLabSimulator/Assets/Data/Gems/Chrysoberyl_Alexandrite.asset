@@ -46,10 +46,16 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 680
     widthNm: 6
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 660
     widthNm: 8
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 630
     widthNm: 15
+    depth: 1
+    edgeNm: 0
   inclusions: "Cristaux macl\xE9s, fines inclusions en \"empreintes digitales\"."
   interferenceFigure: "Figure d'interf\xE9rence biaxiale."
   chelseaFilterReaction: "R\xE9action rouge marqu\xE9e sous filtre Chelsea (due au

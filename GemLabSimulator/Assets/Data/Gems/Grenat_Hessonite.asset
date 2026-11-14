@@ -46,6 +46,8 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 420
     widthNm: 40
+    depth: 1
+    edgeNm: 0
   inclusions: "Aspect interne \"m\xE9lasse\" (treacle) caract\xE9ristique, tourbillons
     de croissance visibles au microscope."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."

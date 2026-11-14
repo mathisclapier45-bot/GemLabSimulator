@@ -46,10 +46,16 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 685
     widthNm: 6
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 675
     widthNm: 6
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 550
     widthNm: 35
+    depth: 1
+    edgeNm: 0
   inclusions: "Cristaux octa\xE9driques, inclusions en \"empreintes digitales\" possibles."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "R\xE9action rouge \xE0 ros\xE2tre, d'intensit\xE9 mod\xE9r\xE9e."

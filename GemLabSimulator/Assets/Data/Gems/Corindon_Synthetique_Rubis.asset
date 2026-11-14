@@ -46,12 +46,20 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 694
     widthNm: 6
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 668
     widthNm: 8
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 620
     widthNm: 12
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 560
     widthNm: 40
+    depth: 1
+    edgeNm: 0
   inclusions: "Bulles de gaz sph\xE9riques ou en forme de virgule, parfois align\xE9es
     ; stries de croissance courbes et concentriques."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."

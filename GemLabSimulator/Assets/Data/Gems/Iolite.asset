@@ -13,14 +13,15 @@ MonoBehaviour:
   m_Name: Iolite
   m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
   displayName: Iolite
-  description: "Une pierre bleu-violet \xE0 fort pl\xE9ochro\xEFsme, parfois appel\xE9e
-    pierre des Vikings."
+  description: "La vari\xE9t\xE9 transparente de la cordi\xE9rite : une pierre bleu-violet
+    \xE0 fort trichro\xEFsme, parfois appel\xE9e pierre des Vikings. Rarement incolore
+    ; le mat\xE9riau est fragile."
   icon: {fileID: 21300000, guid: 5f72f0700fc644b21babac4da694589f, type: 3}
   roughIcon: {fileID: 21300000, guid: 6ef8849855e8b4bc6a87568b373ba1fc, type: 3}
   iconColor: {r: 0.3, g: 0.3, b: 0.6, a: 1}
   iconFacetColor: {r: 0.5, g: 0.5, b: 0.8, a: 1}
   refractiveIndex: 1.545
-  density: 2.61
+  density: 2.59
   hardness: 7.25
   lengthMm: 7.5
   widthMm: 5.8
@@ -30,10 +31,11 @@ MonoBehaviour:
   color: Bleu-violet
   shape: Ovale
   cutStyle: Mixte
-  transparency: Transparent
+  transparency: "Transparent \xE0 translucide"
   pleochroic: 1
   pleochroicDescription: "Bleu / Violet / Jaune p\xE2le selon les trois axes (tr\xE8s
-    marqu\xE9, visible \xE0 l'\u0153il nu)."
+    marqu\xE9 : la couleur de base peut changer compl\xE8tement selon la direction
+    d'observation)."
   fluorescenceLongWave: Aucune fluorescence notable.
   fluorescenceShortWave: Aucune fluorescence notable.
   opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
@@ -43,15 +45,38 @@ MonoBehaviour:
   isPolycrystalline: 0
   isThermallyConductiveLikeDiamond: 0
   isElectricallyConductive: 0
-  absorptionSpectrum: Bandes d'absorption du fer.
+  absorptionSpectrum: "Deux bandes dans le jaune, une bande \xE9troite dans le vert
+    et trois bandes dans le bleu et le violet ; varie selon la direction d'observation."
   spectrumLines:
-  - wavelengthNm: 435
-    widthNm: 15
-  - wavelengthNm: 585
-    widthNm: 20
-  inclusions: "Parfois de fines paillettes orient\xE9es, donnant un effet chatoyant."
+  - wavelengthNm: 593
+    widthNm: 8
+    depth: 0.5
+    edgeNm: 0
+  - wavelengthNm: 580
+    widthNm: 8
+    depth: 0.5
+    edgeNm: 0
+  - wavelengthNm: 535
+    widthNm: 4
+    depth: 0.45
+    edgeNm: 0
+  - wavelengthNm: 456
+    widthNm: 8
+    depth: 0.5
+    edgeNm: 0
+  - wavelengthNm: 436
+    widthNm: 8
+    depth: 0.6
+    edgeNm: 0
+  - wavelengthNm: 426
+    widthNm: 6
+    depth: 0.4
+    edgeNm: 0
+  inclusions: "Minces plaquettes de magn\xE9tite et d'oxyde de fer, parfois en grand
+    nombre ; fissures ondulantes et givres de gu\xE9rison courants. Plans de macle
+    possibles."
   interferenceFigure: "Figure d'interf\xE9rence biaxiale nette."
-  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  chelseaFilterReaction: "Parfois rose p\xE2le."
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
   baseValue: 25
   forcedSynthetic: 0

@@ -48,6 +48,8 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 437
     widthNm: 6
+    depth: 1
+    edgeNm: 0
   inclusions: "Texture grenue \xE0 fibreuse entrelac\xE9e typique d'un agr\xE9gat
     cristallin compact."
   interferenceFigure: "Figure diffuse, non exploitable (agr\xE9gat polycristallin)."

@@ -93,9 +93,9 @@ public static class LapidaryCatalog
     private static readonly Dictionary<string, float> Fragility = new Dictionary<string, float>
     {
         { "Rhodocrosite", 1.8f }, { "Opale_Noble", 1.6f }, { "Opale_De_Feu", 1.6f }, { "Kyanite", 1.5f },
-        { "Tanzanite", 1.4f }, { "Kunzite", 1.4f }, { "Fluorite", 1.4f }, { "Emeraude", 1.4f },
+        { "Tanzanite", 1.4f }, { "Kunzite", 1.4f }, { "Fluorite", 1.4f }, { "Fluorite_Verte", 1.4f }, { "Fluorite_Bleue", 1.4f }, { "Fluorite_Jaune", 1.4f }, { "Fluorite_Bandee", 1.5f }, { "Fluorite_Blue_John", 1.8f }, { "Emeraude", 1.4f },
         { "Orthose", 1.4f }, { "Pierre_De_Lune", 1.4f }, { "Apatite", 1.3f }, { "Labradorite", 1.3f },
-        { "Rhodonite", 1.3f }, { "Pezzottaite", 1.3f }, { "Zoisite", 1.3f }, { "Iolite", 1.2f },
+        { "Rhodonite", 1.3f }, { "Pezzottaite", 1.3f }, { "Zoisite", 1.3f }, { "Iolite", 1.2f }, { "Iolite_Bloodshot", 1.3f },
         { "Turquoise", 1.2f }, { "Diopside_Chromifere", 1.2f }, { "Scapolite", 1.2f }, { "Painite", 1.2f },
     };
 

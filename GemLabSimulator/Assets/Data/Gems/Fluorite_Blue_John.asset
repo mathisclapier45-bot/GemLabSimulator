@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Fluorite_Blue_John
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Blue John
+  description: "Le Blue John : une fluorite \xE0 bandes violettes, blanches et jaunes,
+    propre \xE0 un gisement d'Angleterre. Tr\xE8s fragile, on l'impr\xE8gne de r\xE9sine
+    avant de la tailler."
+  icon: {fileID: 21300000, guid: 73c90e5b04856470d88e6227d327062a, type: 3}
+  roughIcon: {fileID: 21300000, guid: 0947cf2f0df424356b050c7ea11ca63d, type: 3}
+  iconColor: {r: 0.34, g: 0.22, b: 0.58, a: 1}
+  iconFacetColor: {r: 0.7, g: 0.6, b: 0.82, a: 1}
+  refractiveIndex: 1.434
+  density: 3.1
+  hardness: 4
+  lengthMm: 7
+  widthMm: 5.5
+  depthMm: 3.7
+  weightCarats: 1.1
+  luster: Vitreux mat
+  color: Bandes violettes, blanches et jaunes
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: "Translucide \xE0 opaque"
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Fluorescence bleue ou verte, parfois marqu\xE9e, sous UV
+    longue onde. Peut ne pr\xE9senter aucune r\xE9action."
+  fluorescenceShortWave: "Moins marqu\xE9e sous UV courte onde. Peut ne pr\xE9senter
+    aucune r\xE9action."
+  opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Bandes de couleur violettes, blanches et jaunes ; cavit\xE9s et clivages
+    nombreux. Impr\xE9gnation de r\xE9sine fr\xE9quente avant la taille."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 45
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: Angleterre (Derbyshire)
+    rarityWeight: 100
+    valueMultiplier: 1.6
+    inclusionOverride: "Bandes de couleur violettes, blanches et jaunes. Pierre tr\xE8s
+      fragile, souvent impr\xE9gn\xE9e de r\xE9sine pour \xEAtre travaill\xE9e."

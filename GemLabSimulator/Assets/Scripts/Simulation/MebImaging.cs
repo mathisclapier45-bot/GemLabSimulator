@@ -58,7 +58,7 @@ public static class MebImaging
 
     private static bool IsCorundum(string n) => n.StartsWith("Corindon") || n.StartsWith("Saphir") || n == "Padparadscha";
     private static bool IsQuartz(string n) => n.StartsWith("Quartz") || n == "Amethyste" || n == "Ametrine" || n == "Citrine" || n == "Prasiolite";
-    private static bool IsBeryl(string n) => n == "Emeraude" || n == "Goshenite" || n == "Morganite" || n == "Heliodore" || n == "Beryl_Rouge" || n == "Pezzottaite";
+    private static bool IsBeryl(string n) => n == "Emeraude" || n == "Goshenite" || n == "Morganite" || n == "Heliodore" || n == "Beryl_Rouge" || n == "Pezzottaite" || n == "Aigue_Marine" || n == "Beryl_Bleu";
 
     // What fills the fractures of a treated stone (null when none), with the same rule as the Raman spectrometer.
     private static string Filler(GemInstance gem)
@@ -722,6 +722,7 @@ public static class MebImaging
             }
             else if (name == "Morganite") e("Mn", 0.03f);
             else if (name == "Heliodore") e("Fe", 0.05f);
+            else if (name == "Aigue_Marine") e("Fe", 0.03f);
             return;
         }
 
@@ -749,7 +750,7 @@ public static class MebImaging
             case "Zircon": e("Zr", 1f); e("Si", 0.5f); e("O", 0.4f); break;
             case "Peridot": e("O", 0.6f); e("Mg", 1f); e("Si", 0.9f); e("Fe", 0.25f); break;
             case "Apatite": e("Ca", 1f); e("P", 0.7f); e("O", 0.5f); e("F", 0.2f); break;
-            case "Fluorite": e("Ca", 1f); e("F", 0.5f); break;
+            case "Fluorite": case "Fluorite_Verte": case "Fluorite_Bleue": case "Fluorite_Jaune": case "Fluorite_Bandee": case "Fluorite_Blue_John": e("Ca", 1f); e("F", 0.5f); break;
             case "Opale_Noble": case "Opale_De_Feu": e("Si", 1f); e("O", 0.6f); break;
             case "Turquoise": case "Turquoise_Stabilisee": e("Al", 0.8f); e("P", 0.7f); e("Cu", 0.6f); e("O", 0.5f); e("Fe", 0.1f); break;
             case "Jade_Jadeite": e("Na", 0.4f); e("Al", 0.7f); e("Si", 1f); e("O", 0.6f); break;

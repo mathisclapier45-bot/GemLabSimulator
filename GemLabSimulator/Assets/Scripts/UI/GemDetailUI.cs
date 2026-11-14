@@ -106,9 +106,9 @@ public static class GemObservations
             Add("Microscope", $"Inclusions : {gem.InclusionDescription}");
         }
         if (Seen(ExaminationTool.MeasurementType.FluorescenceLongWave))
-            Add("CabineUV", $"Fluorescence UV longues : {def.fluorescenceLongWave}");
+            Add("CabineUV", $"Fluorescence UV longues : {FluorescenceLibrary.Text(gem, true)}");
         if (Seen(ExaminationTool.MeasurementType.FluorescenceShortWave))
-            Add("CabineUV", $"Fluorescence UV courtes : {def.fluorescenceShortWave}");
+            Add("CabineUV", $"Fluorescence UV courtes : {FluorescenceLibrary.Text(gem, false)}");
         if (Seen(ExaminationTool.MeasurementType.ChelseaFilter))
             Add("FiltreChelsea", $"Filtre Chelsea : {ChelseaLibrary.Reaction(gem)}");
         if (Seen(ExaminationTool.MeasurementType.Magnetism))
@@ -234,8 +234,7 @@ public class GemDetailUI : MonoBehaviour
     {
         if (!IsOpen) return;
 
-        var inventory = PlayerInventory.Instance;
-        if (gem == null || (inventory != null && !Holds(inventory, gem)) || Input.GetKeyDown(KeyCode.Escape) || TextEntry.KeyDown(KeyCode.H))
+        if (gem == null || !Holds(gem) || Input.GetKeyDown(KeyCode.Escape) || TextEntry.KeyDown(KeyCode.H))
         {
             Close();
             return;
@@ -247,10 +246,22 @@ public class GemDetailUI : MonoBehaviour
         DrawStone();
     }
 
-    private static bool Holds(PlayerInventory inventory, GemInstance stone)
+    // The sheet stays open while the stone is still in the bag, the chest or one of the wardrobes (it closes when it is sold or given away).
+    private static bool Holds(GemInstance stone)
     {
-        for (var i = 0; i < inventory.Gems.Count; i++)
-            if (inventory.Gems[i] == stone) return true;
+        if (Contains(PlayerInventory.Instance != null ? PlayerInventory.Instance.Gems : null, stone)) return true;
+        if (Contains(PlayerChest.Instance != null ? PlayerChest.Instance.Gems : null, stone)) return true;
+        if (Contains(PlayerCabinet.Instance != null ? PlayerCabinet.Instance.Gems : null, stone)) return true;
+        if (Contains(PlayerOrderCabinet.Instance != null ? PlayerOrderCabinet.Instance.Gems : null, stone)) return true;
+        // No container at all (a scene without the player's storage): leave the sheet open.
+        return PlayerInventory.Instance == null && PlayerChest.Instance == null && PlayerCabinet.Instance == null && PlayerOrderCabinet.Instance == null;
+    }
+
+    private static bool Contains(System.Collections.Generic.IReadOnlyList<GemInstance> list, GemInstance stone)
+    {
+        if (list == null) return false;
+        for (var i = 0; i < list.Count; i++)
+            if (list[i] == stone) return true;
         return false;
     }
 
@@ -277,7 +288,7 @@ public class GemDetailUI : MonoBehaviour
     {
         if (gem == null || view == null) return;
         GemView3D.Colors(gem, out var body, out var facet);
-        view.Draw(GemView3D.MeshFor(gem), GemView3D.HalfExtents(gem), orientation, body, facet, gem.Definition.Diaphaneity, gem.AsterismRays);
+        view.Draw(GemView3D.MeshFor(gem), GemView3D.HalfExtents(gem), orientation, body, facet, gem.Definition.Diaphaneity, gem.AsterismRays, GemLook.For(gem.Definition), gem.CatsEye);
     }
 
     private void BuildPanel()
@@ -310,7 +321,7 @@ public class GemDetailUI : MonoBehaviour
         stoneImage = stoneGO.GetComponent<Image>();
         stoneImage.preserveAspect = true;
         stoneImage.raycastTarget = false;
-        view = new GemView3D(128);
+        view = new GemView3D(160) { Realistic = true };
         stoneImage.sprite = view.Sprite;
 
         RuntimeUIKit.MakeText("RotateHint", panel.transform, "Glisser : tourner la pierre — molette : pivoter", 10, TextAnchor.MiddleCenter,

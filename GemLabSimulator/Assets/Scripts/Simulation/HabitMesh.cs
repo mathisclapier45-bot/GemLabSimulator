@@ -46,6 +46,34 @@ public static class HabitMesh
             }
     }
 
+    // A tier of a tapering end: the sides of the hexagonal section narrow along the line through (x0, a0) that falls by `slope` for each unit along the axis.
+    private static void Taper(List<Vector4> planes, int n, float x0, float a0, float slope, float phase)
+    {
+        for (var end = -1; end <= 1; end += 2)
+            for (var i = 0; i < n; i++)
+            {
+                var t = (phase + 360f * i / n) * Mathf.Deg2Rad;
+                planes.Add(P(end * slope, Mathf.Cos(t), Mathf.Sin(t), a0 + slope * x0));
+            }
+    }
+
+    // Tangent planes of an ellipsoid (a rolled pebble) or of a lump: `count` directions spread evenly on the sphere, each plane at the distance of the ellipsoid in that direction,
+    // shaken a little by the seed so no two pebbles are alike.
+    private static void Pebble(List<Vector4> planes, int count, Vector3 axes, float shake, int seed)
+    {
+        var golden = Mathf.PI * (3f - Mathf.Sqrt(5f));
+        for (var i = 0; i < count; i++)
+        {
+            var y = 1f - 2f * (i + 0.5f) / count;
+            var radius = Mathf.Sqrt(Mathf.Max(0f, 1f - y * y));
+            var theta = golden * i;
+            var n = new Vector3(Mathf.Cos(theta) * radius, y, Mathf.Sin(theta) * radius);
+            var d = Mathf.Sqrt(axes.x * axes.x * n.x * n.x + axes.y * axes.y * n.y * n.y + axes.z * axes.z * n.z * n.z);
+            var jitter = (((i * 2654435761u + (uint)seed * 40503u) % 1000u) / 1000f - 0.5f) * 2f * shake;
+            planes.Add(P(n.x, n.y, n.z, d * (1f + jitter)));
+        }
+    }
+
     private static void Axes(List<Vector4> planes, float x, float y, float z)
     {
         planes.Add(P(1f, 0f, 0f, x)); planes.Add(P(-1f, 0f, 0f, x));
@@ -77,10 +105,25 @@ public static class HabitMesh
     private static List<Vector4> Planes(string id)
     {
         var p = new List<Vector4>();
+
+        // A rough lump of rock (the stones that grow in no crystal): a convex pebble with a few big flats, different for each number.
+        if (id.StartsWith("lump_"))
+        {
+            int.TryParse(id.Substring(5), out var n);
+            Pebble(p, 30, new Vector3(1f, 0.64f + 0.04f * (n % 5), 0.50f + 0.05f * ((n / 2) % 4)), 0.13f, 17 + n * 5);
+            p.Add(P(0.4f, 0.8f, -0.45f, 0.62f + 0.03f * (n % 3)));
+            return p;
+        }
+
         switch (id)
         {
             case "octahedron":
                 Signed(p, 1f, 1f, 1f, 1f);
+                return p;
+            case "cleaved_octahedron":
+                // An octahedron broken along its perfect cleavage: two corners and one more edge are sliced off by flat cleavage faces.
+                Signed(p, 1f, 1f, 1f, 1f);
+                Axes(p, 0.52f, 0.86f, 1f);
                 return p;
             case "cube":
                 Axes(p, 1f, 1f, 1f);
@@ -125,6 +168,135 @@ public static class HabitMesh
                     }
                 return p;
             }
+            // ---- The rough corundums (ruby and sapphire), from the photographs: the long axis of a barrel runs along x -------------------------------------
+            case "corundum_barrel":
+                // A long, narrow barrel of a sapphire: a hexagonal prism that tapers in tiers toward both ends, the pyramid faces turned half a step from the prism faces.
+                Sides(p, 6, 0.34f, 30f);
+                Taper(p, 6, 0.55f, 0.34f, 0.22f, 0f);
+                Taper(p, 6, 0.75f, 0.30f, 0.55f, 0f);
+                Taper(p, 6, 0.90f, 0.19f, 1.40f, 0f);
+                p.Add(P(1f, 0f, 0f, 1f)); p.Add(P(-1f, 0f, 0f, 1f));
+                return p;
+            case "corundum_bipyramid":
+                // A short, squat bipyramid, the ends blunted by a small flat face.
+                Sides(p, 6, 0.58f, 0f);
+                Taper(p, 6, 0.30f, 0.58f, 0.55f, 30f);
+                Taper(p, 6, 0.68f, 0.44f, 1.15f, 30f);
+                p.Add(P(1f, 0f, 0f, 0.96f)); p.Add(P(-1f, 0f, 0f, 0.96f));
+                return p;
+            case "corundum_prism":
+                // The stout prism of a ruby: six sides, flat ends with three rhombohedral faces, the corners worn.
+                Sides(p, 6, 0.62f, 0f);
+                p.Add(P(1f, 0f, 0f, 0.82f)); p.Add(P(-1f, 0f, 0f, 0.82f));
+                for (var end = -1; end <= 1; end += 2)
+                    for (var i = 0; i < 3; i++)
+                    {
+                        var t = (90f + 120f * i + (end > 0 ? 0f : 60f)) * Mathf.Deg2Rad;
+                        p.Add(P(end * 0.85f, 0.55f * Mathf.Cos(t), 0.55f * Mathf.Sin(t), 1.02f));
+                    }
+                Taper(p, 6, 0.62f, 0.66f, 1.2f, 30f);
+                return p;
+            case "corundum_plate":
+                // A hexagonal plate (ruby of Mong Hsu, of Madagascar), beveled at the rim.
+                for (var i = 0; i < 6; i++)
+                {
+                    var t = 60f * i * Mathf.Deg2Rad;
+                    p.Add(P(Mathf.Cos(t), Mathf.Sin(t), 0f, 1f));
+                }
+                p.Add(P(0f, 0f, 1f, 0.40f)); p.Add(P(0f, 0f, -1f, 0.40f));
+                for (var sz = -1; sz <= 1; sz += 2)
+                    for (var i = 0; i < 6; i++)
+                    {
+                        var t = (30f + 60f * i) * Mathf.Deg2Rad;
+                        p.Add(P(0.55f * Mathf.Cos(t), 0.55f * Mathf.Sin(t), sz, 0.98f));
+                    }
+                return p;
+            case "corundum_pebble":
+                // A pebble rolled by the river (the gem gravels of Ceylon and Madagascar): rounded, with the faint flats of its old faces.
+                Pebble(p, 46, new Vector3(1f, 0.78f, 0.64f), 0.035f, 3);
+                return p;
+            case "corundum_fragment":
+                // A broken piece: a few big flat fractures and parting planes, at random.
+                Pebble(p, 17, new Vector3(1f, 0.86f, 0.70f), 0.20f, 11);
+                p.Add(P(0.20f, 0.95f, 0.25f, 0.58f)); p.Add(P(-0.55f, -0.10f, 0.83f, 0.60f)); p.Add(P(0.80f, -0.55f, -0.25f, 0.62f));
+                return p;
+            // ---- More habits: the doubly terminated quartz, the long pencils of beryl and tourmaline, the wedge-ended topaz --------------------------------
+            case "spinel_twin":
+            {
+                // A spinel-law twin: two octahedra joined and flattened along a (111) axis, a thin triangular plate with truncated corners.
+                for (var sx = -1; sx <= 1; sx += 2)
+                    for (var sy = -1; sy <= 1; sy += 2)
+                        for (var sz = -1; sz <= 1; sz += 2)
+                        {
+                            var thin = sx == sy && sy == sz;
+                            p.Add(P(sx, sy, sz, thin ? 0.62f : 1.5f));
+                        }
+                return p;
+            }
+            case "octahedron_modified":
+                // An octahedron whose six corners are cut by small square faces (the cube).
+                Signed(p, 1f, 1f, 1f, 1f);
+                Axes(p, 0.80f, 0.80f, 0.80f);
+                return p;
+            case "beryl_short":
+            case "beryl_prism":
+            case "beryl_long":
+            {
+                // A regular hexagonal prism (six equal sides) closed by two flat hexagonal ends, the basal pinacoid. Only its length changes.
+                Sides(p, 6, 0.50f, 0f);
+                var half = id == "beryl_short" ? 0.62f : id == "beryl_long" ? 2.3f : 1.25f;
+                p.Add(P(1f, 0f, 0f, half)); p.Add(P(-1f, 0f, 0f, half));
+                return p;
+            }
+            case "beryl_stubby":
+                // The stout prism of a golden beryl: six pans, a big flat end, and a ring of small sloping faces below it.
+                Sides(p, 6, 0.55f, 0f);
+                p.Add(P(1f, 0f, 0f, 0.95f)); p.Add(P(-1f, 0f, 0f, 0.95f));
+                Taper(p, 6, 0.70f, 0.55f, 0.9f, 30f);
+                return p;
+            case "quartz_double":
+                // A Herkimer-type crystal: a short hexagonal prism pointed at both ends.
+                Sides(p, 6, 0.52f, 0f);
+                Taper(p, 6, 0.50f, 0.52f, 1.15f, 30f);
+                Taper(p, 6, 0.78f, 0.28f, 2.6f, 30f);
+                p.Add(P(1f, 0f, 0f, 1.1f)); p.Add(P(-1f, 0f, 0f, 1.1f));
+                return p;
+            case "hex_pencil":
+                // A long, thin hexagonal pencil (aquamarine, emerald, apatite) with a flat end and a small bevel.
+                Sides(p, 6, 0.20f, 0f);
+                p.Add(P(1f, 0f, 0f, 1f)); p.Add(P(-1f, 0f, 0f, 1f));
+                Taper(p, 6, 0.93f, 0.20f, 3.2f, 30f);
+                return p;
+            case "trigonal_pencil":
+                // A long tourmaline: a rounded triangle in section, striated along its length.
+                for (var i = 0; i < 3; i++)
+                {
+                    var strong = (90f + 120f * i) * Mathf.Deg2Rad;
+                    var weak = (270f + 120f * i) * Mathf.Deg2Rad;
+                    p.Add(P(0f, Mathf.Cos(strong), Mathf.Sin(strong), 0.30f));
+                    p.Add(P(0f, Mathf.Cos(weak), Mathf.Sin(weak), 0.24f));
+                }
+                p.Add(P(1f, 0f, 0f, 1f)); p.Add(P(-1f, 0f, 0f, 1f));
+                for (var sx = -1; sx <= 1; sx += 2)
+                    for (var i = 0; i < 3; i++)
+                    {
+                        var t = (90f + 120f * i) * Mathf.Deg2Rad;
+                        p.Add(P(sx, 0.45f * Mathf.Cos(t), 0.45f * Mathf.Sin(t), 1.12f));
+                    }
+                return p;
+            case "ortho_wedge":
+                // A topaz: a rectangular prism ending in a wedge, striated along its length.
+                p.Add(P(0f, 1f, 0f, 0.42f)); p.Add(P(0f, -1f, 0f, 0.42f));
+                p.Add(P(0f, 0f, 1f, 0.34f)); p.Add(P(0f, 0f, -1f, 0.34f));
+                for (var sy = -1; sy <= 1; sy += 2)
+                    for (var sz = -1; sz <= 1; sz += 2)
+                        p.Add(P(0f, sy * 0.78f, sz * 0.78f, 0.62f));
+                for (var sx = -1; sx <= 1; sx += 2)
+                {
+                    p.Add(P(sx, 0.55f, 0f, 1f)); p.Add(P(sx, -0.55f, 0f, 1f));
+                    p.Add(P(sx, 0f, 0.25f, 1.1f)); p.Add(P(sx, 0f, -0.25f, 1.1f));
+                }
+                return p;
             case "tetragonal_prism":
                 p.Add(P(0f, 1f, 0f, 0.5f)); p.Add(P(0f, -1f, 0f, 0.5f));
                 p.Add(P(0f, 0f, 1f, 0.5f)); p.Add(P(0f, 0f, -1f, 0.5f));
@@ -172,6 +344,16 @@ public static class HabitMesh
                         var t = (90f + 120f * i) * Mathf.Deg2Rad;
                         p.Add(P(sx, 0.5f * Mathf.Cos(t), 0.5f * Mathf.Sin(t), 1.18f));
                     }
+                return p;
+            case "rhombohedral_plate":
+                // The thin tabular rhombohedron of the pezzottaite: the faces of a rhombohedron cut short by two big flat ends.
+                for (var i = 0; i < 3; i++)
+                {
+                    var t = (90f + 120f * i) * Mathf.Deg2Rad;
+                    p.Add(P(0.72f, Mathf.Cos(t), Mathf.Sin(t), 1f));
+                    p.Add(P(-0.72f, -Mathf.Cos(t), -Mathf.Sin(t), 1f));
+                }
+                p.Add(P(1f, 0f, 0f, 0.34f)); p.Add(P(-1f, 0f, 0f, 0.34f));
                 return p;
             case "rhombohedron":
                 for (var i = 0; i < 3; i++)

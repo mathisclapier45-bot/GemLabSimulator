@@ -64,7 +64,9 @@ public static class GemDiaphaneity
                 // Dull and grainy: the colors lose their punch and a fine checkerboard grain breaks up the facets.
                 result = Color.Lerp(color, Color.Lerp(body, new Color(0.45f, 0.45f, 0.45f), 0.4f), 0.32f);
                 result = GemPixelArt.Dim(result, 0.9f);
-                if (((x + y) & 1) == 0) result = GemPixelArt.Dim(result, 0.9f);
+                // A fine grain, not a regular checkerboard.
+                var grain = (uint)(x * 73856093 ^ y * 19349663) % 100u;
+                if (grain < 30u) result = GemPixelArt.Dim(result, 0.92f);
                 return result;
 
             default:

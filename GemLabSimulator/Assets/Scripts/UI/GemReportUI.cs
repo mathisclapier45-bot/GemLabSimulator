@@ -336,8 +336,8 @@ public class GemReportUI : MonoBehaviour
         Line("Caractère optique", OpticalDescriptions.PolariscopeText(def));
         Line("Figure d'interférence", OpticalDescriptions.ConoscopeText(def));
         Line("Pléochroïsme", def.pleochroic ? def.pleochroicDescription : "Aucun");
-        Line("Fluorescence UV longues", def.fluorescenceLongWave);
-        Line("Fluorescence UV courtes", def.fluorescenceShortWave);
+        Line("Fluorescence UV longues", FluorescenceLibrary.Text(def, true));
+        Line("Fluorescence UV courtes", FluorescenceLibrary.Text(def, false));
         Line("Spectre d'absorption", SpectrumLibrary.Description(def));
         Line("Filtre Chelsea", ChelseaLibrary.Reaction(def));
         Line("Aimant", def.magnetism);

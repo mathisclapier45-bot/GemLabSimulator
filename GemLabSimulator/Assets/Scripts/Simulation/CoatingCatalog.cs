@@ -131,7 +131,7 @@ public static class CoatingCatalog
         switch (name)
         {
             case "Topaze": case "CZ": case "Tanzanite": case "Kunzite": case "Tourmaline_Rose": case "Tourmaline_Paraiba":
-            case "Goshenite": case "Heliodore": case "Morganite":
+            case "Goshenite": case "Heliodore": case "Morganite": case "Aigue_Marine": case "Beryl_Bleu":
                 return true;
         }
         return false;

@@ -35,7 +35,7 @@
     },
     {
       "title": "Deux lampes, deux réponses",
-      "text": "Une même pierre peut réagir <b>différemment</b> aux UV longs et aux UV courts. Il faut donc essayer les deux.\n\nExemple : un rubis naturel brille fort aux UV longs, mais <b>faiblement</b> aux UV courts, car son fer étouffe la lueur. Un rubis de synthèse, sans fer, brille <b>plus</b> aux UV courts.",
+      "text": "Une même pierre peut réagir <b>différemment</b> aux UV longs et aux UV courts. Il faut donc essayer les <b>deux</b>.\n\nExemple : un <b>saphir bleu naturel</b> ne réagit pas (ou presque) aux UV. Un <b>saphir bleu de synthèse</b> brille en <b>vert</b> aux UV courts, et reste noir aux UV longs. Le <b>spinelle bleu synthétique</b>, lui, brille en <b>rouge</b> aux UV longs.",
       "figure": "uv",
       "focus": 2,
       "image": ""
@@ -49,7 +49,7 @@
     },
     {
       "title": "Ce que la cabine révèle",
-      "text": "• <b>Rubis</b> : rouge, mais plus vif aux UV courts s'il est de synthèse.\n• <b>Diamant naturel</b> : souvent bleu.\n• <b>Diamant HPHT</b> : lueur pâle et phosphorescence.\n• <b>Émeraude</b> : inerte ; une émeraude comblée de résine : blanc-bleuté.\n• <b>Teinture rouge</b> : lueur orangée.\n• <b>Verre</b> : variable.",
+      "text": "• <b>Rubis</b>, naturel ou synthétique : rouge (chrome).\n• <b>Saphir bleu</b> : naturel, rien ; synthétique, vert aux UV courts.\n• <b>Diamant</b> : réaction variable, nulle à forte ; le bleu est la plus commune.\n• <b>Fluorite</b> : bleu ou violet. <b>Perle</b> : blanc bleuté.\n• <b>Émeraude</b> : rouge. <b>Kunzite</b> : orange aux UV longs.\n• <b>Verre</b> : variable, parfois un voile blanc crayeux.",
       "figure": "uv",
       "focus": 4,
       "image": ""
@@ -63,7 +63,7 @@
     },
     {
       "title": "À retenir",
-      "text": "• Les UV font briller certaines pierres : la couleur dit souvent ce qui les colore ou les traite.\n• Il faut essayer les <b>deux</b> lampes.\n• La lueur qui <b>persiste</b> après l'extinction est de la phosphorescence.\n• C'est une indication, jamais une identification : on la croise avec les autres mesures.",
+      "text": "• Les UV font briller certaines pierres : la couleur dit souvent ce qui les colore ou les traite.\n• Il faut essayer les <b>deux</b> lampes.\n• La lueur qui <b>persiste</b> après l'extinction est de la phosphorescence.\n• La réaction dépend de la quantité d'éléments en trace, dans le naturel comme dans le synthétique : c'est une <b>indication</b>, jamais une preuve d'identité.",
       "figure": "uv",
       "focus": 3,
       "image": ""

@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: Pezzottaite
   m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
   displayName: Pezzottaite
-  description: "Un b\xE9ryl au c\xE9sium, de couleur \"framboise\", d\xE9couvert
-    seulement en 2002 \xE0 Madagascar."
+  description: "Un b\xE9ryl au c\xE9sium rose \xE0 rouge\xE2tre, translucide \xE0
+    transparent, d\xE9couvert seulement en 2002 \xE0 Madagascar. Il est trigonal
+    et pousse en cristaux rhombo\xE9driques tabulaires, tr\xE8s inclus. Fragile malgr\xE9
+    sa duret\xE9 de 8."
   icon: {fileID: 21300000, guid: 47322775a1a66405b946bc503dcd68eb, type: 3}
   roughIcon: {fileID: 21300000, guid: 57a25daa3cd864e34a3afcf58a70fdc2, type: 3}
   iconColor: {r: 0.75, g: 0.2, b: 0.35, a: 1}
   iconFacetColor: {r: 0.9, g: 0.42, b: 0.55, a: 1}
   refractiveIndex: 1.615
-  density: 3.13
+  density: 3.05
   hardness: 8
   lengthMm: 6.5
   widthMm: 5
@@ -32,20 +34,30 @@ MonoBehaviour:
   cutStyle: Brillant
   transparency: Transparent
   pleochroic: 1
-  pleochroicDescription: "Rose p\xE2le / Rouge-violet selon l'axe (mod\xE9r\xE9)."
+  pleochroicDescription: "Rose orang\xE9 moyen / Rose violac\xE9 \xE0 violet rose
+    (dichro\xEFque)."
   fluorescenceLongWave: Aucune fluorescence notable.
   fluorescenceShortWave: Aucune fluorescence notable.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
   opticalCharacterClass: 1
-  birefringence: 0.008
+  birefringence: 0.0095
   isQuartzFamily: 0
   isPolycrystalline: 0
   isThermallyConductiveLikeDiamond: 0
   isElectricallyConductive: 0
-  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
-  spectrumLines: []
-  inclusions: "Cristaux macl\xE9s en \xE9toile \xE0 trois branches, structure de
-    croissance particuli\xE8re."
+  absorptionSpectrum: Une bande dans le bleu-vert vers 494 nm et une plus petite
+    dans le vert vers 563 nm.
+  spectrumLines:
+  - wavelengthNm: 494
+    widthNm: 14
+    depth: 1
+    edgeNm: 0
+  - wavelengthNm: 563
+    widthNm: 12
+    depth: 0.5
+    edgeNm: 0
+  inclusions: "Mat\xE9riau g\xE9n\xE9ralement tr\xE8s inclus : tubes de croissance
+    et plumes de gu\xE9rison (givres). Peut \xEAtre impr\xE9gn\xE9 de r\xE9sine."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."

@@ -512,7 +512,7 @@ public class GradingUI : MonoBehaviour
 
         GemView3D.Colors(stone, out var body, out var facet);
         var half = new Vector3(grade.DiameterMax, grade.DiameterMin, grade.DepthMm) * 0.5f;
-        gaugeView.Draw(GemView3D.MeshFor(stone), half, orientation, body, facet, stone.Definition.Diaphaneity);
+        gaugeView.Draw(GemView3D.MeshFor(stone), half, orientation, body, facet, stone.Definition.Diaphaneity, 0, GemLook.For(stone.Definition));
 
         var side = Mathf.Max(grade.DiameterMax, Mathf.Max(grade.DiameterMin, grade.DepthMm)) * GaugePxPerMm / GemView3D.FitFraction;
         gaugeStoneRect.sizeDelta = new Vector2(side, side);
@@ -1324,7 +1324,7 @@ public class GradingUI : MonoBehaviour
         gaugeStone = stoneGo.GetComponent<Image>();
         gaugeStone.raycastTarget = false;
         gaugeStone.preserveAspect = false;
-        gaugeView = new GemView3D(48);
+        gaugeView = new GemView3D(48) { Realistic = true };
         gaugeStone.sprite = gaugeView.Sprite;
         gaugeHint = Txt(t, "", 12, TextAnchor.MiddleCenter, new Color(0.55f, 0.58f, 0.65f), new Vector2(GaugeX + GaugeJawWidth, GaugeY - 50f), new Vector2(300f, 18f));
 

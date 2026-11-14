@@ -46,8 +46,12 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 505
     widthNm: 20
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 690
     widthNm: 15
+    depth: 1
+    edgeNm: 0
   inclusions: Fines inclusions fibreuses, parfois structure en "plumes".
   interferenceFigure: "Figure d'interf\xE9rence biaxiale."
   chelseaFilterReaction: "R\xE9action rouge\xE2tre possible (coloration au chrome)."

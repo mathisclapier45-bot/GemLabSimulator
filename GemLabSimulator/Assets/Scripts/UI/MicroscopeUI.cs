@@ -579,7 +579,7 @@ public class MicroscopeUI : MonoBehaviour
         if (stone == null) return;
 
         GemView3D.Colors(stone, out var body, out var facet);
-        miniMap.Draw(GemView3D.MeshFor(stone), GemView3D.HalfExtents(stone), orientation, body, facet, stone.Definition.Diaphaneity);
+        miniMap.Draw(GemView3D.MeshFor(stone), GemView3D.HalfExtents(stone), orientation, body, facet, stone.Definition.Diaphaneity, 0, GemLook.For(stone.Definition));
 
         // Where the view sits over the stone: a glowing disc as big as the field of view.
         var maxDim = GemView3D.MaxDimensionMm(stone);
@@ -765,7 +765,7 @@ public class MicroscopeUI : MonoBehaviour
         miniGO.transform.SetParent(panel.transform, false);
         miniRect = miniGO.GetComponent<RectTransform>();
         RuntimeUIKit.SetTopLeft(miniRect, new Vector2(x + 4f, -240f), new Vector2(88f, 88f));
-        miniMap = new GemView3D(48);
+        miniMap = new GemView3D(48) { Realistic = true };
         var miniImage = miniGO.GetComponent<Image>();
         miniImage.sprite = miniMap.Sprite;
         miniImage.raycastTarget = false;

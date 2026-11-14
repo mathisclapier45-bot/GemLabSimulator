@@ -137,12 +137,12 @@ public static class FillingCatalog
         var name = definition != null ? definition.name : "";
         switch (name)
         {
-            case "Emeraude": case "Goshenite": case "Heliodore": case "Morganite": case "Beryl_Rouge": return Group.Beryl;
+            case "Emeraude": case "Goshenite": case "Heliodore": case "Morganite": case "Beryl_Rouge": case "Aigue_Marine": case "Beryl_Bleu": return Group.Beryl;
             case "Corindon_Rubis": case "Padparadscha": return Group.Corundum;
             case "Opale_Noble": case "Opale_De_Feu": return Group.Opal;
             case "Turquoise": case "Turquoise_Stabilisee": case "Jade_Jadeite": case "Jade_Nephrite": case "Lapis_Lazuli": case "Corail": return Group.Porous;
             case "Orthose": case "Labradorite": case "Pierre_De_Lune": return Group.Feldspar;
-            case "Topaze": case "Tourmaline_Rose": case "Tourmaline_Paraiba": case "Peridot": case "Chrysoberyl": case "Chrysoberyl_Alexandrite": case "Fluorite": return Group.Gem;
+            case "Topaze": case "Tourmaline_Rose": case "Tourmaline_Paraiba": case "Peridot": case "Chrysoberyl": case "Chrysoberyl_Alexandrite": case "Fluorite": case "Fluorite_Verte": case "Fluorite_Bleue": case "Fluorite_Jaune": case "Fluorite_Bandee": case "Fluorite_Blue_John": return Group.Gem;
             case "Diamant": return Group.Diamond;
         }
         if (name.StartsWith("Saphir_") && name != "Saphir_Incolore") return Group.Corundum;

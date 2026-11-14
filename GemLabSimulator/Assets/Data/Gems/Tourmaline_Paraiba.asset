@@ -47,6 +47,8 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 650
     widthNm: 40
+    depth: 1
+    edgeNm: 0
   inclusions: "Inclusions liquides, tubes et fractures cicatris\xE9es ; pierres souvent
     chauff\xE9es."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale."

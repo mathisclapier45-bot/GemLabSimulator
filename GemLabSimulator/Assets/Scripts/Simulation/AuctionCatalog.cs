@@ -57,7 +57,7 @@ public static class AuctionCatalog
         new AuctionTheme { Name = "Diamants", Description = "Une vente de diamants naturels, taillés par les meilleurs ateliers.",
             Matches = d => Natural(d) && d.name == "Diamant" },
         new AuctionTheme { Name = "Émeraudes et béryls", Description = "Le béryl sous toutes ses formes : émeraude, héliodore, morganite et les plus rares.",
-            Matches = d => Natural(d) && (d.name == "Emeraude" || d.name == "Beryl_Rouge" || d.name == "Goshenite" || d.name == "Heliodore" || d.name == "Morganite" || d.name == "Pezzottaite") },
+            Matches = d => Natural(d) && (d.name == "Emeraude" || d.name == "Beryl_Rouge" || d.name == "Goshenite" || d.name == "Heliodore" || d.name == "Morganite" || d.name == "Pezzottaite" || d.name == "Aigue_Marine" || d.name == "Beryl_Bleu") },
         new AuctionTheme { Name = "Grenats", Description = "Almandin, pyrope, tsavorite, démantoïde : la grande famille des grenats.",
             Matches = d => Natural(d) && Starts(d, "Grenat_") },
         new AuctionTheme { Name = "Quartz et améthystes", Description = "Les quartz colorés : améthyste, citrine, ametrine, quartz fumé et rose.",

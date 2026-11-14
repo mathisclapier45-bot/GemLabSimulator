@@ -674,23 +674,25 @@ public static class LessonFigures
         c.Label("c'est la fluorescence", new Vector2(0f, -130f), 14, Ink, 300f);
     }
 
-    // The same two rubies under the two lamps.
+    // The same two blue sapphires under the two lamps: only the synthetic one glows (green, under the short-wave lamp).
     private static void UvLamps(LessonCanvas c)
     {
-        var names = new[] { "Rubis naturel", "Rubis de synthèse" };
-        var longs = new[] { 1.0f, 1.0f };
-        var shorts = new[] { 0.3f, 0.65f };
+        var names = new[] { "Saphir bleu naturel", "Saphir bleu de synthèse" };
+        var dark = new Color(0.04f, 0.05f, 0.14f, 1f);
+        var green = new Color(0.30f, 1f, 0.48f, 1f);
+        var longs = new[] { dark, dark };
+        var shorts = new[] { dark, green };
         c.Label("UV longs", new Vector2(-95f, 120f), 13, Gold, 90f);
         c.Label("UV courts", new Vector2(65f, 120f), 13, Gold, 90f);
         for (var i = 0; i < 2; i++)
         {
             var y = 60f - i * 100f;
-            c.Label(names[i], new Vector2(-165f, y), 13, Ink, 120f);
-            c.Rect(new Vector2(-95f, y), new Vector2(54f, 54f), Color.Lerp(new Color(0.15f, 0.02f, 0.04f, 1f), new Color(1f, 0.15f, 0.12f, 1f), longs[i]), 45f);
-            c.Rect(new Vector2(65f, y), new Vector2(54f, 54f), Color.Lerp(new Color(0.15f, 0.02f, 0.04f, 1f), new Color(1f, 0.15f, 0.12f, 1f), shorts[i]), 45f);
+            c.Label(names[i], new Vector2(-165f, y), 12, Ink, 100f);
+            c.Rect(new Vector2(-95f, y), new Vector2(54f, 54f), longs[i], 45f);
+            c.Rect(new Vector2(65f, y), new Vector2(54f, 54f), shorts[i], 45f);
         }
-        c.Label("même lueur", new Vector2(-95f, -108f), 12, Dim, 100f);
-        c.Label("plus vive : synthèse", new Vector2(65f, -108f), 12, Dim, 150f);
+        c.Label("rien", new Vector2(-95f, -108f), 12, Dim, 100f);
+        c.Label("vert : synthèse", new Vector2(65f, -108f), 12, Dim, 150f);
         c.Label("Essayez toujours les deux lampes", new Vector2(0f, -135f), 14, Gold, 440f);
     }
 
@@ -721,20 +723,21 @@ public static class LessonFigures
     {
         var rows = new[]
         {
-            new { Name = "Rubis naturel", Note = "rouge, faible aux UV courts", Color = new Color(1f, 0.18f, 0.12f, 1f) },
-            new { Name = "Rubis de synthèse", Note = "rouge, vive aux UV courts", Color = new Color(1f, 0.30f, 0.22f, 1f) },
-            new { Name = "Diamant naturel", Note = "souvent bleu, s'éteint", Color = new Color(0.30f, 0.50f, 1f, 1f) },
-            new { Name = "Diamant HPHT", Note = "pâle, phosphorescent", Color = new Color(0.78f, 0.88f, 1f, 1f) },
-            new { Name = "Émeraude", Note = "inerte", Color = new Color(0.08f, 0.10f, 0.08f, 1f) },
-            new { Name = "Émeraude comblée", Note = "blanc-bleuté (résine)", Color = new Color(0.78f, 0.88f, 1f, 1f) },
-            new { Name = "Teinture rouge", Note = "lueur orangée", Color = new Color(1f, 0.55f, 0.18f, 1f) },
+            new { Name = "Rubis (naturel ou synth.)", Note = "rouge, aux deux lampes", Color = new Color(1f, 0.16f, 0.10f, 1f) },
+            new { Name = "Saphir bleu naturel", Note = "aucune réaction", Color = new Color(0.04f, 0.05f, 0.14f, 1f) },
+            new { Name = "Saphir bleu synthétique", Note = "vert aux UV courts", Color = new Color(0.30f, 1f, 0.48f, 1f) },
+            new { Name = "Diamant", Note = "variable ; bleu le plus commun", Color = new Color(0.30f, 0.50f, 1f, 1f) },
+            new { Name = "Fluorite", Note = "bleu ou violet", Color = new Color(0.45f, 0.40f, 1f, 1f) },
+            new { Name = "Spinelle bleu synth.", Note = "rouge aux UV longs", Color = new Color(1f, 0.16f, 0.10f, 1f) },
+            new { Name = "Émeraude", Note = "rouge", Color = new Color(1f, 0.23f, 0.16f, 1f) },
+            new { Name = "Kunzite", Note = "orange aux UV longs", Color = new Color(1f, 0.55f, 0.12f, 1f) },
         };
         for (var i = 0; i < rows.Length; i++)
         {
-            var y = 132f - i * 40f;
-            c.Label(rows[i].Name, new Vector2(-135f, y), 14, Ink, 150f);
-            c.Rect(new Vector2(-30f, y), new Vector2(36f, 24f), rows[i].Color);
-            c.Label(rows[i].Note, new Vector2(120f, y), 12, Gold, 200f);
+            var y = 135f - i * 35f;
+            c.Label(rows[i].Name, new Vector2(-135f, y), 13, Ink, 160f);
+            c.Rect(new Vector2(-30f, y), new Vector2(36f, 22f), rows[i].Color);
+            c.Label(rows[i].Note, new Vector2(125f, y), 12, Gold, 210f);
         }
     }
 

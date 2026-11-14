@@ -367,6 +367,10 @@ public class GemInstance
             }
             if (CoatingIridescence >= 0.25f && HasColor)
                 return GemIconFactory.GetIridescent(Definition, ShapeName, CutStyleName, BodyColor, FacetColor, CoatingIridescence);
+            if (CutStyleName == "Cabochon" && (AsterismRays > 0 || CatsEye))
+                return HasColor
+                    ? GemIconFactory.Get(Definition, ShapeName, CutStyleName, BodyColor, FacetColor, AsterismRays, CatsEye)
+                    : GemIconFactory.Get(Definition, ShapeName, CutStyleName, Definition.iconColor, Definition.iconFacetColor, AsterismRays, CatsEye);
             return HasColor
                 ? GemIconFactory.Get(Definition, ShapeName, CutStyleName, BodyColor, FacetColor)
                 : GemIconFactory.Get(Definition, ShapeName, CutStyleName);
@@ -452,9 +456,37 @@ public class GemInstance
             if (IsRough || IsSynthetic || CutStyleName != "Cabochon") return 0;
             if (HeatStar || DiffusionStar) return 6;
             if (ClarityGrade == "Loupe clean" || ClarityGrade == "Eye-clean") return 0;
+            var name = (Definition.displayName ?? "").ToLowerInvariant();
+            // A heavily included diopside or garnet cut as a cabochon shows a four-rayed star.
+            var fourRays = name.Contains("grenat") || name.Contains("diopside");
+            if (name.Contains("diopside"))
+                return StoneOptics.StableHash((SpecimenId ?? "") + "|star") % 100 < 75 ? 4 : 0;
+            // A trapiche emerald (very rare, 2.5 % of the emeralds): six arms of black matter radiating from the centre, cut as a cabochon.
+            if (name.Contains("émeraude") && StoneOptics.StableHash((SpecimenId ?? "") + "|trapiche") % 1000 < 25) return 6;
             if (InclusionCatalog.ProfileFor(this).Share(FeatureKind.Needle, 0) < 0.18f) return 0;
             if (StoneOptics.StableHash((SpecimenId ?? "") + "|star") % 100 >= 65) return 0;
-            return (Definition.displayName ?? "").ToLowerInvariant().Contains("grenat") ? 4 : 6;
+            return fourRays ? 4 : 6;
+        }
+    }
+
+    // Parallel fibres in a cabochon make a cat's eye: a thin bright line across the dome (chrysoberyl, quartz, tourmaline, apatite...).
+    private static readonly System.Collections.Generic.HashSet<string> CatsEyeSpecies = new System.Collections.Generic.HashSet<string>
+    {
+        "Chrysoberyl", "Chrysoberyl_Alexandrite", "Quartz", "Quartz_Fume", "Quartz_Rose", "Tourmaline_Rose", "Tourmaline_Paraiba", "Apatite", "Scapolite",
+        "Heliodore", "Aigue_Marine", "Beryl_Bleu", "Goshenite", "Morganite", "Emeraude", "Andalousite", "Sinhalite", "Kyanite", "Iolite", "Iolite_Bloodshot", "Diopside_Chromifere",
+    };
+
+    public bool CatsEye
+    {
+        get
+        {
+            if (IsRough || IsSynthetic || CutStyleName != "Cabochon") return false;
+            // The tiger's eye is always chatoyant, cut as a cabochon.
+            if (Definition.name == "Oeil_de_Tigre") return true;
+            if (!CatsEyeSpecies.Contains(Definition.name ?? "")) return false;
+            if (AsterismRays > 0) return false;
+            if (ClarityGrade == "Loupe clean") return false;
+            return StoneOptics.StableHash((SpecimenId ?? "") + "|eye") % 100 < 55;
         }
     }
 

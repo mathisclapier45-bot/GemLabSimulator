@@ -46,10 +46,16 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 455
     widthNm: 20
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 528
     widthNm: 20
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 595
     widthNm: 25
+    depth: 1
+    edgeNm: 0
   inclusions: "G\xE9n\xE9ralement propre, parfois fines inclusions aciculaires."
   interferenceFigure: "Figure d'interf\xE9rence biaxiale."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."

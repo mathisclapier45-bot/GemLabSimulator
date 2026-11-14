@@ -45,10 +45,16 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 412
     widthNm: 10
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 460
     widthNm: 15
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 485
     widthNm: 15
+    depth: 1
+    edgeNm: 0
   inclusions: "Fissures internes possibles, g\xE9n\xE9ralement peu abondantes."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "Aucune r\xE9action rouge notable."

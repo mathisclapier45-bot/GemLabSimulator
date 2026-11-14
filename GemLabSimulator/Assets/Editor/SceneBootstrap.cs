@@ -3613,6 +3613,16 @@ public static partial class SceneBootstrap
         bed.AddComponent<BedInteractable>();
     }
 
+    // Rewrites the data of all the species (Assets/Data/Gems and the database) from the lists of this file, without touching a scene.
+    [MenuItem("GemLab/Rebuild Gem Data")]
+    public static void RebuildGemData()
+    {
+        UpdateGemDatabase(GetOrCreateGemPool());
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+        Debug.Log("Données des espèces réécrites (Assets/Data/Gems). Relancez python3 tools/export_game_data.py pour mettre Docs/gemlab_data.json à jour.");
+    }
+
     private static void UpdateGemDatabase(GemDefinition[] allGems)
     {
         const string path = "Assets/Resources/GemDatabase.asset";
@@ -6101,12 +6111,12 @@ public static partial class SceneBootstrap
             BuildGem("Emeraude", g =>
             {
                 g.displayName = "Émeraude";
-                g.description = "Un béryl vert intense, envoyé pour authentification.";
+                g.description = "Un béryl vert, coloré par le chrome (et parfois le vanadium) : l'émeraude. Fragile malgré sa dureté, elle est presque toujours fracturée et porte ses inclusions en « jardin ».";
                 g.icon = GetGemIconSprite("emeraude", new Color(0.10f, 0.45f, 0.30f), new Color(0.30f, 0.65f, 0.45f), "Rectangle à pans coupés", "Émeraude (à degrés)");
                 g.roughIcon = GetRoughGemIconSprite("emeraude", new Color(0.10f, 0.45f, 0.30f), "Rectangle à pans coupés");
-                g.refractiveIndex = 1.580f;
+                g.refractiveIndex = 1.585f;
                 g.density = 2.72f;
-                g.hardness = 7.7f;
+                g.hardness = 7.5f;
                 g.lengthMm = 8.2f;
                 g.widthMm = 6.2f;
                 g.depthMm = 4.5f;
@@ -6117,12 +6127,12 @@ public static partial class SceneBootstrap
                 g.cutStyle = "Émeraude (à degrés)";
                 g.transparency = "Transparent";
                 g.pleochroic = true;
-                g.pleochroicDescription = "Bleu-vert / Jaune-vert selon l'axe d'observation (marqué).";
+                g.pleochroicDescription = "Bleu-vert / Jaune-vert selon l'axe d'observation (faible à prononcé).";
                 g.fluorescenceLongWave = "Généralement inerte sous UV longue onde.";
                 g.fluorescenceShortWave = "Inerte sous UV courte onde.";
                 g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
                 g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
-                g.birefringence = 0.006f;
+                g.birefringence = 0.007f;
                 g.absorptionSpectrum = "Doublet d'absorption du chrome dans le rouge.";
                 g.spectrumLines = new List<SpectrumLine>
                 {
@@ -6130,18 +6140,30 @@ public static partial class SceneBootstrap
                     new SpectrumLine { wavelengthNm = 662f, widthNm = 8f },
                     new SpectrumLine { wavelengthNm = 637f, widthNm = 8f },
                 };
-                g.inclusions = "Inclusions en \"jardin\" (fissures et inclusions multiphases), très caractéristiques.";
+                g.inclusions = "Inclusions en \"jardin\" : cavités à plusieurs phases, fissures, paillettes de mica ; elles changent selon la mine.";
                 g.interferenceFigure = "Figure d'interférence uniaxiale.";
                 g.chelseaFilterReaction = "Réaction faible ou nulle (contrairement à de nombreuses imitations et synthèses, qui réagissent rouge vif).";
                 g.magnetism = "Aucune réaction notable à l'aimant.";
                 g.baseValue = 180;
                 g.origins = new List<GemOrigin>
                 {
-                    new GemOrigin { name = "Colombie (Muzo/Chivor)", rarityWeight = 25, valueMultiplier = 2.5f,
-                        inclusionOverride = "Inclusions triphasées (liquide, gaz, cristal de halite) en \"jardin\"." },
-                    new GemOrigin { name = "Zambie", rarityWeight = 35, valueMultiplier = 1.2f },
-                    new GemOrigin { name = "Brésil", rarityWeight = 25, valueMultiplier = 0.9f },
-                    new GemOrigin { name = "Afghanistan (Panjshir)", rarityWeight = 15, valueMultiplier = 1.5f },
+                    new GemOrigin { name = "Colombie (Muzo/Chivor)", rarityWeight = 22, valueMultiplier = 2.5f,
+                        inclusionOverride = "Inclusions trois-phases (Muzo), pyrite, parisite (Chivor), feldspath, mica et rhomboèdres de calcite." },
+                    new GemOrigin { name = "Zambie", rarityWeight = 28, valueMultiplier = 1.2f,
+                        inclusionOverride = "Particules de mica (muscovite), chrysobéryl, hématite, magnétite, limonite et prismes de rutile." },
+                    new GemOrigin { name = "Brésil", rarityWeight = 18, valueMultiplier = 0.9f,
+                        inclusionOverride = "Inclusions de pyrite, de limonite, de talc, de chromite, de mica, de dolomite ou de calcite." },
+                    new GemOrigin { name = "Afghanistan (Panjshir)", rarityWeight = 8, valueMultiplier = 1.5f },
+                    new GemOrigin { name = "Sibérie (Oural)", rarityWeight = 6, valueMultiplier = 1.3f,
+                        inclusionOverride = "Inclusions en aiguilles qui ressemblent à des tiges de bambou, aiguilles de tourmaline, fluorite et paillettes de mica biotite." },
+                    new GemOrigin { name = "Zimbabwe (Sandawana)", rarityWeight = 6, valueMultiplier = 1.6f,
+                        inclusionOverride = "Beau vert vif ; inclusions aciculaires courbes (actinolite) et inclusions cristallines." },
+                    new GemOrigin { name = "Afrique du Sud", rarityWeight = 3, valueMultiplier = 0.9f,
+                        inclusionOverride = "Souvent fracturée, avec des paillettes de mica vertes et brunes et des inclusions de molybdénite ; matériau de qualité moyenne, souvent taillé en cabochon." },
+                    new GemOrigin { name = "Inde", rarityWeight = 4, valueMultiplier = 0.9f,
+                        inclusionOverride = "Cavités en forme de virgule à deux phases (liquide et bulle de gaz) et paillettes de mica." },
+                    new GemOrigin { name = "Pakistan (Swat)", rarityWeight = 5, valueMultiplier = 1.1f,
+                        inclusionOverride = "Paillettes de mica, inclusions à deux phases et dolomite." },
                 };
             }),
             BuildGem("Tanzanite", g =>
@@ -6187,14 +6209,257 @@ public static partial class SceneBootstrap
                         inclusionOverride = "Seul gisement connu au monde, situé au pied du Kilimandjaro." },
                 };
             }),
+            BuildGem("Fluorite_Verte", g =>
+            {
+                g.displayName = "Fluorite verte";
+                g.description = "Une fluorite verte, tendre et fragile. Presque toutes les couleurs existent chez la fluorite, sauf le rouge et le noir.";
+                g.icon = GetGemIconSprite("fluorite_verte", new Color(0.30f, 0.72f, 0.40f), new Color(0.58f, 0.88f, 0.62f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("fluorite_verte", new Color(0.30f, 0.72f, 0.40f), "Rond");
+                g.refractiveIndex = 1.434f;
+                g.density = 3.1f;
+                g.hardness = 4f;
+                g.lengthMm = 7.0f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.7f;
+                g.weightCarats = 1.1f;
+                g.luster = "Vitreux mat";
+                g.color = "Vert";
+                g.shape = "Rond";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent à translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence bleue ou verte, parfois marquée, sous UV longue onde. Peut ne présenter aucune réaction.";
+                g.fluorescenceShortWave = "Moins marquée sous UV courte onde. Peut ne présenter aucune réaction.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Deux et trois phases, clivages et inclusions solides telles que de la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage octaédrique parfait peut laisser des cassures conchoïdales.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 15;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Chine", rarityWeight = 40, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Mexique", rarityWeight = 30, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Espagne", rarityWeight = 15, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "États-Unis", rarityWeight = 15, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Fluorite_Bleue", g =>
+            {
+                g.displayName = "Fluorite bleue";
+                g.description = "Une fluorite d'un bleu profond, tendre et fragile, au clivage octaédrique parfait.";
+                g.icon = GetGemIconSprite("fluorite_bleue", new Color(0.22f, 0.36f, 0.82f), new Color(0.50f, 0.62f, 0.95f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("fluorite_bleue", new Color(0.22f, 0.36f, 0.82f), "Ovale");
+                g.refractiveIndex = 1.434f;
+                g.density = 3.1f;
+                g.hardness = 4f;
+                g.lengthMm = 7.0f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.7f;
+                g.weightCarats = 1.1f;
+                g.luster = "Vitreux mat";
+                g.color = "Bleu";
+                g.shape = "Ovale";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent à translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence bleue ou verte, parfois marquée, sous UV longue onde. Peut ne présenter aucune réaction.";
+                g.fluorescenceShortWave = "Moins marquée sous UV courte onde. Peut ne présenter aucune réaction.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Deux et trois phases, clivages et inclusions solides telles que de la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage octaédrique parfait peut laisser des cassures conchoïdales.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 22;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Chine", rarityWeight = 35, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Mexique", rarityWeight = 25, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Angleterre", rarityWeight = 20, valueMultiplier = 1.3f },
+                    new GemOrigin { name = "États-Unis", rarityWeight = 20, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Fluorite_Jaune", g =>
+            {
+                g.displayName = "Fluorite jaune";
+                g.description = "Une fluorite jaune à jaune doré, tendre et fragile. Elle ressemble à une citrine mais se raye très facilement.";
+                g.icon = GetGemIconSprite("fluorite_jaune", new Color(0.93f, 0.78f, 0.25f), new Color(0.98f, 0.90f, 0.55f), "Rectangle à pans coupés", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("fluorite_jaune", new Color(0.93f, 0.78f, 0.25f), "Rectangle à pans coupés");
+                g.refractiveIndex = 1.434f;
+                g.density = 3.1f;
+                g.hardness = 4f;
+                g.lengthMm = 7.0f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.7f;
+                g.weightCarats = 1.1f;
+                g.luster = "Vitreux mat";
+                g.color = "Jaune";
+                g.shape = "Rectangle à pans coupés";
+                g.cutStyle = "À degrés";
+                g.transparency = "Transparent à translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence bleue ou verte, parfois marquée, sous UV longue onde. Peut ne présenter aucune réaction.";
+                g.fluorescenceShortWave = "Moins marquée sous UV courte onde. Peut ne présenter aucune réaction.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Deux et trois phases, clivages et inclusions solides telles que de la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage octaédrique parfait peut laisser des cassures conchoïdales.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 18;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Chine", rarityWeight = 35, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Mexique", rarityWeight = 35, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Espagne", rarityWeight = 15, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "États-Unis", rarityWeight = 15, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Fluorite_Bandee", g =>
+            {
+                g.displayName = "Fluorite à bandes de couleur";
+                g.description = "Une fluorite zonée, veinée de bandes violettes, vertes, blanches ou rosées. Chaque pierre taillée montre un dessin différent.";
+                g.icon = GetGemIconSprite("fluorite_bandee", new Color(0.58f, 0.40f, 0.66f), new Color(0.78f, 0.66f, 0.84f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("fluorite_bandee", new Color(0.58f, 0.40f, 0.66f), "Ovale");
+                g.refractiveIndex = 1.434f;
+                g.density = 3.1f;
+                g.hardness = 4f;
+                g.lengthMm = 7.0f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.7f;
+                g.weightCarats = 1.1f;
+                g.luster = "Vitreux mat";
+                g.color = "Bandes violettes, vertes et blanches";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence bleue ou verte, parfois marquée, sous UV longue onde. Peut ne présenter aucune réaction.";
+                g.fluorescenceShortWave = "Moins marquée sous UV courte onde. Peut ne présenter aucune réaction.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Deux et trois phases, clivages et inclusions solides telles que de la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage octaédrique parfait peut laisser des cassures conchoïdales.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 20;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Chine", rarityWeight = 45, valueMultiplier = 1.0f, inclusionOverride = "Fluorite de Chine à bandes de couleur, souvent veinée de rouge et de violet." },
+                    new GemOrigin { name = "Mexique", rarityWeight = 30, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Angleterre", rarityWeight = 25, valueMultiplier = 1.3f },
+                };
+            }),
+            BuildGem("Fluorite_Blue_John", g =>
+            {
+                g.displayName = "Blue John";
+                g.description = "Le Blue John : une fluorite à bandes violettes, blanches et jaunes, propre à un gisement d'Angleterre. Très fragile, on l'imprègne de résine avant de la tailler.";
+                g.icon = GetGemIconSprite("fluorite_blue_john", new Color(0.34f, 0.22f, 0.58f), new Color(0.70f, 0.60f, 0.82f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("fluorite_blue_john", new Color(0.34f, 0.22f, 0.58f), "Ovale");
+                g.refractiveIndex = 1.434f;
+                g.density = 3.1f;
+                g.hardness = 4f;
+                g.lengthMm = 7.0f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.7f;
+                g.weightCarats = 1.1f;
+                g.luster = "Vitreux mat";
+                g.color = "Bandes violettes, blanches et jaunes";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide à opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence bleue ou verte, parfois marquée, sous UV longue onde. Peut ne présenter aucune réaction.";
+                g.fluorescenceShortWave = "Moins marquée sous UV courte onde. Peut ne présenter aucune réaction.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Bandes de couleur violettes, blanches et jaunes ; cavités et clivages nombreux. Imprégnation de résine fréquente avant la taille.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 45;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Angleterre (Derbyshire)", rarityWeight = 100, valueMultiplier = 1.6f, inclusionOverride = "Bandes de couleur violettes, blanches et jaunes. Pierre très fragile, souvent imprégnée de résine pour être travaillée." },
+                };
+            }),
+            BuildGem("Iolite_Bloodshot", g =>
+            {
+                g.displayName = "Iolite bloodshot";
+                g.description = "Une iolite parsemée de plaquettes d'hématite rougeâtres : elles donnent un effet d'aventurescence et parfois un pseudo œil-de-chat. La variété s'appelle « bloodshot ».";
+                g.icon = GetGemIconSprite("iolite_bloodshot", new Color(0.55f, 0.33f, 0.36f), new Color(0.78f, 0.55f, 0.55f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("iolite_bloodshot", new Color(0.55f, 0.33f, 0.36f), "Ovale");
+                g.refractiveIndex = 1.545f;
+                g.density = 2.59f;
+                g.hardness = 7.25f;
+                g.lengthMm = 7.5f;
+                g.widthMm = 5.8f;
+                g.depthMm = 3.8f;
+                g.weightCarats = 1.2f;
+                g.luster = "Vitreux";
+                g.color = "Brun rougeâtre à bleu-violet";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Bleu / Violet / Jaune pâle selon les trois axes (trichroïsme marqué).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.01f;
+                g.absorptionSpectrum = "Deux bandes dans le jaune, une bande étroite dans le vert et trois bandes dans le bleu et le violet ; varie selon la direction d'observation.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 593f, widthNm = 8f, depth = 0.5f },
+                    new SpectrumLine { wavelengthNm = 580f, widthNm = 8f, depth = 0.5f },
+                    new SpectrumLine { wavelengthNm = 535f, widthNm = 4f, depth = 0.45f },
+                    new SpectrumLine { wavelengthNm = 456f, widthNm = 8f, depth = 0.5f },
+                    new SpectrumLine { wavelengthNm = 436f, widthNm = 8f, depth = 0.6f },
+                    new SpectrumLine { wavelengthNm = 426f, widthNm = 6f, depth = 0.4f },
+                };
+                g.inclusions = "Innombrables plaquettes d'hématite rougeâtres : elles donnent un effet d'aventurescence et parfois un pseudo œil-de-chat. Fissures ondulantes et givres de guérison courants.";
+                g.interferenceFigure = "Figure d'interférence biaxiale nette.";
+                g.chelseaFilterReaction = "Parfois rose pâle.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 40;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Inde", rarityWeight = 70, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Sri Lanka", rarityWeight = 20, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "Madagascar", rarityWeight = 10, valueMultiplier = 1.1f },
+                };
+            }),
             BuildGem("Iolite", g =>
             {
                 g.displayName = "Iolite";
-                g.description = "Une pierre bleu-violet à fort pléochroïsme, parfois appelée pierre des Vikings.";
+                g.description = "La variété transparente de la cordiérite : une pierre bleu-violet à fort trichroïsme, parfois appelée pierre des Vikings. Rarement incolore ; le matériau est fragile.";
                 g.icon = GetGemIconSprite("iolite", new Color(0.30f, 0.30f, 0.60f), new Color(0.50f, 0.50f, 0.80f), "Ovale", "Mixte");
                 g.roughIcon = GetRoughGemIconSprite("iolite", new Color(0.30f, 0.30f, 0.60f), "Ovale");
                 g.refractiveIndex = 1.545f;
-                g.density = 2.61f;
+                g.density = 2.59f;
                 g.hardness = 7.25f;
                 g.lengthMm = 7.5f;
                 g.widthMm = 5.8f;
@@ -6204,23 +6469,27 @@ public static partial class SceneBootstrap
                 g.color = "Bleu-violet";
                 g.shape = "Ovale";
                 g.cutStyle = "Mixte";
-                g.transparency = "Transparent";
+                g.transparency = "Transparent à translucide";
                 g.pleochroic = true;
-                g.pleochroicDescription = "Bleu / Violet / Jaune pâle selon les trois axes (très marqué, visible à l'œil nu).";
+                g.pleochroicDescription = "Bleu / Violet / Jaune pâle selon les trois axes (très marqué : la couleur de base peut changer complètement selon la direction d'observation).";
                 g.fluorescenceLongWave = "Aucune fluorescence notable.";
                 g.fluorescenceShortWave = "Aucune fluorescence notable.";
                 g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
                 g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
                 g.birefringence = 0.010f;
-                g.absorptionSpectrum = "Bandes d'absorption du fer.";
+                g.absorptionSpectrum = "Deux bandes dans le jaune, une bande étroite dans le vert et trois bandes dans le bleu et le violet ; varie selon la direction d'observation.";
                 g.spectrumLines = new List<SpectrumLine>
                 {
-                    new SpectrumLine { wavelengthNm = 435f, widthNm = 15f },
-                    new SpectrumLine { wavelengthNm = 585f, widthNm = 20f },
+                    new SpectrumLine { wavelengthNm = 593f, widthNm = 8f, depth = 0.5f },
+                    new SpectrumLine { wavelengthNm = 580f, widthNm = 8f, depth = 0.5f },
+                    new SpectrumLine { wavelengthNm = 535f, widthNm = 4f, depth = 0.45f },
+                    new SpectrumLine { wavelengthNm = 456f, widthNm = 8f, depth = 0.5f },
+                    new SpectrumLine { wavelengthNm = 436f, widthNm = 8f, depth = 0.6f },
+                    new SpectrumLine { wavelengthNm = 426f, widthNm = 6f, depth = 0.4f },
                 };
-                g.inclusions = "Parfois de fines paillettes orientées, donnant un effet chatoyant.";
+                g.inclusions = "Minces plaquettes de magnétite et d'oxyde de fer, parfois en grand nombre ; fissures ondulantes et givres de guérison courants. Plans de macle possibles.";
                 g.interferenceFigure = "Figure d'interférence biaxiale nette.";
-                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.chelseaFilterReaction = "Parfois rose pâle.";
                 g.magnetism = "Aucune réaction notable à l'aimant.";
                 g.baseValue = 25;
                 g.origins = new List<GemOrigin>
@@ -6441,12 +6710,12 @@ public static partial class SceneBootstrap
             BuildGem("Heliodore", g =>
             {
                 g.displayName = "Héliodore";
-                g.description = "Un béryl jaune doré, coloré par le fer.";
+                g.description = "Un béryl jaune citron à jaune doré foncé, coloré par le fer. On peut aussi l'obtenir en irradiant un béryl vert ou bleu.";
                 g.icon = GetGemIconSprite("heliodore", new Color(0.85f, 0.68f, 0.15f), new Color(0.98f, 0.85f, 0.40f), "Rectangle à pans coupés", "À degrés");
                 g.roughIcon = GetRoughGemIconSprite("heliodore", new Color(0.85f, 0.68f, 0.15f), "Rectangle à pans coupés");
                 g.refractiveIndex = 1.575f;
                 g.density = 2.70f;
-                g.hardness = 7.75f;
+                g.hardness = 7.5f;
                 g.lengthMm = 8.0f;
                 g.widthMm = 6.0f;
                 g.depthMm = 4.0f;
@@ -6462,10 +6731,10 @@ public static partial class SceneBootstrap
                 g.fluorescenceShortWave = "Aucune fluorescence notable.";
                 g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
                 g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
-                g.birefringence = 0.006f;
+                g.birefringence = 0.007f;
                 g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
                 g.spectrumLines = new List<SpectrumLine>();
-                g.inclusions = "Inclusions liquides et fissures en \"empreintes digitales\" possibles.";
+                g.inclusions = "Inclusions en \"pluie\" : fins tubes parallèles à l'axe du cristal, parfois des cavités liquides et des fissures en \"empreintes digitales\".";
                 g.interferenceFigure = "Figure d'interférence uniaxiale.";
                 g.chelseaFilterReaction = "Aucune réaction particulière.";
                 g.magnetism = "Aucune réaction notable à l'aimant.";
@@ -6478,15 +6747,104 @@ public static partial class SceneBootstrap
                     new GemOrigin { name = "Ukraine", rarityWeight = 20, valueMultiplier = 1.2f },
                 };
             }),
+            BuildGem("Aigue_Marine", g =>
+            {
+                g.displayName = "Aigue-marine";
+                g.description = "Un béryl bleu à bleu-vert pâle, coloré par le fer, comme l'eau de mer. C'est la variété bleue du béryl, presque toujours très propre.";
+                g.icon = GetGemIconSprite("aiguemarine", new Color(0.55f, 0.82f, 0.92f), new Color(0.80f, 0.94f, 0.98f), "Rectangle à pans coupés", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("aiguemarine", new Color(0.55f, 0.82f, 0.92f), "Rectangle à pans coupés");
+                g.refractiveIndex = 1.577f;
+                g.density = 2.72f;
+                g.hardness = 7.5f;
+                g.lengthMm = 9.0f;
+                g.widthMm = 7.0f;
+                g.depthMm = 4.5f;
+                g.weightCarats = 2.2f;
+                g.luster = "Vitreux";
+                g.color = "Bleu clair";
+                g.shape = "Rectangle à pans coupés";
+                g.cutStyle = "À degrés";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Bleu clair / Incolore à bleu-vert pâle selon l'axe (faible à modéré).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.006f;
+                g.absorptionSpectrum = "Spectre du fer, souvent peu net : bande faible vers 537 nm et vers 456 nm.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 537f, widthNm = 10f, depth = 0.3f },
+                    new SpectrumLine { wavelengthNm = 456f, widthNm = 12f, depth = 0.4f },
+                };
+                g.inclusions = "Presque toujours très propre. Fins tubes parallèles à l'axe (aspect de pluie), parfois cavités liquides, plumes et fissures.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale.";
+                g.chelseaFilterReaction = "Bleu-vert (terne).";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 60;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil (Minas Gerais)", rarityWeight = 34, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "Mozambique", rarityWeight = 18, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Pakistan", rarityWeight = 16, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "Madagascar", rarityWeight = 14, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Nigeria", rarityWeight = 10, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "Zambie", rarityWeight = 8, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Beryl_Bleu", g =>
+            {
+                g.displayName = "Béryl bleu (maxixe)";
+                g.description = "Un béryl d'un bleu profond, de type maxixe : sa couleur vient de centres colorés naturels et fane à la lumière. Bien plus soutenu que l'aigue-marine.";
+                g.icon = GetGemIconSprite("berylbleu", new Color(0.12f, 0.30f, 0.78f), new Color(0.40f, 0.58f, 0.95f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("berylbleu", new Color(0.12f, 0.30f, 0.78f), "Ovale");
+                g.refractiveIndex = 1.580f;
+                g.density = 2.72f;
+                g.hardness = 7.5f;
+                g.lengthMm = 8.0f;
+                g.widthMm = 6.0f;
+                g.depthMm = 4.0f;
+                g.weightCarats = 1.8f;
+                g.luster = "Vitreux";
+                g.color = "Bleu royal";
+                g.shape = "Ovale";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Bleu profond / Incolore à bleu très pâle selon l'axe (très marqué).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.007f;
+                g.absorptionSpectrum = "Bandes dans le rouge et l'orangé vers 695 nm et 628 nm, plus faible vers 550 nm.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 695f, widthNm = 10f, depth = 0.8f },
+                    new SpectrumLine { wavelengthNm = 628f, widthNm = 20f, depth = 0.7f },
+                    new SpectrumLine { wavelengthNm = 550f, widthNm = 14f, depth = 0.35f },
+                };
+                g.inclusions = "Généralement propre, parfois des tubes parallèles à l'axe et des cavités liquides.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 90;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil (Maxixe)", rarityWeight = 70, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Madagascar", rarityWeight = 30, valueMultiplier = 1.2f },
+                };
+            }),
             BuildGem("Morganite", g =>
             {
                 g.displayName = "Morganite";
-                g.description = "Un béryl rose, coloré par le manganèse.";
+                g.description = "Un béryl rose pêche à rosé, coloré par le manganèse. On le chauffe souvent pour obtenir un rose pur.";
                 g.icon = GetGemIconSprite("morganite", new Color(0.85f, 0.60f, 0.65f), new Color(0.97f, 0.78f, 0.82f), "Ovale", "Mixte");
                 g.roughIcon = GetRoughGemIconSprite("morganite", new Color(0.85f, 0.60f, 0.65f), "Ovale");
                 g.refractiveIndex = 1.585f;
                 g.density = 2.80f;
-                g.hardness = 7.75f;
+                g.hardness = 7.5f;
                 g.lengthMm = 8.0f;
                 g.widthMm = 6.0f;
                 g.depthMm = 4.0f;
@@ -6497,7 +6855,7 @@ public static partial class SceneBootstrap
                 g.cutStyle = "Mixte";
                 g.transparency = "Transparent";
                 g.pleochroic = true;
-                g.pleochroicDescription = "Rose pâle / Bleu-rose selon l'axe (faible à modéré).";
+                g.pleochroicDescription = "Rose / Rose bleuté selon l'axe (faible à modéré).";
                 g.fluorescenceLongWave = "Aucune fluorescence notable.";
                 g.fluorescenceShortWave = "Aucune fluorescence notable.";
                 g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
@@ -6505,7 +6863,7 @@ public static partial class SceneBootstrap
                 g.birefringence = 0.008f;
                 g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
                 g.spectrumLines = new List<SpectrumLine>();
-                g.inclusions = "Généralement propre, parfois inclusions liquides allongées.";
+                g.inclusions = "Tubes parallèles à l'axe (aspect de pluie), inclusions liquides allongées et voiles de croissance.";
                 g.interferenceFigure = "Figure d'interférence uniaxiale.";
                 g.chelseaFilterReaction = "Aucune réaction particulière.";
                 g.magnetism = "Aucune réaction notable à l'aimant.";
@@ -6521,12 +6879,12 @@ public static partial class SceneBootstrap
             BuildGem("Goshenite", g =>
             {
                 g.displayName = "Goshénite";
-                g.description = "Un béryl incolore, la variété la plus pure du groupe.";
+                g.description = "Le béryl incolore : goshénite est le nom que l'on donne à un béryl sans couleur, la variété la plus pure du groupe.";
                 g.icon = GetGemIconSprite("goshenite", new Color(0.88f, 0.90f, 0.92f), new Color(0.98f, 0.99f, 1.00f), "Rond", "Brillant");
                 g.roughIcon = GetRoughGemIconSprite("goshenite", new Color(0.88f, 0.90f, 0.92f), "Rond");
                 g.refractiveIndex = 1.577f;
                 g.density = 2.72f;
-                g.hardness = 7.75f;
+                g.hardness = 7.5f;
                 g.lengthMm = 7.5f;
                 g.widthMm = 5.8f;
                 g.depthMm = 3.9f;
@@ -6809,31 +7167,31 @@ public static partial class SceneBootstrap
             BuildGem("Fluorite", g =>
             {
                 g.displayName = "Fluorite";
-                g.description = "Un minéral tendre et coloré, dont le nom a donné le mot \"fluorescence\".";
+                g.description = "Une fluorite violette, minéral tendre et fragile dont le nom a donné le mot \"fluorescence\". Presque toutes les couleurs existent, sauf le rouge et le noir.";
                 g.icon = GetGemIconSprite("fluorite", new Color(0.55f, 0.30f, 0.70f), new Color(0.72f, 0.50f, 0.85f), "Ovale", "Brillant");
                 g.roughIcon = GetRoughGemIconSprite("fluorite", new Color(0.55f, 0.30f, 0.70f), "Ovale");
                 g.refractiveIndex = 1.434f;
-                g.density = 3.18f;
+                g.density = 3.10f;
                 g.hardness = 4f;
                 g.lengthMm = 7.0f;
                 g.widthMm = 5.5f;
                 g.depthMm = 3.7f;
                 g.weightCarats = 1.1f;
-                g.luster = "Vitreux";
+                g.luster = "Vitreux mat";
                 g.color = "Violet";
                 g.shape = "Ovale";
                 g.cutStyle = "Brillant";
-                g.transparency = "Transparent";
+                g.transparency = "Transparent à translucide";
                 g.pleochroic = false;
                 g.pleochroicDescription = "";
-                g.fluorescenceLongWave = "Fluorescence bleue à violette souvent intense sous UV longue onde.";
-                g.fluorescenceShortWave = "Fluorescence variable sous UV courte onde.";
+                g.fluorescenceLongWave = "Fluorescence bleue ou verte, parfois marquée, sous UV longue onde. Peut ne présenter aucune réaction.";
+                g.fluorescenceShortWave = "Moins marquée sous UV courte onde. Peut ne présenter aucune réaction.";
                 g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
                 g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
                 g.birefringence = 0.000f;
                 g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
                 g.spectrumLines = new List<SpectrumLine>();
-                g.inclusions = "Clivage parfait dans quatre directions, fractures internes fréquentes.";
+                g.inclusions = "Deux et trois phases, clivages et inclusions solides telles que de la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage octaédrique parfait peut laisser des cassures conchoïdales.";
                 g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
                 g.chelseaFilterReaction = "Aucune réaction particulière.";
                 g.magnetism = "Aucune réaction notable à l'aimant.";
@@ -6932,11 +7290,11 @@ public static partial class SceneBootstrap
             BuildGem("Pezzottaite", g =>
             {
                 g.displayName = "Pezzottaite";
-                g.description = "Un béryl au césium, de couleur \"framboise\", découvert seulement en 2002 à Madagascar.";
+                g.description = "Un béryl au césium rose à rougeâtre, translucide à transparent, découvert seulement en 2002 à Madagascar. Il est trigonal et pousse en cristaux rhomboédriques tabulaires, très inclus. Fragile malgré sa dureté de 8.";
                 g.icon = GetGemIconSprite("pezzottaite", new Color(0.75f, 0.20f, 0.35f), new Color(0.90f, 0.42f, 0.55f), "Ovale", "Brillant");
                 g.roughIcon = GetRoughGemIconSprite("pezzottaite", new Color(0.75f, 0.20f, 0.35f), "Ovale");
                 g.refractiveIndex = 1.615f;
-                g.density = 3.13f;
+                g.density = 3.05f;
                 g.hardness = 8f;
                 g.lengthMm = 6.5f;
                 g.widthMm = 5.0f;
@@ -6948,15 +7306,19 @@ public static partial class SceneBootstrap
                 g.cutStyle = "Brillant";
                 g.transparency = "Transparent";
                 g.pleochroic = true;
-                g.pleochroicDescription = "Rose pâle / Rouge-violet selon l'axe (modéré).";
+                g.pleochroicDescription = "Rose orangé moyen / Rose violacé à violet rose (dichroïque).";
                 g.fluorescenceLongWave = "Aucune fluorescence notable.";
                 g.fluorescenceShortWave = "Aucune fluorescence notable.";
                 g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
                 g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
-                g.birefringence = 0.008f;
-                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
-                g.spectrumLines = new List<SpectrumLine>();
-                g.inclusions = "Cristaux maclés en étoile à trois branches, structure de croissance particulière.";
+                g.birefringence = 0.0095f;
+                g.absorptionSpectrum = "Une bande dans le bleu-vert vers 494 nm et une plus petite dans le vert vers 563 nm.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 494f, widthNm = 14f },
+                    new SpectrumLine { wavelengthNm = 563f, widthNm = 12f, depth = 0.5f },
+                };
+                g.inclusions = "Matériau généralement très inclus : tubes de croissance et plumes de guérison (givres). Peut être imprégné de résine.";
                 g.interferenceFigure = "Figure d'interférence uniaxiale.";
                 g.chelseaFilterReaction = "Aucune réaction particulière.";
                 g.magnetism = "Aucune réaction notable à l'aimant.";
@@ -8580,7 +8942,7 @@ public static partial class SceneBootstrap
                 g.roughIcon = GetRoughGemIconSprite("berylrouge", new Color(0.65f, 0.10f, 0.20f), "Ovale");
                 g.refractiveIndex = 1.570f;
                 g.density = 2.68f;
-                g.hardness = 7.75f;
+                g.hardness = 7.5f;
                 g.lengthMm = 4.0f;
                 g.widthMm = 3.0f;
                 g.depthMm = 2.0f;
@@ -8602,7 +8964,7 @@ public static partial class SceneBootstrap
                 {
                     new SpectrumLine { wavelengthNm = 550f, widthNm = 10f },
                 };
-                g.inclusions = "Voiles de croissance et canaux allongés occasionnels, typiques des béryls.";
+                g.inclusions = "Voiles de croissance et canaux allongés occasionnels, typiques des béryls. On trouve rarement de grosses pierres de qualité gemme.";
                 g.interferenceFigure = "Figure uniaxe centrée en lumière convergente.";
                 g.chelseaFilterReaction = "Aucune réaction marquée au filtre Chelsea.";
                 g.magnetism = "Aucune réaction à l'aimant.";

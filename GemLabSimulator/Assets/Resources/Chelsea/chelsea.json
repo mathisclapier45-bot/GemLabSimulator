@@ -168,6 +168,20 @@
    "reaction": "La plupart des pierres présentent un vert terne.",
    "color": "#F7141A",
    "intensity": 0.0
+  },
+  {
+   "key": "Iolite",
+   "source": "Diplôme en gemmologie 2019, iolite (p. 136, note manuscrite)",
+   "reaction": "Parfois rose pâle.",
+   "color": "#E9A9B8",
+   "intensity": 0.3
+  },
+  {
+   "key": "Iolite_Bloodshot",
+   "source": "Diplôme en gemmologie 2019, iolite (p. 136, note manuscrite)",
+   "reaction": "Parfois rose pâle.",
+   "color": "#E9A9B8",
+   "intensity": 0.3
   }
  ]
 }

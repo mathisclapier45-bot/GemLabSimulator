@@ -25,7 +25,8 @@ public static class TreatmentSignatures
 
     public static FluorescenceInfo Fluorescence(GemInstance gem, bool longWave)
     {
-        var info = FluorescenceInfo.ForGem(gem.Definition, longWave);
+        var entry = FluorescenceLibrary.EntryFor(gem);
+        var info = entry != null ? FluorescenceLibrary.Info(entry, longWave) : FluorescenceInfo.ForGem(gem.Definition, longWave);
         if (string.IsNullOrEmpty(gem.TreatmentGrade) || gem.TreatmentGrade == "Non traité") return info;
 
         // An HPHT diamond: the nitrogen centres glow a strong green.

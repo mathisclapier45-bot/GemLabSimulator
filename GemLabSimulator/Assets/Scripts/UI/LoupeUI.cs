@@ -604,7 +604,7 @@ public class LoupeUI : MonoBehaviour
         var uvMode = uvOn;
 
         // Under UV the stone itself is dark; its luminescence is a second, tinted render on top.
-        view3D.Draw(mesh, halfMm, orientation, uvMode ? GemPixelArt.Dim(body, 0.12f) : body, uvMode ? GemPixelArt.Dim(facet, 0.18f) : facet, stone.Definition.Diaphaneity, uvMode ? 0 : stone.AsterismRays);
+        view3D.Draw(mesh, halfMm, orientation, uvMode ? GemPixelArt.Dim(body, 0.12f) : body, uvMode ? GemPixelArt.Dim(facet, 0.18f) : facet, stone.Definition.Diaphaneity, uvMode ? 0 : stone.AsterismRays, GemLook.For(stone.Definition), !uvMode && stone.CatsEye);
 
         var side = Mathf.Max(half.x, half.y, half.z) * 2f / GemView3D.FitFraction;
         stoneRect.sizeDelta = new Vector2(side, side);
@@ -806,7 +806,7 @@ public class LoupeUI : MonoBehaviour
         }
 
         if (uvSeen)
-            text += $"\n\nUV longs : {def.fluorescenceLongWave}";
+            text += $"\n\nUV longs : {FluorescenceLibrary.Text(def, true)}";
 
         resultText.text = text.TrimEnd('\n');
     }
@@ -877,7 +877,7 @@ public class LoupeUI : MonoBehaviour
         stoneImage.enabled = false;
 
         // The stone is drawn in 3D pixel art, so it has real volume when turned.
-        view3D = new GemView3D(64);
+        view3D = new GemView3D(160) { Realistic = true };
         stoneImage.sprite = view3D.Sprite;
 
         // The picture of the stone with its inclusions painted inside it (replaces the plain stone while they show).

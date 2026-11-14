@@ -45,10 +45,16 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 453
     widthNm: 10
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 473
     widthNm: 10
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 493
     widthNm: 10
+    depth: 1
+    edgeNm: 0
   inclusions: "Petites fractures disco\xEFdes en forme de disque autour de cristaux
     inclus."
   interferenceFigure: "Figure d'interf\xE9rence biaxiale."

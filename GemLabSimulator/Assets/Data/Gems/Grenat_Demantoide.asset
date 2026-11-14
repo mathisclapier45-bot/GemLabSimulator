@@ -47,6 +47,8 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 440
     widthNm: 45
+    depth: 1
+    edgeNm: 0
   inclusions: "Inclusions fibreuses radiales caract\xE9ristiques possibles."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "R\xE9action rouge\xE2tre possible si color\xE9 au chrome."

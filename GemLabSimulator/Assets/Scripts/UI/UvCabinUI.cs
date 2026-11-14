@@ -154,7 +154,7 @@ public class UvCabinUI : MonoBehaviour
         StoryState.Instance?.OnObserved(stone, key);
 
         var label = longWave ? "UV longs (365 nm)" : "UV courts (254 nm)";
-        var text = longWave ? def.fluorescenceLongWave : def.fluorescenceShortWave;
+        var text = FluorescenceLibrary.Text(stone, longWave);
         ToolFeedbackUI.Instance?.ShowMessage($"Cabine UV — {label} : {text}");
     }
 
@@ -221,9 +221,9 @@ public class UvCabinUI : MonoBehaviour
         var def = stone.Definition;
         var text = "";
         if (stone.HasObserved(ExaminationTool.MeasurementType.FluorescenceLongWave.ToString()))
-            text += $"UV longs : {def.fluorescenceLongWave}\n\n";
+            text += $"UV longs : {FluorescenceLibrary.Text(stone, true)}\n\n";
         if (stone.HasObserved(ExaminationTool.MeasurementType.FluorescenceShortWave.ToString()))
-            text += $"UV courts : {def.fluorescenceShortWave}";
+            text += $"UV courts : {FluorescenceLibrary.Text(stone, false)}";
 
         return text.Length == 0 ? "La gemme est noire sans lampe. Allumez un UV pour l'observer." : text.TrimEnd('\n');
     }
@@ -387,12 +387,22 @@ public class UvCabinUI : MonoBehaviour
         foreach (var (name, info) in treatments) AddIndexRow(name, info, info);
 
         var stones = new List<GemDefinition>();
+        var speciesNames = new HashSet<string>();
         foreach (var definition in database.allGems)
-            if (definition != null) stones.Add(definition);
+            if (definition != null) { stones.Add(definition); speciesNames.Add(definition.name); }
+
+        // The cases of the table of the course that are not a species of their own (a synthetic blue spinel, a synthetic yellow sapphire, plastics...).
+        var special = new List<FluorescenceEntry>();
+        foreach (var entry in FluorescenceLibrary.All)
+            if (!speciesNames.Contains(entry.key)) special.Add(entry);
+        special.Sort((a, b) => string.CompareOrdinal(TextEntry.Normalize(a.key), TextEntry.Normalize(b.key)));
+        AddIndexHeader("Cas du tableau du cours");
+        foreach (var entry in special)
+            AddIndexRow(entry.key.Replace('_', ' '), FluorescenceLibrary.Info(entry, true), FluorescenceLibrary.Info(entry, false));
         stones.Sort((a, b) => string.CompareOrdinal(TextEntry.Normalize(a.displayName), TextEntry.Normalize(b.displayName)));
         AddIndexHeader("Pierres, de A à Z");
         foreach (var definition in stones)
-            AddIndexRow(definition.displayName, FluorescenceInfo.ForGem(definition, true), FluorescenceInfo.ForGem(definition, false));
+            AddIndexRow(definition.displayName, FluorescenceLibrary.Info(definition, true), FluorescenceLibrary.Info(definition, false));
 
         indexNoResult = RuntimeUIKit.MakeText("NoResult", indexContent, "Aucune pierre ne correspond.", 12, TextAnchor.MiddleCenter, new Color(0.7f, 0.7f, 0.75f),
             new Vector2(0f, -10f), new Vector2(IndexWidth - 24f, 24f));

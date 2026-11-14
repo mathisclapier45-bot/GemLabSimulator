@@ -46,6 +46,8 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 450
     widthNm: 40
+    depth: 1
+    edgeNm: 0
   inclusions: "Zonation de couleur en bandes hexagonales, cristaux fins dispers\xE9s."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."

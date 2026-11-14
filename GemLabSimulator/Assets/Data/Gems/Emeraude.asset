@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: Emeraude
   m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
   displayName: "\xC9meraude"
-  description: "Un b\xE9ryl vert intense, envoy\xE9 pour authentification."
+  description: "Un b\xE9ryl vert, color\xE9 par le chrome (et parfois le vanadium)
+    : l'\xE9meraude. Fragile malgr\xE9 sa duret\xE9, elle est presque toujours fractur\xE9e
+    et porte ses inclusions en \xAB jardin \xBB."
   icon: {fileID: 21300000, guid: 628c56333fad74dc9babcd39867cf215, type: 3}
   roughIcon: {fileID: 21300000, guid: d57c7034579e84200803ab21ea83c50d, type: 3}
   iconColor: {r: 0.1, g: 0.45, b: 0.3, a: 1}
   iconFacetColor: {r: 0.3, g: 0.65, b: 0.45, a: 1}
-  refractiveIndex: 1.58
+  refractiveIndex: 1.585
   density: 2.72
-  hardness: 7.7
+  hardness: 7.5
   lengthMm: 8.2
   widthMm: 6.2
   depthMm: 4.5
@@ -31,12 +33,13 @@ MonoBehaviour:
   cutStyle: "\xC9meraude (\xE0 degr\xE9s)"
   transparency: Transparent
   pleochroic: 1
-  pleochroicDescription: "Bleu-vert / Jaune-vert selon l'axe d'observation (marqu\xE9)."
+  pleochroicDescription: "Bleu-vert / Jaune-vert selon l'axe d'observation (faible
+    \xE0 prononc\xE9)."
   fluorescenceLongWave: "G\xE9n\xE9ralement inerte sous UV longue onde."
   fluorescenceShortWave: Inerte sous UV courte onde.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
   opticalCharacterClass: 1
-  birefringence: 0.006
+  birefringence: 0.007
   isQuartzFamily: 0
   isPolycrystalline: 0
   isThermallyConductiveLikeDiamond: 0
@@ -45,12 +48,18 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 683
     widthNm: 6
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 662
     widthNm: 8
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 637
     widthNm: 8
-  inclusions: "Inclusions en \"jardin\" (fissures et inclusions multiphases), tr\xE8s
-    caract\xE9ristiques."
+    depth: 1
+    edgeNm: 0
+  inclusions: "Inclusions en \"jardin\" : cavit\xE9s \xE0 plusieurs phases, fissures,
+    paillettes de mica ; elles changent selon la mine."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
   chelseaFilterReaction: "R\xE9action faible ou nulle (contrairement \xE0 de nombreuses
     imitations et synth\xE8ses, qui r\xE9agissent rouge vif)."
@@ -62,19 +71,46 @@ MonoBehaviour:
   tunnelMinPrice: 0
   origins:
   - name: Colombie (Muzo/Chivor)
-    rarityWeight: 25
+    rarityWeight: 22
     valueMultiplier: 2.5
-    inclusionOverride: "Inclusions triphas\xE9es (liquide, gaz, cristal de halite)
-      en \"jardin\"."
+    inclusionOverride: "Inclusions trois-phases (Muzo), pyrite, parisite (Chivor),
+      feldspath, mica et rhombo\xE8dres de calcite."
   - name: Zambie
-    rarityWeight: 35
+    rarityWeight: 28
     valueMultiplier: 1.2
-    inclusionOverride: 
+    inclusionOverride: "Particules de mica (muscovite), chrysob\xE9ryl, h\xE9matite,
+      magn\xE9tite, limonite et prismes de rutile."
   - name: "Br\xE9sil"
-    rarityWeight: 25
+    rarityWeight: 18
     valueMultiplier: 0.9
-    inclusionOverride: 
+    inclusionOverride: Inclusions de pyrite, de limonite, de talc, de chromite, de
+      mica, de dolomite ou de calcite.
   - name: Afghanistan (Panjshir)
-    rarityWeight: 15
+    rarityWeight: 8
     valueMultiplier: 1.5
     inclusionOverride: 
+  - name: "Sib\xE9rie (Oural)"
+    rarityWeight: 6
+    valueMultiplier: 1.3
+    inclusionOverride: "Inclusions en aiguilles qui ressemblent \xE0 des tiges de
+      bambou, aiguilles de tourmaline, fluorite et paillettes de mica biotite."
+  - name: Zimbabwe (Sandawana)
+    rarityWeight: 6
+    valueMultiplier: 1.6
+    inclusionOverride: Beau vert vif ; inclusions aciculaires courbes (actinolite)
+      et inclusions cristallines.
+  - name: Afrique du Sud
+    rarityWeight: 3
+    valueMultiplier: 0.9
+    inclusionOverride: "Souvent fractur\xE9e, avec des paillettes de mica vertes
+      et brunes et des inclusions de molybd\xE9nite ; mat\xE9riau de qualit\xE9 moyenne,
+      souvent taill\xE9 en cabochon."
+  - name: Inde
+    rarityWeight: 4
+    valueMultiplier: 0.9
+    inclusionOverride: "Cavit\xE9s en forme de virgule \xE0 deux phases (liquide
+      et bulle de gaz) et paillettes de mica."
+  - name: Pakistan (Swat)
+    rarityWeight: 5
+    valueMultiplier: 1.1
+    inclusionOverride: "Paillettes de mica, inclusions \xE0 deux phases et dolomite."

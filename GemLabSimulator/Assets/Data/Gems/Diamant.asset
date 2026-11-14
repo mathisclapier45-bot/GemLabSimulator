@@ -48,6 +48,8 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 415
     widthNm: 10
+    depth: 1
+    edgeNm: 0
   inclusions: "Inclusions cristallines sombres possibles, g\xE9n\xE9ralement peu
     abondantes."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."

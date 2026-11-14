@@ -15,7 +15,7 @@ public static class OpticalSigns
         // Uniaxial negative: corundum, beryl, tourmaline, apatite, scapolite...
         { "Apatite", '-' }, { "Corindon_Rubis", '-' }, { "Corindon_Synthetique_Rubis", '-' }, { "Corindon_Synthetique_Saphir", '-' }, { "Padparadscha", '-' },
         { "Saphir_Bleu", '-' }, { "Saphir_Incolore", '-' }, { "Saphir_Jaune", '-' }, { "Saphir_Orange", '-' }, { "Saphir_Rose", '-' }, { "Saphir_Vert", '-' }, { "Saphir_Violet", '-' },
-        { "Emeraude", '-' }, { "Goshenite", '-' }, { "Heliodore", '-' }, { "Morganite", '-' }, { "Pezzottaite", '-' }, { "Rhodocrosite", '-' }, { "Scapolite", '-' },
+        { "Emeraude", '-' }, { "Goshenite", '-' }, { "Heliodore", '-' }, { "Aigue_Marine", '-' }, { "Beryl_Bleu", '-' }, { "Morganite", '-' }, { "Pezzottaite", '-' }, { "Rhodocrosite", '-' }, { "Scapolite", '-' },
         { "Tourmaline_Paraiba", '-' }, { "Tourmaline_Rose", '-' },
         // Biaxial positive.
         { "Chrysoberyl", '+' }, { "Chrysoberyl_Alexandrite", '+' }, { "Diopside_Chromifere", '+' }, { "Jade_Jadeite", '+' }, { "Kunzite", '+' }, { "Labradorite", '+' },

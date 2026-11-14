@@ -47,8 +47,12 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 620
     widthNm: 12
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 450
     widthNm: 30
+    depth: 1
+    edgeNm: 0
   inclusions: Soie de rutile fine, zonation de couleur subtile en bandes.
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."
   chelseaFilterReaction: "R\xE9action rouge\xE2tre faible possible."

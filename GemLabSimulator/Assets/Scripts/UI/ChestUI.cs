@@ -88,6 +88,14 @@ public class ChestUI : MonoBehaviour
         iconImage.sprite = gem.DisplaySprite;
         iconImage.preserveAspect = true;
 
+        // A click opens the sheet of the stone, as in the bag.
+        var button = go.AddComponent<Button>();
+        button.onClick.AddListener(() =>
+        {
+            GemTooltipUI.Instance?.Hide();
+            GemDetailUI.Instance?.Open(gem);
+        });
+
         RuntimeUIKit.AddEnvelopeBadge(go.transform, gem);
 
         var dragSource = go.AddComponent<GemDragSource>();

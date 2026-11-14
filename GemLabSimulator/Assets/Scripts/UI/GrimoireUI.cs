@@ -315,13 +315,13 @@ public class GrimoireUI : MonoBehaviour
 
         if (!photoViews.TryGetValue(def.name, out var view))
         {
-            view = new GemView3D(96);
+            view = new GemView3D(128) { Realistic = true };
             photoViews[def.name] = view;
         }
 
         GemView3D.Colors(stone, out var body, out var facet);
         var half = new Vector3(stone.LengthMm, stone.WidthMm, Mathf.Max(stone.DepthMm, 0.5f)) * 0.5f;
-        view.Draw(GemView3D.MeshFor(stone), half, Quaternion.Euler(-32f, 16f, 8f), body, facet, def.Diaphaneity, stone.AsterismRays);
+        view.Draw(GemView3D.MeshFor(stone), half, Quaternion.Euler(-32f, 16f, 8f), body, facet, def.Diaphaneity, stone.AsterismRays, GemLook.For(def), stone.CatsEye);
         return view.Sprite;
     }
 
@@ -527,8 +527,8 @@ public class GrimoireUI : MonoBehaviour
             R("Dureté (Mohs)", "MinimapIcons/pioche", $"{def.hardness:F2}"),
             R("Caractère optique", "ToolIcons/Polariscope", def.opticalCharacter, new[] { "OpticalCharacter" }),
             R("Pléochroïsme", "ToolIcons/Dichroscope", def.pleochroic ? def.pleochroicDescription : "Aucun.", new[] { "Pleochroism" }),
-            R("Fluorescence UV longue onde", "ToolIcons/CabineUV", def.fluorescenceLongWave, new[] { "FluorescenceLongWave" }),
-            R("Fluorescence UV courte onde", "ToolIcons/CabineUV", def.fluorescenceShortWave, new[] { "FluorescenceShortWave" }),
+            R("Fluorescence UV longue onde", "ToolIcons/CabineUV", FluorescenceLibrary.Text(def, true), new[] { "FluorescenceLongWave" }),
+            R("Fluorescence UV courte onde", "ToolIcons/CabineUV", FluorescenceLibrary.Text(def, false), new[] { "FluorescenceShortWave" }),
             R("Spectre d'absorption", "ToolIcons/Spectroscope", SpectrumLibrary.Description(def), new[] { "AbsorptionSpectrum" }),
             R("Inclusions typiques", Loupe, def.inclusions, InclusionKeys),
             R("Figure d'interférence", "ToolIcons/Polariscope", def.interferenceFigure, new[] { "InterferenceFigure" }),

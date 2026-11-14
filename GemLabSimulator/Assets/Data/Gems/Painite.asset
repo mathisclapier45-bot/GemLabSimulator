@@ -49,8 +49,12 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 445
     widthNm: 6
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 635
     widthNm: 6
+    depth: 1
+    edgeNm: 0
   inclusions: "Cristaux min\xE9raux inclus rarement observ\xE9s ; fines stries de
     croissance parfois visibles."
   interferenceFigure: "Figure uniaxe centr\xE9e observable en lumi\xE8re convergente."

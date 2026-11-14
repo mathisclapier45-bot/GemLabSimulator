@@ -47,10 +47,16 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 460
     widthNm: 20
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 580
     widthNm: 40
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 635
     widthNm: 20
+    depth: 1
+    edgeNm: 0
   inclusions: "Cristaux octa\xE9driques, cristaux n\xE9gatifs."
   interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
   chelseaFilterReaction: "R\xE9action rouge marqu\xE9e sous filtre Chelsea si color\xE9

@@ -301,7 +301,7 @@ public static class RamanSpectrum
         string[] pool;
         if (name.StartsWith("Corindon") || name.StartsWith("Saphir") || name == "Padparadscha")
             pool = new[] { "Rutile", "Zircon", "Apatite", "Spinelle", "Calcite", "Mica (muscovite)" };
-        else if (name == "Emeraude" || name == "Goshenite" || name == "Morganite" || name == "Heliodore" || name == "Beryl_Rouge")
+        else if (name == "Emeraude" || name == "Goshenite" || name == "Morganite" || name == "Heliodore" || name == "Beryl_Rouge" || name == "Aigue_Marine" || name == "Beryl_Bleu")
             pool = new[] { "Calcite", "Mica (muscovite)", "Albite", "Quartz", "Pyrite" };
         else if (name == "Diamant")
             pool = new[] { "Graphite", "Péridot", "Grenat pyrope" };
@@ -350,7 +350,7 @@ public static class RamanSpectrum
             case "Saphir_Bleu": case "Saphir_Incolore": case "Saphir_Jaune": case "Saphir_Orange": case "Saphir_Rose":
             case "Saphir_Vert": case "Saphir_Violet": case "Padparadscha": return "Corindon";
             case "Amethyste": case "Ametrine": case "Citrine": case "Prasiolite": case "Quartz": case "Quartz_Fume": case "Quartz_Rose": return "Quartz";
-            case "Emeraude": case "Goshenite": case "Morganite": case "Heliodore": case "Beryl_Rouge": case "Pezzottaite": return "Béryl";
+            case "Emeraude": case "Goshenite": case "Morganite": case "Heliodore": case "Beryl_Rouge": case "Pezzottaite": case "Aigue_Marine": case "Beryl_Bleu": return "Béryl";
             case "Topaze": return "Topaze";
             case "Grenat_Almandin": case "Grenat_Rhodolite": return "Grenat almandin";
             case "Grenat_Pyrope": return "Grenat pyrope";
@@ -364,9 +364,9 @@ public static class RamanSpectrum
             case "Chrysoberyl": case "Chrysoberyl_Alexandrite": return "Chrysobéryl";
             case "Apatite": return "Apatite";
             case "Tanzanite": case "Zoisite": return "Zoïsite";
-            case "Iolite": return "Cordiérite";
+            case "Iolite": case "Iolite_Bloodshot": return "Cordiérite";
             case "Kyanite": return "Kyanite";
-            case "Fluorite": return "Fluorite";
+            case "Fluorite": case "Fluorite_Verte": case "Fluorite_Bleue": case "Fluorite_Jaune": case "Fluorite_Bandee": case "Fluorite_Blue_John": return "Fluorite";
             case "Jade_Jadeite": return "Jadéite";
             case "Jade_Nephrite": return "Néphrite";
             case "Serpentine_Bowenite": return "Serpentine";

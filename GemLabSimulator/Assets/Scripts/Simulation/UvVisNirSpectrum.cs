@@ -269,9 +269,9 @@ public static class UvVisNirSpectrum
         var n = c.Name;
         if (n.StartsWith("Diamant")) return 230f;
         if (n.StartsWith("Corindon") || n.StartsWith("Saphir") || n == "Padparadscha" || n.StartsWith("Spinelle")) return 300f;
-        if (n == "Emeraude" || n == "Goshenite" || n == "Morganite" || n == "Heliodore" || n == "Beryl_Rouge" || n == "Pezzottaite") return 310f;
+        if (n == "Emeraude" || n == "Goshenite" || n == "Morganite" || n == "Heliodore" || n == "Beryl_Rouge" || n == "Pezzottaite" || n == "Aigue_Marine" || n == "Beryl_Bleu") return 310f;
         if (n.StartsWith("Quartz") || n == "Amethyste" || n == "Citrine" || n == "Ametrine" || n == "Prasiolite") return 275f;
-        if (n == "Topaze" || n == "Fluorite") return 260f;
+        if (n == "Topaze" || n.StartsWith("Fluorite")) return 260f;
         if (n == "CZ") return 290f;
         if (n == "YAG") return 250f;
         if (n == "GGG") return 270f;
@@ -365,6 +365,17 @@ public static class UvVisNirSpectrum
                 break;
             case "Beryl_Rouge":
                 c.Add(550, 110, 1.2f * t, "Mn3+", "Mn");
+                c.SkipColor = true;
+                break;
+            case "Aigue_Marine":
+                c.UsesIron = true;
+                c.Add(370, 22, 0.35f * c.Iron, "Fe3+", "Fe");
+                c.Add(810, 120, 0.7f * c.Iron, "Fe2+", "Fe");
+                c.SkipColor = true;
+                break;
+            case "Beryl_Bleu":
+                c.Add(630, 70, 1.0f * t, "centre coloré", "Fe");
+                c.Add(695, 25, 0.8f * t, "centre coloré", "Fe");
                 c.SkipColor = true;
                 break;
             case "Heliodore":
@@ -504,6 +515,7 @@ public static class UvVisNirSpectrum
                 c.Add(865, 12, 0.45f, "Nd3+", "Nd");
                 break;
             case "Iolite":
+            case "Iolite_Bloodshot":
                 c.Add(435, 30, 0.7f * t, "Fe2+/Fe3+", "Fe");
                 c.Add(585, 40, 1.0f * t, "Fe2+/Fe3+", "Fe");
                 c.Add(880, 180, 0.7f * t, "Fe2+", "Fe");

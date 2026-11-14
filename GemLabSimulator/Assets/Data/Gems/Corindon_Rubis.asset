@@ -46,12 +46,20 @@ MonoBehaviour:
   spectrumLines:
   - wavelengthNm: 694
     widthNm: 6
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 668
     widthNm: 8
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 620
     widthNm: 12
+    depth: 1
+    edgeNm: 0
   - wavelengthNm: 560
     widthNm: 40
+    depth: 1
+    edgeNm: 0
   inclusions: Soie de rutile (inclusions aciculaires), parfois halos autour de cristaux.
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale nette."
   chelseaFilterReaction: "R\xE9action rouge vif sous filtre Chelsea (due au chrome)."

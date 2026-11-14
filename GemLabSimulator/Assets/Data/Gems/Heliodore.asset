@@ -13,14 +13,15 @@ MonoBehaviour:
   m_Name: Heliodore
   m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
   displayName: "H\xE9liodore"
-  description: "Un b\xE9ryl jaune dor\xE9, color\xE9 par le fer."
+  description: "Un b\xE9ryl jaune citron \xE0 jaune dor\xE9 fonc\xE9, color\xE9 par
+    le fer. On peut aussi l'obtenir en irradiant un b\xE9ryl vert ou bleu."
   icon: {fileID: 21300000, guid: bc71d8cccbe714b56b4fe381031f7b5e, type: 3}
   roughIcon: {fileID: 21300000, guid: 291e0da32c88a4fa18ec68c1a59753c5, type: 3}
   iconColor: {r: 0.85, g: 0.68, b: 0.15, a: 1}
   iconFacetColor: {r: 0.98, g: 0.85, b: 0.4, a: 1}
   refractiveIndex: 1.575
   density: 2.7
-  hardness: 7.75
+  hardness: 7.5
   lengthMm: 8
   widthMm: 6
   depthMm: 4
@@ -36,14 +37,15 @@ MonoBehaviour:
   fluorescenceShortWave: Aucune fluorescence notable.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
   opticalCharacterClass: 1
-  birefringence: 0.006
+  birefringence: 0.007
   isQuartzFamily: 0
   isPolycrystalline: 0
   isThermallyConductiveLikeDiamond: 0
   isElectricallyConductive: 0
   absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
   spectrumLines: []
-  inclusions: Inclusions liquides et fissures en "empreintes digitales" possibles.
+  inclusions: "Inclusions en \"pluie\" : fins tubes parall\xE8les \xE0 l'axe du cristal,
+    parfois des cavit\xE9s liquides et des fissures en \"empreintes digitales\"."
   interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
   chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
   magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
