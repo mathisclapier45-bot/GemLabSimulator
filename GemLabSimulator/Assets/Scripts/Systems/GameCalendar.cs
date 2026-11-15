@@ -303,6 +303,15 @@ public class CalendarAnnouncer : MonoBehaviour
 
     private int lastDay = -1;
     private float readyAt;
+
+    // A new game: the announcement of the day is made again, whatever the day of the last game was.
+    public static void ResetDay()
+    {
+        if (instance == null) return;
+        instance.lastDay = -1;
+        instance.pending = false;
+    }
+
     private bool pending;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]

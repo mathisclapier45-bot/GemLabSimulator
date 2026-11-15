@@ -344,6 +344,7 @@ public class LessonUI : MonoBehaviour
         if (area == null) return;
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            EscapeGate.Consume();
             Finish();
             return;
         }

@@ -34,6 +34,15 @@ public class MailboxState : MonoBehaviour
         if (GameClock.Instance != null) GameClock.Instance.OnDayChanged -= OnDayChanged;
     }
 
+    // A new game: nothing waits in the mailbox, the tutorial stone is made again.
+    public void ResetSession()
+    {
+        pendingLetters.Clear();
+        tutorialLetter = null;
+        lettersReceivedToday = 0;
+        OnMailboxChanged?.Invoke();
+    }
+
     private void OnDayChanged(int day)
     {
         lettersReceivedToday = 0;

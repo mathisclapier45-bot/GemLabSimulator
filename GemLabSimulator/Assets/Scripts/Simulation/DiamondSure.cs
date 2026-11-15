@@ -14,7 +14,8 @@ public static class DiamondSure
         var def = gem.Definition;
         if (def == null || !(def.name ?? "").StartsWith("Diamant")) return null;
         if (gem.IsSynthetic || def.forcedSynthetic) return "IIa";
-        if (gem.IsFancyDiamond && gem.ColorHue >= 170f && gem.ColorHue < 260f) return "IIb";
+        // A blue colour made by irradiation or by a coating is not boron.
+        if (gem.IsFancyDiamond && gem.ColorHue >= 170f && gem.ColorHue < 260f && !gem.HasTreatment(TreatmentKind.Irradiated) && !gem.HasTreatment(TreatmentKind.Coated)) return "IIb";
         if (StoneOptics.StableHash((gem.SpecimenId ?? "") + "|type") % 100 < 4) return "IIa";
         return "Ia";
     }

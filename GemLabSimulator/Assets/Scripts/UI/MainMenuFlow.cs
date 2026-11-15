@@ -44,7 +44,7 @@ public class MainMenuFlow : MonoBehaviour
 
     private void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.Escape) || MusicManager.IntroPlaying) return;
+        if (!Input.GetKeyDown(KeyCode.Escape) || MusicManager.IntroPlaying || ConfirmDialog.ConsumesEscape) return;
         if (current != Page.Title) Show(Page.Title);
     }
 

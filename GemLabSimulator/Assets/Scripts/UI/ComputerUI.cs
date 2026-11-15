@@ -22,6 +22,7 @@ public class ComputerUI : MonoBehaviour
     private const float SlideshowInterval = 2.5f;
 
     private static readonly Color TitleBlue = Rgb(0, 84, 227);
+    private bool lockedInput;
     private static readonly Color FrameBlue = Rgb(0, 60, 200);
     private static readonly Color Beige = Rgb(236, 233, 216);
     private static readonly Color Ink = Rgb(20, 20, 24);
@@ -107,7 +108,7 @@ public class ComputerUI : MonoBehaviour
     {
         if (Instance != this) return;
         Instance = null;
-        PlayerController.InputLocked = false;
+        if (lockedInput) { PlayerController.InputLocked = false; lockedInput = false; }
         ReleasePhoto();
     }
 
@@ -127,14 +128,14 @@ public class ComputerUI : MonoBehaviour
         boot.SetActive(true);
         panel.SetActive(true);
         panel.transform.SetAsLastSibling();
-        PlayerController.InputLocked = true;
+        if (!PlayerController.InputLocked) { PlayerController.InputLocked = true; lockedInput = true; }      // only release what this window took
     }
 
     public void Close()
     {
         if (panel != null && panel.activeSelf) Sfx.Play(Sfx.Id.ComputerOff);
         if (panel != null) panel.SetActive(false);
-        PlayerController.InputLocked = false;
+        if (lockedInput) { PlayerController.InputLocked = false; lockedInput = false; }
         slideshow = false;
         ReleasePhoto();
     }

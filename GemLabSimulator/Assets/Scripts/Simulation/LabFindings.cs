@@ -140,9 +140,11 @@ public static class LabFindings
 
     private static LabEntry Cached(GemInstance gem, string name, System.Func<GemInstance, LabEntry> build)
     {
-        var key = $"{gem.SpecimenId}|{gem.ShapeName}|{gem.CutStyleName}|{name}";
+        // The state of the stone is part of the key: a treated stone, or another stone with the same number in another game, does not get an old entry.
+        var key = $"{gem.SpecimenId}|{gem.Definition?.name}|{gem.ShapeName}|{gem.CutStyleName}|{gem.TreatmentGrade}|{gem.FillerName}|{gem.DyeName}|{gem.IrradiationName}|{gem.CoatingName}|{gem.HphtName}|{gem.LaserName}|{gem.IsSynthetic}|{gem.IsRough}|{(int)gem.ColorHue}|{name}";
         if (!Cache.TryGetValue(key, out var entry))
         {
+            if (Cache.Count > 300) Cache.Clear();           // the entries are cheap to build again
             entry = build(gem);
             Cache[key] = entry;
         }

@@ -322,7 +322,7 @@ public class BagUI : MonoBehaviour
             }
             break;
         }
-        if (!keyed && panel.activeSelf && Input.GetKeyDown(KeyCode.Escape))
+        if (!keyed && panel.activeSelf && Input.GetKeyDown(KeyCode.Escape) && !(PosterViewerUI.Instance != null && PosterViewerUI.Instance.IsOpen) && !(GemEncyclopediaUI.Instance != null && GemEncyclopediaUI.Instance.IsOpen))
         {
             // A large card of the binder closes first.
             var binder = BinderUI.Instance;

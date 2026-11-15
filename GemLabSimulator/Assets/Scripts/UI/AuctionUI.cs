@@ -107,7 +107,11 @@ public class AuctionUI : MonoBehaviour
     private void Update()
     {
         if (panel == null || !panel.activeSelf) return;
-        if (Input.GetKeyDown(KeyCode.Escape) && !running) { Close(); return; }
+        if (Input.GetKeyDown(KeyCode.Escape) && !ConfirmDialog.ConsumesEscape)
+        {
+            EscapeGate.Consume();                       // during a bid Escape does nothing (the pause menu would not stop the auction)
+            if (!running) { Close(); return; }
+        }
 
         if (lot == null || !running || ended) return;
         clock += Time.deltaTime;

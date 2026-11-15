@@ -73,7 +73,7 @@ public class LessonMenuUI : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) Close();
+        if (Input.GetKeyDown(KeyCode.Escape)) { EscapeGate.Consume(); Close(); }
     }
 
     private void Build(float height)

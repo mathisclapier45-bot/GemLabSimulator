@@ -6,6 +6,10 @@ using UnityEngine.UI;
 public class ConfirmDialog : MonoBehaviour
 {
     private static ConfirmDialog instance;
+    private int closedFrame = -1;
+
+    // True while the dialog is open and in the frame it closes: the window below must not close on the same Escape.
+    public static bool ConsumesEscape => instance != null && instance.root != null && (instance.root.activeSelf || instance.closedFrame == Time.frameCount);
 
     private GameObject root;
     private Text titleText;
@@ -57,7 +61,7 @@ public class ConfirmDialog : MonoBehaviour
     private void Update()
     {
         if (!root.activeSelf) return;
-        if (Input.GetKeyDown(KeyCode.Escape)) Cancel();
+        if (Input.GetKeyDown(KeyCode.Escape)) { EscapeGate.Consume(); Cancel(); }
         else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) Confirm();
     }
 
@@ -110,6 +114,7 @@ public class ConfirmDialog : MonoBehaviour
     {
         onConfirm = null;
         onSecond = null;
+        closedFrame = Time.frameCount;
         root.SetActive(false);
     }
 

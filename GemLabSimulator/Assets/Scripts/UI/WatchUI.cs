@@ -564,7 +564,7 @@ public class WatchUI : MonoBehaviour
         {
             bigHourHand.localEulerAngles = new Vector3(0f, 0f, hourAngle);
             bigMinuteHand.localEulerAngles = new Vector3(0f, 0f, minuteAngle);
-            if (Input.GetKeyDown(KeyCode.Escape)) wristPanel.SetActive(false);
+            if (Input.GetKeyDown(KeyCode.Escape)) { EscapeGate.Consume(); wristPanel.SetActive(false); }
         }
 
         // Magnifying-glass effect under the mouse: the dial swells inside a lens that fades in.

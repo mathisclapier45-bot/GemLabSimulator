@@ -81,7 +81,10 @@ public class TownMapUI : MonoBehaviour
             else Open();
         }
         else if (bigPanel != null && bigPanel.activeSelf && Input.GetKeyDown(KeyCode.Escape))
+        {
+            EscapeGate.Consume();
             Close();
+        }
 
         if (bigPanel != null && bigPanel.activeSelf)
         {

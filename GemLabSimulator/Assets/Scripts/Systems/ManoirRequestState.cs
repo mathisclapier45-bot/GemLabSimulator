@@ -39,6 +39,13 @@ public class ManoirRequestState : MonoBehaviour
         if (GameClock.Instance != null) GameClock.Instance.OnDayChanged -= OnDayChanged;
     }
 
+    // A new game: no request in progress.
+    public void ResetSession()
+    {
+        CurrentRequest = null;
+        OnManoirChanged?.Invoke();
+    }
+
     private void OnDayChanged(int day)
     {
         MaybeGenerateRequest();

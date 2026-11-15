@@ -58,6 +58,7 @@ public class MailboxUI : MonoBehaviour
     private void Update()
     {
         if (window == null || !window.activeSelf || !Input.GetKeyDown(KeyCode.Escape)) return;
+        EscapeGate.Consume();
         if (openedLetter != null || openedCatalogue)
         {
             openedLetter = null;

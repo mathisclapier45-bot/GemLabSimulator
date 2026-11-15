@@ -69,6 +69,8 @@ public class GemEncyclopediaUI : MonoBehaviour
     private Quaternion orientation = StartOrientation;
     private float lastTouch = float.MinValue;
 
+    private bool lockedInput;
+
     public bool IsOpen => panel != null && panel.activeSelf;
 
     // Opens the encyclopedia over the canvas that holds `host` (the main menu, or a game scene).
@@ -94,12 +96,14 @@ public class GemEncyclopediaUI : MonoBehaviour
     private void OnDestroy()
     {
         if (Instance == this) Instance = null;
+        if (lockedInput) PlayerController.InputLocked = false;
     }
 
     private void Show()
     {
         panel.SetActive(true);
         panel.transform.SetAsLastSibling();
+        if (!PlayerController.InputLocked) { PlayerController.InputLocked = true; lockedInput = true; }      // no walking, no hotkeys behind the encyclopedia
         if (def == null)
         {
             var database = GemDatabase.Instance;
@@ -111,12 +115,13 @@ public class GemEncyclopediaUI : MonoBehaviour
     public void Close()
     {
         if (panel != null) panel.SetActive(false);
+        if (lockedInput) { PlayerController.InputLocked = false; lockedInput = false; }
     }
 
     private void Update()
     {
         if (!IsOpen) return;
-        if (Input.GetKeyDown(KeyCode.Escape)) { Close(); return; }
+        if (Input.GetKeyDown(KeyCode.Escape) && !ConfirmDialog.ConsumesEscape) { EscapeGate.Consume(); Close(); return; }
         if (def == null || view == null) return;
 
         // The stone turns by itself, until the player takes hold of it.

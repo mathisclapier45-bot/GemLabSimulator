@@ -70,6 +70,6 @@ public class StoryChoiceUI : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) onEscape?.Invoke();
+        if (Input.GetKeyDown(KeyCode.Escape)) { EscapeGate.Consume(); onEscape?.Invoke(); }
     }
 }

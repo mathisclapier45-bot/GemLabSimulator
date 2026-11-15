@@ -82,6 +82,7 @@ public class RefractionLessonUI : MonoBehaviour
     };
 
     private Action onDone;
+    private static bool lockedByLesson;                  // the lesson holds the input lock: the player must not walk while the animation plays
     private int stepIndex;
     private float clock;
     private RectTransform area;
@@ -128,6 +129,7 @@ public class RefractionLessonUI : MonoBehaviour
         ui.onDone = done;
         ui.Build();
         current = go;
+        if (!PlayerController.InputLocked) { PlayerController.InputLocked = true; lockedByLesson = true; }
         ui.ShowStep(0);
     }
 
@@ -140,6 +142,7 @@ public class RefractionLessonUI : MonoBehaviour
             Destroy(current);
         }
         current = null;
+        if (lockedByLesson) { PlayerController.InputLocked = false; lockedByLesson = false; }
     }
 
     private void OnDestroy()
@@ -339,6 +342,7 @@ public class RefractionLessonUI : MonoBehaviour
         if (area == null) return;
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            EscapeGate.Consume();
             Finish();
             return;
         }

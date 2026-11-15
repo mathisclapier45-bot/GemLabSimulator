@@ -32,6 +32,15 @@ public class QuestState : MonoBehaviour
         Instance = this;
     }
 
+    // A new game: new quests.
+    public void ResetSession()
+    {
+        ActiveQuests.Clear();
+        while (ActiveQuests.Count < QuestSlotCount)
+            ActiveQuests.Add(GenerateQuest());
+        OnQuestsChanged?.Invoke();
+    }
+
     private void Start()
     {
         if (ActiveQuests.Count > 0) return;

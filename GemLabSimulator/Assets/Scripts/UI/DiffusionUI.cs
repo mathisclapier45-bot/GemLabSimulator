@@ -127,7 +127,7 @@ public class DiffusionUI : MonoBehaviour
     private void Update()
     {
         if (!IsOpen) return;
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !ConfirmDialog.ConsumesEscape)
         {
             Close();
             return;

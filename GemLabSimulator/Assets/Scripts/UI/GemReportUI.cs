@@ -328,7 +328,7 @@ public class GemReportUI : MonoBehaviour
 
         var refractiveKey = ExaminationTool.MeasurementType.RefractiveIndex.ToString();
         if (gem.HasMeasured(refractiveKey)) Line("Indice de réfraction", $"{gem.GetMeasuredValue(refractiveKey):F3}");
-        else Line("Indice de réfraction", "OTL (hors limite du prisme, > 1.81)");
+        else Line("Indice de réfraction", def.refractiveIndex > 1.81f ? "OTL (hors limite du prisme, > 1.81)" : "Non mesuré");
         Line("Biréfringence", OpticalDescriptions.BirefringenceText(def));
         Line("Densité", $"{gem.GetMeasuredValue(ExaminationTool.MeasurementType.Density.ToString()):F2}");
         Line("Caractère optique", OpticalDescriptions.PolariscopeText(def));

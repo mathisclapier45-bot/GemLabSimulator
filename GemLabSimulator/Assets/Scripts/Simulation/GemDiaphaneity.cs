@@ -12,6 +12,8 @@ public static class GemDiaphaneity
         if (string.IsNullOrEmpty(text)) return Diaphaneity.Transparent;
 
         var t = text.ToLowerInvariant();
+        // "Transparent à translucide": a stone that is mostly clear, not a milky one.
+        if (t.StartsWith("transparent") && !t.Contains("opaque")) return Diaphaneity.Transparent;
         if (t.Contains("semi-opaque") || t.Contains(" à ")) return Diaphaneity.SemiOpaque;
         if (t.Contains("semi-transparent") || t.StartsWith("transluc")) return Diaphaneity.SemiTransparent;
         if (t.StartsWith("opaque")) return Diaphaneity.Opaque;

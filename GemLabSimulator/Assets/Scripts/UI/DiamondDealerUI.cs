@@ -58,7 +58,7 @@ public class DiamondDealerUI : MonoBehaviour
 
     private void Update()
     {
-        if (panel != null && panel.activeSelf && Input.GetKeyDown(KeyCode.Escape)) Close();
+        if (panel != null && panel.activeSelf && Input.GetKeyDown(KeyCode.Escape) && !ConfirmDialog.ConsumesEscape) Close();
     }
 
     public void Open(DiamondDealer dealer)

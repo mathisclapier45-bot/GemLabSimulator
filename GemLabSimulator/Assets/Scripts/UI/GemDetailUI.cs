@@ -234,7 +234,8 @@ public class GemDetailUI : MonoBehaviour
     {
         if (!IsOpen) return;
 
-        if (gem == null || !Holds(gem) || Input.GetKeyDown(KeyCode.Escape) || TextEntry.KeyDown(KeyCode.H))
+        var escape = Input.GetKeyDown(KeyCode.Escape) && !(DiamondCertificateUI.Instance != null && DiamondCertificateUI.Instance.IsOpen) && !(GemReportUI.Instance != null && GemReportUI.Instance.IsOpen);
+        if (gem == null || !Holds(gem) || escape || TextEntry.KeyDown(KeyCode.H))
         {
             Close();
             return;

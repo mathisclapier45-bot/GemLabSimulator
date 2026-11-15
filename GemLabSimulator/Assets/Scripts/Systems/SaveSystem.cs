@@ -195,6 +195,8 @@ public static class SaveSystem
         var data = JsonUtility.FromJson<SaveData>(File.ReadAllText(SavePath(ActiveSlot)));
         if (data == null) return;
 
+        SessionReset.Run();
+
         if (PlayerWallet.Instance != null)
             PlayerWallet.Instance.SetMoney(data.money);
         if (PlayerWallet.Instance != null)

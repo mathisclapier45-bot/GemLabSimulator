@@ -47,7 +47,7 @@ public class PosterViewerUI : MonoBehaviour
 
     private void Update()
     {
-        if (IsOpen && Input.GetKeyDown(KeyCode.Escape)) Close();
+        if (IsOpen && Input.GetKeyDown(KeyCode.Escape)) { EscapeGate.Consume(); Close(); }
     }
 
     public void Close()

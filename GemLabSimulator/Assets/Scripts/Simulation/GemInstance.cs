@@ -800,7 +800,7 @@ public class GemInstance
             instance.ReportNumber = data.reportNumber;
             instance.ReportDay = data.reportDay;
         }
-        else if (definition != null)
+        if (!data.hasColor && definition != null)
         {
             // Older saves have no color: give the stone a stable one from its specimen number.
             var rng = new System.Random((int)StoneOptics.StableHash(specimenId));

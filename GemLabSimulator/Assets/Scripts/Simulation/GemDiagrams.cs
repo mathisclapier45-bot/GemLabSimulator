@@ -18,8 +18,20 @@ public static class GemDiagrams
     private static Sprite Get(GemInstance gem, bool top)
     {
         var half = GemView3D.HalfExtents(gem);
-        var key = $"{gem.SpecimenId}|{gem.IsRough}|{gem.ShapeName}|{gem.CutStyleName}|{gem.HasOpenCulet}|{half.x:F2}|{half.y:F2}|{half.z:F2}|{top}";
+        var key = $"{gem.SpecimenId}|{gem.Definition?.name}|{gem.IsRough}|{gem.ShapeName}|{gem.CutStyleName}|{gem.HasOpenCulet}|{half.x:F2}|{half.y:F2}|{half.z:F2}|{top}";
         if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
+
+        // Each diagram is a 256 KB texture: the oldest are thrown away when there are too many.
+        if (Cache.Count >= 48)
+        {
+            foreach (var old in Cache.Values)
+            {
+                if (old == null) continue;
+                if (old.texture != null) Object.Destroy(old.texture);
+                Object.Destroy(old);
+            }
+            Cache.Clear();
+        }
 
         var sprite = Render(gem, half, top);
         Cache[key] = sprite;

@@ -77,7 +77,7 @@ public class DiamondCutterUI : MonoBehaviour
 
     private void Update()
     {
-        if (panel != null && panel.activeSelf && Input.GetKeyDown(KeyCode.Escape)) Close();
+        if (panel != null && panel.activeSelf && Input.GetKeyDown(KeyCode.Escape) && !ConfirmDialog.ConsumesEscape) Close();
     }
 
     private void RefreshIfOpen(int _)

@@ -322,7 +322,7 @@ public static class FtirSpectrum
         }
 
         var hue = g.ColorHue;
-        if (g.IsFancyDiamond && hue >= 170f && hue < 260f)
+        if (g.IsFancyDiamond && hue >= 170f && hue < 260f && !g.HasTreatment(TreatmentKind.Irradiated) && !g.HasTreatment(TreatmentKind.Coated))
         {
             // Blue diamond: boron.
             result.DiamondType = "IIb";
@@ -610,7 +610,8 @@ public static class FtirSpectrum
         }
         else if (group == HostGroup.Diamond)
         {
-            var hpht = g.HasTreatment(TreatmentKind.Hpht) && !c.Synthetic;
+            // The nitrogen bands of an HPHT stone exist only in a type Ia diamond; a type IIa one shows nothing.
+            var hpht = g.HasTreatment(TreatmentKind.Hpht) && !c.Synthetic && result.DiamondType == "Ia";
             conclusive = (g.HasTreatment(TreatmentKind.Irradiated) && !c.Synthetic) || hpht;
             analysis.Add(hpht ? "Azote isolé (centre C, 1344 et 1130) : les agrégats ont été cassés, traitement HPHT probable."
                 : conclusive ? "Pic H1a (1450) : irradiation suivie d'un recuit."

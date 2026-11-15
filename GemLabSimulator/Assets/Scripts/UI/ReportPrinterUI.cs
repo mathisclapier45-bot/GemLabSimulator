@@ -132,7 +132,7 @@ public class ReportPrinterUI : MonoBehaviour
 
     private void Update()
     {
-        if (IsOpen && Input.GetKeyDown(KeyCode.Escape)) Close();
+        if (IsOpen && Input.GetKeyDown(KeyCode.Escape) && !(GemReportUI.Instance != null && GemReportUI.Instance.IsOpen)) Close();
     }
 
     private void BuildPanel()

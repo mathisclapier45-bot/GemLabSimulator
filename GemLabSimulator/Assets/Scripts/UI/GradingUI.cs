@@ -68,6 +68,9 @@ public class GradingUI : MonoBehaviour
 
     private static readonly Dictionary<string, Progress> Sessions = new Dictionary<string, Progress>();
 
+    // A new game: no grading in progress.
+    public static void ResetSessions() => Sessions.Clear();
+
     private GameObject panel;
     private GameObject[] groups;
     private Image[] tabs;
@@ -253,7 +256,8 @@ public class GradingUI : MonoBehaviour
         {
             stone = gem;
             grade = DiamondGradeModel.Official(gem);
-            var key = gem.SpecimenId ?? "";
+            // A treatment that changes the colour or the clarity of the diamond starts its grading over.
+            var key = (gem.SpecimenId ?? "") + "|" + gem.ColorGrade + "|" + gem.DiamondClarity + "|" + Mathf.RoundToInt(gem.ColorHue);
             if (!Sessions.TryGetValue(key, out progress))
             {
                 progress = new Progress

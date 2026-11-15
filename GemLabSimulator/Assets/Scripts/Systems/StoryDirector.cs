@@ -628,7 +628,14 @@ public class StoryDirector : MonoBehaviour
         yield return Say(npc, right == 4 ? "Quatre sur quatre : vous avez l'œil !" : right >= 2 ? $"{right} sur 4 : c'est un bon début. L'œil s'entraîne avec le temps." : $"{right} sur 4 : ce n'est pas grave. Les onglets sont là pour ça, servez-vous-en.");
     }
 
-    private int loupeQuizRound;       // the round of the tutorial whose questions about the loupe were asked
+    private static int loupeQuizRound;       // the round of the tutorial whose questions about the loupe were asked
+
+    // A new game: the introductions and the loupe questions have not been given yet.
+    public static void ResetSession()
+    {
+        loupeQuizRound = 0;
+        marketIntroSeen = false;
+    }
 
     private IEnumerator TalkReturn(GameObject npc, StoryState state)
     {
@@ -1046,12 +1053,12 @@ public class StoryDirector : MonoBehaviour
         yield return SayAs("Anselme", man,
             "Une tourmaline ! Ça alors... Et moi qui la prenais pour un simple caillou. Vous êtes bien le neveu de Vincent : vous avez l'œil.",
             "Tenez, voici 50 €, comme promis. Merci beaucoup, vraiment.");
+        state.AddContact("anselme");                // recorded before the reward: the conversation is not played (and paid) twice
         PlayerWallet.Instance?.AddMoney(50);
         Sfx.Play(Sfx.Id.Coin);
         ToolFeedbackUI.Instance?.ShowMessage("Récompense reçue : 50 €.");
         yield return SayAs("Anselme", man,
             "Et prenez aussi mon numéro, au cas où. Si je tombe sur d'autres pierres, ou s'il vous faut un coup de main en ville, appelez-moi.");
-        state.AddContact("anselme");
         ToolFeedbackUI.Instance?.ShowMessage("Nouveau contact dans votre téléphone : Anselme.");
         yield return SayAs("Vous", player, "Merci, Anselme. À bientôt !");
         yield return SayAs("Anselme", man, "Bonne journée, et bienvenue à Crystal Grove !");
@@ -1200,6 +1207,8 @@ public class StoryDirector : MonoBehaviour
             "Il était comme ça, discret. Avant de partir, il m'a laissé deux choses pour vous. Je les ai gardées bien au chaud.",
             "D'abord, un avoir de 60 € à dépenser ici. Il disait que vous auriez besoin d'une bonne loupe : la Loupe 10× est sur l'étagère du fond, elle coûte 59 €. Votre avoir couvre presque tout.");
 
+        // The phase moves on before anything is given: if the game is saved or left now, the conversation is not played (and paid) again.
+        state.SetPhase(StoryState.PhaseMarketVisit);
         PlayerWallet.Instance?.AddStoreCredit(60);
         Sfx.Play(Sfx.Id.Coin);
         ToolFeedbackUI.Instance?.ShowMessage("Avoir de 60 € reçu : il sera déduit de vos achats au GemStore.");
@@ -1229,8 +1238,6 @@ public class StoryDirector : MonoBehaviour
             "Passez quand vous voulez. Et si vous avez des nouvelles de Vincent... dites-le-moi, d'accord ?",
             "Tant que vous êtes en ville, faites donc un tour au Marché aux pierres, à l'ouest : Vincent y passait souvent. Il y a des gemmes taillées de partout. Mais il faut savoir regarder.");
         DialogueBoxUI.Hide();
-
-        state.SetPhase(StoryState.PhaseMarketVisit);
         ToolFeedbackUI.Instance?.ShowMessage("Faites un tour au Marché aux pierres, à l'ouest de la ville. La Loupe 10× vous attend au GemStore.");
         talking = false;
     }
@@ -1808,7 +1815,10 @@ public class StoryDirector : MonoBehaviour
         var reference = state.SpectroReferenceGem(spectroCase);
         if (client == null)
         {
-            yield return Say(npc, "Alors, la pierre du client ? Il me faut l'avoir sous les yeux pour confirmer votre réponse : elle doit être dans votre inventaire.");
+            // The stone is gone (sold, or removed just before the game was saved or left): another one is handed over, so the quest cannot be stuck.
+            yield return Say(npc, "Alors, la pierre du client ? Hmm, je ne la vois pas... Tenez, j'en ai une autre du même lot, ainsi que la pierre de référence.");
+            var replaced = false;
+            yield return GiveStones(SpectroClientSpecies[spectroCase], SpectroReferenceSpecies[spectroCase], (c, r) => state.OnSpectroGiven(spectroCase, c, r), given => replaced = given);
             yield break;
         }
 
@@ -2002,7 +2012,10 @@ public class StoryDirector : MonoBehaviour
         var reference = state.UvReferenceGem(uvCase);
         if (client == null)
         {
-            yield return Say(npc, "Alors, la pierre du client ? Il me faut l'avoir sous les yeux pour confirmer votre réponse : elle doit être dans votre inventaire.");
+            // The stone is gone (sold, or removed just before the game was saved or left): another one is handed over, so the quest cannot be stuck.
+            yield return Say(npc, "Alors, la pierre du client ? Hmm, je ne la vois pas... Tenez, j'en ai une autre du même lot, ainsi que la pierre de référence.");
+            var replaced = false;
+            yield return GiveStones(UvClientSpecies[uvCase], UvReferenceSpecies[uvCase], (c, r) => state.OnUvGiven(uvCase, c, r), given => replaced = given);
             yield break;
         }
 
@@ -2419,7 +2432,10 @@ public class StoryDirector : MonoBehaviour
         var reference = state.PleoReferenceGem(pleoCase);
         if (client == null)
         {
-            yield return Say(npc, "Alors, la pierre du client ? Il me faut l'avoir sous les yeux pour confirmer votre réponse : elle doit être dans votre inventaire.");
+            // The stone is gone (sold, or removed just before the game was saved or left): another one is handed over, so the quest cannot be stuck.
+            yield return Say(npc, "Alors, la pierre du client ? Hmm, je ne la vois pas... Tenez, j'en ai une autre du même lot, ainsi que la pierre de référence.");
+            var replaced = false;
+            yield return GivePleoStones(state, pleoCase, given => replaced = given);
             yield break;
         }
 
