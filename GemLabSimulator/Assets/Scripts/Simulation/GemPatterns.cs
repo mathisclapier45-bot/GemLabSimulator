@@ -35,6 +35,35 @@ public static class GemPatterns
                 else if (grain < 0.05f) r = Darken(r, 0.78f);
                 break;
             }
+            case GemPattern.Snowflakes:
+            {
+                // White and gray spherulites of cristobalite with feathery radial edges, in black glass.
+                var gu = u * 4.4f;
+                var gv = v * 4.4f;
+                var cx0 = Mathf.FloorToInt(gu);
+                var cy0 = Mathf.FloorToInt(gv);
+                var best = 9f;
+                var relX = 0f;
+                var relY = 0f;
+                for (var dy = -1; dy <= 1; dy++)
+                    for (var dx = -1; dx <= 1; dx++)
+                    {
+                        var cx = cx0 + dx;
+                        var cy = cy0 + dy;
+                        var centreX = cx + 0.2f + 0.6f * Hash(cx, cy, seed);
+                        var centreY = cy + 0.2f + 0.6f * Hash(cx + 57, cy + 13, seed);
+                        var flakeSize = 0.24f + 0.20f * Hash(cx + 101, cy + 7, seed);
+                        var present = Hash(cx + 211, cy + 31, seed) < 0.6f;       // only some of the cells hold a snowflake: most of the stone stays black
+                        var score = present ? Mathf.Sqrt((gu - centreX) * (gu - centreX) + (gv - centreY) * (gv - centreY)) / flakeSize : 9f;
+                        if (score < best) { best = score; relX = gu - centreX; relY = gv - centreY; }
+                    }
+                var feather = 0.5f + 0.5f * Mathf.Sin(Mathf.Atan2(relY, relX) * 9f + best * 6f);
+                var edge = best + (feather - 0.5f) * 0.4f;
+                var inside = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.55f, 0.95f, edge));
+                var flake = Color.Lerp(new Color(0.52f, 0.54f, 0.60f), new Color(0.90f, 0.92f, 0.95f), feather);
+                r = Color.Lerp(c, flake, inside * s);
+                break;
+            }
             case GemPattern.Veins:
             {
                 // A network of thin dark veins.

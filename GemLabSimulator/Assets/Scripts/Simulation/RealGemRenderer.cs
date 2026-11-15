@@ -131,7 +131,7 @@ public static class RealGemRenderer
         {
             case Diaphaneity.SemiTransparent: milky = 0.42f; break;
             case Diaphaneity.SemiOpaque: milky = 0.75f; break;
-            case Diaphaneity.Opaque: milky = 0.93f; break;
+            case Diaphaneity.Opaque: milky = 1.0f; break;      // nothing goes through: only the surface, lit and mirroring the studio
         }
 
         // A rough crystal: the surface of its habit (frosted or glassy, striated across or along, with bands of colour and specks).
@@ -268,6 +268,8 @@ public static class RealGemRenderer
             case "quartz_prism": case "quartz_double": return new Surface { Rough = 0.16f, Stria = 1f, StriaMode = 1f, Zoning = 0.25f, Speck = 0.15f, Milky = 0.06f };
             case "hex_prism": case "hex_pencil": return new Surface { Rough = 0.32f, Stria = 0.8f, StriaMode = 2f, Zoning = 0.6f, Speck = 0.3f, Milky = 0.08f };
             case "hex_bipyramid": case "hex_tabular": return new Surface { Rough = 0.45f, Zoning = 0.5f, Speck = 0.3f, Milky = 0.12f };
+            case "druse": return new Surface { Rough = 0.85f, Stria = 0f, StriaMode = 1f, Zoning = 0.4f, Speck = 1f, Milky = 0.30f };
+            case "tourmaline_slice": return new Surface { Rough = 0.10f, Stria = 0.3f, StriaMode = 1f, Zoning = 0.9f, Speck = 0.1f, Milky = 0.03f };
             case "trigonal_prism": case "trigonal_pencil": return new Surface { Rough = 0.22f, Stria = 1f, StriaMode = 2f, Zoning = 0.7f, Speck = 0.2f, Milky = 0.05f };
             case "ortho_prism": case "ortho_wedge": return new Surface { Rough = 0.26f, Stria = 0.75f, StriaMode = 2f, Zoning = 0.3f, Speck = 0.2f, Milky = 0.05f };
             case "monoclinic_prism": return new Surface { Rough = 0.34f, Stria = 0.5f, StriaMode = 2f, Zoning = 0.3f, Speck = 0.2f, Milky = 0.08f };

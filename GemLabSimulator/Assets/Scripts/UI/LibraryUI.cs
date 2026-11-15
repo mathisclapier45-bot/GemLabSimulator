@@ -8,8 +8,8 @@ public class LibraryUI : MonoBehaviour
     public static LibraryUI Instance { get; private set; }
 
     private const float PanelWidth = 760f;
-    private const float PanelHeight = 610f;
-    private const float CardHeight = 112f;
+    private const float PanelHeight = 630f;
+    private const float CardHeight = 84f;
 
     private static readonly Color Gold = new Color(0.95f, 0.85f, 0.65f);
     private static readonly Color Ink = new Color(0.82f, 0.78f, 0.70f);
@@ -18,6 +18,9 @@ public class LibraryUI : MonoBehaviour
     private GameObject panel;
     private RectTransform layer;
     private Text subtitle;
+    private bool showPosters;
+    private Image booksTab;
+    private Image postersTab;
 
     public static void TryOpen()
     {
@@ -56,6 +59,7 @@ public class LibraryUI : MonoBehaviour
 
     public void Open()
     {
+        showPosters = false;
         panel.SetActive(true);
         panel.transform.SetAsLastSibling();
         Refresh();
@@ -93,11 +97,45 @@ public class LibraryUI : MonoBehaviour
     {
         for (var i = layer.childCount - 1; i >= 0; i--) Destroy(layer.GetChild(i).gameObject);
 
-        subtitle.text = $"Sur vous : {Money:N0} €   ·   les livres achetés vont dans le sac (H), onglet « Livres »";
+        subtitle.text = $"Sur vous : {Money:N0} €   ·   les livres et les posters achetés vont dans le sac (H), onglet « Livres »";
+        if (booksTab != null) booksTab.color = showPosters ? new Color(0.32f, 0.26f, 0.22f, 1f) : new Color(0.25f, 0.50f, 0.30f, 1f);
+        if (postersTab != null) postersTab.color = showPosters ? new Color(0.25f, 0.50f, 0.30f, 1f) : new Color(0.32f, 0.26f, 0.22f, 1f);
 
         var row = 0;
-        foreach (var info in BookCatalog.Infos) BookCard(row++, info);
+        if (showPosters)
+            foreach (var info in PosterCatalog.Infos) PosterCard(row++, info);
+        else
+            foreach (var info in BookCatalog.Infos) BookCard(row++, info);
         StardewKit.Skin(layer);
+    }
+
+    // One poster for sale: its small picture, its title, what it shows, its price and the button to buy it.
+    private void PosterCard(int row, PosterInfo info)
+    {
+        var y = -88f - row * (CardHeight + 4f);
+        var owned = BookShelfState.Owns(info.Id);
+        RuntimeUIKit.MakeBox("Card", layer, new Vector2(24f, y), new Vector2(PanelWidth - 48f, CardHeight), CardColor, false).raycastTarget = false;
+
+        var picture = RuntimeUIKit.MakeBox("PosterPicture", layer, new Vector2(40f, y - 4f), new Vector2(76f, 76f), Color.white, false);
+        picture.sprite = PosterArt.Thumbnail(info.Id);
+        picture.raycastTarget = false;
+
+        Txt("PosterTitle", info.Title, 17, new Vector2(130f, y - 8f), new Vector2(420f, 24f), Gold, true);
+        Txt("PosterText", info.Blurb, 11, new Vector2(130f, y - 32f), new Vector2(420f, 50f), Ink);
+
+        if (owned)
+        {
+            Txt("Owned", "Dans votre sac", 14, new Vector2(PanelWidth - 200f, y - 30f), new Vector2(160f, 24f), new Color(0.55f, 0.85f, 0.55f), true, TextAnchor.UpperCenter);
+            return;
+        }
+
+        Txt("Price", $"{info.Price:N0} €", 20, new Vector2(PanelWidth - 200f, y - 8f), new Vector2(160f, 28f), Gold, true, TextAnchor.UpperCenter);
+        var can = Money >= info.Price;
+        var buy = RuntimeUIKit.MakeButton("Buy", layer, can ? "Acheter" : "Pas assez d'argent", 13, can ? new Color(0.25f, 0.50f, 0.30f, 1f) : new Color(0.30f, 0.28f, 0.28f, 1f),
+            new Vector2(PanelWidth - 200f, y - 40f), new Vector2(160f, 36f));
+        buy.interactable = can;
+        var id = info.Id;
+        buy.onClick.AddListener(() => Buy(id));
     }
 
     // One book for sale: its small cover, its title, what it holds, its price and the button to buy it.
@@ -108,19 +146,19 @@ public class LibraryUI : MonoBehaviour
         RuntimeUIKit.MakeBox("Card", layer, new Vector2(24f, y), new Vector2(PanelWidth - 48f, CardHeight), CardColor, false).raycastTarget = false;
         BookCovers.DrawSmall(layer, info, new Vector2(40f, y - 14f));
 
-        Txt("BookTitle", info.Title, 17, new Vector2(120f, y - 12f), new Vector2(430f, 24f), Gold, true);
-        Txt("BookText", info.Blurb, 12, new Vector2(120f, y - 40f), new Vector2(430f, 68f), Ink);
+        Txt("BookTitle", info.Title, 17, new Vector2(120f, y - 8f), new Vector2(430f, 24f), Gold, true);
+        Txt("BookText", info.Blurb, 11, new Vector2(120f, y - 32f), new Vector2(430f, 50f), Ink);
 
         if (owned)
         {
-            Txt("Owned", "Dans votre sac", 14, new Vector2(PanelWidth - 200f, y - 40f), new Vector2(160f, 24f), new Color(0.55f, 0.85f, 0.55f), true, TextAnchor.UpperCenter);
+            Txt("Owned", "Dans votre sac", 14, new Vector2(PanelWidth - 200f, y - 30f), new Vector2(160f, 24f), new Color(0.55f, 0.85f, 0.55f), true, TextAnchor.UpperCenter);
             return;
         }
 
-        Txt("Price", $"{info.Price:N0} €", 20, new Vector2(PanelWidth - 200f, y - 14f), new Vector2(160f, 28f), Gold, true, TextAnchor.UpperCenter);
+        Txt("Price", $"{info.Price:N0} €", 20, new Vector2(PanelWidth - 200f, y - 8f), new Vector2(160f, 28f), Gold, true, TextAnchor.UpperCenter);
         var can = Money >= info.Price;
         var buy = RuntimeUIKit.MakeButton("Buy", layer, can ? "Acheter" : "Pas assez d'argent", 13, can ? new Color(0.25f, 0.50f, 0.30f, 1f) : new Color(0.30f, 0.28f, 0.28f, 1f),
-            new Vector2(PanelWidth - 200f, y - 52f), new Vector2(160f, 36f));
+            new Vector2(PanelWidth - 200f, y - 40f), new Vector2(160f, 36f));
         buy.interactable = can;
         var id = info.Id;
         buy.onClick.AddListener(() => Buy(id));
@@ -134,7 +172,9 @@ public class LibraryUI : MonoBehaviour
         {
             Sfx.Play(Sfx.Id.Chat);
             var info = BookCatalog.Find(id);
-            ToolFeedbackUI.Instance?.ShowMessage(info != null ? $"{info.Title} est dans votre sac (H), onglet « Livres »." : "Le livre est dans votre sac.");
+            var posterInfo = PosterCatalog.Find(id);
+            var bought = info != null ? info.Title : posterInfo != null ? posterInfo.Title : null;
+            ToolFeedbackUI.Instance?.ShowMessage(bought != null ? $"{bought} est dans votre sac (H), onglet « Livres »." : "L'achat est dans votre sac.");
         }
         else if (!string.IsNullOrEmpty(message))
         {
@@ -157,6 +197,14 @@ public class LibraryUI : MonoBehaviour
         title.fontStyle = FontStyle.Bold;
         subtitle = RuntimeUIKit.MakeText("Subtitle", panel.transform, "", 12, TextAnchor.UpperLeft, new Color(0.62f, 0.82f, 1f), new Vector2(30f, -50f), new Vector2(PanelWidth - 60f, 18f));
         RuntimeUIKit.MakeButton("Close", panel.transform, "Fermer", 13, new Color(0.32f, 0.26f, 0.22f, 1f), new Vector2(PanelWidth - 108f, -14f), new Vector2(84f, 28f)).onClick.AddListener(Close);
+
+        // The two shelves of the library: the books and the posters.
+        var booksButton = RuntimeUIKit.MakeButton("TabBooks", panel.transform, "Livres", 13, new Color(0.25f, 0.50f, 0.30f, 1f), new Vector2(PanelWidth - 330f, -14f), new Vector2(104f, 28f));
+        booksButton.onClick.AddListener(() => { showPosters = false; Refresh(); });
+        booksTab = booksButton.GetComponent<Image>();
+        var postersButton = RuntimeUIKit.MakeButton("TabPosters", panel.transform, "Posters", 13, new Color(0.32f, 0.26f, 0.22f, 1f), new Vector2(PanelWidth - 220f, -14f), new Vector2(104f, 28f));
+        postersButton.onClick.AddListener(() => { showPosters = true; Refresh(); });
+        postersTab = postersButton.GetComponent<Image>();
 
         layer = new GameObject("Layer", typeof(RectTransform)).GetComponent<RectTransform>();
         layer.SetParent(panel.transform, false);

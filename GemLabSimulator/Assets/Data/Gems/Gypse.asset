@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Gypse
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Gypse
+  description: "Un sulfate de calcium hydrat\xE9, le min\xE9ral du pl\xE2tre : on
+    le raye \xE0 l'ongle. Blanc, soyeux ou nacr\xE9, il ne se taille pas et se garde
+    en morceau."
+  icon: {fileID: 21300000, guid: 9572dbb2818874565bd32477ae02d415, type: 3}
+  roughIcon: {fileID: 21300000, guid: f9a9908c71cf24c5293d02024502e55f, type: 3}
+  iconColor: {r: 0.92, g: 0.9, b: 0.84, a: 1}
+  iconFacetColor: {r: 0.98, g: 0.97, b: 0.94, a: 1}
+  refractiveIndex: 1.525
+  density: 2.31
+  hardness: 2
+  lengthMm: 18
+  widthMm: 14
+  depthMm: 9
+  weightCarats: 12
+  luster: "Nacr\xE9 \xE0 soyeux"
+  color: "Blanc \xE0 incolore"
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: Translucide
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: Aucune fluorescence notable.
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  opticalCharacterClass: 2
+  birefringence: 0.01
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: Clivages parfaits, aspect fibreux ou massif ; aiguilles et paillettes.
+  interferenceFigure: "Figure d'interf\xE9rence biaxiale."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 2
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  roughOnly: 1
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: Mexique
+    rarityWeight: 30
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Espagne
+    rarityWeight: 25
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Maroc
+    rarityWeight: 25
+    valueMultiplier: 0.9
+    inclusionOverride: 
+  - name: "\xC9tats-Unis"
+    rarityWeight: 20
+    valueMultiplier: 0.9
+    inclusionOverride: 

@@ -16,9 +16,9 @@ public static class OpticalSigns
         { "Apatite", '-' }, { "Corindon_Rubis", '-' }, { "Corindon_Synthetique_Rubis", '-' }, { "Corindon_Synthetique_Saphir", '-' }, { "Padparadscha", '-' },
         { "Saphir_Bleu", '-' }, { "Saphir_Incolore", '-' }, { "Saphir_Jaune", '-' }, { "Saphir_Orange", '-' }, { "Saphir_Rose", '-' }, { "Saphir_Vert", '-' }, { "Saphir_Violet", '-' },
         { "Emeraude", '-' }, { "Goshenite", '-' }, { "Heliodore", '-' }, { "Aigue_Marine", '-' }, { "Beryl_Bleu", '-' }, { "Morganite", '-' }, { "Pezzottaite", '-' }, { "Rhodocrosite", '-' }, { "Scapolite", '-' },
-        { "Tourmaline_Paraiba", '-' }, { "Tourmaline_Rose", '-' },
+        { "Tourmaline_Paraiba", '-' }, { "Tourmaline_Rose", '-' }, { "Tourmaline_Melon_Eau", '-' }, { "Tourmaline_Indicolite", '-' }, { "Tourmaline_Schorl", '-' }, { "Taaffeite", '-' }, { "Calcite", '-' },
         // Biaxial positive.
-        { "Chrysoberyl", '+' }, { "Chrysoberyl_Alexandrite", '+' }, { "Diopside_Chromifere", '+' }, { "Jade_Jadeite", '+' }, { "Kunzite", '+' }, { "Labradorite", '+' },
+        { "Chrysoberyl", '+' }, { "Chrysoberyl_Alexandrite", '+' }, { "Sphene", '+' }, { "Celestine", '+' }, { "Prehnite", '+' }, { "Gypse", '+' }, { "Selenite", '+' }, { "Diopside_Chromifere", '+' }, { "Jade_Jadeite", '+' }, { "Kunzite", '+' }, { "Labradorite", '+' },
         { "Peridot", '+' }, { "Rhodonite", '+' }, { "Tanzanite", '+' }, { "Topaze", '+' }, { "Zoisite", '+' },
         // Biaxial negative.
         { "Andalousite", '-' }, { "Iolite", '-' }, { "Jade_Nephrite", '-' }, { "Kyanite", '-' }, { "Orthose", '-' }, { "Pierre_De_Lune", '-' }, { "Serpentine_Bowenite", '-' }, { "Sinhalite", '-' },

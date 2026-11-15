@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Malachite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Malachite
+  description: "Un carbonate de cuivre vert, ruban\xE9 en cercles concentriques de
+    verts clairs et sombres. Opaque et tendre, on la polit en cabochon ou en perles
+    ; elle fait effervescence \xE0 l'acide."
+  icon: {fileID: 21300000, guid: 124ad9746857640708272198cec62c10, type: 3}
+  roughIcon: {fileID: 21300000, guid: d4d460e5ced494bb1868469f554ac6e4, type: 3}
+  iconColor: {r: 0.1, g: 0.55, b: 0.3, a: 1}
+  iconFacetColor: {r: 0.4, g: 0.8, b: 0.52, a: 1}
+  refractiveIndex: 1.88
+  density: 3.8
+  hardness: 3.75
+  lengthMm: 14
+  widthMm: 11
+  depthMm: 6
+  weightCarats: 10
+  luster: "Soyeux \xE0 vitreux"
+  color: "Vert ruban\xE9"
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: Opaque
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: Aucune fluorescence notable.
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Opaque : aucune lecture optique en lumi\xE8re transmise."
+  opticalCharacterClass: 3
+  birefringence: 0.25
+  isQuartzFamily: 0
+  isPolycrystalline: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Bandes concentriques vert clair et vert sombre, texture fibreuse soyeuse
+    ; cavit\xE9s botryo\xEFdales."
+  interferenceFigure: "Aucune figure d'interf\xE9rence exploitable."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 18
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  roughOnly: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: Congo (RDC)
+    rarityWeight: 40
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Russie (Oural)
+    rarityWeight: 25
+    valueMultiplier: 1.2
+    inclusionOverride: 
+  - name: Zambie
+    rarityWeight: 20
+    valueMultiplier: 0.9
+    inclusionOverride: 
+  - name: Australie
+    rarityWeight: 15
+    valueMultiplier: 0.9
+    inclusionOverride: 

@@ -599,6 +599,9 @@ public class LoupeUI : MonoBehaviour
         var half = new Vector3(stone.LengthMm, stone.WidthMm, Mathf.Max(stone.DepthMm, 0.5f)) * (PxPerMm * 0.5f);
 
         GemView3D.Colors(stone, out var body, out var facet);
+        // Alexandrite: green by day, pink in the light of the torch.
+        if (maglite && GemLook.ChangesColor(stone.Definition)) { body = GemLook.Incandescent(body); facet = GemLook.Incandescent(facet); }
+        GemLook.ApplyPleochroism(stone.Definition, orientation, ref body, ref facet);
         var halfMm = new Vector3(stone.LengthMm, stone.WidthMm, Mathf.Max(stone.DepthMm, 0.5f)) * 0.5f;
         var mesh = GemView3D.MeshFor(stone);
         var uvMode = uvOn;

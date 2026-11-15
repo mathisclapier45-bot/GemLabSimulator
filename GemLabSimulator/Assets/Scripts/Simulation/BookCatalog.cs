@@ -139,6 +139,8 @@ public static class BookCatalog
     public const string Treatments = "traitements";
     public const string Atlas = "atlas";
     public const string Market = "marche";
+    public const string DiamondColors = "teintes";
+    public const string Corundum = "corindons";
 
     public static readonly BookInfo[] Infos =
     {
@@ -170,6 +172,20 @@ public static class BookCatalog
             Blurb = "Les règles de la revente : marchés, divulgation des traitements, enchères du samedi, bijoutier, banque et Rapaport, avec leurs chiffres.",
             Leather = new Color(0.36f, 0.24f, 0.12f), LeatherDark = new Color(0.22f, 0.14f, 0.06f), Foil = new Color(0.92f, 0.76f, 0.38f), Emblem = new Color(0.92f, 0.62f, 0.36f),
         },
+        new BookInfo
+        {
+            Id = DiamondColors, Title = "Nuancier des diamants de couleur", CoverTitle = new[] { "NUANCIER", "des diamants" }, Subtitle = "Les 27 teintes et les neuf degrés",
+            Price = 1500,
+            Blurb = "Le cercle des 27 teintes des diamants de couleur et les neuf degrés de ton et de saturation, de Faint à Fancy Vivid, Deep et Dark : la couleur de chaque pierre, sa fréquence et ce qu'elle ajoute au prix.",
+            Leather = new Color(0.30f, 0.14f, 0.34f), LeatherDark = new Color(0.18f, 0.07f, 0.22f), Foil = new Color(0.92f, 0.80f, 0.45f), Emblem = new Color(0.98f, 0.55f, 0.72f),
+        },
+        new BookInfo
+        {
+            Id = Corundum, Title = "Nuancier du corindon", CoverTitle = new[] { "NUANCIER", "du corindon" }, Subtitle = "Rubis, saphirs et leurs grands noms",
+            Price = 1400,
+            Blurb = "Les couleurs du corindon, du rubis rouge au saphir bleu, rose, orange, jaune, vert et violet, sur les huit degrés de la grille, et les noms de la profession : sang de pigeon, bleu royal, padparadscha.",
+            Leather = new Color(0.46f, 0.09f, 0.14f), LeatherDark = new Color(0.28f, 0.04f, 0.08f), Foil = new Color(0.92f, 0.78f, 0.42f), Emblem = new Color(0.45f, 0.62f, 0.98f),
+        },
     };
 
     public static BookInfo Find(string id)
@@ -187,6 +203,8 @@ public static class BookCatalog
             case Treatments: return BookContents.BuildTreatments();
             case Atlas: return BookContents.BuildAtlas();
             case Market: return BookContents.BuildMarket();
+            case DiamondColors: return BookContents.BuildDiamondColors();
+            case Corundum: return BookContents.BuildCorundum();
         }
         return new BookContent();
     }

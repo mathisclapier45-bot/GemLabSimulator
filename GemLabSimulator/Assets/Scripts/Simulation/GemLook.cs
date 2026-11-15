@@ -5,7 +5,7 @@ using UnityEngine;
 // and the fire of the stones that split the light in rainbow colours. Derived from the luster written on the species, so every place that draws a stone shows the same one.
 public enum GemPattern
 {
-    None, Banded, Flecks, Veins, Mottled, Chatoyant, Adular, Opal, Labrador, Pearl, MetalGray, MetalBrass, Tortoise, Amber, Grain, Streaks, Bicolour, ColorChange, Gradient, Cleavage, Bubbles, Horsetail,
+    None, Banded, Flecks, Veins, Mottled, Chatoyant, Adular, Opal, Labrador, Pearl, MetalGray, MetalBrass, Tortoise, Amber, Grain, Streaks, Bicolour, ColorChange, Gradient, Cleavage, Bubbles, Horsetail, Snowflakes,
 }
 
 public struct GemLook
@@ -56,7 +56,7 @@ public struct GemLook
         { "Corail", (GemPattern.Streaks, 0.4f, new Color(1f, 0.80f, 0.76f)) },
         { "Corne_Rhinoceros", (GemPattern.Streaks, 0.45f, new Color(0.62f, 0.55f, 0.46f)) },
         { "Ametrine", (GemPattern.Bicolour, 1f, new Color(0.96f, 0.76f, 0.26f)) },
-        { "Chrysoberyl_Alexandrite", (GemPattern.ColorChange, 0.85f, new Color(0.82f, 0.20f, 0.36f)) },
+        { "Chrysoberyl_Alexandrite", (GemPattern.ColorChange, 0.45f, new Color(0.82f, 0.20f, 0.36f)) },
         { "Padparadscha", (GemPattern.Gradient, 0.8f, new Color(1f, 0.55f, 0.28f)) },
         { "Fluorite", (GemPattern.Cleavage, 0.3f, default) },
         { "Fluorite_Verte", (GemPattern.Cleavage, 0.3f, default) },
@@ -65,7 +65,19 @@ public struct GemLook
         { "Fluorite_Bandee", (GemPattern.Banded, 0.95f, new Color(0.55f, 0.85f, 0.65f)) },
         { "Fluorite_Blue_John", (GemPattern.Banded, 0.95f, new Color(0.96f, 0.84f, 0.42f)) },
         { "Iolite_Bloodshot", (GemPattern.Flecks, 0.9f, new Color(0.88f, 0.28f, 0.14f)) },
-        { "Iolite", (GemPattern.Gradient, 0.5f, new Color(0.82f, 0.78f, 0.58f)) },
+        { "Malachite", (GemPattern.Banded, 0.9f, new Color(0.04f, 0.28f, 0.13f)) },
+        { "Sodalite", (GemPattern.Veins, 0.7f, new Color(0.90f, 0.92f, 0.96f)) },
+        { "Cornaline", (GemPattern.Banded, 0.35f, new Color(0.96f, 0.55f, 0.22f)) },
+        { "Prehnite", (GemPattern.Mottled, 0.4f, default) },
+        { "Steatite", (GemPattern.Mottled, 0.3f, default) },
+        { "Ivoire_Vegetal", (GemPattern.Grain, 0.55f, default) },
+        { "Calcite", (GemPattern.Cleavage, 0.5f, default) },
+        { "Gypse", (GemPattern.Grain, 0.4f, default) },
+        { "Selenite", (GemPattern.Chatoyant, 0.45f, new Color(1f, 1f, 1f)) },
+        { "Celestine", (GemPattern.Cleavage, 0.3f, default) },
+        { "Moldavite", (GemPattern.Streaks, 0.35f, new Color(0.55f, 0.72f, 0.36f)) },
+        { "Obsidienne_Flocons", (GemPattern.Snowflakes, 0.95f, new Color(0.94f, 0.95f, 0.97f)) },
+        { "Tourmaline_Melon_Eau", (GemPattern.Bicolour, 1f, new Color(0.40f, 0.68f, 0.26f)) },
         { "Tourmaline_Paraiba", (GemPattern.Gradient, 0.6f, new Color(0.25f, 0.85f, 0.55f)) },
         { "Kyanite", (GemPattern.Cleavage, 0.8f, default) },
         { "Verre", (GemPattern.Bubbles, 0.9f, default) },
@@ -76,8 +88,62 @@ public struct GemLook
 
     private static readonly HashSet<string> Fiery = new HashSet<string>
     {
-        "Diamant", "Diamant_Synthetique_CVD", "Diamant_Synthetique_HPHT", "CZ", "GGG", "YAG", "Moissanite_Synthetique", "Zircon", "Grenat_Demantoide",
+        "Diamant", "Diamant_Synthetique_CVD", "Diamant_Synthetique_HPHT", "CZ", "GGG", "YAG", "Moissanite_Synthetique", "Zircon", "Grenat_Demantoide", "Sphene", "Sphalerite", "Titanate_Strontium",
     };
+
+    // The pleochroism seen when the stone is turned: a strongly pleochroic stone shows a different colour along each of its three axes (the iolite, blue-violet along one,
+    // a deeper violet along another and a pale grayish tint along the third). Turned, the colour of the stone moves a little from one to the other.
+    public static void ApplyPleochroism(GemDefinition def, Quaternion orientation, ref Color body, ref Color facet)
+    {
+        if (def == null) return;
+        float hueX, satX, briX, satY, briY, tintY;
+        Color tint;
+        switch (def.name)
+        {
+            case "Iolite":
+                hueX = 14f; satX = 0.10f; briX = -0.12f;         // the deeper violet
+                satY = -0.12f; briY = 0.06f; tintY = 0.28f;     // the paler, grayer tint
+                tint = new Color(0.80f, 0.78f, 0.72f);
+                break;
+            case "Tanzanite":
+                hueX = 22f; satX = 0.08f; briX = -0.10f;        // violet
+                satY = -0.10f; briY = 0.04f; tintY = 0.22f;     // a hint of bronze
+                tint = new Color(0.78f, 0.68f, 0.56f);
+                break;
+            default:
+                return;
+        }
+
+        var z = orientation * Vector3.forward;
+        var x = orientation * Vector3.right;
+        var y = orientation * Vector3.up;
+        var weightZ = z.z * z.z;                                // looking down the axis of the table: the colour of the stone
+        var weightX = x.z * x.z;
+        var weightY = y.z * y.z;
+        body = PleochroicMix(body, weightZ, weightX, weightY, hueX, satX, briX, satY, briY, tintY, tint);
+        facet = PleochroicMix(facet, weightZ, weightX, weightY, hueX, satX * 0.6f, briX * 0.6f, satY * 0.6f, briY * 0.6f, tintY * 0.6f, tint);
+    }
+
+    private static Color PleochroicMix(Color baseColor, float weightZ, float weightX, float weightY, float hueX, float satX, float briX, float satY, float briY, float tintY, Color tint)
+    {
+        Color.RGBToHSV(baseColor, out var h, out var s, out var v);
+        var axisX = Color.HSVToRGB(Mathf.Repeat(h + hueX / 360f, 1f), Mathf.Clamp01(s + satX), Mathf.Clamp01(v + briX));
+        var axisY = Color.Lerp(Color.HSVToRGB(h, Mathf.Clamp01(s + satY), Mathf.Clamp01(v + briY)), tint * Mathf.Clamp01(v + 0.1f), tintY);
+        var total = Mathf.Max(0.0001f, weightZ + weightX + weightY);
+        var mixed = (baseColor * weightZ + axisX * weightX + axisY * weightY) / total;
+        mixed.a = baseColor.a;
+        return mixed;
+    }
+
+    // The alexandrite and the stones like it: green by day, pink under an incandescent light (the torch of the loupe).
+    public static bool ChangesColor(GemDefinition def) => def != null && def.name == "Chrysoberyl_Alexandrite";
+
+    public static Color Incandescent(Color daylight)
+    {
+        Color.RGBToHSV(daylight, out var hue, out var saturation, out var value);
+        var pinkHue = (345f + (hue * 360f - 150f) * 0.08f) / 360f;
+        return Color.HSVToRGB(Mathf.Repeat(pinkHue, 1f), Mathf.Clamp(0.45f + saturation * 0.30f, 0.40f, 0.80f), Mathf.Clamp(value * 1.15f + 0.12f, 0.50f, 0.95f));
+    }
 
     // The look of a rough crystal of a species: the same, with calm faces.
     public static GemLook ForCrystal(GemDefinition def)
@@ -94,7 +160,7 @@ public struct GemLook
         if (def == null) return Default;
         if (cache.TryGetValue(def.name ?? "", out var known)) return known;
 
-        var look = new GemLook { Brilliance = LusterBrilliance(def.luster), Fire = Fiery.Contains(def.name ?? "") ? (def.name == "Zircon" ? 0.6f : def.name == "Grenat_Demantoide" ? 0.95f : 1f) : 0f };
+        var look = new GemLook { Brilliance = LusterBrilliance(def.luster), Fire = Fiery.Contains(def.name ?? "") ? (def.name == "Zircon" ? 0.6f : def.name == "Grenat_Demantoide" ? 0.95f : def.name == "Sphene" ? 0.9f : 1f) : 0f };
         look.Seed = (int)(StoneOptics.StableHash(def.name ?? "") & 0xFFFF);
         look.Ior = def.refractiveIndex > 1.2f ? def.refractiveIndex : 1.6f;
         // The demantoid: a brilliance and a fire to rival the diamond's, and glossy crystals.
@@ -113,7 +179,7 @@ public struct GemLook
         {
             case Diaphaneity.SemiTransparent: look.Brilliance *= 0.8f; break;
             case Diaphaneity.SemiOpaque: look.Brilliance *= 0.55f; break;
-            case Diaphaneity.Opaque: look.Brilliance *= 0.4f; break;
+            case Diaphaneity.Opaque: look.Brilliance *= def.name == "Tourmaline_Schorl" ? 0.85f : 0.4f; break;     // polished black schorl stays glassy
         }
         cache[def.name ?? ""] = look;
         return look;
@@ -131,6 +197,9 @@ public struct GemLook
             case "GGG": return 0.022f;
             case "Zircon": return 0.020f;
             case "Grenat_Demantoide": return 0.036f;
+            case "Sphene": return 0.026f;
+            case "Sphalerite": return 0.078f;
+            case "Titanate_Strontium": return 0.095f;
         }
         return 0.004f + Mathf.Max(0f, ior - 1.4f) * 0.012f;
     }

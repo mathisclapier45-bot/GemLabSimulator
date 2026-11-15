@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using UnityEngine;
 
 // The text of the books of the library. The Guide is made from the grimoire, the Atlas from the origins of the species; the Manual of the treatments and
 // the Digest of the market follow the rules of the game (the figures come from the code where they are public, and from TreatmentDisclosure, MarketState
@@ -654,6 +655,385 @@ public static class BookContents
             "<b>Revêtement :</b> 15 % (diamant : 28 %)",
             "<b>Remplissage :</b> 10 % (fondant 14 %, verre 18 %, diamant 30 %)",
             "<b>Teinture :</b> 20 %");
+    }
+
+    // ---- Le Nuancier des diamants de couleur ----------------------------------------------------------------------------
+
+    private static BookStrip GradeStrip(GiaHue hue, bool brown, bool gray, GiaGrade[] grades, string title)
+    {
+        var strip = new BookStrip { Title = title, Labeled = true };
+        foreach (var grade in grades)
+        {
+            var body = brown ? GiaDiamondColors.TypicalBrown(grade) : gray ? GiaDiamondColors.TypicalGray(grade) : GiaDiamondColors.Typical(hue, grade);
+            var facet = GemColorSystem.FacetColor(new GemColorValue(0f, 0f, 0f)) ;
+            UnityEngine.Color.RGBToHSV(body, out var h, out var s, out var v);
+            facet = GemColorSystem.FacetColor(new GemColorValue(h * 360f, s, v));
+            strip.Icons.Add(new BookIcon { Sprite = GemIconFactory.GetSolid("Ovale", "Brillant", body, facet), Label = GiaDiamondColors.English(grade) });
+        }
+        return strip;
+    }
+
+    private static string Frequency(float perThousand)
+    {
+        if (perThousand >= 50f) return "courante";
+        if (perThousand >= 20f) return "peu courante";
+        if (perThousand >= 8f) return "rare";
+        if (perThousand >= 4f) return "très rare";
+        return "extrêmement rare";
+    }
+
+    public static BookContent BuildDiamondColors()
+    {
+        var book = new BookContent
+        {
+            IndexTitle = "Les teintes",
+            IntroHeading = "Lire ce nuancier",
+            TitleNote = "27 teintes, neuf degrés",
+            IntroText = Blocks(
+                Turning,
+                Heading("Une teinte, un degré") + "\n" +
+                "Un diamant de couleur se décrit par deux mots : sa <b>teinte</b>, parmi les 27 du cercle, et son <b>degré</b>, qui mêle le ton (clair ou sombre) et la saturation (pâle ou intense). Les neuf degrés vont de <b>Faint</b>, à peine teinté, à <b>Fancy Vivid</b>, le plus éclatant, avec <b>Fancy Deep</b> et <b>Fancy Dark</b> pour les tons profonds et sombres.",
+                Heading("La rareté") + "\n" +
+                "La plupart des diamants de couleur sont bruns, jaunes ou gris ; les bleus se rencontrent de temps en temps. Les verts, les roses, les violets, les orange et surtout les rouges sont rares à extrêmement rares. Dans une même teinte, les degrés pâles sont bien plus courants que les vifs et les profonds.",
+                Note("Les nuances de brun et de gris sont les teintes plus faibles ou plus sombres des teintes chaudes et froides. Les roses sont les rouges clairs.")),
+        };
+
+        // The circle: the 27 hues at their most vivid, one after the other.
+        var circle = new BookStrip { Title = "Le cercle des teintes, du rouge au rouge pourpré", Labeled = false };
+        foreach (var hue in GiaDiamondColors.Hues)
+        {
+            var body = GiaDiamondColors.Typical(hue, GiaGrade.FancyVivid);
+            UnityEngine.Color.RGBToHSV(body, out var h, out var s, out var v);
+            var facet = GemColorSystem.FacetColor(new GemColorValue(h * 360f, s, v));
+            circle.Icons.Add(new BookIcon { Sprite = GemIconFactory.GetSolid("Ovale", "Brillant", body, facet) });
+        }
+        book.Entries.Add(new BookEntry
+        {
+            Title = "Le cercle des teintes", Subtitle = "Les 27 teintes, de rouge en rouge",
+            LeftHead = "Nuancier des diamants de couleur", RightHead = "Les neuf degrés",
+            LeftStrip = circle,
+            LeftBuilder = () =>
+            {
+                var lines = new List<string>();
+                for (var i = 0; i < GiaDiamondColors.Hues.Length; i++)
+                    lines.Add((i + 1).ToString(French) + ". " + GiaDiamondColors.Hues[i].French + " <color=#9AA3B5>(" + GiaDiamondColors.Hues[i].English + ")</color>");
+                return Blocks(Heading("Dans l'ordre du cercle") + "\n" + string.Join("\n", lines));
+            },
+            RightBuilder = () =>
+            {
+                var rows = new List<string>();
+                for (var g = 0; g < GiaDiamondColors.GradeEnglish.Length; g++)
+                    rows.Add("<b>" + GiaDiamondColors.GradeEnglish[g] + "</b> : prix de degré ×" + GiaDiamondColors.GradeMultiplier((GiaGrade)g).ToString("0.0#", French));
+                return Blocks(
+                    Heading("Les degrés") + "\n" + Bullets(rows.ToArray()),
+                    Note("Le prix d'un diamant de couleur est celui du degré, multiplié par celui de sa teinte : un rouge vaut des dizaines de fois un jaune du même degré."),
+                    Heading("Pâles et profonds") + "\n" + Bullets(
+                        "Faint, Very Light et Light n'existent pas pour les jaunes : plus pâle, ce n'est plus qu'un diamant de l'échelle D à Z.",
+                        "Fancy Deep est profond et saturé ; Fancy Dark est sombre et plus faible. Les bruns et les gris ont surtout des degrés clairs, moyens et sombres."));
+            },
+        });
+
+        for (var i = 0; i < GiaDiamondColors.Hues.Length; i++)
+        {
+            var index = i;
+            var hue = GiaDiamondColors.Hues[i];
+            var pale = hue.Pale
+                ? new[] { GiaGrade.Faint, GiaGrade.VeryLight, GiaGrade.Light, GiaGrade.FancyLight, GiaGrade.Fancy, GiaGrade.FancyIntense, GiaGrade.FancyVivid }
+                : new[] { GiaGrade.FancyLight, GiaGrade.Fancy, GiaGrade.FancyIntense, GiaGrade.FancyVivid };
+            var perThousand = GiaDiamondColors.PerThousand(i);
+            book.Entries.Add(new BookEntry
+            {
+                Title = hue.French, Subtitle = hue.English + "  ·  " + Frequency(perThousand),
+                LeftHead = "Nuancier des diamants de couleur", RightHead = "Les tons profonds et le prix",
+                LeftStrip = GradeStrip(hue, false, false, pale, "Du plus pâle au plus vif"),
+                RightStrip = GradeStrip(hue, false, false, new[] { GiaGrade.FancyDeep, GiaGrade.FancyDark }, "Les tons profonds et sombres"),
+                LeftBuilder = () => HueLeft(hue, index),
+                RightBuilder = () => HueRight(hue),
+            });
+        }
+
+        AddFamily(book, "Rose", "Les rouges clairs", new[] { 26, 25, 24, 0, 1 }, "Un rose est un rouge clair : la même zone du cercle, à des tons plus légers.");
+        AddFamily(book, "Brun", "Les teintes chaudes plus faibles ou plus sombres", null, null);
+        AddFamily(book, "Gris", "Les teintes froides plus faibles", null, null);
+        book.TitleNote = "27 teintes, neuf degrés, bruns et gris";
+        return book;
+    }
+
+    private static string HueLeft(GiaHue hue, int index)
+    {
+        var perThousand = GiaDiamondColors.PerThousand(index);
+        return Blocks(
+            Heading(hue.French + " (" + hue.English + ")") + "\n" +
+            "Cette teinte est <b>" + Frequency(perThousand) + "</b> : environ <b>" + perThousand.ToString("0.#", French) + "</b> diamants de couleur sur mille.",
+            Heading("Le prix") + "\n" + Bullets(
+                "Facteur de teinte : <b>×" + hue.Rarity.ToString("0", French) + "</b>.",
+                "Le degré s'y ajoute : de ×" + GiaDiamondColors.GradeMultiplier(GiaGrade.Faint).ToString("0.0#", French) + " (Faint) à ×" + GiaDiamondColors.GradeMultiplier(GiaGrade.FancyVivid).ToString("0.0#", French) + " (Fancy Vivid)."),
+            hue.SatCap < 0.8f ? Note("Cette teinte reste toujours un peu grisée : elle atteint rarement une saturation éclatante.") : null);
+    }
+
+    private static string HueRight(GiaHue hue)
+    {
+        var rows = new List<string>();
+        for (var g = 0; g < GiaDiamondColors.GradeEnglish.Length; g++)
+        {
+            var share = GiaDiamondColors.GradeShare(hue, (GiaGrade)g);
+            if (share <= 0f) continue;
+            rows.Add("<b>" + GiaDiamondColors.GradeEnglish[g] + "</b> : " + share.ToString("0", French) + " % des pierres de cette teinte");
+        }
+        return Blocks(
+            Heading("Les degrés de cette teinte") + "\n" + Bullets(rows.ToArray()),
+            Note("Les degrés pâles sont les plus courants. Plus la couleur est vive ou profonde, plus la pierre devient rare et chère."));
+    }
+
+    private static void AddFamily(BookContent book, string title, string subtitle, int[] hues, string lead)
+    {
+        var brown = title == "Brun";
+        var gray = title == "Gris";
+        var grades = brown ? new[] { GiaGrade.FancyLight, GiaGrade.Fancy, GiaGrade.FancyDeep, GiaGrade.FancyDark }
+            : gray ? new[] { GiaGrade.FancyLight, GiaGrade.Fancy, GiaGrade.FancyDark }
+            : new[] { GiaGrade.Faint, GiaGrade.VeryLight, GiaGrade.Light, GiaGrade.FancyLight, GiaGrade.Fancy, GiaGrade.FancyIntense, GiaGrade.FancyVivid };
+        var entry = new BookEntry
+        {
+            Title = title, Subtitle = subtitle,
+            LeftHead = "Nuancier des diamants de couleur", RightHead = "Fréquence et prix",
+        };
+
+        if (hues != null)
+        {
+            // The pinks: the red hues at the light grades.
+            var strip = new BookStrip { Title = "Du rose pâle au rose intense, sur la teinte rouge pourpré", Labeled = true };
+            var hue = GiaDiamondColors.Hues[hues[0]];
+            foreach (var grade in grades)
+            {
+                var body = GiaDiamondColors.Typical(hue, grade);
+                UnityEngine.Color.RGBToHSV(body, out var h, out var s, out var v);
+                var facet = GemColorSystem.FacetColor(new GemColorValue(h * 360f, s, v));
+                strip.Icons.Add(new BookIcon { Sprite = GemIconFactory.GetSolid("Ovale", "Brillant", body, facet), Label = GiaDiamondColors.English(grade) });
+            }
+            entry.LeftStrip = strip;
+            entry.LeftBuilder = () => Blocks(
+                Heading("Rose") + "\n" + lead,
+                Heading("Les teintes concernées") + "\n" + Bullets(hues.Select(i => GiaDiamondColors.Hues[i].French + " <color=#9AA3B5>(" + GiaDiamondColors.Hues[i].English + ")</color>").ToArray()),
+                Note("Rose, rose violacé, rose orangé : une même famille, qui tire vers le rouge à mesure que la couleur s'intensifie."));
+            entry.RightBuilder = () => Blocks(
+                Heading("Fréquence") + "\n" + "Un diamant rose est <b>très rare</b>, un rouge <b>extrêmement rare</b>. Les roses pâles (Faint à Light) sont bien plus courants que les roses vifs.",
+                Heading("Prix") + "\n" + Bullets("Les roses valent de ×" + GiaDiamondColors.Hues[25].Rarity.ToString("0", French) + " à ×" + GiaDiamondColors.Hues[0].Rarity.ToString("0", French) + " le prix d'un diamant ordinaire, avant le degré."));
+        }
+        else
+        {
+            var hue = new GiaHue();
+            entry.LeftStrip = GradeStrip(hue, brown, gray, grades, brown ? "Du brun clair au brun sombre" : "Du gris clair au gris sombre");
+            var perThousand = brown ? GiaDiamondColors.BrownPerThousand : GiaDiamondColors.GrayPerThousand;
+            var rarity = brown ? GiaDiamondColors.BrownRarity : GiaDiamondColors.GrayRarity;
+            entry.LeftBuilder = () => Blocks(
+                Heading(title) + "\n" + (brown
+                    ? "Le brun est la couleur la plus courante des diamants colorés : un jaune, un orange ou un rose plus faible ou plus sombre. On le nomme brun orangé, brun jaunâtre, brun rosâtre ou brun verdâtre."
+                    : "Le gris est un bleu, un violet ou un vert plus faible, à saturation basse."),
+                Heading("Fréquence") + "\n" + "Environ <b>" + perThousand.ToString("0", French) + "</b> diamants de couleur sur mille.");
+            entry.RightBuilder = () => Blocks(
+                Heading("Prix") + "\n" + Bullets("Facteur de teinte : <b>×" + rarity.ToString("0.#", French) + "</b>.", "Fancy Light, Fancy, Fancy Deep et Fancy Dark : les degrés vont de ×" + GiaDiamondColors.GradeMultiplier(GiaGrade.FancyDark).ToString("0.0#", French) + " à ×" + GiaDiamondColors.GradeMultiplier(GiaGrade.FancyDeep).ToString("0.0#", French) + "."),
+                Note("Les bruns se vendent peu cher : ils sont si nombreux qu'on les trouve en grandes quantités."));
+        }
+        book.Entries.Add(entry);
+    }
+
+    // ---- Le Nuancier du corindon ------------------------------------------------------------------------------------------
+
+    private static BookIcon Plate(float hue, float saturation, float brightness, string label)
+    {
+        var body = UnityEngine.Color.HSVToRGB(Mathf.Repeat(hue, 360f) / 360f, Mathf.Clamp01(saturation), Mathf.Clamp01(brightness));
+        UnityEngine.Color.RGBToHSV(body, out var h, out var s, out var v);
+        var facet = GemColorSystem.FacetColor(new GemColorValue(h * 360f, s, v));
+        return new BookIcon { Sprite = GemIconFactory.GetSolid("Ovale", "Brillant", body, facet), Label = label };
+    }
+
+    // The eight rows of the grid of the lab, at one hue, from light to dark.
+    private static BookStrip GridStrip(float hue, string title)
+    {
+        var strip = new BookStrip { Title = title, Labeled = true };
+        for (var row = 0; row < GemColorSystem.RowCount; row++)
+            strip.Icons.Add(Plate(hue, GemColorSystem.RowSaturationOf(row), GemColorSystem.RowBrightnessOf(row), GemColorSystem.RowLabel(row)));
+        return strip;
+    }
+
+    private static string GridValues()
+    {
+        var rows = new List<string>();
+        for (var row = 0; row < GemColorSystem.RowCount; row++)
+            rows.Add("<b>" + GemColorSystem.RowLabel(row) + "</b> : ×" + GemColorSystem.RowValueOf(row).ToString("0.0#", French)
+                     + "  <color=#9AA3B5>(saturation " + Percent(GemColorSystem.RowSaturationOf(row)) + ", brillance " + Percent(GemColorSystem.RowBrightnessOf(row)) + ")</color>");
+        return Heading("Ce que vaut chaque degré") + "\n" + Bullets(rows.ToArray());
+    }
+
+    private struct CorundumColor
+    {
+        public string Title, English, Species, Hue, Origin, Note;
+        public float Degrees;
+    }
+
+    public static BookContent BuildCorundum()
+    {
+        var book = new BookContent
+        {
+            IndexTitle = "Les couleurs et les grands noms",
+            IntroHeading = "Lire ce nuancier",
+            TitleNote = "rubis, saphirs, et les noms de la profession",
+            IntroText = Blocks(
+                Turning,
+                Heading("Le corindon") + "\n" +
+                "Un même minéral, de l'oxyde d'aluminium : <b>rouge, c'est un rubis</b> ; toute autre couleur est un <b>saphir</b>. Sa couleur vient de quelques atomes qui prennent la place de l'aluminium : le <b>chrome</b> (rouge et rose), le <b>fer</b> (jaune, orange, vert), le <b>fer en paire avec le titane</b> (bleu).",
+                Heading("La couleur se note en trois mesures") + "\n" +
+                "La <b>teinte</b> (l'angle sur le cercle des couleurs), la <b>saturation</b> et la <b>brillance</b>. Le laboratoire en tire huit degrés, de Clair à Sombre, que ce livre montre pour chaque couleur du corindon.",
+                Note("Une même pierre change de couleur selon la lumière et la taille : on la juge de face, en la balançant légèrement, loin des reflets.")),
+        };
+
+        // The colours of corundum around the wheel.
+        var wheel = new BookStrip { Title = "Les couleurs du corindon, au plus vif", Labeled = true };
+        var colors = new[]
+        {
+            new CorundumColor { Title = "Rubis", English = "Ruby", Species = "Corindon_Rubis", Degrees = 357f, Hue = "rouge (340° à 15°)",
+                Origin = "Chrome. Le fer l'oriente vers l'orange et ternit sa couleur ; le titane, en paire avec le fer, le rend violacé. Beaucoup de chrome donne un rouge sombre, presque noir. Sa fluorescence rouge, vers 699 nm, ajoute à son éclat.",
+                Note = "Le rubis est le corindon rouge. Plus le rose domine, plus on parle de saphir rose." },
+            new CorundumColor { Title = "Saphir rose", English = "Pink sapphire", Species = "Saphir_Rose", Degrees = 342f, Hue = "rose (330° à 355°)",
+                Origin = "Un peu de chrome, et le pigment s'arrête là : rose pâle à rose vif.", Note = "Au-delà d'un certain seuil de chrome et de saturation, le rose passe au rubis." },
+            new CorundumColor { Title = "Padparadscha", English = "Padparadscha", Species = "Padparadscha", Degrees = 14f, Hue = "rose orangé (0° à 40°)",
+                Origin = "Du chrome pour le rose et du fer, en centre coloré, pour l'orange. La fluorescence orange aux UV longs fait « briller » la pierre.", Note = "Le rose domine sur l'orange, à saturation faible ou moyenne." },
+            new CorundumColor { Title = "Saphir orange", English = "Orange sapphire", Species = "Saphir_Orange", Degrees = 28f, Hue = "orange (20° à 40°)",
+                Origin = "Du fer comme centre coloré, avec un peu de chrome.", Note = "À saturation douce et pleine brillance, un orange rosé peut être un padparadscha." },
+            new CorundumColor { Title = "Saphir jaune", English = "Yellow sapphire", Species = "Saphir_Jaune", Degrees = 50f, Hue = "jaune (40° à 65°)",
+                Origin = "Du fer (Fe3+) qui absorbe le violet et le bleu : jaune pâle à jaune doré.", Note = "Chauffé, il peut devenir plus pur et plus stable." },
+            new CorundumColor { Title = "Saphir vert", English = "Green sapphire", Species = "Saphir_Vert", Degrees = 140f, Hue = "vert (80° à 165°)",
+                Origin = "Du fer, qui joue à la fois le jaune et le bleu : leur mélange donne le vert.", Note = "Le fer tire aussi un saphir bleu vers le vert, et fait baisser sa saturation." },
+            new CorundumColor { Title = "Saphir bleu", English = "Blue sapphire", Species = "Saphir_Bleu", Degrees = 228f, Hue = "bleu (185° à 255°)",
+                Origin = "Du fer en paire avec du titane : plus il y en a, plus le saphir est bleu, jusqu'au noir. Un peu de chrome le rend violacé.", Note = "Les saphirs les plus vifs et profonds reçoivent le nom de bleu royal." },
+            new CorundumColor { Title = "Saphir violet", English = "Violet sapphire", Species = "Saphir_Violet", Degrees = 275f, Hue = "violet (255° à 300°)",
+                Origin = "Du chrome avec le couple fer-titane : un bleu qui se teinte de rose.", Note = "Entre le saphir bleu et le saphir rose, au bord du pourpre." },
+        };
+        foreach (var color in colors) wheel.Icons.Add(Plate(color.Degrees, 0.9f, 0.9f, color.Title));
+
+        book.Entries.Add(new BookEntry
+        {
+            Title = "Les couleurs du corindon", Subtitle = "Du rubis au saphir violet",
+            LeftHead = "Nuancier du corindon", RightHead = "Teintes et pigments",
+            LeftStrip = wheel,
+            LeftBuilder = () => Blocks(
+                Heading("Autour du cercle") + "\n" + Bullets(colors.Select(c => "<b>" + c.Title + "</b> <color=#9AA3B5>(" + c.English + ")</color> : " + c.Hue).ToArray())),
+            RightBuilder = () => Blocks(
+                Heading("Quatre pigments") + "\n" + Bullets(
+                    "<b>Le chrome</b> : rouge et rose. Le fluorescent du rubis.",
+                    "<b>Le fer</b> : jaune, orange et vert ; il éteint la fluorescence.",
+                    "<b>Le fer avec le titane</b> : bleu.",
+                    "<b>Un centre coloré</b> : un trou d'électron près du fer, qui donne l'orange du padparadscha."),
+                Note("La teinte exacte dépend de la proportion de ces pigments : un rubis trop riche en fer vire à l'orange, un saphir trop riche en fer vire au vert.")),
+        });
+
+        foreach (var color in colors)
+        {
+            var c = color;
+            var def = GemDatabase.Instance != null ? GemDatabase.Instance.FindByAssetName(c.Species) : null;
+            book.Entries.Add(new BookEntry
+            {
+                Title = c.Title, Subtitle = c.English + "  ·  " + c.Hue,
+                LeftHead = "Nuancier du corindon", RightHead = "Prix et noms",
+                Icon = def != null ? def.GetIcon() : null,
+                LeftStrip = GridStrip(c.Degrees, "Les huit degrés, du plus clair au plus sombre"),
+                LeftBuilder = () => Blocks(
+                    Heading(c.Title + " (" + c.English + ")") + "\n" + "Teinte : <b>" + c.Hue + "</b>.",
+                    Heading("D'où vient la couleur") + "\n" + c.Origin,
+                    Note(c.Note)),
+                RightBuilder = () => Blocks(
+                    GridValues(),
+                    CorundumNames(c.Species)),
+            });
+        }
+
+        // The great names of the trade.
+        AddTradeName(book, "Sang de pigeon", "Pigeon blood", GemColorSystem.TradeMultiplier("Sang de pigeon"),
+            new[] { Plate(345f, 1f, 0.85f, "345°"), Plate(357f, 1f, 0.85f, "Rouge profond"), Plate(15f, 1f, 0.85f, "15°"), Plate(357f, 0.8f, 0.7f, "Limite"), Plate(357f, 1f, 0.7f, "Plus foncé") },
+            "Le plus beau rouge du rubis : le nom vient de Birmanie, où une vieille légende de la vallée de Mogok compare le premier rubis au sang le plus pur ; le sang d'un pigeon, ou le cercle rouge de son œil.",
+            "Un rouge pur ou à peine pourpré, vif, parfois intense ou profond. Il faut une pierre propre à l'œil ou transparente sous la table, d'une couleur uniforme, bien taillée, sans fenêtre ni extinction. Sa fluorescence rouge aux UV longs est de préférence moyenne à forte.",
+            new[] { "Minéral : corindon ; variété : rubis", "Teinte : 345° à 15°", "Saturation : 80 à 100 %", "Brillance : 100 à 70 % (un rouge profond)", "Degrés : Intense, Vif ou Profond (rouge)", "Couleur : uniforme", "Fluorescence : faible à forte, rouge", "Clarté : sans inclusion visible sous la table", "Taille : excellente à bonne, plus de 60 % de lumière renvoyée", "Traitement : aucun ou chauffage traditionnel", "Origine : toutes" },
+            "Le chrome fait le rouge ; le fer l'oriente vers l'orange, ternit et éteint la fluorescence ; le titane le rend violacé. Beaucoup de rubis dits « sang de pigeon » sont pauvres en fer, avec une très forte fluorescence rouge.");
+
+        AddTradeName(book, "Bleu royal", "Royal blue", GemColorSystem.TradeMultiplier("Bleu royal"),
+            new[] { Plate(220f, 1f, 1f, "220°"), Plate(240f, 1f, 0.9f, "Bleu pur"), Plate(265f, 1f, 0.8f, "265°"), Plate(240f, 0.8f, 0.9f, "Limite"), Plate(240f, 1f, 0.6f, "Plus foncé") },
+            "Le nom date du début du XIXe siècle : un bleu né en Angleterre, qui est celui du drapeau britannique. Les négociants anglais l'ont appliqué aux plus beaux saphirs de Ceylan et de Birmanie. Le bleu d'origine était plus foncé que celui d'aujourd'hui.",
+            "Un bleu pur ou à peine violacé, vif, parfois intense ou profond. Il faut une pierre propre à l'œil ou transparente sous la table, uniforme, bien taillée, sans fenêtre ni extinction.",
+            new[] { "Minéral : corindon ; variété : saphir", "Teinte : 220° à 265°", "Saturation : 80 à 100 %", "Brillance : 100 à 60 %", "Degrés : Intense, Vif ou Profond (bleu)", "Couleur : uniforme", "Fluorescence : aucune à forte", "Clarté : sans inclusion visible sous la table", "Taille : excellente à bonne, plus de 60 % de lumière renvoyée", "Traitement : aucun ou chauffage traditionnel", "Origine : toutes" },
+            "Le bleu vient du fer en paire avec le titane : plus il y en a, plus le saphir est bleu, jusqu'au noir. Le fer seul tire vers le vert et pâlit le bleu ; le chrome le rend violacé.");
+
+        AddTradeName(book, "Padparadscha", "Padparadscha", GemColorSystem.TradeMultiplier("Padparadscha"),
+            new[] { Plate(0f, 0.4f, 1f, "Rose 0°"), Plate(14f, 0.4f, 1f, "Rose orangé"), Plate(40f, 0.4f, 1f, "40°"), Plate(14f, 0.2f, 1f, "Clair"), Plate(14f, 0.6f, 1f, "Moyen") },
+            "Le nom vient du sanskrit padmaraga, « couleur du lotus ». Les anciens Cinghalais l'employaient pour le saphir rose orangé de Ceylan ; le lotus est lié à la fortune et à la religion bouddhiste.",
+            "Un mélange délicat de rose et d'orange, où le rose domine, à saturation faible ou moyenne. La fluorescence aux UV longs est souvent orange moyenne à forte. Il faut une pierre propre à l'œil ou transparente, d'une couleur bien répartie.",
+            new[] { "Minéral : corindon ; variété : saphir", "Teinte : 0° à 40°", "Saturation : 20 à 60 %", "Brillance : 100 %", "Degrés : Clair, Pastel ou Moyen (rose orangé)", "Couleur : uniforme", "Fluorescence : aucune à forte, orange", "Clarté : sans inclusion visible sous la table", "Taille : excellente à bonne, plus de 60 % de lumière renvoyée", "Traitement : aucun ou chauffage traditionnel", "Origine : toutes" },
+            "Le chrome fait le rose, le fer en centre coloré fait l'orange ; la fluorescence orange vient sans doute du même trou d'électron. Une tache de fer bien placée dans une fissure peut ajouter une touche d'orange.");
+
+        book.Entries.Add(new BookEntry
+        {
+            Title = "Bleu bleuet", Subtitle = "Cornflower  ·  un saphir plus tendre",
+            LeftHead = "Nuancier du corindon", RightHead = "Prix",
+            LeftStrip = new BookStrip { Title = "La zone du bleu bleuet", Labeled = true, Icons = { Plate(215f, 0.5f, 0.95f, "215°"), Plate(225f, 0.62f, 0.95f, "Bleu pur"), Plate(235f, 0.75f, 0.95f, "235°"), Plate(225f, 0.5f, 0.85f, "Limite") } },
+            LeftBuilder = () => Blocks(
+                Heading("Bleu bleuet (cornflower)") + "\n" + "Un bleu moyen, ni sombre ni éclatant, comme le bleuet : un saphir velouté, d'un bleu doux, lumineux.",
+                Heading("Dans le jeu") + "\n" + Bullets("Teinte : <b>215° à 235°</b>.", "Saturation : <b>50 à 75 %</b>.", "Brillance : <b>85 % et plus</b>.", "Seulement une pierre propre à l'œil, sans traitement autre que le chauffage.")),
+            RightBuilder = () => Blocks(
+                Heading("Prix") + "\n" + Bullets("Le nom multiplie le prix par <b>×" + GemColorSystem.TradeMultiplier("Cornflower (bleu bleuet)").ToString("0.0#", French) + "</b>."),
+                Note("Ce nom n'est pas dans le tableau du laboratoire : c'est celui du marché.")),
+        });
+
+        book.Entries.Add(new BookEntry
+        {
+            Title = "Ce qui ôte le nom", Subtitle = "Traitements, clarté, taille",
+            LeftHead = "Nuancier du corindon", RightHead = "Les noms et le prix",
+            LeftBuilder = () => Blocks(
+                Heading("Un nom se mérite") + "\n" + "Un nom de la profession suppose bien plus qu'une couleur : la pierre doit être propre à l'œil ou transparente, de couleur bien répartie, bien taillée, et sans autre traitement que le chauffage traditionnel.",
+                Heading("Ce qui l'interdit") + "\n" + Bullets(
+                    "La diffusion d'éléments étrangers dans le réseau (béryllium, titane).",
+                    "Le comblement des fissures par de la résine, du verre au plomb ou au silicate.",
+                    "Le verre coloré au cobalt (pour les bleus).",
+                    "Une inclusion bien visible sous la table, ou une zone transparente (fenêtre) ou sombre (extinction) quand on regarde la pierre de face.")),
+            RightBuilder = () => Blocks(
+                Heading("Dans le jeu") + "\n" + Bullets(
+                    "Il faut une pierre <b>Eye-clean</b> ou <b>Loupe clean</b>.",
+                    "Seuls <b>Non traité</b> et <b>Chauffé</b> gardent le nom.",
+                    "Une pierre synthétique n'en reçoit aucun."),
+                Heading("Le prix du nom") + "\n" + Bullets(
+                    "Sang de pigeon : <b>×" + GemColorSystem.TradeMultiplier("Sang de pigeon").ToString("0.0#", French) + "</b>.",
+                    "Bleu royal : <b>×" + GemColorSystem.TradeMultiplier("Bleu royal").ToString("0.0#", French) + "</b>.",
+                    "Bleu bleuet : <b>×" + GemColorSystem.TradeMultiplier("Cornflower (bleu bleuet)").ToString("0.0#", French) + "</b>.",
+                    "Padparadscha : <b>×" + GemColorSystem.TradeMultiplier("Padparadscha").ToString("0.0#", French) + "</b>."),
+                Note("Le laboratoire donne ces noms sans les lier à une origine : une pierre de n'importe quel gisement peut les porter.")),
+        });
+
+        return book;
+    }
+
+    private static string CorundumNames(string species)
+    {
+        switch (species)
+        {
+            case "Corindon_Rubis": return Blocks(Heading("Les noms") + "\n" + Bullets("<b>Sang de pigeon</b> : un rouge pur, vif, propre à l'œil et sans traitement autre que le chauffage."));
+            case "Saphir_Bleu": return Blocks(Heading("Les noms") + "\n" + Bullets("<b>Bleu royal</b> : le bleu vif et profond.", "<b>Bleu bleuet</b> : un bleu doux et lumineux."));
+            case "Padparadscha":
+            case "Saphir_Rose":
+            case "Saphir_Orange": return Blocks(Heading("Les noms") + "\n" + Bullets("<b>Padparadscha</b> : un rose orangé délicat, le rose dominant, saturation faible ou moyenne."));
+        }
+        return Blocks(Heading("Les noms") + "\n" + "Cette couleur n'a pas de nom propre dans le tableau du laboratoire.");
+    }
+
+    private static void AddTradeName(BookContent book, string title, string english, float multiplier, BookIcon[] plates, string legend, string definition, string[] criteria, string science)
+    {
+        var strip = new BookStrip { Title = "La zone de couleur du nom", Labeled = true };
+        strip.Icons.AddRange(plates);
+        book.Entries.Add(new BookEntry
+        {
+            Title = title, Subtitle = english + "  ·  ×" + multiplier.ToString("0.0#", French),
+            LeftHead = "Nuancier du corindon", RightHead = "Critères du laboratoire",
+            LeftStrip = strip,
+            LeftBuilder = () => Blocks(Heading("L'origine du nom") + "\n" + legend, Heading("La définition") + "\n" + definition),
+            RightBuilder = () => Blocks(Heading("Les critères") + "\n" + Bullets(criteria), Heading("La science") + "\n" + science),
+        });
     }
 
     public static BookContent BuildMarket()

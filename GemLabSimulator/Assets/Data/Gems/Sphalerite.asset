@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Sphalerite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "Sphal\xE9rite"
+  description: "Un sulfure de zinc d'une dispersion pr\xE8s de quatre fois celle
+    du diamant : rouge, orange, brun ou miel, d'un \xE9clat adamantin presque m\xE9tallique.
+    Tr\xE8s tendre et clivable en six directions, elle se taille avec pr\xE9caution."
+  icon: {fileID: 21300000, guid: 32f598038259f4f819410042b9cd2cef, type: 3}
+  roughIcon: {fileID: 21300000, guid: 190f4e1c7543e4df7ae9680b39635200, type: 3}
+  iconColor: {r: 0.82, g: 0.38, b: 0.12, a: 1}
+  iconFacetColor: {r: 0.96, g: 0.65, b: 0.35, a: 1}
+  refractiveIndex: 2.369
+  density: 4.05
+  hardness: 3.75
+  lengthMm: 7
+  widthMm: 6
+  depthMm: 4
+  weightCarats: 1.5
+  luster: "Adamantin \xE0 sub-m\xE9tallique"
+  color: "Rouge \xE0 orange, brun miel"
+  shape: Coussin
+  cutStyle: Brillant
+  transparency: "Transparent \xE0 translucide"
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Orange \xE0 jaune selon l'\xE9chantillon (mangan\xE8se)."
+  fluorescenceShortWave: "Orange \xE0 jaune selon l'\xE9chantillon (mangan\xE8se)."
+  opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: Aucun spectre d'absorption net ; la couleur vient du fer.
+  spectrumLines: []
+  inclusions: "Clivage dod\xE9ca\xE9drique parfait dans six directions, plans de
+    macle, fines inclusions de pyrite et de gal\xE8ne ; aspect tr\xE8s feu."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 80
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  roughOnly: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: Espagne (Cantabrie)
+    rarityWeight: 35
+    valueMultiplier: 1.2
+    inclusionOverride: 
+  - name: Mexique
+    rarityWeight: 25
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: "P\xE9rou"
+    rarityWeight: 20
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Serbie
+    rarityWeight: 10
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: "\xC9tats-Unis"
+    rarityWeight: 10
+    valueMultiplier: 0.9
+    inclusionOverride: 

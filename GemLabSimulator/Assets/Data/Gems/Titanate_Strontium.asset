@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Titanate_Strontium
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Titanate de strontium (fabulite)
+  description: "Un cristal synth\xE9tique cubique, d'une dispersion plus de quatre
+    fois celle du diamant : un feu arc-en-ciel intense et un \xE9clat \xE9blouissant.
+    Tendre, il se raye \xE0 l'usage. Il peut \xEAtre de toutes les couleurs."
+  icon: {fileID: 21300000, guid: 5d686026df24246fb8b291f5e49030db, type: 3}
+  roughIcon: {fileID: 21300000, guid: 889cc491457414f35a38659bb8f479b2, type: 3}
+  iconColor: {r: 0.88, g: 0.9, b: 0.94, a: 1}
+  iconFacetColor: {r: 0.97, g: 0.98, b: 1, a: 1}
+  refractiveIndex: 2.41
+  density: 5.13
+  hardness: 5.5
+  lengthMm: 6.5
+  widthMm: 6.5
+  depthMm: 4
+  weightCarats: 1.3
+  luster: Adamantin
+  color: Incolore
+  shape: Rond
+  cutStyle: Brillant
+  transparency: Transparent
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: Fluorescence variable ou absente.
+  fluorescenceShortWave: Fluorescence variable ou absente.
+  opticalCharacter: "Isotrope (monor\xE9fringent, r\xE9seau cubique)."
+  opticalCharacterClass: 0
+  birefringence: 0
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "G\xE9n\xE9ralement tr\xE8s propre ; bulles de gaz rondes occasionnelles,
+    rayures de polissage fr\xE9quentes."
+  interferenceFigure: "Aucune figure d'interf\xE9rence (mat\xE9riau isotrope)."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 5
+  forcedSynthetic: 1
+  forcedTreatment: 0
+  roughOnly: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: Fabrication industrielle
+    rarityWeight: 100
+    valueMultiplier: 1
+    inclusionOverride: 

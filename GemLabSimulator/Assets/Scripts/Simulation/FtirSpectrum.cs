@@ -119,7 +119,7 @@ public static class FtirSpectrum
         if (name == "Emeraude" || name == "Goshenite" || name == "Morganite" || name == "Heliodore" || name == "Beryl_Rouge" || name == "Pezzottaite" || name == "Aigue_Marine" || name == "Beryl_Bleu") return HostGroup.Beryl;
         if (name.StartsWith("Quartz") || name == "Amethyste" || name == "Ametrine" || name == "Citrine" || name == "Prasiolite") return HostGroup.Quartz;
         if (name.StartsWith("Diamant")) return HostGroup.Diamond;
-        if (name == "CZ" || name == "Moissanite_Synthetique" || name == "YAG" || name == "GGG") return HostGroup.DiamondImitation;
+        if (name == "CZ" || name == "Moissanite_Synthetique" || name == "YAG" || name == "GGG" || name == "Titanate_Strontium") return HostGroup.DiamondImitation;
         if (name == "Verre" || name == "Obsidienne") return HostGroup.Glass;
         if (name.StartsWith("Grenat")) return HostGroup.Garnet;
         if (name.StartsWith("Ivoire") || name == "Defense_Narval" || name == "Ecaille_Tortue" || name == "Corne_Rhinoceros") return HostGroup.Organic;

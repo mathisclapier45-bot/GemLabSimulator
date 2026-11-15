@@ -120,6 +120,8 @@ public static class LapidaryCatalog
     public static bool IsCabochonOnly(GemDefinition def)
     {
         if (def == null) return false;
+        // The black tourmaline is opaque, but it is cut in facets all the same.
+        if (def.name == "Tourmaline_Schorl") return false;
         if (def.opticalCharacterClass == GemDefinition.OpticalCharacterClass.Opaque) return true;
         if (!string.IsNullOrEmpty(def.transparency) && def.transparency.ToLowerInvariant().Contains("opaque")) return true;
         foreach (var prefix in OrganicPrefixes)
@@ -150,6 +152,7 @@ public static class LapidaryCatalog
         if (gem == null) return "";
         if (IsDiamond(gem.Definition)) return "Je ne taille pas les diamants. Adressez-vous aux diamantaires.";
         if (gem.IsClientStone) return "Cette pierre appartient à un client : je ne taille que vos propres spécimens.";
+        if (gem.Definition != null && gem.Definition.roughOnly) return "Cette matière est trop tendre ou trop fragile pour être taillée : elle se garde brute, en cristal ou en fragment.";
         if (!gem.IsRough) return "Cette pierre est déjà taillée.";
         if (!gem.IsIdentified) return "Je ne taille pas une pierre dont j'ignore la nature. Identifiez-la d'abord.";
         return null;

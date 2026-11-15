@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Selenite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "S\xE9l\xE9nite"
+  description: "La vari\xE9t\xE9 transparente du gypse : de grands cristaux limpides,
+    clivables en lames, d'un \xE9clat nacr\xE9. Si tendre qu'on ne la taille pas
+    ; on la garde en cristal."
+  icon: {fileID: 21300000, guid: 8ce94822a2a064055bddef7056edca2b, type: 3}
+  roughIcon: {fileID: 21300000, guid: 6a4af1615bb7f466bb4017064b55a07d, type: 3}
+  iconColor: {r: 0.88, g: 0.92, b: 0.96, a: 1}
+  iconFacetColor: {r: 0.98, g: 0.99, b: 1, a: 1}
+  refractiveIndex: 1.52
+  density: 2.32
+  hardness: 2
+  lengthMm: 20
+  widthMm: 12
+  depthMm: 8
+  weightCarats: 15
+  luster: "Nacr\xE9 \xE0 vitreux"
+  color: Incolore
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: "Transparent \xE0 translucide"
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: "Faible, blanch\xE2tre."
+  fluorescenceShortWave: Inerte.
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  opticalCharacterClass: 2
+  birefringence: 0.01
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Clivages parfaits, lames minces, petites bulles et cavit\xE9s \xE0
+    liquide ; stries parall\xE8les."
+  interferenceFigure: "Figure d'interf\xE9rence biaxiale."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 3
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  roughOnly: 1
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: Mexique (Naica)
+    rarityWeight: 30
+    valueMultiplier: 1.2
+    inclusionOverride: 
+  - name: Maroc
+    rarityWeight: 25
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Espagne
+    rarityWeight: 25
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: "\xC9tats-Unis"
+    rarityWeight: 20
+    valueMultiplier: 0.9
+    inclusionOverride: 

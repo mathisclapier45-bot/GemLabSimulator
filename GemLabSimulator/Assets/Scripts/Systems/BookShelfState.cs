@@ -29,21 +29,34 @@ public class BookShelfState : MonoBehaviour
 
     public static bool Owns(string id) => Instance != null && Instance.owned.Contains(id);
 
+
     public bool TryBuy(string id, out string message)
     {
         message = null;
-        var info = BookCatalog.Find(id);
-        if (info == null) return false;
+        var poster = PosterCatalog.IsPoster(id);
+        var price = 0;
+        if (poster)
+        {
+            var posterInfo = PosterCatalog.Find(id);
+            if (posterInfo == null) return false;
+            price = posterInfo.Price;
+        }
+        else
+        {
+            var info = BookCatalog.Find(id);
+            if (info == null) return false;
+            price = info.Price;
+        }
         if (owned.Contains(id))
         {
-            message = "Vous possédez déjà ce livre.";
+            message = poster ? "Vous possédez déjà ce poster." : "Vous possédez déjà ce livre.";
             return false;
         }
         var wallet = PlayerWallet.Instance;
         if (wallet == null) return false;
-        if (!wallet.TrySpend(info.Price))
+        if (!wallet.TrySpend(price))
         {
-            message = $"Il vous faut {info.Price:N0} € pour acheter ce livre.";
+            message = $"Il vous faut {price:N0} € pour acheter {(poster ? "ce poster" : "ce livre")}.";
             return false;
         }
 
@@ -61,7 +74,7 @@ public class BookShelfState : MonoBehaviour
     public void Load(List<string> ids, bool guideOnly)
     {
         owned.Clear();
-        if (ids != null) foreach (var id in ids) if (BookCatalog.Find(id) != null) owned.Add(id);
+        if (ids != null) foreach (var id in ids) if (BookCatalog.Find(id) != null || PosterCatalog.Find(id) != null) owned.Add(id);
         if (guideOnly) owned.Add(BookCatalog.Guide);
         OnChanged?.Invoke();
     }

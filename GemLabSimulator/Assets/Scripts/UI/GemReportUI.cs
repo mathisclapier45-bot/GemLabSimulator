@@ -13,7 +13,7 @@ public class GemReportUI : MonoBehaviour
     private const float PageWidth = 1040f;
     private const float PageHeight = 660f;
 
-    private static readonly Color PaperColor = new Color(0.975f, 0.968f, 0.945f, 1f);
+    private static readonly Color PaperColor = ReportStyle.Paper;
     private static readonly Color Ink = new Color(0.13f, 0.13f, 0.16f, 1f);
     private static readonly Color Gold = new Color(0.66f, 0.55f, 0.34f, 1f);
     private static readonly Color Quiet = new Color(0.45f, 0.45f, 0.50f, 1f);
@@ -113,8 +113,7 @@ public class GemReportUI : MonoBehaviour
         var parent = sheet.transform;
 
         // Frame.
-        RuntimeUIKit.MakeBox("FrameTop", parent, new Vector2(0f, 0f), new Vector2(PageWidth, 6f), Gold, false);
-        RuntimeUIKit.MakeBox("FrameBottom", parent, new Vector2(0f, -PageHeight + 6f), new Vector2(PageWidth, 6f), Gold, false);
+        ReportStyle.DrawFrame(parent, PageWidth, PageHeight, 8f, gem);
 
         // Header: gold emblem (a brilliant cut) and the name of the laboratory.
         var emblem = new GameObject("Emblem", typeof(RectTransform), typeof(Image));
@@ -238,8 +237,7 @@ public class GemReportUI : MonoBehaviour
         var parent = sheet.transform;
         var def = gem.Definition;
 
-        RuntimeUIKit.MakeBox("FrameTop", parent, new Vector2(0f, 0f), new Vector2(PageWidth, 6f), Gold, false);
-        RuntimeUIKit.MakeBox("FrameBottom", parent, new Vector2(0f, -PageHeight + 6f), new Vector2(PageWidth, 6f), Gold, false);
+        ReportStyle.DrawFrame(parent, PageWidth, PageHeight, 8f, gem);
 
         var emblem = new GameObject("Emblem", typeof(RectTransform), typeof(Image));
         emblem.transform.SetParent(parent, false);

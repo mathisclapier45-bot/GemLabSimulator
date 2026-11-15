@@ -1,18 +1,18 @@
 {
   "meta": {
     "game": "GemLab Simulator",
-    "generated": "2026-11-14",
+    "generated": "2026-11-15",
     "generator": "tools/export_game_data.py",
     "language": "fr",
     "note": "Données lues dans le projet Unity (pierres, outils, traitements, livres, lieux). À régénérer après un changement : python3 tools/export_game_data.py",
     "counts": {
-      "species": 99,
-      "origins": 94,
-      "crystal_habits": 32,
+      "species": 120,
+      "origins": 112,
+      "crystal_habits": 34,
       "instruments": 26,
       "bag_items": 16,
       "shop_items": 16,
-      "books": 4,
+      "books": 6,
       "dealership_items": 2,
       "auction_themes": 14
     }
@@ -57,6 +57,7 @@
       "baseValue": 30,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -133,6 +134,7 @@
       "baseValue": 60,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -228,6 +230,7 @@
       "baseValue": 45,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -291,6 +294,7 @@
       "baseValue": 20,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -359,6 +363,7 @@
       "baseValue": 35,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -421,6 +426,7 @@
       "baseValue": 30,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -502,6 +508,7 @@
       "baseValue": 20,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -604,6 +611,7 @@
       "baseValue": 90,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -681,6 +689,7 @@
       "baseValue": 1200,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": true,
       "tunnelMinPrice": 10000,
       "origins": [
@@ -745,6 +754,7 @@
       "baseValue": 8,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -757,6 +767,157 @@
       ],
       "habits": [],
       "fluorescenceFromJson": true
+    },
+    {
+      "id": "Calcite",
+      "displayName": "Calcite",
+      "description": "Le carbonate de calcium : tendre, clivable en rhomboèdres parfaits, avec un net dédoublement de l'image (double réfraction). Elle bouillonne à l'acide.",
+      "iconColor": "#E6D18C",
+      "iconFacetColor": "#FAF0C7",
+      "refractiveIndex": 1.55,
+      "density": 2.71,
+      "hardness": 3,
+      "lengthMm": 15,
+      "widthMm": 12,
+      "depthMm": 8,
+      "weightCarats": 10,
+      "luster": "Vitreux",
+      "color": "Incolore à jaune miel",
+      "shape": "Ovale",
+      "cutStyle": "Brillant",
+      "transparency": "Transparent à translucide",
+      "pleochroic": true,
+      "pleochroicDescription": "Faible, selon la couleur.",
+      "fluorescenceLongWave": "Rouge, rose ou orangé (manganèse), parfois bleu ou blanc, selon l'échantillon.",
+      "fluorescenceShortWave": "Plus vive en onde courte, rouge à rose.",
+      "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+      "opticalCharacterClassName": "Uniaxe",
+      "opticalCharacterClass": 1,
+      "birefringence": 0.172,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Clivage rhomboédrique parfait, plans de macle polysynthétique, cavités à deux phases.",
+      "interferenceFigure": "Figure d'interférence uniaxiale.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 4,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 1,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Mexique",
+          "rarityWeight": 30,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Islande",
+          "rarityWeight": 20,
+          "valueMultiplier": 1.3,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Brésil",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Chine",
+          "rarityWeight": 25,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "rhombohedron",
+          "weight": 100
+        }
+      ],
+      "fluorescenceFromJson": true
+    },
+    {
+      "id": "Celestine",
+      "displayName": "Célestine",
+      "description": "Un sulfate de strontium d'un bleu pâle comme le ciel. Fragile et clivable, elle se garde en cristal ou en fragment plutôt que de se tailler.",
+      "iconColor": "#A8CCEB",
+      "iconFacetColor": "#E0F0FA",
+      "refractiveIndex": 1.625,
+      "density": 3.96,
+      "hardness": 3.25,
+      "lengthMm": 10,
+      "widthMm": 8,
+      "depthMm": 5,
+      "weightCarats": 3,
+      "luster": "Vitreux",
+      "color": "Bleu pâle",
+      "shape": "Ovale",
+      "cutStyle": "Brillant",
+      "transparency": "Transparent à translucide",
+      "pleochroic": true,
+      "pleochroicDescription": "Faible : bleu pâle / incolore.",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+      "opticalCharacterClassName": "Biaxe",
+      "opticalCharacterClass": 2,
+      "birefringence": 0.011,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Clivages parfaits, inclusions liquides, petits cristaux de soufre ou de calcite.",
+      "interferenceFigure": "Figure d'interférence biaxiale.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 18,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 1,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Madagascar",
+          "rarityWeight": 35,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Mexique",
+          "rarityWeight": 20,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Italie (Sicile)",
+          "rarityWeight": 25,
+          "valueMultiplier": 1.1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Pologne",
+          "rarityWeight": 20,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "ortho_prism",
+          "weight": 100
+        }
+      ]
     },
     {
       "id": "Chrysoberyl",
@@ -804,6 +965,7 @@
       "baseValue": 45,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -910,6 +1072,7 @@
       "baseValue": 250,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -987,6 +1150,7 @@
       "baseValue": 15,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -1055,6 +1219,7 @@
       "baseValue": 110,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -1161,6 +1326,7 @@
       "baseValue": 150,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -1285,6 +1451,7 @@
       "baseValue": 4,
       "forcedSynthetic": true,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -1339,6 +1506,7 @@
       "baseValue": 4,
       "forcedSynthetic": true,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -1352,6 +1520,81 @@
       "habits": [],
       "chelseaFromJson": true,
       "fluorescenceFromJson": true
+    },
+    {
+      "id": "Cornaline",
+      "displayName": "Cornaline",
+      "description": "Une calcédoine orange à rouge sang, colorée par l'oxyde de fer. Translucide, vitreuse, on la polit en cabochon ; on la chauffe souvent pour la rougir.",
+      "iconColor": "#E06124",
+      "iconFacetColor": "#F59E5C",
+      "refractiveIndex": 1.535,
+      "density": 2.6,
+      "hardness": 6.75,
+      "lengthMm": 12,
+      "widthMm": 9,
+      "depthMm": 5,
+      "weightCarats": 6,
+      "luster": "Vitreux à cireux",
+      "color": "Orange à rouge",
+      "shape": "Ovale",
+      "cutStyle": "Cabochon",
+      "transparency": "Translucide",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+      "opticalCharacterClassName": "Uniaxe",
+      "opticalCharacterClass": 1,
+      "birefringence": 0,
+      "isQuartzFamily": true,
+      "isPolycrystalline": true,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Fines bandes de couleur, nuages d'oxyde de fer ; structure fibreuse de calcédoine.",
+      "interferenceFigure": "Aucune figure d'interférence exploitable.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 8,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Inde",
+          "rarityWeight": 40,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Brésil",
+          "rarityWeight": 25,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Uruguay",
+          "rarityWeight": 20,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Madagascar",
+          "rarityWeight": 15,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "quartz_prism",
+          "weight": 100
+        }
+      ]
     },
     {
       "id": "Corne_Rhinoceros",
@@ -1392,6 +1635,7 @@
       "baseValue": 1100,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": true,
       "tunnelMinPrice": 2000,
       "origins": [
@@ -1443,6 +1687,7 @@
       "baseValue": 700,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": true,
       "tunnelMinPrice": 2000,
       "origins": [
@@ -1501,6 +1746,7 @@
       "baseValue": 500,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -1580,6 +1826,7 @@
       "baseValue": 40,
       "forcedSynthetic": true,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -1636,6 +1883,7 @@
       "baseValue": 45,
       "forcedSynthetic": true,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -1705,6 +1953,7 @@
       "baseValue": 30,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -1773,6 +2022,7 @@
       "baseValue": 450,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": true,
       "tunnelMinPrice": 2000,
       "origins": [
@@ -1856,6 +2106,7 @@
       "baseValue": 180,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -1971,6 +2222,7 @@
       "baseValue": 15,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -2058,6 +2310,7 @@
       "baseValue": 20,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -2135,6 +2388,7 @@
       "baseValue": 22,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -2222,6 +2476,7 @@
       "baseValue": 45,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -2287,6 +2542,7 @@
       "baseValue": 18,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -2374,6 +2630,7 @@
       "baseValue": 15,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -2461,6 +2718,7 @@
       "baseValue": 5,
       "forcedSynthetic": true,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -2512,6 +2770,7 @@
       "baseValue": 15,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -2619,6 +2878,7 @@
       "baseValue": 25,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -2700,6 +2960,7 @@
       "baseValue": 150,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -2780,6 +3041,7 @@
       "baseValue": 40,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -2852,6 +3114,7 @@
       "baseValue": 18,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -2937,6 +3200,7 @@
       "baseValue": 45,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -3010,6 +3274,7 @@
       "baseValue": 30,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -3096,6 +3361,7 @@
       "baseValue": 38,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -3187,6 +3453,7 @@
       "baseValue": 55,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -3272,6 +3539,7 @@
       "baseValue": 120,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -3302,6 +3570,169 @@
         {
           "habit": "trapezohedron",
           "weight": 10
+        }
+      ]
+    },
+    {
+      "id": "Grenat_Uvarovite",
+      "displayName": "Uvarovite",
+      "description": "Le grenat vert émeraude du chrome. Il ne forme que de minuscules cristaux, serrés en croûte scintillante : on le garde en druse, jamais en pierre taillée.",
+      "iconColor": "#1F8C40",
+      "iconFacetColor": "#66CC80",
+      "refractiveIndex": 1.86,
+      "density": 3.77,
+      "hardness": 7.25,
+      "lengthMm": 10,
+      "widthMm": 8,
+      "depthMm": 4,
+      "weightCarats": 3,
+      "luster": "Vitreux",
+      "color": "Vert émeraude",
+      "shape": "Ovale",
+      "cutStyle": "Brillant",
+      "transparency": "Translucide",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Isotrope (monoréfringent).",
+      "opticalCharacterClassName": "Isotrope",
+      "opticalCharacterClass": 0,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Spectre du chrome : raies fines vers 690 nm.",
+      "spectrumLines": [
+        {
+          "wavelengthNm": 690,
+          "widthNm": 3,
+          "depth": 0.4,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 640,
+          "widthNm": 10,
+          "depth": 0.3,
+          "edgeNm": 0
+        }
+      ],
+      "inclusions": "Druse de minuscules cristaux ; pas de cristaux assez gros pour la taille.",
+      "interferenceFigure": "Aucune figure d'interférence exploitable.",
+      "chelseaFilterReaction": "Rouge faible à nul.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 60,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 1,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Russie (Oural)",
+          "rarityWeight": 40,
+          "valueMultiplier": 1.1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Finlande",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Afrique du Sud",
+          "rarityWeight": 20,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Turquie",
+          "rarityWeight": 15,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "druse",
+          "weight": 100
+        }
+      ]
+    },
+    {
+      "id": "Gypse",
+      "displayName": "Gypse",
+      "description": "Un sulfate de calcium hydraté, le minéral du plâtre : on le raye à l'ongle. Blanc, soyeux ou nacré, il ne se taille pas et se garde en morceau.",
+      "iconColor": "#EBE6D6",
+      "iconFacetColor": "#FAF7F0",
+      "refractiveIndex": 1.525,
+      "density": 2.31,
+      "hardness": 2,
+      "lengthMm": 18,
+      "widthMm": 14,
+      "depthMm": 9,
+      "weightCarats": 12,
+      "luster": "Nacré à soyeux",
+      "color": "Blanc à incolore",
+      "shape": "Ovale",
+      "cutStyle": "Cabochon",
+      "transparency": "Translucide",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+      "opticalCharacterClassName": "Biaxe",
+      "opticalCharacterClass": 2,
+      "birefringence": 0.01,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Clivages parfaits, aspect fibreux ou massif ; aiguilles et paillettes.",
+      "interferenceFigure": "Figure d'interférence biaxiale.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 2,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 1,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Mexique",
+          "rarityWeight": 30,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Espagne",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Maroc",
+          "rarityWeight": 25,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "États-Unis",
+          "rarityWeight": 20,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "monoclinic_prism",
+          "weight": 100
         }
       ]
     },
@@ -3344,6 +3775,7 @@
       "baseValue": 25,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -3426,6 +3858,7 @@
       "baseValue": 10,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -3467,7 +3900,7 @@
       "color": "Bleu-violet",
       "shape": "Ovale",
       "cutStyle": "Mixte",
-      "transparency": "Transparent à translucide",
+      "transparency": "Transparent",
       "pleochroic": true,
       "pleochroicDescription": "Bleu / Violet / Jaune pâle selon les trois axes (très marqué : la couleur de base peut changer complètement selon la direction d'observation).",
       "fluorescenceLongWave": "Aucune fluorescence notable.",
@@ -3526,6 +3959,7 @@
       "baseValue": 25,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -3640,6 +4074,7 @@
       "baseValue": 40,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -3717,6 +4152,7 @@
       "baseValue": 600,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": true,
       "tunnelMinPrice": 2000,
       "origins": [
@@ -3768,6 +4204,7 @@
       "baseValue": 500,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": true,
       "tunnelMinPrice": 2000,
       "origins": [
@@ -3819,6 +4256,7 @@
       "baseValue": 500,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": true,
       "tunnelMinPrice": 2000,
       "origins": [
@@ -3870,6 +4308,7 @@
       "baseValue": 480,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": true,
       "tunnelMinPrice": 2000,
       "origins": [
@@ -3877,6 +4316,70 @@
           "name": "Arctique (Alaska, Canada)",
           "rarityWeight": 100,
           "valueMultiplier": 1,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": []
+    },
+    {
+      "id": "Ivoire_Vegetal",
+      "displayName": "Ivoire végétal (corozo)",
+      "description": "La noix d'un palmier d'Amérique du Sud, blanche et dure comme l'ivoire. On la sculpte en boutons et en petits objets : c'est un fragment de graine, pas une pierre taillée.",
+      "iconColor": "#E6DBBD",
+      "iconFacetColor": "#F7F2E0",
+      "refractiveIndex": 1.54,
+      "density": 1.4,
+      "hardness": 2.5,
+      "lengthMm": 16,
+      "widthMm": 12,
+      "depthMm": 8,
+      "weightCarats": 10,
+      "luster": "Mat à cireux",
+      "color": "Blanc crème",
+      "shape": "Ovale",
+      "cutStyle": "Cabochon",
+      "transparency": "Opaque à translucide",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Bleuté faible, parfois inerte.",
+      "fluorescenceShortWave": "Inerte.",
+      "opticalCharacter": "Isotrope (monoréfringent).",
+      "opticalCharacterClassName": "Isotrope",
+      "opticalCharacterClass": 0,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": true,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Fin réseau de petits pores, sans lignes de Schreger ; structure cellulaire régulière visible à la loupe.",
+      "interferenceFigure": "Aucune figure d'interférence exploitable.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 6,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 1,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Équateur",
+          "rarityWeight": 50,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Colombie",
+          "rarityWeight": 30,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Panama",
+          "rarityWeight": 20,
+          "valueMultiplier": 0.9,
           "inclusionOverride": ""
         }
       ],
@@ -3928,6 +4431,7 @@
       "baseValue": 120,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -3987,6 +4491,7 @@
       "baseValue": 40,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -4012,6 +4517,76 @@
           "name": "Russie",
           "rarityWeight": 15,
           "valueMultiplier": 1,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": []
+    },
+    {
+      "id": "Jais",
+      "displayName": "Jais",
+      "description": "Un bois fossile devenu lignite, d'un noir profond, chaud au toucher et léger. On le polit en cabochons et on le sculpte ; chauffé à l'aiguille, il sent le charbon.",
+      "iconColor": "#0F0F12",
+      "iconFacetColor": "#4C4C57",
+      "refractiveIndex": 1.66,
+      "density": 1.32,
+      "hardness": 3,
+      "lengthMm": 14,
+      "widthMm": 10,
+      "depthMm": 5,
+      "weightCarats": 6,
+      "luster": "Résineux à vitreux",
+      "color": "Noir",
+      "shape": "Ovale",
+      "cutStyle": "Cabochon",
+      "transparency": "Opaque",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Opaque : aucune lecture optique en lumière transmise.",
+      "opticalCharacterClassName": "Opaque",
+      "opticalCharacterClass": 3,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": true,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Cassure conchoïdale, parfois fibres de bois fossile ; pas de pores visibles.",
+      "interferenceFigure": "Aucune figure d'interférence exploitable.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant ; s'électrise par frottement.",
+      "baseValue": 25,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Royaume-Uni (Whitby)",
+          "rarityWeight": 40,
+          "valueMultiplier": 1.3,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Espagne",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "France (Aude)",
+          "rarityWeight": 20,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Turquie",
+          "rarityWeight": 15,
+          "valueMultiplier": 0.9,
           "inclusionOverride": ""
         }
       ],
@@ -4056,6 +4631,7 @@
       "baseValue": 35,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -4125,6 +4701,7 @@
       "baseValue": 45,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -4188,6 +4765,7 @@
       "baseValue": 20,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -4251,6 +4829,7 @@
       "baseValue": 70,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -4270,6 +4849,76 @@
           "name": "Russie (Baïkal)",
           "rarityWeight": 10,
           "valueMultiplier": 1.2,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": []
+    },
+    {
+      "id": "Malachite",
+      "displayName": "Malachite",
+      "description": "Un carbonate de cuivre vert, rubané en cercles concentriques de verts clairs et sombres. Opaque et tendre, on la polit en cabochon ou en perles ; elle fait effervescence à l'acide.",
+      "iconColor": "#1A8C4C",
+      "iconFacetColor": "#66CC85",
+      "refractiveIndex": 1.88,
+      "density": 3.8,
+      "hardness": 3.75,
+      "lengthMm": 14,
+      "widthMm": 11,
+      "depthMm": 6,
+      "weightCarats": 10,
+      "luster": "Soyeux à vitreux",
+      "color": "Vert rubané",
+      "shape": "Ovale",
+      "cutStyle": "Cabochon",
+      "transparency": "Opaque",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Opaque : aucune lecture optique en lumière transmise.",
+      "opticalCharacterClassName": "Opaque",
+      "opticalCharacterClass": 3,
+      "birefringence": 0.25,
+      "isQuartzFamily": false,
+      "isPolycrystalline": true,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Bandes concentriques vert clair et vert sombre, texture fibreuse soyeuse ; cavités botryoïdales.",
+      "interferenceFigure": "Aucune figure d'interférence exploitable.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 18,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Congo (RDC)",
+          "rarityWeight": 40,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Russie (Oural)",
+          "rarityWeight": 25,
+          "valueMultiplier": 1.2,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Zambie",
+          "rarityWeight": 20,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Australie",
+          "rarityWeight": 15,
+          "valueMultiplier": 0.9,
           "inclusionOverride": ""
         }
       ],
@@ -4314,11 +4963,64 @@
       "baseValue": 10,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
         {
           "name": "Fabrication industrielle",
+          "rarityWeight": 100,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": []
+    },
+    {
+      "id": "Moldavite",
+      "displayName": "Moldavite",
+      "description": "Un verre naturel vert bouteille, né de l'impact d'une météorite il y a quinze millions d'années. Brute, sa surface est sculptée de plis ; elle se facette en pierre vert bouteille.",
+      "iconColor": "#4C752E",
+      "iconFacetColor": "#9EBD66",
+      "refractiveIndex": 1.5,
+      "density": 2.35,
+      "hardness": 5.5,
+      "lengthMm": 14,
+      "widthMm": 10,
+      "depthMm": 6,
+      "weightCarats": 6,
+      "luster": "Vitreux",
+      "color": "Vert bouteille à vert olive",
+      "shape": "Ovale",
+      "cutStyle": "Mixte",
+      "transparency": "Transparent",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Isotrope (monoréfringent).",
+      "opticalCharacterClassName": "Isotrope",
+      "opticalCharacterClass": 0,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Fines bulles sphériques, filaments de verre de silice (lechatelierite), structure d'écoulement ; surface sculptée.",
+      "interferenceFigure": "Aucune figure d'interférence exploitable.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 40,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "République tchèque",
           "rarityWeight": 100,
           "valueMultiplier": 1,
           "inclusionOverride": ""
@@ -4365,6 +5067,7 @@
       "baseValue": 40,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -4447,6 +5150,7 @@
       "baseValue": 5,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -4466,6 +5170,70 @@
           "name": "Islande",
           "rarityWeight": 20,
           "valueMultiplier": 1.1,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": []
+    },
+    {
+      "id": "Obsidienne_Flocons",
+      "displayName": "Obsidienne flocons de neige",
+      "description": "Un verre volcanique noir piqué de taches blanches rayonnantes, comme des flocons : des sphérules de cristobalite. On le polit en cabochon.",
+      "iconColor": "#14141A",
+      "iconFacetColor": "#808594",
+      "refractiveIndex": 1.5,
+      "density": 2.4,
+      "hardness": 5.25,
+      "lengthMm": 14,
+      "widthMm": 11,
+      "depthMm": 5,
+      "weightCarats": 8,
+      "luster": "Vitreux",
+      "color": "Noir à flocons blancs",
+      "shape": "Ovale",
+      "cutStyle": "Cabochon",
+      "transparency": "Translucide à opaque",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Isotrope (monoréfringent).",
+      "opticalCharacterClassName": "Isotrope",
+      "opticalCharacterClass": 0,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Sphérulites blanches de cristobalite en gerbes, dans un verre noir ; cassure conchoïdale.",
+      "interferenceFigure": "Aucune figure d'interférence exploitable.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 8,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Mexique",
+          "rarityWeight": 40,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "États-Unis (Utah)",
+          "rarityWeight": 35,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Islande",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
           "inclusionOverride": ""
         }
       ],
@@ -4510,6 +5278,7 @@
       "baseValue": 55,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -4573,6 +5342,7 @@
       "baseValue": 35,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -4636,6 +5406,7 @@
       "baseValue": 90,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -4694,6 +5465,7 @@
       "baseValue": 22,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -4763,6 +5535,7 @@
       "baseValue": 320,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -4854,6 +5627,7 @@
       "baseValue": 1500,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": true,
       "tunnelMinPrice": 10000,
       "origins": [
@@ -4937,6 +5711,7 @@
       "baseValue": 35,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5006,6 +5781,7 @@
       "baseValue": 160,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5070,6 +5846,7 @@
       "baseValue": 420,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5134,6 +5911,7 @@
       "baseValue": 60,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5200,6 +5978,7 @@
       "baseValue": 25,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5268,6 +6047,7 @@
       "baseValue": 18,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5290,6 +6070,76 @@
           "weight": 100
         }
       ]
+    },
+    {
+      "id": "Prehnite",
+      "displayName": "Préhnite",
+      "description": "Un silicate d'un vert tendre qui rappelle la pomme, translucide, aux reflets nacrés. On la polit surtout en cabochon.",
+      "iconColor": "#9EC76B",
+      "iconFacetColor": "#D6EBA8",
+      "refractiveIndex": 1.62,
+      "density": 2.88,
+      "hardness": 6.25,
+      "lengthMm": 10,
+      "widthMm": 8,
+      "depthMm": 5,
+      "weightCarats": 5,
+      "luster": "Vitreux à nacré",
+      "color": "Vert pomme à jaune-vert",
+      "shape": "Ovale",
+      "cutStyle": "Cabochon",
+      "transparency": "Translucide",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+      "opticalCharacterClassName": "Biaxe",
+      "opticalCharacterClass": 2,
+      "birefringence": 0.03,
+      "isQuartzFamily": false,
+      "isPolycrystalline": true,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Agrégats fibreux rayonnants en gerbes, petites cavités, aspect finement granuleux.",
+      "interferenceFigure": "Figure d'interférence biaxiale.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 12,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Afrique du Sud",
+          "rarityWeight": 30,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Mali",
+          "rarityWeight": 25,
+          "valueMultiplier": 1.1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Australie",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Chine",
+          "rarityWeight": 20,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": []
     },
     {
       "id": "Pyrite",
@@ -5330,6 +6180,7 @@
       "baseValue": 8,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5402,6 +6253,7 @@
       "baseValue": 15,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5470,6 +6322,7 @@
       "baseValue": 10,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5538,6 +6391,7 @@
       "baseValue": 10,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5601,6 +6455,7 @@
       "baseValue": 28,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5669,6 +6524,7 @@
       "baseValue": 22,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5739,6 +6595,7 @@
       "baseValue": 140,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5832,6 +6689,7 @@
       "baseValue": 22,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -5917,6 +6775,7 @@
       "baseValue": 55,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -6002,6 +6861,7 @@
       "baseValue": 90,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -6093,6 +6953,7 @@
       "baseValue": 110,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -6197,6 +7058,7 @@
       "baseValue": 40,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -6282,6 +7144,7 @@
       "baseValue": 65,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -6360,6 +7223,7 @@
       "baseValue": 30,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -6389,6 +7253,81 @@
         }
       ],
       "fluorescenceFromJson": true
+    },
+    {
+      "id": "Selenite",
+      "displayName": "Sélénite",
+      "description": "La variété transparente du gypse : de grands cristaux limpides, clivables en lames, d'un éclat nacré. Si tendre qu'on ne la taille pas ; on la garde en cristal.",
+      "iconColor": "#E0EBF5",
+      "iconFacetColor": "#FAFCFF",
+      "refractiveIndex": 1.52,
+      "density": 2.32,
+      "hardness": 2,
+      "lengthMm": 20,
+      "widthMm": 12,
+      "depthMm": 8,
+      "weightCarats": 15,
+      "luster": "Nacré à vitreux",
+      "color": "Incolore",
+      "shape": "Ovale",
+      "cutStyle": "Cabochon",
+      "transparency": "Transparent à translucide",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Faible, blanchâtre.",
+      "fluorescenceShortWave": "Inerte.",
+      "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+      "opticalCharacterClassName": "Biaxe",
+      "opticalCharacterClass": 2,
+      "birefringence": 0.01,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Clivages parfaits, lames minces, petites bulles et cavités à liquide ; stries parallèles.",
+      "interferenceFigure": "Figure d'interférence biaxiale.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 3,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 1,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Mexique (Naica)",
+          "rarityWeight": 30,
+          "valueMultiplier": 1.2,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Maroc",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Espagne",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "États-Unis",
+          "rarityWeight": 20,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "monoclinic_prism",
+          "weight": 100
+        }
+      ]
     },
     {
       "id": "Serpentine_Bowenite",
@@ -6429,6 +7368,7 @@
       "baseValue": 15,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -6492,6 +7432,7 @@
       "baseValue": 55,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -6511,6 +7452,260 @@
       "habits": [
         {
           "habit": "ortho_prism",
+          "weight": 100
+        }
+      ]
+    },
+    {
+      "id": "Sodalite",
+      "displayName": "Sodalite",
+      "description": "Une roche d'un bleu profond, veinée de blanc, parfois piquée de plages orange sous la lampe UV. Elle ressemble au lapis-lazuli, sans la pyrite.",
+      "iconColor": "#29429E",
+      "iconFacetColor": "#7A94E0",
+      "refractiveIndex": 1.485,
+      "density": 2.27,
+      "hardness": 5.75,
+      "lengthMm": 12,
+      "widthMm": 10,
+      "depthMm": 5,
+      "weightCarats": 8,
+      "luster": "Vitreux",
+      "color": "Bleu profond veiné de blanc",
+      "shape": "Ovale",
+      "cutStyle": "Cabochon",
+      "transparency": "Translucide à opaque",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Plages orange à orange rouge, parfois intenses (hackmanite).",
+      "fluorescenceShortWave": "Orange, plus vive qu'en onde longue.",
+      "opticalCharacter": "Isotrope (monoréfringent).",
+      "opticalCharacterClassName": "Isotrope",
+      "opticalCharacterClass": 0,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": true,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Veines blanches de calcite, masse bleue homogène ; pas de pyrite, contrairement au lapis-lazuli.",
+      "interferenceFigure": "Aucune figure d'interférence exploitable.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 10,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Brésil",
+          "rarityWeight": 30,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Canada (Ontario)",
+          "rarityWeight": 25,
+          "valueMultiplier": 1.1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Namibie",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Inde",
+          "rarityWeight": 20,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [],
+      "fluorescenceFromJson": true
+    },
+    {
+      "id": "Sphalerite",
+      "displayName": "Sphalérite",
+      "description": "Un sulfure de zinc d'une dispersion près de quatre fois celle du diamant : rouge, orange, brun ou miel, d'un éclat adamantin presque métallique. Très tendre et clivable en six directions, elle se taille avec précaution.",
+      "iconColor": "#D1611F",
+      "iconFacetColor": "#F5A659",
+      "refractiveIndex": 2.369,
+      "density": 4.05,
+      "hardness": 3.75,
+      "lengthMm": 7,
+      "widthMm": 6,
+      "depthMm": 4,
+      "weightCarats": 1.5,
+      "luster": "Adamantin à sub-métallique",
+      "color": "Rouge à orange, brun miel",
+      "shape": "Coussin",
+      "cutStyle": "Brillant",
+      "transparency": "Transparent à translucide",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Orange à jaune selon l'échantillon (manganèse).",
+      "fluorescenceShortWave": "Orange à jaune selon l'échantillon (manganèse).",
+      "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
+      "opticalCharacterClassName": "Isotrope",
+      "opticalCharacterClass": 0,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption net ; la couleur vient du fer.",
+      "spectrumLines": "[]",
+      "inclusions": "Clivage dodécaédrique parfait dans six directions, plans de macle, fines inclusions de pyrite et de galène ; aspect très feu.",
+      "interferenceFigure": "Aucune figure d'interférence (matériau isotrope).",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 80,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Espagne (Cantabrie)",
+          "rarityWeight": 35,
+          "valueMultiplier": 1.2,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Mexique",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Pérou",
+          "rarityWeight": 20,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Serbie",
+          "rarityWeight": 10,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "États-Unis",
+          "rarityWeight": 10,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "rhombic_dodecahedron",
+          "weight": 60
+        },
+        {
+          "habit": "octahedron",
+          "weight": 20
+        },
+        {
+          "habit": "cleaved_octahedron",
+          "weight": 20
+        }
+      ]
+    },
+    {
+      "id": "Sphene",
+      "displayName": "Sphène (titanite)",
+      "description": "Une pierre de feu : sa dispersion dépasse celle du diamant et elle lance des éclats rouge orangé sur fond jaune verdâtre. Tendre pour une gemme, elle se manie avec soin.",
+      "iconColor": "#A8B833",
+      "iconFacetColor": "#EBDB73",
+      "refractiveIndex": 1.96,
+      "density": 3.53,
+      "hardness": 5.25,
+      "lengthMm": 7,
+      "widthMm": 5.5,
+      "depthMm": 3.8,
+      "weightCarats": 1.2,
+      "luster": "Adamantin à résineux",
+      "color": "Jaune verdâtre à vert, brun miel",
+      "shape": "Coussin",
+      "cutStyle": "Brillant",
+      "transparency": "Transparent",
+      "pleochroic": true,
+      "pleochroicDescription": "Trichroïsme marqué : jaune, vert, brun orangé (fort).",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+      "opticalCharacterClassName": "Biaxe",
+      "opticalCharacterClass": 2,
+      "birefringence": 0.12,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Bandes fines du didyme (terres rares) vers 580 nm sur certaines pierres.",
+      "spectrumLines": [
+        {
+          "wavelengthNm": 580,
+          "widthNm": 8,
+          "depth": 0.4,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 534,
+          "widthNm": 8,
+          "depth": 0.25,
+          "edgeNm": 0
+        }
+      ],
+      "inclusions": "Plans de macle, fissures, inclusions de rutile et d'apatite ; aspect doublé par la forte biréfringence (dédoublement des arêtes).",
+      "interferenceFigure": "Figure d'interférence biaxiale.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 120,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Madagascar",
+          "rarityWeight": 30,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Brésil",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Pakistan",
+          "rarityWeight": 20,
+          "valueMultiplier": 1.1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Mexique (Chihuahua)",
+          "rarityWeight": 15,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Sri Lanka",
+          "rarityWeight": 10,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "monoclinic_prism",
           "weight": 100
         }
       ]
@@ -6591,6 +7786,7 @@
       "baseValue": 45,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -6688,6 +7884,7 @@
       "baseValue": 90,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -6727,6 +7924,156 @@
       "spectrumFromJson": true,
       "chelseaFromJson": true,
       "fluorescenceFromJson": true
+    },
+    {
+      "id": "Steatite",
+      "displayName": "Stéatite",
+      "description": "Le talc massif, la plus tendre des pierres d'ornement : on la raye à l'ongle et on la sculpte au couteau. Elle est grasse au toucher, gris vert à blanche.",
+      "iconColor": "#9EAD94",
+      "iconFacetColor": "#CCD9C2",
+      "refractiveIndex": 1.57,
+      "density": 2.75,
+      "hardness": 1,
+      "lengthMm": 20,
+      "widthMm": 15,
+      "depthMm": 10,
+      "weightCarats": 20,
+      "luster": "Gras à nacré",
+      "color": "Gris vert à blanc",
+      "shape": "Ovale",
+      "cutStyle": "Cabochon",
+      "transparency": "Translucide à opaque",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+      "opticalCharacterClassName": "Biaxe",
+      "opticalCharacterClass": 2,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": true,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Masse écailleuse très fine, parfois veinée de chlorite ; toucher savonneux.",
+      "interferenceFigure": "Aucune figure d'interférence exploitable.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 3,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 1,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Brésil (Minas Gerais)",
+          "rarityWeight": 40,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Inde",
+          "rarityWeight": 25,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Chine",
+          "rarityWeight": 20,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Canada",
+          "rarityWeight": 15,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": []
+    },
+    {
+      "id": "Taaffeite",
+      "displayName": "Téfféite",
+      "description": "Un minéral d'une rareté extrême, découvert en 1945 dans une boutique de Dublin : pastel mauve, rose ou violet, d'une grande pureté. Les belles pierres taillées sont presque introuvables.",
+      "iconColor": "#B88CCC",
+      "iconFacetColor": "#E0C7F0",
+      "refractiveIndex": 1.72,
+      "density": 3.61,
+      "hardness": 8.25,
+      "lengthMm": 5.5,
+      "widthMm": 4.5,
+      "depthMm": 3,
+      "weightCarats": 0.8,
+      "luster": "Vitreux",
+      "color": "Mauve à violet pâle",
+      "shape": "Ovale",
+      "cutStyle": "Mixte",
+      "transparency": "Transparent",
+      "pleochroic": true,
+      "pleochroicDescription": "Mauve pâle / mauve rosé selon l'axe (faible).",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+      "opticalCharacterClassName": "Uniaxe",
+      "opticalCharacterClass": 1,
+      "birefringence": 0.005,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Spectre faible : légère absorption du fer vers 458 nm.",
+      "spectrumLines": [
+        {
+          "wavelengthNm": 458,
+          "widthNm": 10,
+          "depth": 0.3,
+          "edgeNm": 0
+        }
+      ],
+      "inclusions": "Généralement très propre ; de petites inclusions liquides, des cristaux de spinelle et d'apatite, de rares fissures guéries.",
+      "interferenceFigure": "Figure d'interférence uniaxiale.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 2500,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": true,
+      "tunnelMinPrice": 10000,
+      "origins": [
+        {
+          "name": "Sri Lanka",
+          "rarityWeight": 50,
+          "valueMultiplier": 1.3,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Tanzanie",
+          "rarityWeight": 30,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Birmanie (Mogok)",
+          "rarityWeight": 20,
+          "valueMultiplier": 1.5,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "hex_prism",
+          "weight": 60
+        },
+        {
+          "habit": "hex_bipyramid",
+          "weight": 40
+        }
+      ]
     },
     {
       "id": "Tanzanite",
@@ -6786,6 +8133,7 @@
       "baseValue": 90,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -6802,6 +8150,58 @@
           "weight": 100
         }
       ]
+    },
+    {
+      "id": "Titanate_Strontium",
+      "displayName": "Titanate de strontium (fabulite)",
+      "description": "Un cristal synthétique cubique, d'une dispersion plus de quatre fois celle du diamant : un feu arc-en-ciel intense et un éclat éblouissant. Tendre, il se raye à l'usage. Il peut être de toutes les couleurs.",
+      "iconColor": "#E0E6F0",
+      "iconFacetColor": "#F7FAFF",
+      "refractiveIndex": 2.41,
+      "density": 5.13,
+      "hardness": 5.5,
+      "lengthMm": 6.5,
+      "widthMm": 6.5,
+      "depthMm": 4,
+      "weightCarats": 1.3,
+      "luster": "Adamantin",
+      "color": "Incolore",
+      "shape": "Rond",
+      "cutStyle": "Brillant",
+      "transparency": "Transparent",
+      "pleochroic": false,
+      "pleochroicDescription": "",
+      "fluorescenceLongWave": "Fluorescence variable ou absente.",
+      "fluorescenceShortWave": "Fluorescence variable ou absente.",
+      "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
+      "opticalCharacterClassName": "Isotrope",
+      "opticalCharacterClass": 0,
+      "birefringence": 0,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
+      "spectrumLines": "[]",
+      "inclusions": "Généralement très propre ; bulles de gaz rondes occasionnelles, rayures de polissage fréquentes.",
+      "interferenceFigure": "Aucune figure d'interférence (matériau isotrope).",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 5,
+      "forcedSynthetic": true,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Fabrication industrielle",
+          "rarityWeight": 100,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": []
     },
     {
       "id": "Topaze",
@@ -6842,6 +8242,7 @@
       "baseValue": 35,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -6884,6 +8285,190 @@
         {
           "habit": "ortho_wedge",
           "weight": 50
+        }
+      ]
+    },
+    {
+      "id": "Tourmaline_Indicolite",
+      "displayName": "Tourmaline indicolite",
+      "description": "La tourmaline bleue, du bleu grisé au bleu profond ; les plus vives se rapprochent de la tourmaline de Paraïba, sans avoir son bleu néon.",
+      "iconColor": "#215C9E",
+      "iconFacetColor": "#6B9EDB",
+      "refractiveIndex": 1.635,
+      "density": 3.06,
+      "hardness": 7.25,
+      "lengthMm": 9,
+      "widthMm": 6,
+      "depthMm": 4,
+      "weightCarats": 2,
+      "luster": "Vitreux",
+      "color": "Bleu à bleu verdâtre",
+      "shape": "Rectangle à pans coupés",
+      "cutStyle": "À degrés",
+      "transparency": "Transparent",
+      "pleochroic": true,
+      "pleochroicDescription": "Bleu foncé / bleu verdâtre selon l'axe (fort).",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+      "opticalCharacterClassName": "Uniaxe",
+      "opticalCharacterClass": 1,
+      "birefringence": 0.02,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Forte absorption du rouge et de l'orangé (fer) à partir de 650 nm ; aucune raie nette.",
+      "spectrumLines": [
+        {
+          "wavelengthNm": 670,
+          "widthNm": 70,
+          "depth": 0.6,
+          "edgeNm": 0
+        }
+      ],
+      "inclusions": "Tubes de croissance parallèles à l'axe, inclusions liquides fragmentées, fissures ; couleur souvent zonée.",
+      "interferenceFigure": "Figure d'interférence uniaxiale.",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 90,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Brésil",
+          "rarityWeight": 35,
+          "valueMultiplier": 1.1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Namibie",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Nigeria",
+          "rarityWeight": 20,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Afghanistan",
+          "rarityWeight": 10,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "États-Unis (Maine)",
+          "rarityWeight": 10,
+          "valueMultiplier": 1.2,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "trigonal_prism",
+          "weight": 55
+        },
+        {
+          "habit": "trigonal_pencil",
+          "weight": 45
+        }
+      ]
+    },
+    {
+      "id": "Tourmaline_Melon_Eau",
+      "displayName": "Tourmaline melon d'eau",
+      "description": "Une tourmaline bicolore : le rose d'un côté, le vert de l'autre, comme la chair et la peau d'un melon d'eau. Taillée en tranche, elle montre un cœur rose, un anneau blanc et une bordure verte.",
+      "iconColor": "#D9578F",
+      "iconFacetColor": "#F79EC2",
+      "refractiveIndex": 1.63,
+      "density": 3.06,
+      "hardness": 7.25,
+      "lengthMm": 11,
+      "widthMm": 6,
+      "depthMm": 4.5,
+      "weightCarats": 3,
+      "luster": "Vitreux",
+      "color": "Rose et vert",
+      "shape": "Rectangle à pans coupés",
+      "cutStyle": "À degrés",
+      "transparency": "Transparent",
+      "pleochroic": true,
+      "pleochroicDescription": "Rose / rose foncé d'un côté, vert / vert foncé de l'autre selon l'axe (fort).",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+      "opticalCharacterClassName": "Uniaxe",
+      "opticalCharacterClass": 1,
+      "birefringence": 0.018,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Partie rose : large absorption du vert vers 525 nm ; partie verte : absorption du rouge (fer) vers 660 nm.",
+      "spectrumLines": [
+        {
+          "wavelengthNm": 525,
+          "widthNm": 50,
+          "depth": 0.5,
+          "edgeNm": 0
+        },
+        {
+          "wavelengthNm": 660,
+          "widthNm": 40,
+          "depth": 0.35,
+          "edgeNm": 0
+        }
+      ],
+      "inclusions": "Tubes de croissance parallèles à l'axe (aspect de pluie), inclusions liquides fragmentées, fissures ; zones de couleur bien nettes, du rose au vert, avec parfois un anneau incolore.",
+      "interferenceFigure": "Figure d'interférence uniaxiale.",
+      "chelseaFilterReaction": "Rose pâle dans la partie rose, vert terne dans la partie verte.",
+      "magnetism": "Aucune réaction notable à l'aimant.",
+      "baseValue": 120,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Brésil (Minas Gerais)",
+          "rarityWeight": 50,
+          "valueMultiplier": 1.2,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Namibie",
+          "rarityWeight": 20,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Mozambique",
+          "rarityWeight": 15,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Afghanistan",
+          "rarityWeight": 15,
+          "valueMultiplier": 1.1,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "trigonal_prism",
+          "weight": 55
+        },
+        {
+          "habit": "trigonal_pencil",
+          "weight": 45
         }
       ]
     },
@@ -6933,6 +8518,7 @@
       "baseValue": 900,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -7005,6 +8591,7 @@
       "baseValue": 50,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -7030,6 +8617,91 @@
           "name": "Nigeria",
           "rarityWeight": 15,
           "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        }
+      ],
+      "habits": [
+        {
+          "habit": "trigonal_prism",
+          "weight": 55
+        },
+        {
+          "habit": "trigonal_pencil",
+          "weight": 45
+        }
+      ]
+    },
+    {
+      "id": "Tourmaline_Schorl",
+      "displayName": "Tourmaline schorl",
+      "description": "La tourmaline noire, la plus courante : un silicate de bore au fer, d'un noir profond, opaque. Ses cristaux sont profondément striés dans leur longueur.",
+      "iconColor": "#0F0F0F",
+      "iconFacetColor": "#4C4C4C",
+      "refractiveIndex": 1.655,
+      "density": 3.15,
+      "hardness": 7.25,
+      "lengthMm": 10,
+      "widthMm": 7.5,
+      "depthMm": 4.5,
+      "weightCarats": 3,
+      "luster": "Vitreux",
+      "color": "Noir",
+      "shape": "Ovale",
+      "cutStyle": "Brillant",
+      "transparency": "Opaque",
+      "pleochroic": false,
+      "pleochroicDescription": "Trop sombre pour voir le pléochroïsme : brun très foncé à noir.",
+      "fluorescenceLongWave": "Aucune fluorescence notable.",
+      "fluorescenceShortWave": "Aucune fluorescence notable.",
+      "opticalCharacter": "Opaque : aucune lecture optique en lumière transmise.",
+      "opticalCharacterClassName": "Opaque",
+      "opticalCharacterClass": 3,
+      "birefringence": 0.025,
+      "isQuartzFamily": false,
+      "isPolycrystalline": false,
+      "isThermallyConductiveLikeDiamond": false,
+      "isElectricallyConductive": false,
+      "absorptionSpectrum": "Pierre opaque : aucun spectre d'absorption exploitable.",
+      "spectrumLines": "[]",
+      "inclusions": "Fortes stries verticales sur les cristaux, inclusions de quartz et de feldspath dans la roche encaissante, fissures ; le noir cache presque toute inclusion.",
+      "interferenceFigure": "Aucune figure d'interférence exploitable (pierre opaque).",
+      "chelseaFilterReaction": "Aucune réaction particulière.",
+      "magnetism": "Faiblement attirée par un aimant puissant (elle contient du fer).",
+      "baseValue": 4,
+      "forcedSynthetic": false,
+      "forcedTreatment": false,
+      "roughOnly": 0,
+      "isTunnelExclusive": false,
+      "tunnelMinPrice": 0,
+      "origins": [
+        {
+          "name": "Brésil",
+          "rarityWeight": 30,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Namibie",
+          "rarityWeight": 25,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Pakistan",
+          "rarityWeight": 20,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Népal",
+          "rarityWeight": 15,
+          "valueMultiplier": 1,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "États-Unis (Maine)",
+          "rarityWeight": 10,
+          "valueMultiplier": 1.1,
           "inclusionOverride": ""
         }
       ],
@@ -7083,6 +8755,7 @@
       "baseValue": 35,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -7146,6 +8819,7 @@
       "baseValue": 12,
       "forcedSynthetic": false,
       "forcedTreatment": true,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -7203,6 +8877,7 @@
       "baseValue": 5,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -7255,6 +8930,7 @@
       "baseValue": 5,
       "forcedSynthetic": true,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -7349,6 +9025,7 @@
       "baseValue": 30,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -7413,6 +9090,7 @@
       "baseValue": 15,
       "forcedSynthetic": false,
       "forcedTreatment": false,
+      "roughOnly": 0,
       "isTunnelExclusive": false,
       "tunnelMinPrice": 0,
       "origins": [
@@ -7611,6 +9289,18 @@
       "short": "Prisme monoclinique",
       "name": "Prisme monoclinique",
       "description": "Prisme aplati aux terminaisons obliques : le spodumène (kunzite), les feldspaths, le diopside."
+    },
+    {
+      "id": "druse",
+      "short": "Druse",
+      "name": "Druse de cristaux",
+      "description": "Une croûte de minuscules cristaux serrés sur leur roche, scintillante : la seule forme de l'uvarovite."
+    },
+    {
+      "id": "tourmaline_slice",
+      "short": "Tranche de tourmaline",
+      "name": "Tranche de tourmaline",
+      "description": "Une tranche mince coupée en travers du cristal : un cœur rose, un anneau pâle et une bordure verte, pour la tourmaline melon d'eau."
     },
     {
       "id": "trigonal_prism",
@@ -8855,6 +10545,30 @@
         "shortIntensity": 0.35,
         "phosphorescent": false,
         "variant": false
+      },
+      {
+        "key": "Calcite",
+        "source": "Données du jeu (espèce ajoutée)",
+        "longText": "Rouge, rose ou orangé (manganèse), parfois bleu ou blanc, selon l'échantillon.",
+        "longColor": "#FF5A4A",
+        "longIntensity": 0.6,
+        "shortText": "Plus vive en onde courte, rouge à rose.",
+        "shortColor": "#FF5A4A",
+        "shortIntensity": 0.7,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
+        "key": "Sodalite",
+        "source": "Données du jeu (espèce ajoutée)",
+        "longText": "Plages orange à orange rouge, parfois intenses (hackmanite).",
+        "longColor": "#FF9A3A",
+        "longIntensity": 0.6,
+        "shortText": "Orange, plus vive qu'en onde longue.",
+        "shortColor": "#FF9A3A",
+        "shortIntensity": 0.8,
+        "phosphorescent": false,
+        "variant": false
       }
     ]
   },
@@ -9679,6 +11393,20 @@
       "subtitle": "Vendre sans se faire prendre",
       "price": 700,
       "blurb": "Les règles de la revente : marchés, divulgation des traitements, enchères du samedi, bijoutier, banque et Rapaport, avec leurs chiffres."
+    },
+    {
+      "id": "teintes",
+      "title": "Nuancier des diamants de couleur",
+      "subtitle": "Les 27 teintes et les neuf degrés",
+      "price": 1500,
+      "blurb": "Le cercle des 27 teintes des diamants de couleur et les neuf degrés de ton et de saturation, de Faint à Fancy Vivid, Deep et Dark : la couleur de chaque pierre, sa fréquence et ce qu'elle ajoute au prix."
+    },
+    {
+      "id": "corindons",
+      "title": "Nuancier du corindon",
+      "subtitle": "Rubis, saphirs et leurs grands noms",
+      "price": 1400,
+      "blurb": "Les couleurs du corindon, du rubis rouge au saphir bleu, rose, orange, jaune, vert et violet, sur les huit degrés de la grille, et les noms de la profession : sang de pigeon, bleu royal, padparadscha."
     }
   ],
   "places": {

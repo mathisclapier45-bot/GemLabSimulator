@@ -39,6 +39,36 @@ public static class GemColorSystem
     private static readonly string[] FancyWords = { "Fancy Light", "Fancy Light", "Fancy", "Fancy Intense", "Fancy Vivid", "Fancy Vivid", "Fancy Deep", "Fancy Dark" };
     private static readonly float[] RowValue = { 0.45f, 0.60f, 0.85f, 1.25f, 1.8f, 1.7f, 1.0f, 0.5f };
 
+    // For the books: the colour, the name and the price factor of a row of the Bellerophon grids (0 = light .. 7 = dark).
+    public static int RowCount => RowSaturation.Length;
+
+    public static UnityEngine.Color RowColor(float hue, int row)
+    {
+        row = Mathf.Clamp(row, 0, RowSaturation.Length - 1);
+        return Color.HSVToRGB(Mathf.Repeat(hue, 360f) / 360f, RowSaturation[row], RowBrightness[row]);
+    }
+
+    public static float RowSaturationOf(int row) => RowSaturation[Mathf.Clamp(row, 0, RowSaturation.Length - 1)];
+
+    public static float RowBrightnessOf(int row) => RowBrightness[Mathf.Clamp(row, 0, RowBrightness.Length - 1)];
+
+    public static float RowValueOf(int row) => RowValue[Mathf.Clamp(row, 0, RowValue.Length - 1)];
+
+    public static string RowLabel(int row)
+    {
+        switch (row)
+        {
+            case 0: return "Clair";
+            case 1: return "Pastel";
+            case 2: return "Moyen";
+            case 3: return "Intense";
+            case 4: return "Vif";
+            case 5: return "Vif foncé";
+            case 6: return "Profond";
+            default: return "Sombre";
+        }
+    }
+
     // Hue names of the vivid hue wheel (degrees); red covers 340..15.
     private static readonly (float min, float max, string name)[] HueBands =
     {
@@ -77,11 +107,18 @@ public static class GemColorSystem
         var s = color.Saturation;
         var b = color.Brightness;
 
-        // Neutral: colorless, gray, black.
-        if (s < 0.10f)
+        // Neutral: colorless, gray, black. A coloured diamond of the faintest grade is faintly tinted, not neutral.
+        if (s < 0.10f && !(fancyDiamond && s >= 0.04f))
         {
             var neutral = b < 0.18f ? "Noir" : (b < 0.72f ? "Gris" : "Incolore");
             return new GemColorGrade { Name = neutral, Tone = neutral, Row = ToneRow(0f, b), ValueMultiplier = b < 0.18f ? 0.6f : 0.9f };
+        }
+
+        // A coloured diamond is named after the GIA chart: its hue among the 27, its grade among the nine.
+        if (fancyDiamond)
+        {
+            var gia = GiaDiamondColors.Describe(color);
+            return new GemColorGrade { Name = gia.Name, Tone = GiaDiamondColors.English(gia.Grade), Row = ToneRow(s, b), ValueMultiplier = gia.ValueMultiplier };
         }
 
         var row = ToneRow(s, b);
@@ -159,7 +196,7 @@ public static class GemColorSystem
         switch (speciesName)
         {
             case "Corindon_Rubis":
-                if (InHue(h, 345f, 15f) && s >= 0.80f && b >= 0.80f) return "Sang de pigeon";
+                if (InHue(h, 345f, 15f) && s >= 0.80f && b >= 0.70f) return "Sang de pigeon";
                 break;
             case "Saphir_Bleu":
                 if (h >= 220f && h <= 265f && s >= 0.80f && b >= 0.60f) return "Bleu royal";
@@ -216,16 +253,7 @@ public static class GemColorSystem
     // Rarity of colored diamonds by hue (a pink or blue diamond is worth far more than a yellow one).
     public static float FancyDiamondRarity(GemColorValue c)
     {
-        var h = c.Hue;
-        if (c.Saturation < 0.18f) return 3f;                    // gray
-        if (c.Brightness < 0.72f && h >= 18f && h < 66f) return 2f;             // brown
-        if (InHue(h, 350f, 8f)) return 60f;                      // red
-        if (InHue(h, 300f, 350f)) return 25f;                    // pink, purple-pink
-        if (h >= 195f && h <= 255f) return 40f;                  // blue
-        if (h >= 100f && h <= 180f) return 22f;                  // green
-        if (h >= 255f && h < 300f) return 28f;                   // violet, purple
-        if (h >= 18f && h < 40f) return 9f;                      // orange
-        return 5f;                                               // yellow, orange-yellow
+        return GiaDiamondColors.Describe(c).Rarity;
     }
 
     // ---- Sampling -------------------------------------------------------------------------------------------------
@@ -242,30 +270,47 @@ public static class GemColorSystem
 
     private static readonly Dictionary<string, Mode[]> Profiles = new Dictionary<string, Mode[]>();
 
-    private static readonly Mode[] FancyDiamondModes =
-    {
-        M(0.30f, 48f, 60f, 0.45f, 0.95f, 0.78f, 1.00f),     // yellow
-        M(0.09f, 38f, 48f, 0.60f, 0.95f, 0.82f, 1.00f),     // orange-yellow
-        M(0.18f, 25f, 45f, 0.45f, 0.80f, 0.35f, 0.62f),     // brown
-        M(0.05f, 22f, 36f, 0.70f, 1.00f, 0.75f, 0.95f),     // orange
-        M(0.08f, 335f, 356f, 0.25f, 0.65f, 0.88f, 1.00f),   // pink
-        M(0.03f, 315f, 335f, 0.35f, 0.70f, 0.70f, 0.90f),   // purplish pink
-        M(0.05f, 208f, 230f, 0.30f, 0.55f, 0.45f, 0.80f),   // blue
-        M(0.05f, 130f, 165f, 0.30f, 0.60f, 0.55f, 0.85f),   // green
-        M(0.03f, 70f, 95f, 0.50f, 0.80f, 0.70f, 0.90f),     // yellow-green
-        M(0.05f, 200f, 260f, 0.12f, 0.20f, 0.40f, 0.70f),   // gray
-        M(0.02f, 265f, 290f, 0.30f, 0.60f, 0.40f, 0.70f),   // violet
-        M(0.01f, 352f, 364f, 0.70f, 0.95f, 0.40f, 0.65f),   // red
-    };
-
     public static GemColorValue SampleFancyDiamond(Func<float> random)
     {
-        return Pick(FancyDiamondModes, random);
+        return GiaDiamondColors.Sample(random);
     }
 
-    public static GemColorValue Sample(GemDefinition definition, Func<float> random)
+    public static GemColorValue Sample(GemDefinition definition, Func<float> random, bool synthetic = false)
     {
-        return Pick(ProfileFor(definition), random);
+        return Pick(ProfileFor(definition, synthetic), random);
+    }
+
+    // The materials that are grown in every colour: the synthetic corundums and spinels, YAG, GGG and cubic zirconia.
+    public static bool GrownInAnyColor(GemDefinition definition, bool synthetic)
+    {
+        if (definition == null) return false;
+        var name = definition.name ?? "";
+        if (name == "YAG" || name == "GGG" || name == "CZ" || name == "Titanate_Strontium" || name.StartsWith("Corindon_Synthetique")) return true;
+        if (!synthetic && !definition.forcedSynthetic) return false;
+        return name == "Corindon_Rubis" || name.StartsWith("Saphir_") || name == "Padparadscha" || name.StartsWith("Spinelle");
+    }
+
+    // The palette of a synthetic stone grown in every colour: every hue of the circle, light to dark (and a few colourless ones).
+    private static Mode[] anyColorProfile;
+
+    private static Mode[] AnyColorProfile()
+    {
+        if (anyColorProfile != null) return anyColorProfile;
+        var rows = RowSaturation.Length;
+        var rowWeight = new[] { 0.8f, 1.0f, 1.2f, 1.2f, 1.2f, 1.0f, 0.8f, 0.5f };
+        var modes = new List<Mode>();
+        const int bands = 24;
+        for (var band = 0; band < bands; band++)
+        {
+            var hue = band * 360f / bands;
+            for (var row = 0; row < rows; row++)
+                modes.Add(M(rowWeight[row], hue - 7.5f, hue + 7.5f, Mathf.Clamp01(RowSaturation[row] - 0.10f), Mathf.Clamp01(RowSaturation[row] + 0.07f),
+                    Mathf.Clamp01(RowBrightness[row] - 0.10f), Mathf.Clamp01(RowBrightness[row] + 0.07f)));
+        }
+        // A share of colourless and nearly colourless stones.
+        modes.Add(M(bands * 0.8f, 0f, 360f, 0f, 0.05f, 0.92f, 1f));
+        anyColorProfile = modes.ToArray();
+        return anyColorProfile;
     }
 
     private static GemColorValue Pick(Mode[] modes, Func<float> random)
@@ -291,12 +336,205 @@ public static class GemColorSystem
             Mathf.Lerp(chosen.BrightMin, chosen.BrightMax, random()));
     }
 
-    private static Mode[] ProfileFor(GemDefinition definition)
+    // ---- For the encyclopedia: every colour a species can have ----------------------------------------------------------------
+
+    public struct PaletteCell
+    {
+        public GemColorValue Color;
+        public float Share;           // how often a stone of the species has this colour, among all its colours (0..1)
+        public int Row;               // the row of the grid of the laboratory, 0 (light) .. 7 (dark)
+        public int Step;              // the column: the position in the window of hues of the species
+    }
+
+    // The colours the palette of a species can give, on a grid: its window of hues cut in steps, and the eight rows of the grid of the laboratory. The share is how
+    // likely the colour is for that species (the characteristic and the cloud modes together).
+    public static List<PaletteCell> PaletteCells(GemDefinition definition, int hueSteps = 14, bool synthetic = false)
+    {
+        var cells = new List<PaletteCell>();
+        if (definition == null) return cells;
+        var modes = ProfileFor(definition, synthetic);
+        if (modes == null || modes.Length == 0) return cells;
+
+        // The window of hues: around the circular mean, from the lowest to the highest edge of the modes.
+        float sumX = 0f, sumY = 0f, total = 0f;
+        foreach (var mode in modes)
+        {
+            var radians = (mode.HueMin + mode.HueMax) * 0.5f * Mathf.Deg2Rad;
+            sumX += mode.Weight * Mathf.Cos(radians);
+            sumY += mode.Weight * Mathf.Sin(radians);
+            total += mode.Weight;
+        }
+        var mean = Mathf.Repeat(Mathf.Atan2(sumY, sumX) * Mathf.Rad2Deg, 360f);
+        float lo = 0f, hi = 0f;
+        foreach (var mode in modes)
+        {
+            var centre = Mathf.DeltaAngle(mean, (mode.HueMin + mode.HueMax) * 0.5f);
+            var half = (mode.HueMax - mode.HueMin) * 0.5f;
+            lo = Mathf.Min(lo, centre - half);
+            hi = Mathf.Max(hi, centre + half);
+        }
+        if (hi - lo < 12f) { lo -= 6f; hi += 6f; }
+
+        float weightSum = 0f;
+        for (var step = 0; step < hueSteps; step++)
+        {
+            var offset = Mathf.Lerp(lo, hi, (step + 0.5f) / hueSteps);
+            var hue = Mathf.Repeat(mean + offset, 360f);
+            for (var row = 0; row < RowSaturation.Length; row++)
+            {
+                var saturation = RowSaturation[row];
+                var brightness = RowBrightness[row];
+                var weight = 0f;
+                foreach (var mode in modes)
+                {
+                    var centre = Mathf.DeltaAngle(mean, (mode.HueMin + mode.HueMax) * 0.5f);
+                    var half = (mode.HueMax - mode.HueMin) * 0.5f + (hi - lo) / hueSteps * 0.5f;
+                    if (Mathf.Abs(offset - centre) > half) continue;
+                    if (saturation < mode.SatMin - 0.06f || saturation > mode.SatMax + 0.06f) continue;
+                    if (brightness < mode.BrightMin - 0.06f || brightness > mode.BrightMax + 0.06f) continue;
+                    weight += mode.Weight;
+                }
+                if (weight <= 0f) continue;
+                cells.Add(new PaletteCell { Color = new GemColorValue(hue, saturation, brightness), Share = weight, Row = row, Step = step });
+                weightSum += weight;
+            }
+        }
+
+        // A species with a narrow or neutral palette (a colourless stone) may have no cell on the grid: its own modes stand in.
+        if (cells.Count == 0)
+            foreach (var mode in modes)
+            {
+                cells.Add(new PaletteCell
+                {
+                    Color = new GemColorValue((mode.HueMin + mode.HueMax) * 0.5f, (mode.SatMin + mode.SatMax) * 0.5f, (mode.BrightMin + mode.BrightMax) * 0.5f),
+                    Share = mode.Weight, Row = ToneRow((mode.SatMin + mode.SatMax) * 0.5f, (mode.BrightMin + mode.BrightMax) * 0.5f), Step = cells.Count,
+                });
+                weightSum += mode.Weight;
+            }
+
+        for (var i = 0; i < cells.Count; i++)
+        {
+            var cell = cells[i];
+            cell.Share = weightSum > 0f ? cell.Share / weightSum : 0f;
+            cells[i] = cell;
+        }
+        // From the hue window, then from the light rows to the dark ones.
+        return cells;
+    }
+
+    // What a species can really look like: the window of hues (degrees, from the first to the second going clockwise), then the least and the most saturated and the
+    // darkest and the lightest it reaches. Whatever the palette draws (the characteristic colours and the cloud around them), nothing falls outside this window.
+    // { hue from, hue to, saturation min, saturation max, brightness min, brightness max }
+    private static readonly Dictionary<string, float[]> Limits = new Dictionary<string, float[]>
+    {
+        // Corundum.
+        { "Corindon_Rubis", new[] { 340f, 15f, 0.35f, 1.00f, 0.28f, 1.00f } },
+        { "Saphir_Rose", new[] { 325f, 5f, 0.18f, 0.90f, 0.50f, 1.00f } },
+        { "Padparadscha", new[] { 0f, 40f, 0.20f, 0.90f, 0.50f, 1.00f } },
+        { "Saphir_Orange", new[] { 10f, 42f, 0.22f, 1.00f, 0.50f, 1.00f } },
+        { "Saphir_Jaune", new[] { 38f, 75f, 0.20f, 1.00f, 0.50f, 1.00f } },
+        { "Saphir_Vert", new[] { 70f, 180f, 0.25f, 1.00f, 0.22f, 0.95f } },
+        { "Saphir_Bleu", new[] { 185f, 265f, 0.20f, 1.00f, 0.28f, 1.00f } },
+        { "Saphir_Violet", new[] { 250f, 315f, 0.20f, 1.00f, 0.35f, 1.00f } },
+        // Beryl.
+        { "Emeraude", new[] { 100f, 175f, 0.25f, 1.00f, 0.30f, 0.95f } },
+        { "Aigue_Marine", new[] { 170f, 230f, 0.10f, 0.80f, 0.55f, 1.00f } },
+        { "Beryl_Bleu", new[] { 205f, 245f, 0.50f, 1.00f, 0.25f, 0.90f } },
+        { "Heliodore", new[] { 42f, 78f, 0.15f, 0.95f, 0.70f, 1.00f } },
+        { "Morganite", new[] { 335f, 30f, 0.12f, 0.70f, 0.85f, 1.00f } },
+        { "Beryl_Rouge", new[] { 330f, 15f, 0.40f, 0.95f, 0.30f, 0.90f } },
+        { "Pezzottaite", new[] { 325f, 20f, 0.25f, 0.90f, 0.40f, 1.00f } },
+        // Garnets.
+        { "Grenat_Hessonite", new[] { 18f, 48f, 0.40f, 0.95f, 0.40f, 0.90f } },
+        { "Grenat_Almandin", new[] { 335f, 15f, 0.60f, 1.00f, 0.20f, 0.60f } },
+        { "Grenat_Pyrope", new[] { 345f, 15f, 0.60f, 1.00f, 0.25f, 0.70f } },
+        { "Grenat_Rhodolite", new[] { 320f, 355f, 0.40f, 0.90f, 0.35f, 0.80f } },
+        { "Grenat_Spessartite", new[] { 12f, 40f, 0.60f, 1.00f, 0.50f, 1.00f } },
+        { "Grenat_Malaya", new[] { 5f, 35f, 0.40f, 0.95f, 0.50f, 0.95f } },
+        { "Grenat_Tsavorite", new[] { 110f, 150f, 0.50f, 1.00f, 0.30f, 0.85f } },
+        { "Grenat_Demantoide", new[] { 70f, 140f, 0.45f, 1.00f, 0.40f, 0.95f } },
+        { "Grenat_Hydrogrossulaire", new[] { 90f, 150f, 0.30f, 0.80f, 0.35f, 0.85f } },
+        { "Grenat_Uvarovite", new[] { 125f, 160f, 0.60f, 1.00f, 0.25f, 0.70f } },
+        // Quartz and other transparent stones.
+        { "Amethyste", new[] { 255f, 310f, 0.20f, 0.90f, 0.30f, 0.95f } },
+        { "Citrine", new[] { 28f, 62f, 0.25f, 1.00f, 0.50f, 1.00f } },
+        { "Quartz_Rose", new[] { 320f, 355f, 0.08f, 0.40f, 0.85f, 1.00f } },
+        { "Quartz_Fume", new[] { 20f, 45f, 0.20f, 0.80f, 0.20f, 0.60f } },
+        { "Prasiolite", new[] { 80f, 140f, 0.10f, 0.50f, 0.70f, 1.00f } },
+        { "Peridot", new[] { 60f, 110f, 0.40f, 1.00f, 0.40f, 0.95f } },
+        { "Tanzanite", new[] { 235f, 290f, 0.30f, 1.00f, 0.25f, 0.85f } },
+        { "Kunzite", new[] { 300f, 345f, 0.12f, 0.55f, 0.85f, 1.00f } },
+        { "Iolite", new[] { 225f, 285f, 0.15f, 0.85f, 0.30f, 0.95f } },
+        { "Tourmaline_Paraiba", new[] { 165f, 235f, 0.20f, 1.00f, 0.45f, 1.00f } },
+        { "Chrysoberyl_Alexandrite", new[] { 120f, 185f, 0.25f, 0.80f, 0.25f, 0.75f } },
+        { "Sphene", new[] { 40f, 95f, 0.35f, 1.00f, 0.45f, 1.00f } },
+        { "Taaffeite", new[] { 270f, 325f, 0.10f, 0.60f, 0.60f, 1.00f } },
+        { "Sinhalite", new[] { 25f, 55f, 0.35f, 0.85f, 0.35f, 0.75f } },
+        { "Diopside_Chromifere", new[] { 115f, 160f, 0.50f, 1.00f, 0.20f, 0.55f } },
+        { "Kyanite", new[] { 215f, 245f, 0.30f, 0.80f, 0.35f, 0.90f } },
+        // Fluorite.
+        { "Tourmaline_Indicolite", new[] { 190f, 245f, 0.30f, 0.95f, 0.30f, 0.90f } },
+        { "Tourmaline_Melon_Eau", new[] { 320f, 360f, 0.25f, 0.85f, 0.50f, 1.00f } },
+        { "Sphalerite", new[] { 350f, 60f, 0.45f, 1.00f, 0.15f, 0.90f } },
+        { "Fluorite", new[] { 262f, 295f, 0.20f, 0.90f, 0.35f, 0.95f } },
+        { "Fluorite_Verte", new[] { 100f, 160f, 0.20f, 0.90f, 0.40f, 1.00f } },
+        { "Fluorite_Bleue", new[] { 205f, 245f, 0.30f, 0.95f, 0.35f, 1.00f } },
+        { "Fluorite_Jaune", new[] { 40f, 65f, 0.20f, 0.90f, 0.55f, 1.00f } },
+        // Opaque and translucent stones.
+        { "Lapis_Lazuli", new[] { 215f, 245f, 0.60f, 1.00f, 0.25f, 0.65f } },
+        { "Turquoise", new[] { 165f, 195f, 0.35f, 0.85f, 0.50f, 0.90f } },
+        { "Jade_Jadeite", new[] { 90f, 160f, 0.15f, 0.80f, 0.30f, 0.80f } },
+        { "Jade_Nephrite", new[] { 80f, 150f, 0.20f, 0.65f, 0.20f, 0.60f } },
+        { "Malachite", new[] { 125f, 160f, 0.50f, 1.00f, 0.20f, 0.70f } },
+        { "Sodalite", new[] { 220f, 245f, 0.55f, 1.00f, 0.25f, 0.70f } },
+        { "Prehnite", new[] { 70f, 115f, 0.20f, 0.60f, 0.60f, 0.95f } },
+        { "Cornaline", new[] { 5f, 30f, 0.60f, 1.00f, 0.45f, 0.95f } },
+        { "Moldavite", new[] { 85f, 125f, 0.40f, 0.85f, 0.20f, 0.55f } },
+        { "Rhodonite", new[] { 340f, 360f, 0.40f, 0.70f, 0.40f, 0.85f } },
+        { "Rhodocrosite", new[] { 340f, 10f, 0.25f, 0.80f, 0.60f, 1.00f } },
+    };
+
+    // Cuts the modes of a palette to the window of the species: each mode keeps the part inside, with the weight it keeps; what falls entirely outside is dropped.
+    private static Mode[] Restrict(Mode[] modes, string key)
+    {
+        if (modes == null || !Limits.TryGetValue(key, out var limit)) return modes;
+
+        var width = Mathf.Repeat(limit[1] - limit[0], 360f);
+        var centre = limit[0] + width * 0.5f;
+        var result = new List<Mode>(modes.Length);
+        foreach (var mode in modes)
+        {
+            var modeCentre = Mathf.DeltaAngle(centre, (mode.HueMin + mode.HueMax) * 0.5f);
+            var modeHalf = Mathf.Max(0.5f, (mode.HueMax - mode.HueMin) * 0.5f);
+            var lo = Mathf.Max(modeCentre - modeHalf, -width * 0.5f);
+            var hi = Mathf.Min(modeCentre + modeHalf, width * 0.5f);
+            if (hi <= lo) continue;
+
+            var s0 = Mathf.Max(mode.SatMin, limit[2]);
+            var s1 = Mathf.Min(mode.SatMax, limit[3]);
+            var b0 = Mathf.Max(mode.BrightMin, limit[4]);
+            var b1 = Mathf.Min(mode.BrightMax, limit[5]);
+            if (s1 <= s0 || b1 <= b0) continue;
+
+            var fraction = (hi - lo) / (2f * modeHalf)
+                           * (s1 - s0) / Mathf.Max(0.001f, mode.SatMax - mode.SatMin)
+                           * (b1 - b0) / Mathf.Max(0.001f, mode.BrightMax - mode.BrightMin);
+            result.Add(M(mode.Weight * Mathf.Clamp01(fraction), centre + lo, centre + hi, s0, s1, b0, b1));
+        }
+        return result.Count > 0 ? result.ToArray() : modes;
+    }
+
+    private static Mode[] ProfileFor(GemDefinition definition, bool synthetic = false)
     {
         var key = definition.name;
-        if (Profiles.TryGetValue(key, out var cached)) return cached;
 
+        // A stone grown in every colour (synthetic corundum, spinel, YAG, GGG...): the whole circle of hues, with no limit.
+        if (GrownInAnyColor(definition, synthetic)) return AnyColorProfile();
+
+        if (Profiles.TryGetValue(key, out var cached)) return cached;
         var profile = Overrides(key) ?? Derived(definition);
+        profile = Expand(profile);
+        profile = Restrict(profile, key);
         Profiles[key] = profile;
         return profile;
     }
@@ -309,7 +547,7 @@ public static class GemColorSystem
             case "Corindon_Rubis":
                 return new[]
                 {
-                    M(0.03f, 352f, 366f, 0.92f, 1.00f, 0.88f, 1.00f),    // sang de pigeon core
+                    M(0.04f, 352f, 366f, 0.88f, 1.00f, 0.70f, 0.88f),    // sang de pigeon core: a deep, pure red
                     M(0.20f, 350f, 368f, 0.88f, 1.00f, 0.72f, 0.88f),    // vivid red
                     M(0.18f, 344f, 364f, 0.64f, 0.86f, 0.88f, 1.00f),    // intense / pinkish red
                     M(0.20f, 350f, 372f, 0.90f, 1.00f, 0.50f, 0.68f),    // deep red
@@ -344,6 +582,135 @@ public static class GemColorSystem
                     M(0.10f, 12f, 26f, 0.70f, 0.90f, 0.78f, 0.90f),      // orangy red
                     M(0.06f, 14f, 28f, 0.62f, 0.80f, 0.55f, 0.70f),      // deep orangy
                 };
+            // ---- Corundum: the other sapphires, on the hue ranges of the colour wheels of the laboratory ----
+            case "Saphir_Rose":
+                return new[]
+                {
+                    M(0.12f, 335f, 352f, 0.20f, 0.34f, 0.95f, 1.00f),    // light pink
+                    M(0.20f, 335f, 354f, 0.34f, 0.50f, 0.92f, 1.00f),    // pastel pink
+                    M(0.24f, 335f, 356f, 0.50f, 0.66f, 0.90f, 1.00f),    // pink
+                    M(0.16f, 330f, 352f, 0.66f, 0.84f, 0.88f, 1.00f),    // intense pink
+                    M(0.08f, 322f, 345f, 0.86f, 1.00f, 0.86f, 1.00f),    // vivid pink
+                    M(0.07f, 310f, 332f, 0.40f, 0.70f, 0.78f, 0.96f),    // purplish pink
+                    M(0.05f, 340f, 358f, 0.80f, 1.00f, 0.55f, 0.78f),    // deep pink
+                    M(0.08f, 4f, 16f, 0.28f, 0.48f, 0.94f, 1.00f),       // orangy pink
+                };
+            case "Saphir_Orange":
+                return new[]
+                {
+                    M(0.12f, 16f, 34f, 0.24f, 0.40f, 0.95f, 1.00f),      // light orange
+                    M(0.18f, 14f, 36f, 0.40f, 0.58f, 0.90f, 1.00f),      // pastel / pinkish orange
+                    M(0.24f, 20f, 38f, 0.60f, 0.78f, 0.88f, 1.00f),      // orange
+                    M(0.16f, 22f, 38f, 0.80f, 0.92f, 0.88f, 1.00f),      // intense orange
+                    M(0.08f, 24f, 38f, 0.92f, 1.00f, 0.90f, 1.00f),      // vivid orange
+                    M(0.10f, 18f, 34f, 0.60f, 0.80f, 0.58f, 0.78f),      // deep / brownish orange
+                    M(0.06f, 8f, 20f, 0.30f, 0.50f, 0.94f, 1.00f),       // orangy pink
+                    M(0.06f, 34f, 46f, 0.60f, 0.85f, 0.85f, 1.00f),      // yellowish orange
+                };
+            case "Saphir_Jaune":
+                return new[]
+                {
+                    M(0.14f, 46f, 64f, 0.20f, 0.36f, 0.94f, 1.00f),      // light yellow
+                    M(0.18f, 44f, 64f, 0.36f, 0.54f, 0.92f, 1.00f),      // pastel yellow
+                    M(0.22f, 44f, 62f, 0.54f, 0.74f, 0.90f, 1.00f),      // yellow
+                    M(0.16f, 42f, 58f, 0.74f, 0.90f, 0.90f, 1.00f),      // intense yellow
+                    M(0.08f, 44f, 58f, 0.90f, 1.00f, 0.92f, 1.00f),      // vivid yellow
+                    M(0.08f, 38f, 50f, 0.70f, 0.92f, 0.82f, 0.96f),      // golden
+                    M(0.08f, 62f, 76f, 0.40f, 0.72f, 0.82f, 0.98f),      // greenish yellow
+                    M(0.06f, 36f, 52f, 0.55f, 0.80f, 0.55f, 0.75f),      // brownish yellow
+                };
+            case "Saphir_Vert":
+                return new[]
+                {
+                    M(0.12f, 74f, 100f, 0.30f, 0.55f, 0.55f, 0.80f),     // grayish yellowish green
+                    M(0.18f, 85f, 125f, 0.45f, 0.72f, 0.50f, 0.78f),     // yellowish green
+                    M(0.20f, 110f, 150f, 0.45f, 0.75f, 0.42f, 0.72f),    // green
+                    M(0.16f, 150f, 178f, 0.40f, 0.72f, 0.36f, 0.66f),    // bluish green (teal)
+                    M(0.10f, 90f, 150f, 0.30f, 0.50f, 0.80f, 0.98f),     // pastel green
+                    M(0.12f, 100f, 160f, 0.55f, 0.85f, 0.26f, 0.42f),    // deep / dark green
+                    M(0.07f, 100f, 140f, 0.75f, 0.95f, 0.62f, 0.85f),    // intense green
+                    M(0.05f, 84f, 110f, 0.20f, 0.34f, 0.92f, 1.00f),     // light green
+                };
+            case "Saphir_Violet":
+                return new[]
+                {
+                    M(0.14f, 262f, 290f, 0.20f, 0.38f, 0.92f, 1.00f),    // light violet / lavender
+                    M(0.18f, 258f, 292f, 0.38f, 0.56f, 0.86f, 0.98f),    // pastel violet
+                    M(0.22f, 258f, 285f, 0.56f, 0.74f, 0.76f, 0.94f),    // violet
+                    M(0.16f, 262f, 288f, 0.72f, 0.90f, 0.68f, 0.88f),    // intense violet
+                    M(0.08f, 262f, 280f, 0.88f, 1.00f, 0.66f, 0.88f),    // vivid violet
+                    M(0.08f, 285f, 312f, 0.40f, 0.72f, 0.70f, 0.92f),    // purple
+                    M(0.10f, 262f, 285f, 0.82f, 1.00f, 0.38f, 0.58f),    // deep violet
+                    M(0.04f, 250f, 262f, 0.55f, 0.85f, 0.68f, 0.90f),    // bluish violet
+                };
+
+            // ---- Beryl: aquamarine, maxixe, heliodor, morganite, red beryl and pezzottaite ----
+            case "Aigue_Marine":
+                return new[]
+                {
+                    M(0.22f, 185f, 202f, 0.14f, 0.32f, 0.94f, 1.00f),    // light greenish blue
+                    M(0.22f, 192f, 214f, 0.30f, 0.48f, 0.90f, 1.00f),    // pastel blue
+                    M(0.18f, 198f, 222f, 0.46f, 0.62f, 0.86f, 1.00f),    // blue
+                    M(0.12f, 205f, 228f, 0.60f, 0.76f, 0.82f, 0.98f),    // intense blue (Santa Maria)
+                    M(0.04f, 208f, 230f, 0.74f, 0.88f, 0.70f, 0.90f),    // vivid blue
+                    M(0.04f, 212f, 232f, 0.64f, 0.82f, 0.50f, 0.68f),    // deep blue
+                    M(0.10f, 175f, 192f, 0.22f, 0.50f, 0.88f, 1.00f),    // greenish blue
+                    M(0.08f, 160f, 176f, 0.20f, 0.42f, 0.86f, 1.00f),    // bluish green
+                };
+            case "Beryl_Bleu":
+                return new[]
+                {
+                    M(0.30f, 216f, 238f, 0.80f, 1.00f, 0.55f, 0.85f),    // maxixe deep blue
+                    M(0.22f, 218f, 240f, 0.84f, 1.00f, 0.38f, 0.56f),    // deep blue
+                    M(0.14f, 220f, 242f, 0.84f, 1.00f, 0.28f, 0.40f),    // dark blue
+                    M(0.20f, 208f, 232f, 0.60f, 0.80f, 0.70f, 0.92f),    // intense blue
+                    M(0.14f, 200f, 225f, 0.30f, 0.55f, 0.88f, 1.00f),    // faded blue
+                };
+            case "Heliodore":
+                return new[]
+                {
+                    M(0.20f, 52f, 70f, 0.20f, 0.36f, 0.94f, 1.00f),      // light yellow
+                    M(0.22f, 50f, 72f, 0.36f, 0.54f, 0.92f, 1.00f),      // pastel yellow
+                    M(0.22f, 48f, 66f, 0.54f, 0.74f, 0.90f, 1.00f),      // yellow
+                    M(0.10f, 44f, 62f, 0.74f, 0.92f, 0.90f, 1.00f),      // intense yellow
+                    M(0.04f, 44f, 58f, 0.92f, 1.00f, 0.92f, 1.00f),      // vivid yellow
+                    M(0.10f, 62f, 80f, 0.30f, 0.62f, 0.84f, 1.00f),      // greenish yellow
+                    M(0.08f, 38f, 52f, 0.60f, 0.88f, 0.68f, 0.88f),      // golden / deep yellow
+                    M(0.04f, 34f, 48f, 0.55f, 0.80f, 0.52f, 0.70f),      // brownish yellow
+                };
+            case "Morganite":
+                return new[]
+                {
+                    M(0.24f, 335f, 354f, 0.18f, 0.32f, 0.96f, 1.00f),    // light pink
+                    M(0.26f, 338f, 358f, 0.30f, 0.46f, 0.94f, 1.00f),    // pastel pink
+                    M(0.16f, 340f, 360f, 0.44f, 0.60f, 0.92f, 1.00f),    // pink
+                    M(0.10f, 340f, 358f, 0.60f, 0.74f, 0.88f, 1.00f),    // intense pink
+                    M(0.12f, 4f, 22f, 0.22f, 0.44f, 0.94f, 1.00f),       // peach / orangy pink
+                    M(0.06f, 14f, 30f, 0.34f, 0.52f, 0.90f, 1.00f),      // salmon / orange
+                    M(0.06f, 318f, 338f, 0.20f, 0.40f, 0.92f, 1.00f),    // violetish pink
+                };
+            case "Beryl_Rouge":
+                return new[]
+                {
+                    M(0.20f, 348f, 366f, 0.66f, 0.88f, 0.58f, 0.84f),    // red
+                    M(0.20f, 332f, 350f, 0.60f, 0.86f, 0.55f, 0.82f),    // purplish red
+                    M(0.14f, 340f, 358f, 0.40f, 0.62f, 0.80f, 0.98f),    // pinkish red
+                    M(0.14f, 350f, 372f, 0.80f, 1.00f, 0.38f, 0.58f),    // deep red
+                    M(0.08f, 352f, 374f, 0.80f, 1.00f, 0.26f, 0.40f),    // dark red
+                    M(0.10f, 4f, 16f, 0.62f, 0.86f, 0.62f, 0.86f),       // orangy red
+                    M(0.14f, 326f, 345f, 0.42f, 0.72f, 0.70f, 0.94f),    // raspberry pink
+                };
+            case "Pezzottaite":
+                return new[]
+                {
+                    M(0.20f, 330f, 350f, 0.40f, 0.62f, 0.78f, 0.96f),    // raspberry pink
+                    M(0.20f, 336f, 356f, 0.28f, 0.44f, 0.88f, 1.00f),    // pastel pink
+                    M(0.18f, 330f, 352f, 0.60f, 0.82f, 0.62f, 0.86f),    // intense pink-red
+                    M(0.12f, 340f, 362f, 0.66f, 0.88f, 0.48f, 0.68f),    // purplish red
+                    M(0.10f, 4f, 18f, 0.32f, 0.56f, 0.86f, 1.00f),       // orangy pink
+                    M(0.10f, 318f, 336f, 0.34f, 0.60f, 0.74f, 0.94f),    // violetish pink
+                    M(0.10f, 340f, 360f, 0.70f, 0.90f, 0.38f, 0.56f),    // deep red-pink
+                };
             case "Spinelle":
                 return new[]
                 {
@@ -370,6 +737,41 @@ public static class GemColorSystem
                     M(0.08f, 140f, 165f, 0.88f, 1.00f, 0.38f, 0.58f),    // deep green
                     M(0.06f, 150f, 170f, 0.40f, 0.60f, 0.85f, 1.00f),    // pastel green
                 };
+            case "Sphalerite":
+                // Red to orange to brown, a honey yellow at the pale end, a near-black brown at the dark end.
+                return new[]
+                {
+                    M(0.24f, 22f, 36f, 0.75f, 1.00f, 0.60f, 0.90f),      // orange
+                    M(0.14f, 34f, 48f, 0.60f, 0.90f, 0.65f, 0.90f),      // honey
+                    M(0.14f, 8f, 20f, 0.75f, 1.00f, 0.50f, 0.80f),       // red-orange
+                    M(0.14f, 0f, 12f, 0.80f, 1.00f, 0.30f, 0.55f),       // deep red
+                    M(0.22f, 24f, 38f, 0.60f, 0.90f, 0.25f, 0.50f),      // brown
+                    M(0.12f, 5f, 25f, 0.55f, 0.85f, 0.15f, 0.30f),       // near-black red-brown
+                };
+            case "Obsidienne_Flocons":
+                // Black glass: the snowflakes are drawn by the pattern, the body stays black.
+                return new[]
+                {
+                    M(1f, 20f, 40f, 0.00f, 0.05f, 0.02f, 0.07f),
+                };
+            case "Tourmaline_Schorl":
+                // Black: no hue to speak of, only a trace of brown or gray, and very dark.
+                return new[]
+                {
+                    M(0.70f, 20f, 40f, 0.00f, 0.06f, 0.03f, 0.10f),      // jet black
+                    M(0.30f, 20f, 40f, 0.02f, 0.10f, 0.08f, 0.16f),      // black with a brownish or grayish glint
+                };
+            case "Iolite":
+                // Violet-blue to blue-violet, from a grayish pale blue to a deep ink blue; what the cut shows depends on the axis.
+                return new[]
+                {
+                    M(0.30f, 248f, 266f, 0.55f, 0.75f, 0.50f, 0.75f),    // violet-blue
+                    M(0.20f, 240f, 256f, 0.60f, 0.80f, 0.45f, 0.65f),    // blue-violet
+                    M(0.18f, 250f, 270f, 0.25f, 0.42f, 0.78f, 0.95f),    // light violet-blue
+                    M(0.12f, 225f, 250f, 0.15f, 0.30f, 0.70f, 0.90f),    // grayish pale blue
+                    M(0.12f, 250f, 270f, 0.60f, 0.85f, 0.30f, 0.45f),    // deep ink blue
+                    M(0.08f, 265f, 285f, 0.20f, 0.38f, 0.75f, 0.92f),    // lavender
+                };
             case "Tourmaline_Rose":
                 return new[]
                 {
@@ -391,7 +793,6 @@ public static class GemColorSystem
                     M(0.14f, 176f, 194f, 0.60f, 0.90f, 0.80f, 1.00f),    // greenish blue
                     M(0.10f, 165f, 176f, 0.55f, 0.85f, 0.75f, 0.95f),    // bluish green
                     M(0.06f, 214f, 235f, 0.50f, 0.80f, 0.80f, 0.95f),    // blue
-                    M(0.06f, 250f, 285f, 0.40f, 0.70f, 0.75f, 0.95f),    // violet / purple
                     M(0.10f, 185f, 200f, 0.20f, 0.40f, 0.95f, 1.00f),    // light greenish blue
                 };
             case "Topaze":
@@ -410,6 +811,117 @@ public static class GemColorSystem
             default:
                 return null;
         }
+    }
+
+    // Widens a palette: besides the characteristic colours of the species, a cloud of colours around its mean hue, over a window of hues and over the rows of the grid
+    // that surround its usual tones, from the paler and softer to the deeper ones, with muted (grayer, darker) variants of each. So no two stones of a species look
+    // alike, while the stone keeps its identity: the cloud stays near the hue and the tones the species really has.
+    private static Mode[] Expand(Mode[] curated)
+    {
+        if (curated == null || curated.Length == 0) return curated;
+
+        var rows = RowSaturation.Length;
+        float total = 0f, sumX = 0f, sumY = 0f, meanSaturation = 0f;
+        foreach (var mode in curated)
+        {
+            var radians = (mode.HueMin + mode.HueMax) * 0.5f * Mathf.Deg2Rad;
+            total += mode.Weight;
+            sumX += mode.Weight * Mathf.Cos(radians);
+            sumY += mode.Weight * Mathf.Sin(radians);
+            meanSaturation += mode.Weight * (mode.SatMin + mode.SatMax) * 0.5f;
+        }
+        // A colourless, gray or black species keeps its subtle range.
+        if (total <= 0f || meanSaturation / total < 0.12f) return curated;
+
+        // A palette whose modes lie at far apart hues (a stone that is red or blue, blue or violet) has no single mean hue: it keeps its own modes.
+        var concentration = Mathf.Sqrt(sumX * sumX + sumY * sumY) / total;
+        if (concentration < 0.80f) return curated;
+
+        var meanHue = Mathf.Repeat(Mathf.Atan2(sumY, sumX) * Mathf.Rad2Deg, 360f);
+        var spread = 0f;
+        var histogram = new float[rows];
+        foreach (var mode in curated)
+        {
+            var centre = (mode.HueMin + mode.HueMax) * 0.5f;
+            spread += mode.Weight * (Mathf.Abs(Mathf.DeltaAngle(centre, meanHue)) + (mode.HueMax - mode.HueMin) * 0.5f);
+
+            var saturation = (mode.SatMin + mode.SatMax) * 0.5f;
+            var brightness = (mode.BrightMin + mode.BrightMax) * 0.5f;
+            var best = 0;
+            var bestDistance = float.MaxValue;
+            for (var row = 0; row < rows; row++)
+            {
+                var d = (saturation - RowSaturation[row]) * (saturation - RowSaturation[row]) + (brightness - RowBrightness[row]) * (brightness - RowBrightness[row]);
+                if (d < bestDistance) { bestDistance = d; best = row; }
+            }
+            histogram[best] += mode.Weight / total;
+        }
+        spread = Mathf.Clamp(spread / total + 4f, 8f, 24f);
+
+        // The rows around the usual tones of the species: two rows on each side, and the in-between ones.
+        int low = rows, high = -1;
+        for (var row = 0; row < rows; row++)
+            if (histogram[row] > 0.02f) { low = Mathf.Min(low, row); high = Mathf.Max(high, row); }
+        if (high < 0) return curated;
+        low = Mathf.Max(0, low - 2);
+        high = Mathf.Min(rows - 1, high + 2);
+
+        var rowWeight = new float[rows];
+        var rowTotal = 0f;
+        for (var row = low; row <= high; row++)
+        {
+            var left = row > 0 ? histogram[row - 1] : 0f;
+            var right = row < rows - 1 ? histogram[row + 1] : 0f;
+            rowWeight[row] = histogram[row] + 0.5f * (left + right) + 0.04f;
+            rowTotal += rowWeight[row];
+        }
+
+        const int bands = 13;
+        var cloud = new List<Mode>();
+        var cloudTotal = 0f;
+        for (var band = 0; band < bands; band++)
+        {
+            var offset = (band - (bands - 1) * 0.5f) / ((bands - 1) * 0.5f);          // -1 .. 1 across the window
+            var hue = meanHue + offset * spread;
+            var half = spread / (bands - 1) * 1.6f;
+            var bandWeight = Mathf.Exp(-(offset * offset) / 0.45f);
+            for (var row = low; row <= high; row++)
+            {
+                var weight = bandWeight * rowWeight[row] / rowTotal;
+                var s0 = Mathf.Clamp01(RowSaturation[row] - 0.10f);
+                var s1 = Mathf.Clamp01(RowSaturation[row] + 0.07f);
+                var b0 = Mathf.Clamp01(RowBrightness[row] - 0.10f);
+                var b1 = Mathf.Clamp01(RowBrightness[row] + 0.07f);
+                cloud.Add(M(weight, hue - half, hue + half, s0, s1, b0, b1));
+                cloudTotal += weight;
+
+                // The muted version: grayer and a little darker, like a stone with a brownish or grayish overtone.
+                if (row <= 6 && band % 2 == 0)
+                {
+                    var muted = weight * 0.30f;
+                    cloud.Add(M(muted, hue - half, hue + half, Mathf.Clamp01(RowSaturation[row] * 0.55f - 0.06f), Mathf.Clamp01(RowSaturation[row] * 0.55f + 0.08f),
+                        Mathf.Clamp01(RowBrightness[row] * 0.80f - 0.06f), Mathf.Clamp01(RowBrightness[row] * 0.80f + 0.06f)));
+                    cloudTotal += muted;
+                }
+            }
+        }
+
+        // The characteristic colours keep a little more than half of the draws, the cloud the rest.
+        const float characteristic = 0.65f;
+        var result = new List<Mode>(curated.Length + cloud.Count);
+        foreach (var mode in curated)
+        {
+            var scaled = mode;
+            scaled.Weight = mode.Weight / total * characteristic;
+            result.Add(scaled);
+        }
+        foreach (var mode in cloud)
+        {
+            var scaled = mode;
+            scaled.Weight = mode.Weight / cloudTotal * (1f - characteristic);
+            result.Add(scaled);
+        }
+        return result.ToArray();
     }
 
     // Every other species: colors around the species' typical color, from light to dark, with a few percent of

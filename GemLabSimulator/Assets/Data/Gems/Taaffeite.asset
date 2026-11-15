@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Taaffeite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "T\xE9ff\xE9ite"
+  description: "Un min\xE9ral d'une raret\xE9 extr\xEAme, d\xE9couvert en 1945 dans
+    une boutique de Dublin : pastel mauve, rose ou violet, d'une grande puret\xE9.
+    Les belles pierres taill\xE9es sont presque introuvables."
+  icon: {fileID: 21300000, guid: 55334f08aa9aa40a69ad46c8dfd515eb, type: 3}
+  roughIcon: {fileID: 21300000, guid: 2f908f5e6e6f9493b9f350a6d8d4a5f8, type: 3}
+  iconColor: {r: 0.72, g: 0.55, b: 0.8, a: 1}
+  iconFacetColor: {r: 0.88, g: 0.78, b: 0.94, a: 1}
+  refractiveIndex: 1.72
+  density: 3.61
+  hardness: 8.25
+  lengthMm: 5.5
+  widthMm: 4.5
+  depthMm: 3
+  weightCarats: 0.8
+  luster: Vitreux
+  color: "Mauve \xE0 violet p\xE2le"
+  shape: Ovale
+  cutStyle: Mixte
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Mauve p\xE2le / mauve ros\xE9 selon l'axe (faible)."
+  fluorescenceLongWave: Aucune fluorescence notable.
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.005
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Spectre faible : l\xE9g\xE8re absorption du fer vers 458 nm."
+  spectrumLines:
+  - wavelengthNm: 458
+    widthNm: 10
+    depth: 0.3
+    edgeNm: 0
+  inclusions: "G\xE9n\xE9ralement tr\xE8s propre ; de petites inclusions liquides,
+    des cristaux de spinelle et d'apatite, de rares fissures gu\xE9ries."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 2500
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  roughOnly: 0
+  isTunnelExclusive: 1
+  tunnelMinPrice: 10000
+  origins:
+  - name: Sri Lanka
+    rarityWeight: 50
+    valueMultiplier: 1.3
+    inclusionOverride: 
+  - name: Tanzanie
+    rarityWeight: 30
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Birmanie (Mogok)
+    rarityWeight: 20
+    valueMultiplier: 1.5
+    inclusionOverride: 

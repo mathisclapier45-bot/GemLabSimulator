@@ -149,6 +149,36 @@ float3 PatternAlbedo (int pat, float3 p, float3 c, float3 acc, float s, float se
         float mask = smoothstep(0.75, 0.10, rad) * smoothstep(0.0, 0.12, rad);
         r = lerp(c, acc, saturate(fibre * mask * 1.3) * s);
     }
+    else if (pat == 22)      // snowflake obsidian: white and gray spherulites of cristobalite, with feathery radial edges, in black glass
+    {
+        float3 g = p * 5.0 + seed;
+        float3 ig = floor(g);
+        float best = 9.0;
+        float3 rel = float3(0, 0, 0);
+        [loop]
+        for (int dz = -1; dz <= 1; dz++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                for (int dx = -1; dx <= 1; dx++)
+                {
+                    float3 cell = ig + float3(dx, dy, dz);
+                    float3 jitter = float3(PHash(cell), PHash(cell + 7.3), PHash(cell + 13.1));
+                    float3 centre = cell + 0.2 + 0.6 * jitter;
+                    float size = 0.24 + 0.18 * PHash(cell + 3.7);
+                    float present = PHash(cell + 21.7) < 0.6 ? 1.0 : 0.0;          // only some of the cells hold a snowflake: most of the stone stays black
+                    float score = present > 0.5 ? length(g - centre) / size : 9.0;
+                    if (score < best) { best = score; rel = g - centre; }
+                }
+            }
+        }
+        float ang = atan2(rel.y, rel.x);
+        float feather = 0.5 + 0.5 * sin(ang * 9.0 + best * 6.0);
+        float edge = best + (feather - 0.5) * 0.4;
+        float inside = 1.0 - smoothstep(0.55, 0.95, edge);
+        float3 flake = lerp(float3(0.52, 0.54, 0.60), float3(0.90, 0.92, 0.95), feather);
+        r = lerp(c, flake, inside * s);
+    }
     else if (pat == 20)      // bubbles in glass
     {
         float3 cell = floor(p * 7.0);
@@ -182,3 +212,5 @@ float3 EnvMetal (float3 d)
 }
 
 #endif
+
+// 2026-11-15: patterns up to 22 (snowflake obsidian); this line only forces Unity to recompile the shader.

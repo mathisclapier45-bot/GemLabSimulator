@@ -746,6 +746,9 @@ public static class MebImaging
             case "Spinelle_Bleu": e("O", 0.6f); e("Mg", 0.8f); e("Al", 1f); e("Co", 0.05f); break;
             case "Topaze": e("O", 0.6f); e("Al", 1f); e("Si", 0.8f); e("F", 0.4f); break;
             case "Tourmaline_Paraiba": e("O", 0.6f); e("Si", 1f); e("Al", 0.8f); e("Na", 0.2f); e("Cu", 0.08f); break;
+            case "Tourmaline_Melon_Eau": e("O", 0.6f); e("Si", 1f); e("Al", 0.8f); e("Na", 0.2f); e("Mn", 0.04f); e("Fe", 0.02f); break;
+            case "Tourmaline_Indicolite": e("O", 0.6f); e("Si", 1f); e("Al", 0.8f); e("Na", 0.2f); e("Fe", 0.04f); break;
+            case "Tourmaline_Schorl": e("O", 0.6f); e("Si", 1f); e("Al", 0.7f); e("Na", 0.2f); e("Fe", 0.5f); e("Mg", 0.05f); break;
             case "Tourmaline_Rose": e("O", 0.6f); e("Si", 1f); e("Al", 0.8f); e("Na", 0.2f); e("Mn", 0.05f); break;
             case "Zircon": e("Zr", 1f); e("Si", 0.5f); e("O", 0.4f); break;
             case "Peridot": e("O", 0.6f); e("Mg", 1f); e("Si", 0.9f); e("Fe", 0.25f); break;
@@ -757,6 +760,8 @@ public static class MebImaging
             case "Jade_Nephrite": e("Mg", 0.6f); e("Ca", 0.5f); e("Si", 1f); e("Fe", 0.2f); e("O", 0.6f); break;
             case "Moissanite_Synthetique": e("Si", 1f); e("C", 0.8f); break;
             case "CZ": e("Zr", 1f); e("Y", 0.12f); e("O", 0.4f); break;
+            case "Titanate_Strontium": e("Sr", 1f); e("Ti", 0.8f); e("O", 0.5f); break;
+            case "Sphalerite": e("Zn", 1f); e("S", 0.9f); e("Fe", 0.08f); break;
             case "YAG": e("Y", 1f); e("Al", 0.6f); e("O", 0.4f); break;
             case "GGG": e("Gd", 1f); e("Ga", 0.8f); e("O", 0.4f); break;
             case "Verre": case "Obsidienne": e("Si", 1f); e("O", 0.6f); e("Na", 0.3f); e("Ca", 0.15f); e("Al", 0.1f); break;

@@ -329,6 +329,21 @@ public static class HabitMesh
                     for (var sz = -1; sz <= 1; sz += 2)
                         p.Add(P(0f, sy * 0.7f, sz * 0.45f, 0.5f));
                 return p;
+            case "druse":
+                // A crust of tiny crystals on its rock: a flat, rough slab (the sparkle of the crystals is the surface of the stone).
+                Pebble(p, 30, new Vector3(1f, 0.72f, 0.30f), 0.12f, 7);
+                return p;
+            case "tourmaline_slice":
+                // A thin slice across a tourmaline: the rounded triangle of its section, between two big flat faces.
+                for (var i = 0; i < 3; i++)
+                {
+                    var strong = (90f + 120f * i) * Mathf.Deg2Rad;
+                    var weak = (270f + 120f * i) * Mathf.Deg2Rad;
+                    p.Add(P(0f, Mathf.Cos(strong), Mathf.Sin(strong), 0.78f));
+                    p.Add(P(0f, Mathf.Cos(weak), Mathf.Sin(weak), 0.62f));
+                }
+                p.Add(P(1f, 0f, 0f, 0.16f)); p.Add(P(-1f, 0f, 0f, 0.16f));
+                return p;
             case "trigonal_prism":
                 for (var i = 0; i < 3; i++)
                 {

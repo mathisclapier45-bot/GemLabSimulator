@@ -54,6 +54,7 @@ MonoBehaviour:
   baseValue: 700
   forcedSynthetic: 0
   forcedTreatment: 0
+  roughOnly: 0
   isTunnelExclusive: 1
   tunnelMinPrice: 2000
   origins:

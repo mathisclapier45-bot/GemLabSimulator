@@ -288,6 +288,7 @@ public class GemDetailUI : MonoBehaviour
     {
         if (gem == null || view == null) return;
         GemView3D.Colors(gem, out var body, out var facet);
+        GemLook.ApplyPleochroism(gem.Definition, orientation, ref body, ref facet);
         view.Draw(GemView3D.MeshFor(gem), GemView3D.HalfExtents(gem), orientation, body, facet, gem.Definition.Diaphaneity, gem.AsterismRays, GemLook.For(gem.Definition), gem.CatsEye);
     }
 

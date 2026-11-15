@@ -12,7 +12,7 @@ public class DiamondCertificateUI : MonoBehaviour
     private const float PageWidth = 1120f;
     private const float PageHeight = 680f;
 
-    private static readonly Color PaperColor = new Color(0.97f, 0.97f, 0.95f, 1f);
+    private static readonly Color PaperColor = ReportStyle.Paper;
     private static readonly Color Ink = new Color(0.13f, 0.14f, 0.18f, 1f);
     private static readonly Color Blue = new Color(0.20f, 0.32f, 0.52f, 1f);
     private static readonly Color Quiet = new Color(0.45f, 0.46f, 0.52f, 1f);
@@ -107,8 +107,7 @@ public class DiamondCertificateUI : MonoBehaviour
         var grade = DiamondGradeModel.Official(gem);
 
         // Frame.
-        RuntimeUIKit.MakeBox("FrameTop", parent, new Vector2(0f, 0f), new Vector2(PageWidth, 8f), Blue, false);
-        RuntimeUIKit.MakeBox("FrameBottom", parent, new Vector2(0f, -PageHeight + 8f), new Vector2(PageWidth, 8f), Blue, false);
+        ReportStyle.DrawFrame(parent, PageWidth, PageHeight, 8f, gem);
 
         // Header.
         var emblem = new GameObject("Emblem", typeof(RectTransform), typeof(Image));

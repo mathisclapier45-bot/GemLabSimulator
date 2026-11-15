@@ -340,6 +340,28 @@
    "shortColor": "#5A78FF",
    "shortIntensity": 0.35,
    "phosphorescent": false
+  },
+  {
+   "key": "Calcite",
+   "source": "Données du jeu (espèce ajoutée)",
+   "longText": "Rouge, rose ou orangé (manganèse), parfois bleu ou blanc, selon l'échantillon.",
+   "longColor": "#FF5A4A",
+   "longIntensity": 0.6,
+   "shortText": "Plus vive en onde courte, rouge à rose.",
+   "shortColor": "#FF5A4A",
+   "shortIntensity": 0.7,
+   "phosphorescent": false
+  },
+  {
+   "key": "Sodalite",
+   "source": "Données du jeu (espèce ajoutée)",
+   "longText": "Plages orange à orange rouge, parfois intenses (hackmanite).",
+   "longColor": "#FF9A3A",
+   "longIntensity": 0.6,
+   "shortText": "Orange, plus vive qu'en onde longue.",
+   "shortColor": "#FF9A3A",
+   "shortIntensity": 0.8,
+   "phosphorescent": false
   }
  ]
 }

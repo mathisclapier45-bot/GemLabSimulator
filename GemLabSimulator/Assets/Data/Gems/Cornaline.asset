@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Cornaline
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Cornaline
+  description: "Une calc\xE9doine orange \xE0 rouge sang, color\xE9e par l'oxyde
+    de fer. Translucide, vitreuse, on la polit en cabochon ; on la chauffe souvent
+    pour la rougir."
+  icon: {fileID: 21300000, guid: fcde07a48fa0f48ea99dbf96e025825d, type: 3}
+  roughIcon: {fileID: 21300000, guid: f3a39183c287d4b18868dc7fb2414d5f, type: 3}
+  iconColor: {r: 0.88, g: 0.38, b: 0.14, a: 1}
+  iconFacetColor: {r: 0.96, g: 0.62, b: 0.36, a: 1}
+  refractiveIndex: 1.535
+  density: 2.6
+  hardness: 6.75
+  lengthMm: 12
+  widthMm: 9
+  depthMm: 5
+  weightCarats: 6
+  luster: "Vitreux \xE0 cireux"
+  color: "Orange \xE0 rouge"
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: Translucide
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: Aucune fluorescence notable.
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0
+  isQuartzFamily: 1
+  isPolycrystalline: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Fines bandes de couleur, nuages d'oxyde de fer ; structure fibreuse
+    de calc\xE9doine."
+  interferenceFigure: "Aucune figure d'interf\xE9rence exploitable."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 8
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  roughOnly: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: Inde
+    rarityWeight: 40
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: "Br\xE9sil"
+    rarityWeight: 25
+    valueMultiplier: 0.9
+    inclusionOverride: 
+  - name: Uruguay
+    rarityWeight: 20
+    valueMultiplier: 0.9
+    inclusionOverride: 
+  - name: Madagascar
+    rarityWeight: 15
+    valueMultiplier: 0.9
+    inclusionOverride: 

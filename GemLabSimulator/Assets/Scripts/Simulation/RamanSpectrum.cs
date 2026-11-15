@@ -86,6 +86,15 @@ public static class RamanLibrary
         Define("Cordiérite", "420:12:0.4,570:15:0.4,968:12:1,1180:20:0.2");
         Define("Kyanite", "300:10:0.3,487:10:0.4,897:12:1,950:10:0.5");
         Define("Fluorite", "322:8:1");
+        Define("Calcite", "156:6:0.35,282:6:0.6,713:6:0.3,1086:6:1");
+        Define("Gypse", "415:6:0.3,493:6:0.3,1008:6:1,1135:8:0.2");
+        Define("Sélénite", "415:6:0.3,493:6:0.3,1008:6:1,1135:8:0.2");
+        Define("Célestine", "184:6:0.3,453:6:0.45,462:6:0.4,1000:6:1");
+        Define("Malachite", "180:8:0.35,433:8:0.5,534:8:0.4,1098:8:1");
+        Define("Sodalite", "270:8:0.3,456:8:0.4,1000:10:0.35");
+        Define("Sphène (titanite)", "257:6:0.3,466:6:0.5,610:6:1,861:6:0.3");
+        Define("Téfféite", "330:8:0.3,480:8:0.4,705:8:1");
+        Define("Uvarovite", "372:6:0.3,525:6:0.4,880:6:1");
         Define("Jadéite", "375:8:0.3,700:8:1,989:7:0.8,1037:7:0.6");
         Define("Néphrite", "420:10:0.3,675:6:0.9,920:8:0.4,1060:10:0.4");
         Define("Serpentine", "230:10:0.4,390:8:0.7,690:8:1,1100:12:0.3");
@@ -101,6 +110,7 @@ public static class RamanLibrary
         // Synthetics and imitations.
         Define("Cubic zirconia (CZ)", "260:60:0.5,470:60:0.5,620:70:1");
         Define("Moissanite (SiC)", "766:6:0.6,789:6:1,797:6:0.5,967:8:0.4");
+        Define("Sphalérite", "180:8:0.3,293:8:0.5,350:8:1");
         Define("YAG", "162:6:0.3,261:8:0.4,372:8:1,690:12:0.35,783:10:0.4");
         Define("GGG", "175:8:0.4,300:10:0.5,375:8:0.4,550:10:0.3,745:12:1");
         Define("Verre (amorphe)", "450:200:1,800:150:0.5,1100:120:0.4");
@@ -279,7 +289,7 @@ public static class RamanSpectrum
 
     private static bool IsSyntheticMaterial(string name)
     {
-        return name == "CZ" || name == "YAG" || name == "GGG" || name == "Moissanite_Synthetique" || name == "Verre"
+        return name == "CZ" || name == "YAG" || name == "GGG" || name == "Titanate_Strontium" || name == "Moissanite_Synthetique" || name == "Verre"
             || name.StartsWith("Diamant_Synthetique") || name.StartsWith("Corindon_Synthetique");
     }
 
@@ -359,7 +369,7 @@ public static class RamanSpectrum
             case "Grenat_Demantoide": return "Grenat andradite";
             case "Spinelle": case "Spinelle_Bleu": return "Spinelle";
             case "Peridot": return "Péridot";
-            case "Tourmaline_Paraiba": case "Tourmaline_Rose": return "Tourmaline";
+            case "Tourmaline_Paraiba": case "Tourmaline_Rose": case "Tourmaline_Melon_Eau": case "Tourmaline_Indicolite": case "Tourmaline_Schorl": return "Tourmaline";
             case "Zircon": return "Zircon";
             case "Chrysoberyl": case "Chrysoberyl_Alexandrite": return "Chrysobéryl";
             case "Apatite": return "Apatite";

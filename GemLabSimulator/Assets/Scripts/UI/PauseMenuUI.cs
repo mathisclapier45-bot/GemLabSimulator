@@ -10,7 +10,7 @@ public class PauseMenuUI : MonoBehaviour
     public static PauseMenuUI Instance { get; private set; }
 
     private const float PanelWidth = 460f;
-    private const float PanelHeight = 330f;
+    private const float PanelHeight = 384f;
     private const float SliderWidth = 230f;
 
     private static readonly Color Gold = new Color(0.95f, 0.85f, 0.65f);
@@ -205,7 +205,9 @@ public class PauseMenuUI : MonoBehaviour
         resume.onClick.AddListener(Close);
         var menu = RuntimeUIKit.MakeButton("MainMenu", panel.transform, "Menu principal", 17, ButtonColor, new Vector2(PanelWidth - 220f, -250f), new Vector2(180f, 42f));
         menu.onClick.AddListener(ToMainMenu);
-        RuntimeUIKit.MakeText("Hint", panel.transform, "Échap : fermer", 11, TextAnchor.UpperCenter, new Color(0.55f, 0.55f, 0.62f), new Vector2(0f, -304f), new Vector2(PanelWidth, 16f));
+        var encyclopedia = RuntimeUIKit.MakeButton("Encyclopedia", panel.transform, "Encyclopédie des gemmes", 15, ButtonColor, new Vector2(PanelWidth * 0.5f - 130f, -304f), new Vector2(260f, 36f));
+        encyclopedia.onClick.AddListener(() => { Close(); GemEncyclopediaUI.Open(transform); });
+        RuntimeUIKit.MakeText("Hint", panel.transform, "Échap : fermer", 11, TextAnchor.UpperCenter, new Color(0.55f, 0.55f, 0.62f), new Vector2(0f, -358f), new Vector2(PanelWidth, 16f));
     }
 
     private Slider MakeSlider(Vector2 position, float initial, UnityAction<float> onChange)

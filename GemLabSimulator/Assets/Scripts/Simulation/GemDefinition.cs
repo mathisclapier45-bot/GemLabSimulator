@@ -70,6 +70,7 @@ public class GemDefinition : ScriptableObject
     public int baseValue;
     public bool forcedSynthetic;
     public bool forcedTreatment;
+    public bool roughOnly;               // a species that is never cut (too soft, too fragile or only found as crystals, druses and fragments): it stays rough
     public bool isTunnelExclusive;
     public int tunnelMinPrice;
 

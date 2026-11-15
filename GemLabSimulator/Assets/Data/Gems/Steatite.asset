@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Steatite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: "St\xE9atite"
+  description: "Le talc massif, la plus tendre des pierres d'ornement : on la raye
+    \xE0 l'ongle et on la sculpte au couteau. Elle est grasse au toucher, gris vert
+    \xE0 blanche."
+  icon: {fileID: 21300000, guid: 9d69a9698d4e8454f8e8743b7abf0bc5, type: 3}
+  roughIcon: {fileID: 21300000, guid: 592cf169c821f4218a31787ec5da6364, type: 3}
+  iconColor: {r: 0.62, g: 0.68, b: 0.58, a: 1}
+  iconFacetColor: {r: 0.8, g: 0.85, b: 0.76, a: 1}
+  refractiveIndex: 1.57
+  density: 2.75
+  hardness: 1
+  lengthMm: 20
+  widthMm: 15
+  depthMm: 10
+  weightCarats: 20
+  luster: "Gras \xE0 nacr\xE9"
+  color: "Gris vert \xE0 blanc"
+  shape: Ovale
+  cutStyle: Cabochon
+  transparency: "Translucide \xE0 opaque"
+  pleochroic: 0
+  pleochroicDescription: 
+  fluorescenceLongWave: Aucune fluorescence notable.
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Anisotrope, biaxial (bir\xE9fringent)."
+  opticalCharacterClass: 2
+  birefringence: 0
+  isQuartzFamily: 0
+  isPolycrystalline: 1
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Aucun spectre d'absorption caract\xE9ristique."
+  spectrumLines: []
+  inclusions: "Masse \xE9cailleuse tr\xE8s fine, parfois vein\xE9e de chlorite ;
+    toucher savonneux."
+  interferenceFigure: "Aucune figure d'interf\xE9rence exploitable."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 3
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  roughOnly: 1
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: "Br\xE9sil (Minas Gerais)"
+    rarityWeight: 40
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Inde
+    rarityWeight: 25
+    valueMultiplier: 0.9
+    inclusionOverride: 
+  - name: Chine
+    rarityWeight: 20
+    valueMultiplier: 0.9
+    inclusionOverride: 
+  - name: Canada
+    rarityWeight: 15
+    valueMultiplier: 1
+    inclusionOverride: 

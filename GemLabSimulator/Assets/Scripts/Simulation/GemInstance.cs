@@ -390,20 +390,22 @@ public class GemInstance
 
         Origin = forcedOrigin ?? GemGrading.PickOrigin(definition.origins);
 
-        // A few percent of the diamonds are colored ("fancy"); every other color follows the species' own color range.
-        var fancy = definition.name == "Diamant" && Random.value < 0.04f;
-        var colorValue = fancy
-            ? GemColorSystem.SampleFancyDiamond(() => Random.value)
-            : GemColorSystem.Sample(definition, () => Random.value);
-        var colorGrade = SetColor(colorValue, fancy);
-
-        // Natural or synthetic first: the clarity of a stone and its inclusions depend on it, as on its species and deposit.
+        // Natural or synthetic first: the colour, the clarity of a stone and its inclusions depend on it, as on its species and deposit.
         var authenticity = definition.forcedSynthetic
             ? GemGrading.SyntheticGrade
             : GemGrading.PickWeighted(GemGrading.AuthenticityGrades);
         AuthenticityGrade = authenticity.Name;
         AuthenticityDescription = authenticity.Description;
         IsSynthetic = authenticity.Name == "Synthétique";
+
+        // A few percent of the natural diamonds are colored ("fancy"); every other color follows the species' own color range. A synthetic diamond can have
+        // any color at all, and so can the other synthetic stones that are grown in every color (corundum, spinel, YAG, GGG, cubic zirconia).
+        var syntheticDiamond = definition.name.StartsWith("Diamant") && IsSynthetic;
+        var fancy = syntheticDiamond ? Random.value < 0.55f : definition.name == "Diamant" && Random.value < 0.04f;
+        var colorValue = fancy
+            ? (syntheticDiamond ? GiaDiamondColors.SampleAnyHue(() => Random.value) : GemColorSystem.SampleFancyDiamond(() => Random.value))
+            : GemColorSystem.Sample(definition, () => Random.value, IsSynthetic);
+        var colorGrade = SetColor(colorValue, fancy);
 
         var clarity = InclusionCatalog.PickClarity(definition, Origin, IsSynthetic);
         ClarityGrade = clarity.Name;
@@ -446,6 +448,9 @@ public class GemInstance
         FinalValue = Mathf.RoundToInt(
             definition.baseValue * Origin.valueMultiplier * colorMultiplier * clarity.Multiplier *
             sizeValueMultiplier * treatment.Multiplier * authenticity.Multiplier);
+
+        // A species that is not cut (gypsum, calcite, soapstone, moldavite...) always comes as a rough crystal or fragment.
+        if (definition.roughOnly) IsRough = true;
     }
 
     // Dense rutile silk in a cabochon makes a star (six rays; four in a garnet).
@@ -472,7 +477,7 @@ public class GemInstance
     // Parallel fibres in a cabochon make a cat's eye: a thin bright line across the dome (chrysoberyl, quartz, tourmaline, apatite...).
     private static readonly System.Collections.Generic.HashSet<string> CatsEyeSpecies = new System.Collections.Generic.HashSet<string>
     {
-        "Chrysoberyl", "Chrysoberyl_Alexandrite", "Quartz", "Quartz_Fume", "Quartz_Rose", "Tourmaline_Rose", "Tourmaline_Paraiba", "Apatite", "Scapolite",
+        "Chrysoberyl", "Chrysoberyl_Alexandrite", "Quartz", "Quartz_Fume", "Quartz_Rose", "Tourmaline_Rose", "Tourmaline_Paraiba", "Tourmaline_Indicolite", "Tourmaline_Melon_Eau", "Apatite", "Scapolite",
         "Heliodore", "Aigue_Marine", "Beryl_Bleu", "Goshenite", "Morganite", "Emeraude", "Andalousite", "Sinhalite", "Kyanite", "Iolite", "Iolite_Bloodshot", "Diopside_Chromifere",
     };
 
@@ -799,7 +804,7 @@ public class GemInstance
         {
             // Older saves have no color: give the stone a stable one from its specimen number.
             var rng = new System.Random((int)StoneOptics.StableHash(specimenId));
-            instance.SetColor(GemColorSystem.Sample(definition, () => (float)rng.NextDouble()), false);
+            instance.SetColor(GemColorSystem.Sample(definition, () => (float)rng.NextDouble(), instance.IsSynthetic), false);
         }
 
         for (var i = 0; i < data.measuredKeys.Count; i++)

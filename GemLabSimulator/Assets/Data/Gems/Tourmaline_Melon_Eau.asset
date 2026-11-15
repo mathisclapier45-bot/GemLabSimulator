@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Tourmaline_Melon_Eau
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Tourmaline melon d'eau
+  description: "Une tourmaline bicolore : le rose d'un c\xF4t\xE9, le vert de l'autre,
+    comme la chair et la peau d'un melon d'eau. Taill\xE9e en tranche, elle montre
+    un c\u0153ur rose, un anneau blanc et une bordure verte."
+  icon: {fileID: 21300000, guid: a7f54b22712414559b2e093664b1735d, type: 3}
+  roughIcon: {fileID: 21300000, guid: 914dddaff60324f78bb7ba3be8a88842, type: 3}
+  iconColor: {r: 0.85, g: 0.34, b: 0.56, a: 1}
+  iconFacetColor: {r: 0.97, g: 0.62, b: 0.76, a: 1}
+  refractiveIndex: 1.63
+  density: 3.06
+  hardness: 7.25
+  lengthMm: 11
+  widthMm: 6
+  depthMm: 4.5
+  weightCarats: 3
+  luster: Vitreux
+  color: Rose et vert
+  shape: "Rectangle \xE0 pans coup\xE9s"
+  cutStyle: "\xC0 degr\xE9s"
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Rose / rose fonc\xE9 d'un c\xF4t\xE9, vert / vert fonc\xE9
+    de l'autre selon l'axe (fort)."
+  fluorescenceLongWave: Aucune fluorescence notable.
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.018
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: 'Partie rose : large absorption du vert vers 525 nm ; partie
+    verte : absorption du rouge (fer) vers 660 nm.'
+  spectrumLines:
+  - wavelengthNm: 525
+    widthNm: 50
+    depth: 0.5
+    edgeNm: 0
+  - wavelengthNm: 660
+    widthNm: 40
+    depth: 0.35
+    edgeNm: 0
+  inclusions: "Tubes de croissance parall\xE8les \xE0 l'axe (aspect de pluie), inclusions
+    liquides fragment\xE9es, fissures ; zones de couleur bien nettes, du rose au
+    vert, avec parfois un anneau incolore."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
+  chelseaFilterReaction: "Rose p\xE2le dans la partie rose, vert terne dans la partie
+    verte."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 120
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  roughOnly: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: "Br\xE9sil (Minas Gerais)"
+    rarityWeight: 50
+    valueMultiplier: 1.2
+    inclusionOverride: 
+  - name: Namibie
+    rarityWeight: 20
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Mozambique
+    rarityWeight: 15
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Afghanistan
+    rarityWeight: 15
+    valueMultiplier: 1.1
+    inclusionOverride: 

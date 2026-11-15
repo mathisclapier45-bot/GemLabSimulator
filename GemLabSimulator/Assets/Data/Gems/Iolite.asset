@@ -31,7 +31,7 @@ MonoBehaviour:
   color: Bleu-violet
   shape: Ovale
   cutStyle: Mixte
-  transparency: "Transparent \xE0 translucide"
+  transparency: Transparent
   pleochroic: 1
   pleochroicDescription: "Bleu / Violet / Jaune p\xE2le selon les trois axes (tr\xE8s
     marqu\xE9 : la couleur de base peut changer compl\xE8tement selon la direction
@@ -81,6 +81,7 @@ MonoBehaviour:
   baseValue: 25
   forcedSynthetic: 0
   forcedTreatment: 0
+  roughOnly: 0
   isTunnelExclusive: 0
   tunnelMinPrice: 0
   origins:

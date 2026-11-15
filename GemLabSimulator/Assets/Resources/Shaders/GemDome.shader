@@ -153,3 +153,5 @@ Shader "GemLab/RealDome"
     }
     Fallback Off
 }
+
+// 2026-11-15: patterns up to 22 (snowflake obsidian); this line only forces Unity to recompile the shader.

@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f901c17412cf41f6a8c555e6ff41244, type: 3}
+  m_Name: Tourmaline_Indicolite
+  m_EditorClassIdentifier: Assembly-CSharp::GemDefinition
+  displayName: Tourmaline indicolite
+  description: "La tourmaline bleue, du bleu gris\xE9 au bleu profond ; les plus
+    vives se rapprochent de la tourmaline de Para\xEFba, sans avoir son bleu n\xE9on."
+  icon: {fileID: 21300000, guid: 8d9a7b6735fda4e71be7764fb70b0b08, type: 3}
+  roughIcon: {fileID: 21300000, guid: 785ef3fa732e84581b98ad66749be345, type: 3}
+  iconColor: {r: 0.13, g: 0.36, b: 0.62, a: 1}
+  iconFacetColor: {r: 0.42, g: 0.62, b: 0.86, a: 1}
+  refractiveIndex: 1.635
+  density: 3.06
+  hardness: 7.25
+  lengthMm: 9
+  widthMm: 6
+  depthMm: 4
+  weightCarats: 2
+  luster: Vitreux
+  color: "Bleu \xE0 bleu verd\xE2tre"
+  shape: "Rectangle \xE0 pans coup\xE9s"
+  cutStyle: "\xC0 degr\xE9s"
+  transparency: Transparent
+  pleochroic: 1
+  pleochroicDescription: "Bleu fonc\xE9 / bleu verd\xE2tre selon l'axe (fort)."
+  fluorescenceLongWave: Aucune fluorescence notable.
+  fluorescenceShortWave: Aucune fluorescence notable.
+  opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
+  opticalCharacterClass: 1
+  birefringence: 0.02
+  isQuartzFamily: 0
+  isPolycrystalline: 0
+  isThermallyConductiveLikeDiamond: 0
+  isElectricallyConductive: 0
+  absorptionSpectrum: "Forte absorption du rouge et de l'orang\xE9 (fer) \xE0 partir
+    de 650 nm ; aucune raie nette."
+  spectrumLines:
+  - wavelengthNm: 670
+    widthNm: 70
+    depth: 0.6
+    edgeNm: 0
+  inclusions: "Tubes de croissance parall\xE8les \xE0 l'axe, inclusions liquides
+    fragment\xE9es, fissures ; couleur souvent zon\xE9e."
+  interferenceFigure: "Figure d'interf\xE9rence uniaxiale."
+  chelseaFilterReaction: "Aucune r\xE9action particuli\xE8re."
+  magnetism: "Aucune r\xE9action notable \xE0 l'aimant."
+  baseValue: 90
+  forcedSynthetic: 0
+  forcedTreatment: 0
+  roughOnly: 0
+  isTunnelExclusive: 0
+  tunnelMinPrice: 0
+  origins:
+  - name: "Br\xE9sil"
+    rarityWeight: 35
+    valueMultiplier: 1.1
+    inclusionOverride: 
+  - name: Namibie
+    rarityWeight: 25
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Nigeria
+    rarityWeight: 20
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: Afghanistan
+    rarityWeight: 10
+    valueMultiplier: 1
+    inclusionOverride: 
+  - name: "\xC9tats-Unis (Maine)"
+    rarityWeight: 10
+    valueMultiplier: 1.2
+    inclusionOverride: 

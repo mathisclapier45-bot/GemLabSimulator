@@ -50,6 +50,8 @@ public static class CrystalHabits
         new CrystalHabit { Id = "tetragonal_prism", Short = "Prisme tétragonal", Name = "Prisme tétragonal bipyramidé", Description = "Prisme à section carrée terminé par une pyramide : le zircon." },
         new CrystalHabit { Id = "ortho_prism", Short = "Prisme orthorhombique", Name = "Prisme orthorhombique", Description = "Prisme à section rectangulaire ou losangique, aux terminaisons obliques : la topaze, le péridot, le chrysobéryl." },
         new CrystalHabit { Id = "monoclinic_prism", Short = "Prisme monoclinique", Name = "Prisme monoclinique", Description = "Prisme aplati aux terminaisons obliques : le spodumène (kunzite), les feldspaths, le diopside." },
+        new CrystalHabit { Id = "druse", Short = "Druse", Name = "Druse de cristaux", Description = "Une croûte de minuscules cristaux serrés sur leur roche, scintillante : la seule forme de l'uvarovite." },
+        new CrystalHabit { Id = "tourmaline_slice", Short = "Tranche de tourmaline", Name = "Tranche de tourmaline", Description = "Une tranche mince coupée en travers du cristal : un cœur rose, un anneau pâle et une bordure verte, pour la tourmaline melon d'eau." },
         new CrystalHabit { Id = "trigonal_prism", Short = "Prisme trigonal", Name = "Prisme trigonal", Description = "Prisme à section triangulaire aux angles arrondis, strié : les tourmalines." },
         new CrystalHabit { Id = "cleaved_octahedron", Short = "Octaèdre clivé", Name = "Octaèdre clivé de fluorite", Description = "Un fragment d'octaèdre taillé par le clivage parfait de la fluorite : grandes faces planes, marques en escaliers à la surface." },
         new CrystalHabit { Id = "rhombohedral_plate", Short = "Plaque rhomboédrique", Name = "Plaque rhomboédrique", Description = "Un rhomboèdre aplati entre deux grandes faces plates : la pezzottaïte, béryl au césium rose de Madagascar." },
@@ -118,11 +120,20 @@ public static class CrystalHabits
             case "Painite": return Chance(("hex_prism", 55), ("hex_pencil", 30), ("hex_tabular", 15));
             case "Pezzottaite": return Chance(("rhombohedral_plate", 80), ("rhombohedron", 20));
             case "Rhodocrosite": return Chance(("rhombohedron", 100));
+            case "Calcite": return Chance(("rhombohedron", 100));
+            case "Sphalerite": return Chance(("rhombic_dodecahedron", 60), ("octahedron", 20), ("cleaved_octahedron", 20));
+            case "Grenat_Uvarovite": return Chance(("druse", 100));
+            case "Gypse":
+            case "Selenite":
+            case "Sphene": return Chance(("monoclinic_prism", 100));
+            case "Celestine": return Chance(("ortho_prism", 100));
+            case "Taaffeite": return Chance(("hex_prism", 60), ("hex_bipyramid", 40));
         }
 
         // The rhombic dodecahedron is the habit of the garnets; the icositetrahedron is a rarer one.
         if (name.StartsWith("Grenat_")) return Chance(("rhombic_dodecahedron", 90), ("trapezohedron", 10));
         if (name.StartsWith("Saphir_")) return Chance(("corundum_barrel", 35), ("corundum_bipyramid", 20), ("corundum_pebble", 20), ("corundum_prism", 15), ("corundum_fragment", 10));
+        if (name == "Tourmaline_Melon_Eau") return Chance(("trigonal_pencil", 40), ("tourmaline_slice", 35), ("trigonal_prism", 25));
         if (name.StartsWith("Tourmaline_")) return Chance(("trigonal_prism", 55), ("trigonal_pencil", 45));
 
         // The quartzes grow in prisms; the agates, tiger's eye and rose quartz are masses.

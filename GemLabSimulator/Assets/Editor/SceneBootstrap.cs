@@ -6452,6 +6452,878 @@ public static partial class SceneBootstrap
                     new GemOrigin { name = "Madagascar", rarityWeight = 10, valueMultiplier = 1.1f },
                 };
             }),
+            BuildGem("Taaffeite", g =>
+            {
+                g.displayName = "Téfféite";
+                g.description = "Un minéral d'une rareté extrême, découvert en 1945 dans une boutique de Dublin : pastel mauve, rose ou violet, d'une grande pureté. Les belles pierres taillées sont presque introuvables.";
+                g.icon = GetGemIconSprite("taaffeite", new Color(0.72f, 0.55f, 0.80f), new Color(0.88f, 0.78f, 0.94f), "Ovale", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("taaffeite", new Color(0.72f, 0.55f, 0.80f), "Ovale");
+                g.refractiveIndex = 1.72f;
+                g.density = 3.61f;
+                g.hardness = 8.25f;
+                g.lengthMm = 5.5f;
+                g.widthMm = 4.5f;
+                g.depthMm = 3.0f;
+                g.weightCarats = 0.8f;
+                g.luster = "Vitreux";
+                g.color = "Mauve à violet pâle";
+                g.shape = "Ovale";
+                g.cutStyle = "Mixte";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Mauve pâle / mauve rosé selon l'axe (faible).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.005f;
+                g.absorptionSpectrum = "Spectre faible : légère absorption du fer vers 458 nm.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 458f, widthNm = 10f, depth = 0.3f },
+                };
+                g.inclusions = "Généralement très propre ; de petites inclusions liquides, des cristaux de spinelle et d'apatite, de rares fissures guéries.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 2500;
+                g.isTunnelExclusive = true;
+                g.tunnelMinPrice = 10000;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Sri Lanka", rarityWeight = 50, valueMultiplier = 1.3f },
+                    new GemOrigin { name = "Tanzanie", rarityWeight = 30, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Birmanie (Mogok)", rarityWeight = 20, valueMultiplier = 1.5f },
+                };
+            }),
+            BuildGem("Sphene", g =>
+            {
+                g.displayName = "Sphène (titanite)";
+                g.description = "Une pierre de feu : sa dispersion dépasse celle du diamant et elle lance des éclats rouge orangé sur fond jaune verdâtre. Tendre pour une gemme, elle se manie avec soin.";
+                g.icon = GetGemIconSprite("sphene", new Color(0.66f, 0.72f, 0.20f), new Color(0.92f, 0.86f, 0.45f), "Coussin", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("sphene", new Color(0.66f, 0.72f, 0.20f), "Coussin");
+                g.refractiveIndex = 1.96f;
+                g.density = 3.53f;
+                g.hardness = 5.25f;
+                g.lengthMm = 7.0f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.8f;
+                g.weightCarats = 1.2f;
+                g.luster = "Adamantin à résineux";
+                g.color = "Jaune verdâtre à vert, brun miel";
+                g.shape = "Coussin";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Trichroïsme marqué : jaune, vert, brun orangé (fort).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.12f;
+                g.absorptionSpectrum = "Bandes fines du didyme (terres rares) vers 580 nm sur certaines pierres.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 580f, widthNm = 8f, depth = 0.4f },
+                    new SpectrumLine { wavelengthNm = 534f, widthNm = 8f, depth = 0.25f },
+                };
+                g.inclusions = "Plans de macle, fissures, inclusions de rutile et d'apatite ; aspect doublé par la forte biréfringence (dédoublement des arêtes).";
+                g.interferenceFigure = "Figure d'interférence biaxiale.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 120;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Madagascar", rarityWeight = 30, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Brésil", rarityWeight = 25, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Pakistan", rarityWeight = 20, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "Mexique (Chihuahua)", rarityWeight = 15, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Sri Lanka", rarityWeight = 10, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Malachite", g =>
+            {
+                g.displayName = "Malachite";
+                g.description = "Un carbonate de cuivre vert, rubané en cercles concentriques de verts clairs et sombres. Opaque et tendre, on la polit en cabochon ou en perles ; elle fait effervescence à l'acide.";
+                g.icon = GetGemIconSprite("malachite", new Color(0.10f, 0.55f, 0.30f), new Color(0.40f, 0.80f, 0.52f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("malachite", new Color(0.10f, 0.55f, 0.30f), "Ovale");
+                g.refractiveIndex = 1.88f;
+                g.density = 3.8f;
+                g.hardness = 3.75f;
+                g.lengthMm = 14.0f;
+                g.widthMm = 11.0f;
+                g.depthMm = 6.0f;
+                g.weightCarats = 10.0f;
+                g.luster = "Soyeux à vitreux";
+                g.color = "Vert rubané";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Opaque : aucune lecture optique en lumière transmise.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Opaque;
+                g.birefringence = 0.25f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Bandes concentriques vert clair et vert sombre, texture fibreuse soyeuse ; cavités botryoïdales.";
+                g.interferenceFigure = "Aucune figure d'interférence exploitable.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 18;
+                g.isPolycrystalline = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Congo (RDC)", rarityWeight = 40, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Russie (Oural)", rarityWeight = 25, valueMultiplier = 1.2f },
+                    new GemOrigin { name = "Zambie", rarityWeight = 20, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "Australie", rarityWeight = 15, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Prehnite", g =>
+            {
+                g.displayName = "Préhnite";
+                g.description = "Un silicate d'un vert tendre qui rappelle la pomme, translucide, aux reflets nacrés. On la polit surtout en cabochon.";
+                g.icon = GetGemIconSprite("prehnite", new Color(0.62f, 0.78f, 0.42f), new Color(0.84f, 0.92f, 0.66f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("prehnite", new Color(0.62f, 0.78f, 0.42f), "Ovale");
+                g.refractiveIndex = 1.62f;
+                g.density = 2.88f;
+                g.hardness = 6.25f;
+                g.lengthMm = 10.0f;
+                g.widthMm = 8.0f;
+                g.depthMm = 5.0f;
+                g.weightCarats = 5.0f;
+                g.luster = "Vitreux à nacré";
+                g.color = "Vert pomme à jaune-vert";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.03f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Agrégats fibreux rayonnants en gerbes, petites cavités, aspect finement granuleux.";
+                g.interferenceFigure = "Figure d'interférence biaxiale.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 12;
+                g.isPolycrystalline = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Afrique du Sud", rarityWeight = 30, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Mali", rarityWeight = 25, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "Australie", rarityWeight = 25, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Chine", rarityWeight = 20, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Sodalite", g =>
+            {
+                g.displayName = "Sodalite";
+                g.description = "Une roche d'un bleu profond, veinée de blanc, parfois piquée de plages orange sous la lampe UV. Elle ressemble au lapis-lazuli, sans la pyrite.";
+                g.icon = GetGemIconSprite("sodalite", new Color(0.16f, 0.26f, 0.62f), new Color(0.48f, 0.58f, 0.88f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("sodalite", new Color(0.16f, 0.26f, 0.62f), "Ovale");
+                g.refractiveIndex = 1.485f;
+                g.density = 2.27f;
+                g.hardness = 5.75f;
+                g.lengthMm = 12.0f;
+                g.widthMm = 10.0f;
+                g.depthMm = 5.0f;
+                g.weightCarats = 8.0f;
+                g.luster = "Vitreux";
+                g.color = "Bleu profond veiné de blanc";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide à opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Plages orange à orange rouge, parfois intenses (hackmanite).";
+                g.fluorescenceShortWave = "Orange, plus vive qu'en onde longue.";
+                g.opticalCharacter = "Isotrope (monoréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Veines blanches de calcite, masse bleue homogène ; pas de pyrite, contrairement au lapis-lazuli.";
+                g.interferenceFigure = "Aucune figure d'interférence exploitable.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 10;
+                g.isPolycrystalline = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil", rarityWeight = 30, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Canada (Ontario)", rarityWeight = 25, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "Namibie", rarityWeight = 25, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Inde", rarityWeight = 20, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Ivoire_Vegetal", g =>
+            {
+                g.displayName = "Ivoire végétal (corozo)";
+                g.description = "La noix d'un palmier d'Amérique du Sud, blanche et dure comme l'ivoire. On la sculpte en boutons et en petits objets : c'est un fragment de graine, pas une pierre taillée.";
+                g.icon = GetGemIconSprite("ivoire_vegetal", new Color(0.90f, 0.86f, 0.74f), new Color(0.97f, 0.95f, 0.88f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("ivoire_vegetal", new Color(0.90f, 0.86f, 0.74f), "Ovale");
+                g.refractiveIndex = 1.54f;
+                g.density = 1.4f;
+                g.hardness = 2.5f;
+                g.lengthMm = 16.0f;
+                g.widthMm = 12.0f;
+                g.depthMm = 8.0f;
+                g.weightCarats = 10.0f;
+                g.luster = "Mat à cireux";
+                g.color = "Blanc crème";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Opaque à translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Bleuté faible, parfois inerte.";
+                g.fluorescenceShortWave = "Inerte.";
+                g.opticalCharacter = "Isotrope (monoréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Fin réseau de petits pores, sans lignes de Schreger ; structure cellulaire régulière visible à la loupe.";
+                g.interferenceFigure = "Aucune figure d'interférence exploitable.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 6;
+                g.roughOnly = true;
+                g.isPolycrystalline = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Équateur", rarityWeight = 50, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Colombie", rarityWeight = 30, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Panama", rarityWeight = 20, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Steatite", g =>
+            {
+                g.displayName = "Stéatite";
+                g.description = "Le talc massif, la plus tendre des pierres d'ornement : on la raye à l'ongle et on la sculpte au couteau. Elle est grasse au toucher, gris vert à blanche.";
+                g.icon = GetGemIconSprite("steatite", new Color(0.62f, 0.68f, 0.58f), new Color(0.80f, 0.85f, 0.76f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("steatite", new Color(0.62f, 0.68f, 0.58f), "Ovale");
+                g.refractiveIndex = 1.57f;
+                g.density = 2.75f;
+                g.hardness = 1.0f;
+                g.lengthMm = 20.0f;
+                g.widthMm = 15.0f;
+                g.depthMm = 10.0f;
+                g.weightCarats = 20.0f;
+                g.luster = "Gras à nacré";
+                g.color = "Gris vert à blanc";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide à opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Masse écailleuse très fine, parfois veinée de chlorite ; toucher savonneux.";
+                g.interferenceFigure = "Aucune figure d'interférence exploitable.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 3;
+                g.roughOnly = true;
+                g.isPolycrystalline = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil (Minas Gerais)", rarityWeight = 40, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Inde", rarityWeight = 25, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "Chine", rarityWeight = 20, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "Canada", rarityWeight = 15, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Cornaline", g =>
+            {
+                g.displayName = "Cornaline";
+                g.description = "Une calcédoine orange à rouge sang, colorée par l'oxyde de fer. Translucide, vitreuse, on la polit en cabochon ; on la chauffe souvent pour la rougir.";
+                g.icon = GetGemIconSprite("cornaline", new Color(0.88f, 0.38f, 0.14f), new Color(0.96f, 0.62f, 0.36f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("cornaline", new Color(0.88f, 0.38f, 0.14f), "Ovale");
+                g.refractiveIndex = 1.535f;
+                g.density = 2.6f;
+                g.hardness = 6.75f;
+                g.lengthMm = 12.0f;
+                g.widthMm = 9.0f;
+                g.depthMm = 5.0f;
+                g.weightCarats = 6.0f;
+                g.luster = "Vitreux à cireux";
+                g.color = "Orange à rouge";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Fines bandes de couleur, nuages d'oxyde de fer ; structure fibreuse de calcédoine.";
+                g.interferenceFigure = "Aucune figure d'interférence exploitable.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 8;
+                g.isPolycrystalline = true;
+                g.isQuartzFamily = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Inde", rarityWeight = 40, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Brésil", rarityWeight = 25, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "Uruguay", rarityWeight = 20, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "Madagascar", rarityWeight = 15, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Calcite", g =>
+            {
+                g.displayName = "Calcite";
+                g.description = "Le carbonate de calcium : tendre, clivable en rhomboèdres parfaits, avec un net dédoublement de l'image (double réfraction). Elle bouillonne à l'acide.";
+                g.icon = GetGemIconSprite("calcite", new Color(0.90f, 0.82f, 0.55f), new Color(0.98f, 0.94f, 0.78f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("calcite", new Color(0.90f, 0.82f, 0.55f), "Ovale");
+                g.refractiveIndex = 1.55f;
+                g.density = 2.71f;
+                g.hardness = 3.0f;
+                g.lengthMm = 15.0f;
+                g.widthMm = 12.0f;
+                g.depthMm = 8.0f;
+                g.weightCarats = 10.0f;
+                g.luster = "Vitreux";
+                g.color = "Incolore à jaune miel";
+                g.shape = "Ovale";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent à translucide";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Faible, selon la couleur.";
+                g.fluorescenceLongWave = "Rouge, rose ou orangé (manganèse), parfois bleu ou blanc, selon l'échantillon.";
+                g.fluorescenceShortWave = "Plus vive en onde courte, rouge à rose.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.172f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Clivage rhomboédrique parfait, plans de macle polysynthétique, cavités à deux phases.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 4;
+                g.roughOnly = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Mexique", rarityWeight = 30, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Islande", rarityWeight = 20, valueMultiplier = 1.3f },
+                    new GemOrigin { name = "Brésil", rarityWeight = 25, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Chine", rarityWeight = 25, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Jais", g =>
+            {
+                g.displayName = "Jais";
+                g.description = "Un bois fossile devenu lignite, d'un noir profond, chaud au toucher et léger. On le polit en cabochons et on le sculpte ; chauffé à l'aiguille, il sent le charbon.";
+                g.icon = GetGemIconSprite("jais", new Color(0.06f, 0.06f, 0.07f), new Color(0.30f, 0.30f, 0.34f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("jais", new Color(0.06f, 0.06f, 0.07f), "Ovale");
+                g.refractiveIndex = 1.66f;
+                g.density = 1.32f;
+                g.hardness = 3.0f;
+                g.lengthMm = 14.0f;
+                g.widthMm = 10.0f;
+                g.depthMm = 5.0f;
+                g.weightCarats = 6.0f;
+                g.luster = "Résineux à vitreux";
+                g.color = "Noir";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Opaque : aucune lecture optique en lumière transmise.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Opaque;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Cassure conchoïdale, parfois fibres de bois fossile ; pas de pores visibles.";
+                g.interferenceFigure = "Aucune figure d'interférence exploitable.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant ; s'électrise par frottement.";
+                g.baseValue = 25;
+                g.isPolycrystalline = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Royaume-Uni (Whitby)", rarityWeight = 40, valueMultiplier = 1.3f },
+                    new GemOrigin { name = "Espagne", rarityWeight = 25, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "France (Aude)", rarityWeight = 20, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Turquie", rarityWeight = 15, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Gypse", g =>
+            {
+                g.displayName = "Gypse";
+                g.description = "Un sulfate de calcium hydraté, le minéral du plâtre : on le raye à l'ongle. Blanc, soyeux ou nacré, il ne se taille pas et se garde en morceau.";
+                g.icon = GetGemIconSprite("gypse", new Color(0.92f, 0.90f, 0.84f), new Color(0.98f, 0.97f, 0.94f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("gypse", new Color(0.92f, 0.90f, 0.84f), "Ovale");
+                g.refractiveIndex = 1.525f;
+                g.density = 2.31f;
+                g.hardness = 2.0f;
+                g.lengthMm = 18.0f;
+                g.widthMm = 14.0f;
+                g.depthMm = 9.0f;
+                g.weightCarats = 12.0f;
+                g.luster = "Nacré à soyeux";
+                g.color = "Blanc à incolore";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.01f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Clivages parfaits, aspect fibreux ou massif ; aiguilles et paillettes.";
+                g.interferenceFigure = "Figure d'interférence biaxiale.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 2;
+                g.roughOnly = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Mexique", rarityWeight = 30, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Espagne", rarityWeight = 25, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Maroc", rarityWeight = 25, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "États-Unis", rarityWeight = 20, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Selenite", g =>
+            {
+                g.displayName = "Sélénite";
+                g.description = "La variété transparente du gypse : de grands cristaux limpides, clivables en lames, d'un éclat nacré. Si tendre qu'on ne la taille pas ; on la garde en cristal.";
+                g.icon = GetGemIconSprite("selenite", new Color(0.88f, 0.92f, 0.96f), new Color(0.98f, 0.99f, 1.00f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("selenite", new Color(0.88f, 0.92f, 0.96f), "Ovale");
+                g.refractiveIndex = 1.52f;
+                g.density = 2.32f;
+                g.hardness = 2.0f;
+                g.lengthMm = 20.0f;
+                g.widthMm = 12.0f;
+                g.depthMm = 8.0f;
+                g.weightCarats = 15.0f;
+                g.luster = "Nacré à vitreux";
+                g.color = "Incolore";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Transparent à translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Faible, blanchâtre.";
+                g.fluorescenceShortWave = "Inerte.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.01f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Clivages parfaits, lames minces, petites bulles et cavités à liquide ; stries parallèles.";
+                g.interferenceFigure = "Figure d'interférence biaxiale.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 3;
+                g.roughOnly = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Mexique (Naica)", rarityWeight = 30, valueMultiplier = 1.2f },
+                    new GemOrigin { name = "Maroc", rarityWeight = 25, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Espagne", rarityWeight = 25, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "États-Unis", rarityWeight = 20, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Celestine", g =>
+            {
+                g.displayName = "Célestine";
+                g.description = "Un sulfate de strontium d'un bleu pâle comme le ciel. Fragile et clivable, elle se garde en cristal ou en fragment plutôt que de se tailler.";
+                g.icon = GetGemIconSprite("celestine", new Color(0.66f, 0.80f, 0.92f), new Color(0.88f, 0.94f, 0.98f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("celestine", new Color(0.66f, 0.80f, 0.92f), "Ovale");
+                g.refractiveIndex = 1.625f;
+                g.density = 3.96f;
+                g.hardness = 3.25f;
+                g.lengthMm = 10.0f;
+                g.widthMm = 8.0f;
+                g.depthMm = 5.0f;
+                g.weightCarats = 3.0f;
+                g.luster = "Vitreux";
+                g.color = "Bleu pâle";
+                g.shape = "Ovale";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent à translucide";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Faible : bleu pâle / incolore.";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.011f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Clivages parfaits, inclusions liquides, petits cristaux de soufre ou de calcite.";
+                g.interferenceFigure = "Figure d'interférence biaxiale.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 18;
+                g.roughOnly = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Madagascar", rarityWeight = 35, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Mexique", rarityWeight = 20, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Italie (Sicile)", rarityWeight = 25, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "Pologne", rarityWeight = 20, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Grenat_Uvarovite", g =>
+            {
+                g.displayName = "Uvarovite";
+                g.description = "Le grenat vert émeraude du chrome. Il ne forme que de minuscules cristaux, serrés en croûte scintillante : on le garde en druse, jamais en pierre taillée.";
+                g.icon = GetGemIconSprite("grenat_uvarovite", new Color(0.12f, 0.55f, 0.25f), new Color(0.40f, 0.80f, 0.50f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("grenat_uvarovite", new Color(0.12f, 0.55f, 0.25f), "Ovale");
+                g.refractiveIndex = 1.86f;
+                g.density = 3.77f;
+                g.hardness = 7.25f;
+                g.lengthMm = 10.0f;
+                g.widthMm = 8.0f;
+                g.depthMm = 4.0f;
+                g.weightCarats = 3.0f;
+                g.luster = "Vitreux";
+                g.color = "Vert émeraude";
+                g.shape = "Ovale";
+                g.cutStyle = "Brillant";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Isotrope (monoréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Spectre du chrome : raies fines vers 690 nm.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 690f, widthNm = 3f, depth = 0.4f },
+                    new SpectrumLine { wavelengthNm = 640f, widthNm = 10f, depth = 0.3f },
+                };
+                g.inclusions = "Druse de minuscules cristaux ; pas de cristaux assez gros pour la taille.";
+                g.interferenceFigure = "Aucune figure d'interférence exploitable.";
+                g.chelseaFilterReaction = "Rouge faible à nul.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 60;
+                g.roughOnly = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Russie (Oural)", rarityWeight = 40, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "Finlande", rarityWeight = 25, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Afrique du Sud", rarityWeight = 20, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "Turquie", rarityWeight = 15, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Moldavite", g =>
+            {
+                g.displayName = "Moldavite";
+                g.description = "Un verre naturel vert bouteille, né de l'impact d'une météorite il y a quinze millions d'années. Brute, sa surface est sculptée de plis ; elle se facette en pierre vert bouteille.";
+                g.icon = GetGemIconSprite("moldavite", new Color(0.30f, 0.46f, 0.18f), new Color(0.62f, 0.74f, 0.40f), "Ovale", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("moldavite", new Color(0.30f, 0.46f, 0.18f), "Ovale");
+                g.refractiveIndex = 1.5f;
+                g.density = 2.35f;
+                g.hardness = 5.5f;
+                g.lengthMm = 14.0f;
+                g.widthMm = 10.0f;
+                g.depthMm = 6.0f;
+                g.weightCarats = 6.0f;
+                g.luster = "Vitreux";
+                g.color = "Vert bouteille à vert olive";
+                g.shape = "Ovale";
+                g.cutStyle = "Mixte";
+                g.transparency = "Transparent";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Isotrope (monoréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Fines bulles sphériques, filaments de verre de silice (lechatelierite), structure d'écoulement ; surface sculptée.";
+                g.interferenceFigure = "Aucune figure d'interférence exploitable.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 40;
+                g.roughOnly = false;      // the moldavite is cut
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "République tchèque", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Obsidienne_Flocons", g =>
+            {
+                g.displayName = "Obsidienne flocons de neige";
+                g.description = "Un verre volcanique noir piqué de taches blanches rayonnantes, comme des flocons : des sphérules de cristobalite. On le polit en cabochon.";
+                g.icon = GetGemIconSprite("obsidienne_flocons", new Color(0.08f, 0.08f, 0.10f), new Color(0.50f, 0.52f, 0.58f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("obsidienne_flocons", new Color(0.08f, 0.08f, 0.10f), "Ovale");
+                g.refractiveIndex = 1.5f;
+                g.density = 2.4f;
+                g.hardness = 5.25f;
+                g.lengthMm = 14.0f;
+                g.widthMm = 11.0f;
+                g.depthMm = 5.0f;
+                g.weightCarats = 8.0f;
+                g.luster = "Vitreux";
+                g.color = "Noir à flocons blancs";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide à opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Isotrope (monoréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.0f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Sphérulites blanches de cristobalite en gerbes, dans un verre noir ; cassure conchoïdale.";
+                g.interferenceFigure = "Aucune figure d'interférence exploitable.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 8;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Mexique", rarityWeight = 40, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "États-Unis (Utah)", rarityWeight = 35, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Islande", rarityWeight = 25, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Tourmaline_Melon_Eau", g =>
+            {
+                g.displayName = "Tourmaline melon d'eau";
+                g.description = "Une tourmaline bicolore : le rose d'un côté, le vert de l'autre, comme la chair et la peau d'un melon d'eau. Taillée en tranche, elle montre un cœur rose, un anneau blanc et une bordure verte.";
+                g.icon = GetGemIconSprite("tourmaline_melon_eau", new Color(0.85f, 0.34f, 0.56f), new Color(0.97f, 0.62f, 0.76f), "Rectangle à pans coupés", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("tourmaline_melon_eau", new Color(0.85f, 0.34f, 0.56f), "Rectangle à pans coupés");
+                g.refractiveIndex = 1.63f;
+                g.density = 3.06f;
+                g.hardness = 7.25f;
+                g.lengthMm = 11.0f;
+                g.widthMm = 6.0f;
+                g.depthMm = 4.5f;
+                g.weightCarats = 3.0f;
+                g.luster = "Vitreux";
+                g.color = "Rose et vert";
+                g.shape = "Rectangle à pans coupés";
+                g.cutStyle = "À degrés";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Rose / rose foncé d'un côté, vert / vert foncé de l'autre selon l'axe (fort).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.018f;
+                g.absorptionSpectrum = "Partie rose : large absorption du vert vers 525 nm ; partie verte : absorption du rouge (fer) vers 660 nm.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 525f, widthNm = 50f, depth = 0.5f },
+                    new SpectrumLine { wavelengthNm = 660f, widthNm = 40f, depth = 0.35f },
+                };
+                g.inclusions = "Tubes de croissance parallèles à l'axe (aspect de pluie), inclusions liquides fragmentées, fissures ; zones de couleur bien nettes, du rose au vert, avec parfois un anneau incolore.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale.";
+                g.chelseaFilterReaction = "Rose pâle dans la partie rose, vert terne dans la partie verte.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 120;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil (Minas Gerais)", rarityWeight = 50, valueMultiplier = 1.2f },
+                    new GemOrigin { name = "Namibie", rarityWeight = 20, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Mozambique", rarityWeight = 15, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Afghanistan", rarityWeight = 15, valueMultiplier = 1.1f },
+                };
+            }),
+            BuildGem("Tourmaline_Indicolite", g =>
+            {
+                g.displayName = "Tourmaline indicolite";
+                g.description = "La tourmaline bleue, du bleu grisé au bleu profond ; les plus vives se rapprochent de la tourmaline de Paraïba, sans avoir son bleu néon.";
+                g.icon = GetGemIconSprite("tourmaline_indicolite", new Color(0.13f, 0.36f, 0.62f), new Color(0.42f, 0.62f, 0.86f), "Rectangle à pans coupés", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("tourmaline_indicolite", new Color(0.13f, 0.36f, 0.62f), "Rectangle à pans coupés");
+                g.refractiveIndex = 1.635f;
+                g.density = 3.06f;
+                g.hardness = 7.25f;
+                g.lengthMm = 9.0f;
+                g.widthMm = 6.0f;
+                g.depthMm = 4.0f;
+                g.weightCarats = 2.0f;
+                g.luster = "Vitreux";
+                g.color = "Bleu à bleu verdâtre";
+                g.shape = "Rectangle à pans coupés";
+                g.cutStyle = "À degrés";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Bleu foncé / bleu verdâtre selon l'axe (fort).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.02f;
+                g.absorptionSpectrum = "Forte absorption du rouge et de l'orangé (fer) à partir de 650 nm ; aucune raie nette.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 670f, widthNm = 70f, depth = 0.6f },
+                };
+                g.inclusions = "Tubes de croissance parallèles à l'axe, inclusions liquides fragmentées, fissures ; couleur souvent zonée.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 90;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil", rarityWeight = 35, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "Namibie", rarityWeight = 25, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Nigeria", rarityWeight = 20, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Afghanistan", rarityWeight = 10, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "États-Unis (Maine)", rarityWeight = 10, valueMultiplier = 1.2f },
+                };
+            }),
+            BuildGem("Tourmaline_Schorl", g =>
+            {
+                g.displayName = "Tourmaline schorl";
+                g.description = "La tourmaline noire, la plus courante : un silicate de bore au fer, d'un noir profond, opaque. Ses cristaux sont profondément striés dans leur longueur.";
+                g.icon = GetGemIconSprite("tourmaline_schorl", new Color(0.06f, 0.06f, 0.06f), new Color(0.30f, 0.30f, 0.30f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("tourmaline_schorl", new Color(0.06f, 0.06f, 0.06f), "Ovale");
+                g.refractiveIndex = 1.655f;
+                g.density = 3.15f;
+                g.hardness = 7.25f;
+                g.lengthMm = 10.0f;
+                g.widthMm = 7.5f;
+                g.depthMm = 4.5f;
+                g.weightCarats = 3.0f;
+                g.luster = "Vitreux";
+                g.color = "Noir";
+                g.shape = "Ovale";
+                g.cutStyle = "Brillant";
+                g.transparency = "Opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "Trop sombre pour voir le pléochroïsme : brun très foncé à noir.";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Opaque : aucune lecture optique en lumière transmise.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Opaque;
+                g.birefringence = 0.025f;
+                g.absorptionSpectrum = "Pierre opaque : aucun spectre d'absorption exploitable.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Fortes stries verticales sur les cristaux, inclusions de quartz et de feldspath dans la roche encaissante, fissures ; le noir cache presque toute inclusion.";
+                g.interferenceFigure = "Aucune figure d'interférence exploitable (pierre opaque).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Faiblement attirée par un aimant puissant (elle contient du fer).";
+                g.baseValue = 4;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil", rarityWeight = 30, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Namibie", rarityWeight = 25, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Pakistan", rarityWeight = 20, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Népal", rarityWeight = 15, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "États-Unis (Maine)", rarityWeight = 10, valueMultiplier = 1.1f },
+                };
+            }),
+            BuildGem("Sphalerite", g =>
+            {
+                g.displayName = "Sphalérite";
+                g.description = "Un sulfure de zinc d'une dispersion près de quatre fois celle du diamant : rouge, orange, brun ou miel, d'un éclat adamantin presque métallique. Très tendre et clivable en six directions, elle se taille avec précaution.";
+                g.icon = GetGemIconSprite("sphalerite", new Color(0.82f, 0.38f, 0.12f), new Color(0.96f, 0.65f, 0.35f), "Coussin", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("sphalerite", new Color(0.82f, 0.38f, 0.12f), "Coussin");
+                g.refractiveIndex = 2.369f;
+                g.density = 4.05f;
+                g.hardness = 3.75f;
+                g.lengthMm = 7.0f;
+                g.widthMm = 6.0f;
+                g.depthMm = 4.0f;
+                g.weightCarats = 1.5f;
+                g.luster = "Adamantin à sub-métallique";
+                g.color = "Rouge à orange, brun miel";
+                g.shape = "Coussin";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent à translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Orange à jaune selon l'échantillon (manganèse).";
+                g.fluorescenceShortWave = "Orange à jaune selon l'échantillon (manganèse).";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.000f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption net ; la couleur vient du fer.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Clivage dodécaédrique parfait dans six directions, plans de macle, fines inclusions de pyrite et de galène ; aspect très feu.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 80;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Espagne (Cantabrie)", rarityWeight = 35, valueMultiplier = 1.2f },
+                    new GemOrigin { name = "Mexique", rarityWeight = 25, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Pérou", rarityWeight = 20, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "Serbie", rarityWeight = 10, valueMultiplier = 1.0f },
+                    new GemOrigin { name = "États-Unis", rarityWeight = 10, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Titanate_Strontium", g =>
+            {
+                g.displayName = "Titanate de strontium (fabulite)";
+                g.description = "Un cristal synthétique cubique, d'une dispersion plus de quatre fois celle du diamant : un feu arc-en-ciel intense et un éclat éblouissant. Tendre, il se raye à l'usage. Il peut être de toutes les couleurs.";
+                g.icon = GetGemIconSprite("titanate_strontium", new Color(0.88f, 0.90f, 0.94f), new Color(0.97f, 0.98f, 1.00f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("titanate_strontium", new Color(0.88f, 0.90f, 0.94f), "Rond");
+                g.refractiveIndex = 2.41f;
+                g.density = 5.13f;
+                g.hardness = 5.5f;
+                g.lengthMm = 6.5f;
+                g.widthMm = 6.5f;
+                g.depthMm = 4.0f;
+                g.weightCarats = 1.3f;
+                g.luster = "Adamantin";
+                g.color = "Incolore";
+                g.shape = "Rond";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Fluorescence variable ou absente.";
+                g.fluorescenceShortWave = "Fluorescence variable ou absente.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.000f;
+                g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Généralement très propre ; bulles de gaz rondes occasionnelles, rayures de polissage fréquentes.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction notable à l'aimant.";
+                g.baseValue = 5;
+                g.forcedSynthetic = true;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Fabrication industrielle", rarityWeight = 100, valueMultiplier = 1.0f },
+                };
+            }),
             BuildGem("Iolite", g =>
             {
                 g.displayName = "Iolite";
@@ -6469,7 +7341,7 @@ public static partial class SceneBootstrap
                 g.color = "Bleu-violet";
                 g.shape = "Ovale";
                 g.cutStyle = "Mixte";
-                g.transparency = "Transparent à translucide";
+                g.transparency = "Transparent";
                 g.pleochroic = true;
                 g.pleochroicDescription = "Bleu / Violet / Jaune pâle selon les trois axes (très marqué : la couleur de base peut changer complètement selon la direction d'observation).";
                 g.fluorescenceLongWave = "Aucune fluorescence notable.";

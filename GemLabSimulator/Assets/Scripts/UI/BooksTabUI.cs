@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class BooksTabUI
 {
     public const float ListWidth = 800f;
-    public const float ListHeight = 600f;
+    public const float ListHeight = 630f;
     public const float BookWidth = 900f;
     public const float BookHeight = 690f;
 
@@ -19,6 +19,7 @@ public class BooksTabUI
     private readonly RectTransform listLayer;
     private readonly BookReaderUI reader;
     private bool reading;
+    private bool showPosters;
 
     public GameObject Root { get; }
 
@@ -53,6 +54,7 @@ public class BooksTabUI
     private void ShowShelf()
     {
         reading = false;
+        showPosters = false;
         reader.Root.SetActive(false);
         listLayer.gameObject.SetActive(true);
         resize?.Invoke(ListWidth, ListHeight, -190f);
@@ -81,11 +83,31 @@ public class BooksTabUI
     {
         for (var i = listLayer.childCount - 1; i >= 0; i--) UnityEngine.Object.Destroy(listLayer.GetChild(i).gameObject);
 
-        Txt("Title", "MES LIVRES", 22, TextAnchor.UpperLeft, Gold, new Vector2(24f, -50f), new Vector2(420f, 28f), true);
+        Txt("Title", showPosters ? "MES POSTERS" : "MES LIVRES", 22, TextAnchor.UpperLeft, Gold, new Vector2(24f, -50f), new Vector2(420f, 28f), true);
         RuntimeUIKit.MakeBox("Accent", listLayer, new Vector2(24f, -80f), new Vector2(60f, 3f), new Color(0.13f, 0.34f, 0.30f, 1f), false).raycastTarget = false;
-        Txt("Hint", "Cliquez sur un livre pour le prendre et l'ouvrir.", 12, TextAnchor.UpperLeft, Ink, new Vector2(94f, -76f), new Vector2(500f, 16f));
+        Txt("Hint", showPosters ? "Cliquez sur un poster pour le consulter." : "Cliquez sur un livre pour le prendre et l'ouvrir.", 12, TextAnchor.UpperLeft, Ink, new Vector2(94f, -76f), new Vector2(420f, 16f));
+
+        // The two shelves: the books and the posters.
+        var on = new Color(0.25f, 0.50f, 0.30f, 1f);
+        var off = new Color(0.30f, 0.25f, 0.22f, 1f);
+        RuntimeUIKit.MakeButton("TabBooks", listLayer, "Livres", 13, showPosters ? off : on, new Vector2(ListWidth - 270f, -48f), new Vector2(104f, 28f))
+            .onClick.AddListener(() => { showPosters = false; BuildShelf(); });
+        RuntimeUIKit.MakeButton("TabPosters", listLayer, "Posters", 13, showPosters ? on : off, new Vector2(ListWidth - 160f, -48f), new Vector2(104f, 28f))
+            .onClick.AddListener(() => { showPosters = true; BuildShelf(); });
 
         var row = 0;
+        if (showPosters)
+        {
+            foreach (var info in PosterCatalog.Infos)
+            {
+                if (!BookShelfState.Owns(info.Id)) continue;
+                PosterCard(row++, info);
+            }
+            if (row == 0)
+                Txt("None", "Vous n'avez pas encore de poster. La bibliothèque de la ville en vend.", 14, TextAnchor.UpperLeft, Color.white, new Vector2(30f, -110f), new Vector2(600f, 24f));
+            return;
+        }
+
         foreach (var info in BookCatalog.Infos)
         {
             if (!BookShelfState.Owns(info.Id)) continue;
@@ -96,22 +118,42 @@ public class BooksTabUI
             Txt("None", "Vous n'avez pas encore de livre. La bibliothèque de la ville en vend.", 14, TextAnchor.UpperLeft, Color.white, new Vector2(30f, -110f), new Vector2(600f, 24f));
     }
 
+    // One line of the shelf for a poster: its small picture, its title, what it shows.
+    private void PosterCard(int row, PosterInfo info)
+    {
+        var y = -96f - row * 86f;
+        RuntimeUIKit.MakeBox("Card", listLayer, new Vector2(24f, y), new Vector2(752f, 82f), CardColor, false).raycastTarget = false;
+        var picture = RuntimeUIKit.MakeBox("PosterPicture", listLayer, new Vector2(38f, y - 3f), new Vector2(76f, 76f), Color.white, false);
+        picture.sprite = PosterArt.Thumbnail(info.Id);
+        picture.raycastTarget = false;
+
+        Txt("PosterTitle", info.Title, 17, TextAnchor.UpperLeft, Gold, new Vector2(130f, y - 6f), new Vector2(480f, 24f), true);
+        Txt("PosterText", info.Blurb, 12, TextAnchor.UpperLeft, Ink, new Vector2(130f, y - 30f), new Vector2(490f, 50f));
+
+        var id = info.Id;
+        var button = RuntimeUIKit.MakeButton("Open", listLayer, "Consulter", 14, new Color(0.25f, 0.50f, 0.30f, 1f), new Vector2(632f, y - 22f), new Vector2(120f, 36f));
+        button.onClick.AddListener(() => PosterViewerUI.Open(id));
+
+        var hit = RuntimeUIKit.MakeBox("Hit", listLayer, new Vector2(24f, y), new Vector2(600f, 82f), new Color(1f, 1f, 1f, 0.004f), false);
+        hit.gameObject.AddComponent<Button>().onClick.AddListener(() => PosterViewerUI.Open(id));
+    }
+
     // One line of the shelf: the small closed book, its title, what it holds.
     private void BookCard(int row, BookInfo info)
     {
-        var y = -104f - row * 112f;
-        RuntimeUIKit.MakeBox("Card", listLayer, new Vector2(24f, y), new Vector2(752f, 100f), CardColor, false).raycastTarget = false;
-        BookCovers.DrawSmall(listLayer, info, new Vector2(38f, y - 8f));
+        var y = -96f - row * 86f;
+        RuntimeUIKit.MakeBox("Card", listLayer, new Vector2(24f, y), new Vector2(752f, 82f), CardColor, false).raycastTarget = false;
+        BookCovers.DrawSmall(listLayer, info, new Vector2(38f, y - 1f));
 
-        Txt("BookTitle", info.Title, 17, TextAnchor.UpperLeft, Gold, new Vector2(116f, y - 12f), new Vector2(480f, 24f), true);
-        Txt("BookText", info.Blurb, 12, TextAnchor.UpperLeft, Ink, new Vector2(116f, y - 40f), new Vector2(490f, 56f));
+        Txt("BookTitle", info.Title, 17, TextAnchor.UpperLeft, Gold, new Vector2(116f, y - 6f), new Vector2(480f, 24f), true);
+        Txt("BookText", info.Blurb, 12, TextAnchor.UpperLeft, Ink, new Vector2(116f, y - 30f), new Vector2(490f, 50f));
 
         var id = info.Id;
-        var button = RuntimeUIKit.MakeButton("Open", listLayer, "Ouvrir", 14, new Color(0.25f, 0.50f, 0.30f, 1f), new Vector2(632f, y - 32f), new Vector2(120f, 36f));
+        var button = RuntimeUIKit.MakeButton("Open", listLayer, "Ouvrir", 14, new Color(0.25f, 0.50f, 0.30f, 1f), new Vector2(632f, y - 22f), new Vector2(120f, 36f));
         button.onClick.AddListener(() => OpenBook(id));
 
         // The whole line can be clicked.
-        var hit = RuntimeUIKit.MakeBox("Hit", listLayer, new Vector2(24f, y), new Vector2(600f, 100f), new Color(1f, 1f, 1f, 0.004f), false);
+        var hit = RuntimeUIKit.MakeBox("Hit", listLayer, new Vector2(24f, y), new Vector2(600f, 82f), new Color(1f, 1f, 1f, 0.004f), false);
         hit.gameObject.AddComponent<Button>().onClick.AddListener(() => OpenBook(id));
     }
 }

@@ -193,8 +193,9 @@ public class MainMenuFlow : MonoBehaviour
         CenterText(layer, "Un simulateur de gemmologie", 20, Muted, -362f, 28f, false, true);
 
         CenterButton(layer, "JOUER", 24, Green, -430f, new Vector2(300f, 58f), () => Show(Page.Slots));
-        CenterButton(layer, "RÉGLAGES", 20, Slate, -498f, new Vector2(300f, 50f), () => Show(Page.Settings));
-        CenterButton(layer, "QUITTER", 17, new Color(0.22f, 0.22f, 0.28f, 1f), -558f, new Vector2(300f, 44f), Quit);
+        CenterButton(layer, "ENCYCLOPÉDIE", 20, Slate, -494f, new Vector2(300f, 50f), () => GemEncyclopediaUI.Open(transform));
+        CenterButton(layer, "RÉGLAGES", 20, Slate, -552f, new Vector2(300f, 50f), () => Show(Page.Settings));
+        CenterButton(layer, "QUITTER", 17, new Color(0.22f, 0.22f, 0.28f, 1f), -610f, new Vector2(300f, 44f), Quit);
     }
 
     private static void Quit()
