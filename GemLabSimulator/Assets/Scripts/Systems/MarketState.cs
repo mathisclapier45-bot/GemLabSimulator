@@ -5,6 +5,8 @@ using UnityEngine;
 public class MarketVendor
 {
     public string CountryName;
+    public string Kind;               // the kind of stall: bazaar (poor, cheap stones), dealer, or house of prestige (selected stones)
+    public float QualityBias;         // -1 bazaar, 0 dealer, +1 prestige: see GemInstance
     public readonly List<GemInstance> Stock = new List<GemInstance>();
 
     // Buyback: each vendor has its own base rate, a bonus for stones from its own country and a per-stone quirk.
@@ -87,21 +89,25 @@ public class MarketState : MonoBehaviour
                 Seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue),
                 Expertise = UnityEngine.Random.Range(0.6f, 1.25f),
             };
+            var kindRoll = UnityEngine.Random.value;
+            if (kindRoll < 0.35f) { vendor.Kind = "étal de bazar"; vendor.QualityBias = -1f; }
+            else if (kindRoll < 0.80f) { vendor.Kind = "négociant"; vendor.QualityBias = 0f; }
+            else { vendor.Kind = "maison de prestige"; vendor.QualityBias = 1f; }
             for (var j = 0; j < ItemsPerVendor; j++)
-                vendor.Stock.Add(GenerateStockItem(country, database));
+                vendor.Stock.Add(GenerateStockItem(country, database, vendor.QualityBias));
             Vendors.Add(vendor);
         }
 
         OnMarketChanged?.Invoke();
     }
 
-    private static GemInstance GenerateStockItem(MarketCountries.Country country, GemDatabase database)
+    private static GemInstance GenerateStockItem(MarketCountries.Country country, GemDatabase database, float qualityBias)
     {
         var candidates = new List<(GemDefinition def, GemOrigin origin)>();
 
         foreach (var def in database.allGems)
         {
-            if (def == null || def.isTunnelExclusive) continue;
+            if (def == null || def.isTunnelExclusive || def.roughOnly) continue;
             foreach (var origin in def.origins)
             {
                 foreach (var keyword in country.MatchKeywords)
@@ -119,7 +125,7 @@ public class MarketState : MonoBehaviour
         if (candidates.Count > 0)
         {
             var (def, origin) = candidates[UnityEngine.Random.Range(0, candidates.Count)];
-            instance = new GemInstance(def, origin);
+            instance = new GemInstance(def, origin, qualityBias);
         }
         else
         {
@@ -127,8 +133,8 @@ public class MarketState : MonoBehaviour
             do
             {
                 def = database.allGems[UnityEngine.Random.Range(0, database.allGems.Count)];
-            } while (def.isTunnelExclusive);
-            instance = new GemInstance(def);
+            } while (def.isTunnelExclusive || def.roughOnly);
+            instance = new GemInstance(def, null, qualityBias);
         }
 
         instance.MarkIdentified();

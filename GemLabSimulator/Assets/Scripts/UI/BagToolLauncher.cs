@@ -9,7 +9,18 @@ public static class BagToolLauncher
     private static Action closeTool;
 
     // True while a tool opened from the bag is still on screen.
-    public static bool ToolOpenFromBag => isToolOpen != null && isToolOpen();
+    public static bool ToolOpenFromBag
+    {
+        get
+        {
+            if (isToolOpen == null) return false;
+            if (isToolOpen()) return true;
+            // The tool was closed with its own button: it is forgotten, so a later visit to the same instrument at the lab does not offer to go back to the bag.
+            isToolOpen = null;
+            closeTool = null;
+            return false;
+        }
+    }
 
     public static void CloseTool()
     {

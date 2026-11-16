@@ -56,6 +56,7 @@ public class RefractometerUI : MonoBehaviour
     private RectTransform vialRect;
     private Text contactText;
     private bool dropping;
+    private Coroutine dropRoutine;
 
     // The tabs at the left: the table of the species and their indices, then the situations that can be met.
     private GameObject guideRoot;
@@ -117,8 +118,17 @@ public class RefractometerUI : MonoBehaviour
         if (PlayerInventory.Instance != null) PlayerInventory.Instance.OnInventoryChanged -= RefreshIfOpen;
     }
 
+    private void StopDrop()
+    {
+        if (dropRoutine != null) StopCoroutine(dropRoutine);
+        dropRoutine = null;
+        dropping = false;
+        if (vialRect != null) vialRect.localEulerAngles = Vector3.zero;
+    }
+
     public void Open()
     {
+        StopDrop();
         stone = null;
         hasDrop = false;
         guideTab = null;
@@ -132,6 +142,7 @@ public class RefractometerUI : MonoBehaviour
 
     public void Close()
     {
+        StopDrop();
         if (panel != null) panel.SetActive(false);
         if (guideRoot != null) guideRoot.SetActive(false);
         GemTooltipUI.Instance?.Hide();
@@ -342,7 +353,8 @@ public class RefractometerUI : MonoBehaviour
 
     private void ClearStone()
     {
-        // Taking the stone off wipes the glass: the next one needs its own drop.
+        // Taking the stone off wipes the glass: the next one needs its own drop. A click on the empty glass does nothing (it must not wipe a drop just placed).
+        if (stone == null) return;
         stone = null;
         hasDrop = false;
         Refresh();
@@ -745,7 +757,7 @@ public class RefractometerUI : MonoBehaviour
             ToolFeedbackUI.Instance?.ShowMessage("Réfractomètre — La goutte est déjà sur le verre : déposez la pierre dessus.");
             return;
         }
-        StartCoroutine(DropRoutine());
+        dropRoutine = StartCoroutine(DropRoutine());
     }
 
     private System.Collections.IEnumerator DropRoutine()

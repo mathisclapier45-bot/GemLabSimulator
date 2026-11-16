@@ -54,7 +54,10 @@ public static class LoupeFeatures
                || (!string.IsNullOrEmpty(def.transparency) && def.transparency.ToLowerInvariant().StartsWith("opaque"));
     }
 
-    public static List<LoupeFeature> Generate(GemInstance gem)
+    public static List<LoupeFeature> Generate(GemInstance gem) => Generate(gem, true);
+
+    // `hideBehindSetting`: false gives the features before the metal of a jewel covers some of them (the microscope applies its own, softer rule).
+    private static List<LoupeFeature> Generate(GemInstance gem, bool hideBehindSetting)
     {
         var rng = new System.Random((int)StoneOptics.StableHash((gem.SpecimenId ?? "") + "loupe"));
         var features = new List<LoupeFeature>();
@@ -88,7 +91,7 @@ public static class LoupeFeatures
             });
         }
 
-        HideBehindSetting(features, gem, false);
+        if (hideBehindSetting) HideBehindSetting(features, gem, false);
         return features;
     }
 
@@ -156,7 +159,7 @@ public static class LoupeFeatures
         }
 
         // Surface defects are the same as under the loupe, seen in more detail.
-        foreach (var f in Generate(gem))
+        foreach (var f in Generate(gem, false))
         {
             if (f.External) features.Add(f);
         }

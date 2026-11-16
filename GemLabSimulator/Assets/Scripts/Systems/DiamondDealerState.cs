@@ -41,7 +41,8 @@ public class DiamondDealerState : MonoBehaviour
 
     public event Action OnStockChanged;
 
-    private static int nextCertificateNumber = 482000;
+    // Starts somewhere different in each session: the numbers are not saved, so they must not repeat those of the stones bought earlier.
+    private static int nextCertificateNumber = 482000 + (int)(System.DateTime.UtcNow.Ticks / 10000000L % 500000L);
 
     private void Awake()
     {

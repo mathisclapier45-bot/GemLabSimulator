@@ -385,6 +385,10 @@ public class ReportUIController : MonoBehaviour
                                "Renvoyez-la à son client depuis la boîte aux lettres pour être payé.";
             gemInstance.MarkIdentified();
             PlayerInventory.Instance?.NotifyChanged();
+            // The left side of the report said "not identified": it is written again, and the answer of the director put back.
+            var validated = resultText.text;
+            RenderReport();
+            resultText.text = validated;
             ReputationState.Instance?.AddPoint();
             StoryState.Instance?.OnStoneIdentified(gemInstance);
 

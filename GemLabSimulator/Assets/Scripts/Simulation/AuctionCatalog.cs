@@ -109,10 +109,16 @@ public static class AuctionCatalog
     public static AuctionTheme ThemeFor(DateTime date)
     {
         var saturday = NextAuction(date);
-        var pick = (int)(StoneOptics.StableHash("auction|theme|" + WeekKey(saturday)) % (uint)Themes.Length);
-        var previous = (int)(StoneOptics.StableHash("auction|theme|" + (WeekKey(saturday) - 1)) % (uint)Themes.Length);
-        if (pick == previous) pick = (pick + 1) % Themes.Length;
-        return Themes[pick];
+        return Themes[ThemeIndex(WeekKey(saturday), 8)];
+    }
+
+    // The theme of a week, once the "never twice in a row" rule has moved it: it is compared with the real theme of the week before, not with its raw draw.
+    private static int ThemeIndex(int week, int depth)
+    {
+        var pick = (int)(StoneOptics.StableHash("auction|theme|" + week) % (uint)Themes.Length);
+        if (depth <= 0) return pick;
+        var previous = ThemeIndex(week - 1, depth - 1);
+        return pick == previous ? (pick + 1) % Themes.Length : pick;
     }
 
     // ---- Lots --------------------------------------------------------------------------------------------------------

@@ -396,7 +396,19 @@ public static class RuntimeUIKit
     }
 
     // White rounded rectangle meant to be tinted and 9-sliced.
+    private static readonly System.Collections.Generic.Dictionary<long, Sprite> RoundedSprites = new System.Collections.Generic.Dictionary<long, Sprite>();
+
+    // The same rounded square is asked for again and again (the badges of the map, the bubbles of the furnaces): it is made once.
     public static Sprite MakeRoundedSprite(int size, int radius)
+    {
+        var key = size * 1000L + radius;
+        if (RoundedSprites.TryGetValue(key, out var cached) && cached != null) return cached;
+        var sprite = BuildRoundedSprite(size, radius);
+        RoundedSprites[key] = sprite;
+        return sprite;
+    }
+
+    private static Sprite BuildRoundedSprite(int size, int radius)
     {
         var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
         {

@@ -142,7 +142,7 @@ public static class GiaDiamondColors
     public static GemColorValue SampleHue(GiaHue hue, GiaGrade grade, Func<float> random)
     {
         var range = GradeRange[(int)grade];
-        var saturation = Mathf.Lerp(range[0], range[1], random()) * hue.SatCap;
+        var saturation = Mathf.Max(0.045f, Mathf.Lerp(range[0], range[1], random()) * hue.SatCap);      // never so pale that the stone reads as colourless
         var brightness = Mathf.Lerp(range[2], range[3], random());
         var hueDegrees = hue.Degrees + (random() - 0.5f) * 4f;
         return new GemColorValue(hueDegrees, saturation, brightness);

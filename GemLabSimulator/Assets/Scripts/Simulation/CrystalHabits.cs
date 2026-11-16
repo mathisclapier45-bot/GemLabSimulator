@@ -138,7 +138,7 @@ public static class CrystalHabits
 
         // The quartzes grow in prisms; the agates, tiger's eye and rose quartz are masses.
         var quartz = def.isQuartzFamily || name == "Quartz" || name == "Amethyste" || name == "Citrine" || name == "Ametrine" || name == "Prasiolite" || name == "Quartz_Fume";
-        if (quartz && name != "Agate" && name != "Oeil_de_Tigre" && name != "Quartz_Rose") return Chance(("quartz_prism", 60), ("quartz_double", 40));
+        if (quartz && name != "Agate" && name != "Oeil_de_Tigre" && name != "Quartz_Rose" && name != "Cornaline") return Chance(("quartz_prism", 60), ("quartz_double", 40));
 
         return new List<HabitChance>();
     }

@@ -69,12 +69,15 @@ public class PlayerPets : MonoBehaviour
         return true;
     }
 
-    public void Unequip()
+    // The equipped animal goes back into the bag; false when the bag has no room left for it (it would be an eleventh one, out of sight).
+    public bool Unequip()
     {
-        if (string.IsNullOrEmpty(equipped)) return;
+        if (string.IsNullOrEmpty(equipped)) return true;
+        if (Collection.Count >= CollectionSlots) return false;
         equipped = null;
         RefreshFollower();
         OnPetsChanged?.Invoke();
+        return true;
     }
 
     public void LoadPets(IEnumerable<string> petIds, string equippedId)

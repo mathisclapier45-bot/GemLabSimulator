@@ -157,6 +157,13 @@ public class ChelseaFilterUI : MonoBehaviour
     {
         stone = gem;
         info = TreatmentSignatures.Chelsea(gem);
+        // A stone dropped while the lamp is already on is observed at once.
+        if (lightOn && stone != null)
+        {
+            stone.RecordObservation(ExaminationTool.MeasurementType.ChelseaFilter.ToString());
+            StoryState.Instance?.OnObserved(stone, ExaminationTool.MeasurementType.ChelseaFilter.ToString());
+            ToolFeedbackUI.Instance?.ShowMessage($"Filtre Chelsea — {ChelseaLibrary.Reaction(stone)}");
+        }
         Refresh();
     }
 

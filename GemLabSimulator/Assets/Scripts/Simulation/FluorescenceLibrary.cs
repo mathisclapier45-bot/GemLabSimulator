@@ -33,17 +33,18 @@ public static class FluorescenceLibrary
         get
         {
             if (entries != null) return entries;
-            entries = new Dictionary<string, FluorescenceEntry>();
+            var loaded = new Dictionary<string, FluorescenceEntry>();
             var asset = Resources.Load<TextAsset>("Fluorescence/fluorescence");
-            if (asset == null) { Debug.LogWarning("Table de fluorescence introuvable : Resources/Fluorescence/fluorescence.json"); return entries; }
+            if (asset == null) { Debug.LogWarning("Table de fluorescence introuvable : Resources/Fluorescence/fluorescence.json"); return loaded; }
             try
             {
                 var file = JsonUtility.FromJson<FluorescenceFile>(asset.text);
                 if (file != null && file.entries != null)
                     foreach (var entry in file.entries)
-                        if (entry != null && !string.IsNullOrEmpty(entry.key)) entries[entry.key] = entry;
+                        if (entry != null && !string.IsNullOrEmpty(entry.key)) loaded[entry.key] = entry;
             }
-            catch (Exception) { Debug.LogWarning("Table de fluorescence illisible : Resources/Fluorescence/fluorescence.json"); }
+            catch (Exception) { Debug.LogWarning("Table de fluorescence illisible : Resources/Fluorescence/fluorescence.json"); return loaded; }
+            entries = loaded;
             return entries;
         }
     }

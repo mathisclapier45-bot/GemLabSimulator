@@ -39,7 +39,7 @@ public class TownMapUI : MonoBehaviour
         ("Tunnel", 0f, -50f),
     };
 
-    private const float MapScale = 1.4f;              // screen pixels per texture pixel
+    private const float MapScale = 1.1f;              // screen pixels per texture pixel
     private const float IconSize = 24f;
 
     private static readonly Color Gold = new Color(0.86f, 0.70f, 0.36f, 1f);

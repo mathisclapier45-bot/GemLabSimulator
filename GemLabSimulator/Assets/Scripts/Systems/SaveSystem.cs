@@ -54,6 +54,9 @@ public static class SaveSystem
     {
         if (PlayerWallet.Instance == null || PlayerInventory.Instance == null || PlayerChest.Instance == null)
             return;
+        // The story and the books are part of the save: without their components a save would write "no story" and "no books" over the real ones.
+        if (StoryState.Instance == null || BookShelfState.Instance == null)
+            return;
 
         var existingName = PeekSlot(ActiveSlot)?.saveName;
 

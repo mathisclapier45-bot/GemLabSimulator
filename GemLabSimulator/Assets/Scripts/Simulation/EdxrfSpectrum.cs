@@ -233,7 +233,7 @@ public static class EdxrfSpectrum
                 add("Cr", 0.55f * tone);
                 if (synthetic)
                 {
-                    if (hash("flux") % 100 < 55)
+                    if (hash("flux") % 100 < 60)
                     {
                         add("V", 0.3f);
                         add("Mo", 0.2f);

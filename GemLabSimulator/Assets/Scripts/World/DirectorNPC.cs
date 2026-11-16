@@ -15,7 +15,7 @@ public class DirectorNPC : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.GetComponent<PlayerInventory>() != playerInventory) return;
+        if (!other.CompareTag("Player") || other.GetComponent<PlayerInventory>() != playerInventory) return;
         playerInRange = false;
         playerInventory = null;
         ReportUIController.Instance?.Close();
@@ -26,6 +26,6 @@ public class DirectorNPC : MonoBehaviour
         if (!playerInRange || !TextEntry.KeyDown(KeyCode.E)) return;
 
         Sfx.Play(Sfx.Id.Chat);
-        ReportUIController.Instance.Open(playerInventory);
+        ReportUIController.Instance?.Open(playerInventory);
     }
 }

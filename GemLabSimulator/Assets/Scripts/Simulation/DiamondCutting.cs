@@ -215,7 +215,7 @@ public static class DiamondCutting
         HiddenGrades(rough, out var colorIndex, out var clarityIndex);
 
         var roll = Random.value;
-        if (roll < cutter.ClarityGainChance) clarityIndex = Mathf.Max(1, clarityIndex - 1);
+        if (roll < cutter.ClarityGainChance) clarityIndex = Mathf.Max(0, clarityIndex - 1);
         else if (roll < cutter.ClarityGainChance + cutter.ClarityLossChance) clarityIndex = Mathf.Min(DiamondGrading.ClarityScale.Length - 1, clarityIndex + 1);
 
         var quality = PickQuality(cutter.QualityWeights);

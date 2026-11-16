@@ -36,6 +36,9 @@ public static class LabFindings
         {
             var origin = def.origins != null && def.origins.Count > 0 ? def.origins[0] : null;
             gem = origin != null ? new GemInstance(def, origin) : new GemInstance(def);
+            // The reference stone of a species is a natural one: a stone drawn synthetic is drawn again.
+            for (var attempt = 0; attempt < 8 && gem.IsSynthetic && !def.forcedSynthetic; attempt++)
+                gem = origin != null ? new GemInstance(def, origin) : new GemInstance(def);
             gem.MarkIdentified();
             gem.ClearTreatment();
             ReferenceOrigins[def.name] = origin != null ? origin.name : null;

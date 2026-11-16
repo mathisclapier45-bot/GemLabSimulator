@@ -20,6 +20,7 @@ public class DiamondCertificateUI : MonoBehaviour
     private GameObject page;
     private GameObject sheet;
     private GemInstance gem;
+    private Texture2D profileTexture;                  // the drawing of the proportions: one texture, drawn again each time
 
     public bool IsOpen => page != null && page.activeSelf;
 
@@ -228,7 +229,8 @@ public class DiamondCertificateUI : MonoBehaviour
         profile.transform.SetParent(parent, false);
         RuntimeUIKit.SetTopLeft(profile.GetComponent<RectTransform>(), new Vector2(x, -354f), new Vector2(190f, 170f));
         var raw = profile.GetComponent<RawImage>();
-        raw.texture = DiamondProfileDrawing.Draw(grade, 190, 170, 1.5f, 95f, 22f, false);
+        profileTexture = DiamondProfileDrawing.Draw(grade, 190, 170, 1.5f, 95f, 22f, false, profileTexture);
+        raw.texture = profileTexture;
         raw.raycastTarget = false;
 
         var y = -354f;

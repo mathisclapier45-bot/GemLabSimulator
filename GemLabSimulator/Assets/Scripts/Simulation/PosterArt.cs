@@ -10,6 +10,9 @@ public struct PosterLabel
     public int Size;
     public Color Color;
     public float Width;
+    public bool Bold;
+    public bool Italic;
+    public bool Left;                // Position is the left end of the text instead of its centre
 }
 
 // The pictures of the posters, drawn in code from the colour grid of the laboratory (GemColorSystem): the same 72 hues and eight rows as the book of the corundum.
@@ -35,8 +38,15 @@ public static class PosterArt
     private const float Outer = 248f;
     private const float Inner = 92f;
 
+    // The size in pixels of the picture of a poster.
+    public static Vector2Int SizeOf(string id)
+    {
+        return id == PosterCatalog.Garnets ? new Vector2Int(PosterGarnets.Width, PosterGarnets.Height) : new Vector2Int(PosterWidth, PosterHeight);
+    }
+
     public static Texture2D Poster(string id, out List<PosterLabel> labels)
     {
+        if (id == PosterCatalog.Garnets) return PosterGarnets.Poster(out labels);
         if (cachedTexture == null)
         {
             var pixels = new Color32[PosterWidth * PosterHeight];
@@ -60,6 +70,7 @@ public static class PosterArt
     // A small picture of the poster for the lists: the wheel on its paper.
     public static Sprite Thumbnail(string id)
     {
+        if (id == PosterCatalog.Garnets) return PosterGarnets.Thumbnail();
         if (cachedThumb != null) return cachedThumb;
         const int size = 96;
         var pixels = new Color32[size * size];

@@ -127,7 +127,7 @@ public static class CoatingCatalog
     private static bool FacetedCoatable(GemDefinition definition)
     {
         var name = definition != null ? definition.name : "";
-        if (definition != null && definition.isQuartzFamily) return name != "Agate" && name != "Oeil_de_Tigre";
+        if (definition != null && definition.isQuartzFamily) return name != "Agate" && name != "Oeil_de_Tigre" && name != "Cornaline";
         switch (name)
         {
             case "Topaze": case "CZ": case "Tanzanite": case "Kunzite": case "Tourmaline_Rose": case "Tourmaline_Paraiba":
@@ -326,7 +326,10 @@ public static class CoatingCatalog
             return result;
         }
 
-        result.ValueFactor = Mathf.Clamp(result.ValueFactor / Mathf.Max(0.01f, DiamondGrading.ColorFactorOf(old)) * 0.7f, 0.25f, 3f);
+        // The film turns the diamond into a "fancy" colour: the price follows the colour, but a failed coating never raises it.
+        var scaled = result.ValueFactor / Mathf.Max(0.01f, DiamondGrading.ColorFactorOf(old)) * 0.7f;
+        if (result.Outcome != CoatOutcome.Good && result.Outcome != CoatOutcome.Excellent) scaled = Mathf.Min(scaled, result.ValueFactor);
+        result.ValueFactor = Mathf.Clamp(scaled, 0.25f, 3f);
         result.Description += " Sur un diamant, le film en fait une pierre de couleur fancy qui n'est pas naturelle ; le certificat ne décrit plus la pierre.";
         return result;
     }

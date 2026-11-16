@@ -58,15 +58,22 @@ public struct FluorescenceInfo
 
         // Colors in order of appearance; a range like "rouge à rose" is averaged.
         var found = new List<(int index, Color color)>();
+        var covered = new List<(int start, int end)>();       // where an earlier, longer keyword was found: "bleu-blanc" is one colour, not "bleu" and "blanc"
         foreach (var (keywords, c) in ColorTable)
         {
             var best = -1;
+            var bestLength = 0;
             foreach (var keyword in keywords)
             {
                 var i = t.IndexOf(keyword, System.StringComparison.Ordinal);
-                if (i >= 0 && (best < 0 || i < best)) best = i;
+                if (i >= 0 && (best < 0 || i < best)) { best = i; bestLength = keyword.Length; }
             }
-            if (best >= 0) found.Add((best, c));
+            if (best < 0) continue;
+            var inside = false;
+            foreach (var range in covered) if (best >= range.start && best < range.end) inside = true;
+            if (inside) continue;
+            covered.Add((best, best + bestLength));
+            found.Add((best, c));
         }
         found.Sort((a, b) => a.index.CompareTo(b.index));
         if (found.Count > 0)

@@ -38,7 +38,7 @@ MonoBehaviour:
   fluorescenceShortWave: Aucune fluorescence notable.
   opticalCharacter: "Anisotrope, uniaxial (bir\xE9fringent)."
   opticalCharacterClass: 1
-  birefringence: 0
+  birefringence: 0.009
   isQuartzFamily: 1
   isPolycrystalline: 1
   isThermallyConductiveLikeDiamond: 0

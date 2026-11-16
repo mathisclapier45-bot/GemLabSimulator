@@ -121,7 +121,7 @@ public class MarketUI : MonoBehaviour
     private void Refresh()
     {
         if (titleText != null)
-            titleText.text = currentVendor != null ? $"Marchand — {currentVendor.CountryName}" : "";
+            titleText.text = currentVendor != null ? $"Marchand — {currentVendor.CountryName}" + (string.IsNullOrEmpty(currentVendor.Kind) ? "" : $" ({currentVendor.Kind})") : "";
 
         if (buyTabButton != null)
         {

@@ -499,11 +499,14 @@ public static class DiamondGradeModel
         var total = 0f;
         foreach (var w in weights) total += w;
         var roll = (hash % 1000) / 1000f * total;
+        var last = weights.Length - 1;
         for (var i = 0; i < weights.Length; i++)
         {
+            if (weights[i] <= 0f) continue;              // an entry with no weight is never drawn
+            last = i;
             roll -= weights[i];
             if (roll <= 0f) return i;
         }
-        return weights.Length - 1;
+        return last;
     }
 }

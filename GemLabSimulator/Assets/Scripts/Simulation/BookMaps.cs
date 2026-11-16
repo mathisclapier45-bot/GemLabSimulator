@@ -75,7 +75,7 @@ public static class BookMaps
         { "Czechia", new View { Main = new[] { "Czechia" }, Title = "République tchèque" } },
         { "Myanmar", new View { Main = new[] { "Myanmar" }, Title = "Myanmar" } },
         { "@Africa", new View { Continent = "Africa", Title = "Afrique" } },
-        { "@SouthAfrica", new View { Main = new[] { "South Africa", "Namibia", "Botswana", "Zimbabwe", "Mozambique", "Zambia", "Angola", "Lesotho", "Eswatini", "Malawi" }, Box = new Vector4(10f, -36f, 42f, -8f), Title = "Afrique australe" } },
+        { "@SouthAfrica", new View { Main = new[] { "South Africa", "Namibia", "Botswana", "Zimbabwe", "Mozambique", "Zambia", "Angola", "Lesotho", "eSwatini", "Malawi" }, Box = new Vector4(10f, -36f, 42f, -8f), Title = "Afrique australe" } },
         { "@Arctic", new View { Main = new[] { "Canada", "United States of America" }, Box = new Vector4(-170f, 50f, -55f, 76f), Title = "Alaska et nord du Canada" } },
         { "@Baltic", new View { Main = new[] { "Poland", "Lithuania", "Latvia", "Estonia", "Russia", "Sweden", "Finland", "Denmark", "Germany" }, Clip = new Vector4(4f, 49f, 36f, 68f), Box = new Vector4(4f, 49f, 36f, 67f), Title = "Mer Baltique" } },
         { "@Kashmir", new View { Main = new[] { "India", "Pakistan" }, Box = new Vector4(66f, 23f, 86f, 41f), Title = "Cachemire" } },
@@ -175,6 +175,30 @@ public static class BookMaps
         P("États-Unis (Maine)", "United States of America", M(44.3f, -70.5f, "Mont Mica"));
         P("États-Unis (Utah, Wah Wah Mountains)", "United States of America", M(38.5f, -113.4f, "Wah Wah"));
         P("Éthiopie", "Ethiopia", M(11.9f, 39.6f, "Wollo"));
+        P("Angleterre (Derbyshire)", "United Kingdom", M(53.34f, -1.78f, "Castleton"));
+        P("Brésil (Maxixe)", "Brazil", M(-17.8f, -41.5f, "Minas Gerais"));
+        P("Brésil (Minas Gerais)", "Brazil", M(-18.6f, -43.9f, "Minas Gerais"));
+        P("Canada (Ontario)", "Canada", M(45.1f, -77.8f, "Bancroft"));
+        P("Colombie", "Colombia", M(4.9f, -73.4f, "Boyacá"));
+        P("Congo (RDC)", "Dem. Rep. Congo", M(-10.7f, 25.5f, "Katanga"));
+        P("Espagne (Cantabrie)", "Spain", M(43.2f, -4.5f, "Cantabrie"));
+        P("France (Aude)", "France", M(43.0f, 2.3f, "Aude"));
+        P("Italie (Sicile)", "Italy", M(37.5f, 14.0f, "Sicile"));
+        P("Mali", "Mali", M(12.6f, -8.0f, "Mali"));
+        P("Maroc", "Morocco", M(31.5f, -5.5f, "Anti-Atlas"));
+        P("Mexique (Chihuahua)", "Mexico", M(28.6f, -106.1f, "Chihuahua"));
+        P("Mexique (Naica)", "Mexico", M(27.85f, -105.5f, "Naica"));
+        P("Pakistan (Swat)", "Pakistan", M(35.2f, 72.5f, "Swat"));
+        P("Panama", "Panama", M(8.5f, -80.0f, "Panama"));
+        P("Pologne", "Poland", M(52.0f, 19.4f, "Pologne"));
+        P("Royaume-Uni (Whitby)", "United Kingdom", M(54.5f, -0.6f, "Whitby"));
+        P("République tchèque", "Czechia", M(49.4f, 16.0f, "Moravie et Bohême"));
+        P("Serbie", "Serbia", M(44.0f, 20.9f, "Serbie"));
+        P("Sibérie (Oural)", "Russia", M(57.0f, 60.5f, "Oural"));
+        P("Turquie", "Turkey", M(38.5f, 35.5f, "Anatolie"));
+        P("Zimbabwe (Sandawana)", "Zimbabwe", M(-20.2f, 30.0f, "Sandawana"));
+        P("Équateur", "Ecuador", M(-1.8f, -78.2f, "Équateur"));
+        P("États-Unis (Utah)", "United States of America", M(39.3f, -111.1f, "Utah"));
         return d;
     }
 

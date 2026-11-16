@@ -212,6 +212,7 @@ public class BagUI : MonoBehaviour
         if (string.IsNullOrEmpty(id)) return;
 
         if (BagToolLauncher.Use(id)) Close();
+        else ShowInfo(slotIndex);                  // the lantern lit, the bicycle put on: the text under the slots says so now
     }
 
     // The equipped animal and the ones waiting in the bag.
@@ -647,7 +648,11 @@ public class BagUI : MonoBehaviour
         RuntimeUIKit.MakeText("PetLabel", panel.transform, "Animal", 13, TextAnchor.UpperLeft, Gold, new Vector2(x, -178f), new Vector2(80f, 20f));
         var equipped = MakeSlot("Animal", new Vector2(x, -204f), "Animal");
         equippedPetIcon = AddIcon(equipped);
-        equipped.gameObject.AddComponent<Button>().onClick.AddListener(() => PlayerPets.Instance?.Unequip());
+        equipped.gameObject.AddComponent<Button>().onClick.AddListener(() =>
+        {
+            if (PlayerPets.Instance != null && !PlayerPets.Instance.Unequip())
+                ToolFeedbackUI.Instance?.ShowMessage("Le sac est plein : faites de la place avant de ranger l'animal.");
+        });
         var equippedHover = equipped.gameObject.AddComponent<BagSlotHover>();
         equippedHover.OnEnter = () => ShowPetInfo(PlayerPets.Instance != null ? PlayerPets.Instance.Equipped : null, true);
         equippedHover.OnExit = HideInfo;

@@ -111,9 +111,25 @@ public class ReportPrinterUI : MonoBehaviour
         panel.SetActive(false);
     }
 
+    private void Start()
+    {
+        if (PlayerInventory.Instance != null) PlayerInventory.Instance.OnInventoryChanged += OnInventoryChanged;
+    }
+
+    // The stone on the printer was sent back or sold: the slot is emptied.
+    private void OnInventoryChanged()
+    {
+        if (gem == null || PlayerInventory.Instance == null) return;
+        foreach (var g in PlayerInventory.Instance.Gems)
+            if (ReferenceEquals(g, gem)) return;
+        gem = null;
+        if (panel != null && panel.activeSelf) Refresh();
+    }
+
     private void OnDestroy()
     {
         if (Instance == this) Instance = null;
+        if (PlayerInventory.Instance != null) PlayerInventory.Instance.OnInventoryChanged -= OnInventoryChanged;
     }
 
     public void Open()

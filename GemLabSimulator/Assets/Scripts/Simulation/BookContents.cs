@@ -831,7 +831,7 @@ public static class BookContents
                     : "Le gris est un bleu, un violet ou un vert plus faible, à saturation basse."),
                 Heading("Fréquence") + "\n" + "Environ <b>" + perThousand.ToString("0", French) + "</b> diamants de couleur sur mille.");
             entry.RightBuilder = () => Blocks(
-                Heading("Prix") + "\n" + Bullets("Facteur de teinte : <b>×" + rarity.ToString("0.#", French) + "</b>.", "Fancy Light, Fancy, Fancy Deep et Fancy Dark : les degrés vont de ×" + GiaDiamondColors.GradeMultiplier(GiaGrade.FancyDark).ToString("0.0#", French) + " à ×" + GiaDiamondColors.GradeMultiplier(GiaGrade.FancyDeep).ToString("0.0#", French) + "."),
+                Heading("Prix") + "\n" + Bullets("Facteur de teinte : <b>×" + rarity.ToString("0.#", French) + "</b>.", string.Join(", ", grades.Select(g => GiaDiamondColors.English(g))) + " : les degrés vont de ×" + grades.Min(g => GiaDiamondColors.GradeMultiplier(g)).ToString("0.0#", French) + " à ×" + grades.Max(g => GiaDiamondColors.GradeMultiplier(g)).ToString("0.0#", French) + "."),
                 Note("Les bruns se vendent peu cher : ils sont si nombreux qu'on les trouve en grandes quantités."));
         }
         book.Entries.Add(entry);

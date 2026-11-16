@@ -182,6 +182,7 @@ public class ShadowFollower : MonoBehaviour
     private bool animated;
     private float lengthFactor;
     private int appliedVersion = -1;
+    private float appliedOpacity = -1f;
     private SpriteRenderer blob;
 
     // The soft blob under a character shows and hides with it.
@@ -216,8 +217,10 @@ public class ShadowFollower : MonoBehaviour
         var opacity = visible ? SunShadows.Opacity : 0f;
         shadow.enabled = opacity > 0.01f;
 
-        if (appliedVersion == SunShadows.Version && !animated) return;
+        // Applied again when the version changes, or when the caster appears or disappears (a merchant who is there only at night).
+        if (appliedVersion == SunShadows.Version && !animated && Mathf.Approximately(appliedOpacity, opacity)) return;
         appliedVersion = SunShadows.Version;
+        appliedOpacity = opacity;
         root.localScale = new Vector3(1f, -SunShadows.Length * lengthFactor, 1f);
         swing.localRotation = Quaternion.Euler(0f, 0f, SunShadows.Lean);
         shadow.color = new Color(0f, 0f, 0f, opacity);

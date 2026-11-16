@@ -218,7 +218,7 @@ public static class GemColorSystem
                 if (InHue(h, 335f, 360f) && s >= 0.80f && b >= 0.55f && b <= 0.90f) return "Rubellite";
                 break;
             case "Emeraude":
-                if (h >= 140f && h <= 165f && s >= 0.88f && b >= 0.55f && b <= 0.82f) return "Vert Muzo";
+                if (h >= 128f && h <= 156f && s >= 0.88f && b >= 0.55f && b <= 0.82f) return "Vert Muzo";
                 break;
             case "Topaze":
                 if (h >= 188f && h <= 208f && s >= 0.45f && s <= 0.60f && b >= 0.82f) return "Swiss blue";
@@ -234,14 +234,14 @@ public static class GemColorSystem
     {
         switch (tradeName)
         {
-            case "Sang de pigeon": return 4.0f;
-            case "Bleu royal": return 2.5f;
-            case "Cornflower (bleu bleuet)": return 2.0f;
-            case "Padparadscha": return 1.8f;
-            case "Paraïba (bleu néon)": return 3.0f;
+            case "Sang de pigeon": return 6.0f;
+            case "Bleu royal": return 3.5f;
+            case "Cornflower (bleu bleuet)": return 2.5f;
+            case "Padparadscha": return 3.0f;
+            case "Paraïba (bleu néon)": return 5.0f;
             case "Jedi (rose néon)": return 3.0f;
             case "Rubellite": return 1.5f;
-            case "Vert Muzo": return 2.0f;
+            case "Vert Muzo": return 3.0f;
             case "Topaze impériale": return 3.0f;
             case "London blue": return 1.5f;
             case "Swiss blue": return 1.3f;
@@ -556,6 +556,8 @@ public static class GemColorSystem
                     M(0.10f, 326f, 343f, 0.78f, 1.00f, 0.55f, 0.80f),    // purplish red
                     M(0.07f, 8f, 20f, 0.85f, 1.00f, 0.72f, 0.90f),       // orangy red
                     M(0.04f, 345f, 358f, 0.22f, 0.36f, 0.95f, 1.00f),    // very light pink
+                    M(0.10f, 354f, 372f, 0.55f, 0.78f, 0.34f, 0.52f),    // dull brownish red, the colour of most of the cheap material
+                    M(0.06f, 0f, 14f, 0.38f, 0.58f, 0.40f, 0.60f),       // greyish, muddy red
                 };
             case "Saphir_Bleu":
                 return new[]
@@ -728,14 +730,15 @@ public static class GemColorSystem
             case "Emeraude":
                 return new[]
                 {
-                    M(0.07f, 146f, 160f, 0.88f, 1.00f, 0.58f, 0.80f),    // Muzo green
-                    M(0.20f, 135f, 160f, 0.85f, 1.00f, 0.72f, 0.90f),    // vivid green
-                    M(0.20f, 130f, 160f, 0.62f, 0.84f, 0.78f, 0.95f),    // intense / medium green
-                    M(0.14f, 125f, 155f, 0.28f, 0.50f, 0.94f, 1.00f),    // light green
-                    M(0.12f, 160f, 172f, 0.70f, 0.95f, 0.65f, 0.90f),    // bluish green
-                    M(0.13f, 105f, 130f, 0.65f, 0.90f, 0.70f, 0.90f),    // yellowish green
-                    M(0.08f, 140f, 165f, 0.88f, 1.00f, 0.38f, 0.58f),    // deep green
-                    M(0.06f, 150f, 170f, 0.40f, 0.60f, 0.85f, 1.00f),    // pastel green
+                    M(0.07f, 134f, 148f, 0.88f, 1.00f, 0.58f, 0.80f),    // Muzo green
+                    M(0.20f, 124f, 148f, 0.85f, 1.00f, 0.72f, 0.90f),    // vivid green
+                    M(0.20f, 120f, 148f, 0.62f, 0.84f, 0.78f, 0.95f),    // intense / medium green
+                    M(0.14f, 116f, 145f, 0.28f, 0.50f, 0.94f, 1.00f),    // light green
+                    M(0.12f, 150f, 164f, 0.70f, 0.95f, 0.65f, 0.90f),    // bluish green
+                    M(0.13f, 98f, 124f, 0.65f, 0.90f, 0.70f, 0.90f),    // yellowish green
+                    M(0.08f, 128f, 152f, 0.88f, 1.00f, 0.38f, 0.58f),    // deep green
+                    M(0.06f, 138f, 158f, 0.40f, 0.60f, 0.85f, 1.00f),    // pastel green
+                    M(0.10f, 112f, 140f, 0.40f, 0.62f, 0.32f, 0.52f),    // dull, greyish dark green
                 };
             case "Sphalerite":
                 // Red to orange to brown, a honey yellow at the pale end, a near-black brown at the dark end.

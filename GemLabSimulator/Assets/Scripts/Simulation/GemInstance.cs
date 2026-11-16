@@ -352,35 +352,92 @@ public class GemInstance
         }
     }
 
+    // How good this stone really is, as the eye sees it (haze, visible inclusions, polish, uneven colour, proportions): see StoneQuality. Worked out again when the clarity
+    // or the treatments of the stone change.
+    private StoneQuality qualityCache;
+    private string qualitySignature;
+
+    public StoneQuality Quality
+    {
+        get
+        {
+            var signature = $"{SpecimenId}|{ClarityGrade}|{TreatmentGrade}|{IsRough}|{CutStyleName}|{CutQualityIndex}|{IsSynthetic}|{FillerName}";
+            if (signature != qualitySignature)
+            {
+                qualityCache = StoneQuality.For(this);
+                qualitySignature = signature;
+            }
+            return qualityCache;
+        }
+    }
+
+    // The diaphaneity the stone shows: the one of its species, lowered when it is hazy.
+    public Diaphaneity VisualDiaphaneity => Quality.Level(Definition.Diaphaneity);
+
     public Sprite DisplaySprite
     {
         get
         {
+            var quality = Quality;
             if (IsRough)
             {
                 var crystal = Habit;
                 if (crystal != null && Definition.iconColor.a > 0f)
                     return HasColor
-                        ? GemIconFactory.GetHabit(Definition, crystal.Id, BodyColor, FacetColor)
-                        : GemIconFactory.GetHabit(Definition, crystal.Id, Definition.iconColor, Definition.iconFacetColor);
+                        ? GemIconFactory.GetHabit(Definition, crystal.Id, BodyColor, FacetColor, quality)
+                        : GemIconFactory.GetHabit(Definition, crystal.Id, Definition.iconColor, Definition.iconFacetColor, quality);
                 return HasColor ? GemIconFactory.GetRough(Definition, BodyColor) : Definition.GetRoughIcon();
             }
             if (CoatingIridescence >= 0.25f && HasColor)
                 return GemIconFactory.GetIridescent(Definition, ShapeName, CutStyleName, BodyColor, FacetColor, CoatingIridescence);
             if (CutStyleName == "Cabochon" && (AsterismRays > 0 || CatsEye))
                 return HasColor
-                    ? GemIconFactory.Get(Definition, ShapeName, CutStyleName, BodyColor, FacetColor, AsterismRays, CatsEye)
-                    : GemIconFactory.Get(Definition, ShapeName, CutStyleName, Definition.iconColor, Definition.iconFacetColor, AsterismRays, CatsEye);
-            return HasColor
-                ? GemIconFactory.Get(Definition, ShapeName, CutStyleName, BodyColor, FacetColor)
-                : GemIconFactory.Get(Definition, ShapeName, CutStyleName);
+                    ? GemIconFactory.Get(Definition, ShapeName, CutStyleName, BodyColor, FacetColor, AsterismRays, CatsEye, quality)
+                    : GemIconFactory.Get(Definition, ShapeName, CutStyleName, Definition.iconColor, Definition.iconFacetColor, AsterismRays, CatsEye, quality);
+            if (!HasColor && Definition.iconColor.a <= 0f) return GemIconFactory.Get(Definition, ShapeName, CutStyleName);
+            return GemIconFactory.Get(Definition, ShapeName, CutStyleName,
+                HasColor ? BodyColor : Definition.iconColor, HasColor ? FacetColor : Definition.iconFacetColor, 0, false, quality);
         }
     }
 
     private readonly Dictionary<string, float> measuredValues = new Dictionary<string, float>();
     private readonly HashSet<string> observedProperties = new HashSet<string>();
 
-    public GemInstance(GemDefinition definition, GemOrigin forcedOrigin = null)
+    // A seller's quality bias skews what he stocks: below -0.5 the worst of a few draws (poor colour, heavy inclusions, small stones: a bazaar stall), above 0.5
+    // the best (fine colour, clean stones, larger ones: a house of prestige), in between the plain luck of the draw.
+    private static GemColorValue SampleColor(GemDefinition definition, bool synthetic, float qualityBias)
+    {
+        var best = GemColorSystem.Sample(definition, () => Random.value, synthetic);
+        if (Mathf.Abs(qualityBias) <= 0.5f) return best;
+
+        var bestValue = GemColorSystem.Describe(best).ValueMultiplier;
+        for (var i = 1; i < 3; i++)
+        {
+            var candidate = GemColorSystem.Sample(definition, () => Random.value, synthetic);
+            var value = GemColorSystem.Describe(candidate).ValueMultiplier;
+            if (qualityBias > 0f ? value > bestValue : value < bestValue)
+            {
+                best = candidate;
+                bestValue = value;
+            }
+        }
+        return best;
+    }
+
+    private static GemGrading.Grade PickClarity(GemDefinition definition, GemOrigin origin, bool synthetic, float qualityBias)
+    {
+        var best = InclusionCatalog.PickClarity(definition, origin, synthetic);
+        if (Mathf.Abs(qualityBias) <= 0.5f) return best;
+
+        for (var i = 1; i < 3; i++)
+        {
+            var candidate = InclusionCatalog.PickClarity(definition, origin, synthetic);
+            if (qualityBias > 0f ? candidate.Multiplier > best.Multiplier : candidate.Multiplier < best.Multiplier) best = candidate;
+        }
+        return best;
+    }
+
+    public GemInstance(GemDefinition definition, GemOrigin forcedOrigin = null, float qualityBias = 0f)
     {
         Definition = definition;
         SpecimenId = $"id{nextSpecimenNumber:D4}";
@@ -404,10 +461,10 @@ public class GemInstance
         var fancy = syntheticDiamond ? Random.value < 0.55f : definition.name == "Diamant" && Random.value < 0.04f;
         var colorValue = fancy
             ? (syntheticDiamond ? GiaDiamondColors.SampleAnyHue(() => Random.value) : GemColorSystem.SampleFancyDiamond(() => Random.value))
-            : GemColorSystem.Sample(definition, () => Random.value, IsSynthetic);
+            : SampleColor(definition, IsSynthetic, qualityBias);
         var colorGrade = SetColor(colorValue, fancy);
 
-        var clarity = InclusionCatalog.PickClarity(definition, Origin, IsSynthetic);
+        var clarity = PickClarity(definition, Origin, IsSynthetic, qualityBias);
         ClarityGrade = clarity.Name;
         ClarityDescription = clarity.Description;
 
@@ -415,8 +472,13 @@ public class GemInstance
             ? definition.inclusions
             : Origin.inclusionOverride;
 
-        // Skewed toward the average size; large stones are rare, matching real gem economics.
-        var sizeFactor = Mathf.Lerp(0.5f, 2.5f, Mathf.Pow(Random.value, 2f));
+        // Skewed toward the average size; large stones are rare, matching real gem economics. A share of the stones are small calibrated ones (the cheap cut stones
+        // of the bazaars); a house of prestige shows larger stones only.
+        var smallChance = qualityBias < -0.5f ? 0.35f : qualityBias > 0.5f ? 0f : 0.12f;
+        float sizeFactor;
+        if (!definition.roughOnly && Random.value < smallChance) sizeFactor = Mathf.Lerp(0.22f, 0.48f, Random.value);
+        else if (qualityBias > 0.5f) sizeFactor = Mathf.Lerp(0.8f, 2.5f, Mathf.Pow(Random.value, 1.6f));
+        else sizeFactor = Mathf.Lerp(0.5f, 2.5f, Mathf.Pow(Random.value, 2f));
         CaratWeight = definition.weightCarats * sizeFactor;
 
         var dimensionFactor = Mathf.Pow(sizeFactor, 1f / 3f);
@@ -445,9 +507,11 @@ public class GemInstance
         var colorMultiplier = colorGrade.ValueMultiplier * GemColorSystem.TradeMultiplier(TradeName)
                               * (fancy ? GemColorSystem.FancyDiamondRarity(colorValue) : 1f);
 
-        FinalValue = Mathf.RoundToInt(
-            definition.baseValue * Origin.valueMultiplier * colorMultiplier * clarity.Multiplier *
-            sizeValueMultiplier * treatment.Multiplier * authenticity.Multiplier);
+        // The clarity factor is wide and follows the place of the stone inside its grade, as its look does (see StoneEconomy).
+        var clarityFactor = StoneEconomy.ClarityFactor(definition, StoneQuality.TierOf(clarity.Name), StoneQuality.PositionInTier(SpecimenId));
+        FinalValue = Mathf.Max(1, Mathf.RoundToInt(
+            definition.baseValue * Origin.valueMultiplier * colorMultiplier * clarityFactor *
+            sizeValueMultiplier * treatment.Multiplier * authenticity.Multiplier));
 
         // A species that is not cut (gypsum, calcite, soapstone, moldavite...) always comes as a rough crystal or fragment.
         if (definition.roughOnly) IsRough = true;
@@ -469,7 +533,10 @@ public class GemInstance
             // A trapiche emerald (very rare, 2.5 % of the emeralds): six arms of black matter radiating from the centre, cut as a cabochon.
             if (name.Contains("émeraude") && StoneOptics.StableHash((SpecimenId ?? "") + "|trapiche") % 1000 < 25) return 6;
             if (InclusionCatalog.ProfileFor(this).Share(FeatureKind.Needle, 0) < 0.18f) return 0;
-            if (StoneOptics.StableHash((SpecimenId ?? "") + "|star") % 100 >= 65) return 0;
+            // A star needs dense silk: the stones where it is thin only show a sheen, a clear cabochon shows none. The denser the silk, the likelier the star.
+            if (Quality.Silk < 0.15f) return 0;
+            var chance = Mathf.RoundToInt(Mathf.Clamp01(Quality.Silk * 2f) * 100f);
+            if (StoneOptics.StableHash((SpecimenId ?? "") + "|star") % 100 >= chance) return 0;
             return fourRays ? 4 : 6;
         }
     }
@@ -1193,7 +1260,8 @@ public class GemInstance
     {
         if (!IsIrradiated || IrradiationFadeDay <= 0 || today < IrradiationFadeDay) return false;
 
-        if (HasColor)
+        // A save from before the original colour was kept has nothing to go back to: the colour stays as it is rather than turning black.
+        if (HasColor && irradiationOriginalBrightness > 0f)
             SetColor(new GemColorValue(irradiationOriginalHue, irradiationOriginalSaturation, irradiationOriginalBrightness), IsFancyDiamond);
         FinalValue = Mathf.Max(1, Mathf.RoundToInt(FinalValue / Mathf.Max(0.05f, irradiationFactor) * 0.9f));
         treatmentValueFactor = Mathf.Max(0.01f, treatmentValueFactor / Mathf.Max(0.05f, irradiationFactor) * 0.9f);

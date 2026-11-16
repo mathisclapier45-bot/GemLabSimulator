@@ -45,6 +45,11 @@ Shader "GemLab/RealGem"
             float4 _Planes[256];
             int _PlaneCount;
 
+            float _Scatter;        // how much the body scatters the light, per unit of the stone (silk and haze): the milky look, in depth
+            float _Sheen;          // the sheen of the silk: it shines when the studio is mirrored along the needles
+            float _QZone;          // growth zoning: bands of deeper and paler colour across the stone
+            float4 _QAxis;         // xyz = the direction across the bands, w = how many bands
+
             struct appdata { float4 vertex : POSITION; float3 normal : NORMAL; };
             struct v2f { float4 pos : SV_POSITION; float3 objPos : TEXCOORD0; float3 objNormal : TEXCOORD1; };
 
@@ -126,6 +131,19 @@ Shader "GemLab/RealGem"
                 return normalize(mul((float3x3)unity_ObjectToWorld, d));
             }
 
+            // The inclusions (shared with the dome): the bodies in the volume of the stone and what they do to the light.
+            #include "GemInclusions.cginc"
+
+            // The sheen of the silk: the needles lie in the basal plane in three directions, and each mirrors the studio along its length.
+            float SheenChan (float3 d, int channel)
+            {
+                float3 a0 = float3(1.0, 0.0, 0.0);
+                float3 a1 = float3(0.5, 0.866, 0.0);
+                float3 a2 = float3(-0.5, 0.866, 0.0);
+                float s = EnvChan(2.0 * a0 * dot(d, a0) - d, channel) + EnvChan(2.0 * a1 * dot(d, a1) - d, channel) + EnvChan(2.0 * a2 * dot(d, a2) - d, channel);
+                return s * 0.3333;
+            }
+
             // What one colour channel sees through the stone: from a point just inside the front facet, going along `dir`.
             float Trace (float3 p, float3 dir, float ior, float sigma, int channel)
             {
@@ -151,11 +169,36 @@ Shader "GemLab/RealGem"
                     if (hit < 0) break;
 
                     float3 mid = p + dir * (tMin * 0.5);
+                    float3 pStart = p;
                     p += dir * tMin;
                     // Bands of colour along the long axis, and the odd dark speck inside.
                     float zone = max(0.1, 1.0 + _Zoning * (Noise3(float3(mid.x * 3.5, mid.y * 0.9, mid.z * 0.9) + _Seed) * 2.2 - 0.9));
+                    if (_QZone > 0.01)
+                    {
+                        // Growth zoning: flat bands of deeper and paler colour, seen at a few points of the stretch.
+                        float zsum = 0.0;
+                        [unroll]
+                        for (int zi = 0; zi < 4; zi++)
+                        {
+                            float3 zp = pStart + dir * (tMin * (zi + 0.5) * 0.25);
+                            float band = frac(dot(zp, _QAxis.xyz) * _QAxis.w + Noise3(zp * 1.7 + _Seed) * 0.9 + _Seed);
+                            float plateau = smoothstep(0.30, 0.38, band) - smoothstep(0.70, 0.78, band);
+                            zsum += max(0.12, 1.0 + _QZone * 1.8 * (plateau - 0.5));
+                        }
+                        zone *= zsum * 0.25;
+                    }
                     weight *= exp(-sigma * tMin * zone);
                     if (_Speck > 0.01 && Noise3(mid * 6.5 + _Seed * 1.3) > 1.0 - 0.06 * _Speck) weight *= 0.3;
+                    // The inclusions on this stretch: they hide part of the light and show their own.
+                    if (_IncCount > 0) acc += Inclusions(pStart, dir, tMin, channel, weight);
+                    // The body scatters the light (haze, dense silk): the deeper the light goes, the more of it is turned back toward the eye, and the milkier the stone looks.
+                    if (_Scatter > 0.01)
+                    {
+                        float tr = exp(-_Scatter * tMin);
+                        float lightTerm = 0.22 + 0.32 * EnvChan(dir, channel) + _Sheen * 0.9 * SheenChan(dir, channel);
+                        acc += weight * (1.0 - tr) * Chan(lerp(_Body.rgb, float3(1.0, 1.0, 1.0), 0.25), channel) * lightTerm;
+                        weight *= tr;
+                    }
                     float3 n = _Planes[hit].xyz;
                     if (_Rough > 0.01) n = normalize(n + _Rough * 0.30 * (float3(Noise3(p * 6.0 + 1.7), Noise3(p * 6.0 + 9.1), Noise3(p * 6.0 + 4.3)) - 0.5));
                     float cosi = dot(dir, n);
@@ -226,6 +269,12 @@ Shader "GemLab/RealGem"
                 float3 nw = ToWorld(n);
                 float diffuse = 0.28 + 0.72 * saturate(dot(nw, normalize(float3(-0.5, 0.65, -0.6))));
                 float3 matte = albedo * diffuse * 1.6 + mirrored * fresnel * 0.6 + extra;
+                if (_Sheen > 0.01)
+                {
+                    // An opaque stone full of silk has a velvety sheen that slides over it when it turns.
+                    float3 sheenRgb = float3(SheenChan(view, 0), SheenChan(view, 1), SheenChan(view, 2));
+                    matte += lerp(albedo, float3(1.0, 1.0, 1.0), 0.3) * _Sheen * 0.7 * sheenRgb;
+                }
                 float3 col = lerp(clear, matte, _Milky);
                 if (_Pattern > 0.5) col += extra * (1.0 - _Milky) * 0.6;
 

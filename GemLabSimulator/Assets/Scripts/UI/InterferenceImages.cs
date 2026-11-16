@@ -41,9 +41,11 @@ public static class InterferenceImages
         return s * s;
     }
 
+    private static Color32[] fillBuffer;                 // reused: the animated figures fill a picture every frame
+
     private static void Fill(Texture2D texture, Vector2 c1, Vector2 c2, bool biaxial, bool bullsEye, float edgeRetardation)
     {
-        var pixels = new Color32[Size * Size];
+        var pixels = fillBuffer ?? (fillBuffer = new Color32[Size * Size]);
         for (var y = 0; y < Size; y++)
         {
             for (var x = 0; x < Size; x++)

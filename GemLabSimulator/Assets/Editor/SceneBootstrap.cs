@@ -45,10 +45,16 @@ public static partial class SceneBootstrap
     private const int DoorGapY1 = -1;
     private const int DoorGapY2 = 0;
 
-    private const int TownMinX = -70;
-    private const int TownMaxX = 70;
-    private const int TownMinY = -60;
-    private const int TownMaxY = 45;
+    // The land of the town: the old rectangle of streets (-70..70 and -60..45) is the core; around it a dense forest with small lakes and marshes (TownShape),
+    // closed by a wall of hedge and trees at the edge of the map. MinimapUI.MapMinX.. must follow these bounds.
+    private const int TownMinX = -86;
+    private const int TownMaxX = 86;
+    private const int TownMinY = -76;
+    private const int TownMaxY = 61;
+    private const int TownCoreMinX = -70;
+    private const int TownCoreMaxX = 70;
+    private const int TownCoreMinY = -60;
+    private const int TownCoreMaxY = 45;
 
     [MenuItem("GemLab/Setup Main Menu Scene")]
     public static void CreateMainMenuScene()
@@ -261,7 +267,8 @@ public static partial class SceneBootstrap
         const float topDeskY = 3.0f;
         const float bottomDeskY = -2.9f;
         CreateDeskStation("Loupe", ExaminationTool.MeasurementType.VisualExamination, 8.6f, topDeskY, false);
-        CreateDeskStation("Refractometre", ExaminationTool.MeasurementType.RefractiveIndex, 11.2f, topDeskY, false);
+        // The two balances side by side (weigh, then density), right after the loupe.
+        CreateDeskStation("BalanceCarat", ExaminationTool.MeasurementType.Weight, 11.2f, topDeskY, false);
         CreateDeskStation("BalanceHydrostatique", ExaminationTool.MeasurementType.Density, 13.8f, topDeskY, false);
         CreateDeskStation("Dichroscope", ExaminationTool.MeasurementType.Pleochroism, 16.4f, topDeskY, false);
         CreateDeskStation("Polariscope", ExaminationTool.MeasurementType.OpticalCharacter, 19.0f, topDeskY, false);
@@ -273,8 +280,8 @@ public static partial class SceneBootstrap
         // The conoscope is built into the polariscope; one UV cabinet with both lamps replaces the two UV stations.
         CreateDeskStation("CabineUV", ExaminationTool.MeasurementType.FluorescenceLongWave, 9.3f, bottomDeskY, true);
         CreateDeskStation("FiltreChelsea", ExaminationTool.MeasurementType.ChelseaFilter, 12.0f, bottomDeskY, true);
-        CreateDeskStation("Micrometre", ExaminationTool.MeasurementType.Dimensions, 14.7f, bottomDeskY, true);
-        CreateDeskStation("BalanceCarat", ExaminationTool.MeasurementType.Weight, 17.4f, bottomDeskY, true);
+        CreateDeskStation("Refractometre", ExaminationTool.MeasurementType.RefractiveIndex, 14.7f, bottomDeskY, true);
+        CreateDeskStation("Micrometre", ExaminationTool.MeasurementType.Dimensions, 17.4f, bottomDeskY, true);
         CreateDeskStation("Aimant", ExaminationTool.MeasurementType.Magnetism, 20.1f, bottomDeskY, true);
         // The thermal and electrical testers are field equipment bought at the GemStore: they go into the bag, not into the laboratory.
 
@@ -1940,7 +1947,7 @@ public static partial class SceneBootstrap
         cam.orthographic = true;
         cam.orthographicSize = 6f;
         cam.clearFlags = CameraClearFlags.SolidColor;
-        cam.backgroundColor = new Color(0.55f, 0.72f, 0.88f);
+        cam.backgroundColor = new Color(0.13f, 0.27f, 0.13f);   // the colour of the hedge: nothing but deep forest beyond the map
         cam.transform.position = new Vector3(0f, 0f, -10f);
 
         var pixelPerfect = cam.gameObject.AddComponent<PixelPerfectCamera>();
@@ -1962,22 +1969,42 @@ public static partial class SceneBootstrap
         boundaryGO.transform.SetParent(gridGO.transform);
         var boundaryTilemap = boundaryGO.GetComponent<Tilemap>();
 
-        var grassTile = GetOrCreateTileFromSprite("grass_pack", LoadPackSprite(PackTerrains + "Grass_1_9.png"));
+        // Grass: flat tiles with, in meadows, a few tufts (the tile Grass_1_9 used before carries a notch of earth in its corner, which showed as a grid of angles).
+        var grassTile = GetOrCreateTileFromSprite("grass_flat", LoadPackSprite(PackTerrains + "Grass_Water_1_23.png"));
+        var grassTuftTile = GetOrCreateTileFromSprite("grass_tuft", LoadPackSprite(PackTerrains + "Grass_Water_1_9.png"));
+        TileBase GrassAt(int gx, int gy)
+        {
+            var meadow = TownShape.ValueNoise(gx * 0.11f + 3f, gy * 0.11f + 9f, 5);
+            var roll = Mathf.Abs((gx * 73856093) ^ (gy * 19349663)) % 100;
+            return roll < (meadow > 0.55f ? 50 : 7) ? grassTuftTile : grassTile;
+        }
+        bool IsGrassTile(TileBase t) => t == grassTile || t == grassTuftTile;
         var hedgeTile = GetOrCreateTile("hedge_pixel", HedgePixel);
         var pathTile = GetOrCreateTileFromSprite("path_pack", LoadPackSprite(PackTerrains + "Grass_1_21.png"));
         var pathTileAlt = GetOrCreateTileFromSprite("path_pack_alt", LoadPackSprite(PackTerrains + "Grass_3_9.png"));
         var sidewalkTile = GetOrCreateTileFromSprite("sidewalk_pack", LoadPackSprite(PackCityTerrains + "Sidewalk_1_9.png"));
 
+        // The land: grass everywhere (with the tiles of the set Grass_Water_1 on the shore of the lakes, bank of earth on the south side), a wall of hedge along the edge of the map.
+        // The water of the lakes is painted below, once its layer exists.
+        var coreDistance = TownShape.DistanceToCore(TownMinX, TownMaxX, TownMinY, TownMaxY, TownCoreMinX, TownCoreMaxX, TownCoreMinY, TownCoreMaxY);
+        var land = TownShape.Build(TownMinX, TownMaxX, TownMinY, TownMaxY, coreDistance, out var lakes);
+        var shoreTiles = new Dictionary<int, TileBase>();
         for (var x = TownMinX; x <= TownMaxX; x++)
         {
             for (var y = TownMinY; y <= TownMaxY; y++)
             {
-                var isPerimeter = x == TownMinX || x == TownMaxX || y == TownMinY || y == TownMaxY;
+                if (!land[x - TownMinX, y - TownMinY]) continue;
                 var cell = new Vector3Int(x, y, 0);
-                if (isPerimeter)
-                    boundaryTilemap.SetTile(cell, hedgeTile);
-                else
-                    groundTilemap.SetTile(cell, grassTile);
+                var shore = TownShape.ShoreTile(land, TownMinX, TownMinY, x, y);
+                TileBase tile;
+                if (shore == 0) tile = GrassAt(x, y);
+                else if (!shoreTiles.TryGetValue(shore, out tile))
+                {
+                    tile = GetOrCreateTileFromSprite($"shore_{shore}", LoadPackSprite(PackTerrains + $"Grass_Water_1_{shore}.png"));
+                    shoreTiles[shore] = tile;
+                }
+                groundTilemap.SetTile(cell, tile);
+                if (Mathf.Min(Mathf.Min(x - TownMinX, TownMaxX - x), Mathf.Min(y - TownMinY, TownMaxY - y)) < 3) boundaryTilemap.SetTile(cell, hedgeTile);
             }
         }
 
@@ -1988,7 +2015,7 @@ public static partial class SceneBootstrap
                 for (var y = minY; y <= maxY; y++)
                 {
                     var isSidewalk = vertical ? (x == minX || x == maxX) : (y == minY || y == maxY);
-                    var tile = isSidewalk ? sidewalkTile : ((x + y) % 2 == 0 ? pathTile : pathTileAlt);
+                    var tile = isSidewalk ? sidewalkTile : (Mathf.Abs((x * 73856093) ^ (y * 19349663)) % 100 < 12 ? pathTile : pathTileAlt);   // earth: mostly one colour, a few lighter tiles
                     groundTilemap.SetTile(new Vector3Int(x, y, 0), tile);
                 }
             }
@@ -2078,6 +2105,47 @@ public static partial class SceneBootstrap
         var bottomEdgeTile = GetOrCreateTileFromSprite("water_edge_bottom", LoadPackSprite(PackTerrains + "Deep_Water_1_6.png"));
         var plankTile = GetOrCreateTileFromSprite("bridge_plank", LoadPackSprite("Assets/Art/Sprites/bridge_plank.png"));
 
+        // The lakes and marshes: every cell that is not land. Ripples on the water, lily pads, and in the marshes islets of grass.
+        var waterProps = new Dictionary<int, TileBase>();
+        TileBase WaterProp(int number)
+        {
+            if (!waterProps.TryGetValue(number, out var propTile))
+            {
+                propTile = GetOrCreateTileFromSprite($"water_prop_{number}", LoadPackSprite(PackTerrains + $"Props_Water_{number}.png"));
+                waterProps[number] = propTile;
+            }
+            return propTile;
+        }
+        bool InMarsh(int wx, int wy)
+        {
+            foreach (var lake in lakes)
+                if (lake.Marsh && Mathf.Pow((wx - lake.X) / lake.RadiusX, 2f) + Mathf.Pow((wy - lake.Y) / lake.RadiusY, 2f) < 2.6f) return true;
+            return false;
+        }
+        var ripples = new[] { 1, 2, 3, 4, 5, 9, 10 };
+        for (var x = TownMinX; x <= TownMaxX; x++)
+        {
+            for (var y = TownMinY; y <= TownMaxY; y++)
+            {
+                if (land[x - TownMinX, y - TownMinY]) continue;
+                var roll = Mathf.Abs((x * 83492791) ^ (y * 29834717)) % 100;
+                var marsh = InMarsh(x, y);
+                TileBase waterTile = shallowTile;
+                if (marsh)
+                {
+                    if (roll < 12) waterTile = WaterProp(11 + roll % 3);                 // lily pads
+                    else if (roll < 18) waterTile = WaterProp(14 + roll % 3);            // islets of grass
+                    else if (roll < 40) waterTile = WaterProp(ripples[roll % ripples.Length]);
+                }
+                else
+                {
+                    if (roll < 4) waterTile = WaterProp(11 + roll % 3);
+                    else if (roll < 22) waterTile = WaterProp(ripples[roll % ripples.Length]);
+                }
+                waterTilemap.SetTile(new Vector3Int(x, y, 0), waterTile);
+            }
+        }
+
         for (var x = TownMinX + 1; x <= TownMaxX - 1; x++)
         {
             var onMainBridge = x >= -3 && x <= 3;
@@ -2091,6 +2159,7 @@ public static partial class SceneBootstrap
                     continue;
                 }
                 if (onMainBridge) continue;
+                if (!land[x - TownMinX, y - TownMinY]) continue;            // already a lake
 
                 TileBase tile;
                 if (y == RiverMaxY || y == RiverMinY) tile = shallowTile;
@@ -2230,7 +2299,7 @@ public static partial class SceneBootstrap
                 for (var dy = -radius; dy <= radius; dy++)
                 {
                     var cell = new Vector3Int(cx + dx, cy + dy, 0);
-                    if (groundTilemap.GetTile(cell) != grassTile || waterTilemap.HasTile(cell)) return false;
+                    if (!IsGrassTile(groundTilemap.GetTile(cell)) || waterTilemap.HasTile(cell)) return false;
                 }
             }
             return true;
@@ -2249,7 +2318,7 @@ public static partial class SceneBootstrap
                 for (var cy = Mathf.FloorToInt(area.yMin); cy <= Mathf.FloorToInt(area.yMax); cy++)
                 {
                     var cell = new Vector3Int(cx, cy, 0);
-                    if (groundTilemap.GetTile(cell) != grassTile || waterTilemap.HasTile(cell)) return false;
+                    if (!IsGrassTile(groundTilemap.GetTile(cell)) || waterTilemap.HasTile(cell)) return false;
                 }
             return true;
         }
@@ -2363,7 +2432,38 @@ public static partial class SceneBootstrap
                 TryPlace(FlowerSprites[rng.Next(FlowerSprites.Length)], x + Rf(-1f, 1f), bankY, 1f, 0.6f, "Fleurs");
         }
 
-        // Groves and forest edges: denser near the town border and where the noise field is high.
+        // Hills: ledges of earth (the Mound pieces of the pack) in rows of a few tiles, where the ground "rises" (noise): left end, middle pieces, right end.
+        // Gaps are left between the ledges, as slopes to walk through; they keep clear of roads, buildings and water.
+        var ledgeSprites = new[] { PackTerrains + "Mound_2_2.png", PackTerrains + "Mound_2_3.png", PackTerrains + "Mound_2_4.png" };
+        var ledgesPlaced = 0;
+        for (var rowY = TownMinY + 6; rowY <= TownMaxY - 6; rowY += 5)
+        {
+            var ledgeX = TownMinX + 6;
+            while (ledgeX < TownMaxX - 6)
+            {
+                var length = rng.Next(4, 9);
+                var baseY = rowY + rng.Next(-1, 2);
+                var footprint = new Rect(ledgeX - 1.5f, baseY - 1.5f, length + 3f, 5f);
+                var rising = TownShape.HillNoise(ledgeX, rowY) > 0.60f && TownShape.HillNoise(ledgeX + length, rowY) > 0.56f;
+                if (!rising || !AreaIsFree(footprint) || !AreaIsGrass(footprint))
+                {
+                    ledgeX += 2;
+                    continue;
+                }
+
+                for (var piece = 0; piece < length; piece++)
+                {
+                    var end = piece == 0 ? 0 : piece == length - 1 ? 2 : 1;
+                    PlaceTownProp(ledgeSprites[end], new Vector3(ledgeX + piece + 0.5f, baseY, 0f), "Colline", end == 1 ? 1f : 0.8f, end == 1 ? 1.15f : 0.9f);
+                }
+                occupied.Add(new Rect(ledgeX - 0.3f, baseY - 0.8f, length + 0.6f, 3.2f));
+                ledgesPlaced++;
+                ledgeX += length + rng.Next(3, 6);
+            }
+        }
+        Debug.Log($"Town: {ledgesPlaced} ledges of hills.");
+
+        // Groves: denser where the noise field is high.
         var forest = new[]
         {
             new { path = PackCityProps + "Tree_11.png", w = 2.2f, cw = 1.0f },
@@ -2373,14 +2473,35 @@ public static partial class SceneBootstrap
             new { path = PackCityProps + "Tree_5.png", w = 1.5f, cw = 0.7f },
             new { path = PackCityProps + "Tree_6.png", w = 1.5f, cw = 0.7f },
         };
+        // The dense forest around the town: trees on a loose grid wherever the core of the town is far enough, with winding trails and a few glades left open.
+        var forestTrees = 0;
+        for (var gx = TownMinX + 1f; gx < TownMaxX; gx += 1.5f)
+        {
+            for (var gy = TownMinY + 1f; gy < TownMaxY; gy += 1.5f)
+            {
+                if (coreDistance[Mathf.FloorToInt(gx) - TownMinX, Mathf.FloorToInt(gy) - TownMinY] < 4f) continue;
+                var trail = Mathf.Abs(TownShape.ValueNoise(gx * 0.045f + 5f, gy * 0.045f + 31f, 91) - 0.5f) < 0.035f;
+                var glade = TownShape.ValueNoise(gx * 0.06f + 70f, gy * 0.06f + 2f, 93) > 0.80f;
+                if (trail || glade) continue;
+                var edgeDistance = Mathf.Min(Mathf.Min(gx - TownMinX, TownMaxX - gx), Mathf.Min(gy - TownMinY, TownMaxY - gy));
+                if (edgeDistance >= 4f && Rf(0f, 1f) > 0.92f) continue;
+
+                var px = gx + Rf(-0.6f, 0.6f);
+                var py = gy + Rf(-0.6f, 0.6f);
+                if (!GroundIsGrass(px, py, 1)) continue;
+                var pick = forest[rng.Next(forest.Length)];
+                if (TryPlace(pick.path, px, py, pick.w, 1.1f, "Arbre", pick.cw, 0.45f)) forestTrees++;
+            }
+        }
+        Debug.Log($"Town: {forestTrees} trees in the dense forest.");
+
         var treesPlaced = 0;
-        for (var attempt = 0; attempt < 6000 && treesPlaced < 260; attempt++)
+        for (var attempt = 0; attempt < 9000 && treesPlaced < 330; attempt++)
         {
             var tx = Rf(TownMinX + 3f, TownMaxX - 3f);
             var ty = Rf(TownMinY + 3f, TownMaxY - 3f);
             var noise = Mathf.PerlinNoise(tx * 0.07f + 11.3f, ty * 0.07f + 5.7f);
-            var edgeDistance = Mathf.Min(Mathf.Min(tx - TownMinX, TownMaxX - tx), Mathf.Min(ty - TownMinY, TownMaxY - ty));
-            var chance = (noise > 0.52f ? 0.9f : 0.06f) + (edgeDistance < 10f ? 0.6f : 0f);
+            var chance = noise > 0.52f ? 0.9f : 0.06f;
             if (Rf(0f, 1f) > chance) continue;
             if (!GroundIsGrass(tx, ty, 1)) continue;
 
@@ -2390,7 +2511,7 @@ public static partial class SceneBootstrap
 
         // Small bushes and flower tufts scattered on open grass.
         var scatter = 0;
-        for (var attempt = 0; attempt < 3000 && scatter < 160; attempt++)
+        for (var attempt = 0; attempt < 4000 && scatter < 200; attempt++)
         {
             var sx = Rf(TownMinX + 3f, TownMaxX - 3f);
             var sy = Rf(TownMinY + 3f, TownMaxY - 3f);
@@ -6729,7 +6850,7 @@ public static partial class SceneBootstrap
                 g.fluorescenceShortWave = "Aucune fluorescence notable.";
                 g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
                 g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
-                g.birefringence = 0.0f;
+                g.birefringence = 0.040f;
                 g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
                 g.spectrumLines = new List<SpectrumLine>();
                 g.inclusions = "Masse écailleuse très fine, parfois veinée de chlorite ; toucher savonneux.";
@@ -6771,7 +6892,7 @@ public static partial class SceneBootstrap
                 g.fluorescenceShortWave = "Aucune fluorescence notable.";
                 g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
                 g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
-                g.birefringence = 0.0f;
+                g.birefringence = 0.009f;
                 g.absorptionSpectrum = "Aucun spectre d'absorption caractéristique.";
                 g.spectrumLines = new List<SpectrumLine>();
                 g.inclusions = "Fines bandes de couleur, nuages d'oxyde de fer ; structure fibreuse de calcédoine.";
@@ -10057,9 +10178,9 @@ public static partial class SceneBootstrap
                 g.refractiveIndex = 1.55f;
                 g.density = 1.30f;
                 g.hardness = 2.5f;
-                g.lengthMm = 28f;
-                g.widthMm = 18f;
-                g.depthMm = 18f;
+                g.lengthMm = 17f;
+                g.widthMm = 12f;
+                g.depthMm = 11f;
                 g.weightCarats = 12f;
                 g.luster = "Mat à soyeux";
                 g.color = "Brun-gris à noir";

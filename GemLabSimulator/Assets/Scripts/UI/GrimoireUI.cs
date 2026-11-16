@@ -164,10 +164,16 @@ public class GrimoireUI : MonoBehaviour
         BuildPage(def);
         if (detailSpectrumImage != null)
         {
-            detailSpectrumImage.sprite = SpectrumRenderer.BuildSpectrumSprite(SpectrumLibrary.Lines(def));
             // The spectrum is drawn on the page only once the player has seen it with the spectroscope (a save from before the story knows everything).
             var story = StoryState.Instance;
             var seen = story == null || story.Legacy || GemCodex.Instance == null || GemCodex.Instance.IsKnown(def.name, "AbsorptionSpectrum");
+            if (detailSpectrumImage.sprite != null)
+            {
+                if (detailSpectrumImage.sprite.texture != null) Destroy(detailSpectrumImage.sprite.texture);
+                Destroy(detailSpectrumImage.sprite);
+                detailSpectrumImage.sprite = null;
+            }
+            if (seen) detailSpectrumImage.sprite = SpectrumRenderer.BuildSpectrumSprite(SpectrumLibrary.Lines(def));
             detailSpectrumImage.enabled = seen;
         }
     }
@@ -320,7 +326,7 @@ public class GrimoireUI : MonoBehaviour
         }
 
         GemView3D.Colors(stone, out var body, out var facet);
-        var half = new Vector3(stone.LengthMm, stone.WidthMm, Mathf.Max(stone.DepthMm, 0.5f)) * 0.5f;
+        var half = GemView3D.HalfExtents(stone);      // as on the sheet of the stone: a round cut stays round, a crystal keeps its habit
         view.Draw(GemView3D.MeshFor(stone), half, Quaternion.Euler(-32f, 16f, 8f), body, facet, def.Diaphaneity, stone.AsterismRays, GemLook.For(def), stone.CatsEye);
         return view.Sprite;
     }

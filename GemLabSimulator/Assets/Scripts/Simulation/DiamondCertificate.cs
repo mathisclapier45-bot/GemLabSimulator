@@ -54,7 +54,7 @@ public static class DiamondGrading
 
     public static string Clarity(int index) => ClarityScale[Mathf.Clamp(index, 0, ClarityScale.Length - 1)];
 
-    // Value of a stone in the game's currency: reference 1 ct, G colour, VS2 = about 1100.
+    // Value of a stone in the game's currency: reference 1 ct, H colour (the factor 1.00 of the scale), VS2 = about 1100.
     public static int Value(float carat, int colorIndex, int clarityIndex)
     {
         var size = 1100f * Mathf.Pow(carat, 1.45f) * (carat >= 3f ? 1f + 0.04f * (carat - 3f) : 1f);

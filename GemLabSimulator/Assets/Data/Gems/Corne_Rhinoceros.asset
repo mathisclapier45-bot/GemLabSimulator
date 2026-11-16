@@ -25,9 +25,9 @@ MonoBehaviour:
   refractiveIndex: 1.55
   density: 1.3
   hardness: 2.5
-  lengthMm: 28
-  widthMm: 18
-  depthMm: 18
+  lengthMm: 17
+  widthMm: 12
+  depthMm: 11
   weightCarats: 12
   luster: "Mat \xE0 soyeux"
   color: "Brun-gris \xE0 noir"

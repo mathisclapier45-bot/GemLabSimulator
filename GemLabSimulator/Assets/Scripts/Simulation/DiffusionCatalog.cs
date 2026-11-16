@@ -116,7 +116,7 @@ public static class DiffusionCatalog
     public static DiffusionDepth Classify(float depthMm, float halfThickness)
     {
         if (depthMm < 0.3f) return DiffusionDepth.Surface;
-        if (depthMm < 0.5f) return DiffusionDepth.Shallow;
+        if (depthMm < 0.65f) return DiffusionDepth.Shallow;
         return depthMm >= halfThickness * 0.9f ? DiffusionDepth.FullCore : DiffusionDepth.PartialCore;
     }
 

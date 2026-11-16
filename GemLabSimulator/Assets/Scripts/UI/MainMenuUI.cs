@@ -32,6 +32,9 @@ public class MainMenuUI : MonoBehaviour
     {
         if (slotsContainer == null) return;
 
+        // The input fields are made again, empty: the names typed before must not stay behind.
+        for (var i = 0; i < pendingNames.Length; i++) pendingNames[i] = null;
+
         for (var i = slotsContainer.childCount - 1; i >= 0; i--)
             Destroy(slotsContainer.GetChild(i).gameObject);
 
@@ -181,6 +184,8 @@ public class MainMenuUI : MonoBehaviour
         SaveSystem.PendingLoad = true;
 
         // A new game begins with the story: the cinematic of the journey, then the arrival at the airport of Crystal Grove.
+        // The button of the menu must not stay selected: Enter or Space on the first line would press it a second time.
+        UnityEngine.EventSystems.EventSystem.current?.SetSelectedGameObject(null);
         var canvas = GetComponentInParent<Canvas>();
         var parent = canvas != null ? canvas.rootCanvas.transform : transform;
         IntroCinematic.Play(parent, () =>

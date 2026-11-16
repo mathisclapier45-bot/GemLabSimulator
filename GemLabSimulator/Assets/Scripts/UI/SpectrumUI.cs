@@ -18,6 +18,11 @@ public class SpectrumUI : MonoBehaviour
     public void Show(GemDefinition gem)
     {
         descriptionText.text = SpectrumLibrary.Description(gem);
+        if (spectrumImage.sprite != null)
+        {
+            if (spectrumImage.sprite.texture != null) Destroy(spectrumImage.sprite.texture);
+            Destroy(spectrumImage.sprite);
+        }
         spectrumImage.sprite = SpectrumRenderer.BuildSpectrumSprite(SpectrumLibrary.Lines(gem));
         panel.SetActive(true);
     }

@@ -13,11 +13,11 @@ public class MinimapUI : MonoBehaviour
     private const float ViewRadius = 30f;             // world units shown from the centre to the edge
     private const int PixelsPerUnit = 4;
 
-    // Must match the town bounds in SceneBootstrap.cs (cells -70..70 and -60..45, inclusive).
-    public const int MapMinX = -70;
-    public const int MapMaxX = 71;
-    public const int MapMinY = -60;
-    public const int MapMaxY = 46;
+    // Must match the town bounds in SceneBootstrap.cs (cells -86..86 and -76..61, inclusive: the old streets plus the coast and the sea around them).
+    public const int MapMinX = -86;
+    public const int MapMaxX = 87;
+    public const int MapMinY = -76;
+    public const int MapMaxY = 62;
 
     private static readonly Color Gold = new Color(0.86f, 0.70f, 0.36f, 1f);
     private static readonly Color GoldDark = new Color(0.45f, 0.32f, 0.14f, 1f);

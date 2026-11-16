@@ -484,7 +484,7 @@ public class GemEncyclopediaUI : MonoBehaviour
         for (var i = 0; i < GemGrading.ClarityGrades.Length; i++)
         {
             var grade = GemGrading.ClarityGrades[i];
-            sb.AppendLine("<b>" + grade.Name + "</b> : " + Percent(total > 0f ? profile.Clarity[i] / total * 100f : 0f) + "  ·  prix ×" + grade.Multiplier.ToString("0.0#") + "\n    <color=#9AA3B5>" + grade.Description + "</color>");
+            sb.AppendLine("<b>" + grade.Name + "</b> : " + Percent(total > 0f ? profile.Clarity[i] / total * 100f : 0f) + "  ·  prix " + StoneEconomy.ClarityRangeLabel(def, GemGrading.ClarityGrades.Length - 1 - i) + "\n    <color=#9AA3B5>" + grade.Description + "</color>");
         }
 
         sb.AppendLine();

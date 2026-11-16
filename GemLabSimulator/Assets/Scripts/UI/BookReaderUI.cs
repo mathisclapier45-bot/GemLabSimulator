@@ -80,6 +80,13 @@ public class BookReaderUI
         leather = info.Leather;
         leatherDark = info.LeatherDark;
         foil = info.Foil;
+        // The spectrum strips of the book before are thrown away with their textures.
+        foreach (var old in spectra.Values)
+        {
+            if (old == null) continue;
+            if (old.texture != null) UnityEngine.Object.Destroy(old.texture);
+            UnityEngine.Object.Destroy(old);
+        }
         spectra.Clear();
         spread = -1;
         BuildBook();

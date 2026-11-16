@@ -30,17 +30,18 @@ public static class ChelseaLibrary
         get
         {
             if (entries != null) return entries;
-            entries = new Dictionary<string, ChelseaEntry>();
+            var loaded = new Dictionary<string, ChelseaEntry>();
             var asset = Resources.Load<TextAsset>("Chelsea/chelsea");
-            if (asset == null) { Debug.LogWarning("Table du filtre Chelsea introuvable : Resources/Chelsea/chelsea.json"); return entries; }
+            if (asset == null) { Debug.LogWarning("Table du filtre Chelsea introuvable : Resources/Chelsea/chelsea.json"); return loaded; }
             try
             {
                 var file = JsonUtility.FromJson<ChelseaFile>(asset.text);
                 if (file != null && file.entries != null)
                     foreach (var entry in file.entries)
-                        if (entry != null && !string.IsNullOrEmpty(entry.key)) entries[entry.key] = entry;
+                        if (entry != null && !string.IsNullOrEmpty(entry.key)) loaded[entry.key] = entry;
             }
-            catch (Exception) { Debug.LogWarning("Table du filtre Chelsea illisible : Resources/Chelsea/chelsea.json"); }
+            catch (Exception) { Debug.LogWarning("Table du filtre Chelsea illisible : Resources/Chelsea/chelsea.json"); return loaded; }
+            entries = loaded;
             return entries;
         }
     }

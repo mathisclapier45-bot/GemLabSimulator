@@ -31,6 +31,6 @@ public class GemTooltipUI : MonoBehaviour
 
     public void Hide()
     {
-        panel.SetActive(false);
+        if (panel != null) panel.SetActive(false);                    // the panel is already gone when Play mode stops
     }
 }

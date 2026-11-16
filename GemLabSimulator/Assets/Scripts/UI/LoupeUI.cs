@@ -346,7 +346,7 @@ public class LoupeUI : MonoBehaviour
 
     private void AfterRotation(float degrees)
     {
-        explored += degrees;
+        if (!Dirty) explored += degrees;               // turning a dirty stone shows nothing: it is not an examination
         CheckInspection();
         UpdateView();
     }
@@ -596,18 +596,21 @@ public class LoupeUI : MonoBehaviour
         }
 
         // Half sizes of the stone in screen pixels (the features below use them too).
-        var half = new Vector3(stone.LengthMm, stone.WidthMm, Mathf.Max(stone.DepthMm, 0.5f)) * (PxPerMm * 0.5f);
+        var depthMm = Mathf.Max(stone.DepthMm, 0.5f) * (stone.IsRough ? 1f : stone.Quality.DepthScale);        // the proportions of this stone (a shallow or a deep pavilion)
+        var half = new Vector3(stone.LengthMm, stone.WidthMm, depthMm) * (PxPerMm * 0.5f);
 
         GemView3D.Colors(stone, out var body, out var facet);
         // Alexandrite: green by day, pink in the light of the torch.
         if (maglite && GemLook.ChangesColor(stone.Definition)) { body = GemLook.Incandescent(body); facet = GemLook.Incandescent(facet); }
         GemLook.ApplyPleochroism(stone.Definition, orientation, ref body, ref facet);
-        var halfMm = new Vector3(stone.LengthMm, stone.WidthMm, Mathf.Max(stone.DepthMm, 0.5f)) * 0.5f;
+        var halfMm = new Vector3(stone.LengthMm, stone.WidthMm, depthMm) * 0.5f;
         var mesh = GemView3D.MeshFor(stone);
         var uvMode = uvOn;
 
         // Under UV the stone itself is dark; its luminescence is a second, tinted render on top.
-        view3D.Draw(mesh, halfMm, orientation, uvMode ? GemPixelArt.Dim(body, 0.12f) : body, uvMode ? GemPixelArt.Dim(facet, 0.18f) : facet, stone.Definition.Diaphaneity, uvMode ? 0 : stone.AsterismRays, GemLook.For(stone.Definition), !uvMode && stone.CatsEye);
+        // The quality of the stone (haze, dull polish, uneven colour) is always in its picture; the inclusions that show to the naked eye are too, unless the loupe is on and paints them itself.
+        view3D.PaintInclusions = !(!Dirty && loupeOn && !uvOn);
+        view3D.Draw(mesh, halfMm, orientation, uvMode ? GemPixelArt.Dim(body, 0.12f) : body, uvMode ? GemPixelArt.Dim(facet, 0.18f) : facet, stone.VisualDiaphaneity, uvMode ? 0 : stone.AsterismRays, GemLook.For(stone.Definition), !uvMode && stone.CatsEye, uvMode ? (StoneQuality?)null : stone.Quality);
 
         var side = Mathf.Max(half.x, half.y, half.z) * 2f / GemView3D.FitFraction;
         stoneRect.sizeDelta = new Vector2(side, side);
@@ -683,7 +686,10 @@ public class LoupeUI : MonoBehaviour
         }
         System.Array.Copy(overlayBase, overlayBuffer, overlayBase.Length);
 
-        GemView3D.Colors(stone, out var body, out _);
+        GemView3D.Colors(stone, out var body, out var bodyFacet);
+        // The inclusions are tinted with the colour the stone has now: the alexandrite under the torch, the pleochroism of the iolite.
+        if (maglite && GemLook.ChangesColor(stone.Definition)) body = GemLook.Incandescent(body);
+        GemLook.ApplyPleochroism(stone.Definition, orientation, ref body, ref bodyFacet);
         var host = Color.Lerp(Color.white, body, 0.30f);
         var pxPerMm = PxPerMm * ratio;
         var hideInside = stone.IsRough && !stone.HasWindow;

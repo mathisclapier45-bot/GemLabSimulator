@@ -40,7 +40,7 @@ public static class MebImaging
         { "C", 0.277f }, { "O", 0.525f }, { "F", 0.677f }, { "Na", 1.041f }, { "Mg", 1.254f }, { "Al", 1.487f }, { "Si", 1.740f },
         { "P", 2.013f }, { "K", 3.313f }, { "Ca", 3.691f }, { "Ti", 4.511f }, { "V", 4.952f }, { "Cr", 5.415f }, { "Mn", 5.899f },
         { "Fe", 6.404f }, { "Co", 6.925f }, { "Cu", 8.048f }, { "Ni", 7.478f }, { "Zr", 2.042f }, { "Y", 1.922f }, { "Pb", 2.346f }, { "Au", 2.123f },
-        { "Ga", 1.098f }, { "Gd", 1.185f },
+        { "Ga", 1.098f }, { "Gd", 1.185f }, { "Sr", 1.806f }, { "Zn", 8.639f }, { "S", 2.308f },
     };
 
     public static MebResult Measure(GemInstance gem, MebMode mode, int magnification)

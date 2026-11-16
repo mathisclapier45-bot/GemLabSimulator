@@ -317,7 +317,7 @@ public static class FtirSpectrum
         {
             // Colorless synthetics are type II. A CVD stone often keeps a trace of hydrogen.
             result.DiamondType = "IIa";
-            if (c.Hash("synth") % 2 == 0) c.Add(3123, 4, 0.14f, "N-V-H (CVD)");
+            if (DiamondViewImage.KindOf(g) == DiamondViewKind.Cvd && c.Hash("synth") % 2 == 0) c.Add(3123, 4, 0.14f, "N-V-H (CVD)");
             return;
         }
 

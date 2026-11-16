@@ -41,6 +41,22 @@ public static class GemIconFactory
         return sprite;
     }
 
+    // The same, with the look of this very stone: haze and a lower transparency, a few inclusions, a dull polish, uneven colour. Stones that look alike share one sprite.
+    public static Sprite Get(GemDefinition def, string shape, string cutStyle, Color body, Color facet, int starRays, bool catsEye, StoneQuality quality)
+    {
+        if (def == null) return null;
+        if (!quality.HasEffect) return Get(def, shape, cutStyle, body, facet, starRays, catsEye);
+        body = Quantize(body);
+        facet = Quantize(facet);
+
+        var key = $"{def.name}|{shape}|{cutStyle}|{ColorUtility.ToHtmlStringRGB(body)}|{ColorUtility.ToHtmlStringRGB(facet)}|{starRays}|{catsEye}|{quality.Key}";
+        if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
+
+        var sprite = FacetedIcon(shape, cutStyle, body, facet, quality.Level(def.Diaphaneity), GemLook.For(def), starRays, catsEye, quality);
+        Cache[key] = sprite;
+        return sprite;
+    }
+
     // The icon of a stone whose pavilion carries a thin metal coating: the rainbow sheen of a "mystic" topaz, laid over the facets. The stronger
     // the coating, the more the colours of the rainbow show.
     public static Sprite GetIridescent(GemDefinition def, string shape, string cutStyle, Color body, Color facet, float strength)
@@ -108,12 +124,12 @@ public static class GemIconFactory
     }
 
     // Icon of a faceted cut: the top view of its real facet mesh, with the proportions of its shape, filling the icon.
-    private static Sprite FacetedIcon(string shape, string cutStyle, Color body, Color facet, Diaphaneity? level = null, GemLook? look = null, int starRays = 0, bool catsEye = false)
+    private static Sprite FacetedIcon(string shape, string cutStyle, Color body, Color facet, Diaphaneity? level = null, GemLook? look = null, int starRays = 0, bool catsEye = false, StoneQuality? quality = null)
     {
         var view = new GemView3D(GemPixelArt.Size);
         var aspect = GemMesh.Aspect(shape);
         var half = GemView3D.FitFraction;                      // cancels the margin the viewer keeps around the stone
-        view.Draw(GemMesh.Get(shape, cutStyle), new Vector3(aspect.x * half, aspect.y * half, half * 0.6f), Quaternion.identity, body, facet, level, starRays, look, catsEye);
+        view.Draw(GemMesh.Get(shape, cutStyle), new Vector3(aspect.x * half, aspect.y * half, half * 0.6f), Quaternion.identity, body, facet, level, starRays, look, catsEye, quality);
         return view.Sprite;
     }
 
@@ -131,6 +147,25 @@ public static class GemIconFactory
 
         var view = new GemView3D(GemPixelArt.Size);
         view.Draw(mesh, Vector3.one, HabitMesh.IconOrientation(habitId), body, facet, def.Diaphaneity, 0, GemLook.ForCrystal(def));
+        Cache[key] = view.Sprite;
+        return view.Sprite;
+    }
+
+    // The same for a crystal of this very stone.
+    public static Sprite GetHabit(GemDefinition def, string habitId, Color body, Color facet, StoneQuality quality)
+    {
+        if (def == null) return null;
+        if (!quality.HasEffect) return GetHabit(def, habitId, body, facet);
+        var mesh = GemMesh.GetHabit(habitId);
+        if (mesh == null) return GetRough(def, body);
+
+        body = Quantize(body);
+        facet = Quantize(facet);
+        var key = $"{def.name}|habit|{habitId}|{ColorUtility.ToHtmlStringRGB(body)}|{ColorUtility.ToHtmlStringRGB(facet)}|{quality.Key}";
+        if (Cache.TryGetValue(key, out var cached) && cached != null) return cached;
+
+        var view = new GemView3D(GemPixelArt.Size);
+        view.Draw(mesh, Vector3.one, HabitMesh.IconOrientation(habitId), body, facet, quality.Level(def.Diaphaneity), 0, GemLook.ForCrystal(def), false, quality);
         Cache[key] = view.Sprite;
         return view.Sprite;
     }

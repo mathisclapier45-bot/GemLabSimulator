@@ -17,7 +17,9 @@ public static class RealGemRenderer
         public Mesh Mesh;
         public Vector4[] Planes = new Vector4[MaxPlanes];
         public int PlaneCount;
+        public float BaseZ;         // a dome: where its flat base is, in the space of the studio
         public bool Invalid;        // not a convex polyhedron of flat facets (a rough lump, a crystal with too many faces): the pixel renderer draws it
+        public readonly Dictionary<int, StoneInclusions.Set> Inclusions = new Dictionary<int, StoneInclusions.Set>();      // the inclusions of each stone seen in this mesh
     }
 
     private static GameObject studio;
@@ -33,6 +35,9 @@ public static class RealGemRenderer
     private static readonly Dictionary<string, Prepared> Cache = new Dictionary<string, Prepared>();
 
     public static bool Available => !unavailable;
+
+    // Whether the last picture was drawn with the inclusions and the zoning inside the volume of the stone (then the picture does not need them painted on).
+    public static bool LastVolumetric { get; private set; }
 
     private static bool Ensure(int size)
     {
@@ -51,7 +56,7 @@ public static class RealGemRenderer
             studio = new GameObject("GemStudio") { hideFlags = HideFlags.HideAndDontSave };
             studio.transform.position = StudioPosition;
             studio.layer = StudioLayer;
-            Object.DontDestroyOnLoad(studio);
+            if (Application.isPlaying) Object.DontDestroyOnLoad(studio);      // outside Play mode (the export menus) it is an error, and the hide flags keep the studio anyway
 
             var stone = new GameObject("Stone") { hideFlags = HideFlags.HideAndDontSave };
             stone.layer = StudioLayer;
@@ -109,10 +114,11 @@ public static class RealGemRenderer
 
     // Draws the stone into `output` (size x size pixels, bottom row first). False when the realistic renderer cannot be used.
     public static bool TryRender(GemMesh gem, Vector3 halfExtents, Quaternion orientation, Color body, GemLook look, Diaphaneity? level, int size, Color32[] output,
-        int starRays = 0, bool catsEye = false)
+        int starRays = 0, bool catsEye = false, StoneQuality? quality = null, bool inclusions = true)
     {
+        LastVolumetric = false;
         if (gem == null || output == null || output.Length < size * size) return false;
-        if (gem.Smooth) return TryRenderDome(gem, halfExtents, orientation, body, look, level, size, output, starRays, catsEye);
+        if (gem.Smooth) return TryRenderDome(gem, halfExtents, orientation, body, look, level, size, output, starRays, catsEye, quality, inclusions);
         if (gem.FacetIds == null || gem.Triangles == null) return false;
         if (!Ensure(size)) return false;
         meshRenderer.sharedMaterial = material;
@@ -154,10 +160,13 @@ public static class RealGemRenderer
         material.SetFloat("_Ior", Mathf.Max(1.2f, look.Ior));
         material.SetFloat("_Dispersion", Mathf.Max(0f, look.Dispersion));
         material.SetFloat("_Density", 0.34f);
+        // The silk and the haze scatter the light in depth (see SetVolume): a part of the milky look comes from there, so the flat milky body is lighter.
+        if (quality.HasValue && quality.Value.Scatter > 0.05f && milky < 0.95f) milky *= 0.6f;
         material.SetFloat("_Milky", milky);
         material.SetFloat("_Exposure", 1.35f);
         material.SetVectorArray("_Planes", prepared.Planes);
         material.SetInt("_PlaneCount", prepared.PlaneCount);
+        SetVolume(material, prepared, quality, inclusions, ratios, size, false);
 
         camera.targetTexture = target;
         camera.Render();
@@ -168,14 +177,55 @@ public static class RealGemRenderer
         readback.ReadPixels(new Rect(0, 0, size, size), 0, 0, false);
         RenderTexture.active = previous;
 
-        var pixels = readback.GetPixels32();
-        System.Array.Copy(pixels, output, size * size);
+        CopyPixels(output, size);
+        LastVolumetric = true;
         return true;
+    }
+
+    // The inclusions and the zoning of the stone, given to the shader: bodies in the volume of the stone (see StoneInclusions), and flat bands of colour.
+    private static void SetVolume(Material mat, Prepared prepared, StoneQuality? quality, bool inclusions, Vector3 ratios, int size, bool dome)
+    {
+        var count = 0;
+        if (quality.HasValue && inclusions && quality.Value.Tier >= 1)
+        {
+            var q = quality.Value;
+            var key = q.Seed * 31 + q.Tier * 7 + Mathf.RoundToInt(q.Haze * 20f);
+            if (!prepared.Inclusions.TryGetValue(key, out var set))
+            {
+                set = dome ? StoneInclusions.BuildDome(q, ratios) : StoneInclusions.Build(q, prepared.Planes, prepared.PlaneCount, ratios);
+                if (prepared.Inclusions.Count > 24) prepared.Inclusions.Clear();
+                prepared.Inclusions[key] = set;
+            }
+            count = set.Count;
+            if (count > 0)
+            {
+                mat.SetVectorArray("_IncA", set.A);
+                mat.SetVectorArray("_IncB", set.B);
+                mat.SetVectorArray("_IncC", set.C);
+                mat.SetVectorArray("_IncD", set.D);
+            }
+        }
+        mat.SetInt("_IncCount", count);
+        mat.SetFloat("_IncPixel", 2f / (GemView3D.FitFraction * size));
+        mat.SetFloat("_IncGain", StoneInclusions.Gain);
+        mat.SetFloat("_Scatter", quality.HasValue ? quality.Value.Scatter : 0f);
+        mat.SetFloat("_Sheen", quality.HasValue ? quality.Value.Silk : 0f);
+
+        // Growth zoning: flat bands across the stone, in a direction and with a number of bands of its own.
+        var zone = quality.HasValue ? Mathf.Min(1.1f, quality.Value.Zoning * InclusionStyles.For(quality.Value.StyleKey).Zoning) : 0f;
+        mat.SetFloat("_QZone", zone > 0.04f ? zone : 0f);
+        if (zone > 0.04f)
+        {
+            var seed = quality.Value.Seed;
+            var angle = (seed % 360) * Mathf.Deg2Rad;
+            var axis = new Vector3(Mathf.Cos(angle) * 0.6f, Mathf.Sin(angle) * 0.6f, 0.8f).normalized;
+            mat.SetVector("_QAxis", new Vector4(axis.x, axis.y, axis.z, 2.2f + (seed % 7) * 0.35f));
+        }
     }
 
     // A dome (cabochon): smooth normals, a star or a cat's eye worked out from the light by the shader GemLab/RealDome.
     private static bool TryRenderDome(GemMesh gem, Vector3 halfExtents, Quaternion orientation, Color body, GemLook look, Diaphaneity? level, int size, Color32[] output,
-        int starRays, bool catsEye)
+        int starRays, bool catsEye, StoneQuality? quality, bool inclusions)
     {
         if (!Ensure(size) || domeMaterial == null || gem.Normals == null) return false;
 
@@ -196,17 +246,25 @@ public static class RealGemRenderer
             case Diaphaneity.Opaque: milky = 0.9f; break;
         }
         if (starRays > 0 || catsEye) milky = Mathf.Max(milky, 0.5f);
+        // The denser the silk, the sharper the star and the softer the sheen.
+        var silk = quality.HasValue ? quality.Value.Silk : 0f;
+        if (silk > 0.02f) milky = Mathf.Max(milky, 0.15f + 0.55f * silk);
+        domeMaterial.SetFloat("_Silk", silk);
+        domeMaterial.SetFloat("_StarWidth", Mathf.Lerp(0.06f, 0.028f, silk));
 
         domeMaterial.SetColor("_Body", new Color(body.r, body.g, body.b, 1f));
         domeMaterial.SetFloat("_Milky", milky);
         domeMaterial.SetFloat("_Exposure", 1.3f);
         domeMaterial.SetFloat("_StarRays", starRays);
-        domeMaterial.SetFloat("_StarStrength", starRays > 0 ? 1f : 0f);
+        domeMaterial.SetFloat("_StarStrength", starRays > 0 ? Mathf.Lerp(0.7f, 1.5f, silk) : 0f);
         domeMaterial.SetFloat("_CatsEye", catsEye ? 1f : 0f);
         // The direction of the crystal axes in the base of the stone: always the same for a given species.
         domeMaterial.SetFloat("_EyeAxis", (look.Seed % 360) * Mathf.Deg2Rad);
         domeMaterial.SetFloat("_Ior", Mathf.Max(1.2f, look.Ior));
         SetLook(domeMaterial, look);
+        // The clear stone is seen through: the flat base of the dome, the inclusions of the volume, the zoning and the scatter of the silk and of the haze.
+        domeMaterial.SetFloat("_BaseZ", prepared.BaseZ);
+        SetVolume(domeMaterial, prepared, quality, inclusions, ratios, size, true);
 
         camera.targetTexture = target;
         camera.Render();
@@ -216,8 +274,26 @@ public static class RealGemRenderer
         RenderTexture.active = target;
         readback.ReadPixels(new Rect(0, 0, size, size), 0, 0, false);
         RenderTexture.active = previous;
-        System.Array.Copy(readback.GetPixels32(), output, size * size);
+        CopyPixels(output, size);
+        LastVolumetric = true;
         return true;
+    }
+
+    // The pixels of the last render into `output`, without allocating a new array each time.
+    private static void CopyPixels(Color32[] output, int size)
+    {
+        var raw = readback.GetRawTextureData<Color32>();
+        var count = Mathf.Min(size * size, raw.Length, output.Length);
+        for (var i = 0; i < count; i++) output[i] = raw[i];
+    }
+
+    // The prepared meshes of the stones: each stone of new proportions adds one, so the oldest are thrown away when there are too many.
+    private static void TrimCache()
+    {
+        if (Cache.Count < 160) return;
+        foreach (var entry in Cache.Values)
+            if (entry != null && entry.Mesh != null) Object.Destroy(entry.Mesh);
+        Cache.Clear();
     }
 
     // The mesh of a dome for the studio: shared vertices, smooth normals (corrected for the proportions of the stone), mirrored along z.
@@ -225,6 +301,7 @@ public static class RealGemRenderer
     {
         var key = $"dome|{System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(gem)}|{ratios.x:F2}|{ratios.y:F2}|{ratios.z:F2}";
         if (Cache.TryGetValue(key, out var known) && known.Mesh != null) return known;
+        TrimCache();
 
         var vertices = new Vector3[gem.Vertices.Length];
         var normals = new Vector3[gem.Vertices.Length];
@@ -243,7 +320,9 @@ public static class RealGemRenderer
         mesh.normals = normals;
         mesh.SetTriangles(triangles, 0);
         mesh.bounds = new Bounds(Vector3.zero, Vector3.one * 8f);
-        var prepared = new Prepared { Mesh = mesh };
+        var baseZ = float.MinValue;
+        foreach (var v in vertices) baseZ = Mathf.Max(baseZ, v.z);
+        var prepared = new Prepared { Mesh = mesh, BaseZ = baseZ };
         Cache[key] = prepared;
         return prepared;
     }
@@ -316,6 +395,7 @@ public static class RealGemRenderer
     {
         var key = $"{System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(gem)}|{ratios.x:F2}|{ratios.y:F2}|{ratios.z:F2}";
         if (Cache.TryGetValue(key, out var known) && (known.Invalid || known.Mesh != null)) return known;
+        TrimCache();
 
         var vertices = new List<Vector3>();
         var normals = new List<Vector3>();

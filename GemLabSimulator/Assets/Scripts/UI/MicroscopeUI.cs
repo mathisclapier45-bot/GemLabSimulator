@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Gemological microscope: 10x / 20x / 40x objectives (+ 60x once bought at the GemStore), reflected light or darkfield, fine focus through the
-// depth of the stone, stage movement, and a view drawn in detail (inclusions, growth structure, surface
+// Gemological microscope: continuous zoom with the wheel from 10x (the stone seen as under the loupe, rendered in 3D) to 40x (60x once the objective is bought at the GemStore),
+// preset buttons for 10x / 20x / 40x / 60x, reflected light, darkfield or immersion, fine focus through the
+// depth of the stone (shift + wheel), stage movement, free turning of the stone in every direction (arrows, preset views, dragging), and a view drawn in detail (inclusions, growth structure, surface
 // defects). Rough stones need a polished window first. With the microscope camera (GemStore) the view can be
 // photographed and sent to the lab computer.
 public class MicroscopeUI : MonoBehaviour
@@ -11,13 +12,15 @@ public class MicroscopeUI : MonoBehaviour
     public static MicroscopeUI Instance { get; private set; }
 
     private const float PanelWidth = 640f;
-    private const float PanelHeight = 500f;
+    private const float PanelHeight = 530f;
     private const float AreaX = 20f;
     private const float AreaY = -44f;
     private const int ViewSize = 300;
     private const float HoleRadius = 148f;
     private const float BasePxPerMm = 34f;              // 10x
     private const float ObservationTime = 3f;
+    private const int RenderSize = 512;                 // the 3D render of the stone, enlarged as the zoom grows
+    private const float MinZoom = 10f;
 
     private static readonly Color PanelColor = new Color(0.08f, 0.08f, 0.10f, 0.97f);
     private static readonly Color Gold = new Color(0.95f, 0.85f, 0.65f);
@@ -39,6 +42,12 @@ public class MicroscopeUI : MonoBehaviour
     private FeaturePainter painter;
     private float[] coverageMap;         // how much of each pixel is stone: inclusions never show outside it
     private GemView3D miniMap;
+    private GemView3D stoneRender;       // the stone as the loupe shows it (realistic 3D), sampled by the view
+    private float[] renderBlur;          // its outline blurred: how far from the edge each pixel is (the glow of the darkfield)
+    private float[] renderBlurTemp;
+    private float renderSideMm;
+    private bool renderDirty = true;
+    private bool miniDirty = true;
     private RectTransform miniRect;
     private Image fovMarker;
     private Text hintText;
@@ -47,6 +56,8 @@ public class MicroscopeUI : MonoBehaviour
     private Text magnificationText;
     private readonly Button[] objectiveButtons = new Button[4];
     private readonly Button[] lightingButtons = new Button[3];
+    private bool dragTurns;              // the left button turns the stone instead of moving the stage
+    private Text dragModeLabel;
     private readonly float[] magnifications = { 10f, 20f, 40f, 60f };
     private const string Objective60Id = "Objectif60X";
     private const string CameraId = "CameraMicroscope";
@@ -57,14 +68,15 @@ public class MicroscopeUI : MonoBehaviour
     private readonly List<MicroFeature> features = new List<MicroFeature>();
     private Quaternion orientation = Quaternion.identity;
     private Vector2 pan;                 // view center, in view pixels at the current magnification
-    private int objective;               // index into magnifications
+    private float zoom = MinZoom;        // magnification of the view, continuous
     private Lighting lighting = Lighting.Reflected;
     private float focus;                 // mm, relative to the middle of the stone
     private float watched;
     private bool observed;
     private bool dirty = true;
 
-    private float PxPerMm => BasePxPerMm * magnifications[objective] / 10f;
+    private float PxPerMm => BasePxPerMm * zoom / 10f;
+    private float MaxZoom => Owns(Objective60Id) ? 60f : 40f;
 
     public static bool TryOpen()
     {
@@ -153,13 +165,13 @@ public class MicroscopeUI : MonoBehaviour
         {
             gemName = stone.IsIdentified ? stone.Definition.displayName : "Spécimen non identifié",
             gemId = stone.DisplayId,
-            magnification = magnifications[objective],
+            magnification = Mathf.Round(zoom),
             lighting = lighting == Lighting.Darkfield ? "Fond sombre" : lighting == Lighting.Immersion ? "Immersion" : "Lumière réfléchie",
             day = GameClock.Instance != null ? GameClock.Instance.CurrentDay : 1,
         });
         Destroy(image);
 
-        ToolFeedbackUI.Instance?.ShowMessage($"Microphotographie ×{magnifications[objective]:F0} envoyée à l'ordinateur du laboratoire.");
+        ToolFeedbackUI.Instance?.ShowMessage($"Microphotographie ×{zoom:F0} envoyée à l'ordinateur du laboratoire.");
         UpdateControls();
     }
 
@@ -196,6 +208,8 @@ public class MicroscopeUI : MonoBehaviour
         stone = gem;
         orientation = Quaternion.identity;
         pan = Vector2.zero;
+        zoom = MinZoom;                  // always starts at 10x: the stone whole, as under the loupe
+        renderDirty = true;
         focus = 0f;
         watched = 0f;
         observed = gem.HasObserved(ExaminationTool.MeasurementType.Inclusions.ToString());
@@ -211,10 +225,16 @@ public class MicroscopeUI : MonoBehaviour
 
     private void SelectObjective(int index)
     {
+        SetZoom(magnifications[index]);
+    }
+
+    private void SetZoom(float target)
+    {
+        target = Mathf.Clamp(target, MinZoom, MaxZoom);
+        if (Mathf.Approximately(target, zoom)) return;
         // Keep the same point of the stone in the middle of the view when zooming.
-        var scale = magnifications[index] / magnifications[objective];
-        pan *= scale;
-        objective = index;
+        pan *= target / zoom;
+        zoom = target;
         dirty = true;
         UpdateControls();
     }
@@ -247,41 +267,83 @@ public class MicroscopeUI : MonoBehaviour
         return Vector2.ClampMagnitude(value, limit);
     }
 
-    private void Tilt(Vector2 delta)
+    // Turns the stone: `yaw` around the vertical axis of the view, `pitch` around the horizontal one (degrees). Any direction can be reached.
+    private void Turn(float yaw, float pitch)
     {
         if (stone == null) return;
-        var yaw = Quaternion.AngleAxis(-delta.x * 0.6f, Vector3.up);
-        var pitch = Quaternion.AngleAxis(delta.y * 0.6f, Vector3.right);
-        orientation = yaw * pitch * orientation;
-        dirty = true;
+        orientation = Quaternion.AngleAxis(yaw, Vector3.up) * Quaternion.AngleAxis(pitch, Vector3.right) * orientation;
+        OrientationChanged();
+    }
+
+    private void Tilt(Vector2 delta)
+    {
+        Turn(-delta.x * 0.6f, delta.y * 0.6f);
     }
 
     private void Roll(float degrees)
     {
         if (stone == null) return;
         orientation = Quaternion.AngleAxis(degrees, Vector3.forward) * orientation;
+        OrientationChanged();
+    }
+
+    // A preset view: the stone seen from its table, its culet, its girdle or its profile.
+    private void SetView(Quaternion view)
+    {
+        if (stone == null) return;
+        orientation = view;
+        pan = Vector2.zero;
+        OrientationChanged();
+    }
+
+    private void OrientationChanged()
+    {
+        renderDirty = true;
         dirty = true;
+        var depth = ViewDepthHalf();
+        focus = Mathf.Clamp(focus, -depth, depth);
     }
 
     private void ResetView()
     {
-        orientation = Quaternion.identity;
-        pan = Vector2.zero;
-        dirty = true;
+        SetView(Quaternion.identity);
+    }
+
+    // Half the thickness of the stone along the line of sight: it changes as the stone is turned, and bounds the fine focus.
+    private float ViewDepthHalf()
+    {
+        var half = new Vector3(stone.LengthMm, stone.WidthMm, Mathf.Max(stone.DepthMm, 0.5f) * (stone.IsRough ? 1f : stone.Quality.DepthScale)) * 0.5f;
+        var sum = 0f;
+        var axes = new[] { Vector3.right, Vector3.up, Vector3.forward };
+        for (var i = 0; i < 3; i++)
+        {
+            var z = (orientation * axes[i]).z * half[i];
+            sum += z * z;
+        }
+        return Mathf.Max(Mathf.Sqrt(sum), 0.25f);
     }
 
     private void ChangeFocus(float delta)
     {
         if (stone == null) return;
-        var half = Mathf.Max(stone.DepthMm, 0.5f) * 0.5f;
+        var half = ViewDepthHalf();
         focus = Mathf.Clamp(focus + delta, -half, half);
         dirty = true;
     }
 
-    private void OnWheel(float scroll)
+    private void OnWheel(Vector2 scroll)
     {
-        // The wheel is the fine focus knob.
-        ChangeFocus(scroll * 0.012f);
+        if (stone == null) return;
+        // The wheel zooms (a tick is about 15 %). The fine focus is shift + wheel; macOS then sends the wheel as a horizontal scroll, so that counts too.
+        var shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        var horizontal = Mathf.Abs(scroll.x) > Mathf.Abs(scroll.y);
+        var amount = horizontal ? scroll.x : scroll.y;
+        if (Mathf.Approximately(amount, 0f)) return;
+
+        if (shift || horizontal)
+            ChangeFocus(amount * 0.012f);
+        else
+            SetZoom(zoom * Mathf.Pow(1.15f, amount / 6f));
     }
 
     private void Update()
@@ -327,18 +389,100 @@ public class MicroscopeUI : MonoBehaviour
 
     // ---- Drawing ---------------------------------------------------------------------------------------------
 
+    // The 3D render of the stone (what the loupe shows), made again only when the stone is turned.
+    private void EnsureRender()
+    {
+        if (!renderDirty || stone == null) return;
+        renderDirty = false;
+        miniDirty = true;
+
+        GemView3D.Colors(stone, out var body, out var facet);
+        GemLook.ApplyPleochroism(stone.Definition, orientation, ref body, ref facet);
+        var halfMm = new Vector3(stone.LengthMm, stone.WidthMm, Mathf.Max(stone.DepthMm, 0.5f) * (stone.IsRough ? 1f : stone.Quality.DepthScale)) * 0.5f;
+        stoneRender.PaintInclusions = false;                  // the microscope paints the inclusions itself, in detail
+        stoneRender.Draw(GemView3D.MeshFor(stone), halfMm, orientation, body, facet, stone.VisualDiaphaneity, stone.AsterismRays, GemLook.For(stone.Definition), stone.CatsEye, stone.Quality);
+        renderSideMm = Mathf.Max(halfMm.x, Mathf.Max(halfMm.y, halfMm.z)) * 2f / GemView3D.FitFraction;
+        BlurOutline();
+    }
+
+    // A box blur of the outline of the render: 1 deep inside the stone, about 0.5 on its edge.
+    private void BlurOutline()
+    {
+        const int radius = 12;
+        var n = RenderSize;
+        var px = stoneRender.Pixels;
+        var window = 2 * radius + 1;
+        for (var y = 0; y < n; y++)
+        {
+            float sum = 0f;
+            for (var x = 0; x <= radius && x < n; x++) sum += px[y * n + x].a;
+            for (var x = 0; x < n; x++)
+            {
+                renderBlurTemp[y * n + x] = sum / window / 255f;
+                var add = x + radius + 1;
+                var sub = x - radius;
+                if (add < n) sum += px[y * n + add].a;
+                if (sub >= 0) sum -= px[y * n + sub].a;
+            }
+        }
+        for (var x = 0; x < n; x++)
+        {
+            float sum = 0f;
+            for (var y = 0; y <= radius && y < n; y++) sum += renderBlurTemp[y * n + x] * window;
+            for (var y = 0; y < n; y++)
+            {
+                renderBlur[y * n + x] = sum / window / window;
+                var add = y + radius + 1;
+                var sub = y - radius;
+                if (add < n) sum += renderBlurTemp[add * n + x] * window;
+                if (sub >= 0) sum -= renderBlurTemp[sub * n + x] * window;
+            }
+        }
+    }
+
+    // One point of the render, with bilinear filtering: its colour, how much stone there is, and how deep inside the outline it lies.
+    private void SampleStone(float u, float v, out Color color, out float alpha, out float inner)
+    {
+        var n = RenderSize;
+        var px = stoneRender.Pixels;
+        var x0 = Mathf.FloorToInt(u);
+        var y0 = Mathf.FloorToInt(v);
+        var fx = u - x0;
+        var fy = v - y0;
+        float r = 0f, g = 0f, b = 0f, a = 0f, blur = 0f;
+        for (var dy = 0; dy < 2; dy++)
+        {
+            for (var dx = 0; dx < 2; dx++)
+            {
+                var ix = x0 + dx;
+                var iy = y0 + dy;
+                if (ix < 0 || iy < 0 || ix >= n || iy >= n) continue;
+                var w = (dx == 0 ? 1f - fx : fx) * (dy == 0 ? 1f - fy : fy);
+                var c = px[iy * n + ix];
+                var wa = w * c.a / 255f;
+                r += c.r * wa; g += c.g * wa; b += c.b * wa; a += wa;
+                blur += renderBlur[iy * n + ix] * w;
+            }
+        }
+        alpha = a;
+        inner = blur;
+        color = a > 0.0001f ? new Color(r / a / 255f, g / a / 255f, b / a / 255f, 1f) : Color.black;
+    }
+
     private void DrawView()
     {
         if (stone == null) return;
+        EnsureRender();
 
         var mmToPx = PxPerMm;
-        var half = new Vector3(stone.LengthMm, stone.WidthMm, Mathf.Max(stone.DepthMm, 0.5f)) * 0.5f;
+        var half = new Vector3(stone.LengthMm, stone.WidthMm, Mathf.Max(stone.DepthMm, 0.5f) * (stone.IsRough ? 1f : stone.Quality.DepthScale)) * 0.5f;
         GemView3D.Colors(stone, out var body, out _);
         var dark = lighting == Lighting.Darkfield;
         var immersion = lighting == Lighting.Immersion;
         var pattern = TreatmentSignatures.Immersion(stone);
 
-        // Silhouette of the stone: the projection of its ellipsoid on the lens plane (in mm).
+        // Silhouette of the stone: the projection of its ellipsoid on the lens plane (in mm). It only serves the patterns of the immersion;
+        // the outline itself comes from the 3D render.
         float cxx = 0f, cxy = 0f, cyy = 0f;
         var axes = new[] { Vector3.right, Vector3.up, Vector3.forward };
         for (var i = 0; i < 3; i++)
@@ -356,7 +500,10 @@ public class MicroscopeUI : MonoBehaviour
         var angle = 0.5f * Mathf.Atan2(2f * cxy, cxx - cyy);
         var cos = Mathf.Cos(-angle);
         var sin = Mathf.Sin(-angle);
-        var edgeSoft = Mathf.Max(1f, Mathf.Min(major, minor) * mmToPx * 0.05f);
+
+        // How many pixels of the view one pixel of the render covers: the more the stone is enlarged, the sharper its outline is kept.
+        var renderPerMm = RenderSize / renderSideMm;
+        var sharpness = Mathf.Clamp(mmToPx / renderPerMm, 1f, 8f);
 
         // In immersion the stone sits in a pale liquid of nearly the same refractive index: the colour inside it shows whatever the treatment did to it.
         var stage = dark ? new Color(0f, 0f, 0f) : immersion ? new Color(0.66f, 0.70f, 0.46f) : new Color(0.10f, 0.10f, 0.12f);
@@ -368,37 +515,38 @@ public class MicroscopeUI : MonoBehaviour
             {
                 var mmX = (x + 0.5f - center + pan.x) / mmToPx;
                 var mmY = (y + 0.5f - center + pan.y) / mmToPx;
-                var rx = (mmX * cos - mmY * sin) / major;
-                var ry = (mmX * sin + mmY * cos) / minor;
-                var d2 = rx * rx + ry * ry;
-                var coverage = Mathf.Clamp01((1f - Mathf.Sqrt(d2)) * Mathf.Min(major, minor) * mmToPx / edgeSoft);
+                SampleStone((mmX / renderSideMm + 0.5f) * RenderSize - 0.5f, (mmY / renderSideMm + 0.5f) * RenderSize - 0.5f, out var rendered, out var alpha, out var inner);
+                var coverage = Mathf.Clamp01((alpha - 0.5f) * sharpness + 0.5f);
 
                 Color color;
-                if (d2 >= 1.2f && coverage <= 0f)
+                if (coverage <= 0f)
                 {
                     color = stage;
                 }
                 else
                 {
-                    var shade = 0.55f + 0.35f * (1f - Mathf.Min(1f, d2));
+                    var rx = (mmX * cos - mmY * sin) / major;
+                    var ry = (mmX * sin + mmY * cos) / minor;
+                    var d2 = rx * rx + ry * ry;
                     var noise = Hash(x, y) * 0.05f;
-                    Color inside;
+                    Color insideColor;
                     if (immersion)
                     {
-                        inside = ImmersionColor(body, stage, pattern, d2, rx, ry, mmX, mmY, noise);
+                        insideColor = ImmersionColor(body, stage, pattern, d2, rx, ry, mmX, mmY, noise);
                     }
                     else if (dark)
                     {
                         // Darkfield: the stone is almost black, with a faint glow along its edge.
-                        var rim = Mathf.Pow(Mathf.Clamp01(Mathf.Sqrt(d2)), 6f) * 0.25f;
-                        inside = body * (0.04f + rim) + new Color(noise * 0.2f, noise * 0.2f, noise * 0.25f);
+                        var edge = Mathf.Clamp01((1f - inner) * 2f);
+                        var rim = edge * edge * 0.25f;
+                        insideColor = rendered * 0.10f + body * rim + new Color(noise * 0.2f, noise * 0.2f, noise * 0.25f);
                     }
                     else
                     {
-                        inside = body * shade + new Color(noise, noise, noise);
+                        insideColor = rendered + new Color(noise, noise, noise) * 0.3f;
                     }
-                    inside.a = 1f;
-                    color = Color.Lerp(stage, inside, coverage);
+                    insideColor.a = 1f;
+                    color = Color.Lerp(stage, insideColor, coverage);
                 }
 
                 buffer[y * ViewSize + x] = color;
@@ -423,7 +571,7 @@ public class MicroscopeUI : MonoBehaviour
     private void DrawFeatures(Vector3 half, bool dark, Color body)
     {
         var mmToPx = PxPerMm;
-        var tolerance = 9f / magnifications[objective];
+        var tolerance = 9f / zoom;
         var tint = Color.Lerp(Color.white, body, 0.30f);
 
         foreach (var mf in features)
@@ -543,6 +691,7 @@ public class MicroscopeUI : MonoBehaviour
             hintText.text = "";
             miniRect.gameObject.SetActive(true);
             fovMarker.enabled = true;
+            renderDirty = true;
             dirty = true;
         }
 
@@ -555,7 +704,7 @@ public class MicroscopeUI : MonoBehaviour
         for (var i = 0; i < objectiveButtons.Length; i++)
         {
             objectiveButtons[i].gameObject.SetActive(i < 3 || Owns(Objective60Id));
-            objectiveButtons[i].GetComponent<Image>().color = objective == i ? ButtonOn : ButtonColor;
+            objectiveButtons[i].GetComponent<Image>().color = Mathf.Abs(zoom - magnifications[i]) < 0.5f ? ButtonOn : ButtonColor;
         }
 
         var hasCamera = Owns(CameraId);
@@ -567,10 +716,12 @@ public class MicroscopeUI : MonoBehaviour
             var library = MicroPhotoLibrary.Instance;
             photoCountText.text = $"Photos envoyées : {(library != null ? library.Photos.Count : 0)}";
         }
+        if (dragModeLabel != null) dragModeLabel.text = dragTurns ? "Glisser : tourner" : "Glisser : déplacer";
         for (var i = 0; i < lightingButtons.Length; i++)
             lightingButtons[i].GetComponent<Image>().color = (int)lighting == i ? ButtonOn : ButtonColor;
 
-        magnificationText.text = $"×{magnifications[objective]:F0}";
+        if (zoom > MaxZoom) { zoom = MaxZoom; dirty = true; }
+        magnificationText.text = $"×{zoom:F0}";
         focusText.text = stone == null ? "" : $"Mise au point : {focus:+0.00;-0.00;0.00} mm";
     }
 
@@ -578,8 +729,12 @@ public class MicroscopeUI : MonoBehaviour
     {
         if (stone == null) return;
 
-        GemView3D.Colors(stone, out var body, out var facet);
-        miniMap.Draw(GemView3D.MeshFor(stone), GemView3D.HalfExtents(stone), orientation, body, facet, stone.Definition.Diaphaneity, 0, GemLook.For(stone.Definition));
+        if (miniDirty)
+        {
+            miniDirty = false;
+            GemView3D.Colors(stone, out var body, out var facet);
+            miniMap.Draw(GemView3D.MeshFor(stone), GemView3D.HalfExtents(stone), orientation, body, facet, stone.Definition.Diaphaneity, 0, GemLook.For(stone.Definition));
+        }
 
         // Where the view sits over the stone: a glowing disc as big as the field of view.
         var maxDim = GemView3D.MaxDimensionMm(stone);
@@ -660,6 +815,9 @@ public class MicroscopeUI : MonoBehaviour
         buffer = new Color32[ViewSize * ViewSize];
         painter = new FeaturePainter(buffer, ViewSize, ViewSize, FeaturePainter.Mode.Opaque);
         coverageMap = new float[ViewSize * ViewSize];
+        stoneRender = new GemView3D(RenderSize) { Realistic = true };
+        renderBlur = new float[RenderSize * RenderSize];
+        renderBlurTemp = new float[RenderSize * RenderSize];
         viewTexture = new Texture2D(ViewSize, ViewSize, TextureFormat.RGBA32, false)
         {
             filterMode = FilterMode.Bilinear,
@@ -677,9 +835,9 @@ public class MicroscopeUI : MonoBehaviour
         var area = RuntimeUIKit.MakeBox("Area", panel.transform, new Vector2(AreaX, AreaY), new Vector2(ViewSize + 30f, ViewSize + 30f), new Color(0.04f, 0.04f, 0.05f, 1f));
         area.gameObject.AddComponent<LapidarySlotDropZone>().OnGemDropped = SetStone;
         var drag = area.gameObject.AddComponent<DichroscopeDragArea>();
-        drag.OnDragDelta = MoveStage;
-        drag.OnPanDelta = Tilt;
-        drag.OnRoll = OnWheel;
+        drag.OnDragDelta = delta => { if (dragTurns) Tilt(delta); else MoveStage(delta); };
+        drag.OnPanDelta = delta => { if (dragTurns) MoveStage(delta); else Tilt(delta); };
+        drag.OnScrollDelta = OnWheel;
 
         var viewGO = new GameObject("View", typeof(RectTransform), typeof(Image));
         viewGO.transform.SetParent(panel.transform, false);
@@ -719,9 +877,39 @@ public class MicroscopeUI : MonoBehaviour
         var rollRight = RuntimeUIKit.MakeButton("RollRight", panel.transform, "Rouler >", 12, ButtonColor, new Vector2(AreaX + 270f, top), new Vector2(66f, 24f));
         rollRight.onClick.AddListener(() => Roll(-15f));
 
+        // Turning the stone: arrows, then the preset views.
+        RuntimeUIKit.MakeText("TurnLabel", panel.transform, "Tourner :", 12, TextAnchor.UpperLeft, new Color(0.65f, 0.67f, 0.72f),
+            new Vector2(AreaX, top - 25f), new Vector2(60f, 16f));
+        MakeTurn("TurnLeft", "<", new Vector2(AreaX + 62f, top - 30f), 20f, 0f);
+        MakeTurn("TurnUp", "^", new Vector2(AreaX + 94f, top - 30f), 0f, 20f);
+        MakeTurn("TurnDown", "v", new Vector2(AreaX + 126f, top - 30f), 0f, -20f);
+        MakeTurn("TurnRight", ">", new Vector2(AreaX + 158f, top - 30f), -20f, 0f);
+        var dragMode = RuntimeUIKit.MakeButton("DragMode", panel.transform, "Glisser : déplacer", 11, ButtonColor, new Vector2(AreaX + 200f, top - 30f), new Vector2(136f, 24f));
+        dragModeLabel = dragMode.GetComponentInChildren<Text>();
+        dragMode.onClick.AddListener(() => { dragTurns = !dragTurns; UpdateControls(); });
+
+        RuntimeUIKit.MakeText("ViewLabel", panel.transform, "Vues :", 12, TextAnchor.UpperLeft, new Color(0.65f, 0.67f, 0.72f),
+            new Vector2(AreaX, top - 55f), new Vector2(60f, 16f));
+        MakeView("ViewTable", "Table", new Vector2(AreaX + 62f, top - 60f), Quaternion.identity);
+        MakeView("ViewCulet", "Culasse", new Vector2(AreaX + 132f, top - 60f), Quaternion.AngleAxis(180f, Vector3.up));
+        MakeView("ViewGirdle", "Rondiste", new Vector2(AreaX + 202f, top - 60f), Quaternion.AngleAxis(-90f, Vector3.right));
+        MakeView("ViewSide", "Profil", new Vector2(AreaX + 272f, top - 60f), Quaternion.AngleAxis(90f, Vector3.up));
+
         RuntimeUIKit.MakeText("Tip", panel.transform,
-            "Glisser : déplacer la platine. Clic droit + glisser : incliner la gemme. Molette : mise au point.",
-            11, TextAnchor.UpperLeft, new Color(0.6f, 0.62f, 0.68f), new Vector2(AreaX, top - 34f), new Vector2(340f, 30f));
+            "Glisser : déplacer la platine. Clic droit + glisser : incliner la gemme. Molette : zoom. Maj + molette : mise au point.",
+            11, TextAnchor.UpperLeft, new Color(0.6f, 0.62f, 0.68f), new Vector2(AreaX, top - 94f), new Vector2(340f, 40f));
+    }
+
+    private void MakeTurn(string name, string label, Vector2 position, float yaw, float pitch)
+    {
+        var button = RuntimeUIKit.MakeButton(name, panel.transform, label, 12, ButtonColor, position, new Vector2(28f, 24f));
+        button.onClick.AddListener(() => Turn(yaw, pitch));
+    }
+
+    private void MakeView(string name, string label, Vector2 position, Quaternion view)
+    {
+        var button = RuntimeUIKit.MakeButton(name, panel.transform, label, 11, ButtonColor, position, new Vector2(66f, 24f));
+        button.onClick.AddListener(() => SetView(view));
     }
 
     private void MakeNudge(string name, string label, Vector2 position, Vector2 direction)
@@ -734,7 +922,7 @@ public class MicroscopeUI : MonoBehaviour
     {
         const float x = 392f;
 
-        RuntimeUIKit.MakeText("ObjectiveHeader", panel.transform, "Objectif", 14, TextAnchor.UpperLeft, Gold, new Vector2(x + 4f, -44f), new Vector2(200f, 20f));
+        RuntimeUIKit.MakeText("ObjectiveHeader", panel.transform, "Grossissement (molette)", 14, TextAnchor.UpperLeft, Gold, new Vector2(x + 4f, -44f), new Vector2(200f, 20f));
         for (var i = 0; i < objectiveButtons.Length; i++)
         {
             var captured = i;

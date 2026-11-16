@@ -27,6 +27,9 @@ public class GemView3D
     // A realistic view draws the faceted stones with the ray-tracing shader (see RealGemRenderer); domes and rough stones keep the pixel art.
     public bool Realistic;
 
+    // Whether the inclusions that show without a loupe are painted in the stone (a view that draws the inclusions itself turns this off).
+    public bool PaintInclusions = true;
+
     public GemView3D(int size = 48)
     {
         this.size = size;
@@ -71,7 +74,9 @@ public class GemView3D
             length = Mathf.Sqrt(length * width / ratio);
             width = length * ratio;
         }
-        return new Vector3(length, width, Mathf.Max(gem.DepthMm, 0.1f)) * 0.5f;
+        var depth = Mathf.Max(gem.DepthMm, 0.1f);
+        if (!gem.IsRough) depth *= gem.Quality.DepthScale;                  // proportions that are not ideal: a shallow pavilion, a deep one
+        return new Vector3(length, width, depth) * 0.5f;
     }
 
     // Largest dimension of the stone in millimeters, which is what the image side is scaled from.
@@ -97,12 +102,15 @@ public class GemView3D
     private Vector3[] rotatedNormals = new Vector3[0];
     private float[] vertexTones = new float[0];
 
-    public void Draw(GemMesh mesh, Vector3 halfExtentsMm, Quaternion orientation, Color body, Color facet, Diaphaneity? level = null, int starRays = 0, GemLook? look = null, bool catsEye = false)
+    public void Draw(GemMesh mesh, Vector3 halfExtentsMm, Quaternion orientation, Color body, Color facet, Diaphaneity? level = null, int starRays = 0, GemLook? look = null, bool catsEye = false, StoneQuality? quality = null)
     {
         var gemLook = look ?? GemLook.Default;
-        if (Realistic && RealGemRenderer.TryRender(mesh, halfExtentsMm, orientation, body, gemLook, level, size, pixels, starRays, catsEye))
+        if (Realistic && RealGemRenderer.TryRender(mesh, halfExtentsMm, orientation, body, gemLook, level, size, pixels, starRays, catsEye, quality, PaintInclusions))
         {
             texture.filterMode = FilterMode.Bilinear;
+            // The shader has put the inclusions and the zoning inside the stone: only what belongs to the surface and to the haze is painted on.
+            var volumetric = RealGemRenderer.LastVolumetric;
+            if (quality.HasValue) StoneQualityFx.Apply(pixels, size, quality.Value, body, orientation, halfExtentsMm, PaintInclusions && !volumetric, volumetric);
             texture.SetPixels32(pixels);
             texture.Apply();
             return;
@@ -188,6 +196,7 @@ public class GemView3D
         if (gemLook.Fire > 0f && !smoothDome) DrawFire(gemLook.Fire, gemLook.Seed);
         if (starRays > 0) DrawStar(starRays, orientation);
         if (catsEye) DrawCatsEye(orientation);
+        if (quality.HasValue) StoneQualityFx.Apply(pixels, size, quality.Value, body, orientation, halfExtentsMm, PaintInclusions);
         texture.SetPixels32(pixels);
         texture.Apply();
     }
