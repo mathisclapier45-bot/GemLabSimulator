@@ -1,0 +1,86 @@
+{
+  "id": "systemes_cristallins",
+  "kind": "concept",
+  "title": "Les systèmes cristallins",
+  "unlock": "OpticalCharacter",
+  "animation": "",
+  "steps": [
+    {
+      "title": "Un cristal est un ordre",
+      "text": "Dans un cristal, les atomes sont rangés selon un motif qui se répète dans l'espace, comme des briques dans un mur. On décrit ce motif par <b>trois axes</b> (a, b, c) et les <b>trois angles</b> entre eux (α, β, γ).\n\nSelon les longueurs des axes et les angles, il n'existe que <b>sept systèmes cristallins</b>.",
+      "figure": "systems",
+      "focus": -1,
+      "image": ""
+    },
+    {
+      "title": "Système cubique",
+      "text": "<b>Forme :</b> trois axes égaux, perpendiculaires entre eux.\n<b>Symétrie :</b> la plus élevée : 3 axes d'ordre 4, 4 axes d'ordre 3.\n<b>Habitus :</b> cubes, octaèdres, dodécaèdres.\n<b>Pierres :</b> diamant, grenats, spinelle, fluorite.\n<b>Optique :</b> isotrope, une seule réfraction.",
+      "figure": "systems",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Système quadratique",
+      "text": "<b>Forme :</b> deux axes égaux, un troisième différent, tous perpendiculaires.\n<b>Symétrie :</b> un axe d'ordre 4.\n<b>Habitus :</b> prismes à base carrée, bipyramides.\n<b>Pierres :</b> zircon, rutile, vésuvianite.\n<b>Optique :</b> uniaxe.",
+      "figure": "systems",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "Système hexagonal",
+      "text": "<b>Forme :</b> trois axes égaux dans un plan, à 120° les uns des autres, et un axe vertical perpendiculaire.\n<b>Symétrie :</b> un axe d'ordre 6.\n<b>Habitus :</b> prismes à six faces.\n<b>Pierres :</b> béryl (émeraude, aigue-marine), apatite.\n<b>Optique :</b> uniaxe.",
+      "figure": "systems",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "Système trigonal",
+      "text": "<b>Forme :</b> proche de l'hexagonal, mais avec un axe d'ordre 3 seulement (on le décrit aussi par un rhomboèdre : trois axes égaux, inclinés de la même façon).\n<b>Habitus :</b> prismes à trois ou six faces, rhomboèdres, pointements.\n<b>Pierres :</b> quartz (améthyste, citrine), corindon (rubis, saphir), tourmaline, calcite.\n<b>Optique :</b> uniaxe.",
+      "figure": "systems",
+      "focus": 3,
+      "image": ""
+    },
+    {
+      "title": "Système orthorhombique",
+      "text": "<b>Forme :</b> trois axes de longueurs différentes, tous perpendiculaires.\n<b>Symétrie :</b> trois axes d'ordre 2.\n<b>Habitus :</b> prismes à base losange, cristaux tabulaires.\n<b>Pierres :</b> topaze, péridot, chrysobéryl, tanzanite, andalousite.\n<b>Optique :</b> biaxe.",
+      "figure": "systems",
+      "focus": 4,
+      "image": ""
+    },
+    {
+      "title": "Système monoclinique",
+      "text": "<b>Forme :</b> trois axes inégaux, dont un est incliné : un seul angle diffère de 90°.\n<b>Symétrie :</b> un seul axe d'ordre 2.\n<b>Habitus :</b> prismes aplatis, cristaux maclés.\n<b>Pierres :</b> jadéite, orthose, spodumène (kunzite), malachite.\n<b>Optique :</b> biaxe.",
+      "figure": "systems",
+      "focus": 5,
+      "image": ""
+    },
+    {
+      "title": "Système triclinique",
+      "text": "<b>Forme :</b> trois axes inégaux, aucun angle droit.\n<b>Symétrie :</b> la plus basse : au mieux un centre de symétrie.\n<b>Habitus :</b> cristaux irréguliers, tablettes.\n<b>Pierres :</b> feldspaths (amazonite, labradorite), turquoise, rhodonite.\n<b>Optique :</b> biaxe.",
+      "figure": "systems",
+      "focus": 6,
+      "image": ""
+    },
+    {
+      "title": "Les axes de croissance et l'habitus",
+      "text": "Un cristal ne pousse pas de la même façon dans toutes les directions : il grandit <b>plus vite selon certains axes</b>. Si la croissance est rapide selon c, on obtient une aiguille ; si elle l'est selon a et b, une tablette. Cette forme extérieure est l'<b>habitus</b>.\n\nSurtout, les propriétés changent avec la direction : l'indice de réfraction, la couleur (pléochroïsme), la dureté. C'est pour cela qu'on tourne la pierre sous les instruments, et que le lapidaire l'oriente pour obtenir la plus belle couleur.",
+      "figure": "systems",
+      "focus": 7,
+      "image": ""
+    },
+    {
+      "title": "Trois familles optiques",
+      "text": "Le système cristallin décide de la façon dont la pierre traite la lumière :\n\n• <b>cubique</b> : isotrope, un seul indice ;\n• <b>quadratique, hexagonal, trigonal</b> : uniaxe, un axe optique, deux indices ;\n• <b>orthorhombique, monoclinique, triclinique</b> : biaxe, deux axes optiques, trois indices.\n\nC'est ce que le réfractomètre vous a montré (une ou deux limites d'ombre) et ce que le polariscope va confirmer.",
+      "figure": "systems",
+      "focus": 8,
+      "image": ""
+    }
+  ],
+  "tool": {
+    "name": "",
+    "measures": "",
+    "where": "",
+    "records": [],
+    "tips": []
+  }
+}

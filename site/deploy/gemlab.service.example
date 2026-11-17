@@ -1,0 +1,23 @@
+# Example systemd service: /etc/systemd/system/gemlab.service
+# Then:  sudo systemctl enable --now gemlab
+[Unit]
+Description=GemLab site
+After=network.target
+
+[Service]
+User=gemlab
+WorkingDirectory=/srv/gemlab/site
+Environment=GEMLAB_ENV=prod
+Environment=GEMLAB_BASE_URL=https://gemlab.example.org
+Environment=GEMLAB_TRUST_PROXY=1
+Environment=GEMLAB_MAIL_FROM=GemLab <no-reply@gemlab.example.org>
+Environment=GEMLAB_SMTP_HOST=smtp.example-mail-service.com
+Environment=GEMLAB_SMTP_PORT=587
+Environment=GEMLAB_SMTP_USER=your-smtp-user
+# Keep the real password in a file only root can read, not here:
+EnvironmentFile=/etc/gemlab.env
+ExecStart=/srv/gemlab/venv/bin/gunicorn --workers 3 --bind 127.0.0.1:8000 wsgi:application
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

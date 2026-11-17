@@ -1,0 +1,180 @@
+"""Page layout and small HTML helpers shared by all pages. No visible text here: see i18n/fr.json."""
+import html
+import re
+import time
+
+from . import config
+from .web import Response
+
+esc = html.escape
+
+NAV = [
+    ("home", "/", "nav.home"),
+    ("encyclopedia", "/encyclopedie", "nav.encyclopedia"),
+    ("identify", "/identification", "nav.identify"),
+    ("lessons", "/lecons", "nav.lessons"),
+    ("simulator", "/simulateur", "nav.simulator"),
+    ("forum", "/forum", "nav.forum"),
+]
+
+
+def csrf_field(req):
+    return '<input type="hidden" name="csrf" value="{}">'.format(esc(req.csrf))
+
+
+def honeypot():
+    # Hidden field that humans never fill in; bots usually do.
+    return ('<div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" '
+            'tabindex="-1" autocomplete="off"></label></div>')
+
+
+def fmt_date(req, ts, with_time=False):
+    months = req.t("date.months").split(",")
+    g = time.gmtime(ts)
+    text = "{} {} {}".format(g.tm_mday, months[g.tm_mon - 1], g.tm_year)
+    if with_time:
+        text += " " + req.t("date.at") + " {:02d}:{:02d}".format(g.tm_hour, g.tm_min)
+    return text
+
+
+def fmt_num(value, digits=3):
+    if value is None:
+        return ""
+    text = ("{:." + str(digits) + "f}").format(value).rstrip("0").rstrip(".")
+    return text.replace(".", ",")
+
+
+def gem_svg(color, facet, size=48):
+    """A small faceted gem drawn from two colours (an original drawing, not a game image)."""
+    c = esc(color or "#888888")
+    f = esc(facet or "#dddddd")
+    return (
+        '<svg class="gem" viewBox="0 0 48 48" width="{s}" height="{s}" aria-hidden="true" focusable="false">'
+        '<polygon points="12,6 36,6 45,18 24,43 3,18" fill="{c}" stroke="rgba(0,0,0,.35)" stroke-width="1"/>'
+        '<polygon points="12,6 24,18 3,18" fill="{f}" opacity=".55"/>'
+        '<polygon points="36,6 24,18 45,18" fill="{f}" opacity=".30"/>'
+        '<polygon points="12,6 36,6 24,18" fill="{f}" opacity=".80"/>'
+        '<polygon points="3,18 24,18 24,43" fill="#000" opacity=".12"/>'
+        '</svg>').format(s=size, c=c, f=f)
+
+
+BRAND_MARK = ('<svg class="mark" viewBox="0 0 48 48" width="28" height="28" aria-hidden="true"><defs><linearGradient id="bm" x1="0" y1="0" x2="1" y2="1">'
+              '<stop offset="0" stop-color="#6ea8ff"/><stop offset="1" stop-color="#7b5cff"/></linearGradient></defs>'
+              '<polygon points="12,6 36,6 45,18 24,43 3,18" fill="url(#bm)"/><polygon points="12,6 24,18 3,18" fill="#fff" opacity=".45"/>'
+              '<polygon points="36,6 24,18 45,18" fill="#fff" opacity=".2"/><polygon points="12,6 36,6 24,18" fill="#fff" opacity=".7"/></svg>')
+
+
+def _footer(req):
+    t = req.t
+    user = req.user
+    acct = ('<a href="/compte">{}</a>'.format(esc(t("nav.account"))) if user else
+            '<a href="/connexion">{}</a><a href="/inscription">{}</a>'.format(esc(t("nav.login")), esc(t("nav.register"))))
+    return (
+        '<footer class="foot"><div class="wrap foot-grid"><div class="foot-brand"><a class="brand" href="/">{mark}<span>{site}</span></a>'
+        '<p>{tag}</p></div><nav aria-label="{e}"><h3>{e}</h3><a href="/encyclopedie">{enc}</a><a href="/identification">{idt}</a><a href="/lecons">{les}</a></nav>'
+        '<nav aria-label="{m}"><h3>{m}</h3><a href="/simulateur">{sim}</a><a href="/forum">{forum}</a></nav>'
+        '<nav aria-label="{a}"><h3>{a}</h3>{acct}</nav></div><div class="wrap foot-note">{note}</div></footer>').format(
+        mark=BRAND_MARK, site=esc(t("site.name")), tag=esc(t("footer.tag")), e=esc(t("footer.explore")), enc=esc(t("nav.encyclopedia")),
+        idt=esc(t("nav.identify")), les=esc(t("nav.lessons")), m=esc(t("footer.members")), sim=esc(t("nav.simulator")),
+        forum=esc(t("nav.forum")), a=esc(t("footer.account")), acct=acct, note=esc(t("footer.note")))
+
+
+def page(req, title, content, section="", sim=False, status=200, description=""):
+    """Wraps `content` in the site layout. Every page carries the noindex tag."""
+    t = req.t
+    user = req.user
+    nav = []
+    for key, href, label in NAV:
+        cls = ' class="current"' if key == section else ""
+        nav.append('<a href="{}"{}>{}</a>'.format(href, cls, esc(t(label))))
+    if user:
+        admin = '<a href="/admin">{}</a>'.format(esc(t("nav.admin"))) if user["role"] == "admin" else ""
+        who = (
+            '<span class="who"><a href="/compte">{name}</a>{admin}'
+            '<form method="post" action="/deconnexion" class="inline">{csrf}'
+            '<button type="submit" class="linklike">{logout}</button></form></span>'
+        ).format(name=esc(user["username"]), admin=admin, csrf=csrf_field(req), logout=esc(t("nav.logout")))
+    else:
+        who = '<span class="who"><a href="/connexion">{}</a><a href="/inscription" class="btn small">{}</a></span>'.format(
+            esc(t("nav.login")), esc(t("nav.register")))
+
+    banners = []
+    flash = req.pop_flash()
+    if flash:
+        banners.append('<div class="banner ok" role="status">{}</div>'.format(esc(t(flash))))
+    if user and not user["email_verified_at"]:
+        banners.append(
+            '<div class="banner warn">{msg}<form method="post" action="/verification/renvoyer" class="inline">'
+            '{csrf}<button type="submit" class="linklike">{btn}</button></form></div>'.format(
+                msg=esc(t("banner.unverified")), csrf=csrf_field(req), btn=esc(t("banner.resend"))))
+
+    desc = '<meta name="description" content="{}">'.format(esc(description)) if description else ""
+    body_class = "sim" if sim else ""
+    doc = """<!doctype html>
+<html lang="{lang}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{title} · {site}</title>
+{desc}
+<link rel="stylesheet" href="/static/css/site.css">
+<link rel="stylesheet" href="/static/css/theme.css">
+<meta name="color-scheme" content="light dark">
+</head>
+<body class="{body_class}">
+<a class="skip" href="#main">{skip}</a>
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="/">{mark}<span>{site}</span></a>
+    <nav aria-label="{navlabel}">{nav}</nav>
+    {who}
+  </div>
+</header>
+<main id="main" class="wrap">
+{banners}
+{content}
+</main>
+{footer}
+</body>
+</html>""".format(
+        lang=req.lang, title=esc(title), site=esc(t("site.name")), desc=desc, body_class=body_class,
+        skip=esc(t("nav.skip")), navlabel=esc(t("nav.label")), nav="".join(nav), who=who,
+        banners="".join(banners), content=content, footer=_footer(req), mark=BRAND_MARK)
+    return Response(doc, status=status)
+
+
+def message_page(req, title, text, status=200, link=None):
+    extra = ""
+    if link:
+        extra = '<p><a class="btn" href="{}">{}</a></p>'.format(esc(link[0]), esc(link[1]))
+    content = '<section class="narrow"><h1>{}</h1><p>{}</p>{}</section>'.format(esc(title), esc(text), extra)
+    return page(req, title, content, status=status)
+
+
+def pagination(req, base, page_no, pages):
+    if pages <= 1:
+        return ""
+    parts = []
+    sep = "&" if "?" in base else "?"
+    if page_no > 1:
+        parts.append('<a href="{}{}page={}">{}</a>'.format(esc(base), sep, page_no - 1, esc(req.t("pager.prev"))))
+    parts.append('<span>{}</span>'.format(esc(req.t("pager.of", n=page_no, total=pages))))
+    if page_no < pages:
+        parts.append('<a href="{}{}page={}">{}</a>'.format(esc(base), sep, page_no + 1, esc(req.t("pager.next"))))
+    return '<nav class="pager">{}</nav>'.format(" ".join(parts))
+
+
+def page_number(req, pages):
+    try:
+        n = int(req.query.get("page", "1"))
+    except ValueError:
+        n = 1
+    return max(1, min(n, max(pages, 1)))
+
+
+def safe_next(path):
+    """Only allow redirects to a path inside this site."""
+    if path and re.fullmatch(r"/[A-Za-z0-9_\-./?=&%]*", path) and not path.startswith("//"):
+        return path
+    return "/"

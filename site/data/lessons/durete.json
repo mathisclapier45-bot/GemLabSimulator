@@ -1,0 +1,58 @@
+{
+  "id": "durete",
+  "kind": "concept",
+  "title": "La dureté",
+  "unlock": "VisualExamination",
+  "animation": "",
+  "tool": {
+    "name": "",
+    "measures": "",
+    "where": "",
+    "records": [],
+    "tips": []
+  },
+  "steps": [
+    {
+      "title": "Résister aux rayures",
+      "text": "La <b>dureté</b> est la résistance d'une pierre aux rayures. Un matériau plus dur raye un matériau plus tendre ; l'inverse est impossible.\n\nC'est la première forme de la <b>durabilité</b>. Une pierre tendre se raye, perd son poli et devient terne à force d'être portée.",
+      "figure": "hardness",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "L'échelle de Mohs",
+      "text": "En 1812, le minéralogiste Mohs a classé dix minéraux, du plus tendre au plus dur : talc (1), gypse, calcite, fluorite, apatite, orthose, quartz (7), topaze, corindon (9) et diamant (10).\n\nC'est une échelle <b>relative</b> : elle donne l'ordre, pas l'écart. Chaque minéral raye ceux qui le précèdent.\n\nPour s'y repérer : l'ongle vaut environ 2,5, le verre et la lame d'un couteau 5,5, une lime d'acier 6,5. Et la poussière de l'air contient du quartz (7) : une gemme plus tendre se raye peu à peu.",
+      "figure": "hardness",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "La dureté absolue",
+      "text": "Les intervalles de l'échelle de Mohs ne sont pas égaux. Mesurée avec un instrument, la <b>dureté absolue</b> (par exemple l'échelle de Knoop) montre la réalité : du corindon (9) au diamant (10), il n'y a qu'un cran sur l'échelle de Mohs, mais le diamant est environ <b>trois fois plus dur</b>.\n\nOn n'utilise pas ces chiffres pour reconnaître une pierre, mais ils expliquent pourquoi le diamant seul peut en tailler un autre.",
+      "figure": "hardness",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "Les crayons de dureté",
+      "text": "Pour tester une pierre, le gemmologue utilise des <b>crayons de dureté</b> : des pointes de dureté connue (5, 6, 7, 8...).\n\nOn passe les pointes une à une sur la pierre, en commençant par la plus tendre. Tant qu'une pointe ne laisse pas de trace, la pierre est plus dure qu'elle. La première pointe qui la raye donne l'encadrement : ici, le 6 ne raye pas et le 7 raye, donc la pierre est entre 6 et 7.",
+      "figure": "hardness",
+      "focus": 3,
+      "image": ""
+    },
+    {
+      "title": "Un test destructif",
+      "text": "Le test de dureté est un test <b>destructif</b> : pour tester, on raye la pierre.\n\nOn peut donc le faire sur une pierre <b>brute</b>, ou <b>sous la base d'un cabochon</b>, là où personne ne regardera. On ne le fait <b>jamais</b> sur une gemme taillée : une rayure sur la table ou sur une facette abîme le poli et fait perdre sa valeur à la pierre.\n\nQuand on peut identifier une pierre autrement, on évite ce test.",
+      "figure": "hardness",
+      "focus": 4,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• La dureté mesure la résistance aux rayures.\n• Mohs donne l'ordre, la dureté absolue donne les écarts.\n• Les crayons de dureté encadrent la dureté d'une pierre.\n• C'est un test destructif : brut ou base d'un cabochon, jamais une pierre taillée.\n• Une dureté inférieure à 7 est un point faible pour un bijou de tous les jours.",
+      "figure": "hardness",
+      "focus": 0,
+      "image": ""
+    }
+  ]
+}

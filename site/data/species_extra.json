@@ -1,0 +1,602 @@
+{
+ "Agate": {
+  "system": "trigonal",
+  "formula": "SiO₂",
+  "note": "Calcédoine : quartz microcristallin en bandes, souvent avec un peu d'eau"
+ },
+ "Aigue_Marine": {
+  "system": "hexagonal",
+  "formula": "Be₃Al₂Si₆O₁₈",
+  "note": "Silicate de béryllium et d'aluminium"
+ },
+ "Ambre": {
+  "system": "amorphous",
+  "formula": "≈ C₁₀H₁₆O",
+  "note": "Résine fossile durcie, sans structure cristalline"
+ },
+ "Amethyste": {
+  "system": "trigonal",
+  "formula": "SiO₂ (Fe)",
+  "note": "Quartz coloré par le fer et l'irradiation"
+ },
+ "Ametrine": {
+  "system": "trigonal",
+  "formula": "SiO₂ (Fe)",
+  "note": "Quartz bicolore : zones violettes et jaunes"
+ },
+ "Andalousite": {
+  "system": "orthorhombic",
+  "formula": "Al₂SiO₅",
+  "note": "Silicate d'aluminium"
+ },
+ "Apatite": {
+  "system": "hexagonal",
+  "formula": "Ca₅(PO₄)₃(F,Cl,OH)",
+  "note": "Phosphate de calcium"
+ },
+ "Beryl_Bleu": {
+  "system": "hexagonal",
+  "formula": "Be₃Al₂Si₆O₁₈",
+  "note": "Silicate de béryllium et d'aluminium"
+ },
+ "Beryl_Rouge": {
+  "system": "hexagonal",
+  "formula": "Be₃Al₂Si₆O₁₈ (Mn)",
+  "note": "Béryl coloré par le manganèse"
+ },
+ "CZ": {
+  "system": "cubic",
+  "formula": "ZrO₂ (+ Y₂O₃)",
+  "note": "Oxyde de zirconium synthétique, stabilisé à l'yttrium"
+ },
+ "Calcite": {
+  "system": "trigonal",
+  "formula": "CaCO₃",
+  "note": "Carbonate de calcium"
+ },
+ "Celestine": {
+  "system": "orthorhombic",
+  "formula": "SrSO₄",
+  "note": "Sulfate de strontium"
+ },
+ "Chrysoberyl": {
+  "system": "orthorhombic",
+  "formula": "BeAl₂O₄",
+  "note": "Oxyde de béryllium et d'aluminium"
+ },
+ "Chrysoberyl_Alexandrite": {
+  "system": "orthorhombic",
+  "formula": "BeAl₂O₄ (Cr)",
+  "note": "Chrysobéryl coloré par le chrome : change de couleur"
+ },
+ "Citrine": {
+  "system": "trigonal",
+  "formula": "SiO₂ (Fe)",
+  "note": "Quartz jaune à orangé"
+ },
+ "Corail": {
+  "system": "organic",
+  "formula": "CaCO₃ (calcite) + conchioline",
+  "note": "Squelette de polypes : carbonate de calcium et matière organique"
+ },
+ "Corindon_Rubis": {
+  "system": "trigonal",
+  "formula": "Al₂O₃ (Cr)",
+  "note": "Corindon coloré par le chrome"
+ },
+ "Corindon_Synthetique_Rubis": {
+  "system": "trigonal",
+  "formula": "Al₂O₃ (Cr)",
+  "note": "Corindon de synthèse coloré par le chrome"
+ },
+ "Corindon_Synthetique_Saphir": {
+  "system": "trigonal",
+  "formula": "Al₂O₃ (Fe, Ti)",
+  "note": "Corindon de synthèse coloré par le fer et le titane"
+ },
+ "Cornaline": {
+  "system": "trigonal",
+  "formula": "SiO₂ (Fe)",
+  "note": "Calcédoine rouge-orangé colorée par des oxydes de fer"
+ },
+ "Corne_Rhinoceros": {
+  "system": "organic",
+  "formula": "Kératine (protéine)",
+  "note": "Matière organique, comme les ongles et les cheveux"
+ },
+ "Defense_Narval": {
+  "system": "organic",
+  "formula": "Ca₅(PO₄)₃(OH) + collagène",
+  "note": "Dentine : phosphate de calcium et protéine"
+ },
+ "Diamant": {
+  "system": "cubic",
+  "formula": "C",
+  "note": "Carbone pur"
+ },
+ "Diamant_Synthetique_CVD": {
+  "system": "cubic",
+  "formula": "C",
+  "note": "Carbone pur"
+ },
+ "Diamant_Synthetique_HPHT": {
+  "system": "cubic",
+  "formula": "C",
+  "note": "Carbone pur"
+ },
+ "Diopside_Chromifere": {
+  "system": "monoclinic",
+  "formula": "CaMgSi₂O₆ (Cr)",
+  "note": "Silicate de calcium et de magnésium coloré par le chrome"
+ },
+ "Ecaille_Tortue": {
+  "system": "organic",
+  "formula": "Kératine (protéine)",
+  "note": "Matière organique, comme les ongles et les cheveux"
+ },
+ "Emeraude": {
+  "system": "hexagonal",
+  "formula": "Be₃Al₂Si₆O₁₈ (Cr, V)",
+  "note": "Béryl coloré par le chrome et le vanadium"
+ },
+ "Fluorite": {
+  "system": "cubic",
+  "formula": "CaF₂",
+  "note": "Fluorure de calcium"
+ },
+ "Fluorite_Bandee": {
+  "system": "cubic",
+  "formula": "CaF₂",
+  "note": "Fluorure de calcium"
+ },
+ "Fluorite_Bleue": {
+  "system": "cubic",
+  "formula": "CaF₂",
+  "note": "Fluorure de calcium"
+ },
+ "Fluorite_Blue_John": {
+  "system": "cubic",
+  "formula": "CaF₂",
+  "note": "Fluorure de calcium"
+ },
+ "Fluorite_Jaune": {
+  "system": "cubic",
+  "formula": "CaF₂",
+  "note": "Fluorure de calcium"
+ },
+ "Fluorite_Verte": {
+  "system": "cubic",
+  "formula": "CaF₂",
+  "note": "Fluorure de calcium"
+ },
+ "GGG": {
+  "system": "cubic",
+  "formula": "Gd₃Ga₅O₁₂",
+  "note": "Grenat synthétique de gadolinium et de gallium"
+ },
+ "Goshenite": {
+  "system": "hexagonal",
+  "formula": "Be₃Al₂Si₆O₁₈",
+  "note": "Silicate de béryllium et d'aluminium"
+ },
+ "Grenat_Almandin": {
+  "system": "cubic",
+  "formula": "Fe₃Al₂(SiO₄)₃",
+  "note": "Silicate de fer et d'aluminium"
+ },
+ "Grenat_Demantoide": {
+  "system": "cubic",
+  "formula": "Ca₃Fe₂(SiO₄)₃",
+  "note": "Silicate de calcium et de fer (andradite)"
+ },
+ "Grenat_Hessonite": {
+  "system": "cubic",
+  "formula": "Ca₃Al₂(SiO₄)₃",
+  "note": "Silicate de calcium et d'aluminium (grossulaire)"
+ },
+ "Grenat_Hydrogrossulaire": {
+  "system": "cubic",
+  "formula": "Ca₃Al₂(SiO₄)₃₋ₓ(OH)₄ₓ",
+  "note": "Grossulaire où des groupes OH remplacent des silicates"
+ },
+ "Grenat_Malaya": {
+  "system": "cubic",
+  "formula": "(Mg,Mn,Ca)₃Al₂(SiO₄)₃",
+  "note": "Mélange de pyrope et de spessartite"
+ },
+ "Grenat_Pyrope": {
+  "system": "cubic",
+  "formula": "Mg₃Al₂(SiO₄)₃",
+  "note": "Silicate de magnésium et d'aluminium"
+ },
+ "Grenat_Rhodolite": {
+  "system": "cubic",
+  "formula": "(Mg,Fe)₃Al₂(SiO₄)₃",
+  "note": "Mélange de pyrope et d'almandin"
+ },
+ "Grenat_Spessartite": {
+  "system": "cubic",
+  "formula": "Mn₃Al₂(SiO₄)₃",
+  "note": "Silicate de manganèse et d'aluminium"
+ },
+ "Grenat_Tsavorite": {
+  "system": "cubic",
+  "formula": "Ca₃Al₂(SiO₄)₃ (V, Cr)",
+  "note": "Grossulaire vert coloré par le vanadium et le chrome"
+ },
+ "Grenat_Uvarovite": {
+  "system": "cubic",
+  "formula": "Ca₃Cr₂(SiO₄)₃",
+  "note": "Silicate de calcium et de chrome"
+ },
+ "Gypse": {
+  "system": "monoclinic",
+  "formula": "CaSO₄·2H₂O",
+  "note": "Sulfate de calcium hydraté"
+ },
+ "Heliodore": {
+  "system": "hexagonal",
+  "formula": "Be₃Al₂Si₆O₁₈ (Fe³⁺)",
+  "note": "Béryl jaune coloré par le fer"
+ },
+ "Hematite": {
+  "system": "trigonal",
+  "formula": "Fe₂O₃",
+  "note": "Oxyde de fer"
+ },
+ "Iolite": {
+  "system": "orthorhombic",
+  "formula": "Mg₂Al₄Si₅O₁₈",
+  "note": "Silicate de magnésium et d'aluminium (cordiérite)"
+ },
+ "Iolite_Bloodshot": {
+  "system": "orthorhombic",
+  "formula": "Mg₂Al₄Si₅O₁₈ + Fe₂O₃",
+  "note": "Cordiérite avec des plaquettes d'hématite"
+ },
+ "Ivoire_Elephant": {
+  "system": "organic",
+  "formula": "Ca₅(PO₄)₃(OH) + collagène",
+  "note": "Dentine : phosphate de calcium et protéine"
+ },
+ "Ivoire_Hippopotame": {
+  "system": "organic",
+  "formula": "Ca₅(PO₄)₃(OH) + collagène",
+  "note": "Dentine : phosphate de calcium et protéine"
+ },
+ "Ivoire_Mammouth": {
+  "system": "organic",
+  "formula": "Ca₅(PO₄)₃(OH) + collagène",
+  "note": "Dentine : phosphate de calcium et protéine"
+ },
+ "Ivoire_Morse": {
+  "system": "organic",
+  "formula": "Ca₅(PO₄)₃(OH) + collagène",
+  "note": "Dentine : phosphate de calcium et protéine"
+ },
+ "Ivoire_Vegetal": {
+  "system": "organic",
+  "formula": "Cellulose",
+  "note": "Albumen de la graine du palmier tagua"
+ },
+ "Jade_Jadeite": {
+  "system": "monoclinic",
+  "formula": "NaAlSi₂O₆",
+  "note": "Pyroxène sodique : agrégat de cristaux microscopiques"
+ },
+ "Jade_Nephrite": {
+  "system": "monoclinic",
+  "formula": "Ca₂(Mg,Fe)₅Si₈O₂₂(OH)₂",
+  "note": "Amphibole : agrégat de fibres microscopiques"
+ },
+ "Jais": {
+  "system": "organic",
+  "formula": "Carbone (lignite)",
+  "note": "Bois fossile compressé"
+ },
+ "Kunzite": {
+  "system": "monoclinic",
+  "formula": "LiAlSi₂O₆ (Mn)",
+  "note": "Spodumène rose coloré par le manganèse"
+ },
+ "Kyanite": {
+  "system": "triclinic",
+  "formula": "Al₂SiO₅",
+  "note": "Silicate d'aluminium"
+ },
+ "Labradorite": {
+  "system": "triclinic",
+  "formula": "(Na,Ca)Al(Al,Si)Si₂O₈",
+  "note": "Feldspath plagioclase"
+ },
+ "Lapis_Lazuli": {
+  "system": "cubic",
+  "formula": "(Na,Ca)₈(AlSiO₄)₆(S,SO₄,Cl)",
+  "note": "Roche : lazurite, avec calcite et pyrite"
+ },
+ "Malachite": {
+  "system": "monoclinic",
+  "formula": "Cu₂CO₃(OH)₂",
+  "note": "Carbonate de cuivre"
+ },
+ "Moissanite_Synthetique": {
+  "system": "hexagonal",
+  "formula": "SiC",
+  "note": "Carbure de silicium"
+ },
+ "Moldavite": {
+  "system": "amorphous",
+  "formula": "SiO₂ (≈ 80 %) + Al₂O₃",
+  "note": "Verre naturel formé par un impact de météorite"
+ },
+ "Morganite": {
+  "system": "hexagonal",
+  "formula": "Be₃Al₂Si₆O₁₈ (Mn)",
+  "note": "Béryl rose coloré par le manganèse"
+ },
+ "Obsidienne": {
+  "system": "amorphous",
+  "formula": "SiO₂ (≈ 70 %) + Al₂O₃, K₂O, Na₂O",
+  "note": "Verre volcanique"
+ },
+ "Obsidienne_Flocons": {
+  "system": "amorphous",
+  "formula": "SiO₂ (≈ 70 %) + cristobalite",
+  "note": "Verre volcanique avec des flocons de cristobalite"
+ },
+ "Oeil_de_Tigre": {
+  "system": "trigonal",
+  "formula": "SiO₂ + oxydes de fer",
+  "note": "Quartz fibreux remplaçant de la crocidolite"
+ },
+ "Opale_De_Feu": {
+  "system": "amorphous",
+  "formula": "SiO₂·nH₂O",
+  "note": "Silice hydratée, sans structure cristalline"
+ },
+ "Opale_Noble": {
+  "system": "amorphous",
+  "formula": "SiO₂·nH₂O",
+  "note": "Silice hydratée en sphères ordonnées : jeu de couleurs"
+ },
+ "Orthose": {
+  "system": "monoclinic",
+  "formula": "KAlSi₃O₈",
+  "note": "Feldspath potassique"
+ },
+ "Padparadscha": {
+  "system": "trigonal",
+  "formula": "Al₂O₃ (Cr, Fe)",
+  "note": "Saphir rose-orangé"
+ },
+ "Painite": {
+  "system": "hexagonal",
+  "formula": "CaZrAl₉O₁₅(BO₃)",
+  "note": "Borate de calcium, zirconium et aluminium"
+ },
+ "Peridot": {
+  "system": "orthorhombic",
+  "formula": "(Mg,Fe)₂SiO₄",
+  "note": "Silicate de magnésium et de fer (olivine)"
+ },
+ "Perle": {
+  "system": "organic",
+  "formula": "CaCO₃ (aragonite) + conchioline",
+  "note": "Couches de nacre sécrétées par un mollusque"
+ },
+ "Perle_Tahiti": {
+  "system": "organic",
+  "formula": "CaCO₃ (aragonite) + conchioline",
+  "note": "Couches de nacre sécrétées par une huître à lèvres noires"
+ },
+ "Pezzottaite": {
+  "system": "trigonal",
+  "formula": "Cs(Be₂Li)Al₂Si₆O₁₈",
+  "note": "Silicate de césium, béryllium et lithium"
+ },
+ "Pierre_De_Lune": {
+  "system": "monoclinic",
+  "formula": "KAlSi₃O₈ + NaAlSi₃O₈",
+  "note": "Feldspath en lamelles alternées : reflet bleuté"
+ },
+ "Prasiolite": {
+  "system": "trigonal",
+  "formula": "SiO₂",
+  "note": "Dioxyde de silicium (quartz)"
+ },
+ "Prehnite": {
+  "system": "orthorhombic",
+  "formula": "Ca₂Al₂Si₃O₁₀(OH)₂",
+  "note": "Silicate hydraté de calcium et d'aluminium"
+ },
+ "Pyrite": {
+  "system": "cubic",
+  "formula": "FeS₂",
+  "note": "Sulfure de fer"
+ },
+ "Quartz": {
+  "system": "trigonal",
+  "formula": "SiO₂",
+  "note": "Dioxyde de silicium (quartz)"
+ },
+ "Quartz_Fume": {
+  "system": "trigonal",
+  "formula": "SiO₂ (Al)",
+  "note": "Quartz fumé par irradiation naturelle"
+ },
+ "Quartz_Rose": {
+  "system": "trigonal",
+  "formula": "SiO₂ (Ti, Fe, Mn)",
+  "note": "Quartz rose, souvent laiteux"
+ },
+ "Rhodocrosite": {
+  "system": "trigonal",
+  "formula": "MnCO₃",
+  "note": "Carbonate de manganèse"
+ },
+ "Rhodonite": {
+  "system": "triclinic",
+  "formula": "(Mn,Fe,Ca)SiO₃",
+  "note": "Silicate de manganèse"
+ },
+ "Saphir_Bleu": {
+  "system": "trigonal",
+  "formula": "Al₂O₃ (Fe, Ti)",
+  "note": "Corindon coloré par le fer et le titane"
+ },
+ "Saphir_Incolore": {
+  "system": "trigonal",
+  "formula": "Al₂O₃",
+  "note": "Oxyde d'aluminium (corindon)"
+ },
+ "Saphir_Jaune": {
+  "system": "trigonal",
+  "formula": "Al₂O₃ (Fe)",
+  "note": "Corindon coloré par le fer"
+ },
+ "Saphir_Orange": {
+  "system": "trigonal",
+  "formula": "Al₂O₃ (Cr, Fe)",
+  "note": "Corindon orange"
+ },
+ "Saphir_Rose": {
+  "system": "trigonal",
+  "formula": "Al₂O₃ (Cr)",
+  "note": "Corindon coloré par un peu de chrome"
+ },
+ "Saphir_Vert": {
+  "system": "trigonal",
+  "formula": "Al₂O₃ (Fe)",
+  "note": "Corindon vert"
+ },
+ "Saphir_Violet": {
+  "system": "trigonal",
+  "formula": "Al₂O₃ (Fe, Ti, Cr)",
+  "note": "Corindon violet"
+ },
+ "Scapolite": {
+  "system": "tetragonal",
+  "formula": "(Na,Ca)₄Al₃(Al,Si)₃Si₆O₂₄(Cl,CO₃,SO₄)",
+  "note": "Silicate complexe"
+ },
+ "Selenite": {
+  "system": "monoclinic",
+  "formula": "CaSO₄·2H₂O",
+  "note": "Gypse transparent, sulfate de calcium hydraté"
+ },
+ "Serpentine_Bowenite": {
+  "system": "monoclinic",
+  "formula": "(Mg,Fe)₃Si₂O₅(OH)₄",
+  "note": "Silicate de magnésium hydraté (antigorite)"
+ },
+ "Sinhalite": {
+  "system": "orthorhombic",
+  "formula": "MgAlBO₄",
+  "note": "Borate de magnésium et d'aluminium"
+ },
+ "Sodalite": {
+  "system": "cubic",
+  "formula": "Na₈Al₆Si₆O₂₄Cl₂",
+  "note": "Silicate de sodium et d'aluminium avec du chlore"
+ },
+ "Sphalerite": {
+  "system": "cubic",
+  "formula": "ZnS",
+  "note": "Sulfure de zinc"
+ },
+ "Sphene": {
+  "system": "monoclinic",
+  "formula": "CaTiSiO₅",
+  "note": "Silicate de calcium et de titane (titanite)"
+ },
+ "Spinelle": {
+  "system": "cubic",
+  "formula": "MgAl₂O₄",
+  "note": "Aluminate de magnésium"
+ },
+ "Spinelle_Bleu": {
+  "system": "cubic",
+  "formula": "MgAl₂O₄ (Co, Fe)",
+  "note": "Spinelle coloré par le cobalt ou le fer"
+ },
+ "Steatite": {
+  "system": "monoclinic",
+  "formula": "Mg₃Si₄O₁₀(OH)₂",
+  "note": "Talc : silicate de magnésium hydraté"
+ },
+ "Taaffeite": {
+  "system": "hexagonal",
+  "formula": "BeMgAl₄O₈",
+  "note": "Oxyde de béryllium, magnésium et aluminium"
+ },
+ "Tanzanite": {
+  "system": "orthorhombic",
+  "formula": "Ca₂Al₃(SiO₄)(Si₂O₇)O(OH) (V)",
+  "note": "Zoïsite bleue colorée par le vanadium"
+ },
+ "Titanate_Strontium": {
+  "system": "cubic",
+  "formula": "SrTiO₃",
+  "note": "Oxyde synthétique de strontium et de titane"
+ },
+ "Topaze": {
+  "system": "orthorhombic",
+  "formula": "Al₂SiO₄(F,OH)₂",
+  "note": "Silicate d'aluminium avec du fluor"
+ },
+ "Tourmaline_Indicolite": {
+  "system": "trigonal",
+  "formula": "Na(Li,Al)₃Al₆(BO₃)₃Si₆O₁₈(OH)₄",
+  "note": "Borosilicate complexe (tourmaline, variété elbaïte)"
+ },
+ "Tourmaline_Melon_Eau": {
+  "system": "trigonal",
+  "formula": "Na(Li,Al)₃Al₆(BO₃)₃Si₆O₁₈(OH)₄",
+  "note": "Borosilicate complexe (tourmaline, variété elbaïte)"
+ },
+ "Tourmaline_Paraiba": {
+  "system": "trigonal",
+  "formula": "Na(Li,Al)₃Al₆(BO₃)₃Si₆O₁₈(OH)₄ (Cu, Mn)",
+  "note": "Elbaïte colorée par le cuivre"
+ },
+ "Tourmaline_Rose": {
+  "system": "trigonal",
+  "formula": "Na(Li,Al)₃Al₆(BO₃)₃Si₆O₁₈(OH)₄",
+  "note": "Borosilicate complexe (tourmaline, variété elbaïte)"
+ },
+ "Tourmaline_Schorl": {
+  "system": "trigonal",
+  "formula": "NaFe₃Al₆(BO₃)₃Si₆O₁₈(OH)₄",
+  "note": "Tourmaline noire riche en fer"
+ },
+ "Turquoise": {
+  "system": "triclinic",
+  "formula": "CuAl₆(PO₄)₄(OH)₈·4H₂O",
+  "note": "Phosphate hydraté de cuivre et d'aluminium"
+ },
+ "Turquoise_Stabilisee": {
+  "system": "triclinic",
+  "formula": "CuAl₆(PO₄)₄(OH)₈·4H₂O + résine",
+  "note": "Turquoise imprégnée de résine"
+ },
+ "Verre": {
+  "system": "amorphous",
+  "formula": "SiO₂ + Na₂O + CaO (variable)",
+  "note": "Verre : silice et fondants, sans structure cristalline"
+ },
+ "YAG": {
+  "system": "cubic",
+  "formula": "Y₃Al₅O₁₂",
+  "note": "Grenat synthétique d'yttrium et d'aluminium"
+ },
+ "Zircon": {
+  "system": "tetragonal",
+  "formula": "ZrSiO₄",
+  "note": "Silicate de zirconium"
+ },
+ "Zoisite": {
+  "system": "orthorhombic",
+  "formula": "Ca₂Al₃(SiO₄)(Si₂O₇)O(OH)",
+  "note": "Silicate de calcium et d'aluminium"
+ }
+}

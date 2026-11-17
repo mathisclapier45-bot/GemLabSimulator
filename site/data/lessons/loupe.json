@@ -1,0 +1,60 @@
+{
+  "id": "loupe",
+  "kind": "tool",
+  "title": "La loupe et la chamoisine",
+  "unlock": "VisualExamination",
+  "animation": "",
+  "tool": {
+    "name": "Loupe 10×",
+    "measures": "l'éclat, la couleur, la transparence, la taille, les inclusions et les défauts de surface",
+    "where": "Maison et Bureau de Gemmologie, rangée du haut, sur le bureau de la loupe (la chamoisine est posée à côté)",
+    "records": [
+      "Éclat",
+      "Couleur",
+      "Transparence",
+      "Taille",
+      "Inclusions"
+    ],
+    "tips": [
+      "Essuyer la pierre avant de la regarder",
+      "Tourner la pierre dans tous les sens"
+    ]
+  },
+  "steps": [
+    {
+      "title": "Le premier regard",
+      "text": "La loupe est le premier instrument du gemmologue. Elle grossit <b>dix fois</b> : c'est le grossissement standard pour juger une pierre.\n\nEn quelques secondes, elle vous donne déjà beaucoup : l'éclat, la couleur, la transparence, la taille (facettée ou cabochon), les inclusions et les défauts de surface.",
+      "figure": "loupe",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "La chamoisine d'abord",
+      "text": "Avant de regarder, <b>essuyez toujours la pierre à la chamoisine</b>. La poussière et le gras des doigts laissent un voile blanchâtre en surface, et l'on prend ces traces pour des défauts de la pierre.\n\nDans la fenêtre de la loupe, prenez la chamoisine et frottez la pierre jusqu'à ce qu'elle soit nette.",
+      "figure": "loupe",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "Un voile blanchâtre ?",
+      "text": "Si vous voyez des taches blanchâtres sur la surface, la pierre n'est pas propre. Ne notez rien : essuyez-la et regardez de nouveau.\n\nUn mauvais relevé à cause d'une pierre sale est la première erreur des débutants.",
+      "figure": "loupe",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Tourner la pierre",
+      "text": "Une inclusion, une fracture ou un reflet ne se voient pas toujours sous le même angle. <b>Tournez la pierre dans tous les sens</b>, regardez par la table, par les côtés, par le dessous.\n\nCe n'est qu'après avoir fait le tour de la pierre qu'on peut dire ce qu'elle contient.",
+      "figure": "loupe",
+      "focus": 3,
+      "image": ""
+    },
+    {
+      "title": "Ce qu'on relève",
+      "text": "• <b>L'éclat</b> : la façon dont la surface renvoie la lumière (vitreux, adamantin, gras, métallique...).\n• <b>La couleur</b>, la <b>transparence</b> : transparente, translucide ou opaque.\n• <b>La taille</b> : facettée, cabochon, perle...\n• <b>Les inclusions</b> : aiguilles, cristaux, fractures, bulles.\n\nLes onglets, à gauche de la loupe, expliquent chaque information.",
+      "figure": "loupe",
+      "focus": 2,
+      "image": ""
+    }
+  ]
+}

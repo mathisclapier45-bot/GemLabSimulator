@@ -1,0 +1,64 @@
+{
+  "id": "spectroscope",
+  "kind": "tool",
+  "title": "Le spectroscope",
+  "unlock": "AbsorptionSpectrum",
+  "animation": "",
+  "tool": {
+    "name": "Spectroscope",
+    "measures": "le spectre d'absorption : les raies et les bandes sombres que la pierre ajoute à la lumière blanche",
+    "where": "Maison et Bureau de Gemmologie, rangée du haut, à droite du laboratoire (une lampe est posée dessous)",
+    "records": [
+      "Spectre d'absorption"
+    ],
+    "tips": [
+      "Poser la pierre sur la lampe",
+      "Passer la souris sur les raies pour lire leur longueur d'onde",
+      "Comparer avec une pierre de référence"
+    ]
+  },
+  "steps": [
+    {
+      "title": "La lumière blanche et le prisme",
+      "text": "La lumière blanche contient toutes les couleurs. Un <b>prisme</b> les sépare, du violet (vers 400 nm) au rouge (vers 700 nm) : c'est le <b>spectre</b>.\n\nLe <b>spectroscope</b> est un petit prisme placé dans un instrument : on y regarde la lumière qui a traversé la pierre, étalée en ses couleurs.",
+      "figure": "spectro",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Ce que la pierre absorbe",
+      "text": "Quand la lumière traverse une pierre colorée, la pierre <b>garde</b> certaines couleurs : elles manquent dans le spectre, et y laissent des <b>raies</b> ou des <b>bandes</b> sombres. Ce qui reste est la couleur que l'on voit.\n\nLes raies dépendent de l'élément qui colore la pierre : le <b>chrome</b> (rubis, émeraude), le <b>fer</b> (grenats, péridot), le manganèse, le vanadium, le cuivre...\n\nLe spectre est donc une <b>empreinte de la couleur</b>.",
+      "figure": "spectro",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "Lire le spectre",
+      "text": "L'échelle va de <b>400 nm</b> à <b>700 nm</b> :\n• <b>Violet</b> 400-450 nm\n• <b>Bleu</b> 450-490 nm\n• <b>Vert</b> 490-560 nm\n• <b>Jaune</b> 560-590 nm\n• <b>Orange</b> 590-610 nm\n• <b>Rouge</b> 610-700 nm\n\nLe rubis montre une raie fine vers <b>694 nm</b>. Raies <b>fines</b> : chrome. Bandes <b>larges</b> : fer. Dans l'instrument, passez la souris sur le spectre pour lire la longueur d'onde.",
+      "figure": "spectro",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "Quelques spectres",
+      "text": "• <b>Rubis</b> : raies du chrome dans le rouge, large bande jaune-vert.\n• <b>Émeraude</b> : raies du chrome dans le rouge (664, 683 nm), rien dans le bleu.\n• <b>Péridot</b> : triplet du fer dans le bleu (451, 470, 494 nm).\n• <b>Grenat almandin</b> : bandes du fer, jaune absorbé et deux bandes dans le vert.\n\nDeux pierres vertes, ou deux rouges, peuvent avoir des spectres très différents : le spectroscope voit la <b>cause</b> de la couleur.",
+      "figure": "spectro",
+      "focus": 3,
+      "image": ""
+    },
+    {
+      "title": "Utiliser le spectroscope",
+      "text": "1. Posez la pierre sur la lampe, sous le spectroscope.\n2. Le spectre apparaît : cherchez les raies et les bandes sombres.\n3. Passez la souris dessus pour lire leur longueur d'onde.\n4. Comparez avec une pierre de référence, et notez ce qui diffère.\n\nL'instrument ne touche pas la pierre. Il lui faut une pierre colorée et transparente : une pierre incolore ne donne en général rien (sauf certains diamants, dont le spectre peut montrer des raies dans le violet).",
+      "figure": "spectro",
+      "focus": 3,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• Le spectroscope montre ce que la pierre absorbe, donc <b>ce qui la colore</b>, pas son nom.\n• Raies fines : chrome le plus souvent. Larges bandes : fer.\n• Deux pierres de la même couleur peuvent avoir deux spectres : c'est ainsi qu'on démasque une imitation.\n• Il faut ensuite croiser avec les autres mesures.",
+      "figure": "spectro",
+      "focus": 0,
+      "image": ""
+    }
+  ]
+}

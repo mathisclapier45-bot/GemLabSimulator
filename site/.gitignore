@@ -1,0 +1,8 @@
+# Local database, test mailbox, logs
+var/
+# Simulator build copy (12 MB, rebuilt often, copied by tools/sync_simulator.py)
+private/simulateur/
+__pycache__/
+*.pyc
+.venv/
+data/photo_candidates.json

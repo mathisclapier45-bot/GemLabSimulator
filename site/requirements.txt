@@ -1,0 +1,2 @@
+# Only needed on a real server (not for local testing, which uses only Python itself).
+gunicorn>=22,<24

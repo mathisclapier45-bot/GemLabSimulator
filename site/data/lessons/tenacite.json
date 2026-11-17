@@ -1,0 +1,58 @@
+{
+  "id": "tenacite",
+  "kind": "concept",
+  "title": "La ténacité",
+  "unlock": "VisualExamination",
+  "animation": "",
+  "tool": {
+    "name": "",
+    "measures": "",
+    "where": "",
+    "records": [],
+    "tips": []
+  },
+  "steps": [
+    {
+      "title": "Résister aux chocs",
+      "text": "La <b>ténacité</b> est la résistance d'une pierre aux chocs : éclats, fentes, cassures. C'est la deuxième forme de la durabilité.\n\nElle n'a rien à voir avec la dureté : une pierre très dure peut très bien casser d'un coup sec.",
+      "figure": "tenacity",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Le clivage",
+      "text": "Dans certains cristaux, les liaisons entre atomes sont plus faibles dans certains plans. Un choc peut alors <b>fendre la pierre selon un plan lisse</b> : c'est le <b>clivage</b>.\n\nLe diamant, la topaze, la fluorite, la kunzite ont des plans de clivage. Le lapidaire doit en tenir compte, et l'on évite de porter ces pierres à un endroit exposé.",
+      "figure": "tenacity",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "La cassure",
+      "text": "Quand il n'y a pas de plan de faiblesse, ou en dehors de lui, la pierre se brise de façon irrégulière : c'est la <b>cassure</b>. Elle est dite <b>conchoïdale</b> quand elle forme des arcs, comme l'intérieur d'une coquille (quartz, verre, obsidienne), ou <b>esquilleuse</b> quand elle est fibreuse (jade).\n\nLa cassure aide à reconnaître une pierre brute ou une imitation en verre.",
+      "figure": "tenacity",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "Les pierres tenaces",
+      "text": "Certaines pierres encaissent très bien les chocs. Le <b>jade</b> est la gemme la plus tenace : ses fibres enchevêtrées se serrent les unes contre les autres. C'est pour cela qu'on le sculpte depuis des millénaires.\n\nUne pierre tenace peut être portée tous les jours, même sur un bijou exposé comme un bracelet ou une bague.",
+      "figure": "tenacity",
+      "focus": 4,
+      "image": ""
+    },
+    {
+      "title": "L'échelle de ténacité",
+      "text": "On classe la ténacité de <b>faible</b> à <b>exceptionnelle</b> : le jade néphrite est exceptionnel, la jadéite et le corindon très bons, le diamant et le quartz bons, l'émeraude et la topaze moyennes, l'opale, la fluorite et la kunzite faibles.\n\nLes inclusions et les fractures diminuent la ténacité d'une pierre : une émeraude très incluse est plus fragile que sa dureté ne le laisse croire.",
+      "figure": "tenacity",
+      "focus": 3,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• Ténacité et dureté sont deux choses différentes : le diamant est le plus dur, mais pas le plus tenace.\n• Clivage : fente selon un plan lisse. Cassure : éclat irrégulier.\n• Pour un bijou porté tous les jours, il faut une bonne ténacité autant qu'une bonne dureté.",
+      "figure": "tenacity",
+      "focus": 0,
+      "image": ""
+    }
+  ]
+}

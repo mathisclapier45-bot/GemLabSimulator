@@ -1,0 +1,64 @@
+{
+  "id": "dichroscope",
+  "kind": "tool",
+  "title": "Le dichroscope",
+  "unlock": "Pleochroism",
+  "animation": "",
+  "tool": {
+    "name": "Dichroscope de Londres",
+    "measures": "le pléochroïsme : les couleurs différentes d'une pierre colorée selon la direction d'observation (deux moitiés A et B)",
+    "where": "Maison et Bureau de Gemmologie, rangée du haut, au milieu du laboratoire (une lampe est posée dessous)",
+    "records": [
+      "Pléochroïsme"
+    ],
+    "tips": [
+      "Tourner la pierre dans tous les sens, sur un tour complet",
+      "Comparer les deux fenêtres A et B",
+      "Fonctionne aussi sur une pierre sertie, sans la toucher"
+    ]
+  },
+  "steps": [
+    {
+      "title": "Le pléochroïsme",
+      "text": "Certaines pierres colorées n'ont pas la même couleur quand on les regarde selon des directions différentes : c'est le <b>pléochroïsme</b>.\n\nLa lumière traverse le cristal de façon différente selon l'axe, et chaque direction absorbe d'autres couleurs. Un rubis, vu dans un sens, paraît rouge ; vu dans un autre, il paraît rouge orangé.",
+      "figure": "dichro",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Le dichroscope de Londres",
+      "text": "À l'œil nu, les deux couleurs d'une pierre pléochroïque se mélangent et l'on ne voit qu'une teinte moyenne. Le <b>dichroscope de Londres</b> les sépare.\n\nC'est une petite loupe pliante qui contient <b>deux filtres polarisants collés à angle droit</b>, chacun dans une moitié de la lentille. Chaque filtre ne laisse passer qu'<b>une seule direction de vibration</b> de la lumière : la moitié A montre une des deux couleurs de la pierre, la moitié B l'autre.\n\nOn regarde la pierre à travers les deux moitiés à la fois, et on compare.",
+      "figure": "dichro",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "Aucune, deux ou trois couleurs",
+      "text": "Le nombre de couleurs dépend du système cristallin :\n\n• <b>isotrope</b> (cubique ou amorphe : spinelle, grenat, verre) : aucune différence, les deux fenêtres sont pareilles ;\n• <b>uniaxe</b> : deux couleurs, c'est le <b>dichroïsme</b> (rubis, saphir, émeraude) ;\n• <b>biaxe</b> : jusqu'à trois couleurs, c'est le <b>trichroïsme</b> (tanzanite, iolite).",
+      "figure": "dichro",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "Utiliser le dichroscope",
+      "text": "1. Posez la pierre sur une surface bien éclairée : la lampe du laboratoire.\n2. Approchez le dichroscope de Londres de l'œil et regardez la pierre à travers la lentille : elle apparaît dans les deux moitiés, A et B.\n3. <b>Tournez la pierre</b> sur un tour complet, puis dans d'autres directions : le pléochroïsme n'apparaît que dans certaines positions.\n4. Si A et B diffèrent à un moment, la pierre est pléochroïque ; si elles restent pareilles partout, elle ne l'est pas.\n\nIl faut une pierre colorée et transparente : une pierre très pâle ou incolore donne peu de résultat.",
+      "figure": "dichro",
+      "focus": 3,
+      "image": ""
+    },
+    {
+      "title": "Le dichroscope de Londres et le dichroscope à calcite",
+      "text": "Le <b>dichroscope de Londres</b> est celui du laboratoire, et celui que vous utilisez ici : deux filtres polarisants collés perpendiculairement dans une loupe pliante, simple, léger, qui tient dans la poche.\n\nIl existe un autre modèle, le dichroscope à <b>calcite</b> : un cristal de spath d'Islande sépare la lumière en deux faisceaux et donne <b>deux images côte à côte</b>. On le trouve au GemStore, pour le sac. Les deux reposent sur la même idée : séparer les deux directions de vibration de la lumière.\n\nAucun des deux ne <b>touche la pierre</b> : ils marchent même sur une pierre sertie, dans un bijou.",
+      "figure": "dichro",
+      "focus": 4,
+      "image": ""
+    },
+    {
+      "title": "Quelques exemples",
+      "text": "• <b>Rubis</b> : rouge / rouge orangé.\n• <b>Saphir bleu</b> : bleu / bleu-vert.\n• <b>Émeraude</b> : bleu-vert / jaune-vert.\n• <b>Tanzanite</b> : bleu / violet / rouge-brun.\n• <b>Iolite</b> : bleu / violet / jaune pâle.\n• <b>Spinelle</b> : aucun changement.\n\nUn spinelle rouge ne peut donc pas se faire passer pour un rubis devant un dichroscope : c'est un des plus beaux tests de la gemmologie.",
+      "figure": "dichro",
+      "focus": 5,
+      "image": ""
+    }
+  ]
+}

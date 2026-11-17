@@ -1,0 +1,7 @@
+# Example for a small server. Replace gemlab.example.org by your domain name.
+# Caddy gets and renews the https certificate by itself.
+gemlab.example.org {
+    # Never compress here: the simulator files are already compressed (.gz).
+    reverse_proxy 127.0.0.1:8000
+    header X-Robots-Tag "noindex, nofollow"
+}

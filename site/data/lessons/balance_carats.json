@@ -1,0 +1,49 @@
+{
+  "id": "balance_carats",
+  "kind": "tool",
+  "title": "La balance à carats",
+  "unlock": "Weight",
+  "animation": "",
+  "tool": {
+    "name": "Balance à carats",
+    "measures": "le poids de la pierre, en carats ou en grammes",
+    "where": "Maison et Bureau de Gemmologie, rangée du bas, au milieu du laboratoire",
+    "records": [
+      "Poids"
+    ],
+    "tips": [
+      "Allumer la balance (ON/OFF) avant de poser la pierre",
+      "1 g = 5 ct"
+    ]
+  },
+  "steps": [
+    {
+      "title": "Le carat",
+      "text": "Les pierres se pèsent en <b>carats</b>. Un carat vaut <b>0,2 gramme</b>.\n\nLe mot vient de la graine de caroubier, que les marchands d'autrefois utilisaient comme poids : toutes les graines pèsent presque la même chose.",
+      "figure": "carat",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Peser une pierre",
+      "text": "1. Allumez la balance avec le bouton ON/OFF.\n2. Déposez la pierre sur le plateau.\n3. Attendez que l'affichage soit stable, puis lisez le poids.\n\nLa balance donne le centième de carat : une pierre de 2,35 ct pèse 0,470 g.",
+      "figure": "carat",
+      "focus": 1,
+      "image": ""
+    },
+    {
+      "title": "Carats ou grammes",
+      "text": "Un bouton change l'unité d'affichage. Retenez la conversion : <b>1 g = 5 ct</b>.\n\nOn parle de carats pour les pierres, de grammes pour les cristaux bruts et les objets plus lourds.",
+      "figure": "carat",
+      "focus": 2,
+      "image": ""
+    },
+    {
+      "title": "Le poids n'est pas la taille",
+      "text": "Deux pierres de la même taille ne pèsent pas la même chose : tout dépend de la <b>densité</b> du matériau. Un rubis est plus lourd qu'un quartz de même volume.\n\nNotez bien ce poids : il sert aussi pour calculer la densité, avec la balance hydrostatique.",
+      "figure": "carat",
+      "focus": 2,
+      "image": ""
+    }
+  ]
+}
