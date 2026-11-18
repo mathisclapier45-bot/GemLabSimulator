@@ -105,9 +105,12 @@ def hexagonal_svg(label):
     arrows, extra = [], pb + pt
     for i, key in enumerate(("a₁", "a₂", "a₃")):
         ang = math.radians(120 * i)
-        tip = _project((1.3 * math.cos(ang), 1.3 * math.sin(ang), h / 2), yaw=-20, pitch=26)
-        arrows.append(_arrow(centre, tip, "#c0392b" if i == 0 else ("#2e8b57" if i == 1 else "#b8860b"), key))
-        extra.append(tip)
+        color = "#c0392b" if i == 0 else ("#2e8b57" if i == 1 else "#b8860b")
+        # Each horizontal axis goes right through the crystal: out on both sides (the far side is the negative end, "-a").
+        for sign, name in ((1, key), (-1, "\u2212" + key)):
+            tip = _project((sign * 1.3 * math.cos(ang), sign * 1.3 * math.sin(ang), h / 2), yaw=-20, pitch=26)
+            arrows.append(_arrow(centre, tip, color, name))
+            extra.append(tip)
     tip = _project((0, 0, h / 2 + 1.25), yaw=-20, pitch=26)
     arrows.append(_arrow(centre, tip, AXIS_COLORS["c"], "c"))
     extra.append(tip)

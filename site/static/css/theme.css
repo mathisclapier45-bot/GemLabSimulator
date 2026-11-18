@@ -133,7 +133,7 @@ table.props { overflow: hidden; border-collapse: separate; border-spacing: 0; }
 .mark { flex: none; }
 
 /* anim + misc in dark mode */
-.anim { background: #0b0f1d; }
+.anim, .lessonfig { background: #0b0f1d; }
 canvas.gem3d { background: radial-gradient(circle at 50% 38%, #343c55 0%, #151a2a 75%); }
 #hero-gem canvas.gem3d { background: none; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }

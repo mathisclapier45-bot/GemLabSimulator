@@ -1,0 +1,58 @@
+{
+  "id": "testeurs_diamant",
+  "kind": "tool",
+  "title": "Les testeurs de diamant",
+  "unlock": "ThermalConductivity",
+  "animation": "",
+  "tool": {
+    "name": "Testeur thermique et testeur électrique",
+    "measures": "la conductivité thermique (la chaleur) et la conductivité électrique de la pierre",
+    "where": "Concessionnaire de diamants",
+    "records": [
+      "Conductivité thermique",
+      "Conductivité électrique"
+    ],
+    "tips": [
+      "Appuyer la pointe bien à plat sur une facette propre",
+      "Le testeur thermique ne distingue pas le diamant de la moissanite",
+      "Passer ensuite au testeur électrique"
+    ]
+  },
+  "steps": [
+    {
+      "title": "Le diamant conduit la chaleur",
+      "text": "Le <b>diamant</b> est le meilleur conducteur de chaleur connu : il évacue la chaleur plus vite que le cuivre. C'est ce qui le rend « froid » au toucher.\n\nLe <b>testeur thermique</b> (le Diamond Selector) chauffe légèrement la pointe d'une sonde, l'appuie sur la pierre et mesure la vitesse à laquelle la chaleur s'en va. Un diamant l'évacue vite ; la plupart des imitations (zircon cubique, verre, spinelle synthétique) la retiennent.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "La moissanite brouille le test",
+      "text": "La <b>moissanite</b> synthétique (carbure de silicium) conduit elle aussi très bien la chaleur. Un testeur thermique ne la distingue donc pas du diamant : il répond « diamant » dans les deux cas.\n\nLes diamants de synthèse (HPHT et CVD) sont, eux aussi, de vrais diamants : ils conduisent la chaleur comme le diamant naturel.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Le testeur électrique",
+      "text": "Le <b>diamant</b> est un isolant : il ne conduit pas l'électricité. La <b>moissanite</b> synthétique, elle, <b>conduit</b>.\n\nLe testeur électrique (Moissanite/Diamant) fait passer un faible courant par la pointe : si le courant passe, ce n'est pas un diamant. C'est le test qui départage ces deux pierres.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Que conclure ?",
+      "text": "• Chaleur <b>basse</b> : une imitation (verre, zircon cubique, etc.).\n• Chaleur <b>haute</b> et courant <b>qui passe</b> : une moissanite.\n• Chaleur <b>haute</b> et courant <b>bloqué</b> : un diamant, naturel ou de synthèse.\n\nPour savoir si ce diamant est <b>naturel</b> ou <b>fabriqué</b>, il faut d'autres instruments (voir la leçon sur le diamant au laboratoire).",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• Le thermique repère le diamant, mais confond la moissanite avec lui.\n• L'électrique sépare la moissanite du diamant.\n• Aucun des deux ne dit si le diamant est naturel ou de synthèse.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    }
+  ]
+}

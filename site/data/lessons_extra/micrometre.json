@@ -1,0 +1,50 @@
+{
+  "id": "micrometre",
+  "kind": "tool",
+  "title": "Le micromètre",
+  "unlock": "Dimensions",
+  "animation": "",
+  "tool": {
+    "name": "Micromètre (pied à coulisse)",
+    "measures": "les dimensions de la pierre : longueur, largeur, profondeur, en millimètres",
+    "where": "Maison et Bureau de Gemmologie, laboratoire",
+    "records": [
+      "Dimensions"
+    ],
+    "tips": [
+      "Mesurer la plus grande longueur, puis la largeur, puis la hauteur",
+      "Serrer doucement : jamais de force sur la pierre",
+      "Écrire les trois nombres : ils servent à estimer le poids"
+    ]
+  },
+  "steps": [
+    {
+      "title": "Mesurer sans balance",
+      "text": "Le <b>micromètre</b> est un petit pied à coulisse de précision. Il mesure la pierre au dixième de millimètre. On le sert doucement contre les deux côtés de la pierre et on lit la graduation.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Trois mesures",
+      "text": "On prend toujours trois dimensions :\n• la <b>longueur</b> (la plus grande) ;\n• la <b>largeur</b> ;\n• la <b>profondeur</b>, de la table à la pointe.\n\nSur une pierre ronde, la longueur et la largeur sont presque égales.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Pourquoi mesurer ?",
+      "text": "Les dimensions décrivent la pierre dans un rapport, et surtout elles permettent d'<b>estimer le poids</b> d'une pierre sertie, qu'on ne peut pas poser sur la balance. Chaque taille et chaque matière a sa formule : la densité de la pierre entre en jeu.\n\nElles disent aussi si la taille est <b>bien proportionnée</b> : une pierre trop profonde ou trop plate perd de sa vie.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• Longueur, largeur, profondeur, en <b>millimètres</b>.\n• Serrer sans forcer, sur les bords de la pierre.\n• Les dimensions servent à décrire la pierre et à estimer son poids quand la balance est impossible.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    }
+  ]
+}

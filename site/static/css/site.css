@@ -208,11 +208,11 @@ body.sim main.wrap { max-width: 1040px; }
 .glow { box-shadow: 0 0 8px 2px currentColor; }
 
 /* ---- Animated lesson ---- */
-.anim { background: #0f1420; border-radius: 12px; padding: 0.6rem; margin: 0.8rem 0; color: #e8eef7; }
-.anim canvas { width: 100%; height: auto; display: block; border-radius: 8px; background: #0f1420; }
-.anim .bar { display: flex; align-items: center; gap: 0.8rem; font-size: 0.9rem; padding-top: 0.4rem; }
-.anim button { background: #26324a; color: #fff; border: 1px solid #44527a; border-radius: 6px; padding: 0.2rem 0.8rem; cursor: pointer; font: inherit; }
-.anim .cap { flex: 1; opacity: 0.9; }
+.anim, .lessonfig { background: #0f1420; border-radius: 12px; padding: 0.6rem; margin: 0.8rem 0; color: #e8eef7; }
+.anim canvas, .lessonfig canvas { width: 100%; height: auto; aspect-ratio: 480 / 340; display: block; border-radius: 8px; background: #0f1420; }
+.anim .bar, .lessonfig .bar { display: flex; align-items: center; gap: 0.8rem; font-size: 0.9rem; padding-top: 0.4rem; }
+.anim button, .lessonfig button { background: #26324a; color: #fff; border: 1px solid #44527a; border-radius: 6px; padding: 0.2rem 0.8rem; cursor: pointer; font: inherit; }
+.anim .cap, .lessonfig .cap { flex: 1; opacity: 0.9; }
 @media (max-width: 600px) { .ramp { grid-template-columns: repeat(4, 1fr); } }
 
 /* ---- Colour chart ---- */

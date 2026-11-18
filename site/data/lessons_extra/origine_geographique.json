@@ -1,0 +1,58 @@
+{
+  "id": "origine_geographique",
+  "kind": "tool",
+  "title": "L'origine géographique",
+  "unlock": "ConfirmedOrigin",
+  "animation": "",
+  "tool": {
+    "name": "Spectrophotomètre, EDXRF et LA-ICP-MS",
+    "measures": "les éléments traces de la pierre, qui trahissent son gisement d'origine",
+    "where": "Concessionnaire de diamants et laboratoire",
+    "records": [
+      "Origine confirmée",
+      "Éléments traces"
+    ],
+    "tips": [
+      "Une pierre n'a qu'une origine, mais plusieurs instruments la confirment",
+      "Comparer les rapports d'éléments, pas un seul élément",
+      "Le LA-ICP-MS laisse une trace microscopique sur la pierre"
+    ]
+  },
+  "steps": [
+    {
+      "title": "Pourquoi l'origine compte",
+      "text": "Un rubis de <b>Birmanie</b> ne vaut pas un rubis de <b>Thaïlande</b>, même s'ils se ressemblent. L'origine géographique change le prix, parfois du simple au décuple.\n\nOn ne peut pas la lire à l'œil : c'est le laboratoire qui la détermine.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Les éléments traces",
+      "text": "Chaque gisement a sa « recette » de petits éléments chimiques : <b>fer, chrome, vanadium, titane, gallium, cuivre</b>... Ils sont présents en quantités infimes (quelques millionièmes), mais leurs <b>proportions</b> varient d'un gisement à l'autre. C'est cette empreinte qu'on mesure.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Les trois instruments",
+      "text": "• Le <b>spectrophotomètre</b> UV-Vis-NIR mesure l'absorption de la lumière de l'ultraviolet à l'infrarouge proche : les spectres révèlent le fer, le chrome, le vanadium, le titane.\n• L'<b>EDXRF</b> excite la pierre par des rayons X : chaque élément répond par ses raies, d'autant plus intenses qu'il est abondant. Rapide, il ne laisse aucune trace.\n• Le <b>LA-ICP-MS</b> vaporise avec un laser une quantité microscopique de matière et la passe au spectromètre de masse : la mesure de référence, la plus précise.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Confirmer l'origine",
+      "text": "On ne se fie jamais à un seul instrument. On compare les résultats aux <b>valeurs connues</b> de chaque gisement : si plusieurs mesures concordent, l'origine est <b>confirmée</b>. Si elles se contredisent, la pierre reste « origine indéterminée ».\n\nUne pierre <b>traitée</b> (par diffusion de béryllium, par exemple) peut brouiller la mesure : il faut le savoir.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• L'origine se lit dans les <b>éléments traces</b>.\n• Spectrophotomètre (lumière), EDXRF (rayons X), LA-ICP-MS (laser et masse) : du plus simple au plus précis.\n• Une origine rare et réputée augmente beaucoup la valeur de la pierre.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    }
+  ]
+}

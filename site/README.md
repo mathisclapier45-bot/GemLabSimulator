@@ -5,7 +5,7 @@ Un site en français autour du simulateur de gemmologie :
 | Partie | Qui peut la voir |
 |---|---|
 | **Encyclopédie** : une page par espèce (120) avec composition chimique, système cristallin et axes, figure d'interférence, couleurs de pléochroïsme, lueur aux UV, spectre, gamme de couleurs ; recherche et filtres | tout le monde |
-| **Leçons** : les 14 leçons du jeu, étape par étape, avec la leçon animée du réfractomètre | tout le monde |
+| **Leçons** : les 14 leçons du jeu et 8 leçons écrites pour le site (microscope, micromètre, aimant, traitements, testeurs de diamant, infrarouge et Raman, origine géographique, diamant au laboratoire), avec la leçon animée du réfractomètre et les schémas animés du simulateur | tout le monde |
 | **Comptes** : inscription, vérification de l'e-mail, connexion, mot de passe oublié | tout le monde |
 | **Forum** : catégories, sujets, réponses, signalement, modération | membres connectés |
 | **Simulateur** (le build Unity) | membres connectés |
@@ -58,9 +58,15 @@ Un administrateur peut épingler, verrouiller et supprimer des sujets, supprimer
 python3 site/tools/sync_data.py --export
 ```
 
-Cela relance `tools/export_game_data.py` (qui relit les fichiers du jeu), puis copie le résultat et les 14 leçons dans
+Cela relance `tools/export_game_data.py` (qui relit les fichiers du jeu), puis copie le résultat et les 14 leçons du jeu dans
 `site/data/`. Sans `--export`, on copie simplement les fichiers actuels. Le site relit les fichiers tout seul :
-pas besoin de le redémarrer.
+pas besoin de le redémarrer. Les 8 leçons propres au site sont dans `site/data/lessons_extra/` : la synchronisation
+ne les touche pas (on les modifie à la main, comme les autres : un fichier JSON par leçon).
+
+**Schémas animés des leçons** : ce sont les dessins du jeu (`LessonFigures.cs`), refaits en JavaScript dans
+`static/js/lessonfig*.js`. Chaque étape d'une leçon nomme sa figure et son « focus » dans le JSON, comme dans le jeu ; si l'artiste
+fait de vraies images, elles remplaceront ces dessins. Ils sont en accès libre, sans compte. Les textes des dessins sont écrits
+dans le JavaScript (en français) : ils seront à traduire avec le reste le jour de la version anglaise.
 
 **Simulateur** (après « BuildCourseWeb » dans Unity) :
 

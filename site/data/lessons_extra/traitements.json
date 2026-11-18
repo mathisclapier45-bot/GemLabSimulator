@@ -1,0 +1,58 @@
+{
+  "id": "traitements",
+  "kind": "concept",
+  "title": "Les traitements des pierres",
+  "unlock": "",
+  "animation": "",
+  "tool": {
+    "name": "",
+    "measures": "",
+    "where": "",
+    "records": [],
+    "tips": []
+  },
+  "steps": [
+    {
+      "title": "Pourquoi traiter une pierre ?",
+      "text": "Une pierre sortie de la terre est rarement parfaite : une couleur terne, des fissures, des inclusions visibles. On peut l'<b>améliorer</b> par un traitement. C'est légal et courant, <b>à condition de le dire</b> à l'acheteur.\n\nUn traitement change la valeur : une pierre traitée vaut généralement moins qu'une pierre naturelle équivalente, parfois beaucoup moins.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Changer la couleur",
+      "text": "• <b>Le chauffage</b> : le plus ancien, et souvent stable. Il éclaircit ou intensifie la couleur du rubis, du saphir, de la tanzanite...\n• <b>L'irradiation</b> (rayons gamma, électrons, neutrons) : elle colore ou fonce la pierre, par exemple une topaze bleue ou un diamant vert.\n• <b>La diffusion</b> : on fait pénétrer un élément (titane, chrome, béryllium...) dans la surface. Elle ne colore parfois que le dixième de millimètre.\n• <b>La teinture</b> : on colore une matière poreuse (jade, agate, corail, perle) avec un colorant.\n• <b>Le revêtement</b> : un film de métal ou de laque, comme la topaze « mystique » ou l'aqua aura.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Améliorer la pureté et la transparence",
+      "text": "• <b>Le remplissage</b> : de l'huile, de la cire ou de la résine entre dans les fissures et les rend moins visibles (émeraude, rubis, turquoise). Un <b>verre au plomb</b> peut remplir un rubis très fissuré.\n• <b>Le laser</b> : on perce l'inclusion sombre d'un diamant puis on la blanchit à l'acide.\n• <b>Le blanchiment</b> : un bain d'eau oxygénée ou d'acide éclaircit les perles, le jade, le corail.\n• <b>Le HPHT</b> : un recuit sous haute pression qui décolore ou éclaircit certains diamants.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Les reconnaître",
+      "text": "Chaque traitement laisse un indice :\n• à la <b>loupe</b> et au <b>microscope</b> : une résine dans les fissures, des trous de laser, des bulles de gaz, une couleur concentrée dans les fissures ;\n• aux <b>UV</b> : une lueur inhabituelle, comme une huile ou une résine qui brille ;\n• à l'<b>infrarouge</b> : les pics d'huile et de résine ;\n• au <b>spectroscope</b> : des raies absentes ou ajoutées ;\n• au <b>dichroscope</b> et au <b>Chelsea</b> : une couleur qui ne correspond pas à la pierre.\n\nAucun instrument ne suffit seul : on rassemble les indices.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Stable ou fragile ?",
+      "text": "Tous les traitements ne se valent pas. Une couleur par <b>chauffage</b> reste. Une huile peut sécher ou s'écouler, un verre fondu craint la chaleur et les acides, un revêtement s'use. La leçon sur la <b>stabilité</b> détaille ce qui résiste ou non à la lumière, à la chaleur et aux produits chimiques.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• Traiter est permis, mais il faut le <b>déclarer</b>.\n• Il existe des traitements de <b>couleur</b> et des traitements de <b>pureté</b>.\n• Les instruments recoupent leurs indices pour les reconnaître.\n• Un traitement change la <b>valeur</b> et la <b>stabilité</b> de la pierre.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    }
+  ]
+}

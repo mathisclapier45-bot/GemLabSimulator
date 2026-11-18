@@ -30,6 +30,12 @@ def main():
     shutil.copyfile(SRC_JSON, DST_JSON)
     print("Espèces : {} (données du {})".format(len(data["species"]), data["meta"].get("generated")))
 
+    # The spectra used by the animated lesson drawings (static/js/lessonfig_figs.js): rubis, émeraude, péridot, almandin.
+    keep = ("Corindon_Rubis", "Emeraude", "Peridot", "Grenat_Almandin")
+    spectra = {e["key"]: e["lines"] for e in data["spectra"]["entries"] if e["key"] in keep}
+    with open(SITE / "static" / "data" / "lesson_spectra.json", "w", encoding="utf-8") as f:
+        json.dump(spectra, f, ensure_ascii=False, separators=(",", ":"))
+
     DST_LESSONS.mkdir(parents=True, exist_ok=True)
     for old in DST_LESSONS.glob("*.json"):
         old.unlink()

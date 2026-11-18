@@ -1,5 +1,6 @@
 """Public pages: home, encyclopedia, lessons, robots.txt."""
 import json
+import re
 
 from . import catalog, diagrams, markup
 from .views import esc, fmt_num, gem_svg, page, page_number, pagination
@@ -172,6 +173,13 @@ def habits(req):
     return page(req, t("hab.title"), content, section="encyclopedia")
 
 
+def _dispersion_cell(t, s):
+    """Dispersion (spread of the index between blue and red light), as in the game; '≈' when it is an estimate from the index."""
+    value, exact = catalog.dispersion(s)
+    text = fmt_num(value, 3)
+    return esc(text) if exact else '{} <span class="small">{}</span>'.format(esc("\u2248 " + text), esc(t("sp.dispersion.est")))
+
+
 def _colors_section(req, s):
     """The colour chart of the species: every colour it can have, click one and pick a shape."""
     t = req.t
@@ -235,9 +243,7 @@ def _colors_section(req, s):
     milky = 1.0 if transp == "opaque" else 0.75 if transp in ("translucide a opaque", "opaque a translucide") else \
         0.42 if transp == "translucide" else 0.2 if transp == "transparent a translucide" else 0.0
     sid = s["id"]
-    disp = {"Diamant": .022, "Diamant_Synthetique_CVD": .022, "Diamant_Synthetique_HPHT": .022, "CZ": .030, "Moissanite_Synthetique": .052,
-            "YAG": .014, "GGG": .022, "Zircon": .020, "Grenat_Demantoide": .036, "Sphene": .026, "Sphalerite": .078,
-            "Titanate_Strontium": .095}.get(sid, 0.004 + max(0.0, (s.get("refractiveIndex") or 1.6) - 1.4) * 0.012)
+    disp = catalog.dispersion(s)[0] / 2
     cab_only = sid != "Tourmaline_Schorl" and ("opaque" in transp or s.get("opticalCharacterClassName") == "Opaque"
                                                or sid.startswith(("Ivoire", "Corne", "Defense", "Ecaille")))
     phys = {"ior": s.get("refractiveIndex") or 1.6, "disp": round(disp, 4), "depth": 1.8 if sid in ("Spinelle", "Spinelle_Bleu") else 1.0,
@@ -324,6 +330,7 @@ def species_page(req):
         _row(t("sp.formula"), '<span class="formula">{}</span> <span class="small">{}</span>'.format(esc(ex.get("formula", "")), esc(ex.get("note", ""))) if ex else ""),
         _row(t("sp.ri"), esc(fmt_num(s.get("refractiveIndex"), 3))),
         _row(t("sp.birefringence"), esc(fmt_num(s.get("birefringence"), 3)) if s.get("birefringence") else ""),
+        _row(t("sp.dispersion"), _dispersion_cell(t, s)),
         _row(t("sp.density"), esc(fmt_num(s.get("density"), 2))),
         _row(t("sp.hardness"), esc(fmt_num(s.get("hardness"), 1))),
         _row(t("sp.luster"), esc(s.get("luster", ""))),
@@ -501,11 +508,26 @@ def lesson_page(req):
                 'aria-label="{cap}"></canvas><div class="bar"><button type="button">{pause}</button>'
                 '<span class="cap">{cap}</span></div></div>').format(
             i=i, lab=label_json, cap=esc(t("les.anim.t." + anim_names[i])), pause=esc(t("les.anim.pause")))
+    figures = [0]
+
+    def figure_box(i, s):
+        """The animated drawing of a step (port of the game's lesson figures), drawn on a canvas by lessonfig.js."""
+        if not s.get("figure") or not re.fullmatch(r"[a-z_]+", s["figure"]):
+            return ""
+        figures[0] += 1
+        return ('<div class="lessonfig" data-fig="{fig}" data-focus="{focus}"><canvas role="img" aria-label="{cap}"></canvas>'
+                '<div class="bar"><button type="button" data-pause="{pause}" data-play="{play}">{pause}</button>'
+                '<span class="cap">{cap}</span></div></div>').format(
+            fig=esc(s["figure"]), focus=int(s.get("focus", 0)), cap=esc(t("les.fig.label", n=i + 1, title=s["title"])),
+            pause=esc(t("les.anim.pause")), play=esc(t("les.anim.play")))
     steps = "".join(
         '<section class="step" id="e{i}"><h2><span class="num">{i}</span> {title}</h2>{anim}{text}</section>'.format(
-            i=i + 1, title=esc(s["title"]), anim=anim_box(i), text=markup.lesson_html(s["text"]))
+            i=i + 1, title=esc(s["title"]), anim=anim_box(i) or figure_box(i, s), text=markup.lesson_html(s["text"]))
         for i, s in enumerate(item["steps"]))
     steps += '<script src="/static/js/refraction.js" defer></script>' if animated else ""
+    if figures[0]:
+        steps += "".join('<script src="/static/js/{}" defer></script>'.format(f) for f in (
+            "lessonfig.js", "lessonfig_figs.js", "lessonfig_figs2.js"))
     card = ""
     tool = item.get("tool") or {}
     if item["kind"] == "tool" and tool.get("name"):

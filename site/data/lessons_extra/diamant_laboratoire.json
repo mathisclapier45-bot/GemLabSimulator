@@ -1,0 +1,65 @@
+{
+  "id": "diamant_laboratoire",
+  "kind": "tool",
+  "title": "Le diamant au laboratoire",
+  "unlock": "DiamondScreening",
+  "animation": "",
+  "tool": {
+    "name": "DiamondSure, DiamondView et photoluminescence",
+    "measures": "si un diamant est naturel ou synthétique (HPHT, CVD), et s'il a été traité",
+    "where": "Concessionnaire de diamants",
+    "records": [
+      "Dépistage du diamant",
+      "Croissance du diamant"
+    ],
+    "tips": [
+      "DiamondSure d'abord : « Pass » ou « Refer »",
+      "Un « Refer » ne veut pas dire synthétique, seulement « à examiner »",
+      "DiamondView puis photoluminescence pour trancher"
+    ]
+  },
+  "steps": [
+    {
+      "title": "Trois façons de faire un diamant",
+      "text": "• <b>Naturel</b> : formé dans le manteau terrestre, il y a des milliards d'années.\n• <b>HPHT</b> (haute pression, haute température) : on reproduit en machine les conditions de la nature.\n• <b>CVD</b> : on fait croître le diamant couche par couche, à partir d'un gaz.\n\nLes trois sont de <b>vrais diamants</b> : ils passent le testeur thermique. Pourtant leur valeur n'est pas la même, et il faut savoir les distinguer.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Le DiamondSure : le tri rapide",
+      "text": "Le <b>DiamondSure</b> analyse la <b>transmission UV</b> du diamant, et classe la pierre en deux groupes :\n• <b>Pass</b> : cohérent avec un diamant naturel courant ;\n• <b>Refer</b> : « à examiner de plus près ».\n\nUn « Refer » n'est pas une condamnation : il demande seulement un examen complémentaire.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Le DiamondView : les motifs de croissance",
+      "text": "Le <b>DiamondView</b> éclaire la pierre avec des UV très courts et photographie la lueur. Chaque mode de croissance dessine des motifs différents :\n• le diamant <b>naturel</b> montre des lignes de croissance ondulées, en couches irrégulières ;\n• le diamant <b>HPHT</b> montre des motifs en croix ou en cadran ;\n• le diamant <b>CVD</b> montre des couches parallèles, fines et régulières.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "La photoluminescence",
+      "text": "La <b>photoluminescence</b> refroidit la pierre à l'azote liquide (77 K) et l'excite au laser. Les <b>défauts du réseau</b> du diamant (les centres H3, NV, silicium-lacune, nickel) émettent des raies nettes.\n\nLa combinaison de ces raies est la <b>signature</b> du mode de croissance, et elle trahit aussi les <b>traitements</b>, comme l'irradiation ou le recuit HPHT.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Le rapport de laboratoire",
+      "text": "À la fin, un laboratoire sérieux délivre un <b>certificat</b> : le poids, la couleur, la pureté, la taille, et la mention <b>naturel</b> ou <b>synthétique</b>. Un diamant <b>traité</b> (irradié, HPHT, comblé) ou fancy perd son certificat de diamant « incolore ».\n\nLa mention change le prix du tout au tout : un diamant naturel vaut bien plus que le même diamant de laboratoire.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• Les diamants naturels, HPHT et CVD se ressemblent à l'œil et au testeur thermique.\n• <b>DiamondSure</b> : tri rapide ; <b>DiamondView</b> : motifs de croissance ; <b>photoluminescence</b> : signature du réseau.\n• On recoupe toujours plusieurs résultats avant de conclure.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    }
+  ]
+}

@@ -12,7 +12,10 @@ _state = {"mtime": None, "data": None}
 
 LESSON_ORDER = ["gemmes", "durete", "tenacite", "stabilite", "systemes_cristallins", "loupe",
                 "balance_carats", "balance_hydrostatique", "refractometre", "polariscope",
-                "dichroscope", "spectroscope", "filtre_chelsea", "cabine_uv"]
+                "dichroscope", "spectroscope", "filtre_chelsea", "cabine_uv",
+                # Lessons written for the site only (instruments and topics the game has no lesson for), in data/lessons_extra
+                "microscope", "micrometre", "aimant", "traitements", "testeurs_diamant", "infrarouge_raman",
+                "origine_geographique", "diamant_laboratoire"]
 
 
 def fold(text):
@@ -143,8 +146,7 @@ _lessons = {"mtime": None, "data": None}
 
 
 def lessons():
-    folder = config.DATA_DIR / "lessons"
-    files = sorted(folder.glob("*.json"))
+    files = sorted((config.DATA_DIR / "lessons").glob("*.json")) + sorted((config.DATA_DIR / "lessons_extra").glob("*.json"))
     mtime = max([f.stat().st_mtime for f in files] or [0])
     with _lock:
         if _lessons["mtime"] != mtime:
@@ -165,6 +167,22 @@ def lesson(lesson_id):
         if item["id"] == lesson_id:
             return item
     return None
+
+
+# Dispersion of the game (GemLook.DispersionOf): half the spread of the index between red and blue light, known for the fiery stones,
+# otherwise estimated from the refractive index. The site shows the whole spread (twice that), as the tables of gemmology do.
+FIERY_HALF = {"Diamant": .022, "Diamant_Synthetique_CVD": .022, "Diamant_Synthetique_HPHT": .022, "CZ": .030, "Moissanite_Synthetique": .052,
+              "YAG": .014, "GGG": .022, "Zircon": .020, "Grenat_Demantoide": .036, "Sphene": .026, "Sphalerite": .078, "Titanate_Strontium": .095}
+
+
+def dispersion(species):
+    """(dispersion, is_known): the spread of the index between blue and red light; is_known is False when estimated."""
+    sid = species["id"]
+    if sid in FIERY_HALF:
+        return FIERY_HALF[sid] * 2, True
+    ri = species.get("refractiveIndex") or 0
+    ior = ri if ri > 1.2 else 1.6
+    return (0.004 + max(0.0, ior - 1.4) * 0.012) * 2, False
 
 
 SAFE_ID = re.compile(r"^[a-z0-9_-]+$")

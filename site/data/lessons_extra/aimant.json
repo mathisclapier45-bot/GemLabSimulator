@@ -1,0 +1,57 @@
+{
+  "id": "aimant",
+  "kind": "tool",
+  "title": "L'aimant",
+  "unlock": "Magnetism",
+  "animation": "",
+  "tool": {
+    "name": "Aimant puissant",
+    "measures": "la sensibilité magnétique de la pierre, liée à sa teneur en fer",
+    "where": "Maison et Bureau de Gemmologie, laboratoire",
+    "records": [
+      "Magnétisme"
+    ],
+    "tips": [
+      "Poser la pierre sur une surface lisse et approcher l'aimant",
+      "Un aimant ordinaire ne suffit pas : il faut un aimant très puissant",
+      "Une pierre sertie dans un métal magnétique donne un faux résultat"
+    ]
+  },
+  "steps": [
+    {
+      "title": "Le fer attire l'aimant",
+      "text": "Certaines pierres contiennent du <b>fer</b> (ou du manganèse), et le fer réagit à un aimant. Avec un aimant très puissant, on peut ainsi voir une pierre <b>bouger</b> ou rouler vers lui.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Comment faire le test",
+      "text": "1. Posez la pierre à plat sur une surface lisse (ou faites-la flotter sur l'eau).\n2. Approchez lentement l'aimant, sans le toucher.\n3. Regardez si la pierre se déplace, tourne ou suit l'aimant.\n\nLe test ne détruit rien et ne prend qu'un instant.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Ce que l'on observe",
+      "text": "• <b>Fortement attiré</b> : le grenat almandin (très riche en fer).\n• <b>Attiré</b> : les grenats rhodolite, spessartite, démantoïde.\n• <b>Légèrement attiré</b> : le péridot, l'hématite, la tourmaline noire (schorl).\n• <b>Presque rien</b> : le saphir, la kyanite (traces de fer).\n• <b>Aucune réaction</b> : la plupart des pierres, dont le rubis, l'émeraude, le diamant naturel.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Ce que le test permet",
+      "text": "L'aimant aide à départager des pierres qui se ressemblent : un <b>grenat</b> rouge d'un rubis, par exemple. Il peut aussi signaler un <b>diamant synthétique HPHT</b>, dont la croissance laisse parfois de minuscules restes de métal.\n\nMais l'absence de réaction ne prouve rien : on recoupe toujours avec les autres instruments.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• L'aimant révèle le <b>fer</b> contenu dans la pierre.\n• Il faut un aimant <b>très puissant</b> et un peu de patience.\n• Le test est un indice parmi d'autres, rapide et sans danger pour la pierre.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    }
+  ]
+}

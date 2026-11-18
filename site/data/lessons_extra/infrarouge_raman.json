@@ -1,0 +1,58 @@
+{
+  "id": "infrarouge_raman",
+  "kind": "tool",
+  "title": "L'infrarouge et le Raman",
+  "unlock": "Spectroscopy",
+  "animation": "",
+  "tool": {
+    "name": "Spectromètres FTIR et Raman",
+    "measures": "les liaisons chimiques de la pierre (infrarouge) et la signature de son réseau cristallin (Raman)",
+    "where": "Concessionnaire de diamants et laboratoire",
+    "records": [
+      "Spectre infrarouge",
+      "Spectre Raman"
+    ],
+    "tips": [
+      "Nettoyer la pierre avant de l'analyser",
+      "Lire les pics, pas la forme générale",
+      "Comparer avec les spectres de référence"
+    ]
+  },
+  "steps": [
+    {
+      "title": "Aller plus loin que la lumière visible",
+      "text": "Les instruments du laboratoire de base utilisent la lumière visible. Pour aller plus loin, on utilise des instruments plus coûteux, qui <b>analysent la matière</b> même de la pierre, sans la détruire.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "L'infrarouge (FTIR)",
+      "text": "Le spectromètre <b>FTIR</b> (spectroscopie infrarouge à transformée de Fourier) envoie de la lumière infrarouge sur la pierre. Chaque type de liaison chimique (O–H, C–H...) <b>absorbe</b> à une longueur d'onde précise et laisse un <b>pic</b> dans le spectre.\n\nC'est l'instrument des <b>traitements</b> : il révèle l'<b>huile</b> ou la <b>résine</b> dans les fissures d'une émeraude, le polymère d'un jade, l'eau d'une opale. Une résine époxy est cependant difficile à repérer.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Le Raman",
+      "text": "Le spectromètre <b>Raman</b> éclaire la pierre avec un laser et mesure la façon dont la lumière est diffusée. La façon dont le <b>réseau cristallin</b> vibre donne une signature unique à chaque minéral, même pour une toute petite inclusion.\n\nIl <b>identifie</b> la pierre avec certitude (quartz, béryl, corindon...), et même l'inclusion qu'elle porte : il aide ainsi à séparer une croissance naturelle d'une synthèse.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Le microscope électronique (MEB)",
+      "text": "Le <b>MEB</b> (microscope électronique à balayage) grossit des milliers de fois. Il montre les <b>structures de croissance</b> à l'échelle microscopique : une pierre naturelle et une pierre de laboratoire ne grandissent pas de la même manière, et le MEB le montre.\n\nC'est un examen de laboratoire, long et coûteux, que l'on réserve aux cas difficiles.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• <b>FTIR</b> : les liaisons chimiques, donc les traitements (huile, résine) et l'eau.\n• <b>Raman</b> : l'identité exacte du minéral et de ses inclusions.\n• <b>MEB</b> : la structure de croissance, naturelle ou de synthèse.\n• Ces instruments confirment ce que les instruments simples laissent soupçonner.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    }
+  ]
+}

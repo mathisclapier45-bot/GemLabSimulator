@@ -1,0 +1,65 @@
+{
+  "id": "microscope",
+  "kind": "tool",
+  "title": "Le microscope",
+  "unlock": "Inclusions",
+  "animation": "",
+  "tool": {
+    "name": "Microscope gemmologique",
+    "measures": "les inclusions, la texture et la pureté de la pierre, à fort grossissement",
+    "where": "Maison et Bureau de Gemmologie, laboratoire",
+    "records": [
+      "Inclusions",
+      "Clarté"
+    ],
+    "tips": [
+      "Commencer par le faible grossissement, puis monter",
+      "Bouger la molette de mise au point : l'intérieur se regarde par tranches",
+      "Une pierre brute se regarde par une fenêtre polie"
+    ]
+  },
+  "steps": [
+    {
+      "title": "Voir l'intérieur d'une pierre",
+      "text": "La loupe 10× montre déjà beaucoup, mais le <b>microscope</b> va plus loin : il grossit de 10 à 60 fois et éclaire la pierre pour qu'on regarde <b>à l'intérieur</b>.\n\nCe qu'on y cherche, ce sont les <b>inclusions</b> : de petits corps étrangers, des cavités ou des fissures prisonniers de la pierre. Elles racontent comment elle s'est formée.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Le grossissement et la mise au point",
+      "text": "Plus on grossit, plus on voit fin, mais moins la zone nette est épaisse. À fort grossissement, on ne voit nette qu'une <b>tranche</b> très mince de la pierre : on tourne la molette pour passer d'une tranche à l'autre.\n\nL'objectif <b>×60</b> (le plus fort) montre les plus fines inclusions, mais la mise au point doit être précise.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Les inclusions et leur histoire",
+      "text": "• Des <b>aiguilles</b> fines et parallèles (la « soie ») : typiques du rubis et du saphir naturels.\n• Un <b>jardin</b> de fissures et de petits cristaux : l'émeraude naturelle.\n• Des <b>bulles</b> rondes et des traînées courbes : un verre ou une synthèse à la flamme.\n• Des <b>cristaux</b> entiers (un petit zircon, un grenat) : la preuve d'une pierre née dans la terre.\n\nUne pierre <b>sans aucune inclusion</b> n'est pas forcément synthétique, mais une pierre sans défaut mérite un doute.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Naturelle ou synthétique ?",
+      "text": "Les inclusions aident à distinguer une pierre de la nature d'une pierre fabriquée :\n• les synthétiques ont souvent des <b>stries de croissance courbes</b> (méthode Verneuil) ou des <b>voiles</b> et des restes de fondant ;\n• les pierres naturelles montrent des cristaux et des fissures irréguliers.\n\nC'est un indice, jamais une preuve à lui seul : on le recoupe avec les autres instruments.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "Pierre brute : la fenêtre",
+      "text": "Une pierre brute a une surface rugueuse qui diffuse la lumière : on n'y voit rien. Dans l'atelier lapidaire, la <b>polisseuse à fenêtre</b> polit une petite facette plane. À travers cette fenêtre, on regarde l'intérieur au microscope et on juge la <b>clarté</b> avant de décider de tailler.\n\nLa caméra du microscope prend ensuite une photo de ce qu'on voit, pour la joindre au rapport.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    },
+    {
+      "title": "À retenir",
+      "text": "• Le microscope sert surtout à voir les <b>inclusions</b>.\n• On monte le grossissement peu à peu et on balaie la pierre à la molette.\n• Les inclusions indiquent la <b>nature</b> de la pierre, parfois son <b>gisement</b> et ses <b>traitements</b> (fissures remplies, trous de laser).\n• Le résultat se recoupe avec les autres instruments.",
+      "figure": "",
+      "focus": 0,
+      "image": ""
+    }
+  ]
+}

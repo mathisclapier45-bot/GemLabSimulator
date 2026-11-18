@@ -286,6 +286,15 @@ class TestEncyclopedia(SiteTestCase):
             self.assertEqual(c.get("/lecons/" + item["id"]).status, 200, item["id"])
         self.assertEqual(c.get("/lecons/..%2Fx").status, 404)
 
+    def test_lesson_figures(self):
+        c = Client()
+        body = c.get("/lecons/gemmes").body.decode("utf-8")
+        self.assertIn('class="lessonfig"', body)
+        self.assertIn("/static/js/lessonfig.js", body)
+        self.assertNotIn("lessonfig.js", c.get("/lecons/aimant").body.decode("utf-8"))
+        for name in ("lessonfig.js", "lessonfig_figs.js", "lessonfig_figs2.js", "../data/lesson_spectra.json"):
+            self.assertEqual(c.get("/static/js/" + name).status, 200, name)
+
     def test_lesson_html_is_safe(self):
         from app import markup
         out = markup.lesson_html("Un <b>mot</b> et <script>alert(1)</script>")
