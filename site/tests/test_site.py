@@ -1495,6 +1495,108 @@ class TestPrices(SiteTestCase):
             config.INDEXABLE = False
 
 
+class TestFamilies(SiteTestCase):
+    SHOWN = ("beryls", "corindons", "grenats")          # the families shown on the site for now
+
+    def test_data_files_are_consistent_and_translated(self):
+        import json as _json
+        from app import catalog
+        ids = {s["id"] for s in catalog.data()["species"]}
+        for name, key in (("classes", "classes"), ("families", "families")):
+            items = _json.loads((SITE / "data" / (name + ".json")).read_text(encoding="utf-8"))[key]
+            en = _json.loads((SITE / "data" / "en" / (name + ".json")).read_text(encoding="utf-8"))
+            used = [i for it in items for i in it["species"]]
+            self.assertEqual(sorted(i for i in used if used.count(i) > 1), [], name + " : une espèce est deux fois")
+            self.assertEqual([i for i in used if i not in ids], [], name + " : espèce inconnue")
+            self.assertEqual(sorted(en), sorted(it["id"] for it in items), name + " : une traduction manque")
+            for it in items:
+                o = en[it["id"]]
+                self.assertEqual(len(o["points"]), len(it["points"]), it["id"])
+                for field in ("name", "chem", "intro"):
+                    self.assertTrue(o[field].strip() and it[field].strip(), it["id"] + " " + field)
+            if name == "classes":
+                self.assertEqual(sorted(ids - set(used)), [], "chaque espèce doit être dans une classe")
+        shown = [f["id"] for f in _json.loads((SITE / "data" / "families.json").read_text(encoding="utf-8"))["families"] if f.get("visible")]
+        self.assertEqual(sorted(shown), list(self.SHOWN))
+
+    def test_index_shows_the_classes_then_the_great_families(self):
+        c = Client()
+        for path, h1, classes_title, families_title in (("/encyclopedie/familles", "Les familles de gemmes", "Les classes de minéraux", "Les grandes familles de gemmes"),
+                                                        ("/en/encyclopedie/familles", "Gem families", "The classes of minerals", "The great families of gems")):
+            text = c.get(path).text
+            self.assertIn(h1, text)
+            self.assertLess(text.index(classes_title), text.index(families_title), "les classes d'abord, les familles ensuite")
+        text = c.get("/encyclopedie/familles").text
+        for cid in ("elements-natifs", "sulfures", "halogenures", "oxydes", "carbonates", "borates", "sulfates", "phosphates", "silicates", "organiques", "syntheses"):
+            self.assertIn('href="/encyclopedie/classes/' + cid + '"', text, cid)
+        for fid in self.SHOWN:
+            self.assertIn('href="/encyclopedie/familles/' + fid + '"', text, fid)
+        self.assertNotIn('href="/encyclopedie/familles/quartz"', text)
+
+    def test_class_and_family_pages(self):
+        c = Client()
+        for path, word in (("/encyclopedie/classes/silicates", "Silicates"), ("/en/encyclopedie/classes/syntheses", "Synthetics and imitations"),
+                           ("/encyclopedie/classes/oxydes", "Oxydes et hydroxydes"), ("/encyclopedie/familles/grenats", "Grenats"),
+                           ("/en/encyclopedie/familles/beryls", "Beryls"), ("/en/encyclopedie/familles/corindons", "Corundums")):
+            r = c.get(path)
+            self.assertEqual(r.status, 200, path)
+            self.assertIn(word, r.text, path)
+        for path in ("/encyclopedie/classes/nope", "/encyclopedie/familles/nope", "/encyclopedie/familles/quartz"):
+            self.assertEqual(c.get(path).status, 404, path)
+
+    def test_a_page_lists_its_species_and_common_properties(self):
+        text = Client().get("/encyclopedie/familles/grenats").text
+        for slug in ("grenat-almandin", "grenat-spessartite", "grenat-tsavorite", "grenat-uvarovite"):
+            self.assertIn('href="/encyclopedie/' + slug + '"', text)
+        self.assertIn("Cubique", text)
+        self.assertIn("10 espèces", text)
+        self.assertIn("Synthetic ·", Client().get("/en/encyclopedie/familles/corindons").text)      # synthetic rubies and sapphires are marked
+        self.assertIn('href="/encyclopedie/emeraude"', Client().get("/encyclopedie/classes/silicates").text)
+        self.assertIn('href="/encyclopedie/corindon-synthetique-rubis"', Client().get("/encyclopedie/classes/syntheses").text)
+
+    def test_every_species_names_its_class_and_when_shown_its_family(self):
+        c = Client()
+        page = c.get("/encyclopedie/grenat-spessartite").text
+        self.assertIn('href="/encyclopedie/classes/silicates"', page)
+        self.assertIn('href="/encyclopedie/familles/grenats"', page)
+        self.assertIn('href="/en/encyclopedie/classes/oxydes"', c.get("/en/encyclopedie/saphir-bleu").text)
+        topaz = c.get("/encyclopedie/topaze").text
+        self.assertIn('href="/encyclopedie/classes/silicates"', topaz)
+        self.assertNotIn("Famille :", topaz)                  # no family page for it
+        self.assertNotIn('href="/encyclopedie/familles/quartz"', c.get("/encyclopedie/quartz").text)   # the quartz family is not shown yet
+
+    def test_every_class_has_an_icon(self):
+        from app import catalog, class_icons
+        for c in catalog.classes()["items"]:
+            svg = class_icons.icon(c["id"], 44)
+            self.assertIn("<svg", svg, c["id"])
+            self.assertIn('aria-hidden="true"', svg)                     # decorative: the name is written next to it
+        text = Client().get("/encyclopedie/familles").text
+        self.assertEqual(text.count('class="clsicon"'), len(catalog.classes()["items"]))
+        self.assertIn('class="clsicon"', Client().get("/encyclopedie/classes/oxydes").text)
+
+    def test_menu_and_sitemap(self):
+        self.assertIn('href="/encyclopedie/familles"', Client().get("/encyclopedie").text)
+        config.INDEXABLE = True
+        try:
+            sm = Client().get("/sitemap.xml").text
+            self.assertIn("<loc>http://127.0.0.1:8000/encyclopedie/familles</loc>", sm)
+            self.assertIn("/encyclopedie/classes/silicates</loc>", sm)
+            self.assertIn("/encyclopedie/familles/grenats</loc>", sm)
+            self.assertNotIn("/encyclopedie/familles/quartz</loc>", sm)
+            self.assertEqual(Client().get("/encyclopedie/classes/silicates").headers.get("x-robots-tag"), "index, follow")
+        finally:
+            config.INDEXABLE = False
+
+    def test_no_french_on_english_pages(self):
+        c = Client()
+        words = re.compile(r"\b(?:les|des|une|est|avec|sous|selon|très|pierre|couleur|espèces)\b")
+        for path in ("/en/encyclopedie/familles", "/en/encyclopedie/familles/beryls", "/en/encyclopedie/familles/grenats", "/en/encyclopedie/familles/corindons",
+                     "/en/encyclopedie/classes/silicates", "/en/encyclopedie/classes/organiques", "/en/encyclopedie/classes/syntheses", "/en/encyclopedie/classes/oxydes"):
+            text = re.sub(r"<[^>]+>", " ", c.get(path).text)
+            self.assertEqual(sorted(set(words.findall(text))), [], path)
+
+
 class TestCode(unittest.TestCase):
     def test_all_translation_keys_exist(self):
         table = i18n.load("fr")

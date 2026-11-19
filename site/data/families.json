@@ -1,0 +1,615 @@
+{
+ "note": "Seules les familles « visible » sont montrées sur le site (les autres sont prêtes, à activer une par une).",
+ "families": [
+  {
+   "id": "quartz",
+   "visible": false,
+   "species": [
+    "Quartz",
+    "Amethyste",
+    "Ametrine",
+    "Citrine",
+    "Prasiolite",
+    "Quartz_Fume",
+    "Quartz_Rose"
+   ],
+   "name": "Quartz",
+   "chem": "Dioxyde de silicium, SiO₂ (trigonal)",
+   "intro": "Le quartz est le minéral le plus répandu de la croûte terrestre, et la plus grande famille de gemmes. Les cristaux transparents se reconnaissent à leur couleur : améthyste (violette), citrine (jaune à orangé), quartz fumé (brun-gris), quartz rose, prasiolite (verte), amétrine (violette et jaune dans le même cristal). Presque toutes ces couleurs viennent d'une trace de fer ou d'une irradiation, et changent par chauffage : une améthyste chauffée devient citrine ou prasiolite.",
+   "points": [
+    "Toutes les variétés ont les mêmes constantes : dureté 7, indice 1,544-1,553, densité 2,65.",
+    "Uniaxe positif, biréfringence faible (0,009) : figure d'interférence en croix noire.",
+    "Beaucoup de citrines du commerce sont des améthystes chauffées.",
+    "Le quartz synthétique (hydrothermal) existe en toutes les couleurs."
+   ]
+  },
+  {
+   "id": "calcedoines",
+   "visible": false,
+   "species": [
+    "Agate",
+    "Cornaline",
+    "Oeil_de_Tigre"
+   ],
+   "name": "Calcédoines et quartz fibreux",
+   "chem": "Silice, SiO₂, en cristaux microscopiques",
+   "intro": "Ce sont des quartz dont les cristaux sont trop petits pour être vus. La matière est compacte mais poreuse, donc facile à teindre. L'agate montre des bandes concentriques, la cornaline doit sa couleur rouge-orangé à l'oxyde de fer, et l'œil-de-tigre est un quartz fibreux qui a remplacé de la crocidolite : ses fibres donnent un reflet soyeux mobile, la chatoyance.",
+   "points": [
+    "Dureté 6,5-7, densité autour de 2,6, indice 1,53-1,54 (une lecture floue au réfractomètre).",
+    "Agrégats : pas de pléochroïsme, pas de figure d'interférence exploitable.",
+    "Les agates bleues, vertes ou noires sont presque toujours teintes.",
+    "La cornaline est souvent chauffée pour la rougir."
+   ]
+  },
+  {
+   "id": "beryls",
+   "visible": true,
+   "species": [
+    "Aigue_Marine",
+    "Beryl_Bleu",
+    "Beryl_Rouge",
+    "Emeraude",
+    "Goshenite",
+    "Heliodore",
+    "Morganite",
+    "Pezzottaite"
+   ],
+   "name": "Béryls",
+   "chem": "Silicate de béryllium et d'aluminium, Be₃Al₂Si₆O₁₈ (hexagonal)",
+   "intro": "Dans le béryl, c'est la couleur qui donne son nom à la pierre : émeraude (chrome, parfois vanadium, verte), aigue-marine (fer, bleue), morganite (manganèse, rose), héliodore (fer, jaune), goshénite (incolore), béryl rouge ou bixbite (manganèse, extrêmement rare). La pezzottaïte est une cousine au césium, découverte en 2002 à Madagascar, du système trigonal.",
+   "points": [
+    "Dureté 7,5-8, densité 2,66-2,90, indice 1,56-1,60.",
+    "Uniaxe négatif, cristaux en prisme hexagonal strié.",
+    "Inclusions typiques : tubes parallèles à l'axe (aigue-marine), « jardin » de fissures et de cavités (émeraude).",
+    "L'émeraude est souvent fracturée et traitée à l'huile ou à la résine."
+   ]
+  },
+  {
+   "id": "corindons",
+   "visible": true,
+   "species": [
+    "Corindon_Rubis",
+    "Corindon_Synthetique_Rubis",
+    "Corindon_Synthetique_Saphir",
+    "Padparadscha",
+    "Saphir_Bleu",
+    "Saphir_Incolore",
+    "Saphir_Jaune",
+    "Saphir_Orange",
+    "Saphir_Rose",
+    "Saphir_Vert",
+    "Saphir_Violet"
+   ],
+   "name": "Corindons",
+   "chem": "Oxyde d'aluminium, Al₂O₃ (trigonal)",
+   "intro": "Le corindon rouge, coloré par le chrome, est le rubis ; toutes les autres couleurs s'appellent saphir : bleu (fer et titane), jaune, vert, orange, rose, violet, incolore. Le padparadscha, rose-orangé comme la fleur de lotus, est l'une des variétés les plus chères. Après le diamant, c'est la matière naturelle la plus dure.",
+   "points": [
+    "Dureté 9, densité environ 4,0, indice 1,76-1,77 : des constantes très caractéristiques.",
+    "Uniaxe négatif, biréfringence 0,008, pléochroïsme net.",
+    "Le rubis fluoresce en rouge sous UV et réagit au filtre Chelsea ; sa soie de rutile est typique.",
+    "Les rubis et saphirs de synthèse (Verneuil, depuis 1900) se repèrent à leurs bulles de gaz et à leurs stries courbes."
+   ]
+  },
+  {
+   "id": "grenats",
+   "visible": true,
+   "species": [
+    "Grenat_Almandin",
+    "Grenat_Demantoide",
+    "Grenat_Hessonite",
+    "Grenat_Hydrogrossulaire",
+    "Grenat_Malaya",
+    "Grenat_Pyrope",
+    "Grenat_Rhodolite",
+    "Grenat_Spessartite",
+    "Grenat_Tsavorite",
+    "Grenat_Uvarovite"
+   ],
+   "name": "Grenats",
+   "chem": "Silicates cubiques de formule A₃B₂(SiO₄)₃",
+   "intro": "Les grenats ne sont pas une espèce mais une famille d'espèces qui se mélangent : pyrope (rouge profond), almandin (rouge sombre), spessartite (orange), grossulaire (hessonite brun-orangé, tsavorite verte, hydrogrossulaire massif), andradite (démantoïde, d'un vert à très fort éclat) et uvarovite (vert émeraude, en croûtes de petits cristaux). La rhodolite est un mélange de pyrope et d'almandin, la malaya de pyrope et de spessartite.",
+   "points": [
+    "Cubique, donc isotrope : pas de pléochroïsme, pas de biréfringence.",
+    "Dureté 6,5-7,5, densité 3,5-4,3, indice 1,72-1,89 : c'est l'indice qui départage les espèces.",
+    "Presque toutes les couleurs, sauf le bleu pur (les grenats bleus qui changent de couleur sont très rares).",
+    "Les almandins sont attirés par un aimant puissant ; la tsavorite et le démantoïde en sont pauvres en fer."
+   ]
+  },
+  {
+   "id": "tourmalines",
+   "visible": false,
+   "species": [
+    "Tourmaline_Indicolite",
+    "Tourmaline_Melon_Eau",
+    "Tourmaline_Paraiba",
+    "Tourmaline_Rose",
+    "Tourmaline_Schorl"
+   ],
+   "name": "Tourmalines",
+   "chem": "Borosilicate complexe (trigonal)",
+   "intro": "La tourmaline est la famille aux couleurs les plus variées : indicolite (bleue), rubellite (rose à rouge), Paraïba (bleu néon, colorée par le cuivre), schorl (noire, la plus courante), et la tourmaline melon d'eau, bicolore rose et verte comme le fruit. Un même cristal peut changer de couleur sur sa longueur.",
+   "points": [
+    "Uniaxe négatif, forte biréfringence (0,014-0,040) et pléochroïsme fort : on choisit la taille pour la meilleure couleur.",
+    "Dureté 7-7,5, densité 3,0-3,25, indice 1,61-1,67.",
+    "Cristaux en prisme à section triangulaire, profondément striés.",
+    "Elle s'électrise par frottement ou par chauffage et attire alors les poussières."
+   ]
+  },
+  {
+   "id": "feldspaths",
+   "visible": false,
+   "species": [
+    "Labradorite",
+    "Orthose",
+    "Pierre_De_Lune"
+   ],
+   "name": "Feldspaths",
+   "chem": "Silicates d'aluminium avec potassium, sodium ou calcium",
+   "intro": "Les feldspaths forment la famille de minéraux la plus abondante de la croûte terrestre. En gemmologie, ils sont connus pour leurs effets de lumière : la pierre de lune et son reflet bleuté flottant (adularescence), la labradorite et ses éclairs irisés (labradorescence), tous deux dus à de fines lamelles internes. L'orthose jaune transparente vient surtout de Madagascar.",
+   "points": [
+    "Dureté 6-6,5, densité 2,55-2,75, indice 1,52-1,57.",
+    "Biaxes, avec deux clivages presque à angle droit : des pierres fragiles aux chocs.",
+    "Les effets de lumière disparaissent si la taille est mal orientée : on taille en cabochon.",
+    "Pléochroïsme nul ou très faible."
+   ]
+  },
+  {
+   "id": "scapolites",
+   "visible": false,
+   "species": [
+    "Scapolite"
+   ],
+   "name": "Scapolites",
+   "chem": "Série marialite (sodium) – méionite (calcium) (tétragonal)",
+   "intro": "Les scapolites forment une série continue entre deux pôles, la marialite riche en sodium et la méionite riche en calcium. Les pierres taillées sont jaunes, roses, violettes ou incolores, parfois chatoyantes (œil-de-chat). Les cristaux sont des prismes allongés.",
+   "points": [
+    "Uniaxe négatif, indice 1,54-1,58, forte biréfringence possible (jusqu'à 0,037).",
+    "Dureté 5,5-6,5, densité 2,60-2,74.",
+    "Fluorescence souvent vive, variable avec l'origine : jaune, rose ou orange.",
+    "Certaines scapolites changent de couleur à la lumière (ténébrescence)."
+   ]
+  },
+  {
+   "id": "cordierites",
+   "visible": false,
+   "species": [
+    "Iolite",
+    "Iolite_Bloodshot"
+   ],
+   "name": "Cordiérites",
+   "chem": "Silicate de magnésium, fer et aluminium (orthorhombique)",
+   "intro": "La variété gemme de la cordiérite est l'iolite, bleu-violet, surnommée « pierre des Vikings » ou « saphir d'eau ». Son trichroïsme est l'un des plus forts : bleu, violet et jaune pâle selon l'axe. L'iolite « bloodshot » contient des plaquettes rougeâtres d'hématite qui donnent un effet d'aventurescence.",
+   "points": [
+    "Biaxe, indice 1,54-1,55, densité 2,57-2,66, dureté 7-7,5.",
+    "Trichroïsme très fort : on le voit à l'œil nu en tournant la pierre.",
+    "Le matériau est fragile à la taille : clivages et fissures.",
+    "Elle peut être confondue avec la tanzanite ou le saphir bleu ; la densité et l'indice la distinguent."
+   ]
+  },
+  {
+   "id": "olivines",
+   "visible": false,
+   "species": [
+    "Peridot"
+   ],
+   "name": "Olivines",
+   "chem": "Série forstérite (magnésium) – fayalite (fer), (Mg,Fe)₂SiO₄ (orthorhombique)",
+   "intro": "L'olivine est la série de minéraux qui forme l'essentiel du manteau terrestre. La variété gemme est le péridot, d'un vert olive qui vient du fer qu'elle contient naturellement (elle n'a besoin d'aucune impureté pour être colorée). On en trouve dans des laves, et même dans des météorites (les pallasites).",
+   "points": [
+    "Biaxe, très forte biréfringence (0,033-0,038) : les arêtes des facettes arrière paraissent doublées à la loupe.",
+    "Dureté 6,5-7, densité 3,28-3,48, indice 1,65-1,70.",
+    "Spectre du fer : trois bandes dans le bleu (vers 453, 473 et 494 nm).",
+    "Sensible aux acides et aux chocs : à protéger dans un bijou."
+   ]
+  },
+  {
+   "id": "jades",
+   "visible": false,
+   "species": [
+    "Jade_Jadeite",
+    "Jade_Nephrite"
+   ],
+   "name": "Jades",
+   "chem": "Jadéite : pyroxène de sodium et d'aluminium. Néphrite : amphibole de calcium et de magnésium",
+   "intro": "Le mot « jade » désigne deux minéraux différents. La jadéite, la plus précieuse, atteint son plus haut prix dans le vert impérial coloré par le chrome. La néphrite, plus répandue, est le jade ancien de la Chine et de la Nouvelle-Zélande. Ce sont des agrégats de cristaux microscopiques entrelacés, ce qui les rend extrêmement tenaces : ils résistent aux chocs mieux que des pierres plus dures.",
+   "points": [
+    "Jadéite : dureté 6,5-7, densité 3,3, indice 1,66. Néphrite : dureté 6-6,5, densité 2,9-3,0, indice 1,61.",
+    "Agrégats : lecture floue au réfractomètre, pas de pléochroïsme.",
+    "La jadéite montre une raie nette à 437 nm au spectroscope.",
+    "Traitements courants : blanchiment, imprégnation de résine, teinture (jade « A », « B » et « C »)."
+   ]
+  },
+  {
+   "id": "serpentines-talc",
+   "visible": false,
+   "species": [
+    "Serpentine_Bowenite",
+    "Steatite"
+   ],
+   "name": "Serpentines et talc",
+   "chem": "Silicates de magnésium hydratés",
+   "intro": "Ce sont des pierres d'ornement tendres, faciles à sculpter. La bowénite est une serpentine compacte et dure, d'un vert pâle translucide, souvent vendue comme substitut du jade. La stéatite est du talc massif, le plus tendre des minéraux : on la raye à l'ongle et elle est grasse au toucher.",
+   "points": [
+    "Bowénite : dureté 5,5, indice 1,55-1,57. Stéatite : dureté 1, densité 2,7-2,8.",
+    "Agrégats opaques à translucides, sans pléochroïsme.",
+    "Une stéatite se reconnaît à son toucher savonneux.",
+    "La bowénite se distingue du jade par sa dureté plus faible et sa densité plus basse (2,5-2,7)."
+   ]
+  },
+  {
+   "id": "ivoires",
+   "visible": false,
+   "species": [
+    "Ivoire_Elephant",
+    "Ivoire_Hippopotame",
+    "Ivoire_Mammouth",
+    "Ivoire_Morse",
+    "Defense_Narval",
+    "Ivoire_Vegetal"
+   ],
+   "name": "Ivoires",
+   "chem": "Dentine : phosphate de calcium et protéine (collagène)",
+   "intro": "L'ivoire est la dentine des dents très développées, les défenses : éléphant, mammouth (fossile), hippopotame, morse, narval. Chaque animal a sa signature : les lignes de Schreger de l'éléphant forment des angles supérieurs à 115° et celles du mammouth des angles inférieurs, l'hippopotame a un grain très fin, le morse un cœur granuleux, le narval une spirale. L'ivoire végétal (tagua) est une graine de palmier, pas une dent, qui imite l'ivoire.",
+   "points": [
+    "Dureté 2,5-3, densité 1,7-2,0, indice 1,54 : très léger et tendre.",
+    "Fluorescence bleu-blanc sous UV longs.",
+    "Le commerce de l'ivoire d'éléphant est interdit depuis 1989 (CITES) ; l'ivoire de mammouth est légal dans la plupart des pays, ce qui sert parfois à écouler de l'ivoire frais.",
+    "L'ivoire végétal se reconnaît à son réseau de petits pores et à l'absence de lignes de Schreger."
+   ]
+  },
+  {
+   "id": "cornes-ecailles",
+   "visible": false,
+   "species": [
+    "Corne_Rhinoceros",
+    "Ecaille_Tortue"
+   ],
+   "name": "Cornes et écailles",
+   "chem": "Kératine, la matière des ongles et des cheveux",
+   "intro": "La corne de rhinocéros et l'écaille de tortue sont de la kératine, comme nos ongles : une matière organique tendre et légère, qui se travaille à chaud. L'écaille de tortue, au motif tacheté, servait pour les peignes et les montures de lunettes. Ces deux matières sont aujourd'hui interdites de commerce (CITES) pour protéger des espèces menacées.",
+   "points": [
+    "Dureté 2,5, densité 1,3, indice 1,55 environ.",
+    "Opaques ou translucides, sans structure cristalline.",
+    "L'écaille de tortue est très souvent imitée par du plastique, qui fluoresce en jaune sous UV courts.",
+    "Ce sont des objets de collection : on n'en achète plus de neufs."
+   ]
+  },
+  {
+   "id": "ambre-jais",
+   "visible": false,
+   "species": [
+    "Ambre",
+    "Jais"
+   ],
+   "name": "Ambre et jais",
+   "chem": "Matières organiques fossiles",
+   "intro": "L'ambre est de la résine d'arbre fossilisée, vieille de dizaines de millions d'années : de la Baltique, de République dominicaine ou de Birmanie (birmite). Il garde parfois des insectes piégés. Le jais est du bois fossile devenu lignite, d'un noir profond. Ce sont deux « gemmes » nées du vivant, sans cristaux.",
+   "points": [
+    "Ambre : densité 1,05-1,10, dureté 2-2,5, indice 1,54 ; il flotte dans l'eau très salée.",
+    "Jais : densité 1,3, dureté 2,5-4, noir ; chauffé à l'aiguille, il sent le charbon.",
+    "Tous deux s'électrisent par frottement.",
+    "L'ambre fluoresce en bleu-blanc à jaune-vert sous UV longs ; les imitations en plastique ou en copal sont fréquentes."
+   ]
+  },
+  {
+   "id": "zoisites",
+   "visible": false,
+   "species": [
+    "Zoisite",
+    "Tanzanite"
+   ],
+   "name": "Zoisites",
+   "chem": "Silicate de calcium et d'aluminium (orthorhombique)",
+   "intro": "La zoisite se présente en plusieurs variétés : la tanzanite, d'un bleu-violet découvert en 1967 en Tanzanie et presque toujours chauffée, la zoisite verte à brunâtre, et la thulite rose (qui n'est pas dans le jeu). Toutes ont un trichroïsme fort.",
+   "points": [
+    "Biaxe, indice 1,69-1,70, densité 3,35, dureté 6,5.",
+    "La tanzanite montre un trichroïsme très marqué : bleu, violet, rouge-brun.",
+    "Le chauffage (à 400-600 °C) fait passer la tanzanite du brun au bleu-violet.",
+    "Pierres fragiles : clivage parfait dans une direction."
+   ]
+  },
+  {
+   "id": "opales",
+   "visible": false,
+   "species": [
+    "Opale_Noble",
+    "Opale_De_Feu"
+   ],
+   "name": "Opales",
+   "chem": "Silice hydratée, SiO₂·nH₂O (amorphe)",
+   "intro": "L'opale n'est pas un cristal : c'est de la silice hydratée sans structure ordonnée, qui contient de 3 à 20 % d'eau. L'opale noble doit son jeu de couleurs à un empilement régulier de microscopiques sphères de silice qui diffractent la lumière. L'opale de feu, orange à rouge vif, n'a généralement pas de jeu de couleurs.",
+   "points": [
+    "Isotrope, indice 1,37-1,47, densité 1,9-2,3, dureté 5,5-6,5.",
+    "Fragile : l'opale se craquelle si elle se déshydrate ou subit un choc thermique.",
+    "Le jeu de couleurs change avec l'angle d'observation.",
+    "Fluorescence blanche à verte sous UV, parfois avec phosphorescence."
+   ]
+  },
+  {
+   "id": "perles",
+   "visible": false,
+   "species": [
+    "Perle",
+    "Perle_Tahiti"
+   ],
+   "name": "Perles",
+   "chem": "Nacre : carbonate de calcium (aragonite) et matière organique",
+   "intro": "La perle se forme dans un mollusque, en couches de nacre autour d'un corps étranger. Les perles naturelles sont rarissimes ; presque toutes celles du commerce sont de culture : le perliculteur introduit un noyau de nacre. On distingue les perles d'eau de mer (Akoya du Japon, Tahiti, mers du Sud) et d'eau douce (Chine).",
+   "points": [
+    "Dureté 2,5-4,5, densité 2,6-2,85 : tendre et fragile aux acides, aux parfums et à la transpiration.",
+    "Les rayons X montrent le noyau et distinguent une perle de culture d'une perle naturelle.",
+    "Les perles de Tahiti sont grises à noires, aux reflets verts, bleus ou aubergine.",
+    "Beaucoup de perles noires sont teintes ou irradiées."
+   ]
+  },
+  {
+   "id": "corail",
+   "visible": false,
+   "species": [
+    "Corail"
+   ],
+   "name": "Corail",
+   "chem": "Calcite magnésienne et matière organique",
+   "intro": "Le corail précieux est le squelette calcaire d'une colonie de polypes, comme le corail rouge de Méditerranée ou le « momo » du Japon. On le polit en cabochons, en perles ou en branches sculptées. Sa couleur va du blanc au rose et au rouge sang.",
+   "points": [
+    "Dureté 3,5, densité 2,6-2,7 : tendre, il se raye facilement.",
+    "Il effervesce au contact d'un acide, comme la calcite.",
+    "Au microscope : fines stries parallèles et motif ondulé du squelette.",
+    "La pêche est réglementée dans de nombreux pays pour protéger les récifs."
+   ]
+  },
+  {
+   "id": "spinelles",
+   "visible": false,
+   "species": [
+    "Spinelle",
+    "Spinelle_Bleu",
+    "Taaffeite"
+   ],
+   "name": "Spinelles et apparentés",
+   "chem": "Spinelle : aluminate de magnésium, MgAl₂O₄ (cubique)",
+   "intro": "Le spinelle a longtemps été pris pour du rubis : plusieurs « rubis » célèbres des joyaux de la couronne sont des spinelles. Il existe en rouge (chrome), bleu (fer ou cobalt), rose, violet. La téfféite, découverte en 1945 dans une boutique de bijoutier à Dublin, est un minéral apparenté, de formule proche et d'une rareté extrême.",
+   "points": [
+    "Spinelle : cubique, donc isotrope et sans pléochroïsme, dureté 8, indice 1,71-1,72, densité 3,6.",
+    "Cristaux en octaèdres, fréquemment maclés (la macle du spinelle porte son nom).",
+    "Le spectre du chrome du spinelle rouge montre un groupe de raies dans le rouge.",
+    "Le spinelle bleu de synthèse au cobalt est un faux-semblant courant : il réagit en rouge vif au filtre Chelsea."
+   ]
+  },
+  {
+   "id": "chrysoberyls",
+   "visible": false,
+   "species": [
+    "Chrysoberyl",
+    "Chrysoberyl_Alexandrite"
+   ],
+   "name": "Chrysobéryls",
+   "chem": "Oxyde de béryllium et d'aluminium, BeAl₂O₄ (orthorhombique)",
+   "intro": "Malgré son nom, le chrysobéryl n'est pas un béryl : c'est un oxyde, bien plus dur (8,5). Sa variété la plus célèbre est l'alexandrite, qui change de couleur : verte à la lumière du jour, rouge sous une lampe à incandescence, grâce au chrome. La variété chatoyante, l'œil-de-chat, est aussi très appréciée.",
+   "points": [
+    "Troisième minéral naturel le plus dur après le diamant et le corindon.",
+    "Biaxe, indice 1,745-1,755, densité 3,7, trichroïsme.",
+    "Spectre : bande à 444 nm (fer) ; alexandrite : raies du chrome dans le rouge.",
+    "Macles en « roue » (cristaux en trillings) ; l'alexandrite de synthèse est très courante."
+   ]
+  },
+  {
+   "id": "diamants",
+   "visible": false,
+   "species": [
+    "Diamant",
+    "Diamant_Synthetique_CVD",
+    "Diamant_Synthetique_HPHT"
+   ],
+   "name": "Diamants",
+   "chem": "Carbone pur (cubique)",
+   "intro": "Le diamant est du carbone cristallisé sous haute pression, le plus dur des minéraux (10) avec le plus fort éclat et un feu remarquable. Il existe aussi des diamants de laboratoire, chimiquement identiques : HPHT (haute pression et haute température, qui imite la formation naturelle) et CVD (dépôt chimique en phase vapeur, couche par couche).",
+   "points": [
+    "Indice 2,417, densité 3,52, isotrope, dureté 10.",
+    "Excellent conducteur de chaleur : le testeur thermique le reconnaît (la moissanite aussi).",
+    "Fluorescence : naturel surtout bleu, plus faible en onde courte ; HPHT et CVD plus fortes en onde courte.",
+    "Les diamants de laboratoire se repèrent par la fluorescence, la structure de croissance et des instruments de laboratoire."
+   ]
+  },
+  {
+   "id": "fluorites",
+   "visible": false,
+   "species": [
+    "Fluorite",
+    "Fluorite_Bandee",
+    "Fluorite_Bleue",
+    "Fluorite_Blue_John",
+    "Fluorite_Jaune",
+    "Fluorite_Verte"
+   ],
+   "name": "Fluorites",
+   "chem": "Fluorure de calcium, CaF₂ (cubique)",
+   "intro": "La fluorite existe dans presque toutes les couleurs (sauf le rouge et le noir), souvent en bandes. Son nom a donné le mot « fluorescence ». Le Blue John, une fluorite à bandes violettes, blanches et jaunes d'un seul gisement du Derbyshire, est célèbre.",
+   "points": [
+    "Cubique, isotrope, indice 1,434 : le plus bas des gemmes courantes.",
+    "Dureté 4, clivage octaédrique parfait : très fragile, à manier avec soin.",
+    "Fluorescence bleue ou verte sous UV, plus forte en onde longue.",
+    "Pierre de collection plutôt que de bijou."
+   ]
+  },
+  {
+   "id": "pyroxenes",
+   "visible": false,
+   "species": [
+    "Diopside_Chromifere",
+    "Kunzite"
+   ],
+   "name": "Pyroxènes",
+   "chem": "Silicates de chaînes (monocliniques)",
+   "intro": "Les pyroxènes sont des silicates en chaînes. Le diopside chromifère est d'un vert intense dû au chrome. La kunzite, rose-lilas, est la variété gemme du spodumène. La jadéite (famille des jades) est aussi un pyroxène.",
+   "points": [
+    "Deux clivages presque à angle droit : taille délicate, pierres fragiles aux chocs.",
+    "Biaxes, indices 1,66-1,68.",
+    "Kunzite : pléochroïsme fort, fluorescence orange, et couleur qui pâlit à la lumière prolongée.",
+    "Diopside chromifère : dureté 5,5-6, spectre du chrome."
+   ]
+  },
+  {
+   "id": "carbonates",
+   "visible": false,
+   "species": [
+    "Calcite",
+    "Rhodocrosite",
+    "Malachite"
+   ],
+   "name": "Carbonates",
+   "chem": "Calcite : carbonate de calcium. Rhodocrosite : de manganèse. Malachite : de cuivre",
+   "intro": "Ces minéraux tendres sont des carbonates : calcite incolore à jaune miel, rhodocrosite rose à rouge en bandes (la « rose des Incas »), malachite verte rubanée. Ils fondent ou bouillonnent au contact d'un acide dilué, ce qui sert de test.",
+   "points": [
+    "Dureté 3-4, très sensibles aux acides et aux chocs.",
+    "Biréfringence énorme (calcite 0,172, rhodocrosite 0,22, malachite 0,25) : on voit l'image doublée à travers un cristal de calcite.",
+    "Rarement montés en bagues : plutôt en cabochons, perles et objets.",
+    "La malachite et la rhodocrosite sont en général opaques à translucides, en bandes concentriques."
+   ]
+  },
+  {
+   "id": "sulfates",
+   "visible": false,
+   "species": [
+    "Celestine",
+    "Gypse",
+    "Selenite"
+   ],
+   "name": "Sulfates",
+   "chem": "Célestine : sulfate de strontium. Gypse et sélénite : sulfate de calcium hydraté",
+   "intro": "Les sulfates gemmes sont très tendres (2 à 3,5) et clivables. La célestine est bleu pâle comme le ciel ; le gypse est blanc, soyeux ou nacré ; la sélénite est sa variété transparente, en grands cristaux. Ils ne se taillent pas : on les garde en cristal ou en fragment.",
+   "points": [
+    "Dureté 2 (gypse, sélénite) et 3-3,5 (célestine) : on raye le gypse à l'ongle.",
+    "Biaxes, clivage parfait.",
+    "Densité : gypse 2,3, célestine 3,95.",
+    "À ne pas mouiller ni chauffer : le gypse se déshydrate et se dégrade."
+   ]
+  },
+  {
+   "id": "aluminosilicates",
+   "visible": false,
+   "species": [
+    "Andalousite",
+    "Kyanite"
+   ],
+   "name": "Silicates d'aluminium (Al₂SiO₅)",
+   "chem": "Al₂SiO₅ : même formule, structures différentes",
+   "intro": "L'andalousite et la kyanite ont la même formule chimique mais cristallisent différemment selon la pression et la température où elles se sont formées : ce sont des polymorphes (la sillimanite en est une troisième). L'andalousite montre un trichroïsme vert-rouge-brun spectaculaire. La kyanite est bleue, en lames allongées.",
+   "points": [
+    "Biaxes, indice 1,63-1,64 (andalousite) et 1,72 (kyanite).",
+    "Kyanite : dureté qui change avec la direction (4-5 dans le sens de la longueur, 6-7 en travers) : une anisotropie de dureté rare.",
+    "Andalousite : trichroïsme extrême ; la variété chiastolite montre une croix noire.",
+    "Densité : 3,17 (andalousite) et 3,68 (kyanite)."
+   ]
+  },
+  {
+   "id": "feldspathoides",
+   "visible": false,
+   "species": [
+    "Sodalite",
+    "Lapis_Lazuli"
+   ],
+   "name": "Feldspathoïdes",
+   "chem": "Silicates d'aluminium pauvres en silice, avec sodium",
+   "intro": "Ces minéraux ressemblent aux feldspaths mais contiennent moins de silice. La sodalite est d'un bleu profond veiné de blanc ; sa variété hackmanite change de couleur à la lumière et fluoresce en orange. Le lapis-lazuli est une roche faite surtout de lazurite, avec de la calcite blanche et des paillettes de pyrite dorée.",
+   "points": [
+    "Cubiques, isotropes, indice 1,48-1,50.",
+    "Dureté 5-6, densité 2,3 (sodalite) à 2,8 (lapis-lazuli).",
+    "Le lapis contient de la pyrite dorée, pas la sodalite : c'est le moyen de les distinguer.",
+    "Le lapis est une roche, donc un agrégat de minéraux."
+   ]
+  },
+  {
+   "id": "metalliques",
+   "visible": false,
+   "species": [
+    "Hematite",
+    "Pyrite",
+    "Sphalerite"
+   ],
+   "name": "Hématite, pyrite et sphalérite",
+   "chem": "Hématite : oxyde de fer. Pyrite : sulfure de fer. Sphalérite : sulfure de zinc",
+   "intro": "Ces minéraux à l'éclat métallique ou presque adamantin sont des oxydes et des sulfures. L'hématite gris-noir laisse une trace rouge, la pyrite, l'« or des fous », une trace noir-vert. La sphalérite, rouge à orange, est transparente mais si tendre et clivable qu'on la taille avec précaution : sa dispersion est près de quatre fois celle du diamant.",
+   "points": [
+    "Hématite : dureté 6, densité 5,15. Pyrite : dureté 6-6,5, densité 5,0. Sphalérite : dureté 3,5-4, densité 4,05.",
+    "Hématite et pyrite sont opaques : pas d'indice mesurable au réfractomètre.",
+    "Pour distinguer pyrite et or : l'or est tendre, malléable et laisse une trace jaune.",
+    "La sphalérite a six directions de clivage."
+   ]
+  },
+  {
+   "id": "phosphates",
+   "visible": false,
+   "species": [
+    "Apatite",
+    "Turquoise",
+    "Turquoise_Stabilisee"
+   ],
+   "name": "Phosphates",
+   "chem": "Apatite : phosphate de calcium. Turquoise : phosphate hydraté de cuivre et d'aluminium",
+   "intro": "L'apatite, bleu-vert, doit son nom au grec « tromper » : on la confond avec d'autres pierres. La turquoise, opaque, bleue à verte, est utilisée depuis l'Antiquité. Poreuse, elle est souvent stabilisée à la résine pour renforcer sa structure.",
+   "points": [
+    "Apatite : dureté 5 (c'est le minéral de référence de la dureté 5), indice 1,63-1,64, spectre des terres rares.",
+    "Turquoise : dureté 5-6, densité 2,6-2,9, indice 1,61-1,65.",
+    "La turquoise craint les parfums, les graisses et la chaleur.",
+    "Les veinules de roche mère donnent à la turquoise sa « toile d'araignée »."
+   ]
+  },
+  {
+   "id": "borates",
+   "visible": false,
+   "species": [
+    "Painite",
+    "Sinhalite"
+   ],
+   "name": "Borates rares",
+   "chem": "Painite : borate de calcium, zirconium et aluminium. Sinhalite : borate de magnésium et d'aluminium",
+   "intro": "Deux gemmes aux histoires de découvertes surprenantes. La sinhalite a longtemps été prise pour du péridot brun, jusqu'à ce qu'on la reconnaisse comme espèce distincte en 1952. La painite, trouvée en Birmanie, a été pendant des décennies le minéral gemme le plus rare du monde, avec à peine quelques cristaux connus.",
+   "points": [
+    "Painite : dureté 8, densité 4,01, indice 1,79-1,82, uniaxe.",
+    "Sinhalite : dureté 6,5-7, densité 3,48, indice 1,67-1,71, biaxe, forte biréfringence (0,038).",
+    "La sinhalite se confond avec le péridot brun, mais sa densité et sa biréfringence sont différentes.",
+    "Pierres de collectionneur."
+   ]
+  },
+  {
+   "id": "verres",
+   "visible": false,
+   "species": [
+    "Obsidienne",
+    "Obsidienne_Flocons",
+    "Moldavite",
+    "Verre"
+   ],
+   "name": "Verres",
+   "chem": "Silice sans structure cristalline",
+   "intro": "Un verre est un solide sans cristaux, formé par un refroidissement très rapide. Il existe des verres naturels : l'obsidienne (lave refroidie), l'obsidienne flocons de neige (avec des sphérules blanches de cristobalite), la moldavite (verre né de l'impact d'une météorite en Bohême il y a 15 millions d'années). Le verre artificiel, lui, est la plus ancienne imitation de pierre précieuse.",
+   "points": [
+    "Isotropes, cassure conchoïdale (en coquille) caractéristique.",
+    "Indice 1,48-1,54 pour les verres naturels ; le verre artificiel va de 1,45 à plus de 1,70.",
+    "Les bulles rondes et les stries d'écoulement trahissent un verre artificiel.",
+    "Au filtre Chelsea et au spectroscope, un verre coloré trahit son colorant (cobalt, sélénium, or…)."
+   ]
+  },
+  {
+   "id": "simulants",
+   "visible": false,
+   "species": [
+    "CZ",
+    "GGG",
+    "YAG",
+    "Titanate_Strontium",
+    "Moissanite_Synthetique"
+   ],
+   "name": "Simulants du diamant",
+   "chem": "Cristaux fabriqués par l'homme",
+   "intro": "Ces cristaux n'existent pas dans la nature : ils ont été fabriqués pour ressembler au diamant. Le titanate de strontium (fabulite) et le GGG ont ouvert la voie, puis la zircone cubique (CZ) est devenue le simulant le plus courant. La moissanite synthétique est la plus difficile à distinguer, car elle conduit la chaleur comme le diamant.",
+   "points": [
+    "CZ : densité 5,8, indice 2,16. GGG : densité 7,05. YAG : 4,57. Titanate de strontium : 5,13, dispersion plus forte que le diamant.",
+    "La moissanite est biréfringente (0,043) : on voit les arêtes doublées. Le diamant est isotrope.",
+    "Au testeur thermique, la moissanite réagit comme un diamant ; on la distingue avec un testeur électrique.",
+    "Beaucoup sont plus tendres que le diamant et se rayent à l'usage."
+   ]
+  }
+ ]
+}

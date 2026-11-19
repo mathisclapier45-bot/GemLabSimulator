@@ -11,6 +11,7 @@ esc = html.escape
 # Second menu shown under the header on the pages of the encyclopedia: (path, label key).
 ENCYCLOPEDIA_MENU = [
     ("/encyclopedie", "sub.species"),
+    ("/encyclopedie/familles", "sub.families"),
     ("/encyclopedie/formes", "sub.habits"),
     ("/comparer", "sub.compare"),
     ("/glossaire", "sub.glossary"),
@@ -140,7 +141,7 @@ def page(req, title, content, section="", sim=False, status=200, description="")
     if section == "encyclopedia":
         here = req.path.rstrip("/") or "/"
         links = "".join('<a href="{}"{}>{}</a>'.format(
-            href, ' class="current" aria-current="page"' if (here == href or (href == "/encyclopedie" and here.startswith("/encyclopedie/") and here != "/encyclopedie/formes")) else "",
+            href, ' class="current" aria-current="page"' if (here == href or (href == "/encyclopedie/familles" and here.startswith(("/encyclopedie/familles/", "/encyclopedie/classes/"))) or (href == "/encyclopedie" and here.startswith("/encyclopedie/") and here != "/encyclopedie/formes" and not here.startswith(("/encyclopedie/familles", "/encyclopedie/classes")))) else "",
             esc(t(label))) for href, label in ENCYCLOPEDIA_MENU)
         submenu = '<div class="wrap subnav"><nav aria-label="{}">{}</nav></div>'.format(esc(t("sub.label")), links)
 

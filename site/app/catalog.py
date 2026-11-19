@@ -440,3 +440,54 @@ def identify(q):
         results.append((s, score, notes))
     results.sort(key=lambda r: (r[1], r[0]["name_key"]))
     return results
+
+
+# ------------------------------------------------------------------ groups of gems: the classes of minerals and the families of gems
+
+_groups = {}         # (file, language) -> {"mtime": ..., "data": ...}
+
+
+def _load_groups(name, only_visible=False):
+    """data/<name>.json translated by data/<lang>/<name>.json, as {"items": [...], "of": species id -> item}.
+    Each item has: id, name, chem, intro, points and species (the species dictionaries of the encyclopedia, in the order of the file).
+    With only_visible, the items marked "visible": false in the file are left out."""
+    lang = current_lang()
+    path = config.DATA_DIR / (name + ".json")
+    over_path = config.DATA_DIR / lang / (name + ".json") if lang != "fr" else None
+    species = data()
+    mtime = ((path.stat().st_mtime if path.exists() else 0) + (over_path.stat().st_mtime if over_path and over_path.exists() else 0), id(species))
+    key = (name, lang, only_visible)
+    with _lock:
+        cache = _groups.get(key)
+        if cache and cache["mtime"] == mtime:
+            return cache["data"]
+    by_id = {s["id"]: s for s in species["species"]}
+    out = {"items": [], "of": {}}
+    if path.exists():
+        base = _read_json(path)[name]
+        over = _read_json(over_path) if over_path and over_path.exists() else {}
+        for f in base:
+            if only_visible and not f.get("visible", True):
+                continue
+            o = over.get(f["id"], {})
+            item = {"id": f["id"], "name": o.get("name", f["name"]), "chem": o.get("chem", f.get("chem", "")),
+                    "intro": o.get("intro", f.get("intro", "")), "points": o.get("points", f.get("points", [])),
+                    "species": [by_id[i] for i in f["species"] if i in by_id]}
+            out["items"].append(item)
+            for sp in item["species"]:
+                out["of"][sp["id"]] = item
+    with _lock:
+        _groups[key] = {"mtime": mtime, "data": out}
+    return out
+
+
+def families():
+    """The families of gems shown on the site (the ones marked visible), alphabetical: {"items": [...], "of": ...}."""
+    out = dict(_load_groups("families", only_visible=True))
+    out["items"] = sorted(out["items"], key=lambda f: fold(f["name"]))
+    return out
+
+
+def classes():
+    """The classes of minerals (Strunz order) and the synthetics: {"items": [...], "of": ...}."""
+    return _load_groups("classes")

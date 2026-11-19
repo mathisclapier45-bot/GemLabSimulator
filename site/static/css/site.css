@@ -318,3 +318,10 @@ progress { width: 100%; max-width: 480px; height: 14px; }
 .how { margin: 1.4rem 0; }
 .how summary { cursor: pointer; font-weight: 650; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Gem families */
+.famline { margin: 0.1rem 0 0.4rem; }
+.famlist { padding-left: 1.2rem; }
+.famlist li { margin: 0.35rem 0; }
+.tile.wide .sub { font-size: 0.85rem; }
+.clsicon { flex: none; }

@@ -6,7 +6,7 @@ import os
 import re
 
 from . import catalog, config, db
-from . import routes_account, routes_forum, routes_learn, routes_legal, routes_prices, routes_site
+from . import routes_account, routes_forum, routes_learn, routes_families, routes_legal, routes_prices, routes_site
 from . import views
 from .views import esc, page
 from .web import HTTPError, Request, Response, Router
@@ -14,7 +14,8 @@ from .web import HTTPError, Request, Response, Router
 log = logging.getLogger("gemlab")
 
 router = Router()
-for part in (routes_site, routes_account, routes_forum, routes_learn, routes_legal, routes_prices):
+# routes_families first: /encyclopedie/familles must come before /encyclopedie/<slug>
+for part in (routes_families, routes_site, routes_account, routes_forum, routes_learn, routes_legal, routes_prices):
     router.routes.extend(part.router.routes)
 
 CSP_DEFAULT = ("default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; "

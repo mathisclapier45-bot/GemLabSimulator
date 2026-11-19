@@ -66,7 +66,8 @@ def encyclopedia(req):
         body = '<p class="empty">{}</p>'.format(esc(t("enc.empty")))
     content = (
         '<h1>{h1}</h1><p class="lead">{lead}</p>{form}<p class="count">{count}</p>{body}'
-        '<p class="side-link"><a href="/encyclopedie/formes">{habits}</a> · <a href="/comparer">{compare}</a> · <a href="/glossaire">{gloss}</a></p>').format(
+        '<p class="side-link"><a href="/encyclopedie/familles">{families}</a> · <a href="/encyclopedie/formes">{habits}</a> · <a href="/comparer">{compare}</a> · <a href="/glossaire">{gloss}</a></p>').format(
+        families=esc(t("fam.link")),
         h1=esc(t("enc.title")), lead=esc(t("enc.lead")), form=form,
         count=esc(t("enc.count", n=len(results))), body=body,
         habits=esc(t("enc.habits.link")), compare=esc(t("cmp.title")), gloss=esc(t("gloss.title")))
@@ -142,6 +143,18 @@ def _dispersion_cell(t, s):
     value, exact = catalog.dispersion(s)
     text = fmt_num(value, 3)
     return esc(text) if exact else '{} <span class="small">{}</span>'.format(esc("\u2248 " + text), esc(t("sp.dispersion.est")))
+
+
+def _groups_line(t, s):
+    """"Class: Silicates · Family: Garnets" under the name of a species (the family only when it is shown on the site)."""
+    parts = []
+    cls = catalog.classes()["of"].get(s["id"])
+    if cls:
+        parts.append('{} <a href="/encyclopedie/classes/{}">{}</a>'.format(esc(t("cls.of")), esc(cls["id"]), esc(cls["name"])))
+    fam = catalog.families()["of"].get(s["id"])
+    if fam:
+        parts.append('{} <a href="/encyclopedie/familles/{}">{}</a>'.format(esc(t("fam.of")), esc(fam["id"]), esc(fam["name"])))
+    return '<p class="small famline">{}</p>'.format(" \u00b7 ".join(parts)) if parts else ""
 
 
 def _colors_section(req, s):
@@ -360,8 +373,9 @@ def species_page(req):
     content = (
         '<nav class="crumbs"><a href="/encyclopedie">{back}</a></nav>'
         '<header class="species-head" style="--gem:{gemc};--gem2:{gemf}">{gem}<div><h1>{name} {badge}</h1>'
-        '<p class="formula big">{formula}</p><p class="lead">{desc}</p></div></header>'
+        '<p class="formula big">{formula}</p>{family}<p class="lead">{desc}</p></div></header>'
         '{gallery}{colors}<h2>{ph}</h2><table class="props">{props}</table>{sections}{nav}').format(
+        family=_groups_line(t, s),
         back=esc(t("sp.back")), gem=gem_svg(s["iconColor"], s["iconFacetColor"], 96), name=esc(s["displayName"]),
         gemc=esc(s["iconColor"]), gemf=esc(s["iconFacetColor"]), formula=esc(ex.get("formula", "")),
         badge=badge, desc=markup.link_terms(esc(s.get("description", "")), seen_terms), gallery=gallery, colors=_colors_section(req, s), ph=esc(t("sp.properties")), props=props,
@@ -541,7 +555,7 @@ def robots(req):
     return Response("\n".join(lines) + "\n", content_type="text/plain; charset=utf-8")
 
 
-PUBLIC_PATHS = ["/", "/encyclopedie", "/encyclopedie/formes", "/identification", "/comparer", "/glossaire", "/lecons", "/quiz", "/prix",
+PUBLIC_PATHS = ["/", "/encyclopedie", "/encyclopedie/formes", "/encyclopedie/familles", "/identification", "/comparer", "/glossaire", "/lecons", "/quiz", "/prix",
                 "/a-propos", "/contact", "/mentions-legales", "/confidentialite"]
 
 
@@ -552,6 +566,8 @@ def sitemap(req):
         raise HTTPError(404)
     paths = list(PUBLIC_PATHS)
     paths += ["/encyclopedie/" + s["slug"] for s in catalog.data()["species"]]
+    paths += ["/encyclopedie/familles/" + f["id"] for f in catalog.families()["items"]]
+    paths += ["/encyclopedie/classes/" + c["id"] for c in catalog.classes()["items"]]
     paths += ["/lecons/" + it["id"] for it in catalog.lessons()]
     # every page in both languages, each one pointing to the other (hreflang)
     def entry(p):

@@ -336,3 +336,20 @@ les courriels (sujet et expéditeur) et les aperçus de partage. Les textes l'é
 2. refaire l'icône et l'image de partage : `python3 site/tools/make_icons.py` (elles reprennent le nom) ;
 3. mettre à jour `GEMLAB_BASE_URL` et `GEMLAB_MAIL_FROM` avec le nouveau domaine.
 Le jeu garde son nom (« GemLab Simulator »), c'est un autre produit : le texte du simulateur (`sim.window`) ne change pas.
+
+## 12. Les familles de gemmes
+
+Page `/encyclopedie/familles` (menu « Familles » de l'encyclopédie), en deux parties :
+1. **Les classes de minéraux** : les 10 classes de la classification de Strunz (éléments natifs, sulfures, halogénures, oxydes et hydroxydes, carbonates, borates, sulfates, phosphates, silicates, composés organiques) et une 11e, « synthèses et imitations ».
+   Chacune a sa page `/encyclopedie/classes/<classe>` : introduction, ce que ses espèces ont en commun (système cristallin, indice, densité, dureté, caractère optique, calculés à partir des données du jeu), points à retenir, liste des espèces. Chaque espèce est dans **une seule** classe.
+   Choix de Strunz à connaître : le quartz et l'opale (la silice SiO₂) sont rangés avec les **oxydes**, comme dans la classification officielle, alors que beaucoup d'ouvrages les mettent avec les silicates ; la page des oxydes l'explique.
+2. **Les grandes familles de gemmes** : pour l'instant seulement les **béryls**, les **grenats** et les **corindons** (`/encyclopedie/familles/<famille>`, même présentation que les classes).
+
+Chaque classe a son icône (`app/class_icons.py` : un atome, un cube de pyrite, l'octaèdre de la fluorite, le tonneau hexagonal du corindon, le rhomboèdre de la calcite, le triangle du groupe BO₃, des lames de célestine, le prisme de l'apatite, le tétraèdre SiO₄, une feuille, un flacon de laboratoire).
+
+Chaque fiche d'espèce indique sa classe, et sa famille quand elle est montrée.
+
+- **Les données** : `data/classes.json` et `data/families.json` (français : nom, composition, introduction, points, liste des espèces), et `data/en/classes.json`, `data/en/families.json` (anglais, même structure).
+- **Ajouter une famille au site** : 30 familles sont déjà écrites (quartz, tourmalines, feldspaths, olivines, jades, ivoires, opales, perles, corail, diamants…) mais cachées : dans `families.json`, mettre `"visible": true` pour celle qu'on veut montrer. Un test vérifie que chaque espèce est dans une classe et une seule, que les identifiants existent et que tout est traduit.
+- **Quand le jeu ajoute une espèce** : le test échoue tant qu'on ne l'a pas rangée dans une classe de `classes.json`.
+- Les textes sont de moi : à faire relire par un gemmologue avec le reste du contenu (`Docs/RELECTURE_CONTENU.md`).

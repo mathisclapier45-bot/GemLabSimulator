@@ -1,0 +1,119 @@
+{
+ "elements-natifs": {
+  "name": "Native elements",
+  "chem": "Minerals made of a single chemical element",
+  "intro": "A native element is a mineral made of only one element: the carbon of diamond, but also gold, silver, copper, sulfur or graphite. Diamond is by far the most important native gem. It has the same element as the graphite of pencils, but a completely different structure: that is what makes it so hard.",
+  "points": [
+   "Diamond is pure carbon crystallized in the cubic system (hardness 10, index 2.417).",
+   "Graphite, also carbon, is one of the softest minerals.",
+   "Laboratory-grown diamonds (HPHT, CVD) are filed under \"Synthetics and imitations\"."
+  ]
+ },
+ "sulfures": {
+  "name": "Sulfides and sulfosalts",
+  "chem": "A metal combined with sulfur",
+  "intro": "Sulfides are compounds of sulfur and one or more metals. They often have a metallic luster and a high density. Pyrite, or \"fool's gold\", is an iron sulfide. Sphalerite, a zinc sulfide, is transparent and has a very strong dispersion, but is so soft and cleavable that it is mostly a collector's stone.",
+  "points": [
+   "Metallic luster (pyrite) or adamantine (sphalerite).",
+   "High density: 4.0 to 5.0 for the two species in the game.",
+   "A colored mark on porcelain (the \"streak\") helps to recognize them.",
+   "Many sulfides are ores: zinc comes from sphalerite."
+  ]
+ },
+ "halogenures": {
+  "name": "Halides",
+  "chem": "A metal combined with fluorine, chlorine, bromine or iodine",
+  "intro": "Halides are salts, like table salt (halite). The only one shown here is fluorite, calcium fluoride, which exists in almost every color. They are soft minerals that cleave easily into regular shapes.",
+  "points": [
+   "Fluorite: hardness 4, index 1.434 (the lowest of the common gems), cubic.",
+   "Blue or green fluorescence: the word \"fluorescence\" comes from fluorite.",
+   "Perfect octahedral cleavage: the stone breaks into octahedra.",
+   "Collector's stones rather than jewelry stones."
+  ]
+ },
+ "oxydes": {
+  "name": "Oxides and hydroxides",
+  "chem": "A metal (or silicon) combined with oxygen or the OH group",
+  "intro": "Oxides are compounds of oxygen and one or two metals; hydroxides also contain the OH group. This class gives many of the hardest gems: corundum (ruby and sapphires), chrysoberyl (including alexandrite), spinel. In the Strunz classification, silica (quartz, chalcedonies, opal) is filed here, although many books place it with the silicates.",
+  "points": [
+   "Very high hardness for the hard oxides: corundum 9, chrysoberyl 8.5, spinel 8.",
+   "Quartz and opal: silica (SiO₂), a silicon oxide.",
+   "Colors often come from traces of chromium (red), iron and titanium (blue).",
+   "Synthetic rubies and sapphires are filed under \"Synthetics and imitations\"."
+  ]
+ },
+ "carbonates": {
+  "name": "Carbonates",
+  "chem": "Minerals containing the CO₃ group",
+  "intro": "Carbonates are soft (hardness 3 to 4) and react to acids: a drop of dilute acid makes them fizz. Colorless calcite, pink banded rhodochrosite and banded green malachite belong here. Aragonite, which forms the nacre of pearls, is also a calcium carbonate.",
+  "points": [
+   "Hardness 3-4, very sensitive to acids and knocks.",
+   "Very strong birefringence: the image is doubled through a calcite crystal.",
+   "Rarely set in rings: cabochons, beads, objects.",
+   "Pearls and coral contain calcium carbonate but are filed with the organic materials."
+  ]
+ },
+ "borates": {
+  "name": "Borates",
+  "chem": "Minerals containing boron (BO₃ group)",
+  "intro": "Borates are a class little represented among gems, but one that has some very rare ones. Sinhalite was long mistaken for brown peridot. Painite, discovered in Burma, was for decades the rarest gem mineral in the world.",
+  "points": [
+   "Painite: hardness 8, density 4.01; sinhalite: hardness 6.5-7, density 3.48.",
+   "Strong birefringence for sinhalite (0.038), which tells it apart from peridot.",
+   "Collector's stones."
+  ]
+ },
+ "sulfates": {
+  "name": "Sulfates",
+  "chem": "Minerals containing the SO₄ group",
+  "intro": "Gem sulfates are very soft (hardness 2 to 3.5) and cleavable. Celestine, a strontium sulfate, is pale blue like the sky. Gypsum, a hydrated calcium sulfate, is white; its transparent variety in large crystals is selenite. They are hardly ever cut: they are kept as crystals.",
+  "points": [
+   "Hardness 2 for gypsum: it can be scratched with a fingernail.",
+   "Perfect cleavage: the crystals come apart in blades.",
+   "Not to be heated or wetted: gypsum dehydrates and degrades."
+  ]
+ },
+ "phosphates": {
+  "name": "Phosphates, arsenates and vanadates",
+  "chem": "Minerals containing the PO₄ group",
+  "intro": "Phosphates are the compounds of phosphoric acid. Apatite is the reference mineral of hardness 5 on the Mohs scale; turquoise, a copper aluminum phosphate, is opaque, blue to green, and has been used since antiquity. Bone and teeth are also made of a calcium phosphate close to apatite.",
+  "points": [
+   "Apatite: hardness 5, index 1.63-1.64, rare-earth spectrum.",
+   "Turquoise: opaque, porous, often stabilized with resin.",
+   "Turquoise fears perfumes, grease and heat."
+  ]
+ },
+ "silicates": {
+  "name": "Silicates",
+  "chem": "Minerals built on the SiO₄ group (silicon and oxygen)",
+  "intro": "Silicates are the largest class of minerals: they make up almost the whole Earth's crust and nearly half of all gems. The basic brick is a silicon tetrahedron surrounded by four oxygens; the way these tetrahedra link up gives the great families: isolated tetrahedra (garnets, peridot, topaz, zircon), rings (beryls, tourmalines, cordierite), chains (jades, pyroxenes), sheets (talc, serpentines), framework (feldspars, sodalite). Natural glasses (obsidian, moldavite), which have no crystals, are filed here for lack of a better place.",
+  "points": [
+   "A huge variety: hardness from 1 (talc) to 8 (topaz, beryl), indices from 1.48 to 2.0.",
+   "Most silicates are crystals; jades and most rocks are aggregates of microscopic crystals.",
+   "Colors come from impurities of iron, chromium, manganese, vanadium or copper.",
+   "The great families (beryls, garnets…) are shown below."
+  ]
+ },
+ "organiques": {
+  "name": "Organic compounds",
+  "chem": "Materials made by living things",
+  "intro": "These gems come from living things: the dentine of tusks (ivories), the nacre of molluscs (pearls), the skeleton of polyps (coral), the keratin of horns and shells, fossil tree resin (amber) and fossil wood (jet). They are not minerals in the strict sense, but they appear in class 10 of the Strunz classification and in every gemology collection.",
+  "points": [
+   "Soft (hardness 1.5 to 4.5) and light (density 1.05 to 2.9).",
+   "Sensitive to acids, heat, perfumes and perspiration.",
+   "Often without crystals: no pleochroism.",
+   "The trade in many of them (elephant ivory, tortoiseshell, rhinoceros horn) is banned or regulated (CITES)."
+  ]
+ },
+ "syntheses": {
+  "name": "Synthetics and imitations",
+  "chem": "Stones made by humans",
+  "intro": "A synthetic has the same composition and structure as the natural stone: a synthetic ruby is real corundum, an HPHT or CVD diamond is real diamond. An imitation (or simulant) is just a stone that looks like another: cubic zirconia, GGG, YAG, strontium titanate or glass do not have the composition of diamond or ruby. They are told apart with instruments: inclusions, fluorescence, spectrum, conductivity.",
+  "points": [
+   "Synthetic rubies and sapphires (Verneuil, since 1900): curved gas bubbles and growth striae.",
+   "Laboratory-grown diamonds: stronger fluorescence under short wave, growth structure.",
+   "Diamond simulants: very different density (CZ 5.8; GGG 7.05), often softer. Synthetic moissanite conducts heat like diamond.",
+   "Glass is the oldest imitation: round bubbles and flow striae."
+  ]
+ }
+}

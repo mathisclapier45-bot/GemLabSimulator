@@ -1,0 +1,365 @@
+{
+ "quartz": {
+  "name": "Quartz",
+  "chem": "Silicon dioxide, SiO₂ (trigonal)",
+  "intro": "Quartz is the most common mineral of the Earth's crust, and the largest family of gems. Transparent crystals are told apart by color: amethyst (purple), citrine (yellow to orange), smoky quartz (gray-brown), rose quartz, prasiolite (green), ametrine (purple and yellow in the same crystal). Almost all these colors come from a trace of iron or from irradiation, and they change on heating: a heated amethyst becomes citrine or prasiolite.",
+  "points": [
+   "All varieties share the same constants: hardness 7, index 1.544-1.553, density 2.65.",
+   "Uniaxial positive, weak birefringence (0.009): black-cross interference figure.",
+   "Many citrines on the market are heated amethysts.",
+   "Synthetic (hydrothermal) quartz exists in every color."
+  ]
+ },
+ "calcedoines": {
+  "name": "Chalcedonies and fibrous quartz",
+  "chem": "Silica, SiO₂, in microscopic crystals",
+  "intro": "These are quartzes whose crystals are too small to be seen. The material is compact but porous, so it takes dye easily. Agate shows concentric bands, carnelian owes its red-orange color to iron oxide, and tiger's eye is a fibrous quartz that replaced crocidolite: its fibers give a mobile silky reflection, chatoyancy.",
+  "points": [
+   "Hardness 6.5-7, density around 2.6, index 1.53-1.54 (a vague reading on the refractometer).",
+   "Aggregates: no pleochroism, no usable interference figure.",
+   "Blue, green or black agates are almost always dyed.",
+   "Carnelian is often heated to make it redder."
+  ]
+ },
+ "beryls": {
+  "name": "Beryls",
+  "chem": "Beryllium aluminum silicate, Be₃Al₂Si₆O₁₈ (hexagonal)",
+  "intro": "In beryl, color gives the stone its name: emerald (chromium, sometimes vanadium, green), aquamarine (iron, blue), morganite (manganese, pink), heliodor (iron, yellow), goshenite (colorless), red beryl or bixbite (manganese, extremely rare). Pezzottaite is a cesium cousin, discovered in 2002 in Madagascar, of the trigonal system.",
+  "points": [
+   "Hardness 7.5-8, density 2.66-2.90, index 1.56-1.60.",
+   "Uniaxial negative, crystals in striated hexagonal prisms.",
+   "Typical inclusions: tubes parallel to the axis (aquamarine), a \"garden\" of fissures and cavities (emerald).",
+   "Emerald is often fractured and treated with oil or resin."
+  ]
+ },
+ "corindons": {
+  "name": "Corundums",
+  "chem": "Aluminum oxide, Al₂O₃ (trigonal)",
+  "intro": "Red corundum, colored by chromium, is ruby; every other color is called sapphire: blue (iron and titanium), yellow, green, orange, pink, violet, colorless. Padparadscha, pink-orange like the lotus flower, is one of the most expensive varieties. After diamond, it is the hardest natural material.",
+  "points": [
+   "Hardness 9, density about 4.0, index 1.76-1.77: very characteristic constants.",
+   "Uniaxial negative, birefringence 0.008, distinct pleochroism.",
+   "Ruby fluoresces red under UV and reacts to the Chelsea filter; its rutile silk is typical.",
+   "Synthetic rubies and sapphires (Verneuil, since 1900) are spotted by their gas bubbles and curved striae."
+  ]
+ },
+ "grenats": {
+  "name": "Garnets",
+  "chem": "Cubic silicates of formula A₃B₂(SiO₄)₃",
+  "intro": "Garnets are not one species but a family of species that mix: pyrope (deep red), almandine (dark red), spessartite (orange), grossular (brown-orange hessonite, green tsavorite, massive hydrogrossular), andradite (demantoid, a green of very high luster) and uvarovite (emerald green, in crusts of tiny crystals). Rhodolite is a mix of pyrope and almandine, malaya of pyrope and spessartite.",
+  "points": [
+   "Cubic, so isotropic: no pleochroism, no birefringence.",
+   "Hardness 6.5-7.5, density 3.5-4.3, index 1.72-1.89: the index tells the species apart.",
+   "Almost every color except pure blue (blue color-change garnets are very rare).",
+   "Almandines are attracted to a strong magnet; tsavorite and demantoid are poor in iron."
+  ]
+ },
+ "tourmalines": {
+  "name": "Tourmalines",
+  "chem": "Complex borosilicate (trigonal)",
+  "intro": "Tourmaline is the family with the most varied colors: indicolite (blue), rubellite (pink to red), Paraíba (neon blue, colored by copper), schorl (black, the most common), and watermelon tourmaline, bicolor pink and green like the fruit. A single crystal can change color along its length.",
+  "points": [
+   "Uniaxial negative, strong birefringence (0.014-0.040) and strong pleochroism: the cut is chosen for the best color.",
+   "Hardness 7-7.5, density 3.0-3.25, index 1.61-1.67.",
+   "Crystals in prisms with a triangular section, deeply striated.",
+   "It becomes electrified by rubbing or heating and then attracts dust."
+  ]
+ },
+ "feldspaths": {
+  "name": "Feldspars",
+  "chem": "Aluminum silicates with potassium, sodium or calcium",
+  "intro": "Feldspars are the most abundant mineral family of the Earth's crust. In gemology they are known for their light effects: moonstone and its floating bluish sheen (adularescence), labradorite and its iridescent flashes (labradorescence), both caused by fine internal lamellae. Transparent yellow orthoclase comes mostly from Madagascar.",
+  "points": [
+   "Hardness 6-6.5, density 2.55-2.75, index 1.52-1.57.",
+   "Biaxial, with two cleavages almost at right angles: stones that are fragile to knocks.",
+   "The light effects vanish if the cut is badly oriented: they are cut as cabochons.",
+   "Pleochroism none or very weak."
+  ]
+ },
+ "scapolites": {
+  "name": "Scapolites",
+  "chem": "Marialite (sodium) – meionite (calcium) series (tetragonal)",
+  "intro": "Scapolites form a continuous series between two end members, marialite rich in sodium and meionite rich in calcium. Cut stones are yellow, pink, violet or colorless, sometimes chatoyant (cat's eye). The crystals are elongated prisms.",
+  "points": [
+   "Uniaxial negative, index 1.54-1.58, strong birefringence possible (up to 0.037).",
+   "Hardness 5.5-6.5, density 2.60-2.74.",
+   "Fluorescence often vivid, varying with origin: yellow, pink or orange.",
+   "Some scapolites change color in light (tenebrescence)."
+  ]
+ },
+ "cordierites": {
+  "name": "Cordierites",
+  "chem": "Magnesium iron aluminum silicate (orthorhombic)",
+  "intro": "The gem variety of cordierite is iolite, blue-violet, nicknamed \"Vikings' stone\" or \"water sapphire\". Its trichroism is one of the strongest: blue, violet and pale yellow depending on the axis. \"Bloodshot\" iolite contains reddish hematite platelets that give an aventurescence effect.",
+  "points": [
+   "Biaxial, index 1.54-1.55, density 2.57-2.66, hardness 7-7.5.",
+   "Very strong trichroism: it can be seen with the naked eye by turning the stone.",
+   "The material is fragile when cut: cleavages and fissures.",
+   "It can be mistaken for tanzanite or blue sapphire; density and index tell them apart."
+  ]
+ },
+ "olivines": {
+  "name": "Olivines",
+  "chem": "Forsterite (magnesium) – fayalite (iron) series, (Mg,Fe)₂SiO₄ (orthorhombic)",
+  "intro": "Olivine is the series of minerals that makes up most of the Earth's mantle. The gem variety is peridot, an olive green that comes from the iron it naturally contains (it needs no impurity to be colored). It is found in lavas, and even in meteorites (pallasites).",
+  "points": [
+   "Biaxial, very strong birefringence (0.033-0.038): the edges of the back facets look doubled under a loupe.",
+   "Hardness 6.5-7, density 3.28-3.48, index 1.65-1.70.",
+   "Iron spectrum: three bands in the blue (near 453, 473 and 494 nm).",
+   "Sensitive to acids and knocks: to be protected in a piece of jewelry."
+  ]
+ },
+ "jades": {
+  "name": "Jades",
+  "chem": "Jadeite: sodium aluminum pyroxene. Nephrite: calcium magnesium amphibole",
+  "intro": "The word \"jade\" covers two different minerals. Jadeite, the more precious one, reaches its highest price in the imperial green colored by chromium. Nephrite, more widespread, is the ancient jade of China and New Zealand. They are aggregates of interlocking microscopic crystals, which makes them extremely tough: they resist knocks better than harder stones.",
+  "points": [
+   "Jadeite: hardness 6.5-7, density 3.3, index 1.66. Nephrite: hardness 6-6.5, density 2.9-3.0, index 1.61.",
+   "Aggregates: a vague reading on the refractometer, no pleochroism.",
+   "Jadeite shows a sharp line at 437 nm in the spectroscope.",
+   "Common treatments: bleaching, resin impregnation, dyeing (\"A\", \"B\" and \"C\" jade)."
+  ]
+ },
+ "serpentines-talc": {
+  "name": "Serpentines and talc",
+  "chem": "Hydrated magnesium silicates",
+  "intro": "These are soft ornamental stones, easy to carve. Bowenite is a compact, hard serpentine, a translucent pale green, often sold as a jade substitute. Steatite is massive talc, the softest of minerals: it can be scratched with a fingernail and feels greasy.",
+  "points": [
+   "Bowenite: hardness 5.5, index 1.55-1.57. Steatite: hardness 1, density 2.7-2.8.",
+   "Opaque to translucent aggregates, without pleochroism.",
+   "Steatite is recognized by its soapy feel.",
+   "Bowenite is told from jade by its lower hardness and lower density (2.5-2.7)."
+  ]
+ },
+ "ivoires": {
+  "name": "Ivories",
+  "chem": "Dentine: calcium phosphate and protein (collagen)",
+  "intro": "Ivory is the dentine of very developed teeth, tusks: elephant, mammoth (fossil), hippopotamus, walrus, narwhal. Each animal has its signature: elephant's Schreger lines form angles greater than 115° and mammoth's smaller ones, hippopotamus has a very fine grain, walrus a granular core, narwhal a spiral. Vegetable ivory (tagua) is a palm seed, not a tooth, which imitates ivory.",
+  "points": [
+   "Hardness 2.5-3, density 1.7-2.0, index 1.54: very light and soft.",
+   "Bluish-white fluorescence under long-wave UV.",
+   "The trade in elephant ivory has been banned since 1989 (CITES); mammoth ivory is legal in most countries, which is sometimes used to pass off fresh ivory.",
+   "Vegetable ivory is recognized by its network of small pores and the absence of Schreger lines."
+  ]
+ },
+ "cornes-ecailles": {
+  "name": "Horns and shells",
+  "chem": "Keratin, the material of nails and hair",
+  "intro": "Rhinoceros horn and tortoiseshell are keratin, like our nails: a soft, light organic material that can be worked hot. Tortoiseshell, with its mottled pattern, was used for combs and spectacle frames. Both materials are now banned from trade (CITES) to protect threatened species.",
+  "points": [
+   "Hardness 2.5, density 1.3, index about 1.55.",
+   "Opaque or translucent, with no crystalline structure.",
+   "Tortoiseshell is very often imitated by plastic, which fluoresces yellow under short-wave UV.",
+   "They are collector's items: no new pieces are bought any more."
+  ]
+ },
+ "ambre-jais": {
+  "name": "Amber and jet",
+  "chem": "Fossil organic materials",
+  "intro": "Amber is fossilized tree resin, tens of millions of years old: from the Baltic, the Dominican Republic or Burma (burmite). It sometimes keeps trapped insects. Jet is fossil wood turned into lignite, deep black. These are two \"gems\" born from living things, with no crystals.",
+  "points": [
+   "Amber: density 1.05-1.10, hardness 2-2.5, index 1.54; it floats in very salty water.",
+   "Jet: density 1.3, hardness 2.5-4, black; heated with a needle, it smells of coal.",
+   "Both become electrified by rubbing.",
+   "Amber fluoresces bluish white to yellow-green under long-wave UV; imitations in plastic or copal are common."
+  ]
+ },
+ "zoisites": {
+  "name": "Zoisites",
+  "chem": "Calcium aluminum silicate (orthorhombic)",
+  "intro": "Zoisite occurs in several varieties: tanzanite, a blue-violet discovered in 1967 in Tanzania and almost always heated, green to brownish zoisite, and pink thulite (which is not in the game). All have strong trichroism.",
+  "points": [
+   "Biaxial, index 1.69-1.70, density 3.35, hardness 6.5.",
+   "Tanzanite shows very marked trichroism: blue, violet, red-brown.",
+   "Heating (at 400-600 °C) turns tanzanite from brown to blue-violet.",
+   "Fragile stones: perfect cleavage in one direction."
+  ]
+ },
+ "opales": {
+  "name": "Opals",
+  "chem": "Hydrated silica, SiO₂·nH₂O (amorphous)",
+  "intro": "Opal is not a crystal: it is hydrated silica with no ordered structure, containing 3 to 20% water. Precious opal owes its play of color to a regular stacking of microscopic silica spheres that diffract light. Fire opal, orange to bright red, generally has no play of color.",
+  "points": [
+   "Isotropic, index 1.37-1.47, density 1.9-2.3, hardness 5.5-6.5.",
+   "Fragile: opal cracks if it dehydrates or suffers thermal shock.",
+   "The play of color changes with the viewing angle.",
+   "White to green fluorescence under UV, sometimes with phosphorescence."
+  ]
+ },
+ "perles": {
+  "name": "Pearls",
+  "chem": "Nacre: calcium carbonate (aragonite) and organic matter",
+  "intro": "A pearl forms inside a mollusc, in layers of nacre around a foreign body. Natural pearls are extremely rare; almost all those on the market are cultured: the pearl farmer inserts a nacre bead. There are saltwater pearls (Akoya from Japan, Tahiti, South Seas) and freshwater pearls (China).",
+  "points": [
+   "Hardness 2.5-4.5, density 2.6-2.85: soft and fragile to acids, perfumes and perspiration.",
+   "X-rays show the bead and tell a cultured pearl from a natural one.",
+   "Tahitian pearls are gray to black, with green, blue or aubergine overtones.",
+   "Many black pearls are dyed or irradiated."
+  ]
+ },
+ "corail": {
+  "name": "Coral",
+  "chem": "Magnesian calcite and organic matter",
+  "intro": "Precious coral is the calcareous skeleton of a colony of polyps, like the red coral of the Mediterranean or Japan's \"momo\". It is polished into cabochons, beads or carved branches. Its color ranges from white to pink and blood red.",
+  "points": [
+   "Hardness 3.5, density 2.6-2.7: soft, it scratches easily.",
+   "It effervesces in contact with an acid, like calcite.",
+   "Under the microscope: fine parallel striations and the wavy pattern of the skeleton.",
+   "Harvesting is regulated in many countries to protect the reefs."
+  ]
+ },
+ "spinelles": {
+  "name": "Spinels and relatives",
+  "chem": "Spinel: magnesium aluminate, MgAl₂O₄ (cubic)",
+  "intro": "Spinel was long mistaken for ruby: several famous \"rubies\" of the crown jewels are spinels. It exists in red (chromium), blue (iron or cobalt), pink, violet. Taaffeite, discovered in 1945 in a jeweler's shop in Dublin, is a related mineral, of a close formula and of extreme rarity.",
+  "points": [
+   "Spinel: cubic, so isotropic with no pleochroism, hardness 8, index 1.71-1.72, density 3.6.",
+   "Octahedral crystals, frequently twinned (the spinel twin is named after it).",
+   "The chromium spectrum of red spinel shows a group of lines in the red.",
+   "Synthetic cobalt blue spinel is a common look-alike: it reacts bright red under the Chelsea filter."
+  ]
+ },
+ "chrysoberyls": {
+  "name": "Chrysoberyls",
+  "chem": "Beryllium aluminum oxide, BeAl₂O₄ (orthorhombic)",
+  "intro": "Despite its name, chrysoberyl is not a beryl: it is an oxide, much harder (8.5). Its best-known variety is alexandrite, which changes color: green in daylight, red under an incandescent lamp, thanks to chromium. The chatoyant variety, cat's eye, is also highly prized.",
+  "points": [
+   "The third hardest natural mineral after diamond and corundum.",
+   "Biaxial, index 1.745-1.755, density 3.7, trichroism.",
+   "Spectrum: band at 444 nm (iron); alexandrite: chromium lines in the red.",
+   "Wheel-shaped twins (trillings); synthetic alexandrite is very common."
+  ]
+ },
+ "diamants": {
+  "name": "Diamonds",
+  "chem": "Pure carbon (cubic)",
+  "intro": "Diamond is carbon crystallized under high pressure, the hardest of minerals (10) with the strongest luster and a remarkable fire. There are also laboratory-grown diamonds, chemically identical: HPHT (high pressure and high temperature, imitating natural formation) and CVD (chemical vapor deposition, layer by layer).",
+  "points": [
+   "Index 2.417, density 3.52, isotropic, hardness 10.",
+   "Excellent heat conductor: the thermal tester recognizes it (so does moissanite).",
+   "Fluorescence: natural mostly blue, weaker under short wave; HPHT and CVD stronger under short wave.",
+   "Lab-grown diamonds are spotted by fluorescence, growth structure and laboratory instruments."
+  ]
+ },
+ "fluorites": {
+  "name": "Fluorites",
+  "chem": "Calcium fluoride, CaF₂ (cubic)",
+  "intro": "Fluorite exists in almost every color (except red and black), often in bands. Its name gave the word \"fluorescence\". Blue John, a fluorite with purple, white and yellow bands from a single Derbyshire deposit, is famous.",
+  "points": [
+   "Cubic, isotropic, index 1.434: the lowest of the common gems.",
+   "Hardness 4, perfect octahedral cleavage: very fragile, to be handled with care.",
+   "Blue or green fluorescence under UV, stronger under long wave.",
+   "A collector's stone rather than a jewelry stone."
+  ]
+ },
+ "pyroxenes": {
+  "name": "Pyroxenes",
+  "chem": "Chain silicates (monoclinic)",
+  "intro": "Pyroxenes are chain silicates. Chrome diopside is an intense green due to chromium. Kunzite, pink-lilac, is the gem variety of spodumene. Jadeite (of the jade family) is also a pyroxene.",
+  "points": [
+   "Two cleavages almost at right angles: delicate cutting, stones fragile to knocks.",
+   "Biaxial, indices 1.66-1.68.",
+   "Kunzite: strong pleochroism, orange fluorescence, and a color that fades in prolonged light.",
+   "Chrome diopside: hardness 5.5-6, chromium spectrum."
+  ]
+ },
+ "carbonates": {
+  "name": "Carbonates",
+  "chem": "Calcite: calcium carbonate. Rhodochrosite: manganese. Malachite: copper",
+  "intro": "These soft minerals are carbonates: colorless to honey-yellow calcite, pink to red banded rhodochrosite (the \"Inca rose\"), banded green malachite. They fizz on contact with a dilute acid, which serves as a test.",
+  "points": [
+   "Hardness 3-4, very sensitive to acids and knocks.",
+   "Huge birefringence (calcite 0.172, rhodochrosite 0.22, malachite 0.25): the image is seen doubled through a calcite crystal.",
+   "Rarely set in rings: rather cabochons, beads and objects.",
+   "Malachite and rhodochrosite are generally opaque to translucent, in concentric bands."
+  ]
+ },
+ "sulfates": {
+  "name": "Sulfates",
+  "chem": "Celestine: strontium sulfate. Gypsum and selenite: hydrated calcium sulfate",
+  "intro": "Gem sulfates are very soft (2 to 3.5) and cleavable. Celestine is pale blue like the sky; gypsum is white, silky or pearly; selenite is its transparent variety, in large crystals. They are not cut: they are kept as crystals or fragments.",
+  "points": [
+   "Hardness 2 (gypsum, selenite) and 3-3.5 (celestine): gypsum can be scratched with a fingernail.",
+   "Biaxial, perfect cleavage.",
+   "Density: gypsum 2.3, celestine 3.95.",
+   "Not to be wetted or heated: gypsum dehydrates and degrades."
+  ]
+ },
+ "aluminosilicates": {
+  "name": "Aluminum silicates (Al₂SiO₅)",
+  "chem": "Al₂SiO₅: same formula, different structures",
+  "intro": "Andalusite and kyanite have the same chemical formula but crystallize differently depending on the pressure and temperature at which they formed: they are polymorphs (sillimanite is a third one). Andalusite shows a spectacular green-red-brown trichroism. Kyanite is blue, in elongated blades.",
+  "points": [
+   "Biaxial, index 1.63-1.64 (andalusite) and 1.72 (kyanite).",
+   "Kyanite: hardness changes with direction (4-5 along the length, 6-7 across): a rare anisotropy of hardness.",
+   "Andalusite: extreme trichroism; the chiastolite variety shows a black cross.",
+   "Density: 3.17 (andalusite) and 3.68 (kyanite)."
+  ]
+ },
+ "feldspathoides": {
+  "name": "Feldspathoids",
+  "chem": "Silica-poor aluminum silicates with sodium",
+  "intro": "These minerals resemble feldspars but contain less silica. Sodalite is a deep blue veined with white; its hackmanite variety changes color in light and fluoresces orange. Lapis lazuli is a rock made mostly of lazurite, with white calcite and flecks of golden pyrite.",
+  "points": [
+   "Cubic, isotropic, index 1.48-1.50.",
+   "Hardness 5-6, density 2.3 (sodalite) to 2.8 (lapis lazuli).",
+   "Lapis contains golden pyrite, sodalite does not: that is how to tell them apart.",
+   "Lapis is a rock, so an aggregate of minerals."
+  ]
+ },
+ "metalliques": {
+  "name": "Hematite, pyrite and sphalerite",
+  "chem": "Hematite: iron oxide. Pyrite: iron sulfide. Sphalerite: zinc sulfide",
+  "intro": "These minerals with a metallic or almost adamantine luster are oxides and sulfides. Gray-black hematite leaves a red streak, pyrite, \"fool's gold\", a greenish-black streak. Sphalerite, red to orange, is transparent but so soft and cleavable that it is cut with great care: its dispersion is nearly four times that of diamond.",
+  "points": [
+   "Hematite: hardness 6, density 5.15. Pyrite: hardness 6-6.5, density 5.0. Sphalerite: hardness 3.5-4, density 4.05.",
+   "Hematite and pyrite are opaque: no measurable index on the refractometer.",
+   "To tell pyrite from gold: gold is soft, malleable and leaves a yellow streak.",
+   "Sphalerite has six directions of cleavage."
+  ]
+ },
+ "phosphates": {
+  "name": "Phosphates",
+  "chem": "Apatite: calcium phosphate. Turquoise: hydrated copper aluminum phosphate",
+  "intro": "Apatite, blue-green, owes its name to the Greek for \"to deceive\": it is mistaken for other stones. Turquoise, opaque, blue to green, has been used since antiquity. Porous, it is often stabilized with resin to strengthen its structure.",
+  "points": [
+   "Apatite: hardness 5 (the reference mineral of hardness 5), index 1.63-1.64, rare-earth spectrum.",
+   "Turquoise: hardness 5-6, density 2.6-2.9, index 1.61-1.65.",
+   "Turquoise fears perfumes, grease and heat.",
+   "Veinlets of host rock give turquoise its \"spider web\"."
+  ]
+ },
+ "borates": {
+  "name": "Rare borates",
+  "chem": "Painite: calcium zirconium aluminum borate. Sinhalite: magnesium aluminum borate",
+  "intro": "Two gems with surprising discovery stories. Sinhalite was long mistaken for brown peridot, until it was recognized as a distinct species in 1952. Painite, found in Burma, was for decades the rarest gem mineral in the world, with barely a few known crystals.",
+  "points": [
+   "Painite: hardness 8, density 4.01, index 1.79-1.82, uniaxial.",
+   "Sinhalite: hardness 6.5-7, density 3.48, index 1.67-1.71, biaxial, strong birefringence (0.038).",
+   "Sinhalite is mistaken for brown peridot, but its density and birefringence are different.",
+   "Collector's stones."
+  ]
+ },
+ "verres": {
+  "name": "Glasses",
+  "chem": "Silica without crystalline structure",
+  "intro": "A glass is a solid without crystals, formed by very rapid cooling. There are natural glasses: obsidian (cooled lava), snowflake obsidian (with white spherules of cristobalite), moldavite (a glass born from a meteorite impact in Bohemia 15 million years ago). Artificial glass, for its part, is the oldest imitation of a precious stone.",
+  "points": [
+   "Isotropic, characteristic conchoidal (shell-like) fracture.",
+   "Index 1.48-1.54 for natural glasses; artificial glass ranges from 1.45 to above 1.70.",
+   "Round bubbles and flow striae betray an artificial glass.",
+   "With the Chelsea filter and the spectroscope, a colored glass betrays its colorant (cobalt, selenium, gold…)."
+  ]
+ },
+ "simulants": {
+  "name": "Diamond simulants",
+  "chem": "Man-made crystals",
+  "intro": "These crystals do not exist in nature: they were made to look like diamond. Strontium titanate (fabulite) and GGG led the way, then cubic zirconia (CZ) became the most common simulant. Synthetic moissanite is the hardest to tell apart, because it conducts heat like diamond.",
+  "points": [
+   "CZ: density 5.8, index 2.16. GGG: density 7.05. YAG: 4.57. Strontium titanate: 5.13, dispersion stronger than diamond.",
+   "Moissanite is doubly refractive (0.043): the edges look doubled. Diamond is isotropic.",
+   "On a thermal tester, moissanite reacts like diamond; it is told apart with an electrical tester.",
+   "Many are softer than diamond and scratch with wear."
+  ]
+ }
+}

@@ -1,0 +1,274 @@
+{
+ "classes": [
+  {
+   "id": "elements-natifs",
+   "species": [
+    "Diamant"
+   ],
+   "name": "Éléments natifs",
+   "chem": "Minéraux formés d'un seul élément chimique",
+   "intro": "Un élément natif est un minéral qui n'est fait que d'un seul élément : le carbone du diamant, mais aussi l'or, l'argent, le cuivre, le soufre ou le graphite. Le diamant est la gemme native de loin la plus importante. Il a le même élément que le graphite des crayons, mais une structure toute différente : c'est ce qui le rend si dur.",
+   "points": [
+    "Le diamant est du carbone pur cristallisé dans le système cubique (dureté 10, indice 2,417).",
+    "Le graphite, du carbone aussi, est l'un des minéraux les plus tendres.",
+    "Les diamants de laboratoire (HPHT, CVD) sont rangés dans « Synthèses et imitations »."
+   ]
+  },
+  {
+   "id": "sulfures",
+   "species": [
+    "Pyrite",
+    "Sphalerite"
+   ],
+   "name": "Sulfures et sulfosels",
+   "chem": "Un métal combiné au soufre",
+   "intro": "Les sulfures sont des composés de soufre et d'un ou plusieurs métaux. Ils ont souvent un éclat métallique et une densité élevée. La pyrite, ou « or des fous », est un sulfure de fer. La sphalérite, un sulfure de zinc, est transparente et d'une dispersion très forte, mais si tendre et clivable qu'elle est surtout une pierre de collection.",
+   "points": [
+    "Éclat métallique (pyrite) ou adamantin (sphalérite).",
+    "Densité élevée : 4,0 à 5,0 pour les deux espèces du jeu.",
+    "Une trace de couleur sur la porcelaine (la « poudre ») aide à les reconnaître.",
+    "Beaucoup de sulfures sont des minerais : le zinc vient de la sphalérite."
+   ]
+  },
+  {
+   "id": "halogenures",
+   "species": [
+    "Fluorite",
+    "Fluorite_Bandee",
+    "Fluorite_Bleue",
+    "Fluorite_Blue_John",
+    "Fluorite_Jaune",
+    "Fluorite_Verte"
+   ],
+   "name": "Halogénures",
+   "chem": "Un métal combiné au fluor, au chlore, au brome ou à l'iode",
+   "intro": "Les halogénures sont des sels, comme le sel de cuisine (halite). Le seul représenté ici est la fluorite, du fluorure de calcium, qui existe dans presque toutes les couleurs. Ce sont des minéraux tendres, qui se clivent facilement en formes régulières.",
+   "points": [
+    "Fluorite : dureté 4, indice 1,434 (le plus bas des gemmes courantes), cubique.",
+    "Fluorescence bleue ou verte : le mot « fluorescence » vient de la fluorite.",
+    "Clivage octaédrique parfait : la pierre éclate en octaèdres.",
+    "Pierres de collection plutôt que de bijou."
+   ]
+  },
+  {
+   "id": "oxydes",
+   "species": [
+    "Quartz",
+    "Amethyste",
+    "Ametrine",
+    "Citrine",
+    "Prasiolite",
+    "Quartz_Fume",
+    "Quartz_Rose",
+    "Agate",
+    "Cornaline",
+    "Oeil_de_Tigre",
+    "Opale_Noble",
+    "Opale_De_Feu",
+    "Chrysoberyl",
+    "Chrysoberyl_Alexandrite",
+    "Spinelle",
+    "Spinelle_Bleu",
+    "Taaffeite",
+    "Hematite",
+    "Corindon_Rubis",
+    "Padparadscha",
+    "Saphir_Bleu",
+    "Saphir_Incolore",
+    "Saphir_Jaune",
+    "Saphir_Orange",
+    "Saphir_Rose",
+    "Saphir_Vert",
+    "Saphir_Violet"
+   ],
+   "name": "Oxydes et hydroxydes",
+   "chem": "Un métal (ou le silicium) combiné à l'oxygène ou au groupe OH",
+   "intro": "Les oxydes sont des composés d'oxygène et d'un ou deux métaux ; les hydroxydes contiennent en plus le groupe OH. Cette classe donne beaucoup des gemmes les plus dures : le corindon (rubis et saphirs), le chrysobéryl (dont l'alexandrite), le spinelle. En classification de Strunz, la silice (quartz, calcédoines, opale) est rangée ici, alors que beaucoup d'ouvrages la placent avec les silicates.",
+   "points": [
+    "Dureté très élevée pour les oxydes durs : corindon 9, chrysobéryl 8,5, spinelle 8.",
+    "Quartz et opale : de la silice (SiO₂), un oxyde de silicium.",
+    "Les couleurs viennent souvent de traces de chrome (rouge), de fer et de titane (bleu).",
+    "Les rubis et saphirs de synthèse sont rangés dans « Synthèses et imitations »."
+   ]
+  },
+  {
+   "id": "carbonates",
+   "species": [
+    "Calcite",
+    "Rhodocrosite",
+    "Malachite"
+   ],
+   "name": "Carbonates",
+   "chem": "Minéraux contenant le groupe CO₃",
+   "intro": "Les carbonates sont tendres (dureté 3 à 4) et réagissent aux acides : une goutte d'acide dilué les fait bouillonner. La calcite incolore, la rhodocrosite rose en bandes et la malachite verte rubanée en font partie. L'aragonite, qui forme la nacre des perles, est aussi un carbonate de calcium.",
+   "points": [
+    "Dureté 3-4, très sensibles aux acides et aux chocs.",
+    "Biréfringence très forte : l'image se dédouble à travers un cristal de calcite.",
+    "Rarement montés en bagues : cabochons, perles, objets.",
+    "Les perles et le corail contiennent du carbonate de calcium, mais sont rangés avec les matières organiques."
+   ]
+  },
+  {
+   "id": "borates",
+   "species": [
+    "Painite",
+    "Sinhalite"
+   ],
+   "name": "Borates",
+   "chem": "Minéraux contenant le bore (groupe BO₃)",
+   "intro": "Les borates sont une classe peu représentée parmi les gemmes, mais qui en compte de très rares. La sinhalite a longtemps été prise pour du péridot brun. La painite, découverte en Birmanie, a été pendant des décennies le minéral gemme le plus rare du monde.",
+   "points": [
+    "Painite : dureté 8, densité 4,01 ; sinhalite : dureté 6,5-7, densité 3,48.",
+    "Forte biréfringence pour la sinhalite (0,038), qui la distingue du péridot.",
+    "Pierres de collectionneur."
+   ]
+  },
+  {
+   "id": "sulfates",
+   "species": [
+    "Celestine",
+    "Gypse",
+    "Selenite"
+   ],
+   "name": "Sulfates",
+   "chem": "Minéraux contenant le groupe SO₄",
+   "intro": "Les sulfates gemmes sont très tendres (dureté 2 à 3,5) et clivables. La célestine, un sulfate de strontium, est bleu pâle comme le ciel. Le gypse, un sulfate de calcium hydraté, est blanc ; sa variété transparente en grands cristaux est la sélénite. On ne les taille presque pas : on les garde en cristal.",
+   "points": [
+    "Dureté 2 pour le gypse : on le raye à l'ongle.",
+    "Clivage parfait : les cristaux se détachent en lames.",
+    "À ne pas chauffer ni mouiller : le gypse se déshydrate et se dégrade."
+   ]
+  },
+  {
+   "id": "phosphates",
+   "species": [
+    "Apatite",
+    "Turquoise",
+    "Turquoise_Stabilisee"
+   ],
+   "name": "Phosphates, arséniates et vanadates",
+   "chem": "Minéraux contenant le groupe PO₄",
+   "intro": "Les phosphates sont les composés de l'acide phosphorique. L'apatite est le minéral de référence de la dureté 5 sur l'échelle de Mohs ; la turquoise, un phosphate de cuivre et d'aluminium, est opaque, bleu à vert, et utilisée depuis l'Antiquité. L'os et les dents sont aussi faits d'un phosphate de calcium proche de l'apatite.",
+   "points": [
+    "Apatite : dureté 5, indice 1,63-1,64, spectre des terres rares.",
+    "Turquoise : opaque, poreuse, souvent stabilisée à la résine.",
+    "La turquoise craint les parfums, les graisses et la chaleur."
+   ]
+  },
+  {
+   "id": "silicates",
+   "species": [
+    "Aigue_Marine",
+    "Beryl_Bleu",
+    "Beryl_Rouge",
+    "Emeraude",
+    "Goshenite",
+    "Heliodore",
+    "Morganite",
+    "Pezzottaite",
+    "Grenat_Almandin",
+    "Grenat_Demantoide",
+    "Grenat_Hessonite",
+    "Grenat_Hydrogrossulaire",
+    "Grenat_Malaya",
+    "Grenat_Pyrope",
+    "Grenat_Rhodolite",
+    "Grenat_Spessartite",
+    "Grenat_Tsavorite",
+    "Grenat_Uvarovite",
+    "Tourmaline_Indicolite",
+    "Tourmaline_Melon_Eau",
+    "Tourmaline_Paraiba",
+    "Tourmaline_Rose",
+    "Tourmaline_Schorl",
+    "Labradorite",
+    "Orthose",
+    "Pierre_De_Lune",
+    "Scapolite",
+    "Iolite",
+    "Iolite_Bloodshot",
+    "Peridot",
+    "Jade_Jadeite",
+    "Jade_Nephrite",
+    "Serpentine_Bowenite",
+    "Steatite",
+    "Zoisite",
+    "Tanzanite",
+    "Diopside_Chromifere",
+    "Kunzite",
+    "Andalousite",
+    "Kyanite",
+    "Sodalite",
+    "Lapis_Lazuli",
+    "Prehnite",
+    "Rhodonite",
+    "Sphene",
+    "Topaze",
+    "Zircon",
+    "Obsidienne",
+    "Obsidienne_Flocons",
+    "Moldavite"
+   ],
+   "name": "Silicates",
+   "chem": "Minéraux construits sur le groupe SiO₄ (silicium et oxygène)",
+   "intro": "Les silicates sont la plus grande classe de minéraux : ils forment presque toute la croûte terrestre et près de la moitié des gemmes. La brique de base est un tétraèdre de silicium entouré de quatre oxygènes ; la façon dont ces tétraèdres s'assemblent donne les grandes familles : tétraèdres isolés (grenats, péridot, topaze, zircon), anneaux (béryls, tourmalines, cordiérite), chaînes (jades, pyroxènes), feuillets (talc, serpentines), réseau (feldspaths, sodalite). Les verres naturels (obsidienne, moldavite), qui n'ont pas de cristaux, sont rangés ici faute d'une meilleure place.",
+   "points": [
+    "Très grande variété : dureté de 1 (talc) à 8 (topaze, béryl), indices de 1,48 à 2,0.",
+    "La plupart des silicates sont des cristaux ; les jades et la plupart des roches sont des agrégats de cristaux microscopiques.",
+    "Les couleurs viennent d'impuretés de fer, chrome, manganèse, vanadium ou cuivre.",
+    "Les grandes familles (béryls, grenats…) se retrouvent en dessous."
+   ]
+  },
+  {
+   "id": "organiques",
+   "species": [
+    "Ivoire_Elephant",
+    "Ivoire_Hippopotame",
+    "Ivoire_Mammouth",
+    "Ivoire_Morse",
+    "Defense_Narval",
+    "Ivoire_Vegetal",
+    "Corne_Rhinoceros",
+    "Ecaille_Tortue",
+    "Ambre",
+    "Jais",
+    "Perle",
+    "Perle_Tahiti",
+    "Corail"
+   ],
+   "name": "Composés organiques",
+   "chem": "Matières fabriquées par des êtres vivants",
+   "intro": "Ces gemmes viennent du vivant : la dentine des défenses (ivoires), la nacre des mollusques (perles), le squelette des polypes (corail), la kératine des cornes et des écailles, la résine d'arbre fossile (ambre) et le bois fossile (jais). Ce ne sont pas des minéraux au sens strict, mais elles figurent dans la classe 10 de la classification de Strunz et dans toutes les collections de gemmologie.",
+   "points": [
+    "Tendres (dureté 1,5 à 4,5) et légères (densité 1,05 à 2,9).",
+    "Sensibles aux acides, à la chaleur, aux parfums et à la sueur.",
+    "Souvent sans cristaux : pas de pléochroïsme.",
+    "Le commerce de nombreuses espèces (ivoire d'éléphant, écaille de tortue, corne de rhinocéros) est interdit ou réglementé (CITES)."
+   ]
+  },
+  {
+   "id": "syntheses",
+   "species": [
+    "Corindon_Synthetique_Rubis",
+    "Corindon_Synthetique_Saphir",
+    "Diamant_Synthetique_CVD",
+    "Diamant_Synthetique_HPHT",
+    "CZ",
+    "GGG",
+    "YAG",
+    "Titanate_Strontium",
+    "Moissanite_Synthetique",
+    "Verre"
+   ],
+   "name": "Synthèses et imitations",
+   "chem": "Pierres fabriquées par l'homme",
+   "intro": "Une synthèse a la même composition et la même structure que la pierre naturelle : un rubis de synthèse est du vrai corindon, un diamant HPHT ou CVD est du vrai diamant. Une imitation (ou simulant) n'est qu'une pierre qui ressemble à une autre : la zircone cubique, le GGG, le YAG, le titanate de strontium ou le verre n'ont pas la composition du diamant ou du rubis. On les distingue avec des instruments : inclusions, fluorescence, spectre, conductivité.",
+   "points": [
+    "Rubis et saphirs de synthèse (Verneuil, depuis 1900) : bulles de gaz courbes et stries de croissance.",
+    "Diamants de laboratoire : fluorescence plus forte en onde courte, structure de croissance.",
+    "Simulants du diamant : densité très différente (CZ 5,8 ; GGG 7,05), souvent plus tendres. La moissanite synthétique conduit la chaleur comme le diamant.",
+    "Le verre est la plus ancienne imitation : bulles rondes et stries d'écoulement."
+   ]
+  }
+ ]
+}
