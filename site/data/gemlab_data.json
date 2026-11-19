@@ -5570,24 +5570,36 @@
       "opticalCharacter": "Uniaxe (biréfringent, réseau hexagonal).",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
-      "birefringence": 0.022,
+      "birefringence": 0.029,
       "isQuartzFamily": false,
       "isPolycrystalline": false,
       "isThermallyConductiveLikeDiamond": false,
       "isElectricallyConductive": false,
-      "absorptionSpectrum": "Raies d'absorption marquées dans le rouge et le bleu, liées à des traces de fer et de chrome.",
+      "absorptionSpectrum": "Bandes d'absorption vers 553, 450 et 402 nm, avec un épaulement vers 608 nm, dues au chrome et au vanadium (spectre proche de celui de la tsavorite).",
       "spectrumLines": [
         {
-          "wavelengthNm": 445,
-          "widthNm": 6,
-          "depth": 1,
-          "edgeNm": 0
+          "wavelengthNm": 553,
+          "widthNm": 20,
+          "depth": 0.7,
+          "edgeNm": 6
         },
         {
-          "wavelengthNm": 635,
-          "widthNm": 6,
-          "depth": 1,
-          "edgeNm": 0
+          "wavelengthNm": 450,
+          "widthNm": 14,
+          "depth": 0.8,
+          "edgeNm": 4
+        },
+        {
+          "wavelengthNm": 402,
+          "widthNm": 12,
+          "depth": 0.6,
+          "edgeNm": 3
+        },
+        {
+          "wavelengthNm": 608,
+          "widthNm": 16,
+          "depth": 0.35,
+          "edgeNm": 5
         }
       ],
       "inclusions": "Cristaux minéraux inclus rarement observés ; fines stries de croissance parfois visibles.",
@@ -5621,7 +5633,8 @@
           "habit": "hex_tabular",
           "weight": 15
         }
-      ]
+      ],
+      "spectrumFromJson": true
     },
     {
       "id": "Peridot",
@@ -5836,7 +5849,7 @@
       "iconColor": "#BF3359",
       "iconFacetColor": "#E66B8C",
       "refractiveIndex": 1.615,
-      "density": 3.05,
+      "density": 3.1,
       "hardness": 8,
       "lengthMm": 6.5,
       "widthMm": 5,
@@ -6393,7 +6406,7 @@
       "iconColor": "#D96673",
       "iconFacetColor": "#F29EA6",
       "refractiveIndex": 1.6,
-      "density": 3.75,
+      "density": 3.65,
       "hardness": 3.75,
       "lengthMm": 8.5,
       "widthMm": 7,
@@ -9931,6 +9944,38 @@
           }
         ],
         "variant": true
+      },
+      {
+        "key": "Painite",
+        "source": "Corrections 2026 d'après la littérature (voir Docs/VERIF_PROPRIETES.md)",
+        "description": "Bandes d'absorption vers 553, 450 et 402 nm, avec un épaulement vers 608 nm, dues au chrome et au vanadium (spectre proche de celui de la tsavorite).",
+        "lines": [
+          {
+            "wavelengthNm": 553,
+            "widthNm": 20,
+            "depth": 0.7,
+            "edgeNm": 6
+          },
+          {
+            "wavelengthNm": 450,
+            "widthNm": 14,
+            "depth": 0.8,
+            "edgeNm": 4
+          },
+          {
+            "wavelengthNm": 402,
+            "widthNm": 12,
+            "depth": 0.6,
+            "edgeNm": 3
+          },
+          {
+            "wavelengthNm": 608,
+            "widthNm": 16,
+            "depth": 0.35,
+            "edgeNm": 5
+          }
+        ],
+        "variant": false
       }
     ]
   },

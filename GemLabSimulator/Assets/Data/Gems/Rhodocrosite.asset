@@ -20,7 +20,7 @@ MonoBehaviour:
   iconColor: {r: 0.85, g: 0.4, b: 0.45, a: 1}
   iconFacetColor: {r: 0.95, g: 0.62, b: 0.65, a: 1}
   refractiveIndex: 1.6
-  density: 3.75
+  density: 3.65
   hardness: 3.75
   lengthMm: 8.5
   widthMm: 7

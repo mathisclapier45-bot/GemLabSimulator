@@ -39,7 +39,7 @@ MonoBehaviour:
   fluorescenceShortWave: Inerte sous UV courte onde.
   opticalCharacter: "Uniaxe (bir\xE9fringent, r\xE9seau hexagonal)."
   opticalCharacterClass: 1
-  birefringence: 0.022
+  birefringence: 0.029
   isQuartzFamily: 0
   isPolycrystalline: 0
   isThermallyConductiveLikeDiamond: 0

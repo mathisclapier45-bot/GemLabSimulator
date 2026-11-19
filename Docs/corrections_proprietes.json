@@ -1,0 +1,107 @@
+{
+ "note": "Corrections de propriétés proposées (rapport : Docs/VERIF_PROPRIETES.md). apply=false : facultatif ou décision à prendre. Appliquer avec tools/apply_property_corrections.py.",
+ "corrections": [
+  {
+   "id": "P1",
+   "apply": true,
+   "type": "asset_value",
+   "espece": "Painite",
+   "niveau": "hors plage",
+   "pourquoi": "Biréfringence de la painite : environ 0,029 (nω 1,816, nε 1,787). Le jeu avait 0,022.",
+   "file": "Data/Gems/Painite.asset",
+   "field": "birefringence",
+   "old": "0.022",
+   "new": "0.029"
+  },
+  {
+   "id": "P2",
+   "apply": true,
+   "type": "asset_value",
+   "espece": "Pezzottaite",
+   "niveau": "hors plage",
+   "pourquoi": "Densité de la pezzottaïte : 3,09 à 3,13 selon les sources. Le jeu avait 3,05.",
+   "file": "Data/Gems/Pezzottaite.asset",
+   "field": "density",
+   "old": "3.05",
+   "new": "3.10"
+  },
+  {
+   "id": "P3",
+   "apply": true,
+   "type": "asset_value",
+   "espece": "Rhodocrosite",
+   "niveau": "hors plage",
+   "pourquoi": "Densité de la rhodocrosite : 3,40 à 3,71 selon les sources (3,45-3,70 le plus courant). Le jeu avait 3,75.",
+   "file": "Data/Gems/Rhodocrosite.asset",
+   "field": "density",
+   "old": "3.75",
+   "new": "3.65"
+  },
+  {
+   "id": "S1",
+   "apply": true,
+   "type": "spectrum_entry",
+   "espece": "Painite",
+   "niveau": "à revoir",
+   "pourquoi": "Spectre de la painite (étude de 1986) : bandes à 553, 450 et 402 nm avec un épaulement vers 608 nm, dues au chrome et au vanadium. Le jeu avait deux raies à 445 et 635 nm attribuées au fer et au chrome. Une entrée dans spectra.json remplace les raies de l'asset.",
+   "entry": {
+    "key": "Painite",
+    "source": "Corrections 2026 d'après la littérature (voir Docs/VERIF_PROPRIETES.md)",
+    "description": "Bandes d'absorption vers 553, 450 et 402 nm, avec un épaulement vers 608 nm, dues au chrome et au vanadium (spectre proche de celui de la tsavorite).",
+    "lines": [
+     {
+      "wavelengthNm": 553,
+      "widthNm": 20,
+      "depth": 0.7,
+      "edgeNm": 6
+     },
+     {
+      "wavelengthNm": 450,
+      "widthNm": 14,
+      "depth": 0.8,
+      "edgeNm": 4
+     },
+     {
+      "wavelengthNm": 402,
+      "widthNm": 12,
+      "depth": 0.6,
+      "edgeNm": 3
+     },
+     {
+      "wavelengthNm": 608,
+      "widthNm": 16,
+      "depth": 0.35,
+      "edgeNm": 5
+     }
+    ]
+   }
+  },
+  {
+   "id": "D1",
+   "apply": false,
+   "type": "asset_text",
+   "espece": "Diopside_Chromifere",
+   "niveau": "nuance",
+   "pourquoi": "Le pléochroïsme du diopside chromifère est faible à modéré dans la littérature ; le jeu dit « marqué ». Facultatif.",
+   "file": "Data/Gems/Diopside_Chromifere.asset",
+   "old": "selon l'axe (marqu\\xE9).",
+   "new": "selon l'axe (faible \\xE0 mod\\xE9r\\xE9)."
+  },
+  {
+   "id": "S2",
+   "apply": false,
+   "type": "note",
+   "espece": "Spinelle_Bleu",
+   "niveau": "décision",
+   "pourquoi": "Le spectre « spinelle bleu (cobalt) » vient d'une planche du diplôme et sert de référence cobalt dans le spectroscope. Un spinelle bleu naturel coloré par le fer montre plutôt une bande vers 457-460 nm (GIA). Distinguer les deux demande une entrée de plus (par exemple Spinelle_Bleu_Synthetique pour le cobalt) et un petit changement dans SpectrumLibrary.EntryFor : pas appliqué, à toi de décider."
+  },
+  {
+   "id": "Q1",
+   "apply": false,
+   "type": "note",
+   "espece": "Calcite",
+   "niveau": "à confirmer",
+   "pourquoi": "La calcite est marquée pléochroïque (« faible, selon la couleur ») mais aucune source ne le confirme ; elle est très biréfringente. À vérifier dans le cours avant de changer le champ pleochroic."
+  }
+ ]
+}
