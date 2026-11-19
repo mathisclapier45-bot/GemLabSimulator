@@ -56,6 +56,9 @@ T = {
  "Grenat_Hessonite": GARNET("Ca₃Al₂(SiO₄)₃", "Silicate de calcium et d'aluminium (grossulaire)"),
  "Grenat_Hydrogrossulaire": GARNET("Ca₃Al₂(SiO₄)₃₋ₓ(OH)₄ₓ", "Grossulaire où des groupes OH remplacent des silicates"),
  "Grenat_Malaya": GARNET("(Mg,Mn,Ca)₃Al₂(SiO₄)₃", "Mélange de pyrope et de spessartite"),
+ "Saphir_Change_Couleur": ("trigonal", "Al₂O₃ (Cr,V)", "Oxyde d'aluminium (corindon) coloré par le chrome et le vanadium"),
+ "Grenat_Grossulaire": GARNET("Ca₃Al₂(SiO₄)₃", "Silicate de calcium et d'aluminium (grossulaire)"),
+ "Grenat_Andradite": GARNET("Ca₃Fe₂(SiO₄)₃", "Silicate de calcium et de fer (andradite)"),
  "Grenat_Mali": GARNET("Ca₃(Al,Fe)₂(SiO₄)₃", "Mélange de grossulaire et d'andradite"),
  "Grenat_Topazolite": GARNET("Ca₃Fe₂(SiO₄)₃", "Silicate de calcium et de fer (andradite jaune)"),
  "Grenat_Pyrope_Chromifere": GARNET("Mg₃(Al,Cr)₂(SiO₄)₃", "Pyrope coloré par le chrome"),
@@ -127,6 +130,9 @@ T = {
 def main():
     data = json.load(open(Path(__file__).resolve().parent.parent / "data" / "gemlab_data.json", encoding="utf-8"))
     ids = [s["id"] for s in data["species"]]
+    extra_path = Path(__file__).resolve().parent.parent / "data" / "extra_species.json"
+    if extra_path.exists():                       # species of the site that the game data does not have (yet)
+        ids += [e["id"] for e in json.load(open(extra_path, encoding="utf-8"))["species"] if e["id"] not in ids]
     missing = [i for i in ids if i not in T]
     extra = [k for k in T if k not in ids]
     if missing:

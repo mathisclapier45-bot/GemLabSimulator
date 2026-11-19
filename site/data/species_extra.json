@@ -184,10 +184,25 @@
   "formula": "Fe₃Al₂(SiO₄)₃",
   "note": "Silicate de fer et d'aluminium"
  },
+ "Grenat_Andradite": {
+  "system": "cubic",
+  "formula": "Ca₃Fe₂(SiO₄)₃",
+  "note": "Silicate de calcium et de fer (andradite)"
+ },
+ "Grenat_Change_Couleur": {
+  "system": "cubic",
+  "formula": "(Mg,Mn)₃(Al,V,Cr)₂(SiO₄)₃",
+  "note": "Mélange de pyrope et de spessartite, avec vanadium et chrome"
+ },
  "Grenat_Demantoide": {
   "system": "cubic",
   "formula": "Ca₃Fe₂(SiO₄)₃",
   "note": "Silicate de calcium et de fer (andradite)"
+ },
+ "Grenat_Grossulaire": {
+  "system": "cubic",
+  "formula": "Ca₃Al₂(SiO₄)₃",
+  "note": "Silicate de calcium et d'aluminium (grossulaire)"
  },
  "Grenat_Hessonite": {
   "system": "cubic",
@@ -204,10 +219,20 @@
   "formula": "(Mg,Mn,Ca)₃Al₂(SiO₄)₃",
   "note": "Mélange de pyrope et de spessartite"
  },
+ "Grenat_Mali": {
+  "system": "cubic",
+  "formula": "Ca₃(Al,Fe)₂(SiO₄)₃",
+  "note": "Mélange de grossulaire et d'andradite"
+ },
  "Grenat_Pyrope": {
   "system": "cubic",
   "formula": "Mg₃Al₂(SiO₄)₃",
   "note": "Silicate de magnésium et d'aluminium"
+ },
+ "Grenat_Pyrope_Chromifere": {
+  "system": "cubic",
+  "formula": "Mg₃(Al,Cr)₂(SiO₄)₃",
+  "note": "Pyrope coloré par le chrome"
  },
  "Grenat_Rhodolite": {
   "system": "cubic",
@@ -218,6 +243,11 @@
   "system": "cubic",
   "formula": "Mn₃Al₂(SiO₄)₃",
   "note": "Silicate de manganèse et d'aluminium"
+ },
+ "Grenat_Topazolite": {
+  "system": "cubic",
+  "formula": "Ca₃Fe₂(SiO₄)₃",
+  "note": "Silicate de calcium et de fer (andradite jaune)"
  },
  "Grenat_Tsavorite": {
   "system": "cubic",
@@ -443,6 +473,11 @@
   "system": "trigonal",
   "formula": "Al₂O₃ (Fe, Ti)",
   "note": "Corindon coloré par le fer et le titane"
+ },
+ "Saphir_Change_Couleur": {
+  "system": "trigonal",
+  "formula": "Al₂O₃ (Cr,V)",
+  "note": "Oxyde d'aluminium (corindon) coloré par le chrome et le vanadium"
  },
  "Saphir_Incolore": {
   "system": "trigonal",

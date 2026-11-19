@@ -77,7 +77,10 @@ def _translate_deep(x, tr):
     """A copy of lists and dictionaries where each colour name of a palette (the 7th item of a list that starts with numbers) is translated."""
     if isinstance(x, list):
         if len(x) > 6 and isinstance(x[6], str) and isinstance(x[0], (int, float)):
-            return x[:6] + [tr.get(x[6], x[6])] + x[7:]
+            tail = list(x[7:])
+            if len(tail) >= 4 and isinstance(tail[3], str):          # stones that change color: the name under the incandescent light
+                tail[3] = tr.get(tail[3], tail[3])
+            return x[:6] + [tr.get(x[6], x[6])] + tail
         return [_translate_deep(y, tr) for y in x]
     if isinstance(x, dict):
         return {k: _translate_deep(v, tr) for k, v in x.items()}
@@ -89,6 +92,11 @@ def _build(lang="fr"):
     with open(path, encoding="utf-8") as f:
         raw = json.load(f)
     tr = _translations(lang)
+    # Species the site has but the game data does not (yet): the game version wins as soon as it exists.
+    extra_path = config.DATA_DIR / "extra_species.json"
+    if extra_path.exists():
+        known = {s["id"] for s in raw["species"]}
+        raw["species"] = list(raw["species"]) + [dict(e, siteOnly=True) for e in _read_json(extra_path)["species"] if e["id"] not in known]
 
     def t_(text):
         return tr.get(text, text) if isinstance(text, str) else text
@@ -173,7 +181,7 @@ def data():
     """The encyclopedia in the language of the page. Loaded once per language, and again whenever a JSON file changes (so a data update needs no restart)."""
     lang = current_lang()
     path = config.DATA_DIR / "gemlab_data.json"
-    files = (path, config.DATA_DIR / "species_extra.json", config.DATA_DIR / "photo_credits.json", config.DATA_DIR / "palettes.json", config.DATA_DIR / lang / "species.json")
+    files = (path, config.DATA_DIR / "species_extra.json", config.DATA_DIR / "photo_credits.json", config.DATA_DIR / "palettes.json", config.DATA_DIR / "extra_species.json", config.DATA_DIR / lang / "species.json")
     mtime = tuple(p.stat().st_mtime for p in files if p.exists())
     with _lock:
         cache = _state.get(lang)

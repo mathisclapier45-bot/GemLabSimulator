@@ -79,8 +79,8 @@ def ugrandite_svg(t):
     body = (_line(top, left, True) + _line(top, right, True) + _line(left, right, False) +
             _pill((230, 312), [t("garnet.mali")], [C["mali"]], 140, ["Grenat_Mali"]) +
             _card(top[0], top[1], t("garnet.uvarovite"), "Ca₃Cr₂(SiO₄)₃", [], C["uvarovite"], _slug("Grenat_Uvarovite")) +
-            _card(left[0], left[1], t("garnet.grossular"), "Ca₃Al₂(SiO₄)₃", [(t("garnet.hessonite"), C["hessonite"]), (t("garnet.tsavorite"), C["tsavorite"])], C["grossulaire"]) +
-            _card(right[0], right[1], t("garnet.andradite"), "Ca₃Fe₂(SiO₄)₃", [(t("garnet.demantoid"), C["demantoide"]), (t("garnet.topazolite"), C["topazolite"])], C["andradite"]))
+            _card(left[0], left[1], t("garnet.grossular"), "Ca₃Al₂(SiO₄)₃", [(t("garnet.hessonite"), C["hessonite"]), (t("garnet.tsavorite"), C["tsavorite"])], C["grossulaire"], _species_href("Grenat_Grossulaire")) +
+            _card(right[0], right[1], t("garnet.andradite"), "Ca₃Fe₂(SiO₄)₃", [(t("garnet.demantoid"), C["demantoide"]), (t("garnet.topazolite"), C["topazolite"])], C["andradite"], _species_href("Grenat_Andradite")))
     return _svg(t("garnet.ugrandite.label"), body)
 
 
@@ -96,14 +96,14 @@ def section(t):
     rows = [("pyralspite", "pyrope", "Mg₃Al₂(SiO₄)₃", ["chromifere"], "Grenat_Pyrope"),
             ("pyralspite", "almandin", "Fe₃Al₂(SiO₄)₃", [], "Grenat_Almandin"),
             ("pyralspite", "spessartite", "Mn₃Al₂(SiO₄)₃", [], "Grenat_Spessartite"),
-            ("ugrandite", "grossular", "Ca₃Al₂(SiO₄)₃", ["hessonite", "tsavorite"], None),
-            ("ugrandite", "andradite", "Ca₃Fe₂(SiO₄)₃", ["demantoid", "topazolite"], None),
+            ("ugrandite", "grossular", "Ca₃Al₂(SiO₄)₃", ["hessonite", "tsavorite"], "Grenat_Grossulaire"),
+            ("ugrandite", "andradite", "Ca₃Fe₂(SiO₄)₃", ["demantoid", "topazolite"], "Grenat_Andradite"),
             ("ugrandite", "uvarovite", "Ca₃Cr₂(SiO₄)₃", [], "Grenat_Uvarovite")]
     lines = []
     for group, key, formula, varieties, species in rows:
         name = esc(t("garnet." + key))
-        if species:
-            name = '<a href="{}">{}</a>'.format(esc(_slug(species)), name)
+        if species and _species_href(species):
+            name = '<a href="{}">{}</a>'.format(esc(_species_href(species)), name)
         lines.append("<tr><th scope=\"row\">{}</th><td>{}</td><td>{}</td><td>{}</td></tr>".format(
             name, esc(formula), esc(t("garnet.group." + group)), esc(", ".join(t("garnet." + v) for v in varieties)) or "—"))
     table = ('<table class="props gtable"><caption class="sr-only">{cap}</caption><thead><tr><th>{c1}</th><th>{c2}</th><th>{c3}</th><th>{c4}</th></tr></thead>'

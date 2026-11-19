@@ -78,7 +78,8 @@
     "Saphir_Orange",
     "Saphir_Rose",
     "Saphir_Vert",
-    "Saphir_Violet"
+    "Saphir_Violet",
+    "Saphir_Change_Couleur"
    ],
    "name": "Corindons",
    "chem": "Oxyde d'aluminium, Al₂O₃ (trigonal)",
@@ -103,7 +104,13 @@
     "Grenat_Rhodolite",
     "Grenat_Spessartite",
     "Grenat_Tsavorite",
-    "Grenat_Uvarovite"
+    "Grenat_Uvarovite",
+    "Grenat_Mali",
+    "Grenat_Topazolite",
+    "Grenat_Pyrope_Chromifere",
+    "Grenat_Change_Couleur",
+    "Grenat_Grossulaire",
+    "Grenat_Andradite"
    ],
    "name": "Grenats",
    "chem": "Silicates cubiques de formule X₃Y₂(SiO₄)₃",

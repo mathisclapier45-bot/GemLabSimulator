@@ -855,5 +855,10 @@
  "garnet.hessonite": "Hessonite",
  "garnet.tsavorite": "Tsavorite",
  "garnet.demantoid": "Démantoïde",
- "garnet.topazolite": "Topazolite"
+ "garnet.topazolite": "Topazolite",
+ "sp.siteonly": "Cette fiche décrit une espèce de l'encyclopédie qui n'est pas (encore) une pierre du jeu.",
+ "col.change.day": "À la lumière du jour",
+ "col.change.torch": "Sous une lampe à incandescence",
+ "col.change.lead": "Cette pierre change de couleur : sa couleur de jour n'est pas celle qu'elle montre sous une lampe à incandescence, plus chaude. Deux grilles, une pour chaque état : choisissez une couleur de jour et vous voyez ce qu'elle devient sous la lampe, dans la case au même endroit de l'autre grille.",
+ "col.change.info": "Sous une lampe à incandescence : {name}"
 }

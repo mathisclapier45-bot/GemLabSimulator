@@ -28,6 +28,10 @@ def collect():
         if isinstance(text, str) and text.strip():
             out.setdefault(text, group)
 
+    extra_path = DATA / "extra_species.json"
+    if extra_path.exists():                       # species of the site that the game data does not have (yet)
+        known = {s["id"] for s in raw["species"]}
+        raw["species"] = list(raw["species"]) + [e for e in _load(extra_path)["species"] if e["id"] not in known]
     for s in raw["species"]:
         for f in SPECIES_FIELDS:
             add(s.get(f), f)
@@ -48,6 +52,8 @@ def collect():
         if isinstance(x, list):
             if len(x) > 6 and isinstance(x[6], str) and isinstance(x[0], (int, float)):
                 add(x[6], "colour")
+                if len(x) > 10:
+                    add(x[10], "colour")
             else:
                 for y in x:
                     walk(y)

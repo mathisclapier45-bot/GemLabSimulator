@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""Puts the four new garnets (Mali, topazolite, chrome pyrope, color-change garnet) on the site, once the game has them.
+"""Puts the six new garnets on the site: Mali, topazolite, chrome pyrope, color-change garnet (four varieties written in the game code),
+and the pure grossular and the pure andradite (two poles of the garnet diagram, not stones of the game).
 
-Order of work (the game must have the species first):
+The six are in site/data/extra_species.json (python3 site/tools/build_extra_species.py), so this script works now. It files them under
+"silicates" and "garnets" and adds their English texts. Run it again after any change to extra_species.json.
+
+When the game has the four varieties (the stones are generated in Unity), the game version takes over on the site:
   1. In Unity: run the GemLab menu that rebuilds the gems (SceneBootstrap), so that Assets/Data/Gems/Grenat_Mali.asset... exist.
   2. python3 site/tools/sync_data.py --export          copies the game data into the site
   3. python3 site/tools/export_palettes.py             the colour chart of the new species
@@ -18,7 +22,9 @@ SITE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SITE / "tools"))
 import species_strings  # noqa: E402
 
-NEW = ["Grenat_Mali", "Grenat_Topazolite", "Grenat_Pyrope_Chromifere", "Grenat_Change_Couleur"]
+NEW = ["Grenat_Mali", "Grenat_Topazolite", "Grenat_Pyrope_Chromifere", "Grenat_Change_Couleur", "Grenat_Grossulaire", "Grenat_Andradite"]
+# The species of the site that are not garnets: id -> (class, family)
+OTHERS = {"Saphir_Change_Couleur": ("oxydes", "corindons")}
 
 # French text -> English text, for every text the four species can bring. Only the ones the site is missing are added.
 EN = {
@@ -61,26 +67,59 @@ EN = {
     "Silicate de calcium et de fer (andradite jaune)": "Calcium iron silicate (yellow andradite)",
     "Pyrope coloré par le chrome": "Pyrope colored by chromium",
     "Mélange de pyrope et de spessartite, avec vanadium et chrome": "Mixture of pyrope and spessartine, with vanadium and chromium",
+    # the two poles that are not stones of the game
+    "Grenat Grossulaire": "Grossular Garnet",
+    "Grenat Andradite": "Andradite Garnet",
+    "Le grenat de calcium et d'aluminium pur : incolore à vert pâle, jaune ou rose, plus coloré avec des traces de fer, de chrome ou de vanadium. Ses variétés les plus connues sont l'hessonite et la tsavorite.":
+        "The pure calcium aluminum garnet: colorless to pale green, yellow or pink, more strongly colored with traces of iron, chromium or vanadium. Its best-known varieties are hessonite and tsavorite.",
+    "Le grenat de calcium et de fer pur : jaune, vert, brun ou noir. Ses variétés sont le démantoïde (vert, au chrome), la topazolite (jaune) et la mélanite (noire, opaque).":
+        "The pure calcium iron garnet: yellow, green, brown or black. Its varieties are demantoid (green, with chromium), topazolite (yellow) and melanite (black, opaque).",
+    "Incolore à vert pâle, jaune ou rose": "Colorless to pale green, yellow or pink",
+    "Jaune à vert, brun ou noir": "Yellow to green, brown or black",
+    "Pas de spectre net ; bandes faibles du fer ou du manganèse selon la teinte.": "No clear spectrum; weak iron or manganese bands depending on the hue.",
+    "Généralement propre ; petits cristaux d'apatite, de zircon ou de diopside, parfois des grains arrondis.":
+        "Generally clean; small crystals of apatite, zircon or diopside, sometimes rounded grains.",
+    "Fines fibres, parfois en « queue de cheval » ; sinon assez propre.": "Fine fibers, sometimes in a \"horsetail\"; otherwise fairly clean.",
+    "Canada (Québec)": "Canada (Quebec)",
+    "Silicate de calcium et d'aluminium (grossulaire)": "Calcium aluminum silicate (grossular)",
+    # colour names that the chart of the new species brings
+    "Saphir à changement de couleur": "Color-Change Sapphire",
+    "Un saphir naturel qui change de couleur : bleu-violet à la lumière du jour, pourpre à rouge-violet sous une lampe à incandescence. Il le doit à un mélange de vanadium et de chrome, et se rapproche de l'alexandrite par son effet.":
+        "A natural sapphire that changes color: blue-violet in daylight, purple to red-violet under an incandescent lamp. It owes this to a mixture of vanadium and chromium, and resembles alexandrite in its effect.",
+    "Bleu violacé à pourpre (changement de couleur)": "Violet-blue to purple (color change)",
+    "Bleu-violet / Violet-rouge selon l'axe d'observation (modéré).": "Blue-violet / Violet-red depending on the viewing axis (moderate).",
+    "Inerte à rouge faible sous UV longue onde.": "Inert to weak red under long-wave UV.",
+    "Bandes du chrome et du vanadium : large bande vers 570 nm et raies fines du chrome dans le rouge (694 nm).": "Chromium and vanadium bands: a broad band near 570 nm and fine chromium lines in the red (694 nm).",
+    "Fine soie de rutile, zonation de couleur, petits cristaux dispersés.": "Fine rutile silk, color zoning, scattered small crystals.",
+    "Oxyde d'aluminium (corindon) coloré par le chrome et le vanadium": "Aluminum oxide (corundum) colored by chromium and vanadium",
+    "Jaune brunâtre": "Brownish yellow",
+    "Pourpre grisâtre": "Grayish purple",
 }
 
 
 def main():
     data = json.loads((SITE / "data" / "gemlab_data.json").read_text(encoding="utf-8"))
     have = {s["id"] for s in data["species"]}
-    missing = [i for i in NEW if i not in have]
+    extra = SITE / "data" / "extra_species.json"
+    if extra.exists():
+        have |= {s["id"] for s in json.loads(extra.read_text(encoding="utf-8"))["species"]}
+    missing = [i for i in NEW + list(OTHERS) if i not in have]
     if missing:
-        sys.exit("Ces espèces ne sont pas encore dans les données du site : {}\n"
-                 "Il faut d'abord les générer dans Unity (menu GemLab), puis lancer : python3 site/tools/sync_data.py --export".format(", ".join(missing)))
+        sys.exit("Ces espèces ne sont pas dans les données du site : {}\n"
+                 "Lance d'abord : python3 site/tools/build_extra_species.py".format(", ".join(missing)))
 
     # 1. the classes and the families
-    for name, group in (("classes", "silicates"), ("families", "grenats")):
+    targets = {i: ("silicates", "grenats") for i in NEW}
+    targets.update(OTHERS)
+    for name, which in (("classes", 0), ("families", 1)):
         path = SITE / "data" / (name + ".json")
         doc = json.loads(path.read_text(encoding="utf-8"))
-        item = next(x for x in doc[name] if x["id"] == group)
-        added = [i for i in NEW if i not in item["species"]]
-        item["species"] += added
+        for group in sorted({t[which] for t in targets.values()}):
+            item = next(x for x in doc[name] if x["id"] == group)
+            added = [i for i, t in targets.items() if t[which] == group and i not in item["species"]]
+            item["species"] += added
+            print("{} : {} ajoutée(s) à « {} »".format(name, len(added), group))
         path.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
-        print("{} : {} ajoutée(s) à « {} »".format(name, len(added), group))
 
     # 2. the English texts the site is missing
     path = SITE / "data" / "en" / "species.json"

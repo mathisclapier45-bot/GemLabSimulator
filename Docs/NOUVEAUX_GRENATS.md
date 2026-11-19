@@ -19,6 +19,12 @@ Les valeurs sont dans les plages de la littérature (voir `Docs/VERIF_PROPRIETES
 - `GemLook.cs` : le feu et l'éclat de la topazolite et du grenat du Mali (comme le démantoïde), et le **changement de couleur** : le grenat à changement de couleur change de couleur sous la lampe à incandescence de la loupe, comme l'alexandrite (la couleur « incandescente » est la même que pour l'alexandrite : un rose-rouge).
 - Les habitus cristallins n'ont pas besoin d'être touchés : tout nom qui commence par `Grenat_` reçoit le dodécaèdre rhombique.
 
+## Sur le site (déjà fait)
+
+Les six grenats ont leur page dès maintenant, sans attendre Unity : les quatre variétés (lues dans le code du jeu) et deux pôles qui ne sont pas des pierres du jeu, le **grossulaire** et l'**andradite purs**.
+Elles sont dans `site/data/extra_species.json` (fabriqué par `site/tools/build_extra_species.py`), rangées dans la classe des silicates et la famille des grenats, avec leur traduction anglaise.
+Chaque fiche porte un bandeau « n'est pas (encore) une pierre du jeu » tant que l'espèce n'est pas dans les données du jeu. Quand Unity aura généré les quatre variétés et que `sync_data.py --export` les aura amenées, la version du jeu remplace celle du site et le bandeau disparaît. Le grossulaire et l'andradite gardent le bandeau (ou entrent dans le jeu un jour).
+
 ## À faire dans l'ordre
 
 1. **Unity** : ouvrir le projet (regarder la console : une erreur de compilation serait dans les fichiers ci-dessus), puis menu **GemLab > Rebuild Gem Data**. Cela crée les quatre `.asset` et leurs icônes dans `Assets/Data/Gems/`.
@@ -31,7 +37,7 @@ Les valeurs sont dans les plages de la littérature (voir `Docs/VERIF_PROPRIETES
    python3 site/tools/add_new_garnets.py
    python3 -m unittest discover -s site/tests
    ```
-   `add_new_garnets.py` range les quatre espèces dans la classe des silicates et dans la famille des grenats, et ajoute leurs textes anglais. Sur le schéma des grenats, les variétés deviennent des liens dès que l'espèce existe.
+   Les quatre variétés passent alors des « espèces du site » aux « espèces du jeu » (les valeurs viennent du même code, donc ne changent pas). Si tu modifies une valeur dans le code C#, relance aussi `python3 site/tools/build_extra_species.py` pour que le site suive tant que le jeu n'a pas été régénéré.
 
 ## Prudence
 

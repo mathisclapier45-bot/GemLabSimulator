@@ -333,6 +333,32 @@ def palette_cells(modes, steps=12):
     return out
 
 
+# Stones that change color: the color seen under an incandescent light is added to every cell of their chart.
+# By daylight these stones are blue or green; under a warm light they turn purple, red or orange. Each one has its own map from the daylight hue
+# (from, to) to the incandescent hue (at the start, at the end). The map is linear; the saturation stays, the brightness drops a little.
+# (The game today gives every stone one pinkish shift, GemLook.Incandescent; these maps keep the order of the colors.)
+COLOR_CHANGE = {
+    "Chrysoberyl_Alexandrite": (120, 185, 20, -45),       # yellowish green -> orange-red, blue-green -> purple
+    "Grenat_Change_Couleur": (165, 205, 350, 285),        # blue-green -> red-pink, blue -> violet
+    "Saphir_Change_Couleur": (235, 320, 280, 350),        # blue -> violet, violet -> red-pink
+}
+
+
+def incandescent(key, h, s, b):
+    """(hue, saturation, brightness) seen under an incandescent light, from the color seen by daylight."""
+    lo, hi, inc_lo, inc_hi = COLOR_CHANGE[key]
+    t = clamp01((h - lo) / float(hi - lo))
+    return repeat(inc_lo + (inc_hi - inc_lo) * t, 360.0), s, clamp01(b * 0.93)
+
+
+def with_incandescent(key, cells):
+    out = []
+    for cell in cells:
+        ih, is_, ib = incandescent(key, cell[0], cell[1], cell[2])
+        out.append(cell + [round(ih, 1), round(is_, 3), round(ib, 3), color_name(ih, is_, ib)])
+    return out
+
+
 def hex_rgb(h):
     return tuple(int(h[i:i + 2], 16) / 255 for i in (1, 3, 5))
 
@@ -348,7 +374,15 @@ def letter_scale():
 
 def main():
     data = json.load(open(SITE / "data" / "gemlab_data.json", encoding="utf-8"))
+    extra_path = SITE / "data" / "extra_species.json"
     pal = Palettes()
+    if extra_path.exists():                       # species of the site that the game data does not have (yet), with their own colour window
+        known = {s["id"] for s in data["species"]}
+        for e in json.load(open(extra_path, encoding="utf-8"))["species"]:
+            if e["id"] not in known:
+                data["species"].append(e)
+                if e.get("colorLimits") and e["id"] not in pal.limits:
+                    pal.limits[e["id"]] = [float(v) for v in e["colorLimits"]]
     out = {"_rows": ROW_LABELS}
     for sp in data["species"]:
         key = sp["id"]
@@ -356,7 +390,9 @@ def main():
             out[key] = {"diamond": letter_scale()}
             continue
         entry = {"natural": palette_cells(pal.profile(sp, False)), "any": grown_in_any_color(key, bool(sp.get("forcedSynthetic")), False)}
-        if not sp.get("forcedSynthetic") and grown_in_any_color(key, False, True):
+        if key in COLOR_CHANGE:
+            entry["natural"] = with_incandescent(key, entry["natural"])
+        if not sp.get("forcedSynthetic") and key not in COLOR_CHANGE and grown_in_any_color(key, False, True):
             entry["synthetic"] = palette_cells(pal.profile(sp, True))
         out[key] = entry
     (SITE / "data" / "palettes.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

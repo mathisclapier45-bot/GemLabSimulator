@@ -855,5 +855,10 @@
  "garnet.hessonite": "Hessonite",
  "garnet.tsavorite": "Tsavorite",
  "garnet.demantoid": "Demantoid",
- "garnet.topazolite": "Topazolite"
+ "garnet.topazolite": "Topazolite",
+ "sp.siteonly": "This page describes a species of the encyclopedia that is not (yet) a stone of the game.",
+ "col.change.day": "In daylight",
+ "col.change.torch": "Under an incandescent lamp",
+ "col.change.lead": "This stone changes color: its daylight color is not the one it shows under a warmer, incandescent lamp. Two grids, one for each state: pick a daylight color and you see what it becomes under the lamp, in the cell at the same place in the other grid.",
+ "col.change.info": "Under an incandescent lamp: {name}"
 }

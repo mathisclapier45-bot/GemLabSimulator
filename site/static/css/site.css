@@ -344,3 +344,14 @@ progress { width: 100%; max-width: 480px; height: 14px; }
 .glegend svg .gd-line { stroke: var(--muted); }
 .gdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(135deg, #f27a55, #5d9fb5); }
 table.gtable th, table.gtable td { white-space: normal; }
+
+/* Stones that change color: two stones and two grids */
+.colors.change .colors-body { grid-template-columns: minmax(0, 1fr); }
+.colors.change .cgrids, .colors.change .cpreview { min-width: 0; }
+.stonepair { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
+.stonepair figure { flex: 1 1 200px; max-width: 260px; margin: 0; }
+.stonepair figcaption { font-weight: 650; font-size: 0.9rem; margin-top: 0.3rem; }
+.colors.change .cgrids { overflow: visible; }
+.cgroup { max-width: 100%; overflow-x: auto; margin-bottom: 1rem; }
+.cgroup h3 { margin: 0 0 0.3rem; font-size: 1rem; }
+.changenote { margin: 0.4rem 0 0.8rem; }

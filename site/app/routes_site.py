@@ -182,8 +182,13 @@ def _colors_section(req, s):
         return ""
     data = {}
     grids = []
+    change = False
     for name, cells, letters in variants:
         data[name] = [{"h": c[0], "s": c[1], "b": c[2], "share": c[3], "row": c[4], "name": c[6], "hex": rgb(c[0], c[1], c[2])} for c in cells]
+        if name == "natural" and cells and len(cells[0]) > 10:           # a stone that changes color: the same cell under an incandescent light
+            change = True
+            for entry, c in zip(data[name], cells):
+                entry.update({"ih": c[7], "is": c[8], "ib": c[9], "iname": c[10], "ihex": rgb(c[7], c[8], c[9])})
         if letters:
             body = '<div class="sw-row">{}</div>'.format("".join(
                 '<button type="button" class="sw" data-v="{v}" data-i="{i}" style="background:{hex}" title="{n}" aria-label="{n}"><span>{n2}</span></button>'.format(
@@ -201,6 +206,15 @@ def _colors_section(req, s):
                                    v=name, i=i, hex=data[name][i]["hex"], n=esc(cells[i][6])))
                 rows.append("<tr><th scope=\"row\">{}</th>{}</tr>".format(esc(t("row.%d" % row)), "".join(tds)))
             body = '<table class="pgrid"><tbody>{}</tbody></table>'.format("".join(rows))
+        if name == "natural" and change and not letters:
+            torch = body
+            for i, entry in enumerate(data[name]):          # the same grid, each cell in its incandescent colour
+                torch = torch.replace('data-v="{v}" data-i="{i}" style="background:{a}" title="{n}" aria-label="{n}"'.format(
+                    v=name, i=i, a=entry["hex"], n=esc(cells[i][6])), 'data-v="{v}" data-i="{i}" style="background:{b}" title="{m}" aria-label="{m}"'.format(
+                    v=name, i=i, b=entry["ihex"], m=esc(entry["iname"])))
+            grids.append('<div class="cgroup"><h3>{}</h3><div class="grid-wrap" data-variant="natural">{}</div></div>'.format(esc(t("col.change.day")), body))
+            grids.append('<div class="cgroup"><h3>{}</h3><div class="grid-wrap" data-variant="natural">{}</div></div>'.format(esc(t("col.change.torch")), torch))
+            continue
         grids.append('<div class="grid-wrap" data-variant="{}"{}>{}</div>'.format(name, "" if name == "natural" else " hidden", body))
     toggle = ""
     if len(variants) > 1:
@@ -227,17 +241,23 @@ def _colors_section(req, s):
             "milky": milky, "dims": [s.get("lengthMm") or 10, s.get("widthMm") or 8, s.get("depthMm") or 5], "cabonly": bool(cab_only)}
     n = sum(len(v[1]) for v in variants[:1])
     note = t("col.diamond") if pal.get("diamond") else (t("col.count", n=n) + (" " + t("col.any") if pal.get("any") else ""))
-    labels = {"info": t("col.info"), "share": t("col.share"), "neutral": t("col.neutral"), "preview": t("col.preview"), "phys": phys}
+    labels = {"info": t("col.info"), "share": t("col.share"), "neutral": t("col.neutral"), "preview": t("col.preview"), "phys": phys, "torch": t("col.change.info")}
+    stones = '<div class="stone" role="img" aria-label="{pv}"></div>'.format(pv=esc(t("col.preview")))
+    if change:                                       # two stones: by daylight and under an incandescent light
+        stones = ('<div class="stonepair"><figure><div class="stone" role="img" aria-label="{pv} ({d})"></div><figcaption>{d}</figcaption></figure>'
+                  '<figure><div class="stone stone2" role="img" aria-label="{pv} ({i})"></div><figcaption>{i}</figcaption></figure></div>').format(
+            pv=esc(t("col.preview")), d=esc(t("col.change.day")), i=esc(t("col.change.torch")))
     return (
-        '<section class="colors" data-shape="{shape}" data-cut="{cut}" data-labels="{labels}"><h2>{title}</h2><p class="lead small">{lead}</p>'
-        '<p class="small">{note}</p>{toggle}<div class="colors-body"><div class="cpreview"><div class="stone" role="img" aria-label="{pv}"></div>'
+        '<section class="colors{changecls}" data-shape="{shape}" data-cut="{cut}" data-labels="{labels}"><h2>{title}</h2><p class="lead small">{lead}</p>{changenote}'
+        '<p class="small">{note}</p>{toggle}<div class="colors-body"><div class="cpreview">{stones}'
         '<p class="small drag">{drag}</p><p class="cinfo" aria-live="polite"></p></div><div class="cgrids">{grids}</div></div>'
         '<div class="pick"><div><strong>{ls}</strong><div class="seg wrap" data-kind="shape">{shapes}</div></div>'
         '<div><strong>{lc}</strong><div class="seg" data-kind="cut">{cuts}</div></div></div>'
         '<script type="application/json" id="pal-data">{data}</script>'
         '<script src="/static/js/gem3d.js" defer></script><script src="/static/js/palette.js" defer></script></section>').format(
+        changecls=" change" if change else "", stones=stones, changenote='<p class="banner ok changenote">{}</p>'.format(esc(t("col.change.lead"))) if change else "",
         shape=esc(shape), cut=cut, labels=esc(json.dumps(labels, ensure_ascii=False)), title=esc(t("col.title")), lead=esc(t("col.lead")),
-        note=esc(note), toggle=toggle, pv=esc(t("col.preview")), drag=esc(t("col.drag")), grids="".join(grids), ls=esc(t("col.shape")), shapes=shape_btns,
+        note=esc(note), toggle=toggle, drag=esc(t("col.drag")), grids="".join(grids), ls=esc(t("col.shape")), shapes=shape_btns,
         lc=esc(t("col.cut")), cuts=cut_btns, data=json.dumps(data, ensure_ascii=False).replace("</", "<\\/"))
 
 
@@ -371,10 +391,11 @@ def species_page(req):
     badge = '<span class="badge">{}</span>'.format(esc(t("sp.synthetic"))) if s["synthetic"] else ""
     seen_terms = set()
     content = (
-        '<nav class="crumbs"><a href="/encyclopedie">{back}</a></nav>'
+        '{siteonly}<nav class="crumbs"><a href="/encyclopedie">{back}</a></nav>'
         '<header class="species-head" style="--gem:{gemc};--gem2:{gemf}">{gem}<div><h1>{name} {badge}</h1>'
         '<p class="formula big">{formula}</p>{family}<p class="lead">{desc}</p></div></header>'
         '{gallery}{colors}<h2>{ph}</h2><table class="props">{props}</table>{sections}{nav}').format(
+        siteonly='<div class="banner warn">{}</div>'.format(esc(t("sp.siteonly"))) if s.get("siteOnly") else "",
         family=_groups_line(t, s),
         back=esc(t("sp.back")), gem=gem_svg(s["iconColor"], s["iconFacetColor"], 96), name=esc(s["displayName"]),
         gemc=esc(s["iconColor"]), gemf=esc(s["iconFacetColor"]), formula=esc(ex.get("formula", "")),

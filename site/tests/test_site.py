@@ -1549,7 +1549,7 @@ class TestFamilies(SiteTestCase):
         for slug in ("grenat-almandin", "grenat-spessartite", "grenat-tsavorite", "grenat-uvarovite"):
             self.assertIn('href="/encyclopedie/' + slug + '"', text)
         self.assertIn("Cubique", text)
-        self.assertIn("10 espèces", text)
+        self.assertIn("16 espèces", text)
         self.assertIn("Synthetic ·", Client().get("/en/encyclopedie/familles/corindons").text)      # synthetic rubies and sapphires are marked
         self.assertIn('href="/encyclopedie/emeraude"', Client().get("/encyclopedie/classes/silicates").text)
         self.assertIn('href="/encyclopedie/corindon-synthetique-rubis"', Client().get("/encyclopedie/classes/syntheses").text)
@@ -1576,12 +1576,46 @@ class TestFamilies(SiteTestCase):
             self.assertIn(word, fr)
         self.assertIn('<table class="props gtable">', fr)                      # the same content as a table
         self.assertIn('href="/encyclopedie/grenat-pyrope"', fr)
+        for slug in ("grenat-grossulaire", "grenat-andradite", "grenat-mali", "grenat-change-couleur"):     # the new garnets have their pages
+            self.assertIn('href="/encyclopedie/' + slug + '"', fr, slug)
         en = Client().get("/en/encyclopedie/familles/grenats").text
         for word in ("Garnets at a glance", "Almandine", "Spessartine", "Color change", "Mali garnet", "Limited mixture", "Chrome pyrope"):
             self.assertIn(word, en)
         words = re.compile(r"\b(?:les|des|une|est|avec|selon|très|pierre|couleur|toujours)\b")
         self.assertEqual(sorted(set(words.findall(re.sub(r"<[^>]+>", " ", en)))), [])
         self.assertNotIn("gdia", Client().get("/encyclopedie/familles/corindons").text)   # only the garnets have it
+
+    def test_new_garnets_have_their_pages(self):
+        """Topazolite, grossular, andradite, Mali, chrome pyrope and color-change garnet: species of the site that the game data does not have yet."""
+        c = Client()
+        import json as _json
+        game_ids = {x["id"].lower() for x in _json.loads((SITE / "data" / "gemlab_data.json").read_text(encoding="utf-8"))["species"]}
+        pages = {"grenat-topazolite": ("Grenat Topazolite", "Ca₃Fe₂(SiO₄)₃", "Topazolite Garnet"),
+                 "grenat-grossulaire": ("Grenat Grossulaire", "Ca₃Al₂(SiO₄)₃", "Grossular Garnet"),
+                 "grenat-andradite": ("Grenat Andradite", "Ca₃Fe₂(SiO₄)₃", "Andradite Garnet"),
+                 "grenat-mali": ("Grenat du Mali", "Ca₃(Al,Fe)₂(SiO₄)₃", "Mali Garnet"),
+                 "grenat-pyrope-chromifere": ("Grenat Pyrope chromifère", "Mg₃(Al,Cr)₂(SiO₄)₃", "Chrome Pyrope Garnet"),
+                 "grenat-change-couleur": ("Grenat à changement de couleur", "(Mg,Mn)₃(Al,V,Cr)₂(SiO₄)₃", "Color-Change Garnet")}
+        for slug, (name, formula, english) in pages.items():
+            fr = c.get("/encyclopedie/" + slug)
+            self.assertEqual(fr.status, 200, slug)
+            self.assertIn(name, fr.text)
+            self.assertIn(formula, fr.text)
+            self.assertIn('href="/encyclopedie/familles/grenats"', fr.text, slug)           # family
+            self.assertIn('href="/encyclopedie/classes/silicates"', fr.text, slug)          # class
+            self.assertIn("Possible colours".replace("Possible colours", "Couleurs possibles"), fr.text, slug)   # the colour chart exists
+            en = c.get("/en/encyclopedie/" + slug)
+            self.assertEqual(en.status, 200, slug)
+            self.assertIn(english, en.text, slug)
+            if slug.replace("-", "_") not in {i.lower().replace("_", "_") for i in game_ids}:      # a stone the game does not have (yet) says so
+                self.assertIn("not (yet) a stone of the game", en.text, slug)
+        words = re.compile(r"\b(?:les|des|une|est|avec|selon|très|pierre|couleur|toujours)\b")
+        self.assertEqual(sorted(set(words.findall(re.sub(r"<[^>]+>", " ", c.get("/en/encyclopedie/grenat-mali").text)))), [])
+        # the encyclopedia list, the search by data and the class page know them too
+        self.assertIn('href="/encyclopedie/grenat-topazolite"', c.get("/encyclopedie?q=topazolite").text)
+        self.assertIn('href="/en/encyclopedie/grenat-mali"', c.get("/en/encyclopedie?q=mali").text)
+        self.assertIn('href="/encyclopedie/grenat-andradite"', c.get("/encyclopedie/classes/silicates").text)
+        self.assertIn("grenat-change-couleur", c.get("/identification?color=blue&optic=Isotrope").text)
 
     def test_every_class_has_an_icon(self):
         from app import catalog, class_icons
@@ -1613,6 +1647,56 @@ class TestFamilies(SiteTestCase):
                      "/en/encyclopedie/classes/silicates", "/en/encyclopedie/classes/organiques", "/en/encyclopedie/classes/syntheses", "/en/encyclopedie/classes/oxydes"):
             text = re.sub(r"<[^>]+>", " ", c.get(path).text)
             self.assertEqual(sorted(set(words.findall(text))), [], path)
+
+
+class TestColorChange(SiteTestCase):
+    CHANGING = ("chrysoberyl-alexandrite", "grenat-change-couleur", "saphir-change-couleur")
+
+    def test_stones_that_change_color_have_two_grids_and_two_stones(self):
+        c = Client()
+        for slug in self.CHANGING:
+            text = c.get("/encyclopedie/" + slug).text
+            self.assertIn('<section class="colors change"', text, slug)
+            self.assertEqual(text.count('<table class="pgrid">'), 2, slug)               # one grid for each state
+            self.assertIn("À la lumière du jour", text)
+            self.assertIn("Sous une lampe à incandescence", text)
+            self.assertIn('class="stone stone2"', text)                                     # the second stone
+            self.assertIn("Cette pierre change de couleur", text)
+        en = c.get("/en/encyclopedie/grenat-change-couleur").text
+        self.assertIn("In daylight", en)
+        self.assertIn("Under an incandescent lamp", en)
+        self.assertEqual(sorted(set(re.findall(r"\b(?:les|des|une|est|avec|selon|très|couleur|pierre|sous)\b", re.sub(r"<[^>]+>", " ", en)))), [])
+
+    def test_the_two_grids_have_the_same_cells_and_other_colors(self):
+        import json as _json
+        text = Client().get("/encyclopedie/chrysoberyl-alexandrite").text
+        grids = re.findall(r'<table class="pgrid">(.*?)</table>', text, re.S)
+        self.assertEqual(len(grids), 2)
+        cells = [re.findall(r'data-i="(\d+)" style="background:(#[0-9a-f]{6})"', g) for g in grids]
+        self.assertEqual([i for i, _ in cells[0]], [i for i, _ in cells[1]])               # the same cells, in the same places
+        self.assertNotEqual([col for _, col in cells[0]], [col for _, col in cells[1]])    # not the same colors
+        data = _json.loads(re.search(r'<script type="application/json" id="pal-data">(.*?)</script>', text, re.S).group(1).replace("<\\/", "</"))
+        first = data["natural"][0]
+        self.assertTrue(all(k in first for k in ("ih", "is", "ib", "iname", "ihex")))
+        # by daylight an alexandrite is green, under the lamp it is red or purple
+        green = [e for e in data["natural"] if 90 <= e["h"] <= 190]
+        self.assertEqual(len(green), len(data["natural"]))
+        self.assertTrue(all(e["ih"] >= 300 or e["ih"] <= 40 for e in data["natural"]))
+
+    def test_other_stones_keep_one_grid(self):
+        text = Client().get("/encyclopedie/grenat-pyrope").text
+        self.assertIn('<section class="colors"', text)
+        self.assertEqual(text.count('<table class="pgrid">'), 1)
+        self.assertNotIn("stone2", text)
+        self.assertNotIn("Cette pierre change de couleur", text)
+
+    def test_the_color_change_sapphire_is_filed(self):
+        text = Client().get("/encyclopedie/saphir-change-couleur").text
+        self.assertIn("Saphir à changement de couleur", text)
+        self.assertIn('href="/encyclopedie/classes/oxydes"', text)
+        self.assertIn('href="/encyclopedie/familles/corindons"', text)
+        self.assertIn("Color-Change Sapphire", Client().get("/en/encyclopedie/saphir-change-couleur").text)
+        self.assertIn('href="/encyclopedie/saphir-change-couleur"', Client().get("/encyclopedie/familles/corindons").text)
 
 
 class TestCode(unittest.TestCase):

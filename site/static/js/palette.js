@@ -6,10 +6,11 @@
   var data = JSON.parse(document.getElementById("pal-data").textContent);
   var L = JSON.parse(root.getAttribute("data-labels"));
   var state = { variant: "natural", index: 0, shape: root.getAttribute("data-shape"), cut: root.getAttribute("data-cut") };
-  var stoneBox = root.querySelector(".stone"), info = root.querySelector(".cinfo");
+  var stoneBox = root.querySelector(".stone"), stoneBox2 = root.querySelector(".stone2"), info = root.querySelector(".cinfo");   // stoneBox2: the stone under an incandescent light (stones that change color)
   var SLUG = { Rond: "rond", Ovale: "ovale", Coussin: "coussin", Carre: "carre", Rectangle: "rectangle", Emeraude: "rectangle-a-pans-coupes", Octogone: "octogone",
     Baguette: "baguette", Poire: "poire", Marquise: "marquise", Shield: "shield", Triangle: "triangle", Coeur: "coeur" };
   var view = window.GemView3D ? window.GemView3D.create(stoneBox) : null;
+  var view2 = stoneBox2 && window.GemView3D ? window.GemView3D.create(stoneBox2) : null;
   var allowed = null;       // from the exported cuts: which sizes each shape accepts
   if (view) view.index().then(function (ix) { allowed = ix.allowed; fixCut(); refresh(); });
   function cutAllowed(cut, shape) {
@@ -61,7 +62,12 @@
 
   // ---------- drawing the stone
   function draw() {
-    var c = data[state.variant][state.index], body = hsv(c.h, c.s, c.b), facet = facetOf(c);
+    var c = data[state.variant][state.index];
+    drawStone(c, stoneBox, view, "a");
+    if (stoneBox2 && c.ih !== undefined) drawStone({ h: c.ih, s: c.is, b: c.ib }, stoneBox2, view2, "b");
+  }
+  function drawStone(c, stoneBox, view, tag) {
+    var body = hsv(c.h, c.s, c.b), facet = facetOf(c);
     if (view) {
       var ph = L.phys;
       view.set({ shape: SLUG[state.shape], style: state.cut, body: body, ior: ph.ior, disp: ph.disp, depth: ph.depth, milky: ph.milky, dims: ph.dims });
@@ -71,11 +77,11 @@
     var make = OUTLINES[state.shape] || OUTLINES.Ovale, out = make(), cen = centroid(out), n = out.length;
     var svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", "0 0 200 200"); svg.setAttribute("class", "gemview");
     var defs = el("defs", {}, svg);
-    var rg = el("radialGradient", { id: "gv-rg", cx: "38%", cy: "30%", r: "75%" }, defs);
+    var rg = el("radialGradient", { id: "gv-rg-" + tag, cx: "38%", cy: "30%", r: "75%" }, defs);
     el("stop", { offset: "0%", "stop-color": css(facet) }, rg); el("stop", { offset: "55%", "stop-color": css(body) }, rg); el("stop", { offset: "100%", "stop-color": css(body, 0.55) }, rg);
     el("ellipse", { cx: 100, cy: 188, rx: 70, ry: 7, fill: "rgba(0,0,0,.16)" }, svg);
     if (cutKind === "cabochon") {
-      el("path", { d: path(out), fill: "url(#gv-rg)", stroke: css(body, 0.45), "stroke-width": 1.5 }, svg);
+      el("path", { d: path(out), fill: "url(#gv-rg-" + tag + ")", stroke: css(body, 0.45), "stroke-width": 1.5 }, svg);
       var hl = el("ellipse", { cx: cen[0] - 16, cy: cen[1] - 22, rx: 18, ry: 10, fill: "rgba(255,255,255,.55)", transform: "rotate(-30 " + (cen[0] - 16) + " " + (cen[1] - 22) + ")" }, svg);
     } else {
       var rings = cutKind === "step" ? [1, 0.82, 0.64, 0.46] : (cutKind === "mixed" ? [1, 0.74, 0.5] : [1, 0.72, 0.5]);
@@ -92,9 +98,9 @@
         }
       }
       var table = scaled(out, rings[rings.length - 1], cen[0], cen[1]);
-      var tg = el("linearGradient", { id: "gv-tg", x1: "0", y1: "0", x2: "1", y2: "1" }, defs);
+      var tg = el("linearGradient", { id: "gv-tg-" + tag, x1: "0", y1: "0", x2: "1", y2: "1" }, defs);
       el("stop", { offset: "0%", "stop-color": css(facet, 1.05) }, tg); el("stop", { offset: "100%", "stop-color": css(body, 0.9) }, tg);
-      el("path", { d: path(table), fill: "url(#gv-tg)", stroke: "rgba(255,255,255,.5)", "stroke-width": 0.8 }, svg);
+      el("path", { d: path(table), fill: "url(#gv-tg-" + tag + ")", stroke: "rgba(255,255,255,.5)", "stroke-width": 0.8 }, svg);
       if (cutKind !== "step") for (var q = 0; q < n; q += 2) el("line", { x1: table[q][0], y1: table[q][1], x2: cen[0], y2: cen[1], stroke: "rgba(255,255,255,.18)", "stroke-width": 0.6 }, svg);
       el("path", { d: path(scaled(table, 0.5, cen[0] - 12, cen[1] - 14)), fill: "rgba(255,255,255,.22)" }, svg);
       el("path", { d: path(out), fill: "none", stroke: css(body, 0.4), "stroke-width": 1.4 }, svg);
@@ -112,6 +118,7 @@
     var strong = document.createElement("strong"); strong.textContent = c.name; info.appendChild(strong);
     info.appendChild(document.createTextNode(text.slice(c.name.length)));
     if (c.share > 0 && !neutral) { var p = document.createElement("span"); p.className = "small"; p.textContent = L.share.replace("{share}", pct(c.share * 100, c.share < 0.01 ? 1 : 0)); info.appendChild(document.createElement("br")); info.appendChild(p); }
+    if (c.iname) { var t2 = document.createElement("span"); t2.className = "small"; t2.textContent = L.torch.replace("{name}", c.iname); info.appendChild(document.createElement("br")); info.appendChild(t2); }
     if (neutral) { var q = document.createElement("span"); q.className = "small"; q.textContent = L.neutral; info.appendChild(document.createElement("br")); info.appendChild(q); }
   }
   function mark() {

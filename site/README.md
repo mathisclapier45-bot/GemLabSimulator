@@ -353,3 +353,17 @@ Chaque fiche d'espèce indique sa classe, et sa famille quand elle est montrée.
 - **Ajouter une famille au site** : 30 familles sont déjà écrites (quartz, tourmalines, feldspaths, olivines, jades, ivoires, opales, perles, corail, diamants…) mais cachées : dans `families.json`, mettre `"visible": true` pour celle qu'on veut montrer. Un test vérifie que chaque espèce est dans une classe et une seule, que les identifiants existent et que tout est traduit.
 - **Quand le jeu ajoute une espèce** : le test échoue tant qu'on ne l'a pas rangée dans une classe de `classes.json`.
 - Les textes sont de moi : à faire relire par un gemmologue avec le reste du contenu (`Docs/RELECTURE_CONTENU.md`).
+
+## 13. Espèces propres au site
+
+`data/extra_species.json` contient des espèces que l'encyclopédie montre mais que les données du jeu n'ont pas (encore) : les quatre nouveaux grenats écrits dans le code du jeu (mais pas encore générés dans Unity), et le grossulaire et l'andradite purs (deux pôles du schéma des grenats).
+Le fichier est fabriqué par `python3 site/tools/build_extra_species.py` (les quatre variétés sont lues dans `SceneBootstrap.cs`, les deux pôles sont écrits dans le script). Le catalogue les ajoute aux espèces du jeu, sauf si le jeu a déjà une espèce du même nom : la version du jeu gagne.
+Leur fiche porte un bandeau qui dit que ce n'est pas (encore) une pierre du jeu. Pour en ajouter une : l'écrire dans `build_extra_species.py`, puis lancer `build_extra_species.py`, `export_palettes.py`, `build_species_extra.py` (formule), puis `add_new_garnets.py` (classe, famille, anglais : on adapte la liste `NEW` et le dictionnaire `EN`).
+
+## 14. Les pierres qui changent de couleur : deux grilles
+
+Pour une pierre qui change de couleur (alexandrite, grenat à changement de couleur, saphir à changement de couleur), le nuancier « Couleurs possibles » de la fiche a **deux grilles, une pour chaque état** : à la lumière du jour, et sous une lampe à incandescence (plus chaude). Les deux grilles ont les mêmes cases aux mêmes places : choisir une couleur de jour montre, dans la case au même endroit de l'autre grille, ce qu'elle devient sous la lampe, et la fiche montre **deux pierres** côte à côte (en 3D, comme d'habitude).
+
+- **D'où viennent les couleurs de la lampe** : `tools/export_palettes.py` ajoute à chaque case de ces espèces (liste `COLOR_CHANGE`) sa couleur sous lampe : la teinte de jour est transformée par une table propre à l'espèce (alexandrite : du vert jaunâtre à l'orangé-rouge et du vert bleuté au pourpre ; grenat : du bleu-vert au rose-rouge et du bleu au violet ; saphir : du bleu au violet et du violet au rose-rouge), la saturation reste, la brillance baisse un peu. Le jeu, lui, donne aujourd'hui un même rose à toutes ces pierres (`GemLook.Incandescent`) : les tables du site gardent l'ordre des couleurs, ce qui donne une grille variée.
+- **Ajouter une pierre qui change de couleur** : l'ajouter à `COLOR_CHANGE` (avec sa table de teintes) dans `export_palettes.py`, relancer `python3 site/tools/export_palettes.py`. La fiche passe seule en deux grilles.
+- Le **saphir à changement de couleur** est une espèce du site (`extra_species.json`, voir la section 13), classée dans les oxydes et les corindons.

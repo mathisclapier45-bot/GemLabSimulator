@@ -79,7 +79,8 @@
     "Saphir_Orange",
     "Saphir_Rose",
     "Saphir_Vert",
-    "Saphir_Violet"
+    "Saphir_Violet",
+    "Saphir_Change_Couleur"
    ],
    "name": "Oxydes et hydroxydes",
    "chem": "Un métal (ou le silicium) combiné à l'oxygène ou au groupe OH",
@@ -207,7 +208,13 @@
     "Zircon",
     "Obsidienne",
     "Obsidienne_Flocons",
-    "Moldavite"
+    "Moldavite",
+    "Grenat_Mali",
+    "Grenat_Topazolite",
+    "Grenat_Pyrope_Chromifere",
+    "Grenat_Change_Couleur",
+    "Grenat_Grossulaire",
+    "Grenat_Andradite"
    ],
    "name": "Silicates",
    "chem": "Minéraux construits sur le groupe SiO₄ (silicium et oxygène)",
