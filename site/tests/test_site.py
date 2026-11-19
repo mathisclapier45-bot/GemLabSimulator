@@ -1565,6 +1565,24 @@ class TestFamilies(SiteTestCase):
         self.assertNotIn("Famille :", topaz)                  # no family page for it
         self.assertNotIn('href="/encyclopedie/familles/quartz"', c.get("/encyclopedie/quartz").text)   # the quartz family is not shown yet
 
+    def test_garnet_diagram(self):
+        fr = Client().get("/encyclopedie/familles/grenats").text
+        self.assertIn("Les grenats d'un coup d'œil".replace("'", "&#x27;"), fr)
+        self.assertEqual(fr.count('class="gdia"'), 2)                          # one triangle for each group
+        self.assertIn('role="img"', fr)
+        for formula in ("Mg₃Al₂(SiO₄)₃", "Fe₃Al₂(SiO₄)₃", "Mn₃Al₂(SiO₄)₃", "Ca₃Al₂(SiO₄)₃", "Ca₃Fe₂(SiO₄)₃", "Ca₃Cr₂(SiO₄)₃"):
+            self.assertIn(formula, fr)
+        for word in ("Rhodolite", "Malaya", "Change de couleur", "Grenat du Mali", "Hessonite", "Tsavorite", "Topazolite", "Pyrope chromifère"):
+            self.assertIn(word, fr)
+        self.assertIn('<table class="props gtable">', fr)                      # the same content as a table
+        self.assertIn('href="/encyclopedie/grenat-pyrope"', fr)
+        en = Client().get("/en/encyclopedie/familles/grenats").text
+        for word in ("Garnets at a glance", "Almandine", "Spessartine", "Color change", "Mali garnet", "Limited mixture", "Chrome pyrope"):
+            self.assertIn(word, en)
+        words = re.compile(r"\b(?:les|des|une|est|avec|selon|très|pierre|couleur|toujours)\b")
+        self.assertEqual(sorted(set(words.findall(re.sub(r"<[^>]+>", " ", en)))), [])
+        self.assertNotIn("gdia", Client().get("/encyclopedie/familles/corindons").text)   # only the garnets have it
+
     def test_every_class_has_an_icon(self):
         from app import catalog, class_icons
         for c in catalog.classes()["items"]:

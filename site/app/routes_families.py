@@ -1,5 +1,5 @@
 """The families of gems in the encyclopedia: the classes of minerals (and the synthetics), then the great families, each with its page."""
-from . import catalog, class_icons, markup
+from . import catalog, class_icons, garnet_diagram, markup
 from .views import esc, fmt_num, gem_svg, page
 from .web import HTTPError, Router
 
@@ -57,6 +57,10 @@ def index(req):
     return page(req, t("fam.title"), content, section="encyclopedia", description=t("fam.desc"))
 
 
+# Figures that belong to one family: the diagram of the garnets sits under their introduction.
+FIGURES = {"grenats": garnet_diagram.section}
+
+
 def _group_page(req, item, items, base, back_label, is_class=False):
     """The page of a class or of a family: introduction, what its species have in common, key points, the species."""
     t = req.t
@@ -104,10 +108,11 @@ def _group_page(req, item, items, base, back_label, is_class=False):
         '<nav class="crumbs"><a href="/encyclopedie/familles">{back}</a></nav>'
         '<header class="species-head" style="--gem:{gc};--gem2:{gf}">{gem}<div><h1>{name}</h1><p class="formula big">{chem}</p>'
         '<p class="small">{count}</p></div></header><p class="lead">{intro}</p>'
-        '<h2>{ph}</h2><table class="props">{props}</table><h2>{pt}</h2><ul class="famlist">{points}</ul>'
+        '{figure}<h2>{ph}</h2><table class="props">{props}</table><h2>{pt}</h2><ul class="famlist">{points}</ul>'
         '<h2>{mh}</h2><ul class="tiles">{tiles}</ul>{nav}').format(
         back=esc(back_label), gc=esc(first["iconColor"]), gf=esc(first["iconFacetColor"]), gem=_picture(item, 96, is_class),
         name=esc(item["name"]), chem=esc(item["chem"]), count=esc(_count(t, len(members))), intro=intro,
+        figure=FIGURES[item["id"]](t) if not is_class and item["id"] in FIGURES else "",
         ph=esc(t("fam.props")), props=props, pt=esc(t("fam.points")), points=points, mh=esc(t("fam.members")), tiles="".join(tiles), nav=nav)
     return page(req, item["name"], content, section="encyclopedia", description=item["intro"][:160])
 

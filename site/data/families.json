@@ -106,7 +106,7 @@
     "Grenat_Uvarovite"
    ],
    "name": "Grenats",
-   "chem": "Silicates cubiques de formule A₃B₂(SiO₄)₃",
+   "chem": "Silicates cubiques de formule X₃Y₂(SiO₄)₃",
    "intro": "Les grenats ne sont pas une espèce mais une famille d'espèces qui se mélangent : pyrope (rouge profond), almandin (rouge sombre), spessartite (orange), grossulaire (hessonite brun-orangé, tsavorite verte, hydrogrossulaire massif), andradite (démantoïde, d'un vert à très fort éclat) et uvarovite (vert émeraude, en croûtes de petits cristaux). La rhodolite est un mélange de pyrope et d'almandin, la malaya de pyrope et de spessartite.",
    "points": [
     "Cubique, donc isotrope : pas de pléochroïsme, pas de biréfringence.",

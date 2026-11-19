@@ -325,3 +325,22 @@ progress { width: 100%; max-width: 480px; height: 14px; }
 .famlist li { margin: 0.35rem 0; }
 .tile.wide .sub { font-size: 0.85rem; }
 .clsicon { flex: none; }
+
+/* Diagram of the garnets */
+.gfigure { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; }
+.gfigure figure { flex: 1 1 340px; margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.5rem 0.7rem 0.7rem; box-shadow: var(--shadow); }
+.gfigure figcaption { font-weight: 650; margin: 0.2rem 0 0.2rem; }
+.gdia { width: 100%; height: auto; display: block; }
+.gd-card { fill: var(--surface2); stroke: var(--line); stroke-width: 1.2; }
+.gd-pill { fill: var(--surface); stroke: var(--line); stroke-width: 1.2; }
+.gd-title { fill: var(--text); font-size: 15px; font-weight: 700; }
+.gd-formula { fill: var(--muted); font-size: 12px; }
+.gd-chip { fill: var(--text); font-size: 12px; }
+.gd-line { stroke: var(--muted); stroke-width: 3; stroke-linecap: round; }
+.gd-line.limited { stroke-dasharray: 3 8; stroke-width: 2.6; }
+.gdia a:hover .gd-card { stroke: var(--accent); }
+.glegend { list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; padding: 0; margin: 0.4rem 0; color: var(--muted); font-size: 0.9rem; }
+.glegend li { display: inline-flex; align-items: center; gap: 0.4rem; }
+.glegend svg .gd-line { stroke: var(--muted); }
+.gdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(135deg, #f27a55, #5d9fb5); }
+table.gtable th, table.gtable td { white-space: normal; }

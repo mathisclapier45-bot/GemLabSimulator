@@ -45,7 +45,7 @@
  },
  "grenats": {
   "name": "Garnets",
-  "chem": "Cubic silicates of formula A₃B₂(SiO₄)₃",
+  "chem": "Cubic silicates of formula X₃Y₂(SiO₄)₃",
   "intro": "Garnets are not one species but a family of species that mix: pyrope (deep red), almandine (dark red), spessartite (orange), grossular (brown-orange hessonite, green tsavorite, massive hydrogrossular), andradite (demantoid, a green of very high luster) and uvarovite (emerald green, in crusts of tiny crystals). Rhodolite is a mix of pyrope and almandine, malaya of pyrope and spessartite.",
   "points": [
    "Cubic, so isotropic: no pleochroism, no birefringence.",
