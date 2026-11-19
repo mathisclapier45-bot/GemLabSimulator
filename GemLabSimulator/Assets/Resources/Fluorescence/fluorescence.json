@@ -61,9 +61,9 @@
    "longText": "Jaune-brunâtre.",
    "longColor": "#C89A3C",
    "longIntensity": 0.45,
-   "shortText": "Aucune réaction.",
-   "shortColor": "#FFFFFF",
-   "shortIntensity": 0,
+   "shortText": "Variable : nulle, ou jaune moutarde à orangé faible.",
+   "shortColor": "#D9A030",
+   "shortIntensity": 0.3,
    "phosphorescent": false
   },
   {
@@ -80,12 +80,12 @@
   {
    "key": "Emeraude",
    "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
-   "longText": "Rouge ou vert, naturelle ou synthétique.",
+   "longText": "Inerte à rouge faible (le fer éteint la fluorescence).",
    "longColor": "#FF3A2A",
-   "longIntensity": 0.5,
-   "shortText": "Rouge, naturelle ou synthétique.",
+   "longIntensity": 0.2,
+   "shortText": "Inerte à rouge très faible.",
    "shortColor": "#FF3A2A",
-   "shortIntensity": 0.5,
+   "shortIntensity": 0.1,
    "phosphorescent": false
   },
   {
@@ -105,9 +105,9 @@
    "longText": "Aucune réaction.",
    "longColor": "#FFFFFF",
    "longIntensity": 0,
-   "shortText": "Vert : réaction du saphir bleu de synthèse.",
-   "shortColor": "#4DFF7A",
-   "shortIntensity": 0.7,
+   "shortText": "Crayeuse, vert-bleu : réaction du saphir bleu de synthèse (faible à moyenne).",
+   "shortColor": "#6FE8B0",
+   "shortIntensity": 0.45,
    "phosphorescent": false
   },
   {
@@ -138,20 +138,20 @@
    "longText": "Rouge (chrome).",
    "longColor": "#FF2A1A",
    "longIntensity": 0.75,
-   "shortText": "Rouge (chrome).",
+   "shortText": "Rouge faible.",
    "shortColor": "#FF2A1A",
-   "shortIntensity": 0.75,
+   "shortIntensity": 0.3,
    "phosphorescent": false
   },
   {
    "key": "Corindon_Rubis",
    "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
-   "longText": "Rouge vif (chrome). Naturel ou synthétique : la réaction est la même.",
+   "longText": "Rouge vif (chrome) ; faible à nulle si la pierre est riche en fer.",
    "longColor": "#FF2418",
    "longIntensity": 0.9,
-   "shortText": "Rouge vif (chrome). Naturel ou synthétique : la réaction est la même.",
+   "shortText": "Rouge, plus faible qu'en onde longue.",
    "shortColor": "#FF2418",
-   "shortIntensity": 0.9,
+   "shortIntensity": 0.6,
    "phosphorescent": false
   },
   {
@@ -179,13 +179,13 @@
   {
    "key": "Kunzite",
    "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
-   "longText": "Orange.",
+   "longText": "Orange (rose à orange), souvent forte.",
    "longColor": "#FF8C1F",
    "longIntensity": 0.55,
-   "shortText": "Aucune réaction.",
-   "shortColor": "#FFFFFF",
-   "shortIntensity": 0,
-   "phosphorescent": false
+   "shortText": "Plus faible, orangée à violacée selon l'échantillon.",
+   "shortColor": "#FF8C6A",
+   "shortIntensity": 0.25,
+   "phosphorescent": true
   },
   {
    "key": "Ecaille_Tortue",
@@ -270,9 +270,9 @@
    "longText": "Jaune-brunâtre.",
    "longColor": "#C89A3C",
    "longIntensity": 0.45,
-   "shortText": "Aucune réaction.",
-   "shortColor": "#FFFFFF",
-   "shortIntensity": 0,
+   "shortText": "Variable : nulle, ou jaune moutarde à orangé faible.",
+   "shortColor": "#D9A030",
+   "shortIntensity": 0.3,
    "phosphorescent": false
   },
   {
@@ -361,6 +361,39 @@
    "shortText": "Orange, plus vive qu'en onde longue.",
    "shortColor": "#FF9A3A",
    "shortIntensity": 0.8,
+   "phosphorescent": false
+  },
+  {
+   "key": "Diamant_Synthetique_HPHT",
+   "source": "Corrections 2026 d'après la littérature (voir Docs/VERIF_FLUORESCENCE.md)",
+   "longText": "Inerte ou faible, parfois orangée.",
+   "longColor": "#FF9A3A",
+   "longIntensity": 0.1,
+   "shortText": "Vert-jaune à jaune-vert, plus forte qu'en onde longue ; phosphorescence parfois prolongée.",
+   "shortColor": "#BEE83C",
+   "shortIntensity": 0.7,
+   "phosphorescent": true
+  },
+  {
+   "key": "Diamant_Synthetique_CVD",
+   "source": "Corrections 2026 d'après la littérature (voir Docs/VERIF_FLUORESCENCE.md)",
+   "longText": "Inerte ou faible, orangée.",
+   "longColor": "#FF8A3A",
+   "longIntensity": 0.15,
+   "shortText": "Orange à orange-rouge, plus forte qu'en onde longue.",
+   "shortColor": "#FF6A2A",
+   "shortIntensity": 0.5,
+   "phosphorescent": false
+  },
+  {
+   "key": "Emeraude_Synthetique",
+   "source": "Corrections 2026 d'après la littérature (voir Docs/VERIF_FLUORESCENCE.md)",
+   "longText": "Rouge, souvent plus vive que la naturelle.",
+   "longColor": "#FF3A2A",
+   "longIntensity": 0.6,
+   "shortText": "Rouge, plus faible qu'en onde longue.",
+   "shortColor": "#FF3A2A",
+   "shortIntensity": 0.45,
    "phosphorescent": false
   }
  ]

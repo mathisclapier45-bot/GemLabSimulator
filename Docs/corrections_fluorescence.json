@@ -1,0 +1,221 @@
+{
+ "note": "Corrections de fluorescence proposées (rapport : Docs/VERIF_FLUORESCENCE.md). apply=false : à vérifier ou facultatif. Appliquer avec tools/apply_fluorescence_corrections.py.",
+ "corrections": [
+  {
+   "id": "A1",
+   "apply": true,
+   "niveau": "erreur",
+   "espece": "Diamant_Synthetique_HPHT",
+   "pourquoi": "Les HPHT réagissent plus fort en onde courte qu'en onde longue (GIA), avec phosphorescence souvent longue.",
+   "entry": {
+    "key": "Diamant_Synthetique_HPHT",
+    "source": "Corrections 2026 d'après la littérature (voir Docs/VERIF_FLUORESCENCE.md)",
+    "longText": "Inerte ou faible, parfois orangée.",
+    "longColor": "#FF9A3A",
+    "longIntensity": 0.1,
+    "shortText": "Vert-jaune à jaune-vert, plus forte qu'en onde longue ; phosphorescence parfois prolongée.",
+    "shortColor": "#BEE83C",
+    "shortIntensity": 0.7,
+    "phosphorescent": true
+   }
+  },
+  {
+   "id": "A2",
+   "apply": true,
+   "niveau": "erreur",
+   "espece": "Diamant_Synthetique_CVD",
+   "pourquoi": "Pour les CVD aussi, la réaction en onde courte est plus forte qu'en onde longue (orange-rouge, centre NV0).",
+   "entry": {
+    "key": "Diamant_Synthetique_CVD",
+    "source": "Corrections 2026 d'après la littérature (voir Docs/VERIF_FLUORESCENCE.md)",
+    "longText": "Inerte ou faible, orangée.",
+    "longColor": "#FF8A3A",
+    "longIntensity": 0.15,
+    "shortText": "Orange à orange-rouge, plus forte qu'en onde longue.",
+    "shortColor": "#FF6A2A",
+    "shortIntensity": 0.5,
+    "phosphorescent": false
+   }
+  },
+  {
+   "id": "B1",
+   "apply": true,
+   "niveau": "correction",
+   "espece": "Zircon (et Zircon_Vert)",
+   "pourquoi": "Jaune moutarde ou orangé typique en onde courte, ou inerte selon la pierre : « aucune réaction » est trop absolu.",
+   "entry": {
+    "key": "Zircon",
+    "shortText": "Variable : nulle, ou jaune moutarde à orangé faible.",
+    "shortColor": "#D9A030",
+    "shortIntensity": 0.3
+   }
+  },
+  {
+   "id": "B1b",
+   "apply": true,
+   "niveau": "correction",
+   "espece": "Zircon_Vert",
+   "pourquoi": "Même chose que Zircon.",
+   "entry": {
+    "key": "Zircon_Vert",
+    "shortText": "Variable : nulle, ou jaune moutarde à orangé faible.",
+    "shortColor": "#D9A030",
+    "shortIntensity": 0.3
+   }
+  },
+  {
+   "id": "B2",
+   "apply": true,
+   "niveau": "correction",
+   "espece": "Kunzite",
+   "pourquoi": "Réaction plus faible mais présente en onde courte (orange ou violet selon l'échantillon) ; phosphorescence fréquente.",
+   "entry": {
+    "key": "Kunzite",
+    "longText": "Orange (rose à orange), souvent forte.",
+    "shortText": "Plus faible, orangée à violacée selon l'échantillon.",
+    "shortColor": "#FF8C6A",
+    "shortIntensity": 0.25,
+    "phosphorescent": true
+   }
+  },
+  {
+   "id": "B3",
+   "apply": true,
+   "niveau": "correction",
+   "espece": "Spinelle",
+   "pourquoi": "Rouge (chrome) surtout en onde longue ; faible à nulle en onde courte.",
+   "entry": {
+    "key": "Spinelle",
+    "shortText": "Rouge faible.",
+    "shortIntensity": 0.3
+   }
+  },
+  {
+   "id": "B4",
+   "apply": true,
+   "niveau": "correction",
+   "espece": "Corindon_Rubis",
+   "pourquoi": "Le rubis naturel réagit plus en onde longue qu'en onde courte ; faible à inerte s'il est riche en fer (Thaïlande, Cambodge).",
+   "entry": {
+    "key": "Corindon_Rubis",
+    "longText": "Rouge vif (chrome) ; faible à nulle si la pierre est riche en fer.",
+    "shortText": "Rouge, plus faible qu'en onde longue.",
+    "shortIntensity": 0.6
+   }
+  },
+  {
+   "id": "B5",
+   "apply": true,
+   "niveau": "correction",
+   "espece": "Emeraude",
+   "pourquoi": "La plupart des émeraudes naturelles sont inertes ou faibles (le fer éteint la fluorescence) ; les synthétiques sont plus rouges. Aucune source pour « vert ».",
+   "entry": {
+    "key": "Emeraude",
+    "longText": "Inerte à rouge faible (le fer éteint la fluorescence).",
+    "longIntensity": 0.2,
+    "shortText": "Inerte à rouge très faible.",
+    "shortIntensity": 0.1
+   }
+  },
+  {
+   "id": "B5b",
+   "apply": true,
+   "niveau": "correction",
+   "espece": "Emeraude_Synthetique (nouvelle entrée, utilisée pour une émeraude de synthèse)",
+   "pourquoi": "Les émeraudes de synthèse (hydrothermales, au flux) fluorescent en rouge, plus fort que les naturelles.",
+   "entry": {
+    "key": "Emeraude_Synthetique",
+    "source": "Corrections 2026 d'après la littérature (voir Docs/VERIF_FLUORESCENCE.md)",
+    "longText": "Rouge, souvent plus vive que la naturelle.",
+    "longColor": "#FF3A2A",
+    "longIntensity": 0.6,
+    "shortText": "Rouge, plus faible qu'en onde longue.",
+    "shortColor": "#FF3A2A",
+    "shortIntensity": 0.45,
+    "phosphorescent": false
+   }
+  },
+  {
+   "id": "B6",
+   "apply": true,
+   "niveau": "correction",
+   "espece": "Corindon_Synthetique_Saphir",
+   "pourquoi": "Réaction « crayeuse » bleu à bleu-vert en onde courte, faible à moyenne.",
+   "entry": {
+    "key": "Corindon_Synthetique_Saphir",
+    "shortText": "Crayeuse, vert-bleu : réaction du saphir bleu de synthèse (faible à moyenne).",
+    "shortColor": "#6FE8B0",
+    "shortIntensity": 0.45
+   }
+  },
+  {
+   "id": "B7",
+   "apply": false,
+   "niveau": "à vérifier",
+   "espece": "Chrysoberyl_Alexandrite",
+   "pourquoi": "Rouge en onde longue confirmé ; en onde courte je n'ai pas de source (de mémoire : inerte à faible). À appliquer seulement après vérification.",
+   "entry": {
+    "key": "Chrysoberyl_Alexandrite",
+    "shortText": "Rouge faible (chrome).",
+    "shortIntensity": 0.35
+   }
+  },
+  {
+   "id": "C1",
+   "apply": false,
+   "niveau": "nuance",
+   "espece": "Scapolite",
+   "pourquoi": "Dépend de l'origine : jaune en LW (Afghanistan) ou rose en LW et rouge-orange en SW (Inde, Tanzanie).",
+   "entry": {
+    "key": "Scapolite",
+    "longText": "Jaunâtre à rose selon l'origine.",
+    "shortText": "Rougeâtre à orangé selon l'origine.",
+    "shortIntensity": 0.45
+   }
+  },
+  {
+   "id": "C2",
+   "apply": false,
+   "niveau": "nuance",
+   "espece": "Saphir_Jaune",
+   "pourquoi": "La littérature donne orange faible à moyen en onde courte pour le saphir jaune naturel.",
+   "entry": {
+    "key": "Saphir_Jaune",
+    "shortText": "Orangée faible possible.",
+    "shortColor": "#FFA860",
+    "shortIntensity": 0.1
+   }
+  },
+  {
+   "id": "C3",
+   "apply": false,
+   "niveau": "nuance",
+   "espece": "Opale_Noble",
+   "pourquoi": "Réaction souvent plus forte en onde longue qu'en onde courte ; phosphorescence verte possible.",
+   "entry": {
+    "key": "Opale_Noble",
+    "shortText": "Blanc à vert, plus faible qu'en onde longue.",
+    "shortIntensity": 0.3,
+    "phosphorescent": true
+   }
+  },
+  {
+   "id": "C4",
+   "apply": false,
+   "niveau": "nuance",
+   "espece": "Turquoise (et Turquoise_Stabilisee)",
+   "pourquoi": "Le jeu dit « non applicable (minéral opaque) » en onde courte mais donne une réaction en onde longue : incohérent. Une pierre opaque peut réagir en surface.",
+   "entry": {
+    "key": "Turquoise",
+    "source": "Corrections 2026 d'après la littérature (voir Docs/VERIF_FLUORESCENCE.md)",
+    "longText": "Verdâtre à jaunâtre faible possible.",
+    "longColor": "#C8E060",
+    "longIntensity": 0.15,
+    "shortText": "Inerte ou très faible en surface.",
+    "shortColor": "#FFFFFF",
+    "shortIntensity": 0,
+    "phosphorescent": false
+   }
+  }
+ ]
+}
