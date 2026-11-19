@@ -1650,7 +1650,7 @@ class TestFamilies(SiteTestCase):
 
 
 class TestColorChange(SiteTestCase):
-    CHANGING = ("chrysoberyl-alexandrite", "grenat-change-couleur", "saphir-change-couleur")
+    CHANGING = ("chrysoberyl-alexandrite", "grenat-change-couleur", "saphir-change-couleur", "diaspore-zultanite")
 
     def test_stones_that_change_color_have_two_grids_and_two_stones(self):
         c = Client()
@@ -1697,6 +1697,58 @@ class TestColorChange(SiteTestCase):
         self.assertIn('href="/encyclopedie/familles/corindons"', text)
         self.assertIn("Color-Change Sapphire", Client().get("/en/encyclopedie/saphir-change-couleur").text)
         self.assertIn('href="/encyclopedie/saphir-change-couleur"', Client().get("/encyclopedie/familles/corindons").text)
+
+
+class TestNewSpecies(SiteTestCase):
+    """The 22 species added for the game and the site (tools/new_species_spec.py)."""
+
+    def test_every_new_species_has_its_pages_in_both_languages(self):
+        sys.path.insert(0, str(SITE / "tools"))
+        from new_species_spec import SPECIES
+        c = Client()
+        words = re.compile(r"\b(?:les|des|une|est|avec|selon|très|pierre|couleur|toujours)\b")
+        self.assertEqual(len(SPECIES), 22)
+        for sp in SPECIES:
+            slug = sp["id"].lower().replace("_", "-")
+            fr = c.get("/encyclopedie/" + slug)
+            self.assertEqual(fr.status, 200, slug)
+            self.assertIn(sp["name"][0], fr.text, slug)
+            self.assertIn('href="/encyclopedie/classes/{}"'.format(sp["cls"]), fr.text, slug)
+            self.assertIn("Couleurs possibles", fr.text, slug)
+            self.assertIn("n&#x27;est pas (encore) une pierre du jeu", fr.text, slug)
+            en = c.get("/en/encyclopedie/" + slug)
+            self.assertEqual(en.status, 200, slug)
+            self.assertIn(sp["name"][1], en.text, slug)
+            self.assertIn("not (yet) a stone of the game", en.text, slug)
+            self.assertEqual(sorted(set(words.findall(re.sub(r"<[^>]+>", " ", en.text)))), [], slug)
+
+    def test_classes_and_families(self):
+        from app import catalog
+        classes = {x["id"]: {e["id"] for e in x["species"]} for x in catalog.classes()["items"]}
+        self.assertIn("Larimar", classes["silicates"])
+        self.assertIn("Azurite", classes["carbonates"])
+        self.assertIn("Variscite", classes["phosphates"])
+        self.assertIn("Diaspore_Zultanite", classes["oxydes"])
+        self.assertIn("Jaspe", classes["oxydes"])                        # quartz and chalcedony are filed with the oxides
+        self.assertNotIn("Jaspe", classes["silicates"])
+        text = Client().get("/encyclopedie/classes/silicates").text
+        self.assertIn('href="/encyclopedie/larimar"', text)
+        # the families these species belong to exist but stay hidden, like the other ones
+        self.assertEqual(Client().get("/encyclopedie/familles/tourmalines").status, 404)
+
+    def test_zultanite_changes_color_and_benitoite_glows(self):
+        c = Client()
+        text = c.get("/encyclopedie/diaspore-zultanite").text
+        self.assertIn('<section class="colors change"', text)
+        self.assertEqual(text.count('<table class="pgrid">'), 2)
+        self.assertIn("monts Ilbir", text)
+        fluo = c.get("/encyclopedie/benitoite").text
+        self.assertIn("Bleu-blanc vif", fluo)
+        self.assertIn("Bénitoïte", fluo)
+
+    def test_search_finds_a_new_species(self):
+        self.assertIn('href="/encyclopedie/charoite"', Client().get("/encyclopedie?q=charo%C3%AFte").text)
+        self.assertIn('href="/en/encyclopedie/larimar"', Client().get("/en/encyclopedie?q=larimar").text)
 
 
 class TestCode(unittest.TestCase):

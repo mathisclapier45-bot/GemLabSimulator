@@ -96,7 +96,11 @@ def _build(lang="fr"):
     extra_path = config.DATA_DIR / "extra_species.json"
     if extra_path.exists():
         known = {s["id"] for s in raw["species"]}
-        raw["species"] = list(raw["species"]) + [dict(e, siteOnly=True) for e in _read_json(extra_path)["species"] if e["id"] not in known]
+        added = [dict(e, siteOnly=True) for e in _read_json(extra_path)["species"] if e["id"] not in known]
+        raw["species"] = list(raw["species"]) + added
+        have = {e["key"] for e in raw["fluorescence"]["entries"]}
+        raw["fluorescence"] = dict(raw["fluorescence"], entries=list(raw["fluorescence"]["entries"]) + [   # the fluorescence of a species the game data does not have
+            dict(e["fluoEntry"], key=e["id"], source="site") for e in added if e.get("fluoEntry") and e["id"] not in have])
 
     def t_(text):
         return tr.get(text, text) if isinstance(text, str) else text

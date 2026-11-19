@@ -1972,17 +1972,37 @@ public static partial class SceneBootstrap
         // Grass: flat tiles with, in meadows, a few tufts (the tile Grass_1_9 used before carries a notch of earth in its corner, which showed as a grid of angles).
         var grassTile = GetOrCreateTileFromSprite("grass_flat", LoadPackSprite(PackTerrains + "Grass_Water_1_23.png"));
         var grassTuftTile = GetOrCreateTileFromSprite("grass_tuft", LoadPackSprite(PackTerrains + "Grass_Water_1_9.png"));
+        // Several plain tiles and several with detail (tufts, flowers, clover), so the meadow never repeats as a grid.
+        var grassPlainTiles = new List<TileBase> { grassTile };
+        foreach (var plain in new[] { "Grass_Plain_1", "Grass_Plain_2", "Grass_Plain_3" })
+            grassPlainTiles.Add(GetOrCreateTileFromSprite("town_" + plain, LoadPackSprite(PackTerrains + plain + ".png")));
+        var grassDetailTiles = new List<TileBase> { grassTuftTile };
+        foreach (var detail in new[] { "Grass_Tuft_2", "Grass_Flowers_1", "Grass_Flowers_2", "Grass_Flowers_3", "Grass_Clover" })
+            grassDetailTiles.Add(GetOrCreateTileFromSprite("town_" + detail, LoadPackSprite(PackTerrains + detail + ".png")));
+        var grassSet = new HashSet<TileBase>(grassPlainTiles);
+        foreach (var detailTile in grassDetailTiles) grassSet.Add(detailTile);
         TileBase GrassAt(int gx, int gy)
         {
             var meadow = TownShape.ValueNoise(gx * 0.11f + 3f, gy * 0.11f + 9f, 5);
-            var roll = Mathf.Abs((gx * 73856093) ^ (gy * 19349663)) % 100;
-            return roll < (meadow > 0.55f ? 50 : 7) ? grassTuftTile : grassTile;
+            var hash = Mathf.Abs((gx * 73856093) ^ (gy * 19349663));
+            var pick = (hash / 100) % 1000;
+            return hash % 100 < (meadow > 0.55f ? 42 : 8) ? grassDetailTiles[pick % grassDetailTiles.Count] : grassPlainTiles[pick % grassPlainTiles.Count];
         }
-        bool IsGrassTile(TileBase t) => t == grassTile || t == grassTuftTile;
+        bool IsGrassTile(TileBase t) => grassSet.Contains(t);
         var hedgeTile = GetOrCreateTile("hedge_pixel", HedgePixel);
         var pathTile = GetOrCreateTileFromSprite("path_pack", LoadPackSprite(PackTerrains + "Grass_1_21.png"));
         var pathTileAlt = GetOrCreateTileFromSprite("path_pack_alt", LoadPackSprite(PackTerrains + "Grass_3_9.png"));
         var sidewalkTile = GetOrCreateTileFromSprite("sidewalk_pack", LoadPackSprite(PackCityTerrains + "Sidewalk_1_9.png"));
+        // Pavements with their kerb on the side of the road, and dirt paths with the meadow growing over their sides.
+        var kerbNorth = GetOrCreateTileFromSprite("town_kerb_n", LoadPackSprite(PackCityTerrains + "Sidewalk_Curb_N.png"));
+        var kerbSouth = GetOrCreateTileFromSprite("town_kerb_s", LoadPackSprite(PackCityTerrains + "Sidewalk_Curb_S.png"));
+        var kerbEast = GetOrCreateTileFromSprite("town_kerb_e", LoadPackSprite(PackCityTerrains + "Sidewalk_Curb_E.png"));
+        var kerbWest = GetOrCreateTileFromSprite("town_kerb_w", LoadPackSprite(PackCityTerrains + "Sidewalk_Curb_W.png"));
+        var pathEdgeNorth = GetOrCreateTileFromSprite("town_path_edge_n", LoadPackSprite(PackTerrains + "Path_Edge_N.png"));
+        var pathEdgeSouth = GetOrCreateTileFromSprite("town_path_edge_s", LoadPackSprite(PackTerrains + "Path_Edge_S.png"));
+        var pathEdgeEast = GetOrCreateTileFromSprite("town_path_edge_e", LoadPackSprite(PackTerrains + "Path_Edge_E.png"));
+        var pathEdgeWest = GetOrCreateTileFromSprite("town_path_edge_w", LoadPackSprite(PackTerrains + "Path_Edge_W.png"));
+        var pathSet = new HashSet<TileBase> { pathTile, pathTileAlt };
 
         // The land: grass everywhere (with the tiles of the set Grass_Water_1 on the shore of the lakes, bank of earth on the south side), a wall of hedge along the edge of the map.
         // The water of the lakes is painted below, once its layer exists.
@@ -2014,9 +2034,16 @@ public static partial class SceneBootstrap
             {
                 for (var y = minY; y <= maxY; y++)
                 {
-                    var isSidewalk = vertical ? (x == minX || x == maxX) : (y == minY || y == maxY);
-                    var tile = isSidewalk ? sidewalkTile : (Mathf.Abs((x * 73856093) ^ (y * 19349663)) % 100 < 12 ? pathTile : pathTileAlt);   // earth: mostly one colour, a few lighter tiles
-                    groundTilemap.SetTile(new Vector3Int(x, y, 0), tile);
+                    var cell = new Vector3Int(x, y, 0);
+                    TileBase edge = null;
+                    if (vertical) edge = x == minX ? pathEdgeWest : x == maxX ? pathEdgeEast : null;
+                    else edge = y == minY ? pathEdgeSouth : y == maxY ? pathEdgeNorth : null;
+                    if (edge != null)
+                    {
+                        if (!pathSet.Contains(groundTilemap.GetTile(cell))) groundTilemap.SetTile(cell, edge);    // where two paths join, the earth of the first one stays
+                        continue;
+                    }
+                    groundTilemap.SetTile(cell, Mathf.Abs((x * 73856093) ^ (y * 19349663)) % 100 < 12 ? pathTile : pathTileAlt);   // earth: mostly one colour, a few lighter tiles
                 }
             }
         }
@@ -2059,7 +2086,8 @@ public static partial class SceneBootstrap
                     var isEdge = vertical ? (x == minX || x == maxX) : (y == minY || y == maxY);
                     if (isEdge)
                     {
-                        if (!asphaltSet.Contains(existing)) groundTilemap.SetTile(cell, sidewalkTile);
+                        if (!asphaltSet.Contains(existing))
+                            groundTilemap.SetTile(cell, vertical ? (x == minX ? kerbEast : kerbWest) : (y == minY ? kerbNorth : kerbSouth));
                         continue;
                     }
 
@@ -2103,6 +2131,8 @@ public static partial class SceneBootstrap
             GetOrCreateTileFromSprite("water_edge_top_3", LoadPackSprite(PackTerrains + "Deep_Water_1_3.png")),
         };
         var bottomEdgeTile = GetOrCreateTileFromSprite("water_edge_bottom", LoadPackSprite(PackTerrains + "Deep_Water_1_6.png"));
+        var riverBankTop = GetOrCreateTileFromSprite("town_river_bank_top", LoadPackSprite(PackTerrains + "River_Bank_Top.png"));
+        var riverBankBottom = GetOrCreateTileFromSprite("town_river_bank_bottom", LoadPackSprite(PackTerrains + "River_Bank_Bottom.png"));
         var plankTile = GetOrCreateTileFromSprite("bridge_plank", LoadPackSprite("Assets/Art/Sprites/bridge_plank.png"));
 
         // The lakes and marshes: every cell that is not land. Ripples on the water, lily pads, and in the marshes islets of grass.
@@ -2162,7 +2192,8 @@ public static partial class SceneBootstrap
                 if (!land[x - TownMinX, y - TownMinY]) continue;            // already a lake
 
                 TileBase tile;
-                if (y == RiverMaxY || y == RiverMinY) tile = shallowTile;
+                if (y == RiverMaxY) tile = riverBankTop;
+                else if (y == RiverMinY) tile = riverBankBottom;
                 else if (y == RiverMaxY - 1) tile = topEdgeTiles[Mathf.Abs(x) % topEdgeTiles.Length];
                 else if (y == RiverMinY + 1) tile = bottomEdgeTile;
                 else tile = deepTiles[(Mathf.Abs(x * 5 + y) % 9 == 0) ? 1 : 0];
@@ -8847,6 +8878,1072 @@ public static partial class SceneBootstrap
                     new GemOrigin { name = "Kenya", rarityWeight = 40, valueMultiplier = 1.1f },
                 };
             }),
+            BuildGem("Grenat_Mali", g =>
+            {
+                g.displayName = "Grenat du Mali";
+                g.description = "Un grenat jaune-vert à vert olive, mélange de grossulaire et d'andradite, découvert au Mali en 1994. Son éclat et son feu rappellent le démantoïde.";
+                g.icon = GetGemIconSprite("grenatmali", new Color(0.55f, 0.62f, 0.18f), new Color(0.78f, 0.82f, 0.38f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("grenatmali", new Color(0.55f, 0.62f, 0.18f), "Ovale");
+                g.refractiveIndex = 1.8f;
+                g.density = 3.75f;
+                g.hardness = 6.75f;
+                g.lengthMm = 6.5f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.6f;
+                g.weightCarats = 1.1f;
+                g.luster = "Vitreux à sub-adamantin";
+                g.color = "Jaune-vert à vert olive";
+                g.shape = "Ovale";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Généralement inerte sous UV longue onde.";
+                g.fluorescenceShortWave = "Généralement inerte sous UV courte onde.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.000f;
+                g.absorptionSpectrum = "Forte absorption dans le violet et le bleu (fer), parfois des bandes faibles du manganèse.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 440f, widthNm = 50f },
+                    new SpectrumLine { wavelengthNm = 480f, widthNm = 60f },
+                };
+                g.inclusions = "Généralement assez propre : fines aiguilles et plumes de guérison, plus rarement des fibres rappelant le démantoïde.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Attiré par un aimant puissant (grenat riche en fer).";
+                g.baseValue = 70;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Mali (région de Kayes)", rarityWeight = 100, valueMultiplier = 1.0f,
+                        inclusionOverride = "Gisement découvert en 1994 : des cristaux jaune-vert sans cassure, au feu marqué." },
+                };
+            }),
+            BuildGem("Grenat_Topazolite", g =>
+            {
+                g.displayName = "Grenat Topazolite";
+                g.description = "Un grenat andradite jaune à jaune-vert, à l'éclat très fort, que sa couleur fait ressembler à la topaze (d'où son nom). C'est la variété jaune du démantoïde.";
+                g.icon = GetGemIconSprite("topazolite", new Color(0.85f, 0.75f, 0.18f), new Color(0.97f, 0.9f, 0.45f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("topazolite", new Color(0.85f, 0.75f, 0.18f), "Rond");
+                g.refractiveIndex = 1.887f;
+                g.density = 3.85f;
+                g.hardness = 6.75f;
+                g.lengthMm = 5.5f;
+                g.widthMm = 4.5f;
+                g.depthMm = 3.0f;
+                g.weightCarats = 0.8f;
+                g.luster = "Vitreux à sub-adamantin";
+                g.color = "Jaune à jaune-vert";
+                g.shape = "Rond";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Généralement inerte sous UV.";
+                g.fluorescenceShortWave = "Généralement inerte sous UV.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.000f;
+                g.absorptionSpectrum = "Forte absorption dans le violet et le bleu (fer ferrique).";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 440f, widthNm = 45f },
+                };
+                g.inclusions = "Fines inclusions fibreuses possibles, fissures ; généralement propre.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Attiré par un aimant puissant (grenat riche en fer).";
+                g.baseValue = 90;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Italie (Piémont)", rarityWeight = 50, valueMultiplier = 1.3f,
+                        inclusionOverride = "Gisement historique des Alpes, où la variété a reçu son nom." },
+                    new GemOrigin { name = "Autre gisement", rarityWeight = 50, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Grenat_Pyrope_Chromifere", g =>
+            {
+                g.displayName = "Grenat Pyrope chromifère";
+                g.description = "Un pyrope d'un rouge vif, parfois orangé, coloré par le chrome. On le trouve dans les kimberlites, les roches qui contiennent le diamant : les prospecteurs le cherchent comme indice.";
+                g.icon = GetGemIconSprite("pyropechromifere", new Color(0.75f, 0.08f, 0.1f), new Color(0.92f, 0.3f, 0.25f), "Rond", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("pyropechromifere", new Color(0.75f, 0.08f, 0.1f), "Rond");
+                g.refractiveIndex = 1.745f;
+                g.density = 3.75f;
+                g.hardness = 7.25f;
+                g.lengthMm = 6.5f;
+                g.widthMm = 5.2f;
+                g.depthMm = 3.6f;
+                g.weightCarats = 1.1f;
+                g.luster = "Vitreux";
+                g.color = "Rouge vif (parfois orangé)";
+                g.shape = "Rond";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Généralement inerte sous UV longue onde.";
+                g.fluorescenceShortWave = "Généralement inerte sous UV courte onde.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.000f;
+                g.absorptionSpectrum = "Spectre du chrome : large bande vers 570 nm et absorption du violet, avec de faibles bandes du fer.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 570f, widthNm = 90f },
+                    new SpectrumLine { wavelengthNm = 410f, widthNm = 60f },
+                };
+                g.inclusions = "Souvent propre ; parfois des aiguilles de rutile, de petits cristaux de chromite ou de diopside.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Réaction rougeâtre possible (coloration au chrome).";
+                g.magnetism = "Modérément attiré par un aimant puissant (fer et magnésium).";
+                g.baseValue = 55;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Afrique du Sud (kimberlites)", rarityWeight = 50, valueMultiplier = 1.0f,
+                        inclusionOverride = "Trouvé avec les diamants dans les cheminées kimberlitiques de la région de Kimberley." },
+                    new GemOrigin { name = "Russie (Sibérie)", rarityWeight = 50, valueMultiplier = 1.0f },
+                };
+            }),
+            BuildGem("Grenat_Change_Couleur", g =>
+            {
+                g.displayName = "Grenat à changement de couleur";
+                g.description = "Un grenat pyrope-spessartite qui change de couleur : bleu-vert à la lumière du jour, violet à rouge sous une lampe à incandescence, comme l'alexandrite. Découvert à Madagascar à la fin des années 1990.";
+                g.icon = GetGemIconSprite("grenatchangecouleur", new Color(0.25f, 0.55f, 0.6f), new Color(0.5f, 0.78f, 0.8f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("grenatchangecouleur", new Color(0.25f, 0.55f, 0.6f), "Ovale");
+                g.refractiveIndex = 1.765f;
+                g.density = 3.85f;
+                g.hardness = 7.25f;
+                g.lengthMm = 7.0f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.8f;
+                g.weightCarats = 1.3f;
+                g.luster = "Vitreux";
+                g.color = "Bleu-vert à violet (changement de couleur)";
+                g.shape = "Ovale";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence sous UV longue onde.";
+                g.fluorescenceShortWave = "Aucune fluorescence sous UV courte onde.";
+                g.opticalCharacter = "Isotrope (monoréfringent, réseau cubique).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Isotropic;
+                g.birefringence = 0.000f;
+                g.absorptionSpectrum = "Bandes du vanadium et du chrome (large bande vers 570 nm) et fines bandes du manganèse dans le bleu.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 430f, widthNm = 10f },
+                    new SpectrumLine { wavelengthNm = 462f, widthNm = 10f },
+                    new SpectrumLine { wavelengthNm = 570f, widthNm = 80f },
+                };
+                g.inclusions = "Généralement propre ; fines aiguilles de rutile et petits cristaux.";
+                g.interferenceFigure = "Aucune figure d'interférence (matériau isotrope).";
+                g.chelseaFilterReaction = "Réaction rougeâtre faible possible (chrome et vanadium).";
+                g.magnetism = "Attiré par un aimant puissant (fer et manganèse).";
+                g.baseValue = 200;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Madagascar (Bekily)", rarityWeight = 60, valueMultiplier = 1.3f,
+                        inclusionOverride = "Gisement des premiers grenats à changement de couleur, bleu-vert devenant violet." },
+                    new GemOrigin { name = "Tanzanie (Umba)", rarityWeight = 40, valueMultiplier = 1.1f },
+                };
+            }),
+            // <new-species-2026-11-20>
+            BuildGem("Amazonite", g =>
+            {
+                g.displayName = "Amazonite";
+                g.description = "Un feldspath vert bleuté, coloré par le plomb, que l'on reconnaît à son aspect quadrillé. On le polit en cabochons et en perles.";
+                g.icon = GetGemIconSprite("amazonite", new Color(0.3f, 0.62f, 0.55f), new Color(0.55f, 0.82f, 0.74f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("amazonite", new Color(0.3f, 0.62f, 0.55f), "Ovale");
+                g.refractiveIndex = 1.526f;
+                g.density = 2.56f;
+                g.hardness = 6.25f;
+                g.lengthMm = 8f;
+                g.widthMm = 6f;
+                g.depthMm = 4f;
+                g.weightCarats = 3f;
+                g.luster = "Vitreux à nacré";
+                g.color = "Vert bleuté (vert-de-gris)";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Généralement inerte sous UV longue onde.";
+                g.fluorescenceShortWave = "Généralement inerte sous UV courte onde.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.008f;
+                g.absorptionSpectrum = "Pas de spectre net.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Macle en grille (réseau quadrillé) du microcline et lamelles blanches de perthite.";
+                g.interferenceFigure = "Figure d'interférence biaxiale nette.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 8;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Russie (Oural)", rarityWeight = 40, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "États-Unis (Colorado)", rarityWeight = 35, valueMultiplier = 1.2f,
+                        inclusionOverride = "Gisement célèbre de Pikes Peak : cristaux d'un vert bleu intense." },
+                    new GemOrigin { name = "Brésil", rarityWeight = 25, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Pierre_Soleil", g =>
+            {
+                g.displayName = "Pierre de soleil";
+                g.description = "Un feldspath orangé qui scintille de milliers de petites paillettes d'hématite ou de goethite : c'est l'aventurescence. La pierre « brille comme le soleil ».";
+                g.icon = GetGemIconSprite("pierresoleil", new Color(0.85f, 0.48f, 0.22f), new Color(0.96f, 0.7f, 0.42f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("pierresoleil", new Color(0.85f, 0.48f, 0.22f), "Ovale");
+                g.refractiveIndex = 1.542f;
+                g.density = 2.65f;
+                g.hardness = 6.25f;
+                g.lengthMm = 9f;
+                g.widthMm = 7f;
+                g.depthMm = 4.5f;
+                g.weightCarats = 3.5f;
+                g.luster = "Vitreux";
+                g.color = "Orange à rouge-brun, avec des reflets dorés";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Transparent à translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.008f;
+                g.absorptionSpectrum = "Pas de spectre net ; absorption diffuse du fer.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Plaquettes orientées de goethite ou d'hématite, qui donnent le scintillement doré (aventurescence) ; clivages.";
+                g.interferenceFigure = "Figure d'interférence biaxiale nette.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 25;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Inde", rarityWeight = 35, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "États-Unis (Oregon)", rarityWeight = 35, valueMultiplier = 1.3f,
+                        inclusionOverride = "Gisement de grandes pierres claires, parfois rouge et vert (cuivre natif)." },
+                    new GemOrigin { name = "Norvège", rarityWeight = 15, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "Tanzanie", rarityWeight = 15, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Hiddenite", g =>
+            {
+                g.displayName = "Hiddénite";
+                g.description = "Le spodumène vert, cousin de la kunzite, coloré par le chrome. Elle doit son nom à Hiddenite, en Caroline du Nord, où elle a été découverte en 1879.";
+                g.icon = GetGemIconSprite("hiddenite", new Color(0.3f, 0.68f, 0.4f), new Color(0.6f, 0.88f, 0.62f), "Coussin", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("hiddenite", new Color(0.3f, 0.68f, 0.4f), "Coussin");
+                g.refractiveIndex = 1.665f;
+                g.density = 3.18f;
+                g.hardness = 6.75f;
+                g.lengthMm = 7f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.6f;
+                g.weightCarats = 1.4f;
+                g.luster = "Vitreux";
+                g.color = "Vert pâle à vert émeraude";
+                g.shape = "Coussin";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Vert bleuté / Vert jaunâtre selon l'axe (fort).";
+                g.fluorescenceLongWave = "Orange à jaune faible sous UV longue onde.";
+                g.fluorescenceShortWave = "Faible ou inerte sous UV courte onde.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.015f;
+                g.absorptionSpectrum = "Spectre du chrome : fines raies dans le rouge.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 646f, widthNm = 3f },
+                    new SpectrumLine { wavelengthNm = 669f, widthNm = 3f },
+                    new SpectrumLine { wavelengthNm = 686f, widthNm = 4f },
+                };
+                g.inclusions = "Clivage parfait dans deux directions, tubes et cavités à deux phases ; pierre fragile aux chocs.";
+                g.interferenceFigure = "Figure d'interférence biaxiale nette.";
+                g.chelseaFilterReaction = "Réaction rougeâtre faible possible (chrome).";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 60;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Afghanistan (Nuristan)", rarityWeight = 40, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "États-Unis (Caroline du Nord)", rarityWeight = 30, valueMultiplier = 1.6f,
+                        inclusionOverride = "Gisement historique d'Hiddenite, où la pierre a reçu son nom." },
+                    new GemOrigin { name = "Brésil", rarityWeight = 30, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Tourmaline_Verdelite", g =>
+            {
+                g.displayName = "Tourmaline verdélite";
+                g.description = "La tourmaline verte : vert bouteille, émeraude ou olive, colorée par le fer, le manganèse ou le chrome. C'est la couleur de tourmaline la plus courante.";
+                g.icon = GetGemIconSprite("tourmalineverdelite", new Color(0.12f, 0.5f, 0.3f), new Color(0.35f, 0.75f, 0.52f), "Rectangle", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("tourmalineverdelite", new Color(0.12f, 0.5f, 0.3f), "Rectangle");
+                g.refractiveIndex = 1.63f;
+                g.density = 3.06f;
+                g.hardness = 7.25f;
+                g.lengthMm = 8f;
+                g.widthMm = 5.5f;
+                g.depthMm = 4f;
+                g.weightCarats = 2f;
+                g.luster = "Vitreux";
+                g.color = "Vert (bouteille, émeraude ou olive)";
+                g.shape = "Rectangle";
+                g.cutStyle = "À degrés";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Vert foncé / Vert jaunâtre selon l'axe (fort).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.018f;
+                g.absorptionSpectrum = "Forte absorption du rouge (fer et manganèse) ; faibles bandes dans le bleu et le bleu-vert.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 468f, widthNm = 10f },
+                    new SpectrumLine { wavelengthNm = 497f, widthNm = 12f },
+                    new SpectrumLine { wavelengthNm = 660f, widthNm = 60f },
+                };
+                g.inclusions = "Tubes de croissance parallèles à l'axe, inclusions liquides fragmentées, fissures.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale nette.";
+                g.chelseaFilterReaction = "Vert terne, parfois teinté de rouge.";
+                g.magnetism = "Légère réaction possible avec un aimant très puissant (fer).";
+                g.baseValue = 45;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil (Minas Gerais)", rarityWeight = 40, valueMultiplier = 1f },
+                    new GemOrigin { name = "Mozambique", rarityWeight = 30, valueMultiplier = 1f },
+                    new GemOrigin { name = "Namibie", rarityWeight = 30, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Tourmaline_Dravite", g =>
+            {
+                g.displayName = "Tourmaline dravite";
+                g.description = "La tourmaline brune, riche en magnésium, qui doit son nom à la Drave, une rivière de l'est des Alpes. Brun doré à brun foncé, elle est solide et peu chère.";
+                g.icon = GetGemIconSprite("tourmalinedravite", new Color(0.45f, 0.28f, 0.12f), new Color(0.72f, 0.52f, 0.3f), "Ovale", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("tourmalinedravite", new Color(0.45f, 0.28f, 0.12f), "Ovale");
+                g.refractiveIndex = 1.63f;
+                g.density = 3.05f;
+                g.hardness = 7.25f;
+                g.lengthMm = 8f;
+                g.widthMm = 6f;
+                g.depthMm = 4f;
+                g.weightCarats = 2.4f;
+                g.luster = "Vitreux";
+                g.color = "Brun à brun jaunâtre, parfois vert foncé";
+                g.shape = "Ovale";
+                g.cutStyle = "Mixte";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Brun clair / Brun foncé selon l'axe (fort).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.02f;
+                g.absorptionSpectrum = "Bandes diffuses du fer ; absorption du bleu et du violet.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 450f, widthNm = 60f },
+                };
+                g.inclusions = "Tubes de croissance parallèles à l'axe, inclusions liquides, fissures ; cristaux souvent striés.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale nette.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Légère réaction possible avec un aimant très puissant (fer).";
+                g.baseValue = 20;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Slovénie (Drave)", rarityWeight = 20, valueMultiplier = 1.2f,
+                        inclusionOverride = "Région qui a donné son nom à la dravite." },
+                    new GemOrigin { name = "Tanzanie", rarityWeight = 45, valueMultiplier = 1f },
+                    new GemOrigin { name = "Kenya", rarityWeight = 35, valueMultiplier = 1f },
+                };
+            }),
+            BuildGem("Aventurine", g =>
+            {
+                g.displayName = "Aventurine";
+                g.description = "Un quartz massif plein de petites paillettes de mica vert (fuchsite) qui scintillent : c'est l'aventurescence. Elle est verte, parfois bleue, orange ou brune.";
+                g.icon = GetGemIconSprite("aventurine", new Color(0.3f, 0.62f, 0.35f), new Color(0.58f, 0.82f, 0.58f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("aventurine", new Color(0.3f, 0.62f, 0.35f), "Ovale");
+                g.refractiveIndex = 1.544f;
+                g.density = 2.66f;
+                g.hardness = 6.75f;
+                g.lengthMm = 9f;
+                g.widthMm = 7f;
+                g.depthMm = 4f;
+                g.weightCarats = 3.5f;
+                g.luster = "Vitreux";
+                g.color = "Vert (parfois bleu, orange ou brun)";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Agrégat microcristallin de quartz : lecture diffuse, uniaxe positif en lumière polarisée.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.009f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Pas de spectre net ; bandes faibles du chrome de la fuchsite.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Paillettes orientées de fuchsite (mica au chrome), qui donnent le scintillement ; cassure granuleuse.";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat polycristallin).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 6;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Inde", rarityWeight = 40, valueMultiplier = 1f },
+                    new GemOrigin { name = "Brésil", rarityWeight = 30, valueMultiplier = 1f },
+                    new GemOrigin { name = "Russie (Oural)", rarityWeight = 30, valueMultiplier = 1f },
+                };
+            }),
+            BuildGem("Jaspe", g =>
+            {
+                g.displayName = "Jaspe";
+                g.description = "Un quartz microcristallin opaque, coloré par des oxydes de fer : rouge, jaune, vert ou brun, souvent tacheté ou rubané. Il est dur et se polit très bien.";
+                g.icon = GetGemIconSprite("jaspe", new Color(0.62f, 0.22f, 0.14f), new Color(0.82f, 0.45f, 0.32f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("jaspe", new Color(0.62f, 0.22f, 0.14f), "Ovale");
+                g.refractiveIndex = 1.54f;
+                g.density = 2.7f;
+                g.hardness = 6.75f;
+                g.lengthMm = 9f;
+                g.widthMm = 7f;
+                g.depthMm = 4f;
+                g.weightCarats = 4f;
+                g.luster = "Cireux à vitreux";
+                g.color = "Rouge, jaune, vert ou brun (souvent tacheté)";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Opaque : aucune lecture optique en lumière transmise.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Opaque;
+                g.birefringence = 0f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Pas de spectre net.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Grain microcristallin, taches et veines d'oxydes de fer, parfois fossiles ou dendrites.";
+                g.interferenceFigure = "Aucune figure d'interférence exploitable (pierre opaque).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Réaction très faible à l'aimant selon la teneur en fer.";
+                g.baseValue = 5;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Inde", rarityWeight = 30, valueMultiplier = 0.9f },
+                    new GemOrigin { name = "Brésil", rarityWeight = 25, valueMultiplier = 1f },
+                    new GemOrigin { name = "États-Unis (Oregon)", rarityWeight = 25, valueMultiplier = 1.2f },
+                    new GemOrigin { name = "Madagascar", rarityWeight = 20, valueMultiplier = 1f },
+                };
+            }),
+            BuildGem("Onyx", g =>
+            {
+                g.displayName = "Onyx";
+                g.description = "Une calcédoine à bandes parallèles noires et blanches. La plupart des onyx du commerce sont des agates grises teintes en noir.";
+                g.icon = GetGemIconSprite("onyx", new Color(0.12f, 0.12f, 0.14f), new Color(0.45f, 0.45f, 0.48f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("onyx", new Color(0.12f, 0.12f, 0.14f), "Ovale");
+                g.refractiveIndex = 1.535f;
+                g.density = 2.6f;
+                g.hardness = 6.75f;
+                g.lengthMm = 9f;
+                g.widthMm = 7f;
+                g.depthMm = 4f;
+                g.weightCarats = 4f;
+                g.luster = "Cireux à vitreux";
+                g.color = "Noir et blanc, en bandes parallèles";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Opaque : aucune lecture optique en lumière transmise.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Opaque;
+                g.birefringence = 0f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Pas de spectre net ; la teinture noire donne ses propres bandes.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Bandes rectilignes parallèles, noires et blanches ; grain microcristallin.";
+                g.interferenceFigure = "Aucune figure d'interférence exploitable (pierre opaque).";
+                g.chelseaFilterReaction = "Aucune réaction (sauf teinture).";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 6;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil", rarityWeight = 40, valueMultiplier = 1f },
+                    new GemOrigin { name = "Uruguay", rarityWeight = 30, valueMultiplier = 1f },
+                    new GemOrigin { name = "Inde", rarityWeight = 30, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Enstatite", g =>
+            {
+                g.displayName = "Enstatite";
+                g.description = "Un pyroxène de magnésium, d'un vert bouteille à brun. L'enstatite verte au chrome est très rare ; la variété riche en fer est l'hypersthène.";
+                g.icon = GetGemIconSprite("enstatite", new Color(0.3f, 0.45f, 0.2f), new Color(0.58f, 0.72f, 0.4f), "Ovale", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("enstatite", new Color(0.3f, 0.45f, 0.2f), "Ovale");
+                g.refractiveIndex = 1.665f;
+                g.density = 3.25f;
+                g.hardness = 5.75f;
+                g.lengthMm = 7f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.6f;
+                g.weightCarats = 1.3f;
+                g.luster = "Vitreux";
+                g.color = "Vert à brun (vert bouteille, jaune-vert)";
+                g.shape = "Ovale";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Vert / Brun jaunâtre selon l'axe (faible à modéré).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.009f;
+                g.absorptionSpectrum = "Bandes du fer dans le vert-bleu ; parfois une bande du chrome dans le jaune-vert.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 505f, widthNm = 10f },
+                    new SpectrumLine { wavelengthNm = 550f, widthNm = 20f },
+                };
+                g.inclusions = "Fines aiguilles parallèles, petits cristaux, fissures ; clivage net dans deux directions.";
+                g.interferenceFigure = "Figure d'interférence biaxiale nette.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Faible réaction à l'aimant (fer).";
+                g.baseValue = 35;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Tanzanie", rarityWeight = 40, valueMultiplier = 1f },
+                    new GemOrigin { name = "Sri Lanka", rarityWeight = 30, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "Myanmar", rarityWeight = 30, valueMultiplier = 1f },
+                };
+            }),
+            BuildGem("Larimar", g =>
+            {
+                g.displayName = "Larimar";
+                g.description = "Une variété bleue de pectolite, que l'on ne trouve qu'en République dominicaine. Son bleu ciel veiné de blanc rappelle la mer des Caraïbes.";
+                g.icon = GetGemIconSprite("larimar", new Color(0.3f, 0.65f, 0.82f), new Color(0.65f, 0.88f, 0.95f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("larimar", new Color(0.3f, 0.65f, 0.82f), "Ovale");
+                g.refractiveIndex = 1.62f;
+                g.density = 2.8f;
+                g.hardness = 4.75f;
+                g.lengthMm = 10f;
+                g.widthMm = 8f;
+                g.depthMm = 4.5f;
+                g.weightCarats = 5f;
+                g.luster = "Vitreux à soyeux";
+                g.color = "Bleu ciel à bleu-vert, veiné de blanc";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Inerte, parfois orangé faible.";
+                g.fluorescenceShortWave = "Inerte, parfois orangé faible.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.04f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Pas de spectre net ; le cuivre colore en bleu.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Fibres rayonnantes de pectolite, volutes et veines blanches (motif en « vagues »).";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat polycristallin).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 60;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "République dominicaine", rarityWeight = 100, valueMultiplier = 1f,
+                        inclusionOverride = "Seul gisement connu : la mine de Los Chupaderos, près de Barahona." },
+                };
+            }),
+            BuildGem("Charoite", g =>
+            {
+                g.displayName = "Charoïte";
+                g.description = "Une roche violette aux tourbillons soyeux, trouvée seulement en Sibérie, près de la rivière Chara. Elle a été décrite en 1978.";
+                g.icon = GetGemIconSprite("charoite", new Color(0.5f, 0.25f, 0.65f), new Color(0.75f, 0.55f, 0.85f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("charoite", new Color(0.5f, 0.25f, 0.65f), "Ovale");
+                g.refractiveIndex = 1.555f;
+                g.density = 2.68f;
+                g.hardness = 5.5f;
+                g.lengthMm = 10f;
+                g.widthMm = 8f;
+                g.depthMm = 4.5f;
+                g.weightCarats = 5f;
+                g.luster = "Soyeux à nacré";
+                g.color = "Violet (lilas à pourpre) en tourbillons";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.009f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Pas de spectre net.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Fibres violettes en tourbillons, avec des plages d'aegyrine noire et de feldspath blanc.";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat polycristallin).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 35;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Russie (Yakoutie, massif du Murun)", rarityWeight = 100, valueMultiplier = 1f,
+                        inclusionOverride = "Seul gisement connu au monde, dans le massif du Murun." },
+                };
+            }),
+            BuildGem("Sugilite", g =>
+            {
+                g.displayName = "Sugilite";
+                g.description = "Une roche d'un violet intense, découverte au Japon en 1944 et exploitée en Afrique du Sud. Sa couleur vient du manganèse.";
+                g.icon = GetGemIconSprite("sugilite", new Color(0.55f, 0.2f, 0.6f), new Color(0.78f, 0.5f, 0.82f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("sugilite", new Color(0.55f, 0.2f, 0.6f), "Ovale");
+                g.refractiveIndex = 1.608f;
+                g.density = 2.78f;
+                g.hardness = 6f;
+                g.lengthMm = 10f;
+                g.widthMm = 8f;
+                g.depthMm = 4.5f;
+                g.weightCarats = 5f;
+                g.luster = "Vitreux à cireux";
+                g.color = "Violet intense à pourpre";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, uniaxial, lecture diffuse typique d'un agrégat.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.002f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Bandes du manganèse dans le violet et le vert.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 411f, widthNm = 6f },
+                    new SpectrumLine { wavelengthNm = 419f, widthNm = 6f },
+                    new SpectrumLine { wavelengthNm = 550f, widthNm = 40f },
+                };
+                g.inclusions = "Grain fin, plages plus claires et taches noires d'oxydes de manganèse.";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat polycristallin).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Légère réaction possible avec un aimant très puissant (manganèse et fer).";
+                g.baseValue = 50;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Afrique du Sud (mine Wessels)", rarityWeight = 100, valueMultiplier = 1f,
+                        inclusionOverride = "Gisement du Kalahari qui donne la plus belle sugilite, d'un violet intense." },
+                };
+            }),
+            BuildGem("Azurite", g =>
+            {
+                g.displayName = "Azurite";
+                g.description = "Un carbonate de cuivre d'un bleu profond, au nom qui vient de l'azur. Tendre et fragile, on le polit en cabochons ou on le garde en cristaux ; il se transforme lentement en malachite.";
+                g.icon = GetGemIconSprite("azurite", new Color(0.08f, 0.22f, 0.62f), new Color(0.3f, 0.48f, 0.85f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("azurite", new Color(0.08f, 0.22f, 0.62f), "Ovale");
+                g.refractiveIndex = 1.78f;
+                g.density = 3.8f;
+                g.hardness = 3.75f;
+                g.lengthMm = 8f;
+                g.widthMm = 6f;
+                g.depthMm = 4f;
+                g.weightCarats = 3f;
+                g.luster = "Vitreux";
+                g.color = "Bleu profond (bleu azur)";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Opaque";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Opaque : aucune lecture optique en lumière transmise.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Opaque;
+                g.birefringence = 0.109f;
+                g.absorptionSpectrum = "Pas de spectre net.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Cristaux et rosettes, passages à la malachite verte ; bulles de cavités botryoïdales.";
+                g.interferenceFigure = "Aucune figure d'interférence exploitable (pierre opaque).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 20;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Maroc", rarityWeight = 35, valueMultiplier = 1f },
+                    new GemOrigin { name = "États-Unis (Arizona)", rarityWeight = 35, valueMultiplier = 1.2f },
+                    new GemOrigin { name = "Chine", rarityWeight = 30, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Chrysocolle", g =>
+            {
+                g.displayName = "Chrysocolle";
+                g.description = "Un silicate de cuivre bleu-vert, tendre et poreux, le plus souvent mêlé de quartz ou d'autres minéraux de cuivre. Sa variété silicifiée, plus dure, est la « gem silica ».";
+                g.icon = GetGemIconSprite("chrysocolle", new Color(0.15f, 0.62f, 0.65f), new Color(0.45f, 0.85f, 0.85f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("chrysocolle", new Color(0.15f, 0.62f, 0.65f), "Ovale");
+                g.refractiveIndex = 1.6f;
+                g.density = 2.2f;
+                g.hardness = 3f;
+                g.lengthMm = 10f;
+                g.widthMm = 8f;
+                g.depthMm = 4.5f;
+                g.weightCarats = 5f;
+                g.luster = "Vitreux à terne";
+                g.color = "Bleu-vert à bleu turquoise";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.04f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Pas de spectre net ; le cuivre colore en bleu-vert.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Masse cryptocristalline, bandes et plages vert foncé, parfois cristaux de quartz.";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat polycristallin).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 12;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Pérou", rarityWeight = 40, valueMultiplier = 1f },
+                    new GemOrigin { name = "États-Unis (Arizona)", rarityWeight = 35, valueMultiplier = 1.1f },
+                    new GemOrigin { name = "République démocratique du Congo", rarityWeight = 25, valueMultiplier = 0.9f },
+                };
+            }),
+            BuildGem("Variscite", g =>
+            {
+                g.displayName = "Variscite";
+                g.description = "Un phosphate d'aluminium vert pomme à bleuté, souvent veiné de brun ou de noir. On la prend souvent pour de la turquoise.";
+                g.icon = GetGemIconSprite("variscite", new Color(0.35f, 0.68f, 0.45f), new Color(0.65f, 0.88f, 0.68f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("variscite", new Color(0.35f, 0.68f, 0.45f), "Ovale");
+                g.refractiveIndex = 1.58f;
+                g.density = 2.55f;
+                g.hardness = 4.5f;
+                g.lengthMm = 10f;
+                g.widthMm = 8f;
+                g.depthMm = 4.5f;
+                g.weightCarats = 5f;
+                g.luster = "Cireux à vitreux";
+                g.color = "Vert pomme à vert bleuté";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.031f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Pas de spectre net ; le chrome ou le vanadium colore en vert.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Veinules brunes ou noires d'oxydes de fer ou de manganèse (matrice), nodules en rognons.";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat polycristallin).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 18;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "États-Unis (Utah)", rarityWeight = 55, valueMultiplier = 1.2f },
+                    new GemOrigin { name = "Autre gisement", rarityWeight = 45, valueMultiplier = 1f },
+                };
+            }),
+            BuildGem("Lepidolite", g =>
+            {
+                g.displayName = "Lépidolite";
+                g.description = "Un mica de lithium rose à violet lilas, fait de minuscules paillettes. C'est un minerai de lithium, et une pierre d'ornement douce.";
+                g.icon = GetGemIconSprite("lepidolite", new Color(0.72f, 0.5f, 0.75f), new Color(0.88f, 0.72f, 0.9f), "Ovale", "Cabochon");
+                g.roughIcon = GetRoughGemIconSprite("lepidolite", new Color(0.72f, 0.5f, 0.75f), "Ovale");
+                g.refractiveIndex = 1.54f;
+                g.density = 2.85f;
+                g.hardness = 2.75f;
+                g.lengthMm = 10f;
+                g.widthMm = 8f;
+                g.depthMm = 4.5f;
+                g.weightCarats = 5f;
+                g.luster = "Nacré";
+                g.color = "Lilas à rose-violet";
+                g.shape = "Ovale";
+                g.cutStyle = "Cabochon";
+                g.transparency = "Translucide";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.019f;
+                g.isPolycrystalline = true;
+                g.absorptionSpectrum = "Pas de spectre net.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Paillettes de mica agglomérées, parfois cristaux de tourmaline rose ou de quartz.";
+                g.interferenceFigure = "Figure diffuse, non exploitable (agrégat polycristallin).";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 8;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil", rarityWeight = 40, valueMultiplier = 1f },
+                    new GemOrigin { name = "Madagascar", rarityWeight = 35, valueMultiplier = 1f },
+                    new GemOrigin { name = "États-Unis (Californie)", rarityWeight = 25, valueMultiplier = 1.1f },
+                };
+            }),
+            BuildGem("Benitoite", g =>
+            {
+                g.displayName = "Bénitoïte";
+                g.description = "Un silicate de baryum et de titane d'un bleu saphir, trouvé seulement en Californie. Sa dispersion dépasse celle du diamant et elle brille en bleu vif sous les UV courts.";
+                g.icon = GetGemIconSprite("benitoite", new Color(0.1f, 0.25f, 0.75f), new Color(0.4f, 0.58f, 0.95f), "Coussin", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("benitoite", new Color(0.1f, 0.25f, 0.75f), "Coussin");
+                g.refractiveIndex = 1.78f;
+                g.density = 3.67f;
+                g.hardness = 6.25f;
+                g.lengthMm = 5.5f;
+                g.widthMm = 4.5f;
+                g.depthMm = 3f;
+                g.weightCarats = 0.6f;
+                g.luster = "Vitreux à sub-adamantin";
+                g.color = "Bleu saphir à violet (parfois incolore)";
+                g.shape = "Coussin";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Bleu intense / Incolore selon l'axe (très marqué).";
+                g.fluorescenceLongWave = "Inerte ou très faible.";
+                g.fluorescenceShortWave = "Bleu-blanc vif, très intense.";
+                g.opticalCharacter = "Anisotrope, uniaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Uniaxial;
+                g.birefringence = 0.047f;
+                g.absorptionSpectrum = "Pas de spectre net.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Souvent propre ; petits cristaux de natrolite, de neptunite ou de joaquinite.";
+                g.interferenceFigure = "Figure d'interférence uniaxiale nette.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 1500;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "États-Unis (Californie)", rarityWeight = 100, valueMultiplier = 1f,
+                        inclusionOverride = "Seul gisement de qualité gemme : la mine de Dallas, dans le comté de San Benito." },
+                };
+            }),
+            BuildGem("Grandidierite", g =>
+            {
+                g.displayName = "Grandidiérite";
+                g.description = "Un borosilicate bleu-vert, l'une des gemmes les plus rares du monde, découvert à Madagascar en 1902. Son trichroïsme est très fort.";
+                g.icon = GetGemIconSprite("grandidierite", new Color(0.1f, 0.55f, 0.55f), new Color(0.4f, 0.8f, 0.78f), "Coussin", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("grandidierite", new Color(0.1f, 0.55f, 0.55f), "Coussin");
+                g.refractiveIndex = 1.62f;
+                g.density = 2.95f;
+                g.hardness = 7.5f;
+                g.lengthMm = 6f;
+                g.widthMm = 5f;
+                g.depthMm = 3.2f;
+                g.weightCarats = 0.9f;
+                g.luster = "Vitreux";
+                g.color = "Bleu-vert (turquoise)";
+                g.shape = "Coussin";
+                g.cutStyle = "Mixte";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Bleu-vert / Vert / Incolore à jaunâtre selon les trois axes (très marqué).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.039f;
+                g.absorptionSpectrum = "Pas de raies nettes ; absorption du fer dans le rouge et le bleu.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Souvent propre ; petits cristaux, plumes de guérison, fines aiguilles.";
+                g.interferenceFigure = "Figure d'interférence biaxiale nette.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Légère réaction possible avec un aimant très puissant (fer).";
+                g.baseValue = 2000;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Madagascar", rarityWeight = 60, valueMultiplier = 1f },
+                    new GemOrigin { name = "Sri Lanka", rarityWeight = 40, valueMultiplier = 1.1f },
+                };
+            }),
+            BuildGem("Diaspore_Zultanite", g =>
+            {
+                g.displayName = "Zultanite (diaspore)";
+                g.description = "Le diaspore gemme, qui change de couleur : vert jaunâtre à la lumière du jour, rose à orangé sous une lampe à incandescence. On ne l'exploite qu'en Turquie, dans les monts Ilbir (Anatolie).";
+                g.icon = GetGemIconSprite("diasporezultanite", new Color(0.62f, 0.7f, 0.3f), new Color(0.82f, 0.88f, 0.55f), "Coussin", "Brillant");
+                g.roughIcon = GetRoughGemIconSprite("diasporezultanite", new Color(0.62f, 0.7f, 0.3f), "Coussin");
+                g.refractiveIndex = 1.72f;
+                g.density = 3.4f;
+                g.hardness = 6.75f;
+                g.lengthMm = 7f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.6f;
+                g.weightCarats = 1.6f;
+                g.luster = "Vitreux";
+                g.color = "Vert jaunâtre à rose (changement de couleur)";
+                g.shape = "Coussin";
+                g.cutStyle = "Brillant";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Vert / Jaune-brun / Rose-violet selon les trois axes (fort).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.046f;
+                g.absorptionSpectrum = "Absorption du bleu (fer) et faibles raies du chrome dans le rouge.";
+                g.spectrumLines = new List<SpectrumLine>
+                {
+                    new SpectrumLine { wavelengthNm = 440f, widthNm = 30f },
+                    new SpectrumLine { wavelengthNm = 690f, widthNm = 4f },
+                };
+                g.inclusions = "Généralement propre ; fissures, cristaux, clivage parfait dans une direction (pierre fragile).";
+                g.interferenceFigure = "Figure d'interférence biaxiale nette.";
+                g.chelseaFilterReaction = "Réaction rougeâtre faible possible (chrome).";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 300;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Turquie (monts Ilbir)", rarityWeight = 100, valueMultiplier = 1f,
+                        inclusionOverride = "Seul gisement important : des cristaux qui changent de couleur, vendus sous le nom de zultanite." },
+                };
+            }),
+            BuildGem("Euclase", g =>
+            {
+                g.displayName = "Euclase";
+                g.description = "Un silicate de béryllium et d'aluminium d'un bleu-vert pâle, très dur mais fragile : son nom grec veut dire « qui se brise bien », à cause de son clivage parfait.";
+                g.icon = GetGemIconSprite("euclase", new Color(0.45f, 0.72f, 0.82f), new Color(0.72f, 0.9f, 0.95f), "Rectangle", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("euclase", new Color(0.45f, 0.72f, 0.82f), "Rectangle");
+                g.refractiveIndex = 1.66f;
+                g.density = 3.1f;
+                g.hardness = 7.5f;
+                g.lengthMm = 7f;
+                g.widthMm = 5f;
+                g.depthMm = 3.4f;
+                g.weightCarats = 1.3f;
+                g.luster = "Vitreux";
+                g.color = "Bleu à bleu-vert pâle (parfois incolore ou vert)";
+                g.shape = "Rectangle";
+                g.cutStyle = "À degrés";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Bleu / Bleu-vert / Incolore selon les trois axes (modéré).";
+                g.fluorescenceLongWave = "Aucune fluorescence notable.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.019f;
+                g.absorptionSpectrum = "Pas de spectre net.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Clivage parfait, fissures, inclusions liquides ; très fragile à la taille.";
+                g.interferenceFigure = "Figure d'interférence biaxiale nette.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 120;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Brésil (Minas Gerais)", rarityWeight = 50, valueMultiplier = 1f },
+                    new GemOrigin { name = "Zimbabwe", rarityWeight = 25, valueMultiplier = 1f },
+                    new GemOrigin { name = "Colombie", rarityWeight = 25, valueMultiplier = 1.1f },
+                };
+            }),
+            BuildGem("Danburite", g =>
+            {
+                g.displayName = "Danburite";
+                g.description = "Un borosilicate de calcium, incolore à jaune pâle, au bel éclat. Il est dur et clair, mais reste rare. Il tient son nom de Danbury, dans le Connecticut.";
+                g.icon = GetGemIconSprite("danburite", new Color(0.88f, 0.86f, 0.72f), new Color(0.96f, 0.95f, 0.88f), "Rectangle", "À degrés");
+                g.roughIcon = GetRoughGemIconSprite("danburite", new Color(0.88f, 0.86f, 0.72f), "Rectangle");
+                g.refractiveIndex = 1.633f;
+                g.density = 3f;
+                g.hardness = 7.25f;
+                g.lengthMm = 8f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.6f;
+                g.weightCarats = 1.8f;
+                g.luster = "Vitreux à gras";
+                g.color = "Incolore à jaune pâle";
+                g.shape = "Rectangle";
+                g.cutStyle = "À degrés";
+                g.transparency = "Transparent";
+                g.pleochroic = false;
+                g.pleochroicDescription = "";
+                g.fluorescenceLongWave = "Bleu clair, variable selon la pierre.";
+                g.fluorescenceShortWave = "Bleu, plus faible qu'en onde longue.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.006f;
+                g.absorptionSpectrum = "Pas de spectre net ; parfois de fines raies des terres rares.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Généralement propre ; cavités à liquide, fissures.";
+                g.interferenceFigure = "Figure d'interférence biaxiale nette.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Aucune réaction à l'aimant.";
+                g.baseValue = 40;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Mexique", rarityWeight = 40, valueMultiplier = 1f },
+                    new GemOrigin { name = "Madagascar", rarityWeight = 30, valueMultiplier = 1f },
+                    new GemOrigin { name = "Myanmar", rarityWeight = 30, valueMultiplier = 1f },
+                };
+            }),
+            BuildGem("Kornerupine", g =>
+            {
+                g.displayName = "Kornérupine";
+                g.description = "Un silicate de magnésium et d'aluminium, vert à brun, au trichroïsme marqué. Rare en pierre taillée, elle donne parfois des œils-de-chat.";
+                g.icon = GetGemIconSprite("kornerupine", new Color(0.35f, 0.52f, 0.28f), new Color(0.62f, 0.75f, 0.48f), "Ovale", "Mixte");
+                g.roughIcon = GetRoughGemIconSprite("kornerupine", new Color(0.35f, 0.52f, 0.28f), "Ovale");
+                g.refractiveIndex = 1.68f;
+                g.density = 3.35f;
+                g.hardness = 6.5f;
+                g.lengthMm = 7f;
+                g.widthMm = 5.5f;
+                g.depthMm = 3.6f;
+                g.weightCarats = 1.5f;
+                g.luster = "Vitreux";
+                g.color = "Vert à brun";
+                g.shape = "Ovale";
+                g.cutStyle = "Mixte";
+                g.transparency = "Transparent";
+                g.pleochroic = true;
+                g.pleochroicDescription = "Vert / Jaune-brun / Brun-rouge selon les trois axes (marqué).";
+                g.fluorescenceLongWave = "Généralement inerte, parfois jaune orangé faible.";
+                g.fluorescenceShortWave = "Aucune fluorescence notable.";
+                g.opticalCharacter = "Anisotrope, biaxial (biréfringent).";
+                g.opticalCharacterClass = GemDefinition.OpticalCharacterClass.Biaxial;
+                g.birefringence = 0.013f;
+                g.absorptionSpectrum = "Absorption du bleu (fer), sans raie nette.";
+                g.spectrumLines = new List<SpectrumLine>();
+                g.inclusions = "Aiguilles parallèles (parfois en œil-de-chat), fissures, cristaux.";
+                g.interferenceFigure = "Figure d'interférence biaxiale nette.";
+                g.chelseaFilterReaction = "Aucune réaction particulière.";
+                g.magnetism = "Faible réaction à l'aimant (fer).";
+                g.baseValue = 80;
+                g.origins = new List<GemOrigin>
+                {
+                    new GemOrigin { name = "Sri Lanka", rarityWeight = 35, valueMultiplier = 1f },
+                    new GemOrigin { name = "Tanzanie", rarityWeight = 30, valueMultiplier = 1f },
+                    new GemOrigin { name = "Madagascar", rarityWeight = 20, valueMultiplier = 1f },
+                    new GemOrigin { name = "Kenya", rarityWeight = 15, valueMultiplier = 1f },
+                };
+            }),
+            // </new-species-2026-11-20>
             BuildGem("Grenat_Rhodolite", g =>
             {
                 g.displayName = "Grenat Rhodolite";
@@ -10580,7 +11677,15 @@ public static partial class SceneBootstrap
     {
         var tilePath = $"Assets/Art/Tilesets/{name}.asset";
         var existingTile = AssetDatabase.LoadAssetAtPath<Tile>(tilePath);
-        if (existingTile != null) return existingTile;
+        if (existingTile != null)
+        {
+            if (sprite != null && existingTile.sprite != sprite)             // the picture changed since the tile was made
+            {
+                existingTile.sprite = sprite;
+                EditorUtility.SetDirty(existingTile);
+            }
+            return existingTile;
+        }
 
         var tile = ScriptableObject.CreateInstance<Tile>();
         tile.sprite = sprite;
@@ -10590,13 +11695,13 @@ public static partial class SceneBootstrap
         return tile;
     }
 
-    // ----- External sprite pack (LimeZu Modern Exteriors) -----
+    // ----- Scenery of the town: our own pictures, drawn by tools/pixelart/build.py into Assets/Art/Town (no outside art pack) -----
 
-    private const string PackThemeRoot = "Assets/Art/tileset/modernexteriors-win/Modern_Exteriors_32x32/ME_Theme_Sorter_32x32/";
-    private const string PackTerrains = PackThemeRoot + "1_Terrains_and_Fences_Singles_32x32/ME_Singles_Terrains_and_Fences_32x32_";
-    private const string PackGarden = PackThemeRoot + "17_Garden_Singles_32x32/ME_Singles_Garden_32x32_";
-    private const string PackCityProps = PackThemeRoot + "3_City_Props_Singles_32x32/ME_Singles_City_Props_32x32_";
-    private const string PackCityTerrains = PackThemeRoot + "2_City_Terrains_Singles_32x32/ME_Singles_City_Terrains_32x32_";
+    private const string PackThemeRoot = "Assets/Art/Town/";
+    private const string PackTerrains = PackThemeRoot + "Terrain_";
+    private const string PackGarden = PackThemeRoot + "Garden_";
+    private const string PackCityProps = PackThemeRoot + "City_";
+    private const string PackCityTerrains = PackThemeRoot + "Road_";
 
     // ----- Per-room decoration -----
 

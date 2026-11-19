@@ -10,9 +10,11 @@
 """
 import json
 import re
+import sys
 from pathlib import Path
 
 SITE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 REPO = SITE.parent
 SRC = REPO / "GemLabSimulator" / "Assets" / "Editor" / "SceneBootstrap.cs"
 OUT = SITE / "data" / "extra_species.json"
@@ -141,6 +143,30 @@ COLOR_LIMITS = {"Grenat_Grossulaire": [55, 130, 0.12, 0.70, 0.55, 1.0], "Grenat_
                 "Saphir_Change_Couleur": [235, 320, 0.25, 0.85, 0.25, 0.80]}
 
 
+def hex_of(c):
+    return "#{:02X}{:02X}{:02X}".format(*[int(round(v * 255)) for v in c])
+
+
+def from_spec(sp):
+    """A species of tools/new_species_spec.py as it appears in the game data."""
+    optic_name, optic_number = OPTIC[sp["optic"]]
+    out = {
+        "id": sp["id"], "displayName": sp["name"][0], "description": sp["desc"][0], "iconColor": hex_of(sp["icon"][0]), "iconFacetColor": hex_of(sp["icon"][1]),
+        "refractiveIndex": sp["ri"], "density": sp["sg"], "hardness": sp["h"], "lengthMm": sp["dims"][0], "widthMm": sp["dims"][1], "depthMm": sp["dims"][2], "weightCarats": sp["ct"],
+        "luster": sp["luster"][0], "color": sp["color"][0], "shape": sp["shape"], "cutStyle": sp["cut"], "transparency": sp["transp"],
+        "pleochroic": bool(sp.get("pleo")), "pleochroicDescription": sp["pleo"][0] if sp.get("pleo") else "",
+        "fluorescenceLongWave": sp["fluL"][0], "fluorescenceShortWave": sp["fluS"][0], "opticalCharacter": sp["opt"][0],
+        "opticalCharacterClassName": optic_name, "opticalCharacterClass": optic_number, "birefringence": sp["biref"], "isPolycrystalline": bool(sp.get("poly")),
+        "absorptionSpectrum": sp["spec"][0], "spectrumLines": [{"wavelengthNm": a, "widthNm": b, "depth": 1, "edgeNm": 0} for a, b in sp["lines"]],
+        "inclusions": sp["incl"][0], "interferenceFigure": sp["fig"][0], "chelseaFilterReaction": sp["chelsea"][0], "magnetism": sp["magn"][0], "baseValue": sp["value"],
+        "origins": [dict({"name": o["fr"], "rarityWeight": o["weight"], "valueMultiplier": o["mult"]}, **({"inclusionOverride": o["over"][0]} if o.get("over") else {})) for o in sp["origins"]],
+        "habits": [{"habit": h, "weight": w} for h, w in sp["habits"]], "colorLimits": list(sp["limits"]),
+    }
+    if sp.get("fluo_entry"):
+        out["fluoEntry"] = sp["fluo_entry"]
+    return finish(out)
+
+
 def main():
     text = SRC.read_text(encoding="utf-8")
     game = {s["id"]: s for s in json.loads((SITE / "data" / "gemlab_data.json").read_text(encoding="utf-8"))["species"]}
@@ -151,6 +177,8 @@ def main():
     species = [parse_block(text, i) for i in FROM_GAME_CODE] + [finish(dict(s)) for s in BY_HAND] + [finish(sapphire)]
     for s in species:
         s["colorLimits"] = COLOR_LIMITS.get(s["id"])
+    from new_species_spec import SPECIES            # the 22 species written for both the game and the site
+    species += [from_spec(s) for s in SPECIES]
     OUT.write_text(json.dumps({"note": "Espèces du site absentes des données du jeu. Fichier fabriqué par site/tools/build_extra_species.py : ne pas modifier à la main.",
                                "species": species}, ensure_ascii=False, indent=1), encoding="utf-8")
     print("{} espèces écrites dans {}".format(len(species), OUT))

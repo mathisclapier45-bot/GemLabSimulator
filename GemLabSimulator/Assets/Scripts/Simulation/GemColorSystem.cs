@@ -280,14 +280,58 @@ public static class GemColorSystem
         return Pick(ProfileFor(definition, synthetic), random);
     }
 
+    // The deposit pulls the colour of a natural stone: a Kashmir sapphire is a velvety cornflower blue, a Ceylon one lighter, an Australian or Thai one dark and inky.
+    // dark / light multiply the weight of the dark modes (low brightness) and of the light ones (low saturation, bright); `favoured` multiplies the modes whose hue
+    // falls in [hueMin, hueMax]. The first rule whose species (start of the name) and deposit (part of its name, lower case) match is used.
+    private static readonly (string species, string origin, float dark, float light, float hueMin, float hueMax, float favoured)[] OriginColour =
+    {
+        ("Saphir_Bleu", "cachemire", 0.15f, 0.40f, 212f, 238f, 3.0f),
+        ("Saphir_Bleu", "sri lanka", 0.30f, 1.80f, 0f, 0f, 1f),
+        ("Saphir_Bleu", "australie", 3.50f, 0.25f, 180f, 205f, 2.5f),
+        ("Saphir_Bleu", "madagascar", 1.00f, 1.00f, 0f, 0f, 1f),
+        ("Saphir_", "australie", 2.50f, 0.40f, 0f, 0f, 1f),
+        ("Saphir_", "thaïlande", 2.00f, 0.50f, 0f, 0f, 1f),
+        ("Saphir_", "nigeria", 1.80f, 0.60f, 0f, 0f, 1f),
+        ("Saphir_", "sri lanka", 0.40f, 1.60f, 0f, 0f, 1f),
+    };
+
+    public static GemColorValue Sample(GemDefinition definition, Func<float> random, bool synthetic, GemOrigin origin)
+    {
+        var modes = ProfileFor(definition, synthetic);
+        if (synthetic || origin == null || string.IsNullOrEmpty(origin.name) || definition == null || definition.name == null) return Pick(modes, random);
+
+        var place = origin.name.ToLowerInvariant();
+        foreach (var rule in OriginColour)
+        {
+            if (!definition.name.StartsWith(rule.species) || !place.Contains(rule.origin)) continue;
+            var pulled = new Mode[modes.Length];
+            for (var i = 0; i < modes.Length; i++)
+            {
+                var mode = modes[i];
+                var sat = (mode.SatMin + mode.SatMax) * 0.5f;
+                var bright = (mode.BrightMin + mode.BrightMax) * 0.5f;
+                var hue = Mathf.Repeat((mode.HueMin + mode.HueMax) * 0.5f, 360f);
+                var dark = bright < 0.62f;
+                var light = sat < 0.45f && bright >= 0.85f;
+                var factor = dark ? rule.dark : light ? rule.light : 1f;
+                if (!dark && !light && rule.hueMax > rule.hueMin && hue >= rule.hueMin && hue <= rule.hueMax) factor *= rule.favoured;
+                mode.Weight *= factor;
+                pulled[i] = mode;
+            }
+            return Pick(pulled, random);
+        }
+        return Pick(modes, random);
+    }
+
     // The materials that are grown in every colour: the synthetic corundums and spinels, YAG, GGG and cubic zirconia.
     public static bool GrownInAnyColor(GemDefinition definition, bool synthetic)
     {
         if (definition == null) return false;
         var name = definition.name ?? "";
+        if (name == "Corindon_Synthetique_Rubis") return false;               // a synthetic ruby keeps the colours of a ruby
         if (name == "YAG" || name == "GGG" || name == "CZ" || name == "Titanate_Strontium" || name.StartsWith("Corindon_Synthetique")) return true;
         if (!synthetic && !definition.forcedSynthetic) return false;
-        return name == "Corindon_Rubis" || name.StartsWith("Saphir_") || name == "Padparadscha" || name.StartsWith("Spinelle");
+        return name.StartsWith("Saphir_") || name == "Padparadscha" || name.StartsWith("Spinelle");
     }
 
     // The palette of a synthetic stone grown in every colour: every hue of the circle, light to dark (and a few colourless ones).
@@ -453,8 +497,36 @@ public static class GemColorSystem
         { "Grenat_Malaya", new[] { 5f, 35f, 0.40f, 0.95f, 0.50f, 0.95f } },
         { "Grenat_Tsavorite", new[] { 110f, 150f, 0.50f, 1.00f, 0.30f, 0.85f } },
         { "Grenat_Demantoide", new[] { 70f, 140f, 0.45f, 1.00f, 0.40f, 0.95f } },
+        { "Grenat_Mali", new[] { 55f, 95f, 0.45f, 0.95f, 0.40f, 0.85f } },
+        { "Grenat_Topazolite", new[] { 42f, 70f, 0.55f, 1.00f, 0.60f, 1.00f } },
+        { "Grenat_Pyrope_Chromifere", new[] { 350f, 18f, 0.70f, 1.00f, 0.40f, 0.90f } },
+        { "Grenat_Change_Couleur", new[] { 165f, 205f, 0.30f, 0.80f, 0.30f, 0.75f } },
         { "Grenat_Hydrogrossulaire", new[] { 90f, 150f, 0.30f, 0.80f, 0.35f, 0.85f } },
         { "Grenat_Uvarovite", new[] { 125f, 160f, 0.60f, 1.00f, 0.25f, 0.70f } },
+        // <new-species-2026-11-20>
+        { "Amazonite", new[] { 150f, 190f, 0.25f, 0.7f, 0.45f, 0.85f } },
+        { "Pierre_Soleil", new[] { 10f, 40f, 0.45f, 0.95f, 0.5f, 0.95f } },
+        { "Hiddenite", new[] { 80f, 160f, 0.25f, 0.9f, 0.4f, 0.95f } },
+        { "Tourmaline_Verdelite", new[] { 100f, 165f, 0.45f, 1f, 0.25f, 0.8f } },
+        { "Tourmaline_Dravite", new[] { 15f, 45f, 0.5f, 1f, 0.25f, 0.7f } },
+        { "Aventurine", new[] { 100f, 165f, 0.3f, 0.8f, 0.35f, 0.8f } },
+        { "Jaspe", new[] { 0f, 55f, 0.5f, 1f, 0.25f, 0.85f } },
+        { "Onyx", new[] { 0f, 360f, 0f, 0.12f, 0.05f, 0.35f } },
+        { "Enstatite", new[] { 50f, 120f, 0.3f, 0.9f, 0.2f, 0.75f } },
+        { "Larimar", new[] { 185f, 205f, 0.3f, 0.7f, 0.55f, 0.95f } },
+        { "Charoite", new[] { 270f, 300f, 0.3f, 0.85f, 0.3f, 0.85f } },
+        { "Sugilite", new[] { 280f, 310f, 0.45f, 0.95f, 0.25f, 0.75f } },
+        { "Azurite", new[] { 215f, 240f, 0.8f, 1f, 0.25f, 0.65f } },
+        { "Chrysocolle", new[] { 165f, 195f, 0.4f, 0.9f, 0.4f, 0.9f } },
+        { "Variscite", new[] { 95f, 165f, 0.3f, 0.75f, 0.45f, 0.9f } },
+        { "Lepidolite", new[] { 290f, 330f, 0.12f, 0.55f, 0.6f, 0.95f } },
+        { "Benitoite", new[] { 215f, 270f, 0.5f, 1f, 0.3f, 0.9f } },
+        { "Grandidierite", new[] { 170f, 200f, 0.35f, 0.9f, 0.35f, 0.85f } },
+        { "Diaspore_Zultanite", new[] { 55f, 115f, 0.3f, 0.85f, 0.45f, 0.9f } },
+        { "Euclase", new[] { 170f, 215f, 0.12f, 0.6f, 0.55f, 1f } },
+        { "Danburite", new[] { 40f, 70f, 0f, 0.3f, 0.75f, 1f } },
+        { "Kornerupine", new[] { 70f, 130f, 0.3f, 0.85f, 0.25f, 0.75f } },
+        // </new-species-2026-11-20>
         // Quartz and other transparent stones.
         { "Amethyste", new[] { 255f, 310f, 0.20f, 0.90f, 0.30f, 0.95f } },
         { "Citrine", new[] { 28f, 62f, 0.25f, 1.00f, 0.50f, 1.00f } },
@@ -488,7 +560,7 @@ public static class GemColorSystem
         { "Malachite", new[] { 125f, 160f, 0.50f, 1.00f, 0.20f, 0.70f } },
         { "Sodalite", new[] { 220f, 245f, 0.55f, 1.00f, 0.25f, 0.70f } },
         { "Prehnite", new[] { 70f, 115f, 0.20f, 0.60f, 0.60f, 0.95f } },
-        { "Cornaline", new[] { 5f, 30f, 0.60f, 1.00f, 0.45f, 0.95f } },
+        { "Cornaline", new[] { 0f, 22f, 0.70f, 1.00f, 0.45f, 0.90f } },
         { "Moldavite", new[] { 85f, 125f, 0.40f, 0.85f, 0.20f, 0.55f } },
         { "Rhodonite", new[] { 340f, 360f, 0.40f, 0.70f, 0.40f, 0.85f } },
         { "Rhodocrosite", new[] { 340f, 10f, 0.25f, 0.80f, 0.60f, 1.00f } },
@@ -526,17 +598,47 @@ public static class GemColorSystem
 
     private static Mode[] ProfileFor(GemDefinition definition, bool synthetic = false)
     {
-        var key = definition.name;
+        var key = definition.name ?? "";
+        var grown = synthetic || definition.forcedSynthetic;
 
-        // A stone grown in every colour (synthetic corundum, spinel, YAG, GGG...): the whole circle of hues, with no limit.
+        // A synthetic ruby has the colours of a natural ruby, no other; a synthetic sapphire every colour but those of a ruby (user, 2026-11-17).
+        if (key == "Corindon_Synthetique_Rubis" || (key == "Corindon_Rubis" && grown)) return NaturalProfile("Corindon_Rubis", definition);
+        if (key == "Corindon_Synthetique_Saphir" || ((key.StartsWith("Saphir_") || key == "Padparadscha") && grown)) return AnyColorExceptRuby();
+
+        // A stone grown in every colour (synthetic spinel, YAG, GGG...): the whole circle of hues, with no limit.
         if (GrownInAnyColor(definition, synthetic)) return AnyColorProfile();
 
+        return NaturalProfile(key, definition);
+    }
+
+    // The colour range of a species as nature makes it (its own modes, or modes worked out from its description), within the limits of the species.
+    private static Mode[] NaturalProfile(string key, GemDefinition definition)
+    {
         if (Profiles.TryGetValue(key, out var cached)) return cached;
         var profile = Overrides(key) ?? Derived(definition);
         profile = Expand(profile);
         profile = Restrict(profile, key);
         Profiles[key] = profile;
         return profile;
+    }
+
+    // Every colour of the circle except the reds of a ruby: a strong red (or a strong purplish or orangy red) would be a ruby, not a sapphire. Pinks stay (pink sapphire).
+    private static Mode[] anyColorExceptRuby;
+
+    private static Mode[] AnyColorExceptRuby()
+    {
+        if (anyColorExceptRuby != null) return anyColorExceptRuby;
+        var list = new List<Mode>();
+        foreach (var mode in AnyColorProfile())
+        {
+            var hue = Mathf.Repeat((mode.HueMin + mode.HueMax) * 0.5f, 360f);
+            var sat = (mode.SatMin + mode.SatMax) * 0.5f;
+            var fromRed = Mathf.Abs(Mathf.DeltaAngle(hue, 352f));
+            var ruby = mode.HueMax - mode.HueMin < 300f && ((fromRed <= 10f && sat >= 0.5f) || (fromRed <= 25f && sat >= 0.7f));
+            if (!ruby) list.Add(mode);
+        }
+        anyColorExceptRuby = list.ToArray();
+        return anyColorExceptRuby;
     }
 
     // Species whose color range matters: several characteristic color modes with their own rarity.
@@ -750,6 +852,28 @@ public static class GemColorSystem
                     M(0.14f, 0f, 12f, 0.80f, 1.00f, 0.30f, 0.55f),       // deep red
                     M(0.22f, 24f, 38f, 0.60f, 0.90f, 0.25f, 0.50f),      // brown
                     M(0.12f, 5f, 25f, 0.55f, 0.85f, 0.15f, 0.30f),       // near-black red-brown
+                };
+            case "Ivoire_Vegetal":
+                // Corozo: cream when fresh, honey, caramel and brown as it ages in the light or is dyed (the yellow-brown faceted stones of the shops).
+                return new[]
+                {
+                    M(0.25f, 35f, 48f, 0.08f, 0.25f, 0.85f, 0.97f),
+                    M(0.35f, 35f, 45f, 0.35f, 0.60f, 0.75f, 0.92f),
+                    M(0.25f, 28f, 38f, 0.45f, 0.65f, 0.60f, 0.80f),
+                    M(0.15f, 22f, 32f, 0.50f, 0.70f, 0.35f, 0.55f),
+                };
+            case "Agate":
+                // The natural colours of agate: blue-gray chalcedony above all, gray, brown and beige, honey, the orange-red of iron, a faint lavender, nearly black.
+                // The vivid blues, greens and pinks of the shops are dyed (see DyeingCatalog).
+                return new[]
+                {
+                    M(0.30f, 205f, 230f, 0.12f, 0.35f, 0.55f, 0.80f),
+                    M(0.14f, 200f, 240f, 0.00f, 0.06f, 0.40f, 0.75f),
+                    M(0.20f, 25f, 40f, 0.25f, 0.55f, 0.45f, 0.75f),
+                    M(0.10f, 35f, 45f, 0.30f, 0.55f, 0.70f, 0.90f),
+                    M(0.12f, 15f, 30f, 0.55f, 0.85f, 0.55f, 0.85f),
+                    M(0.07f, 300f, 340f, 0.10f, 0.25f, 0.65f, 0.85f),
+                    M(0.07f, 200f, 240f, 0.00f, 0.08f, 0.10f, 0.30f),
                 };
             case "Obsidienne_Flocons":
                 // Black glass: the snowflakes are drawn by the pattern, the body stays black.

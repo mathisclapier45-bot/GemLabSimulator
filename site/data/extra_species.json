@@ -577,6 +577,1636 @@
     0.25,
     0.8
    ]
+  },
+  {
+   "id": "Amazonite",
+   "displayName": "Amazonite",
+   "description": "Un feldspath vert bleuté, coloré par le plomb, que l'on reconnaît à son aspect quadrillé. On le polit en cabochons et en perles.",
+   "iconColor": "#4C9E8C",
+   "iconFacetColor": "#8CD1BD",
+   "refractiveIndex": 1.526,
+   "density": 2.56,
+   "hardness": 6.25,
+   "lengthMm": 8.0,
+   "widthMm": 6.0,
+   "depthMm": 4.0,
+   "weightCarats": 3.0,
+   "luster": "Vitreux à nacré",
+   "color": "Vert bleuté (vert-de-gris)",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Généralement inerte sous UV longue onde.",
+   "fluorescenceShortWave": "Généralement inerte sous UV courte onde.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.008,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Macle en grille (réseau quadrillé) du microcline et lamelles blanches de perthite.",
+   "interferenceFigure": "Figure d'interférence biaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 8,
+   "origins": [
+    {
+     "name": "Russie (Oural)",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "États-Unis (Colorado)",
+     "rarityWeight": 35,
+     "valueMultiplier": 1.2,
+     "inclusionOverride": "Gisement célèbre de Pikes Peak : cristaux d'un vert bleu intense."
+    },
+    {
+     "name": "Brésil",
+     "rarityWeight": 25,
+     "valueMultiplier": 0.9
+    }
+   ],
+   "habits": [
+    {
+     "habit": "ortho_prism",
+     "weight": 100
+    }
+   ],
+   "colorLimits": [
+    150,
+    190,
+    0.25,
+    0.7,
+    0.45,
+    0.85
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Pierre_Soleil",
+   "displayName": "Pierre de soleil",
+   "description": "Un feldspath orangé qui scintille de milliers de petites paillettes d'hématite ou de goethite : c'est l'aventurescence. La pierre « brille comme le soleil ».",
+   "iconColor": "#D97A38",
+   "iconFacetColor": "#F5B26B",
+   "refractiveIndex": 1.542,
+   "density": 2.65,
+   "hardness": 6.25,
+   "lengthMm": 9.0,
+   "widthMm": 7.0,
+   "depthMm": 4.5,
+   "weightCarats": 3.5,
+   "luster": "Vitreux",
+   "color": "Orange à rouge-brun, avec des reflets dorés",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Transparent à translucide",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.008,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de spectre net ; absorption diffuse du fer.",
+   "spectrumLines": [],
+   "inclusions": "Plaquettes orientées de goethite ou d'hématite, qui donnent le scintillement doré (aventurescence) ; clivages.",
+   "interferenceFigure": "Figure d'interférence biaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 25,
+   "origins": [
+    {
+     "name": "Inde",
+     "rarityWeight": 35,
+     "valueMultiplier": 0.9
+    },
+    {
+     "name": "États-Unis (Oregon)",
+     "rarityWeight": 35,
+     "valueMultiplier": 1.3,
+     "inclusionOverride": "Gisement de grandes pierres claires, parfois rouge et vert (cuivre natif)."
+    },
+    {
+     "name": "Norvège",
+     "rarityWeight": 15,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "Tanzanie",
+     "rarityWeight": 15,
+     "valueMultiplier": 0.9
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    10,
+    40,
+    0.45,
+    0.95,
+    0.5,
+    0.95
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Hiddenite",
+   "displayName": "Hiddénite",
+   "description": "Le spodumène vert, cousin de la kunzite, coloré par le chrome. Elle doit son nom à Hiddenite, en Caroline du Nord, où elle a été découverte en 1879.",
+   "iconColor": "#4CAD66",
+   "iconFacetColor": "#99E09E",
+   "refractiveIndex": 1.665,
+   "density": 3.18,
+   "hardness": 6.75,
+   "lengthMm": 7.0,
+   "widthMm": 5.5,
+   "depthMm": 3.6,
+   "weightCarats": 1.4,
+   "luster": "Vitreux",
+   "color": "Vert pâle à vert émeraude",
+   "shape": "Coussin",
+   "cutStyle": "Brillant",
+   "transparency": "Transparent",
+   "pleochroic": true,
+   "pleochroicDescription": "Vert bleuté / Vert jaunâtre selon l'axe (fort).",
+   "fluorescenceLongWave": "Orange à jaune faible sous UV longue onde.",
+   "fluorescenceShortWave": "Faible ou inerte sous UV courte onde.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.015,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Spectre du chrome : fines raies dans le rouge.",
+   "spectrumLines": [
+    {
+     "wavelengthNm": 646,
+     "widthNm": 3,
+     "depth": 1,
+     "edgeNm": 0
+    },
+    {
+     "wavelengthNm": 669,
+     "widthNm": 3,
+     "depth": 1,
+     "edgeNm": 0
+    },
+    {
+     "wavelengthNm": 686,
+     "widthNm": 4,
+     "depth": 1,
+     "edgeNm": 0
+    }
+   ],
+   "inclusions": "Clivage parfait dans deux directions, tubes et cavités à deux phases ; pierre fragile aux chocs.",
+   "interferenceFigure": "Figure d'interférence biaxiale nette.",
+   "chelseaFilterReaction": "Réaction rougeâtre faible possible (chrome).",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 60,
+   "origins": [
+    {
+     "name": "Afghanistan (Nuristan)",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "États-Unis (Caroline du Nord)",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.6,
+     "inclusionOverride": "Gisement historique d'Hiddenite, où la pierre a reçu son nom."
+    },
+    {
+     "name": "Brésil",
+     "rarityWeight": 30,
+     "valueMultiplier": 0.9
+    }
+   ],
+   "habits": [
+    {
+     "habit": "monoclinic_prism",
+     "weight": 100
+    }
+   ],
+   "colorLimits": [
+    80,
+    160,
+    0.25,
+    0.9,
+    0.4,
+    0.95
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Tourmaline_Verdelite",
+   "displayName": "Tourmaline verdélite",
+   "description": "La tourmaline verte : vert bouteille, émeraude ou olive, colorée par le fer, le manganèse ou le chrome. C'est la couleur de tourmaline la plus courante.",
+   "iconColor": "#1F804C",
+   "iconFacetColor": "#59BF85",
+   "refractiveIndex": 1.63,
+   "density": 3.06,
+   "hardness": 7.25,
+   "lengthMm": 8.0,
+   "widthMm": 5.5,
+   "depthMm": 4.0,
+   "weightCarats": 2.0,
+   "luster": "Vitreux",
+   "color": "Vert (bouteille, émeraude ou olive)",
+   "shape": "Rectangle",
+   "cutStyle": "À degrés",
+   "transparency": "Transparent",
+   "pleochroic": true,
+   "pleochroicDescription": "Vert foncé / Vert jaunâtre selon l'axe (fort).",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+   "opticalCharacterClassName": "Uniaxe",
+   "opticalCharacterClass": 1,
+   "birefringence": 0.018,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Forte absorption du rouge (fer et manganèse) ; faibles bandes dans le bleu et le bleu-vert.",
+   "spectrumLines": [
+    {
+     "wavelengthNm": 468,
+     "widthNm": 10,
+     "depth": 1,
+     "edgeNm": 0
+    },
+    {
+     "wavelengthNm": 497,
+     "widthNm": 12,
+     "depth": 1,
+     "edgeNm": 0
+    },
+    {
+     "wavelengthNm": 660,
+     "widthNm": 60,
+     "depth": 1,
+     "edgeNm": 0
+    }
+   ],
+   "inclusions": "Tubes de croissance parallèles à l'axe, inclusions liquides fragmentées, fissures.",
+   "interferenceFigure": "Figure d'interférence uniaxiale nette.",
+   "chelseaFilterReaction": "Vert terne, parfois teinté de rouge.",
+   "magnetism": "Légère réaction possible avec un aimant très puissant (fer).",
+   "baseValue": 45,
+   "origins": [
+    {
+     "name": "Brésil (Minas Gerais)",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Mozambique",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Namibie",
+     "rarityWeight": 30,
+     "valueMultiplier": 0.9
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    100,
+    165,
+    0.45,
+    1.0,
+    0.25,
+    0.8
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Tourmaline_Dravite",
+   "displayName": "Tourmaline dravite",
+   "description": "La tourmaline brune, riche en magnésium, qui doit son nom à la Drave, une rivière de l'est des Alpes. Brun doré à brun foncé, elle est solide et peu chère.",
+   "iconColor": "#73471F",
+   "iconFacetColor": "#B8854C",
+   "refractiveIndex": 1.63,
+   "density": 3.05,
+   "hardness": 7.25,
+   "lengthMm": 8.0,
+   "widthMm": 6.0,
+   "depthMm": 4.0,
+   "weightCarats": 2.4,
+   "luster": "Vitreux",
+   "color": "Brun à brun jaunâtre, parfois vert foncé",
+   "shape": "Ovale",
+   "cutStyle": "Mixte",
+   "transparency": "Transparent",
+   "pleochroic": true,
+   "pleochroicDescription": "Brun clair / Brun foncé selon l'axe (fort).",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+   "opticalCharacterClassName": "Uniaxe",
+   "opticalCharacterClass": 1,
+   "birefringence": 0.02,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Bandes diffuses du fer ; absorption du bleu et du violet.",
+   "spectrumLines": [
+    {
+     "wavelengthNm": 450,
+     "widthNm": 60,
+     "depth": 1,
+     "edgeNm": 0
+    }
+   ],
+   "inclusions": "Tubes de croissance parallèles à l'axe, inclusions liquides, fissures ; cristaux souvent striés.",
+   "interferenceFigure": "Figure d'interférence uniaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Légère réaction possible avec un aimant très puissant (fer).",
+   "baseValue": 20,
+   "origins": [
+    {
+     "name": "Slovénie (Drave)",
+     "rarityWeight": 20,
+     "valueMultiplier": 1.2,
+     "inclusionOverride": "Région qui a donné son nom à la dravite."
+    },
+    {
+     "name": "Tanzanie",
+     "rarityWeight": 45,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Kenya",
+     "rarityWeight": 35,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    15,
+    45,
+    0.5,
+    1.0,
+    0.25,
+    0.7
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Aventurine",
+   "displayName": "Aventurine",
+   "description": "Un quartz massif plein de petites paillettes de mica vert (fuchsite) qui scintillent : c'est l'aventurescence. Elle est verte, parfois bleue, orange ou brune.",
+   "iconColor": "#4C9E59",
+   "iconFacetColor": "#94D194",
+   "refractiveIndex": 1.544,
+   "density": 2.66,
+   "hardness": 6.75,
+   "lengthMm": 9.0,
+   "widthMm": 7.0,
+   "depthMm": 4.0,
+   "weightCarats": 3.5,
+   "luster": "Vitreux",
+   "color": "Vert (parfois bleu, orange ou brun)",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Agrégat microcristallin de quartz : lecture diffuse, uniaxe positif en lumière polarisée.",
+   "opticalCharacterClassName": "Uniaxe",
+   "opticalCharacterClass": 1,
+   "birefringence": 0.009,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net ; bandes faibles du chrome de la fuchsite.",
+   "spectrumLines": [],
+   "inclusions": "Paillettes orientées de fuchsite (mica au chrome), qui donnent le scintillement ; cassure granuleuse.",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 6,
+   "origins": [
+    {
+     "name": "Inde",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Brésil",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Russie (Oural)",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    100,
+    165,
+    0.3,
+    0.8,
+    0.35,
+    0.8
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Jaspe",
+   "displayName": "Jaspe",
+   "description": "Un quartz microcristallin opaque, coloré par des oxydes de fer : rouge, jaune, vert ou brun, souvent tacheté ou rubané. Il est dur et se polit très bien.",
+   "iconColor": "#9E3824",
+   "iconFacetColor": "#D17352",
+   "refractiveIndex": 1.54,
+   "density": 2.7,
+   "hardness": 6.75,
+   "lengthMm": 9.0,
+   "widthMm": 7.0,
+   "depthMm": 4.0,
+   "weightCarats": 4.0,
+   "luster": "Cireux à vitreux",
+   "color": "Rouge, jaune, vert ou brun (souvent tacheté)",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Opaque",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Opaque : aucune lecture optique en lumière transmise.",
+   "opticalCharacterClassName": "Opaque",
+   "opticalCharacterClass": 3,
+   "birefringence": 0.0,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Grain microcristallin, taches et veines d'oxydes de fer, parfois fossiles ou dendrites.",
+   "interferenceFigure": "Aucune figure d'interférence exploitable (pierre opaque).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Réaction très faible à l'aimant selon la teneur en fer.",
+   "baseValue": 5,
+   "origins": [
+    {
+     "name": "Inde",
+     "rarityWeight": 30,
+     "valueMultiplier": 0.9
+    },
+    {
+     "name": "Brésil",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "États-Unis (Oregon)",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.2
+    },
+    {
+     "name": "Madagascar",
+     "rarityWeight": 20,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    0,
+    55,
+    0.5,
+    1.0,
+    0.25,
+    0.85
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Onyx",
+   "displayName": "Onyx",
+   "description": "Une calcédoine à bandes parallèles noires et blanches. La plupart des onyx du commerce sont des agates grises teintes en noir.",
+   "iconColor": "#1F1F24",
+   "iconFacetColor": "#73737A",
+   "refractiveIndex": 1.535,
+   "density": 2.6,
+   "hardness": 6.75,
+   "lengthMm": 9.0,
+   "widthMm": 7.0,
+   "depthMm": 4.0,
+   "weightCarats": 4.0,
+   "luster": "Cireux à vitreux",
+   "color": "Noir et blanc, en bandes parallèles",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Opaque",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Opaque : aucune lecture optique en lumière transmise.",
+   "opticalCharacterClassName": "Opaque",
+   "opticalCharacterClass": 3,
+   "birefringence": 0.0,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net ; la teinture noire donne ses propres bandes.",
+   "spectrumLines": [],
+   "inclusions": "Bandes rectilignes parallèles, noires et blanches ; grain microcristallin.",
+   "interferenceFigure": "Aucune figure d'interférence exploitable (pierre opaque).",
+   "chelseaFilterReaction": "Aucune réaction (sauf teinture).",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 6,
+   "origins": [
+    {
+     "name": "Brésil",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Uruguay",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Inde",
+     "rarityWeight": 30,
+     "valueMultiplier": 0.9
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    0,
+    360,
+    0.0,
+    0.12,
+    0.05,
+    0.35
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Enstatite",
+   "displayName": "Enstatite",
+   "description": "Un pyroxène de magnésium, d'un vert bouteille à brun. L'enstatite verte au chrome est très rare ; la variété riche en fer est l'hypersthène.",
+   "iconColor": "#4C7333",
+   "iconFacetColor": "#94B866",
+   "refractiveIndex": 1.665,
+   "density": 3.25,
+   "hardness": 5.75,
+   "lengthMm": 7.0,
+   "widthMm": 5.5,
+   "depthMm": 3.6,
+   "weightCarats": 1.3,
+   "luster": "Vitreux",
+   "color": "Vert à brun (vert bouteille, jaune-vert)",
+   "shape": "Ovale",
+   "cutStyle": "Brillant",
+   "transparency": "Transparent",
+   "pleochroic": true,
+   "pleochroicDescription": "Vert / Brun jaunâtre selon l'axe (faible à modéré).",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.009,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Bandes du fer dans le vert-bleu ; parfois une bande du chrome dans le jaune-vert.",
+   "spectrumLines": [
+    {
+     "wavelengthNm": 505,
+     "widthNm": 10,
+     "depth": 1,
+     "edgeNm": 0
+    },
+    {
+     "wavelengthNm": 550,
+     "widthNm": 20,
+     "depth": 1,
+     "edgeNm": 0
+    }
+   ],
+   "inclusions": "Fines aiguilles parallèles, petits cristaux, fissures ; clivage net dans deux directions.",
+   "interferenceFigure": "Figure d'interférence biaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Faible réaction à l'aimant (fer).",
+   "baseValue": 35,
+   "origins": [
+    {
+     "name": "Tanzanie",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Sri Lanka",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "Myanmar",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [
+    {
+     "habit": "ortho_prism",
+     "weight": 100
+    }
+   ],
+   "colorLimits": [
+    50,
+    120,
+    0.3,
+    0.9,
+    0.2,
+    0.75
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Larimar",
+   "displayName": "Larimar",
+   "description": "Une variété bleue de pectolite, que l'on ne trouve qu'en République dominicaine. Son bleu ciel veiné de blanc rappelle la mer des Caraïbes.",
+   "iconColor": "#4CA6D1",
+   "iconFacetColor": "#A6E0F2",
+   "refractiveIndex": 1.62,
+   "density": 2.8,
+   "hardness": 4.75,
+   "lengthMm": 10.0,
+   "widthMm": 8.0,
+   "depthMm": 4.5,
+   "weightCarats": 5.0,
+   "luster": "Vitreux à soyeux",
+   "color": "Bleu ciel à bleu-vert, veiné de blanc",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Inerte, parfois orangé faible.",
+   "fluorescenceShortWave": "Inerte, parfois orangé faible.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.04,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net ; le cuivre colore en bleu.",
+   "spectrumLines": [],
+   "inclusions": "Fibres rayonnantes de pectolite, volutes et veines blanches (motif en « vagues »).",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 60,
+   "origins": [
+    {
+     "name": "République dominicaine",
+     "rarityWeight": 100,
+     "valueMultiplier": 1.0,
+     "inclusionOverride": "Seul gisement connu : la mine de Los Chupaderos, près de Barahona."
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    185,
+    205,
+    0.3,
+    0.7,
+    0.55,
+    0.95
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Charoite",
+   "displayName": "Charoïte",
+   "description": "Une roche violette aux tourbillons soyeux, trouvée seulement en Sibérie, près de la rivière Chara. Elle a été décrite en 1978.",
+   "iconColor": "#8040A6",
+   "iconFacetColor": "#BF8CD9",
+   "refractiveIndex": 1.555,
+   "density": 2.68,
+   "hardness": 5.5,
+   "lengthMm": 10.0,
+   "widthMm": 8.0,
+   "depthMm": 4.5,
+   "weightCarats": 5.0,
+   "luster": "Soyeux à nacré",
+   "color": "Violet (lilas à pourpre) en tourbillons",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.009,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Fibres violettes en tourbillons, avec des plages d'aegyrine noire et de feldspath blanc.",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 35,
+   "origins": [
+    {
+     "name": "Russie (Yakoutie, massif du Murun)",
+     "rarityWeight": 100,
+     "valueMultiplier": 1.0,
+     "inclusionOverride": "Seul gisement connu au monde, dans le massif du Murun."
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    270,
+    300,
+    0.3,
+    0.85,
+    0.3,
+    0.85
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Sugilite",
+   "displayName": "Sugilite",
+   "description": "Une roche d'un violet intense, découverte au Japon en 1944 et exploitée en Afrique du Sud. Sa couleur vient du manganèse.",
+   "iconColor": "#8C3399",
+   "iconFacetColor": "#C780D1",
+   "refractiveIndex": 1.608,
+   "density": 2.78,
+   "hardness": 6.0,
+   "lengthMm": 10.0,
+   "widthMm": 8.0,
+   "depthMm": 4.5,
+   "weightCarats": 5.0,
+   "luster": "Vitreux à cireux",
+   "color": "Violet intense à pourpre",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, uniaxial, lecture diffuse typique d'un agrégat.",
+   "opticalCharacterClassName": "Uniaxe",
+   "opticalCharacterClass": 1,
+   "birefringence": 0.002,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Bandes du manganèse dans le violet et le vert.",
+   "spectrumLines": [
+    {
+     "wavelengthNm": 411,
+     "widthNm": 6,
+     "depth": 1,
+     "edgeNm": 0
+    },
+    {
+     "wavelengthNm": 419,
+     "widthNm": 6,
+     "depth": 1,
+     "edgeNm": 0
+    },
+    {
+     "wavelengthNm": 550,
+     "widthNm": 40,
+     "depth": 1,
+     "edgeNm": 0
+    }
+   ],
+   "inclusions": "Grain fin, plages plus claires et taches noires d'oxydes de manganèse.",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Légère réaction possible avec un aimant très puissant (manganèse et fer).",
+   "baseValue": 50,
+   "origins": [
+    {
+     "name": "Afrique du Sud (mine Wessels)",
+     "rarityWeight": 100,
+     "valueMultiplier": 1.0,
+     "inclusionOverride": "Gisement du Kalahari qui donne la plus belle sugilite, d'un violet intense."
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    280,
+    310,
+    0.45,
+    0.95,
+    0.25,
+    0.75
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Azurite",
+   "displayName": "Azurite",
+   "description": "Un carbonate de cuivre d'un bleu profond, au nom qui vient de l'azur. Tendre et fragile, on le polit en cabochons ou on le garde en cristaux ; il se transforme lentement en malachite.",
+   "iconColor": "#14389E",
+   "iconFacetColor": "#4C7AD9",
+   "refractiveIndex": 1.78,
+   "density": 3.8,
+   "hardness": 3.75,
+   "lengthMm": 8.0,
+   "widthMm": 6.0,
+   "depthMm": 4.0,
+   "weightCarats": 3.0,
+   "luster": "Vitreux",
+   "color": "Bleu profond (bleu azur)",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Opaque",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Opaque : aucune lecture optique en lumière transmise.",
+   "opticalCharacterClassName": "Opaque",
+   "opticalCharacterClass": 3,
+   "birefringence": 0.109,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Cristaux et rosettes, passages à la malachite verte ; bulles de cavités botryoïdales.",
+   "interferenceFigure": "Aucune figure d'interférence exploitable (pierre opaque).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 20,
+   "origins": [
+    {
+     "name": "Maroc",
+     "rarityWeight": 35,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "États-Unis (Arizona)",
+     "rarityWeight": 35,
+     "valueMultiplier": 1.2
+    },
+    {
+     "name": "Chine",
+     "rarityWeight": 30,
+     "valueMultiplier": 0.9
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    215,
+    240,
+    0.8,
+    1.0,
+    0.25,
+    0.65
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Chrysocolle",
+   "displayName": "Chrysocolle",
+   "description": "Un silicate de cuivre bleu-vert, tendre et poreux, le plus souvent mêlé de quartz ou d'autres minéraux de cuivre. Sa variété silicifiée, plus dure, est la « gem silica ».",
+   "iconColor": "#269EA6",
+   "iconFacetColor": "#73D9D9",
+   "refractiveIndex": 1.6,
+   "density": 2.2,
+   "hardness": 3.0,
+   "lengthMm": 10.0,
+   "widthMm": 8.0,
+   "depthMm": 4.5,
+   "weightCarats": 5.0,
+   "luster": "Vitreux à terne",
+   "color": "Bleu-vert à bleu turquoise",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.04,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net ; le cuivre colore en bleu-vert.",
+   "spectrumLines": [],
+   "inclusions": "Masse cryptocristalline, bandes et plages vert foncé, parfois cristaux de quartz.",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 12,
+   "origins": [
+    {
+     "name": "Pérou",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "États-Unis (Arizona)",
+     "rarityWeight": 35,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "République démocratique du Congo",
+     "rarityWeight": 25,
+     "valueMultiplier": 0.9
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    165,
+    195,
+    0.4,
+    0.9,
+    0.4,
+    0.9
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Variscite",
+   "displayName": "Variscite",
+   "description": "Un phosphate d'aluminium vert pomme à bleuté, souvent veiné de brun ou de noir. On la prend souvent pour de la turquoise.",
+   "iconColor": "#59AD73",
+   "iconFacetColor": "#A6E0AD",
+   "refractiveIndex": 1.58,
+   "density": 2.55,
+   "hardness": 4.5,
+   "lengthMm": 10.0,
+   "widthMm": 8.0,
+   "depthMm": 4.5,
+   "weightCarats": 5.0,
+   "luster": "Cireux à vitreux",
+   "color": "Vert pomme à vert bleuté",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.031,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net ; le chrome ou le vanadium colore en vert.",
+   "spectrumLines": [],
+   "inclusions": "Veinules brunes ou noires d'oxydes de fer ou de manganèse (matrice), nodules en rognons.",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 18,
+   "origins": [
+    {
+     "name": "États-Unis (Utah)",
+     "rarityWeight": 55,
+     "valueMultiplier": 1.2
+    },
+    {
+     "name": "Autre gisement",
+     "rarityWeight": 45,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    95,
+    165,
+    0.3,
+    0.75,
+    0.45,
+    0.9
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Lepidolite",
+   "displayName": "Lépidolite",
+   "description": "Un mica de lithium rose à violet lilas, fait de minuscules paillettes. C'est un minerai de lithium, et une pierre d'ornement douce.",
+   "iconColor": "#B880BF",
+   "iconFacetColor": "#E0B8E6",
+   "refractiveIndex": 1.54,
+   "density": 2.85,
+   "hardness": 2.75,
+   "lengthMm": 10.0,
+   "widthMm": 8.0,
+   "depthMm": 4.5,
+   "weightCarats": 5.0,
+   "luster": "Nacré",
+   "color": "Lilas à rose-violet",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.019,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Paillettes de mica agglomérées, parfois cristaux de tourmaline rose ou de quartz.",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 8,
+   "origins": [
+    {
+     "name": "Brésil",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Madagascar",
+     "rarityWeight": 35,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "États-Unis (Californie)",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.1
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    290,
+    330,
+    0.12,
+    0.55,
+    0.6,
+    0.95
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Benitoite",
+   "displayName": "Bénitoïte",
+   "description": "Un silicate de baryum et de titane d'un bleu saphir, trouvé seulement en Californie. Sa dispersion dépasse celle du diamant et elle brille en bleu vif sous les UV courts.",
+   "iconColor": "#1A40BF",
+   "iconFacetColor": "#6694F2",
+   "refractiveIndex": 1.78,
+   "density": 3.67,
+   "hardness": 6.25,
+   "lengthMm": 5.5,
+   "widthMm": 4.5,
+   "depthMm": 3.0,
+   "weightCarats": 0.6,
+   "luster": "Vitreux à sub-adamantin",
+   "color": "Bleu saphir à violet (parfois incolore)",
+   "shape": "Coussin",
+   "cutStyle": "Brillant",
+   "transparency": "Transparent",
+   "pleochroic": true,
+   "pleochroicDescription": "Bleu intense / Incolore selon l'axe (très marqué).",
+   "fluorescenceLongWave": "Inerte ou très faible.",
+   "fluorescenceShortWave": "Bleu-blanc vif, très intense.",
+   "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+   "opticalCharacterClassName": "Uniaxe",
+   "opticalCharacterClass": 1,
+   "birefringence": 0.047,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Souvent propre ; petits cristaux de natrolite, de neptunite ou de joaquinite.",
+   "interferenceFigure": "Figure d'interférence uniaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 1500,
+   "origins": [
+    {
+     "name": "États-Unis (Californie)",
+     "rarityWeight": 100,
+     "valueMultiplier": 1.0,
+     "inclusionOverride": "Seul gisement de qualité gemme : la mine de Dallas, dans le comté de San Benito."
+    }
+   ],
+   "habits": [
+    {
+     "habit": "hex_bipyramid",
+     "weight": 70
+    },
+    {
+     "habit": "hex_tabular",
+     "weight": 30
+    }
+   ],
+   "colorLimits": [
+    215,
+    270,
+    0.5,
+    1.0,
+    0.3,
+    0.9
+   ],
+   "fluoEntry": {
+    "longText": "Inerte ou très faible.",
+    "longColor": "#CFE0FF",
+    "longIntensity": 0.05,
+    "shortText": "Bleu-blanc vif, très intense.",
+    "shortColor": "#9CC8FF",
+    "shortIntensity": 0.9,
+    "phosphorescent": false
+   },
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Grandidierite",
+   "displayName": "Grandidiérite",
+   "description": "Un borosilicate bleu-vert, l'une des gemmes les plus rares du monde, découvert à Madagascar en 1902. Son trichroïsme est très fort.",
+   "iconColor": "#1A8C8C",
+   "iconFacetColor": "#66CCC7",
+   "refractiveIndex": 1.62,
+   "density": 2.95,
+   "hardness": 7.5,
+   "lengthMm": 6.0,
+   "widthMm": 5.0,
+   "depthMm": 3.2,
+   "weightCarats": 0.9,
+   "luster": "Vitreux",
+   "color": "Bleu-vert (turquoise)",
+   "shape": "Coussin",
+   "cutStyle": "Mixte",
+   "transparency": "Transparent",
+   "pleochroic": true,
+   "pleochroicDescription": "Bleu-vert / Vert / Incolore à jaunâtre selon les trois axes (très marqué).",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.039,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de raies nettes ; absorption du fer dans le rouge et le bleu.",
+   "spectrumLines": [],
+   "inclusions": "Souvent propre ; petits cristaux, plumes de guérison, fines aiguilles.",
+   "interferenceFigure": "Figure d'interférence biaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Légère réaction possible avec un aimant très puissant (fer).",
+   "baseValue": 2000,
+   "origins": [
+    {
+     "name": "Madagascar",
+     "rarityWeight": 60,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Sri Lanka",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.1
+    }
+   ],
+   "habits": [
+    {
+     "habit": "ortho_prism",
+     "weight": 100
+    }
+   ],
+   "colorLimits": [
+    170,
+    200,
+    0.35,
+    0.9,
+    0.35,
+    0.85
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Diaspore_Zultanite",
+   "displayName": "Zultanite (diaspore)",
+   "description": "Le diaspore gemme, qui change de couleur : vert jaunâtre à la lumière du jour, rose à orangé sous une lampe à incandescence. On ne l'exploite qu'en Turquie, dans les monts Ilbir (Anatolie).",
+   "iconColor": "#9EB24C",
+   "iconFacetColor": "#D1E08C",
+   "refractiveIndex": 1.72,
+   "density": 3.4,
+   "hardness": 6.75,
+   "lengthMm": 7.0,
+   "widthMm": 5.5,
+   "depthMm": 3.6,
+   "weightCarats": 1.6,
+   "luster": "Vitreux",
+   "color": "Vert jaunâtre à rose (changement de couleur)",
+   "shape": "Coussin",
+   "cutStyle": "Brillant",
+   "transparency": "Transparent",
+   "pleochroic": true,
+   "pleochroicDescription": "Vert / Jaune-brun / Rose-violet selon les trois axes (fort).",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.046,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Absorption du bleu (fer) et faibles raies du chrome dans le rouge.",
+   "spectrumLines": [
+    {
+     "wavelengthNm": 440,
+     "widthNm": 30,
+     "depth": 1,
+     "edgeNm": 0
+    },
+    {
+     "wavelengthNm": 690,
+     "widthNm": 4,
+     "depth": 1,
+     "edgeNm": 0
+    }
+   ],
+   "inclusions": "Généralement propre ; fissures, cristaux, clivage parfait dans une direction (pierre fragile).",
+   "interferenceFigure": "Figure d'interférence biaxiale nette.",
+   "chelseaFilterReaction": "Réaction rougeâtre faible possible (chrome).",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 300,
+   "origins": [
+    {
+     "name": "Turquie (monts Ilbir)",
+     "rarityWeight": 100,
+     "valueMultiplier": 1.0,
+     "inclusionOverride": "Seul gisement important : des cristaux qui changent de couleur, vendus sous le nom de zultanite."
+    }
+   ],
+   "habits": [
+    {
+     "habit": "ortho_prism",
+     "weight": 100
+    }
+   ],
+   "colorLimits": [
+    55,
+    115,
+    0.3,
+    0.85,
+    0.45,
+    0.9
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Euclase",
+   "displayName": "Euclase",
+   "description": "Un silicate de béryllium et d'aluminium d'un bleu-vert pâle, très dur mais fragile : son nom grec veut dire « qui se brise bien », à cause de son clivage parfait.",
+   "iconColor": "#73B8D1",
+   "iconFacetColor": "#B8E6F2",
+   "refractiveIndex": 1.66,
+   "density": 3.1,
+   "hardness": 7.5,
+   "lengthMm": 7.0,
+   "widthMm": 5.0,
+   "depthMm": 3.4,
+   "weightCarats": 1.3,
+   "luster": "Vitreux",
+   "color": "Bleu à bleu-vert pâle (parfois incolore ou vert)",
+   "shape": "Rectangle",
+   "cutStyle": "À degrés",
+   "transparency": "Transparent",
+   "pleochroic": true,
+   "pleochroicDescription": "Bleu / Bleu-vert / Incolore selon les trois axes (modéré).",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.019,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Clivage parfait, fissures, inclusions liquides ; très fragile à la taille.",
+   "interferenceFigure": "Figure d'interférence biaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 120,
+   "origins": [
+    {
+     "name": "Brésil (Minas Gerais)",
+     "rarityWeight": 50,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Zimbabwe",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Colombie",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.1
+    }
+   ],
+   "habits": [
+    {
+     "habit": "monoclinic_prism",
+     "weight": 100
+    }
+   ],
+   "colorLimits": [
+    170,
+    215,
+    0.12,
+    0.6,
+    0.55,
+    1.0
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Danburite",
+   "displayName": "Danburite",
+   "description": "Un borosilicate de calcium, incolore à jaune pâle, au bel éclat. Il est dur et clair, mais reste rare. Il tient son nom de Danbury, dans le Connecticut.",
+   "iconColor": "#E0DBB8",
+   "iconFacetColor": "#F5F2E0",
+   "refractiveIndex": 1.633,
+   "density": 3.0,
+   "hardness": 7.25,
+   "lengthMm": 8.0,
+   "widthMm": 5.5,
+   "depthMm": 3.6,
+   "weightCarats": 1.8,
+   "luster": "Vitreux à gras",
+   "color": "Incolore à jaune pâle",
+   "shape": "Rectangle",
+   "cutStyle": "À degrés",
+   "transparency": "Transparent",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Bleu clair, variable selon la pierre.",
+   "fluorescenceShortWave": "Bleu, plus faible qu'en onde longue.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.006,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de spectre net ; parfois de fines raies des terres rares.",
+   "spectrumLines": [],
+   "inclusions": "Généralement propre ; cavités à liquide, fissures.",
+   "interferenceFigure": "Figure d'interférence biaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 40,
+   "origins": [
+    {
+     "name": "Mexique",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Madagascar",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Myanmar",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [
+    {
+     "habit": "ortho_prism",
+     "weight": 100
+    }
+   ],
+   "colorLimits": [
+    40,
+    70,
+    0.0,
+    0.3,
+    0.75,
+    1.0
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Kornerupine",
+   "displayName": "Kornérupine",
+   "description": "Un silicate de magnésium et d'aluminium, vert à brun, au trichroïsme marqué. Rare en pierre taillée, elle donne parfois des œils-de-chat.",
+   "iconColor": "#598547",
+   "iconFacetColor": "#9EBF7A",
+   "refractiveIndex": 1.68,
+   "density": 3.35,
+   "hardness": 6.5,
+   "lengthMm": 7.0,
+   "widthMm": 5.5,
+   "depthMm": 3.6,
+   "weightCarats": 1.5,
+   "luster": "Vitreux",
+   "color": "Vert à brun",
+   "shape": "Ovale",
+   "cutStyle": "Mixte",
+   "transparency": "Transparent",
+   "pleochroic": true,
+   "pleochroicDescription": "Vert / Jaune-brun / Brun-rouge selon les trois axes (marqué).",
+   "fluorescenceLongWave": "Généralement inerte, parfois jaune orangé faible.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.013,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Absorption du bleu (fer), sans raie nette.",
+   "spectrumLines": [],
+   "inclusions": "Aiguilles parallèles (parfois en œil-de-chat), fissures, cristaux.",
+   "interferenceFigure": "Figure d'interférence biaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Faible réaction à l'aimant (fer).",
+   "baseValue": 80,
+   "origins": [
+    {
+     "name": "Sri Lanka",
+     "rarityWeight": 35,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Tanzanie",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Madagascar",
+     "rarityWeight": 20,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Kenya",
+     "rarityWeight": 15,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [
+    {
+     "habit": "ortho_prism",
+     "weight": 100
+    }
+   ],
+   "colorLimits": [
+    70,
+    130,
+    0.3,
+    0.85,
+    0.25,
+    0.75
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
   }
  ]
 }

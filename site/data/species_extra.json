@@ -9,6 +9,11 @@
   "formula": "Be₃Al₂Si₆O₁₈",
   "note": "Silicate de béryllium et d'aluminium"
  },
+ "Amazonite": {
+  "system": "triclinic",
+  "formula": "KAlSi₃O₈ (Pb)",
+  "note": "Feldspath potassique (microcline) coloré par le plomb"
+ },
  "Ambre": {
   "system": "amorphous",
   "formula": "≈ C₁₀H₁₆O",
@@ -33,6 +38,21 @@
   "system": "hexagonal",
   "formula": "Ca₅(PO₄)₃(F,Cl,OH)",
   "note": "Phosphate de calcium"
+ },
+ "Aventurine": {
+  "system": "trigonal",
+  "formula": "SiO₂ + fuchsite",
+  "note": "Quartz à paillettes de mica vert (fuchsite)"
+ },
+ "Azurite": {
+  "system": "monoclinic",
+  "formula": "Cu₃(CO₃)₂(OH)₂",
+  "note": "Carbonate basique de cuivre"
+ },
+ "Benitoite": {
+  "system": "hexagonal",
+  "formula": "BaTiSi₃O₉",
+  "note": "Silicate de baryum et de titane"
  },
  "Beryl_Bleu": {
   "system": "hexagonal",
@@ -59,6 +79,11 @@
   "formula": "SrSO₄",
   "note": "Sulfate de strontium"
  },
+ "Charoite": {
+  "system": "monoclinic",
+  "formula": "(K,Sr,Ba,Mn)₁₅₋₁₆(Ca,Na)₃₂[Si₇₀(O,OH)₁₈₀](OH,F)₄·nH₂O",
+  "note": "Silicate complexe de potassium et de calcium (charoïte)"
+ },
  "Chrysoberyl": {
   "system": "orthorhombic",
   "formula": "BeAl₂O₄",
@@ -68,6 +93,11 @@
   "system": "orthorhombic",
   "formula": "BeAl₂O₄ (Cr)",
   "note": "Chrysobéryl coloré par le chrome : change de couleur"
+ },
+ "Chrysocolle": {
+  "system": "amorphous",
+  "formula": "(Cu,Al)₂H₂Si₂O₅(OH)₄·nH₂O",
+  "note": "Silicate hydraté de cuivre, presque amorphe"
  },
  "Citrine": {
   "system": "trigonal",
@@ -104,6 +134,11 @@
   "formula": "Kératine (protéine)",
   "note": "Matière organique, comme les ongles et les cheveux"
  },
+ "Danburite": {
+  "system": "orthorhombic",
+  "formula": "CaB₂Si₂O₈",
+  "note": "Borosilicate de calcium"
+ },
  "Defense_Narval": {
   "system": "organic",
   "formula": "Ca₅(PO₄)₃(OH) + collagène",
@@ -124,6 +159,11 @@
   "formula": "C",
   "note": "Carbone pur"
  },
+ "Diaspore_Zultanite": {
+  "system": "orthorhombic",
+  "formula": "AlO(OH) (Cr,Fe)",
+  "note": "Hydroxyde d'aluminium (diaspore)"
+ },
  "Diopside_Chromifere": {
   "system": "monoclinic",
   "formula": "CaMgSi₂O₆ (Cr)",
@@ -138,6 +178,16 @@
   "system": "hexagonal",
   "formula": "Be₃Al₂Si₆O₁₈ (Cr, V)",
   "note": "Béryl coloré par le chrome et le vanadium"
+ },
+ "Enstatite": {
+  "system": "orthorhombic",
+  "formula": "Mg₂Si₂O₆ (Fe,Cr)",
+  "note": "Pyroxène de magnésium (enstatite)"
+ },
+ "Euclase": {
+  "system": "monoclinic",
+  "formula": "BeAlSiO₄(OH)",
+  "note": "Silicate de béryllium et d'aluminium"
  },
  "Fluorite": {
   "system": "cubic",
@@ -178,6 +228,11 @@
   "system": "hexagonal",
   "formula": "Be₃Al₂Si₆O₁₈",
   "note": "Silicate de béryllium et d'aluminium"
+ },
+ "Grandidierite": {
+  "system": "orthorhombic",
+  "formula": "(Mg,Fe)Al₃(BO₃)(SiO₄)O₂",
+  "note": "Borosilicate de magnésium, de fer et d'aluminium"
  },
  "Grenat_Almandin": {
   "system": "cubic",
@@ -274,6 +329,11 @@
   "formula": "Fe₂O₃",
   "note": "Oxyde de fer"
  },
+ "Hiddenite": {
+  "system": "monoclinic",
+  "formula": "LiAlSi₂O₆ (Cr)",
+  "note": "Spodumène vert coloré par le chrome"
+ },
  "Iolite": {
   "system": "orthorhombic",
   "formula": "Mg₂Al₄Si₅O₁₈",
@@ -324,6 +384,16 @@
   "formula": "Carbone (lignite)",
   "note": "Bois fossile compressé"
  },
+ "Jaspe": {
+  "system": "trigonal",
+  "formula": "SiO₂ + oxydes de fer",
+  "note": "Quartz microcristallin opaque coloré par des oxydes de fer"
+ },
+ "Kornerupine": {
+  "system": "orthorhombic",
+  "formula": "Mg₃Al₆(Si,Al,B)₅O₂₁(OH)",
+  "note": "Silicate de magnésium et d'aluminium contenant du bore"
+ },
  "Kunzite": {
   "system": "monoclinic",
   "formula": "LiAlSi₂O₆ (Mn)",
@@ -343,6 +413,16 @@
   "system": "cubic",
   "formula": "(Na,Ca)₈(AlSiO₄)₆(S,SO₄,Cl)",
   "note": "Roche : lazurite, avec calcite et pyrite"
+ },
+ "Larimar": {
+  "system": "triclinic",
+  "formula": "NaCa₂Si₃O₈(OH) (Cu)",
+  "note": "Pectolite (silicate de sodium et de calcium) bleue par le cuivre"
+ },
+ "Lepidolite": {
+  "system": "monoclinic",
+  "formula": "K(Li,Al)₃(Si,Al)₄O₁₀(F,OH)₂",
+  "note": "Mica de lithium et d'aluminium"
  },
  "Malachite": {
   "system": "monoclinic",
@@ -378,6 +458,11 @@
   "system": "trigonal",
   "formula": "SiO₂ + oxydes de fer",
   "note": "Quartz fibreux remplaçant de la crocidolite"
+ },
+ "Onyx": {
+  "system": "trigonal",
+  "formula": "SiO₂",
+  "note": "Calcédoine : quartz microcristallin en bandes"
  },
  "Opale_De_Feu": {
   "system": "amorphous",
@@ -428,6 +513,11 @@
   "system": "monoclinic",
   "formula": "KAlSi₃O₈ + NaAlSi₃O₈",
   "note": "Feldspath en lamelles alternées : reflet bleuté"
+ },
+ "Pierre_Soleil": {
+  "system": "triclinic",
+  "formula": "(Na,Ca)(Al,Si)₄O₈",
+  "note": "Feldspath plagioclase (oligoclase) à plaquettes d'oxyde de fer"
  },
  "Prasiolite": {
   "system": "trigonal",
@@ -559,6 +649,11 @@
   "formula": "Mg₃Si₄O₁₀(OH)₂",
   "note": "Talc : silicate de magnésium hydraté"
  },
+ "Sugilite": {
+  "system": "hexagonal",
+  "formula": "KNa₂(Fe,Mn,Al)₂Li₃Si₁₂O₃₀",
+  "note": "Silicate de potassium, de lithium et de manganèse (sugilite)"
+ },
  "Taaffeite": {
   "system": "hexagonal",
   "formula": "BeMgAl₄O₈",
@@ -578,6 +673,11 @@
   "system": "orthorhombic",
   "formula": "Al₂SiO₄(F,OH)₂",
   "note": "Silicate d'aluminium avec du fluor"
+ },
+ "Tourmaline_Dravite": {
+  "system": "trigonal",
+  "formula": "NaMg₃Al₆(BO₃)₃Si₆O₁₈(OH)₄",
+  "note": "Tourmaline magnésienne (dravite)"
  },
  "Tourmaline_Indicolite": {
   "system": "trigonal",
@@ -604,6 +704,11 @@
   "formula": "NaFe₃Al₆(BO₃)₃Si₆O₁₈(OH)₄",
   "note": "Tourmaline noire riche en fer"
  },
+ "Tourmaline_Verdelite": {
+  "system": "trigonal",
+  "formula": "Na(Li,Al)₃Al₆(BO₃)₃Si₆O₁₈(OH)₄",
+  "note": "Tourmaline verte (elbaïte) colorée par le fer, le manganèse ou le chrome"
+ },
  "Turquoise": {
   "system": "triclinic",
   "formula": "CuAl₆(PO₄)₄(OH)₈·4H₂O",
@@ -613,6 +718,11 @@
   "system": "triclinic",
   "formula": "CuAl₆(PO₄)₄(OH)₈·4H₂O + résine",
   "note": "Turquoise imprégnée de résine"
+ },
+ "Variscite": {
+  "system": "orthorhombic",
+  "formula": "AlPO₄·2H₂O",
+  "note": "Phosphate hydraté d'aluminium"
  },
  "Verre": {
   "system": "amorphous",

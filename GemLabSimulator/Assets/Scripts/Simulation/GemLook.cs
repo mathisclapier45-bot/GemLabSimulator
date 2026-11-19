@@ -5,7 +5,7 @@ using UnityEngine;
 // and the fire of the stones that split the light in rainbow colours. Derived from the luster written on the species, so every place that draws a stone shows the same one.
 public enum GemPattern
 {
-    None, Banded, Flecks, Veins, Mottled, Chatoyant, Adular, Opal, Labrador, Pearl, MetalGray, MetalBrass, Tortoise, Amber, Grain, Streaks, Bicolour, ColorChange, Gradient, Cleavage, Bubbles, Horsetail, Snowflakes,
+    None, Banded, Flecks, Veins, Mottled, Chatoyant, Adular, Opal, Labrador, Pearl, MetalGray, MetalBrass, Tortoise, Amber, Grain, Streaks, Bicolour, ColorChange, Gradient, Cleavage, Bubbles, Horsetail, Snowflakes, Rhodochrosite, Agate, Carnelian, Malachite, Turquoise, Corozo, CorozoSkin,
 }
 
 public struct GemLook
@@ -21,17 +21,19 @@ public struct GemLook
     public float Dispersion;        // half the spread of the index between red and blue light
     public float RoughScale;        // how dull the faces of its rough crystals are, compared with the habit's usual: 0 or 1 = as usual, less = glossier (spinel, garnet)
     public float ToneCap;           // > 0: no facet gets brighter than this (a rough crystal has big flat faces, which must not turn white)
+    public float Depth;             // 0 or 1 = as usual; more = the colour is absorbed faster in the stone (realistic renderer), so a saturated stone keeps its pure hue
+                                    // instead of turning pale (coral reds, lavender pinks) through the short paths of the light
 
     public static readonly GemLook Default = new GemLook { Brilliance = 0.6f, Fire = 0f, Contrast = 1f, Ior = 1.6f, Dispersion = 0.012f };
 
     // The pattern of each species that has one: (pattern, strength, accent colour).
     private static readonly Dictionary<string, (GemPattern pattern, float strength, Color accent)> Patterns = new Dictionary<string, (GemPattern, float, Color)>
     {
-        { "Agate", (GemPattern.Banded, 0.9f, default) },
-        { "Rhodocrosite", (GemPattern.Banded, 0.75f, default) },
+        { "Agate", (GemPattern.Agate, 0.92f, default) },
+        { "Rhodocrosite", (GemPattern.Rhodochrosite, 0.95f, default) },
         { "Lapis_Lazuli", (GemPattern.Flecks, 0.9f, default) },
-        { "Turquoise", (GemPattern.Veins, 0.85f, new Color(0.32f, 0.22f, 0.14f)) },
-        { "Turquoise_Stabilisee", (GemPattern.Veins, 0.35f, new Color(0.32f, 0.22f, 0.14f)) },
+        { "Turquoise", (GemPattern.Turquoise, 0.92f, new Color(0.32f, 0.22f, 0.14f)) },
+        { "Turquoise_Stabilisee", (GemPattern.Turquoise, 0.85f, new Color(0.32f, 0.22f, 0.14f)) },
         { "Rhodonite", (GemPattern.Veins, 0.75f, new Color(0.18f, 0.12f, 0.12f)) },
         { "Serpentine_Bowenite", (GemPattern.Mottled, 0.55f, default) },
         { "Jade_Jadeite", (GemPattern.Mottled, 0.5f, default) },
@@ -57,6 +59,22 @@ public struct GemLook
         { "Corne_Rhinoceros", (GemPattern.Streaks, 0.45f, new Color(0.62f, 0.55f, 0.46f)) },
         { "Ametrine", (GemPattern.Bicolour, 1f, new Color(0.96f, 0.76f, 0.26f)) },
         { "Chrysoberyl_Alexandrite", (GemPattern.ColorChange, 0.45f, new Color(0.82f, 0.20f, 0.36f)) },
+        { "Grenat_Change_Couleur", (GemPattern.ColorChange, 0.45f, new Color(0.62f, 0.18f, 0.46f)) },
+        // <new-species-2026-11-20>
+        { "Amazonite", (GemPattern.Veins, 0.6f, new Color(0.95f, 0.95f, 0.9f)) },
+        { "Pierre_Soleil", (GemPattern.Flecks, 0.85f, new Color(1f, 0.72f, 0.2f)) },
+        { "Aventurine", (GemPattern.Flecks, 0.7f, new Color(0.55f, 0.85f, 0.55f)) },
+        { "Jaspe", (GemPattern.Mottled, 0.7f, new Color(0.3f, 0.12f, 0.08f)) },
+        { "Onyx", (GemPattern.Banded, 0.9f, new Color(0.95f, 0.95f, 0.95f)) },
+        { "Larimar", (GemPattern.Mottled, 0.6f, new Color(0.95f, 0.97f, 0.98f)) },
+        { "Charoite", (GemPattern.Streaks, 0.8f, new Color(0.25f, 0.1f, 0.35f)) },
+        { "Sugilite", (GemPattern.Mottled, 0.55f, new Color(0.15f, 0.05f, 0.2f)) },
+        { "Azurite", (GemPattern.Mottled, 0.5f, new Color(0.35f, 0.55f, 0.9f)) },
+        { "Chrysocolle", (GemPattern.Mottled, 0.6f, new Color(0.1f, 0.45f, 0.4f)) },
+        { "Variscite", (GemPattern.Veins, 0.7f, new Color(0.3f, 0.2f, 0.12f)) },
+        { "Lepidolite", (GemPattern.Flecks, 0.6f, new Color(0.95f, 0.9f, 0.97f)) },
+        { "Diaspore_Zultanite", (GemPattern.ColorChange, 0.45f, new Color(0.85f, 0.42f, 0.52f)) },
+        // </new-species-2026-11-20>
         { "Padparadscha", (GemPattern.Gradient, 0.8f, new Color(1f, 0.55f, 0.28f)) },
         { "Fluorite", (GemPattern.Cleavage, 0.3f, default) },
         { "Fluorite_Verte", (GemPattern.Cleavage, 0.3f, default) },
@@ -65,12 +83,12 @@ public struct GemLook
         { "Fluorite_Bandee", (GemPattern.Banded, 0.95f, new Color(0.55f, 0.85f, 0.65f)) },
         { "Fluorite_Blue_John", (GemPattern.Banded, 0.95f, new Color(0.96f, 0.84f, 0.42f)) },
         { "Iolite_Bloodshot", (GemPattern.Flecks, 0.9f, new Color(0.88f, 0.28f, 0.14f)) },
-        { "Malachite", (GemPattern.Banded, 0.9f, new Color(0.04f, 0.28f, 0.13f)) },
+        { "Malachite", (GemPattern.Malachite, 0.95f, new Color(0.04f, 0.28f, 0.13f)) },
         { "Sodalite", (GemPattern.Veins, 0.7f, new Color(0.90f, 0.92f, 0.96f)) },
-        { "Cornaline", (GemPattern.Banded, 0.35f, new Color(0.96f, 0.55f, 0.22f)) },
+        { "Cornaline", (GemPattern.Carnelian, 0.9f, new Color(0.96f, 0.55f, 0.22f)) },
         { "Prehnite", (GemPattern.Mottled, 0.4f, default) },
         { "Steatite", (GemPattern.Mottled, 0.3f, default) },
-        { "Ivoire_Vegetal", (GemPattern.Grain, 0.55f, default) },
+        { "Ivoire_Vegetal", (GemPattern.Corozo, 0.9f, default) },
         { "Calcite", (GemPattern.Cleavage, 0.5f, default) },
         { "Gypse", (GemPattern.Grain, 0.4f, default) },
         { "Selenite", (GemPattern.Chatoyant, 0.45f, new Color(1f, 1f, 1f)) },
@@ -88,7 +106,7 @@ public struct GemLook
 
     private static readonly HashSet<string> Fiery = new HashSet<string>
     {
-        "Diamant", "Diamant_Synthetique_CVD", "Diamant_Synthetique_HPHT", "CZ", "GGG", "YAG", "Moissanite_Synthetique", "Zircon", "Grenat_Demantoide", "Sphene", "Sphalerite", "Titanate_Strontium",
+        "Diamant", "Diamant_Synthetique_CVD", "Diamant_Synthetique_HPHT", "CZ", "GGG", "YAG", "Moissanite_Synthetique", "Zircon", "Grenat_Demantoide", "Grenat_Topazolite", "Grenat_Mali", "Benitoite", "Sphene", "Sphalerite", "Titanate_Strontium",
     };
 
     // The pleochroism seen when the stone is turned: a strongly pleochroic stone shows a different colour along each of its three axes (the iolite, blue-violet along one,
@@ -136,7 +154,7 @@ public struct GemLook
     }
 
     // The alexandrite and the stones like it: green by day, pink under an incandescent light (the torch of the loupe).
-    public static bool ChangesColor(GemDefinition def) => def != null && def.name == "Chrysoberyl_Alexandrite";
+    public static bool ChangesColor(GemDefinition def) => def != null && (def.name == "Chrysoberyl_Alexandrite" || def.name == "Grenat_Change_Couleur" || def.name == "Diaspore_Zultanite");
 
     public static Color Incandescent(Color daylight)
     {
@@ -160,13 +178,15 @@ public struct GemLook
         if (def == null) return Default;
         if (cache.TryGetValue(def.name ?? "", out var known)) return known;
 
-        var look = new GemLook { Brilliance = LusterBrilliance(def.luster), Fire = Fiery.Contains(def.name ?? "") ? (def.name == "Zircon" ? 0.6f : def.name == "Grenat_Demantoide" ? 0.95f : def.name == "Sphene" ? 0.9f : 1f) : 0f };
+        var look = new GemLook { Brilliance = LusterBrilliance(def.luster), Fire = Fiery.Contains(def.name ?? "") ? (def.name == "Zircon" ? 0.6f : def.name == "Grenat_Demantoide" || def.name == "Grenat_Topazolite" ? 0.95f : def.name == "Grenat_Mali" ? 0.8f : def.name == "Sphene" ? 0.9f : 1f) : 0f };
         look.Seed = (int)(StoneOptics.StableHash(def.name ?? "") & 0xFFFF);
         look.Ior = def.refractiveIndex > 1.2f ? def.refractiveIndex : 1.6f;
         // The demantoid: a brilliance and a fire to rival the diamond's, and glossy crystals.
-        if (def.name == "Grenat_Demantoide") look.Brilliance = Mathf.Max(look.Brilliance, 0.97f);
-        look.RoughScale = def.name == "Spinelle" || def.name == "Spinelle_Bleu" ? 0.35f : def.name == "Grenat_Demantoide" ? 0.4f : (def.name ?? "").StartsWith("Grenat_") ? 0.6f : 1f;
+        if (def.name == "Grenat_Demantoide" || def.name == "Grenat_Topazolite") look.Brilliance = Mathf.Max(look.Brilliance, 0.97f);
+        look.RoughScale = def.name == "Spinelle" || def.name == "Spinelle_Bleu" ? 0.35f : def.name == "Grenat_Demantoide" || def.name == "Grenat_Topazolite" ? 0.4f : (def.name ?? "").StartsWith("Grenat_") ? 0.6f : 1f;
         look.Dispersion = DispersionOf(def.name ?? "", look.Ior);
+        // Spinel: rich, pure reds and pinks, a vivid cobalt blue (seen too pale and shifted toward coral and lavender in the export of 2026-11-17).
+        if (def.name == "Spinelle" || def.name == "Spinelle_Bleu") look.Depth = 1.8f;
         look.Contrast = look.Fire > 0.8f ? 1.7f : look.Fire > 0f ? 1.35f : look.Brilliance >= 0.85f ? 1.25f : 1f;
         if (Patterns.TryGetValue(def.name ?? "", out var pattern))
         {
@@ -196,7 +216,9 @@ public struct GemLook
             case "YAG": return 0.014f;
             case "GGG": return 0.022f;
             case "Zircon": return 0.020f;
-            case "Grenat_Demantoide": return 0.036f;
+            case "Grenat_Demantoide": case "Grenat_Topazolite": return 0.036f;
+            case "Grenat_Mali": return 0.028f;
+            case "Benitoite": return 0.023f;
             case "Sphene": return 0.026f;
             case "Sphalerite": return 0.078f;
             case "Titanate_Strontium": return 0.095f;

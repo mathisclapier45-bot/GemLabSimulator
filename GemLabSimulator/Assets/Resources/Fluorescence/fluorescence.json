@@ -395,6 +395,17 @@
    "shortColor": "#FF3A2A",
    "shortIntensity": 0.45,
    "phosphorescent": false
+  },
+  {
+   "key": "Benitoite",
+   "source": "Ajout 2026 : fluorescence de la bénitoïte (UV courts, bleu-blanc vif)",
+   "longText": "Inerte ou très faible.",
+   "longColor": "#CFE0FF",
+   "longIntensity": 0.05,
+   "shortText": "Bleu-blanc vif, très intense.",
+   "shortColor": "#9CC8FF",
+   "shortIntensity": 0.9,
+   "phosphorescent": false
   }
  ]
 }

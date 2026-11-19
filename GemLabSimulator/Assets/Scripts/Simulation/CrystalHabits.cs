@@ -37,6 +37,7 @@ public static class CrystalHabits
         new CrystalHabit { Id = "corundum_prism", Short = "Prisme trapu", Name = "Prisme trapu de corindon", Description = "Un prisme à six pans, trapu, aux extrémités plates ou rhomboédriques, dépoli et mat : le rubis brut." },
         new CrystalHabit { Id = "corundum_plate", Short = "Plaque", Name = "Plaque hexagonale de corindon", Description = "Une plaque aplatie à six côtés, au bord biseauté : les rubis de Mong Hsu et de Madagascar." },
         new CrystalHabit { Id = "corundum_pebble", Short = "Galet", Name = "Galet de corindon", Description = "Un galet roulé par la rivière, arrondi, aux faces usées : les graviers à gemmes de Ceylan et de Madagascar." },
+        new CrystalHabit { Id = "tagua_nut", Short = "Noix", Name = "Noix de tagua", Description = "La graine entière du palmier tagua, encore dans sa peau brune, sèche et craquelée : l'ivoire végétal est dessous, blanc et dur." },
         new CrystalHabit { Id = "corundum_fragment", Short = "Fragment", Name = "Fragment de corindon", Description = "Un éclat anguleux aux grandes cassures plates, parfois le long des plans de séparation." },
         new CrystalHabit { Id = "spinel_twin", Short = "Macle du spinelle", Name = "Macle du spinelle", Description = "Deux octaèdres accolés et aplatis : une plaque triangulaire aux coins tronqués. C'est la macle classique du spinelle, qui lui a donné son nom de loi de macle." },
         new CrystalHabit { Id = "octahedron_modified", Short = "Octaèdre tronqué", Name = "Octaèdre à sommets tronqués", Description = "Un octaèdre dont les six pointes sont coupées par de petites faces carrées (le cube)." },
@@ -92,6 +93,7 @@ public static class CrystalHabits
             case "Fluorite_Blue_John": return new List<HabitChance>();   // massive: nodules and veins, no crystal faces
             case "Iolite":
             case "Iolite_Bloodshot": return new List<HabitChance>();    // rarely crystals with faces: pebbles and shapeless fragments
+            case "Ivoire_Vegetal": return Chance(("tagua_nut", 100));
             case "Spinelle":
             case "Spinelle_Bleu": return Chance(("octahedron", 55), ("spinel_twin", 25), ("octahedron_modified", 20));
             case "Pyrite": return Chance(("cube", 70), ("octahedron", 30));
@@ -127,6 +129,17 @@ public static class CrystalHabits
             case "Selenite":
             case "Sphene": return Chance(("monoclinic_prism", 100));
             case "Celestine": return Chance(("ortho_prism", 100));
+            // <new-species-2026-11-20>
+            case "Amazonite": return Chance(("ortho_prism", 100));
+            case "Hiddenite": return Chance(("monoclinic_prism", 100));
+            case "Enstatite": return Chance(("ortho_prism", 100));
+            case "Benitoite": return Chance(("hex_bipyramid", 70), ("hex_tabular", 30));
+            case "Grandidierite": return Chance(("ortho_prism", 100));
+            case "Diaspore_Zultanite": return Chance(("ortho_prism", 100));
+            case "Euclase": return Chance(("monoclinic_prism", 100));
+            case "Danburite": return Chance(("ortho_prism", 100));
+            case "Kornerupine": return Chance(("ortho_prism", 100));
+            // </new-species-2026-11-20>
             case "Taaffeite": return Chance(("hex_prism", 60), ("hex_bipyramid", 40));
         }
 

@@ -80,7 +80,11 @@
     "Saphir_Rose",
     "Saphir_Vert",
     "Saphir_Violet",
-    "Saphir_Change_Couleur"
+    "Saphir_Change_Couleur",
+    "Aventurine",
+    "Jaspe",
+    "Onyx",
+    "Diaspore_Zultanite"
    ],
    "name": "Oxydes et hydroxydes",
    "chem": "Un métal (ou le silicium) combiné à l'oxygène ou au groupe OH",
@@ -97,7 +101,8 @@
    "species": [
     "Calcite",
     "Rhodocrosite",
-    "Malachite"
+    "Malachite",
+    "Azurite"
    ],
    "name": "Carbonates",
    "chem": "Minéraux contenant le groupe CO₃",
@@ -145,7 +150,8 @@
    "species": [
     "Apatite",
     "Turquoise",
-    "Turquoise_Stabilisee"
+    "Turquoise_Stabilisee",
+    "Variscite"
    ],
    "name": "Phosphates, arséniates et vanadates",
    "chem": "Minéraux contenant le groupe PO₄",
@@ -214,7 +220,23 @@
     "Grenat_Pyrope_Chromifere",
     "Grenat_Change_Couleur",
     "Grenat_Grossulaire",
-    "Grenat_Andradite"
+    "Grenat_Andradite",
+    "Amazonite",
+    "Pierre_Soleil",
+    "Hiddenite",
+    "Tourmaline_Verdelite",
+    "Tourmaline_Dravite",
+    "Enstatite",
+    "Larimar",
+    "Charoite",
+    "Sugilite",
+    "Chrysocolle",
+    "Lepidolite",
+    "Benitoite",
+    "Grandidierite",
+    "Euclase",
+    "Danburite",
+    "Kornerupine"
    ],
    "name": "Silicates",
    "chem": "Minéraux construits sur le groupe SiO₄ (silicium et oxygène)",

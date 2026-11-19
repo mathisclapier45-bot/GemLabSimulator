@@ -41,6 +41,7 @@ public static class MebImaging
         { "P", 2.013f }, { "K", 3.313f }, { "Ca", 3.691f }, { "Ti", 4.511f }, { "V", 4.952f }, { "Cr", 5.415f }, { "Mn", 5.899f },
         { "Fe", 6.404f }, { "Co", 6.925f }, { "Cu", 8.048f }, { "Ni", 7.478f }, { "Zr", 2.042f }, { "Y", 1.922f }, { "Pb", 2.346f }, { "Au", 2.123f },
         { "Ga", 1.098f }, { "Gd", 1.185f }, { "Sr", 1.806f }, { "Zn", 8.639f }, { "S", 2.308f },
+        { "Be", 0.109f }, { "B", 0.183f }, { "Ba", 0.780f },       // added with the new species (benitoite, euclase, danburite)
     };
 
     public static MebResult Measure(GemInstance gem, MebMode mode, int magnification)
@@ -742,6 +743,34 @@ public static class MebImaging
             case "Grenat_Tsavorite": e("O", 0.6f); e("Si", 0.8f); e("Al", 0.6f); e("Ca", 1f); e("V", 0.05f); break;
             case "Grenat_Hessonite": case "Grenat_Hydrogrossulaire": e("O", 0.6f); e("Si", 0.8f); e("Al", 0.6f); e("Ca", 1f); break;
             case "Grenat_Demantoide": e("O", 0.6f); e("Si", 0.8f); e("Ca", 1f); e("Fe", 0.8f); break;
+            case "Grenat_Topazolite": e("O", 0.6f); e("Si", 0.8f); e("Ca", 1f); e("Fe", 0.8f); break;
+            case "Grenat_Mali": e("O", 0.6f); e("Si", 0.8f); e("Al", 0.3f); e("Ca", 1f); e("Fe", 0.5f); break;
+            case "Grenat_Pyrope_Chromifere": e("O", 0.6f); e("Si", 0.8f); e("Al", 0.6f); e("Mg", 1f); e("Cr", 0.2f); break;
+            case "Grenat_Change_Couleur": e("O", 0.6f); e("Si", 0.8f); e("Al", 0.7f); e("Mg", 0.7f); e("Mn", 0.6f); e("V", 0.04f); break;
+            // <new-species-2026-11-20>
+            case "Amazonite": e("O", 0.6f); e("Si", 0.8f); e("Al", 0.5f); e("K", 1f); break;
+            case "Pierre_Soleil": e("O", 0.6f); e("Si", 0.8f); e("Al", 0.5f); e("Ca", 0.4f); e("Fe", 0.2f); break;
+            case "Hiddenite": e("O", 0.6f); e("Si", 0.8f); e("Al", 0.6f); break;
+            case "Tourmaline_Verdelite": e("O", 0.6f); e("Si", 0.8f); e("Al", 0.8f); e("Fe", 0.3f); e("Mn", 0.2f); break;
+            case "Tourmaline_Dravite": e("O", 0.6f); e("Si", 0.8f); e("Al", 0.7f); e("Mg", 0.6f); e("Fe", 0.3f); break;
+            case "Aventurine": e("O", 0.7f); e("Si", 1f); e("K", 0.1f); e("Al", 0.1f); break;
+            case "Jaspe": e("O", 0.7f); e("Si", 1f); e("Fe", 0.3f); break;
+            case "Onyx": e("O", 0.7f); e("Si", 1f); break;
+            case "Enstatite": e("O", 0.6f); e("Si", 0.8f); e("Mg", 0.8f); e("Fe", 0.2f); break;
+            case "Larimar": e("O", 0.6f); e("Si", 0.8f); e("Ca", 0.7f); e("Na", 0.3f); break;
+            case "Charoite": e("O", 0.6f); e("Si", 0.9f); e("K", 0.4f); e("Ca", 0.5f); break;
+            case "Sugilite": e("O", 0.6f); e("Si", 0.9f); e("K", 0.3f); e("Mn", 0.3f); e("Fe", 0.2f); break;
+            case "Azurite": e("O", 0.6f); e("C", 0.3f); e("Cu", 1f); break;
+            case "Chrysocolle": e("O", 0.6f); e("Si", 0.8f); e("Cu", 0.8f); e("Al", 0.2f); break;
+            case "Variscite": e("O", 0.6f); e("Al", 0.8f); e("P", 0.7f); break;
+            case "Lepidolite": e("O", 0.6f); e("Si", 0.8f); e("Al", 0.6f); e("K", 0.5f); e("F", 0.2f); break;
+            case "Benitoite": e("O", 0.6f); e("Si", 0.8f); e("Ba", 1f); e("Ti", 0.7f); break;
+            case "Grandidierite": e("O", 0.6f); e("Si", 0.6f); e("Al", 0.8f); e("Mg", 0.5f); e("Fe", 0.3f); break;
+            case "Diaspore_Zultanite": e("O", 0.7f); e("Al", 1f); break;
+            case "Euclase": e("O", 0.6f); e("Si", 0.8f); e("Al", 0.8f); e("Be", 0.2f); break;
+            case "Danburite": e("O", 0.6f); e("Si", 0.8f); e("Ca", 1f); e("B", 0.1f); break;
+            case "Kornerupine": e("O", 0.6f); e("Si", 0.7f); e("Al", 0.8f); e("Mg", 0.6f); e("Fe", 0.3f); break;
+            // </new-species-2026-11-20>
             case "Spinelle": e("O", 0.6f); e("Mg", 0.8f); e("Al", 1f); e("Cr", 0.05f); break;
             case "Spinelle_Bleu": e("O", 0.6f); e("Mg", 0.8f); e("Al", 1f); e("Co", 0.05f); break;
             case "Topaze": e("O", 0.6f); e("Al", 1f); e("Si", 0.8f); e("F", 0.4f); break;

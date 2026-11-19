@@ -53,6 +53,7 @@ public static class EdxrfSpectrum
         { "Pb", new[] { (10.55f, 1f), (12.61f, 0.8f) } },
         { "Se", new[] { (11.22f, 1f) } },
         { "Rb", new[] { (13.40f, 1f), (14.96f, 0.2f) } },
+        { "Ba", new[] { (4.47f, 1f), (4.83f, 0.7f) } },       // L lines; added with the new species (benitoite)
         { "Sr", new[] { (14.16f, 1f), (15.83f, 0.2f) } },
         { "Y", new[] { (14.96f, 1f), (16.74f, 0.2f) } },
         { "Zr", new[] { (15.77f, 1f), (17.67f, 0.2f) } },
@@ -302,8 +303,36 @@ public static class EdxrfSpectrum
             case "Grenat_Spessartite": case "Grenat_Malaya": add("Mn", 1f); add("Fe", 0.35f); break;
             case "Grenat_Tsavorite": add("Ca", 0.5f); add("V", 0.2f); add("Cr", 0.1f); add("Fe", 0.05f); break;
             case "Grenat_Demantoide": add("Fe", 0.6f); add("Ca", 0.3f); add("Cr", 0.08f); break;
+            case "Grenat_Topazolite": add("Fe", 0.65f); add("Ca", 0.3f); add("Ti", 0.03f); break;
+            case "Grenat_Mali": add("Ca", 0.5f); add("Fe", 0.4f); add("Ti", 0.03f); break;
+            case "Grenat_Pyrope_Chromifere": add("Cr", 0.45f); add("Fe", 0.25f); add("Ca", 0.2f); add("Ti", 0.05f); break;
+            case "Grenat_Change_Couleur": add("Mn", 0.5f); add("Fe", 0.2f); add("V", 0.15f); add("Cr", 0.08f); break;
             case "Grenat_Hessonite": case "Grenat_Hydrogrossulaire": add("Ca", 0.5f); add("Fe", 0.3f); break;
 
+            // <new-species-2026-11-20>
+            case "Amazonite": add("K", 0.8f); add("Rb", 0.15f); add("Pb", 0.05f); break;
+            case "Pierre_Soleil": add("Ca", 0.3f); add("Fe", 0.15f); add("K", 0.1f); break;
+            case "Hiddenite": add("Cr", 0.1f); add("Fe", 0.05f); add("Mn", 0.04f); break;
+            case "Tourmaline_Verdelite": add("Mn", 0.3f); add("Fe", 0.2f); add("Cu", 0.05f); add("Ti", 0.03f); break;
+            case "Tourmaline_Dravite": add("Fe", 0.3f); add("Ti", 0.1f); add("Ca", 0.05f); break;
+            case "Aventurine": add("Cr", 0.05f); add("Fe", 0.05f); add("K", 0.1f); break;
+            case "Jaspe": add("Fe", 0.6f); add("Mn", 0.05f); add("Ti", 0.03f); break;
+            case "Onyx": add("Fe", 0.05f); break;
+            case "Enstatite": add("Fe", 0.2f); add("Cr", 0.03f); add("Ca", 0.05f); break;
+            case "Larimar": add("Ca", 0.8f); add("Cu", 0.06f); add("Fe", 0.04f); break;
+            case "Charoite": add("K", 0.4f); add("Ca", 0.5f); add("Ba", 0.1f); add("Sr", 0.1f); add("Mn", 0.05f); break;
+            case "Sugilite": add("K", 0.3f); add("Mn", 0.4f); add("Fe", 0.2f); break;
+            case "Azurite": add("Cu", 1f); break;
+            case "Chrysocolle": add("Cu", 0.8f); add("Fe", 0.04f); break;
+            case "Variscite": add("Fe", 0.04f); add("Cr", 0.05f); add("V", 0.04f); break;
+            case "Lepidolite": add("K", 0.6f); add("Rb", 0.2f); add("Cs", 0.05f); add("Mn", 0.1f); break;
+            case "Benitoite": add("Ba", 1f); add("Ti", 0.7f); break;
+            case "Grandidierite": add("Fe", 0.4f); add("Ti", 0.03f); break;
+            case "Diaspore_Zultanite": add("Fe", 0.3f); add("Cr", 0.06f); add("Ti", 0.04f); break;
+            case "Euclase": add("Fe", 0.1f); add("Cr", 0.03f); break;
+            case "Danburite": add("Ca", 1f); add("Fe", 0.03f); break;
+            case "Kornerupine": add("Fe", 0.5f); add("Ca", 0.1f); add("Ti", 0.05f); break;
+            // </new-species-2026-11-20>
             case "Topaze": add("Fe", 0.06f); add("Ga", 0.08f); add("Mn", 0.02f); break;
             case "Tourmaline_Paraiba": add("Cu", 0.8f); add("Mn", 0.3f); add("Fe", 0.05f); add("Zn", 0.15f); add("Ga", 0.06f); break;
             case "Tourmaline_Rose": add("Mn", 0.5f); add("Fe", 0.1f); add("Ga", 0.08f); add("Zn", 0.1f); add("Ca", 0.1f); break;

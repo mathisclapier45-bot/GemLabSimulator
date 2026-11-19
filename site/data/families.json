@@ -11,7 +11,8 @@
     "Citrine",
     "Prasiolite",
     "Quartz_Fume",
-    "Quartz_Rose"
+    "Quartz_Rose",
+    "Aventurine"
    ],
    "name": "Quartz",
    "chem": "Dioxyde de silicium, SiO₂ (trigonal)",
@@ -29,7 +30,9 @@
    "species": [
     "Agate",
     "Cornaline",
-    "Oeil_de_Tigre"
+    "Oeil_de_Tigre",
+    "Jaspe",
+    "Onyx"
    ],
    "name": "Calcédoines et quartz fibreux",
    "chem": "Silice, SiO₂, en cristaux microscopiques",
@@ -130,7 +133,9 @@
     "Tourmaline_Melon_Eau",
     "Tourmaline_Paraiba",
     "Tourmaline_Rose",
-    "Tourmaline_Schorl"
+    "Tourmaline_Schorl",
+    "Tourmaline_Verdelite",
+    "Tourmaline_Dravite"
    ],
    "name": "Tourmalines",
    "chem": "Borosilicate complexe (trigonal)",
@@ -148,7 +153,9 @@
    "species": [
     "Labradorite",
     "Orthose",
-    "Pierre_De_Lune"
+    "Pierre_De_Lune",
+    "Amazonite",
+    "Pierre_Soleil"
    ],
    "name": "Feldspaths",
    "chem": "Silicates d'aluminium avec potassium, sodium ou calcium",
@@ -444,7 +451,9 @@
    "visible": false,
    "species": [
     "Diopside_Chromifere",
-    "Kunzite"
+    "Kunzite",
+    "Hiddenite",
+    "Enstatite"
    ],
    "name": "Pyroxènes",
    "chem": "Silicates de chaînes (monocliniques)",
@@ -462,7 +471,8 @@
    "species": [
     "Calcite",
     "Rhodocrosite",
-    "Malachite"
+    "Malachite",
+    "Azurite"
    ],
    "name": "Carbonates",
    "chem": "Calcite : carbonate de calcium. Rhodocrosite : de manganèse. Malachite : de cuivre",
@@ -550,7 +560,8 @@
    "species": [
     "Apatite",
     "Turquoise",
-    "Turquoise_Stabilisee"
+    "Turquoise_Stabilisee",
+    "Variscite"
    ],
    "name": "Phosphates",
    "chem": "Apatite : phosphate de calcium. Turquoise : phosphate hydraté de cuivre et d'aluminium",

@@ -341,6 +341,7 @@ COLOR_CHANGE = {
     "Chrysoberyl_Alexandrite": (120, 185, 20, -45),       # yellowish green -> orange-red, blue-green -> purple
     "Grenat_Change_Couleur": (165, 205, 350, 285),        # blue-green -> red-pink, blue -> violet
     "Saphir_Change_Couleur": (235, 320, 280, 350),        # blue -> violet, violet -> red-pink
+    "Diaspore_Zultanite": (60, 85, 25, -15),              # yellowish green -> orange, greener -> pink
 }
 
 

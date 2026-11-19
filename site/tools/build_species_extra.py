@@ -5,7 +5,10 @@ Edit this table, then run:  python3 site/tools/build_species_extra.py
 System codes: cubic, tetragonal, hexagonal, trigonal, orthorhombic, monoclinic, triclinic, amorphous, organic.
 """
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 OUT = Path(__file__).resolve().parent.parent / "data" / "species_extra.json"
 
@@ -126,6 +129,14 @@ T = {
  "Peridot": ("orthorhombic", "(Mg,Fe)₂SiO₄", "Silicate de magnésium et de fer (olivine)"),
  "Zircon": ("tetragonal", "ZrSiO₄", "Silicate de zirconium"),
 }
+
+try:                                            # the species written for both the game and the site
+    from new_species_spec import SPECIES as _NEW
+    for _s in _NEW:
+        T[_s["id"]] = (_s["system"], _s["formula"], _s["note"][0])
+except ImportError:
+    pass
+
 
 def main():
     data = json.load(open(Path(__file__).resolve().parent.parent / "data" / "gemlab_data.json", encoding="utf-8"))

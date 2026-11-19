@@ -362,10 +362,15 @@ public static class RamanSpectrum
             case "Emeraude": case "Goshenite": case "Morganite": case "Heliodore": case "Beryl_Rouge": case "Pezzottaite": case "Aigue_Marine": case "Beryl_Bleu": return "Béryl";
             case "Topaze": return "Topaze";
             case "Grenat_Almandin": case "Grenat_Rhodolite": return "Grenat almandin";
-            case "Grenat_Pyrope": return "Grenat pyrope";
+            case "Grenat_Pyrope": case "Grenat_Pyrope_Chromifere": case "Grenat_Change_Couleur": return "Grenat pyrope";
             case "Grenat_Spessartite": case "Grenat_Malaya": return "Grenat spessartite";
             case "Grenat_Tsavorite": case "Grenat_Hessonite": case "Grenat_Hydrogrossulaire": return "Grenat grossulaire";
-            case "Grenat_Demantoide": return "Grenat andradite";
+            case "Grenat_Demantoide": case "Grenat_Topazolite": case "Grenat_Mali": return "Grenat andradite";
+            // <new-species-2026-11-20>
+            case "Amazonite": case "Pierre_Soleil": return "Feldspath";
+            case "Tourmaline_Verdelite": case "Tourmaline_Dravite": return "Tourmaline";
+            case "Aventurine": case "Jaspe": case "Onyx": return "Quartz";
+            // </new-species-2026-11-20>
             case "Spinelle": case "Spinelle_Bleu": return "Spinelle";
             case "Peridot": return "Péridot";
             case "Tourmaline_Paraiba": case "Tourmaline_Rose": case "Tourmaline_Melon_Eau": case "Tourmaline_Indicolite": case "Tourmaline_Schorl": return "Tourmaline";
