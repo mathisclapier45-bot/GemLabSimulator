@@ -1,4 +1,4 @@
-# Site web GemLab (première version, en local)
+# Site web GemXP (première version, en local)
 
 Un site en français autour du simulateur de gemmologie :
 
@@ -327,3 +327,12 @@ D'où viennent les prix :
 Ce qu'il ne faut pas faire (c'est la partie risquée) : copier automatiquement les prix d'autres sites, ou réutiliser les données d'une interface de programmation sans que sa licence le permette. Mieux vaut des prix saisis, des accords écrits ou des relevés personnels.
 
 Confidentialité : un prix ajouté n'est pas lié à son auteur après la suppression du compte (l'identifiant est effacé, le prix reste, anonyme) ; la politique de confidentialité le dit. Le code est dans `app/prices.py` (calcul) et `app/routes_prices.py` (pages) ; les tests dans `TestPrices`.
+
+## 11. Le nom du site
+
+Le nom (« GemXP ») vit à un seul endroit : `SITE_NAME` dans `app/config.py`, ou la variable `GEMLAB_SITE_NAME`. Il apparaît dans l'en-tête, les titres, le pied de page, les pages légales,
+les courriels (sujet et expéditeur) et les aperçus de partage. Les textes l'écrivent `{site_name}`. Pour changer de nom :
+1. changer la valeur (ou `GEMLAB_SITE_NAME=NouveauNom` au lancement) ;
+2. refaire l'icône et l'image de partage : `python3 site/tools/make_icons.py` (elles reprennent le nom) ;
+3. mettre à jour `GEMLAB_BASE_URL` et `GEMLAB_MAIL_FROM` avec le nouveau domaine.
+Le jeu garde son nom (« GemLab Simulator »), c'est un autre produit : le texte du simulateur (`sim.window`) ne change pas.

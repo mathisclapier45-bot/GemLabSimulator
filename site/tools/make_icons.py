@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Makes the icon and the share image of the site (needs Pillow, only for this tool: the site itself uses the standard library only).
 
-  python3 site/tools/make_icons.py "GemLab" "Apprendre à reconnaître les pierres précieuses"
+  python3 site/tools/make_icons.py "GemXP" "Apprendre à reconnaître les pierres précieuses"
 
 Writes site/static/img/favicon.svg, apple-touch-icon.png and og-image.png (1200 x 630, shown when a link is shared).
 Run it again when the name of the site changes."""
@@ -9,6 +9,11 @@ import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from app import config  # noqa: E402
+
+CONFIG_NAME = config.SITE_NAME
 
 OUT = Path(__file__).resolve().parent.parent / "static" / "img"
 FONTS = ["/System/Library/Fonts/Helvetica.ttc", "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
@@ -101,4 +106,4 @@ def main(name, tagline):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "GemLab", sys.argv[2] if len(sys.argv) > 2 else "Apprendre à reconnaître les pierres précieuses")
+    main(sys.argv[1] if len(sys.argv) > 1 else CONFIG_NAME, sys.argv[2] if len(sys.argv) > 2 else "Apprendre à reconnaître les pierres précieuses")

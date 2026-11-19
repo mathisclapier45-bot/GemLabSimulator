@@ -762,6 +762,23 @@ class TestEnglish(SiteTestCase):
             self.assertEqual(sorted(hole.findall(fr[key])), sorted(hole.findall(en[key])), key)
         self.assertEqual(sum(1 for v in en.values() if not v.strip()), 0)
 
+    def test_the_name_of_the_site_comes_from_one_setting(self):
+        c = Client()
+        for path in ("/", "/en/", "/mentions-legales", "/confidentialite"):
+            text = c.get(path).text
+            self.assertIn(config.SITE_NAME, text, path)
+            self.assertNotIn("GemLab", text, path)
+        old = config.SITE_NAME
+        config.SITE_NAME = "NomDeTest"
+        try:
+            page = c.get("/").text
+            self.assertIn("<title>Accueil · NomDeTest", page)
+            self.assertNotIn(old, page)
+            self.register(c, "zoe")
+            self.assertTrue(self.mails()[-1]["subject"].startswith("NomDeTest"))
+        finally:
+            config.SITE_NAME = old
+
     def test_every_species_text_is_translated(self):
         """data/en/species.json must have an English text for every French text of the species data (python3 site/tools/species_strings.py lists the missing ones)."""
         import json as _json

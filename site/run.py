@@ -33,7 +33,7 @@ def run():
     logging.basicConfig(level=logging.INFO)
     main.init()
     server = make_server(args.host, args.port, main.application, server_class=ThreadedServer, handler_class=QuietHandler)
-    print("GemLab démarré : http://{}:{}   (mode {})".format(args.host, args.port, config.ENV))
+    print("{} démarré : http://{}:{}   (mode {})".format(config.SITE_NAME, args.host, args.port, config.ENV))
     print("Arrêt : Ctrl+C. Les e-mails de test s'affichent sur /dev/courriels")
     try:
         server.serve_forever()

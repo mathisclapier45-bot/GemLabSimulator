@@ -13,6 +13,8 @@ def env(name, default=None):
 ENV = env("ENV", "dev")
 DEV = ENV != "prod"
 
+# The name of the site, shown everywhere (header, titles, mails, legal pages, share image). Change it here or with GEMLAB_SITE_NAME.
+SITE_NAME = env("SITE_NAME", "GemXP")
 DEFAULT_LANG = env("LANG", "fr")
 BASE_URL = env("BASE_URL", "http://127.0.0.1:8000").rstrip("/")
 
@@ -50,7 +52,7 @@ TRUST_PROXY = env("TRUST_PROXY", "0") == "1"
 
 # Mail: "file" writes mails to var/outbox (and the /dev/courriels page); "smtp" really sends them.
 MAIL_MODE = env("MAIL_MODE", "file" if DEV else "smtp")
-MAIL_FROM = env("MAIL_FROM", "GemLab <no-reply@example.invalid>")
+MAIL_FROM = env("MAIL_FROM", SITE_NAME + " <no-reply@example.invalid>")
 SMTP_HOST = env("SMTP_HOST", "")
 SMTP_PORT = int(env("SMTP_PORT", "587"))
 SMTP_USER = env("SMTP_USER", "")

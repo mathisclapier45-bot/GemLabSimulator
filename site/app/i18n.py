@@ -29,6 +29,7 @@ def translate(lang, key, **kw):
         text = load("fr").get(key)
     if text is None:
         return key  # visible hint of a missing translation; tests catch these
+    text = text.replace("{site_name}", config.SITE_NAME)      # the name of the site comes from the settings, not from the texts
     if kw:
         try:
             return text.format(**kw)
