@@ -99,7 +99,8 @@ def look_of(specimen_id, tier):
 
 # ---- the specimens -----------------------------------------------------------------------------------------------------------------------
 
-BASE_VALUE = {"Corindon_Rubis": 150, "Emeraude": 180}      # baseValue of the species assets
+BASE_VALUE = {"Corindon_Rubis": 150, "Emeraude": 180, "Saphir_Bleu": 140, "Saphir_Jaune": 55, "Saphir_Rose": 110, "Padparadscha": 320, "Saphir_Vert": 40,
+              "Saphir_Violet": 65, "Saphir_Orange": 90, "Spinelle": 45, "Spinelle_Bleu": 90, "Rhodocrosite": 28, "Agate": 30, "Cornaline": 8, "Malachite": 18, "Turquoise": 35, "Turquoise_Stabilisee": 12, "Ivoire_Vegetal": 6}      # baseValue of the species assets
 
 BURMA = ("Birmanie (Mogok)", 3.0)
 MOZAMBIQUE = ("Mozambique", 1.0)
@@ -170,13 +171,278 @@ EMERAUDES = [
     ("Emeraude", AFGHANISTAN, 3, 0.30, (136, 0.85, 0.70), 1.8, "", "Poire", "Brillant", 1.6, None, None),
 ]
 
-PRESETS = {"rubis": RUBIS, "rubis10": RUBIS[:10], "cabochons": CABOCHONS, "emeraudes": EMERAUDES}      # rubis10: the ten faceted rubies of Burma, to go with the cabochons in the 24 places
-DEFAULT_PRESET = "emeraudes"
+KASHMIR = ("Cachemire (Kashmir)", 4.0)
+CEYLON_BLUE = ("Sri Lanka (Ceylan)", 1.4)
+MADAGASCAR_BLUE = ("Madagascar", 1.0)
+AUSTRALIA_BLUE = ("Australie", 0.7)
+
+# Sapphires: blue by deposit (Kashmir velvet, Ceylon light with long silk, Madagascar, dark Australian with hexagonal bands), star cabochons, and the other colours.
+SAPHIRS = [
+    ("Saphir_Bleu", KASHMIR, 0, 0.20, (222, 0.62, 0.92), 2.5, "Cornflower", "Coussin", "Mixte", 2.0, None, None),
+    ("Saphir_Bleu", KASHMIR, 1, 0.40, (226, 0.70, 0.88), 2.5, "Cornflower", "Ovale", "Mixte", 1.8, 0.30, None),
+    ("Saphir_Bleu", KASHMIR, 2, 0.50, (228, 0.75, 0.85), 1.25, "", "Coussin", "Mixte", 2.2, 0.40, None),
+    ("Saphir_Bleu", CEYLON_BLUE, 0, 0.20, (215, 0.45, 0.96), 1.0, "", "Ovale", "Mixte", 2.5, None, None),
+    ("Saphir_Bleu", CEYLON_BLUE, 1, 0.30, (232, 0.90, 0.82), 3.5, "Bleu royal", "Coussin", "Mixte", 2.0, None, None),
+    ("Saphir_Bleu", CEYLON_BLUE, 2, 0.50, (218, 0.55, 0.94), 1.0, "", "Rond", "Brillant", 1.6, 0.40, None),
+    ("Saphir_Bleu", CEYLON_BLUE, 2, 0.20, (220, 0.65, 0.90), 1.0, "", "Ovale", "Cabochon", 2.4, None, False),
+    ("Saphir_Bleu", CEYLON_BLUE, 3, 0.40, (220, 0.60, 0.85), 1.0, "", "Ovale", "Cabochon", 3.0, None, True),
+    ("Saphir_Bleu", CEYLON_BLUE, 3, 0.85, (215, 0.40, 0.88), 0.6, "", "Ovale", "Cabochon", 2.6, None, True),
+    ("Saphir_Bleu", CEYLON_BLUE, 3, 0.97, (220, 0.40, 0.60), 0.3, "", "Ovale", "Cabochon", 2.4, None, None),
+    ("Saphir_Bleu", MADAGASCAR_BLUE, 1, 0.50, (235, 0.90, 0.75), 1.8, "", "Ovale", "Mixte", 1.6, None, None),
+    ("Saphir_Bleu", MADAGASCAR_BLUE, 2, 0.60, (228, 0.80, 0.80), 1.0, "", "Coussin", "Mixte", 1.5, None, None),
+    ("Saphir_Bleu", MADAGASCAR_BLUE, 3, 0.50, (230, 0.85, 0.70), 0.6, "", "Ovale", "Mixte", 1.8, None, None),
+    ("Saphir_Bleu", AUSTRALIA_BLUE, 2, 0.40, (240, 0.95, 0.40), 0.5, "", "Ovale", "Mixte", 1.8, 0.45, None),
+    ("Saphir_Bleu", AUSTRALIA_BLUE, 3, 0.60, (235, 0.95, 0.32), 0.3, "", "Coussin", "Mixte", 2.0, 0.40, None),
+    ("Saphir_Bleu", AUSTRALIA_BLUE, 2, 0.30, (192, 0.75, 0.70), 0.6, "", "Rond", "Brillant", 1.5, 0.40, None),
+    ("Padparadscha", ("Sri Lanka", 2.2), 1, 0.30, (14, 0.48, 0.98), 3.0, "Padparadscha", "Ovale", "Mixte", 1.6, None, None),
+    ("Saphir_Rose", ("Madagascar", 1.0), 2, 0.40, (340, 0.58, 0.95), 1.0, "", "Ovale", "Brillant", 1.4, None, None),
+    ("Saphir_Rose", ("Sri Lanka", 1.2), 3, 0.50, (338, 0.50, 0.90), 1.0, "", "Ovale", "Cabochon", 2.4, None, True),
+    ("Saphir_Jaune", ("Sri Lanka", 1.1), 1, 0.30, (52, 0.62, 0.96), 1.0, "", "Coussin", "Mixte", 2.5, None, None),
+    ("Saphir_Jaune", ("Australie", 0.8), 2, 0.50, (44, 0.70, 0.70), 0.6, "", "Ovale", "Mixte", 2.0, 0.40, None),
+    ("Saphir_Orange", ("Tanzanie", 0.9), 2, 0.40, (28, 0.70, 0.94), 1.0, "", "Ovale", "Brillant", 1.5, None, None),
+    ("Saphir_Violet", ("Sri Lanka", 1.1), 1, 0.40, (272, 0.65, 0.85), 1.0, "", "Coussin", "Mixte", 1.6, None, None),
+    ("Saphir_Vert", ("Australie", 0.8), 2, 0.50, (110, 0.55, 0.55), 0.6, "", "Ovale", "Mixte", 1.8, 0.40, None),
+]
+
+BURMA_SPINEL = ("Birmanie", 1.8)
+TANZANIA_SPINEL = ("Tanzanie", 1.0)
+CEYLON_SPINEL = ("Sri Lanka", 1.1)
+
+# Spinels: very clear stones; red, pink and the neon "Jedi" of Mahenge, cobalt blue of Vietnam. Crystals, octahedral negative crystals, strings of tiny octahedra,
+# iron-stained fissures, zircons with halos.
+SPINELLES = [
+    ("Spinelle", BURMA_SPINEL, 0, 0.20, (358, 0.92, 0.82), 1.8, "", "Ovale", "Brillant", 1.6, None, None),
+    ("Spinelle", BURMA_SPINEL, 0, 0.50, (346, 0.94, 0.97), 3.0, "Jedi (rose néon)", "Coussin", "Mixte", 1.4, None, None),
+    ("Spinelle", BURMA_SPINEL, 1, 0.30, (335, 0.58, 0.95), 1.0, "", "Coussin", "Mixte", 1.5, None, None),
+    ("Spinelle", BURMA_SPINEL, 1, 0.70, (355, 0.90, 0.70), 1.25, "", "Rectangle à pans coupés", "Émeraude", 1.7, None, None),
+    ("Spinelle", BURMA_SPINEL, 2, 0.30, (2, 0.88, 0.75), 1.0, "", "Ovale", "Brillant", 1.6, None, None),
+    ("Spinelle", BURMA_SPINEL, 2, 0.60, (318, 0.70, 0.85), 1.0, "", "Coussin", "Mixte", 1.8, None, None),
+    ("Spinelle", BURMA_SPINEL, 3, 0.40, (0, 0.92, 0.58), 0.6, "", "Ovale", "Mixte", 1.9, None, None),
+    ("Spinelle", BURMA_SPINEL, 3, 0.50, (350, 0.85, 0.70), 0.6, "", "Ovale", "Cabochon", 2.2, None, None),
+    ("Spinelle", TANZANIA_SPINEL, 0, 0.30, (348, 0.95, 0.98), 3.0, "Jedi (rose néon)", "Ovale", "Brillant", 1.5, None, None),
+    ("Spinelle", TANZANIA_SPINEL, 1, 0.40, (338, 0.62, 0.95), 1.0, "", "Coussin", "Mixte", 1.6, None, None),
+    ("Spinelle", TANZANIA_SPINEL, 2, 0.40, (12, 0.85, 0.85), 1.0, "", "Ovale", "Brillant", 1.5, None, None),
+    ("Spinelle", TANZANIA_SPINEL, 2, 0.80, (352, 0.85, 0.72), 0.8, "", "Rond", "Brillant", 1.3, None, None),
+    ("Spinelle", TANZANIA_SPINEL, 3, 0.50, (356, 0.85, 0.60), 0.5, "", "Coussin", "Mixte", 2.0, None, None),
+    ("Spinelle", CEYLON_SPINEL, 1, 0.30, (338, 0.32, 0.97), 0.8, "", "Ovale", "Brillant", 1.6, None, None),
+    ("Spinelle", CEYLON_SPINEL, 2, 0.50, (322, 0.65, 0.85), 1.0, "", "Coussin", "Mixte", 1.7, None, None),
+    ("Spinelle", CEYLON_SPINEL, 1, 0.40, (14, 0.48, 0.98), 2.5, "Padparadscha", "Ovale", "Mixte", 1.4, None, None),
+    ("Spinelle_Bleu", ("Vietnam", 1.3), 0, 0.30, (222, 0.85, 0.80), 2.0, "", "Coussin", "Mixte", 1.2, None, None),
+    ("Spinelle_Bleu", ("Vietnam", 1.3), 1, 0.40, (225, 0.80, 0.70), 1.5, "", "Ovale", "Brillant", 1.3, None, None),
+    ("Spinelle_Bleu", ("Vietnam", 1.3), 2, 0.50, (228, 0.75, 0.60), 1.0, "", "Rond", "Brillant", 1.1, None, None),
+    ("Spinelle_Bleu", ("Sri Lanka", 1.2), 1, 0.30, (215, 0.40, 0.75), 0.8, "", "Ovale", "Mixte", 1.6, None, None),
+    ("Spinelle_Bleu", ("Sri Lanka", 1.2), 2, 0.60, (232, 0.55, 0.70), 0.8, "", "Coussin", "Mixte", 1.8, None, None),
+    ("Spinelle_Bleu", ("Tanzanie", 1.0), 2, 0.40, (240, 0.60, 0.65), 0.8, "", "Ovale", "Brillant", 1.5, None, None),
+    ("Spinelle_Bleu", ("Tanzanie", 1.0), 3, 0.50, (235, 0.60, 0.50), 0.5, "", "Coussin", "Mixte", 1.9, None, None),
+    ("Spinelle", TANZANIA_SPINEL, 3, 0.85, (354, 0.80, 0.55), 0.4, "", "Ovale", "Mixte", 2.1, None, None),
+]
+
+ARGENTINA = ("Argentine", 1.0)
+PERU = ("P\u00e9rou", 1.1)
+USA = ("\u00c9tats-Unis", 1.6)
+
+# Rhodochrosite: banded cabochons of every kind (the crusts change from stone to stone: rings, stripes, oxide), and four clear faceted stones of one colour.
+RHODOCHROSITES = [
+    ("Rhodocrosite", ARGENTINA, 1, 0.30, (350, 0.62, 0.92), 1.0, "", "Ovale", "Cabochon", 6.0, None, None),
+    ("Rhodocrosite", ARGENTINA, 1, 0.50, (346, 0.70, 0.88), 1.0, "", "Poire", "Cabochon", 5.0, None, None),
+    ("Rhodocrosite", ARGENTINA, 2, 0.40, (355, 0.55, 0.95), 1.0, "", "Ovale", "Cabochon", 8.0, None, None),
+    ("Rhodocrosite", ARGENTINA, 2, 0.60, (342, 0.75, 0.85), 1.0, "", "Coussin", "Cabochon", 4.5, None, None),
+    ("Rhodocrosite", ARGENTINA, 2, 0.20, (352, 0.48, 0.96), 1.0, "", "Poire", "Cabochon", 7.0, None, None),
+    ("Rhodocrosite", ARGENTINA, 3, 0.40, (348, 0.66, 0.90), 1.0, "", "Ovale", "Cabochon", 9.0, None, None),
+    ("Rhodocrosite", ARGENTINA, 1, 0.70, (358, 0.58, 0.93), 1.0, "", "Rond", "Cabochon", 4.0, None, None),
+    ("Rhodocrosite", ARGENTINA, 2, 0.80, (344, 0.80, 0.82), 1.0, "", "Ovale", "Cabochon", 6.5, None, None),
+    ("Rhodocrosite", ARGENTINA, 3, 0.20, (350, 0.45, 0.97), 1.0, "", "Coussin", "Cabochon", 5.5, None, None),
+    ("Rhodocrosite", ARGENTINA, 2, 0.50, (2, 0.60, 0.92), 1.0, "", "Poire", "Cabochon", 6.0, None, None),
+    ("Rhodocrosite", PERU, 1, 0.40, (347, 0.72, 0.88), 1.0, "", "Ovale", "Cabochon", 5.0, None, None),
+    ("Rhodocrosite", PERU, 2, 0.30, (353, 0.52, 0.94), 1.0, "", "Ovale", "Cabochon", 7.5, None, None),
+    ("Rhodocrosite", PERU, 2, 0.70, (340, 0.68, 0.84), 1.0, "", "Coussin", "Cabochon", 4.8, None, None),
+    ("Rhodocrosite", PERU, 3, 0.60, (356, 0.62, 0.90), 1.0, "", "Poire", "Cabochon", 8.5, None, None),
+    ("Rhodocrosite", PERU, 1, 0.20, (349, 0.78, 0.86), 1.0, "", "Rond", "Cabochon", 3.5, None, None),
+    ("Rhodocrosite", ARGENTINA, 2, 0.45, (345, 0.66, 0.89), 1.0, "", "Ovale", "Cabochon", 10.0, None, None),
+    ("Rhodocrosite", ARGENTINA, 3, 0.75, (351, 0.57, 0.91), 1.0, "", "Ovale", "Cabochon", 12.0, None, None),
+    ("Rhodocrosite", PERU, 2, 0.55, (343, 0.74, 0.87), 1.0, "", "Poire", "Cabochon", 6.0, None, None),
+    ("Rhodocrosite", ARGENTINA, 1, 0.60, (354, 0.50, 0.95), 1.0, "", "Coussin", "Cabochon", 5.2, None, None),
+    ("Rhodocrosite", PERU, 3, 0.30, (348, 0.70, 0.88), 1.0, "", "Ovale", "Cabochon", 7.0, None, None),
+    ("Rhodocrosite", USA, 0, 0.30, (352, 0.90, 0.80), 1.5, "", "Coussin", "Mixte", 2.5, None, None),
+    ("Rhodocrosite", USA, 0, 0.50, (348, 0.88, 0.85), 1.5, "", "Ovale", "Brillant", 1.8, None, None),
+    ("Rhodocrosite", USA, 1, 0.40, (355, 0.85, 0.75), 1.3, "", "Rectangle \u00e0 pans coup\u00e9s", "\u00c9meraude", 3.0, None, None),
+    ("Rhodocrosite", PERU, 1, 0.50, (346, 0.75, 0.88), 1.2, "", "Rond", "Brillant", 1.5, None, None),
+]
+
+BRAZIL_AGATE = ("Br\u00e9sil", 1.0)
+MADAGASCAR_AGATE = ("Madagascar", 1.0)
+INDIA_AGATE = ("Inde", 0.9)
+
+# Agate: cabochons of every natural colour; the pattern (the nodule, its bands, its middle) changes from stone to stone.
+AGATES = [
+    ("Agate", BRAZIL_AGATE, 0, 0.20, (215, 0.25, 0.72), 1.0, "", "Ovale", "Cabochon", 4.0, None, None),
+    ("Agate", BRAZIL_AGATE, 1, 0.30, (0, 0.03, 0.62), 1.0, "", "Ovale", "Cabochon", 5.5, None, None),
+    ("Agate", MADAGASCAR_AGATE, 2, 0.40, (30, 0.42, 0.62), 1.0, "", "Poire", "Cabochon", 7.0, None, None),
+    ("Agate", INDIA_AGATE, 3, 0.50, (22, 0.72, 0.75), 1.0, "", "Coussin", "Cabochon", 8.5, None, None),
+    ("Agate", BRAZIL_AGATE, 0, 0.60, (40, 0.42, 0.82), 1.0, "", "Ovale", "Cabochon", 10.0, None, None),
+    ("Agate", BRAZIL_AGATE, 1, 0.70, (320, 0.15, 0.78), 1.0, "", "Rond", "Cabochon", 11.5, None, None),
+    ("Agate", MADAGASCAR_AGATE, 2, 0.80, (220, 0.30, 0.68), 1.0, "", "Ovale", "Cabochon", 4.0, None, None),
+    ("Agate", INDIA_AGATE, 3, 0.20, (0, 0.05, 0.25), 1.0, "", "Poire", "Cabochon", 5.5, None, None),
+    ("Agate", BRAZIL_AGATE, 0, 0.30, (28, 0.50, 0.55), 1.0, "", "Ovale", "Cabochon", 7.0, None, None),
+    ("Agate", BRAZIL_AGATE, 1, 0.40, (210, 0.20, 0.75), 1.0, "", "Ovale", "Cabochon", 8.5, None, None),
+    ("Agate", MADAGASCAR_AGATE, 2, 0.50, (18, 0.75, 0.70), 1.0, "", "Poire", "Cabochon", 10.0, None, None),
+    ("Agate", INDIA_AGATE, 3, 0.60, (35, 0.30, 0.70), 1.0, "", "Coussin", "Cabochon", 11.5, None, None),
+    ("Agate", BRAZIL_AGATE, 0, 0.70, (225, 0.35, 0.60), 1.0, "", "Ovale", "Cabochon", 4.0, None, None),
+    ("Agate", BRAZIL_AGATE, 1, 0.80, (205, 0.15, 0.80), 1.0, "", "Rond", "Cabochon", 5.5, None, None),
+    ("Agate", MADAGASCAR_AGATE, 2, 0.20, (32, 0.55, 0.50), 1.0, "", "Ovale", "Cabochon", 7.0, None, None),
+    ("Agate", INDIA_AGATE, 3, 0.30, (25, 0.65, 0.80), 1.0, "", "Poire", "Cabochon", 8.5, None, None),
+    ("Agate", BRAZIL_AGATE, 0, 0.40, (0, 0.02, 0.45), 1.0, "", "Ovale", "Cabochon", 10.0, None, None),
+    ("Agate", BRAZIL_AGATE, 1, 0.50, (215, 0.22, 0.65), 1.0, "", "Ovale", "Cabochon", 11.5, None, None),
+    ("Agate", MADAGASCAR_AGATE, 2, 0.60, (38, 0.40, 0.75), 1.0, "", "Poire", "Cabochon", 4.0, None, None),
+    ("Agate", INDIA_AGATE, 3, 0.70, (330, 0.12, 0.72), 1.0, "", "Coussin", "Cabochon", 5.5, None, None),
+    ("Agate", BRAZIL_AGATE, 0, 0.80, (20, 0.80, 0.62), 1.0, "", "Ovale", "Cabochon", 7.0, None, None),
+    ("Agate", BRAZIL_AGATE, 1, 0.20, (212, 0.28, 0.78), 1.0, "", "Rond", "Cabochon", 8.5, None, None),
+    ("Agate", MADAGASCAR_AGATE, 2, 0.30, (30, 0.30, 0.40), 1.0, "", "Ovale", "Cabochon", 10.0, None, None),
+    ("Agate", INDIA_AGATE, 3, 0.40, (0, 0.04, 0.80), 1.0, "", "Poire", "Cabochon", 11.5, None, None),
+]
+
+INDIA_CARN = ("Inde", 1.0)
+BRAZIL_CARN = ("Br\u00e9sil", 1.0)
+URUGUAY_CARN = ("Uruguay", 1.0)
+MADAGASCAR_CARN = ("Madagascar", 1.0)
+
+# Carnelian: 18 cabochons (clouds, flames, white lines, eyes, cracks change from stone to stone) and 6 faceted stones, semi-opaque with a glassy polish.
+CORNALINES = [
+    ("Cornaline", INDIA_CARN, 0, 0.20, (10, 0.85, 0.85), 1.0, "", "Ovale", "Cabochon", 4.0, None, None),
+    ("Cornaline", BRAZIL_CARN, 1, 0.30, (6, 0.90, 0.70), 1.0, "", "Coussin", "Cabochon", 5.5, None, None),
+    ("Cornaline", URUGUAY_CARN, 2, 0.40, (12, 0.80, 0.92), 1.0, "", "Poire", "Cabochon", 7.0, None, None),
+    ("Cornaline", MADAGASCAR_CARN, 3, 0.50, (3, 0.90, 0.55), 1.0, "", "Ovale", "Cabochon", 8.5, None, None),
+    ("Cornaline", INDIA_CARN, 0, 0.60, (8, 0.88, 0.80), 1.0, "", "Rond", "Cabochon", 10.0, None, None),
+    ("Cornaline", BRAZIL_CARN, 1, 0.70, (14, 0.75, 0.90), 1.0, "", "Ovale", "Cabochon", 11.5, None, None),
+    ("Cornaline", URUGUAY_CARN, 2, 0.80, (7, 0.92, 0.65), 1.0, "", "Ovale", "Cabochon", 4.0, None, None),
+    ("Cornaline", MADAGASCAR_CARN, 3, 0.20, (11, 0.85, 0.75), 1.0, "", "Coussin", "Cabochon", 5.5, None, None),
+    ("Cornaline", INDIA_CARN, 0, 0.30, (4, 0.85, 0.60), 1.0, "", "Poire", "Cabochon", 7.0, None, None),
+    ("Cornaline", BRAZIL_CARN, 1, 0.40, (15, 0.70, 0.95), 1.0, "", "Ovale", "Cabochon", 8.5, None, None),
+    ("Cornaline", URUGUAY_CARN, 2, 0.50, (8, 0.90, 0.78), 1.0, "", "Rond", "Cabochon", 10.0, None, None),
+    ("Cornaline", MADAGASCAR_CARN, 3, 0.60, (9, 0.80, 0.70), 1.0, "", "Ovale", "Cabochon", 11.5, None, None),
+    ("Cornaline", INDIA_CARN, 0, 0.70, (3, 0.88, 0.50), 1.0, "", "Ovale", "Cabochon", 4.0, None, None),
+    ("Cornaline", BRAZIL_CARN, 1, 0.80, (13, 0.82, 0.88), 1.0, "", "Coussin", "Cabochon", 5.5, None, None),
+    ("Cornaline", URUGUAY_CARN, 2, 0.20, (6, 0.95, 0.72), 1.0, "", "Poire", "Cabochon", 7.0, None, None),
+    ("Cornaline", MADAGASCAR_CARN, 3, 0.30, (10, 0.78, 0.82), 1.0, "", "Ovale", "Cabochon", 8.5, None, None),
+    ("Cornaline", INDIA_CARN, 0, 0.40, (5, 0.90, 0.62), 1.0, "", "Rond", "Cabochon", 10.0, None, None),
+    ("Cornaline", BRAZIL_CARN, 1, 0.50, (12, 0.86, 0.86), 1.0, "", "Ovale", "Cabochon", 11.5, None, None),
+    ("Cornaline", INDIA_CARN, 0, 0.40, (9, 0.88, 0.80), 1.0, "", "Ovale", "Brillant", 2.0, None, None),
+    ("Cornaline", BRAZIL_CARN, 1, 0.40, (6, 0.92, 0.68), 1.0, "", "Coussin", "Mixte", 2.5, None, None),
+    ("Cornaline", URUGUAY_CARN, 2, 0.40, (12, 0.82, 0.90), 1.0, "", "Rond", "Brillant", 3.0, None, None),
+    ("Cornaline", MADAGASCAR_CARN, 0, 0.40, (7, 0.90, 0.75), 1.0, "", "Rectangle \u00e0 pans coup\u00e9s", "\u00c9meraude", 3.5, None, None),
+    ("Cornaline", INDIA_CARN, 1, 0.40, (4, 0.90, 0.60), 1.0, "", "Poire", "Brillant", 4.0, None, None),
+    ("Cornaline", BRAZIL_CARN, 2, 0.40, (10, 0.85, 0.85), 1.0, "", "Ovale", "Mixte", 4.5, None, None),
+]
+
+CONGO_MAL = ("Congo (RDC)", 1.0)
+RUSSIA_MAL = ("Russie (Oural)", 1.8)
+ZAMBIA_MAL = ("Zambie", 1.0)
+AUSTRALIA_MAL = ("Australie", 1.1)
+
+# Malachite: 20 cabochons (centres of growth, ribbons, seams change from stone to stone) and 4 faceted stones (opaque, a silky polish).
+MALACHITES = [
+    ("Malachite", CONGO_MAL, 0, 0.20, (145, 0.85, 0.55), 1.0, "", "Ovale", "Cabochon", 5.0, None, None),
+    ("Malachite", CONGO_MAL, 1, 0.30, (140, 0.90, 0.45), 1.0, "", "Coussin", "Cabochon", 7.0, None, None),
+    ("Malachite", RUSSIA_MAL, 2, 0.40, (150, 0.80, 0.60), 1.0, "", "Poire", "Cabochon", 9.0, None, None),
+    ("Malachite", ZAMBIA_MAL, 3, 0.50, (135, 0.85, 0.50), 1.0, "", "Ovale", "Cabochon", 11.0, None, None),
+    ("Malachite", AUSTRALIA_MAL, 0, 0.60, (155, 0.90, 0.40), 1.0, "", "Rond", "Cabochon", 13.0, None, None),
+    ("Malachite", CONGO_MAL, 1, 0.70, (148, 0.75, 0.65), 1.0, "", "Ovale", "Cabochon", 15.0, None, None),
+    ("Malachite", CONGO_MAL, 2, 0.80, (142, 0.88, 0.50), 1.0, "", "Ovale", "Cabochon", 5.0, None, None),
+    ("Malachite", RUSSIA_MAL, 3, 0.20, (152, 0.82, 0.55), 1.0, "", "Coussin", "Cabochon", 7.0, None, None),
+    ("Malachite", ZAMBIA_MAL, 0, 0.30, (138, 0.90, 0.45), 1.0, "", "Poire", "Cabochon", 9.0, None, None),
+    ("Malachite", AUSTRALIA_MAL, 1, 0.40, (146, 0.80, 0.58), 1.0, "", "Ovale", "Cabochon", 11.0, None, None),
+    ("Malachite", CONGO_MAL, 2, 0.50, (150, 0.86, 0.48), 1.0, "", "Rond", "Cabochon", 13.0, None, None),
+    ("Malachite", CONGO_MAL, 3, 0.60, (144, 0.84, 0.52), 1.0, "", "Ovale", "Cabochon", 15.0, None, None),
+    ("Malachite", RUSSIA_MAL, 0, 0.70, (147, 0.92, 0.42), 1.0, "", "Ovale", "Cabochon", 5.0, None, None),
+    ("Malachite", ZAMBIA_MAL, 1, 0.80, (141, 0.78, 0.62), 1.0, "", "Coussin", "Cabochon", 7.0, None, None),
+    ("Malachite", AUSTRALIA_MAL, 2, 0.20, (153, 0.85, 0.50), 1.0, "", "Poire", "Cabochon", 9.0, None, None),
+    ("Malachite", CONGO_MAL, 3, 0.30, (139, 0.88, 0.56), 1.0, "", "Ovale", "Cabochon", 11.0, None, None),
+    ("Malachite", CONGO_MAL, 0, 0.40, (149, 0.80, 0.46), 1.0, "", "Rond", "Cabochon", 13.0, None, None),
+    ("Malachite", RUSSIA_MAL, 1, 0.50, (143, 0.86, 0.60), 1.0, "", "Ovale", "Cabochon", 15.0, None, None),
+    ("Malachite", ZAMBIA_MAL, 2, 0.60, (151, 0.90, 0.52), 1.0, "", "Ovale", "Cabochon", 5.0, None, None),
+    ("Malachite", AUSTRALIA_MAL, 3, 0.70, (145, 0.75, 0.55), 1.0, "", "Coussin", "Cabochon", 7.0, None, None),
+    ("Malachite", CONGO_MAL, 0, 0.40, (146, 0.85, 0.55), 1.0, "", "Ovale", "Brillant", 3.0, None, None),
+    ("Malachite", CONGO_MAL, 1, 0.40, (142, 0.88, 0.48), 1.0, "", "Coussin", "Mixte", 4.0, None, None),
+    ("Malachite", RUSSIA_MAL, 2, 0.40, (150, 0.82, 0.58), 1.0, "", "Rectangle \u00e0 pans coup\u00e9s", "\u00c9meraude", 5.0, None, None),
+    ("Malachite", ZAMBIA_MAL, 0, 0.40, (144, 0.86, 0.52), 1.0, "", "Rond", "Brillant", 6.0, None, None),
+]
+
+IRAN_TQ = ("Iran", 1.6)
+USA_TQ = ("\u00c9tats-Unis", 1.2)
+CHINA_TQ = ("Chine", 0.8)
+
+# Turquoise: 18 natural cabochons (clean, spiderweb or patchy matrix, drawn from stone to stone) and 6 stabilized.
+TURQUOISES = [
+    ("Turquoise", IRAN_TQ, 0, 0.20, (188, 0.70, 0.85), 1.0, "", "Ovale", "Cabochon", 3.0, None, None),
+    ("Turquoise", USA_TQ, 1, 0.30, (182, 0.60, 0.80), 1.0, "", "Poire", "Cabochon", 4.5, None, None),
+    ("Turquoise", CHINA_TQ, 2, 0.40, (192, 0.75, 0.88), 1.0, "", "Coussin", "Cabochon", 6.0, None, None),
+    ("Turquoise", IRAN_TQ, 3, 0.50, (178, 0.55, 0.75), 1.0, "", "Ovale", "Cabochon", 7.5, None, None),
+    ("Turquoise", USA_TQ, 0, 0.60, (185, 0.65, 0.82), 1.0, "", "Rond", "Cabochon", 9.0, None, None),
+    ("Turquoise", CHINA_TQ, 1, 0.70, (175, 0.50, 0.70), 1.0, "", "Ovale", "Cabochon", 10.5, None, None),
+    ("Turquoise", IRAN_TQ, 2, 0.80, (190, 0.72, 0.90), 1.0, "", "Ovale", "Cabochon", 3.0, None, None),
+    ("Turquoise", USA_TQ, 3, 0.20, (180, 0.60, 0.78), 1.0, "", "Poire", "Cabochon", 4.5, None, None),
+    ("Turquoise", CHINA_TQ, 0, 0.30, (186, 0.68, 0.84), 1.0, "", "Coussin", "Cabochon", 6.0, None, None),
+    ("Turquoise", IRAN_TQ, 1, 0.40, (172, 0.48, 0.72), 1.0, "", "Ovale", "Cabochon", 7.5, None, None),
+    ("Turquoise", USA_TQ, 2, 0.50, (194, 0.70, 0.86), 1.0, "", "Rond", "Cabochon", 9.0, None, None),
+    ("Turquoise", CHINA_TQ, 3, 0.60, (183, 0.62, 0.80), 1.0, "", "Ovale", "Cabochon", 10.5, None, None),
+    ("Turquoise", IRAN_TQ, 0, 0.70, (189, 0.74, 0.87), 1.0, "", "Ovale", "Cabochon", 3.0, None, None),
+    ("Turquoise", USA_TQ, 1, 0.80, (177, 0.52, 0.74), 1.0, "", "Poire", "Cabochon", 4.5, None, None),
+    ("Turquoise", CHINA_TQ, 2, 0.20, (184, 0.66, 0.83), 1.0, "", "Coussin", "Cabochon", 6.0, None, None),
+    ("Turquoise", IRAN_TQ, 3, 0.30, (170, 0.45, 0.70), 1.0, "", "Ovale", "Cabochon", 7.5, None, None),
+    ("Turquoise", USA_TQ, 0, 0.40, (191, 0.70, 0.88), 1.0, "", "Rond", "Cabochon", 9.0, None, None),
+    ("Turquoise", CHINA_TQ, 1, 0.50, (181, 0.58, 0.79), 1.0, "", "Ovale", "Cabochon", 10.5, None, None),
+    ("Turquoise_Stabilisee", USA_TQ, 0, 0.40, (186, 0.75, 0.86), 1.0, "", "Ovale", "Cabochon", 4.0, None, None),
+    ("Turquoise_Stabilisee", CHINA_TQ, 1, 0.40, (180, 0.65, 0.80), 1.0, "", "Poire", "Cabochon", 5.0, None, None),
+    ("Turquoise_Stabilisee", USA_TQ, 2, 0.40, (190, 0.78, 0.88), 1.0, "", "Coussin", "Cabochon", 6.0, None, None),
+    ("Turquoise_Stabilisee", CHINA_TQ, 0, 0.40, (176, 0.60, 0.76), 1.0, "", "Ovale", "Cabochon", 7.0, None, None),
+    ("Turquoise_Stabilisee", USA_TQ, 1, 0.40, (184, 0.70, 0.84), 1.0, "", "Rond", "Cabochon", 8.0, None, None),
+    ("Turquoise_Stabilisee", CHINA_TQ, 2, 0.40, (188, 0.72, 0.82), 1.0, "", "Ovale", "Cabochon", 9.0, None, None),
+]
+
+ECUADOR_TG = ("\u00c9quateur", 1.0)
+COLOMBIA_TG = ("Colombie", 1.0)
+PANAMA_TG = ("Panama", 0.9)
+
+# Corozo (vegetable ivory): 18 cut stones, cream to caramel and brown, cabochons and faceted, and 6 whole nuts in their skin (rough).
+COROZOS = [
+    ("Ivoire_Vegetal", ECUADOR_TG, 0, 0.20, (40, 0.15, 0.94), 1.0, "", "Ovale", "Cabochon", 6.0, None, None),
+    ("Ivoire_Vegetal", COLOMBIA_TG, 1, 0.30, (38, 0.45, 0.88), 1.0, "", "Poire", "Brillant", 8.0, None, None),
+    ("Ivoire_Vegetal", PANAMA_TG, 2, 0.40, (32, 0.55, 0.70), 1.0, "", "Ovale", "Mixte", 10.0, None, None),
+    ("Ivoire_Vegetal", ECUADOR_TG, 3, 0.50, (36, 0.50, 0.85), 1.0, "", "Coussin", "Mixte", 12.0, None, None),
+    ("Ivoire_Vegetal", COLOMBIA_TG, 0, 0.60, (42, 0.30, 0.92), 1.0, "", "Ovale", "Mixte", 14.0, None, None),
+    ("Ivoire_Vegetal", PANAMA_TG, 1, 0.70, (30, 0.60, 0.75), 1.0, "", "Coussin", "Mixte", 6.0, None, None),
+    ("Ivoire_Vegetal", ECUADOR_TG, 2, 0.80, (26, 0.62, 0.48), 1.0, "", "Ovale", "Brillant", 8.0, None, None),
+    ("Ivoire_Vegetal", COLOMBIA_TG, 3, 0.20, (40, 0.40, 0.86), 1.0, "", "Rond", "Cabochon", 10.0, None, None),
+    ("Ivoire_Vegetal", PANAMA_TG, 0, 0.30, (34, 0.52, 0.80), 1.0, "", "Poire", "Mixte", 12.0, None, None),
+    ("Ivoire_Vegetal", ECUADOR_TG, 1, 0.40, (44, 0.20, 0.95), 1.0, "", "Ovale", "Cabochon", 14.0, None, None),
+    ("Ivoire_Vegetal", COLOMBIA_TG, 2, 0.50, (28, 0.58, 0.62), 1.0, "", "Rectangle \u00e0 pans coup\u00e9s", "\u00c9meraude", 6.0, None, None),
+    ("Ivoire_Vegetal", PANAMA_TG, 3, 0.60, (37, 0.48, 0.83), 1.0, "", "Ovale", "Mixte", 8.0, None, None),
+    ("Ivoire_Vegetal", ECUADOR_TG, 0, 0.70, (24, 0.65, 0.42), 1.0, "", "Coussin", "Mixte", 10.0, None, None),
+    ("Ivoire_Vegetal", COLOMBIA_TG, 1, 0.80, (39, 0.35, 0.90), 1.0, "", "Ovale", "Cabochon", 12.0, None, None),
+    ("Ivoire_Vegetal", PANAMA_TG, 2, 0.20, (33, 0.55, 0.72), 1.0, "", "Ovale", "Mixte", 14.0, None, None),
+    ("Ivoire_Vegetal", ECUADOR_TG, 3, 0.30, (41, 0.25, 0.93), 1.0, "", "Poire", "Cabochon", 6.0, None, None),
+    ("Ivoire_Vegetal", COLOMBIA_TG, 0, 0.40, (35, 0.50, 0.78), 1.0, "", "Coussin", "Brillant", 8.0, None, None),
+    ("Ivoire_Vegetal", PANAMA_TG, 1, 0.50, (29, 0.60, 0.55), 1.0, "", "Ovale", "Mixte", 10.0, None, None),
+    ("Ivoire_Vegetal", ECUADOR_TG, 1, 0.40, (38, 0.15, 0.94), 1.0, "", "Ovale", "Brut", 60.0, None, None),
+    ("Ivoire_Vegetal", COLOMBIA_TG, 1, 0.40, (38, 0.15, 0.94), 1.0, "", "Ovale", "Brut", 75.0, None, None),
+    ("Ivoire_Vegetal", PANAMA_TG, 1, 0.40, (38, 0.15, 0.94), 1.0, "", "Ovale", "Brut", 55.0, None, None),
+    ("Ivoire_Vegetal", ECUADOR_TG, 1, 0.40, (38, 0.15, 0.94), 1.0, "", "Ovale", "Brut", 90.0, None, None),
+    ("Ivoire_Vegetal", COLOMBIA_TG, 1, 0.40, (38, 0.15, 0.94), 1.0, "", "Ovale", "Brut", 68.0, None, None),
+    ("Ivoire_Vegetal", ECUADOR_TG, 1, 0.40, (38, 0.15, 0.94), 1.0, "", "Ovale", "Brut", 80.0, None, None),
+]
+
+PRESETS = {"rubis": RUBIS, "rubis10": RUBIS[:10], "cabochons": CABOCHONS, "emeraudes": EMERAUDES, "saphirs": SAPHIRS, "spinelles": SPINELLES, "rhodochrosites": RHODOCHROSITES, "agates": AGATES, "cornalines": CORNALINES, "malachites": MALACHITES, "turquoises": TURQUOISES, "corozos": COROZOS}      # rubis10: the ten faceted rubies of Burma, to go with the cabochons in the 24 places
+DEFAULT_PRESET = "corozos"
+
+
+def game_species(species):
+    """The sapphire is one species of the game, whatever its colour: the lines below keep the colour name ("Saphir_Rose") for the price and the name."""
+    return "Saphir" if species.startswith("Saphir_") else species
 
 
 def species_text(species, key):
     """A text field of the species asset (the yaml of Unity: a quoted string with \\xE9 style escapes)."""
-    path = os.path.join(GEM_DIR, species + ".asset")
+    path = os.path.join(GEM_DIR, game_species(species) + ".asset")
     if not os.path.exists(path):
         return ""
     for line in open(path, encoding="utf-8"):
@@ -221,8 +487,8 @@ def make_entry(spec, sid, species_inclusions):
     width = round(length / ratio, 3)
     depth = round(math.sqrt(carat / 1.4) * (3.2 if style == "Cabochon" else 4.0), 3)
     return {
-        "definitionName": species, "specimenId": sid, "clientName": CLIENT, "isDonation": True, "isRough": False, "needsCleaning": False,
-        "isPersonalSpecimen": True, "isIdentified": True, "hasWindow": False, "cutShape": shape, "cutStyle": style,
+        "definitionName": game_species(species), "specimenId": sid, "clientName": CLIENT, "isDonation": True, "isRough": style == "Brut", "needsCleaning": False,
+        "isPersonalSpecimen": True, "isIdentified": True, "hasWindow": False, "cutShape": "" if style == "Brut" else shape, "cutStyle": "" if style == "Brut" else style,
         "originName": origin, "originValueMultiplier": origin_mult, "originInclusionOverride": "",
         "saturationGrade": "", "clarityGrade": clarity_name, "clarityDescription": clarity_text, "inclusionDescription": species_inclusions,
         "caratWeight": carat, "lengthMm": length, "widthMm": width, "depthMm": depth,

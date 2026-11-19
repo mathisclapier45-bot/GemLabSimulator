@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 SITE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 REPO = SITE.parent
 SRC_JSON = REPO / "Docs" / "gemlab_data.json"
 SRC_LESSONS = REPO / "GemLabSimulator" / "Assets" / "Resources" / "Lessons"
@@ -28,6 +29,8 @@ def main():
         data = json.load(f)
     DST_JSON.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(SRC_JSON, DST_JSON)
+    import merge_species                           # the sapphire and the fluorite are one species each (a no-op once the game data has them)
+    merge_species.main()
     print("Espèces : {} (données du {})".format(len(data["species"]), data["meta"].get("generated")))
 
     # The spectra used by the animated lesson drawings (static/js/lessonfig_figs.js): rubis, émeraude, péridot, almandin.

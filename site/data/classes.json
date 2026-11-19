@@ -35,10 +35,7 @@
    "species": [
     "Fluorite",
     "Fluorite_Bandee",
-    "Fluorite_Bleue",
-    "Fluorite_Blue_John",
-    "Fluorite_Jaune",
-    "Fluorite_Verte"
+    "Fluorite_Blue_John"
    ],
    "name": "Halogénures",
    "chem": "Un métal combiné au fluor, au chlore, au brome ou à l'iode",
@@ -73,13 +70,7 @@
     "Hematite",
     "Corindon_Rubis",
     "Padparadscha",
-    "Saphir_Bleu",
-    "Saphir_Incolore",
-    "Saphir_Jaune",
-    "Saphir_Orange",
-    "Saphir_Rose",
-    "Saphir_Vert",
-    "Saphir_Violet",
+    "Saphir",
     "Saphir_Change_Couleur",
     "Aventurine",
     "Jaspe",

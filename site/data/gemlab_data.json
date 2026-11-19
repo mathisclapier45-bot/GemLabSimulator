@@ -2183,7 +2183,7 @@
     {
       "id": "Fluorite",
       "displayName": "Fluorite",
-      "description": "Une fluorite violette, minéral tendre et fragile dont le nom a donné le mot \"fluorescence\". Presque toutes les couleurs existent, sauf le rouge et le noir.",
+      "description": "Un minéral tendre et fragile dont le nom a donné le mot \"fluorescence\". Violette, bleue, verte ou jaune le plus souvent, elle existe aussi en orange, en rose, en rougeâtre ou incolore : c'est toujours la même espèce, seule la couleur change.",
       "iconColor": "#8C4CB2",
       "iconFacetColor": "#B880D9",
       "refractiveIndex": 1.434,
@@ -2194,7 +2194,7 @@
       "depthMm": 3.7,
       "weightCarats": 1.1,
       "luster": "Vitreux mat",
-      "color": "Violet",
+      "color": "Violet, bleu, vert, jaune, orange, rose, rougeâtre ou incolore",
       "shape": "Ovale",
       "cutStyle": "Brillant",
       "transparency": "Transparent à translucide",
@@ -2339,94 +2339,6 @@
       "fluorescenceFromJson": true
     },
     {
-      "id": "Fluorite_Bleue",
-      "displayName": "Fluorite bleue",
-      "description": "Une fluorite d'un bleu profond, tendre et fragile, au clivage octaédrique parfait.",
-      "iconColor": "#385CD1",
-      "iconFacetColor": "#809EF2",
-      "refractiveIndex": 1.434,
-      "density": 3.1,
-      "hardness": 4,
-      "lengthMm": 7,
-      "widthMm": 5.5,
-      "depthMm": 3.7,
-      "weightCarats": 1.1,
-      "luster": "Vitreux mat",
-      "color": "Bleu",
-      "shape": "Ovale",
-      "cutStyle": "Brillant",
-      "transparency": "Transparent à translucide",
-      "pleochroic": false,
-      "pleochroicDescription": "",
-      "fluorescenceLongWave": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
-      "fluorescenceShortWave": "Moins marquée. Peut ne présenter aucune réaction.",
-      "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
-      "opticalCharacterClassName": "Isotrope",
-      "opticalCharacterClass": 0,
-      "birefringence": 0,
-      "isQuartzFamily": false,
-      "isPolycrystalline": false,
-      "isThermallyConductiveLikeDiamond": false,
-      "isElectricallyConductive": false,
-      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
-      "spectrumLines": "[]",
-      "inclusions": "Deux et trois phases, clivages et inclusions solides telles que de la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage octaédrique parfait peut laisser des cassures conchoïdales.",
-      "interferenceFigure": "Aucune figure d'interférence (matériau isotrope).",
-      "chelseaFilterReaction": "Aucune réaction particulière.",
-      "magnetism": "Aucune réaction notable à l'aimant.",
-      "baseValue": 22,
-      "forcedSynthetic": false,
-      "forcedTreatment": false,
-      "roughOnly": 0,
-      "isTunnelExclusive": false,
-      "tunnelMinPrice": 0,
-      "origins": [
-        {
-          "name": "Chine",
-          "rarityWeight": 35,
-          "valueMultiplier": 1,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Mexique",
-          "rarityWeight": 25,
-          "valueMultiplier": 1,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Angleterre",
-          "rarityWeight": 20,
-          "valueMultiplier": 1.3,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "États-Unis",
-          "rarityWeight": 20,
-          "valueMultiplier": 1,
-          "inclusionOverride": ""
-        }
-      ],
-      "habits": [
-        {
-          "habit": "cube",
-          "weight": 40
-        },
-        {
-          "habit": "octahedron",
-          "weight": 28
-        },
-        {
-          "habit": "cleaved_octahedron",
-          "weight": 28
-        },
-        {
-          "habit": "rhombic_dodecahedron",
-          "weight": 4
-        }
-      ],
-      "fluorescenceFromJson": true
-    },
-    {
       "id": "Fluorite_Blue_John",
       "displayName": "Blue John",
       "description": "Le Blue John : une fluorite à bandes violettes, blanches et jaunes, propre à un gisement d'Angleterre. Très fragile, on l'imprègne de résine avant de la tailler.",
@@ -2480,182 +2392,6 @@
         {
           "habit": "tagua_nut",
           "weight": 100
-        }
-      ],
-      "fluorescenceFromJson": true
-    },
-    {
-      "id": "Fluorite_Jaune",
-      "displayName": "Fluorite jaune",
-      "description": "Une fluorite jaune à jaune doré, tendre et fragile. Elle ressemble à une citrine mais se raye très facilement.",
-      "iconColor": "#EDC740",
-      "iconFacetColor": "#FAE68C",
-      "refractiveIndex": 1.434,
-      "density": 3.1,
-      "hardness": 4,
-      "lengthMm": 7,
-      "widthMm": 5.5,
-      "depthMm": 3.7,
-      "weightCarats": 1.1,
-      "luster": "Vitreux mat",
-      "color": "Jaune",
-      "shape": "Rectangle à pans coupés",
-      "cutStyle": "À degrés",
-      "transparency": "Transparent à translucide",
-      "pleochroic": false,
-      "pleochroicDescription": "",
-      "fluorescenceLongWave": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
-      "fluorescenceShortWave": "Moins marquée. Peut ne présenter aucune réaction.",
-      "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
-      "opticalCharacterClassName": "Isotrope",
-      "opticalCharacterClass": 0,
-      "birefringence": 0,
-      "isQuartzFamily": false,
-      "isPolycrystalline": false,
-      "isThermallyConductiveLikeDiamond": false,
-      "isElectricallyConductive": false,
-      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
-      "spectrumLines": "[]",
-      "inclusions": "Deux et trois phases, clivages et inclusions solides telles que de la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage octaédrique parfait peut laisser des cassures conchoïdales.",
-      "interferenceFigure": "Aucune figure d'interférence (matériau isotrope).",
-      "chelseaFilterReaction": "Aucune réaction particulière.",
-      "magnetism": "Aucune réaction notable à l'aimant.",
-      "baseValue": 18,
-      "forcedSynthetic": false,
-      "forcedTreatment": false,
-      "roughOnly": 0,
-      "isTunnelExclusive": false,
-      "tunnelMinPrice": 0,
-      "origins": [
-        {
-          "name": "Chine",
-          "rarityWeight": 35,
-          "valueMultiplier": 1,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Mexique",
-          "rarityWeight": 35,
-          "valueMultiplier": 1,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Espagne",
-          "rarityWeight": 15,
-          "valueMultiplier": 1,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "États-Unis",
-          "rarityWeight": 15,
-          "valueMultiplier": 0.9,
-          "inclusionOverride": ""
-        }
-      ],
-      "habits": [
-        {
-          "habit": "cube",
-          "weight": 40
-        },
-        {
-          "habit": "octahedron",
-          "weight": 28
-        },
-        {
-          "habit": "cleaved_octahedron",
-          "weight": 28
-        },
-        {
-          "habit": "rhombic_dodecahedron",
-          "weight": 4
-        }
-      ],
-      "fluorescenceFromJson": true
-    },
-    {
-      "id": "Fluorite_Verte",
-      "displayName": "Fluorite verte",
-      "description": "Une fluorite verte, tendre et fragile. Presque toutes les couleurs existent chez la fluorite, sauf le rouge et le noir.",
-      "iconColor": "#4CB866",
-      "iconFacetColor": "#94E09E",
-      "refractiveIndex": 1.434,
-      "density": 3.1,
-      "hardness": 4,
-      "lengthMm": 7,
-      "widthMm": 5.5,
-      "depthMm": 3.7,
-      "weightCarats": 1.1,
-      "luster": "Vitreux mat",
-      "color": "Vert",
-      "shape": "Rond",
-      "cutStyle": "Brillant",
-      "transparency": "Transparent à translucide",
-      "pleochroic": false,
-      "pleochroicDescription": "",
-      "fluorescenceLongWave": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
-      "fluorescenceShortWave": "Moins marquée. Peut ne présenter aucune réaction.",
-      "opticalCharacter": "Isotrope (monoréfringent, réseau cubique).",
-      "opticalCharacterClassName": "Isotrope",
-      "opticalCharacterClass": 0,
-      "birefringence": 0,
-      "isQuartzFamily": false,
-      "isPolycrystalline": false,
-      "isThermallyConductiveLikeDiamond": false,
-      "isElectricallyConductive": false,
-      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
-      "spectrumLines": "[]",
-      "inclusions": "Deux et trois phases, clivages et inclusions solides telles que de la pyrite. Des zones de couleur et de croissance ne sont pas rares. Le clivage octaédrique parfait peut laisser des cassures conchoïdales.",
-      "interferenceFigure": "Aucune figure d'interférence (matériau isotrope).",
-      "chelseaFilterReaction": "Aucune réaction particulière.",
-      "magnetism": "Aucune réaction notable à l'aimant.",
-      "baseValue": 15,
-      "forcedSynthetic": false,
-      "forcedTreatment": false,
-      "roughOnly": 0,
-      "isTunnelExclusive": false,
-      "tunnelMinPrice": 0,
-      "origins": [
-        {
-          "name": "Chine",
-          "rarityWeight": 40,
-          "valueMultiplier": 1,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Mexique",
-          "rarityWeight": 30,
-          "valueMultiplier": 1,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Espagne",
-          "rarityWeight": 15,
-          "valueMultiplier": 1.1,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "États-Unis",
-          "rarityWeight": 15,
-          "valueMultiplier": 0.9,
-          "inclusionOverride": ""
-        }
-      ],
-      "habits": [
-        {
-          "habit": "cube",
-          "weight": 40
-        },
-        {
-          "habit": "octahedron",
-          "weight": 28
-        },
-        {
-          "habit": "cleaved_octahedron",
-          "weight": 28
-        },
-        {
-          "habit": "rhombic_dodecahedron",
-          "weight": 4
         }
       ],
       "fluorescenceFromJson": true
@@ -6533,9 +6269,9 @@
       "habits": []
     },
     {
-      "id": "Saphir_Bleu",
-      "displayName": "Saphir Bleu",
-      "description": "Un corindon bleu intense, envoyé pour confirmer s'il s'agit d'un saphir naturel.",
+      "id": "Saphir",
+      "displayName": "Saphir",
+      "description": "Le corindon de toutes les couleurs, sauf le rouge (un corindon rouge est un rubis) : bleu, le plus connu, mais aussi jaune, rose, orange, vert, violet ou incolore. La couleur ne change pas l'espèce : c'est toujours un saphir.",
       "iconColor": "#142E8C",
       "iconFacetColor": "#4C6BC7",
       "refractiveIndex": 1.766,
@@ -6546,14 +6282,14 @@
       "depthMm": 4,
       "weightCarats": 1.4,
       "luster": "Vitreux à sub-adamantin",
-      "color": "Bleu",
+      "color": "Toutes les couleurs sauf le rouge (le bleu est la plus courante)",
       "shape": "Ovale",
       "cutStyle": "Mixte",
       "transparency": "Transparent",
       "pleochroic": true,
-      "pleochroicDescription": "Bleu / Bleu-vert selon l'axe d'observation (marqué).",
-      "fluorescenceLongWave": "Aucune réaction.",
-      "fluorescenceShortWave": "Saphir naturel : aucune réaction, parfois un vert faible.",
+      "pleochroicDescription": "Deux teintes de la même couleur selon l'axe d'observation : marqué dans les saphirs bleus, verts et violets (bleu / bleu-vert pour un saphir bleu), faible dans les jaunes, roses et orange, nul dans l'incolore.",
+      "fluorescenceLongWave": "Généralement aucune réaction (le fer inhibe la fluorescence). Les saphirs roses et orange (chrome) peuvent être rouges, certains jaunes abricot.",
+      "fluorescenceShortWave": "Généralement aucune réaction, parfois un vert faible.",
       "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
@@ -6571,10 +6307,10 @@
           "edgeNm": 0.0
         }
       ],
-      "inclusions": "Soie de rutile, zonation de couleur en bandes hexagonales.",
+      "inclusions": "Soie de rutile, zonation de couleur en bandes hexagonales, cristaux fins dispersés.",
       "interferenceFigure": "Figure d'interférence uniaxiale nette.",
       "chelseaFilterReaction": "Généralement vert foncé.",
-      "magnetism": "Légère réaction possible avec un aimant très puissant (traces de fer).",
+      "magnetism": "Légère réaction possible avec un aimant très puissant (traces de fer), nulle dans l'incolore.",
       "baseValue": 140,
       "forcedSynthetic": false,
       "forcedTreatment": false,
@@ -6584,25 +6320,37 @@
       "origins": [
         {
           "name": "Cachemire (Kashmir)",
-          "rarityWeight": 5,
-          "valueMultiplier": 4,
+          "rarityWeight": 3,
+          "valueMultiplier": 4.0,
           "inclusionOverride": "Couleur bleu velouté intense caractéristique ; gisement de Kashmir aujourd'hui quasiment épuisé, extrêmement recherché."
         },
         {
           "name": "Sri Lanka (Ceylan)",
           "rarityWeight": 35,
-          "valueMultiplier": 1.4,
+          "valueMultiplier": 1.3,
           "inclusionOverride": ""
         },
         {
           "name": "Madagascar",
-          "rarityWeight": 35,
-          "valueMultiplier": 1,
+          "rarityWeight": 25,
+          "valueMultiplier": 1.0,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Thaïlande",
+          "rarityWeight": 12,
+          "valueMultiplier": 0.9,
+          "inclusionOverride": ""
+        },
+        {
+          "name": "Nigeria",
+          "rarityWeight": 5,
+          "valueMultiplier": 0.8,
           "inclusionOverride": ""
         },
         {
           "name": "Australie",
-          "rarityWeight": 25,
+          "rarityWeight": 20,
           "valueMultiplier": 0.7,
           "inclusionOverride": "Zonation de couleur marquée, teinte souvent trop sombre à contre-jour."
         }
@@ -6632,540 +6380,6 @@
       "spectrumFromJson": true,
       "chelseaFromJson": true,
       "fluorescenceFromJson": true
-    },
-    {
-      "id": "Saphir_Incolore",
-      "displayName": "Saphir Incolore",
-      "description": "Corindon dépourvu d'éléments traces colorants ; historiquement utilisé comme substitut bon marché du diamant.",
-      "iconColor": "#E0E6ED",
-      "iconFacetColor": "#FAFCFF",
-      "refractiveIndex": 1.766,
-      "density": 4,
-      "hardness": 9,
-      "lengthMm": 5.8,
-      "widthMm": 5.8,
-      "depthMm": 3.6,
-      "weightCarats": 1,
-      "luster": "Vitreux à sub-adamantin",
-      "color": "Incolore",
-      "shape": "Rond",
-      "cutStyle": "Brillant",
-      "transparency": "Transparent",
-      "pleochroic": false,
-      "pleochroicDescription": "",
-      "fluorescenceLongWave": "Inerte sous UV longue onde.",
-      "fluorescenceShortWave": "Inerte sous UV courte onde.",
-      "opticalCharacter": "Anisotrope, uniaxial (biréfringent) — dédoublement des arêtes parfois visible à fort grossissement.",
-      "opticalCharacterClassName": "Uniaxe",
-      "opticalCharacterClass": 1,
-      "birefringence": 0.008,
-      "isQuartzFamily": false,
-      "isPolycrystalline": false,
-      "isThermallyConductiveLikeDiamond": false,
-      "isElectricallyConductive": false,
-      "absorptionSpectrum": "Aucun spectre d'absorption caractéristique.",
-      "spectrumLines": "[]",
-      "inclusions": "Généralement très propre, quelques cristaux fins dispersés possibles.",
-      "interferenceFigure": "Figure d'interférence uniaxiale nette.",
-      "chelseaFilterReaction": "Aucune réaction particulière.",
-      "magnetism": "Aucune réaction notable à l'aimant.",
-      "baseValue": 22,
-      "forcedSynthetic": false,
-      "forcedTreatment": false,
-      "roughOnly": 0,
-      "isTunnelExclusive": false,
-      "tunnelMinPrice": 0,
-      "origins": [
-        {
-          "name": "Sri Lanka",
-          "rarityWeight": 60,
-          "valueMultiplier": 1,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Australie",
-          "rarityWeight": 40,
-          "valueMultiplier": 0.8,
-          "inclusionOverride": ""
-        }
-      ],
-      "habits": [
-        {
-          "habit": "corundum_barrel",
-          "weight": 35
-        },
-        {
-          "habit": "corundum_bipyramid",
-          "weight": 20
-        },
-        {
-          "habit": "corundum_pebble",
-          "weight": 20
-        },
-        {
-          "habit": "corundum_prism",
-          "weight": 15
-        },
-        {
-          "habit": "corundum_fragment",
-          "weight": 10
-        }
-      ]
-    },
-    {
-      "id": "Saphir_Jaune",
-      "displayName": "Saphir Jaune",
-      "description": "Corindon jaune, couleur due à des centres colorés ou à des traces de fer.",
-      "iconColor": "#CCAD1F",
-      "iconFacetColor": "#F2D966",
-      "refractiveIndex": 1.766,
-      "density": 4,
-      "hardness": 9,
-      "lengthMm": 7.5,
-      "widthMm": 5.8,
-      "depthMm": 4,
-      "weightCarats": 1.3,
-      "luster": "Vitreux à sub-adamantin",
-      "color": "Jaune",
-      "shape": "Rectangle à pans coupés",
-      "cutStyle": "Émeraude",
-      "transparency": "Transparent",
-      "pleochroic": true,
-      "pleochroicDescription": "Jaune pâle / Jaune plus soutenu selon l'axe (faible).",
-      "fluorescenceLongWave": "Naturel : nulle à abricot.",
-      "fluorescenceShortWave": "Aucune réaction.",
-      "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
-      "opticalCharacterClassName": "Uniaxe",
-      "opticalCharacterClass": 1,
-      "birefringence": 0.008,
-      "isQuartzFamily": false,
-      "isPolycrystalline": false,
-      "isThermallyConductiveLikeDiamond": false,
-      "isElectricallyConductive": false,
-      "absorptionSpectrum": "Bande d'absorption diffuse dans le bleu-violet.",
-      "spectrumLines": [
-        {
-          "wavelengthNm": 450,
-          "widthNm": 40,
-          "depth": 1,
-          "edgeNm": 0
-        }
-      ],
-      "inclusions": "Zonation de couleur en bandes hexagonales, cristaux fins dispersés.",
-      "interferenceFigure": "Figure d'interférence uniaxiale nette.",
-      "chelseaFilterReaction": "Aucune réaction particulière.",
-      "magnetism": "Légère réaction possible avec un aimant très puissant (traces de fer).",
-      "baseValue": 55,
-      "forcedSynthetic": false,
-      "forcedTreatment": false,
-      "roughOnly": 0,
-      "isTunnelExclusive": false,
-      "tunnelMinPrice": 0,
-      "origins": [
-        {
-          "name": "Sri Lanka",
-          "rarityWeight": 45,
-          "valueMultiplier": 1.1,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Australie",
-          "rarityWeight": 30,
-          "valueMultiplier": 0.8,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Thaïlande",
-          "rarityWeight": 25,
-          "valueMultiplier": 0.9,
-          "inclusionOverride": ""
-        }
-      ],
-      "habits": [
-        {
-          "habit": "corundum_barrel",
-          "weight": 35
-        },
-        {
-          "habit": "corundum_bipyramid",
-          "weight": 20
-        },
-        {
-          "habit": "corundum_pebble",
-          "weight": 20
-        },
-        {
-          "habit": "corundum_prism",
-          "weight": 15
-        },
-        {
-          "habit": "corundum_fragment",
-          "weight": 10
-        }
-      ],
-      "fluorescenceFromJson": true
-    },
-    {
-      "id": "Saphir_Orange",
-      "displayName": "Saphir Orange",
-      "description": "Corindon orange, teinte rare obtenue par un équilibre particulier entre plusieurs éléments traces.",
-      "iconColor": "#D9731F",
-      "iconFacetColor": "#F7A859",
-      "refractiveIndex": 1.766,
-      "density": 4,
-      "hardness": 9,
-      "lengthMm": 6.5,
-      "widthMm": 6,
-      "depthMm": 3.9,
-      "weightCarats": 1.2,
-      "luster": "Vitreux à sub-adamantin",
-      "color": "Orange",
-      "shape": "Rond",
-      "cutStyle": "Brillant",
-      "transparency": "Transparent",
-      "pleochroic": true,
-      "pleochroicDescription": "Orange clair / Orangé plus soutenu selon l'axe (faible).",
-      "fluorescenceLongWave": "Fluorescence orangée faible possible sous UV longue onde.",
-      "fluorescenceShortWave": "Généralement inerte sous UV courte onde.",
-      "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
-      "opticalCharacterClassName": "Uniaxe",
-      "opticalCharacterClass": 1,
-      "birefringence": 0.008,
-      "isQuartzFamily": false,
-      "isPolycrystalline": false,
-      "isThermallyConductiveLikeDiamond": false,
-      "isElectricallyConductive": false,
-      "absorptionSpectrum": "Bande d'absorption diffuse dans le bleu-violet.",
-      "spectrumLines": "[]",
-      "inclusions": "Zonation de couleur en bandes, cristaux fins dispersés.",
-      "interferenceFigure": "Figure d'interférence uniaxiale nette.",
-      "chelseaFilterReaction": "Aucune réaction ou réaction rougeâtre très faible.",
-      "magnetism": "Légère réaction possible avec un aimant très puissant (traces de fer).",
-      "baseValue": 90,
-      "forcedSynthetic": false,
-      "forcedTreatment": false,
-      "roughOnly": 0,
-      "isTunnelExclusive": false,
-      "tunnelMinPrice": 0,
-      "origins": [
-        {
-          "name": "Sri Lanka",
-          "rarityWeight": 50,
-          "valueMultiplier": 1.2,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Tanzanie",
-          "rarityWeight": 50,
-          "valueMultiplier": 0.9,
-          "inclusionOverride": ""
-        }
-      ],
-      "habits": [
-        {
-          "habit": "corundum_barrel",
-          "weight": 35
-        },
-        {
-          "habit": "corundum_bipyramid",
-          "weight": 20
-        },
-        {
-          "habit": "corundum_pebble",
-          "weight": 20
-        },
-        {
-          "habit": "corundum_prism",
-          "weight": 15
-        },
-        {
-          "habit": "corundum_fragment",
-          "weight": 10
-        }
-      ]
-    },
-    {
-      "id": "Saphir_Rose",
-      "displayName": "Saphir Rose",
-      "description": "Corindon rose, coloré par de faibles traces de chrome, à la frontière stylistique avec le rubis.",
-      "iconColor": "#CC5980",
-      "iconFacetColor": "#F29EBD",
-      "refractiveIndex": 1.766,
-      "density": 4,
-      "hardness": 9,
-      "lengthMm": 6.5,
-      "widthMm": 6,
-      "depthMm": 3.9,
-      "weightCarats": 1.2,
-      "luster": "Vitreux à sub-adamantin",
-      "color": "Rose",
-      "shape": "Coussin",
-      "cutStyle": "Mixte",
-      "transparency": "Transparent",
-      "pleochroic": true,
-      "pleochroicDescription": "Rose clair / Rose plus soutenu selon l'axe (modéré).",
-      "fluorescenceLongWave": "Rouge (chrome).",
-      "fluorescenceShortWave": "Rouge (chrome).",
-      "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
-      "opticalCharacterClassName": "Uniaxe",
-      "opticalCharacterClass": 1,
-      "birefringence": 0.008,
-      "isQuartzFamily": false,
-      "isPolycrystalline": false,
-      "isThermallyConductiveLikeDiamond": false,
-      "isElectricallyConductive": false,
-      "absorptionSpectrum": "Raies d'absorption fines dans le vert, dues à un élément chromophore en faible concentration.",
-      "spectrumLines": [
-        {
-          "wavelengthNm": 694,
-          "widthNm": 10,
-          "depth": 1,
-          "edgeNm": 0
-        },
-        {
-          "wavelengthNm": 620,
-          "widthNm": 14,
-          "depth": 1,
-          "edgeNm": 0
-        }
-      ],
-      "inclusions": "Soie de rutile fine, légère zonation de couleur.",
-      "interferenceFigure": "Figure d'interférence uniaxiale nette.",
-      "chelseaFilterReaction": "Réaction rougeâtre faible à modérée possible.",
-      "magnetism": "Aucune réaction notable à l'aimant.",
-      "baseValue": 110,
-      "forcedSynthetic": false,
-      "forcedTreatment": false,
-      "roughOnly": 0,
-      "isTunnelExclusive": false,
-      "tunnelMinPrice": 0,
-      "origins": [
-        {
-          "name": "Sri Lanka",
-          "rarityWeight": 40,
-          "valueMultiplier": 1.2,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Madagascar",
-          "rarityWeight": 35,
-          "valueMultiplier": 1,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Tanzanie",
-          "rarityWeight": 25,
-          "valueMultiplier": 1.1,
-          "inclusionOverride": ""
-        }
-      ],
-      "habits": [
-        {
-          "habit": "corundum_barrel",
-          "weight": 35
-        },
-        {
-          "habit": "corundum_bipyramid",
-          "weight": 20
-        },
-        {
-          "habit": "corundum_pebble",
-          "weight": 20
-        },
-        {
-          "habit": "corundum_prism",
-          "weight": 15
-        },
-        {
-          "habit": "corundum_fragment",
-          "weight": 10
-        }
-      ],
-      "fluorescenceFromJson": true
-    },
-    {
-      "id": "Saphir_Vert",
-      "displayName": "Saphir Vert",
-      "description": "Corindon vert, souvent formé de fines bandes alternées bleu/jaune donnant une teinte verte à l'œil nu.",
-      "iconColor": "#26804C",
-      "iconFacetColor": "#59B87A",
-      "refractiveIndex": 1.766,
-      "density": 4,
-      "hardness": 9,
-      "lengthMm": 7.5,
-      "widthMm": 6.2,
-      "depthMm": 4.2,
-      "weightCarats": 1.5,
-      "luster": "Vitreux à sub-adamantin",
-      "color": "Vert",
-      "shape": "Rectangle à pans coupés",
-      "cutStyle": "Émeraude",
-      "transparency": "Transparent",
-      "pleochroic": true,
-      "pleochroicDescription": "Vert / Jaune-vert selon l'axe d'observation (marqué).",
-      "fluorescenceLongWave": "Inerte sous UV longue onde.",
-      "fluorescenceShortWave": "Inerte sous UV courte onde.",
-      "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
-      "opticalCharacterClassName": "Uniaxe",
-      "opticalCharacterClass": 1,
-      "birefringence": 0.008,
-      "isQuartzFamily": false,
-      "isPolycrystalline": false,
-      "isThermallyConductiveLikeDiamond": false,
-      "isElectricallyConductive": false,
-      "absorptionSpectrum": "Spectre du fer : trois bandes dans le bleu (450, 460 et 471 nm). Dans les saphirs naturels très foncés, les deux bandes les plus larges peuvent ne faire qu'une.",
-      "spectrumLines": [
-        {
-          "wavelengthNm": 450,
-          "widthNm": 6,
-          "depth": 1,
-          "edgeNm": 0.0
-        },
-        {
-          "wavelengthNm": 459.5,
-          "widthNm": 4.5,
-          "depth": 0.9,
-          "edgeNm": 0.0
-        },
-        {
-          "wavelengthNm": 471.5,
-          "widthNm": 3.5,
-          "depth": 0.9,
-          "edgeNm": 0.0
-        }
-      ],
-      "inclusions": "Zonation de couleur marquée en bandes fines alternées, fissures internes fréquentes.",
-      "interferenceFigure": "Figure d'interférence uniaxiale nette.",
-      "chelseaFilterReaction": "Aucune réaction particulière.",
-      "magnetism": "Légère réaction possible avec un aimant très puissant (traces de fer).",
-      "baseValue": 40,
-      "forcedSynthetic": false,
-      "forcedTreatment": false,
-      "roughOnly": 0,
-      "isTunnelExclusive": false,
-      "tunnelMinPrice": 0,
-      "origins": [
-        {
-          "name": "Australie",
-          "rarityWeight": 50,
-          "valueMultiplier": 0.8,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Thaïlande",
-          "rarityWeight": 30,
-          "valueMultiplier": 0.8,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Nigeria",
-          "rarityWeight": 20,
-          "valueMultiplier": 0.9,
-          "inclusionOverride": ""
-        }
-      ],
-      "habits": [
-        {
-          "habit": "corundum_barrel",
-          "weight": 35
-        },
-        {
-          "habit": "corundum_bipyramid",
-          "weight": 20
-        },
-        {
-          "habit": "corundum_pebble",
-          "weight": 20
-        },
-        {
-          "habit": "corundum_prism",
-          "weight": 15
-        },
-        {
-          "habit": "corundum_fragment",
-          "weight": 10
-        }
-      ],
-      "spectrumFromJson": true
-    },
-    {
-      "id": "Saphir_Violet",
-      "displayName": "Saphir Violet",
-      "description": "Corindon violet, couleur résultant de la combinaison de plusieurs éléments traces.",
-      "iconColor": "#7340A6",
-      "iconFacetColor": "#A875D4",
-      "refractiveIndex": 1.766,
-      "density": 4,
-      "hardness": 9,
-      "lengthMm": 7,
-      "widthMm": 5.8,
-      "depthMm": 4,
-      "weightCarats": 1.3,
-      "luster": "Vitreux à sub-adamantin",
-      "color": "Violet",
-      "shape": "Ovale",
-      "cutStyle": "Brillant",
-      "transparency": "Transparent",
-      "pleochroic": true,
-      "pleochroicDescription": "Violet-bleu / Violet-rouge selon l'axe d'observation (modéré).",
-      "fluorescenceLongWave": "Généralement inerte sous UV longue onde.",
-      "fluorescenceShortWave": "Inerte sous UV courte onde.",
-      "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
-      "opticalCharacterClassName": "Uniaxe",
-      "opticalCharacterClass": 1,
-      "birefringence": 0.008,
-      "isQuartzFamily": false,
-      "isPolycrystalline": false,
-      "isThermallyConductiveLikeDiamond": false,
-      "isElectricallyConductive": false,
-      "absorptionSpectrum": "Bandes d'absorption combinées, larges et diffuses.",
-      "spectrumLines": "[]",
-      "inclusions": "Zonation de couleur en secteurs, cristaux fins dispersés.",
-      "interferenceFigure": "Figure d'interférence uniaxiale nette.",
-      "chelseaFilterReaction": "Aucune réaction ou réaction rougeâtre très faible.",
-      "magnetism": "Légère réaction possible avec un aimant très puissant (traces de fer).",
-      "baseValue": 65,
-      "forcedSynthetic": false,
-      "forcedTreatment": false,
-      "roughOnly": 0,
-      "isTunnelExclusive": false,
-      "tunnelMinPrice": 0,
-      "origins": [
-        {
-          "name": "Sri Lanka",
-          "rarityWeight": 50,
-          "valueMultiplier": 1.1,
-          "inclusionOverride": ""
-        },
-        {
-          "name": "Tanzanie",
-          "rarityWeight": 50,
-          "valueMultiplier": 1,
-          "inclusionOverride": ""
-        }
-      ],
-      "habits": [
-        {
-          "habit": "corundum_barrel",
-          "weight": 35
-        },
-        {
-          "habit": "corundum_bipyramid",
-          "weight": 20
-        },
-        {
-          "habit": "corundum_pebble",
-          "weight": 20
-        },
-        {
-          "habit": "corundum_prism",
-          "weight": 15
-        },
-        {
-          "habit": "corundum_fragment",
-          "weight": 10
-        }
-      ]
     },
     {
       "id": "Scapolite",
@@ -9566,7 +8780,7 @@
         "variant": false
       },
       {
-        "key": "Saphir_Bleu",
+        "key": "Saphir",
         "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
         "description": "Spectre du fer : une raie fine ou une mince bande dans le bleu, vers 450 nm. Certains saphirs bleus pâles en montrent plus d'une ; les saphirs de synthèse (Verneuil) n'en montrent aucune.",
         "lines": [
@@ -10039,7 +9253,7 @@
         "variant": true
       },
       {
-        "key": "Saphir_Bleu",
+        "key": "Saphir",
         "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
         "reaction": "Généralement vert foncé.",
         "color": "#F7141A",
@@ -10292,6 +9506,18 @@
         "variant": false
       },
       {
+        "key": "Saphir",
+        "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+        "longText": "Généralement aucune réaction (le fer inhibe la fluorescence). Les saphirs roses et orange (chrome) peuvent être rouges, certains jaunes abricot.",
+        "longColor": "#FFFFFF",
+        "longIntensity": 0,
+        "shortText": "Généralement aucune réaction, parfois un vert faible.",
+        "shortColor": "#5CFF8A",
+        "shortIntensity": 0.12,
+        "phosphorescent": false,
+        "variant": false
+      },
+      {
         "key": "Saphir_Bleu",
         "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
         "longText": "Aucune réaction.",
@@ -10497,42 +9723,6 @@
       },
       {
         "key": "Fluorite",
-        "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
-        "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
-        "longColor": "#5A78FF",
-        "longIntensity": 0.7,
-        "shortText": "Moins marquée. Peut ne présenter aucune réaction.",
-        "shortColor": "#5A78FF",
-        "shortIntensity": 0.35,
-        "phosphorescent": false,
-        "variant": false
-      },
-      {
-        "key": "Fluorite_Verte",
-        "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
-        "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
-        "longColor": "#5A78FF",
-        "longIntensity": 0.7,
-        "shortText": "Moins marquée. Peut ne présenter aucune réaction.",
-        "shortColor": "#5A78FF",
-        "shortIntensity": 0.35,
-        "phosphorescent": false,
-        "variant": false
-      },
-      {
-        "key": "Fluorite_Bleue",
-        "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
-        "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
-        "longColor": "#5A78FF",
-        "longIntensity": 0.7,
-        "shortText": "Moins marquée. Peut ne présenter aucune réaction.",
-        "shortColor": "#5A78FF",
-        "shortIntensity": 0.35,
-        "phosphorescent": false,
-        "variant": false
-      },
-      {
-        "key": "Fluorite_Jaune",
         "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
         "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
         "longColor": "#5A78FF",

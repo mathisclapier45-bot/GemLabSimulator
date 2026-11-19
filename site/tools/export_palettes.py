@@ -223,14 +223,28 @@ def grown_in_any_color(name, forced, synthetic):
         return True
     if not synthetic and not forced:
         return False
-    return name.startswith("Saphir_") or name == "Padparadscha" or name.startswith("Spinelle")
+    return name.startswith("Saphir") or name == "Padparadscha" or name.startswith("Spinelle")
 
 
 class Palettes:
     def __init__(self):
         self.limits, self.overrides = read_source()
 
+    # The sapphire is one species: the modes of each colour group (cut to its window), scaled by the share of the colour, and some colourless stones
+    SAPPHIRE_GROUPS = [("Saphir_Bleu", 0.50), ("Saphir_Jaune", 0.13), ("Saphir_Vert", 0.09), ("Saphir_Rose", 0.08), ("Saphir_Orange", 0.05), ("Saphir_Violet", 0.05)]
+
+    def sapphire(self):
+        out = []
+        for group, share in self.SAPPHIRE_GROUPS:
+            modes = restrict(expand(self.overrides[group]), group, self.limits)
+            total = sum(m["w"] for m in modes)
+            out += [dict(m, w=(m["w"] / total * share if total > 0 else 0)) for m in modes]
+        out.append(mode(0.10, 0, 360, 0, 0.07, 0.90, 1))
+        return out
+
     def natural(self, key, icon):
+        if key == "Saphir":
+            return restrict(self.sapphire(), key, self.limits)
         modes = self.overrides.get(key) or derived(icon)
         return restrict(expand(modes), key, self.limits)
 
@@ -240,7 +254,7 @@ class Palettes:
         icon = hex_rgb(sp["iconColor"])
         if key == "Corindon_Synthetique_Rubis" or (key == "Corindon_Rubis" and grown):
             return self.natural("Corindon_Rubis", icon)
-        if key == "Corindon_Synthetique_Saphir" or ((key.startswith("Saphir_") or key == "Padparadscha") and grown):
+        if key == "Corindon_Synthetique_Saphir" or ((key.startswith("Saphir") or key == "Padparadscha") and grown):
             return any_color_except_ruby()
         if grown_in_any_color(key, forced, synthetic):
             return any_color_profile()

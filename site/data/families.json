@@ -75,13 +75,7 @@
     "Corindon_Synthetique_Rubis",
     "Corindon_Synthetique_Saphir",
     "Padparadscha",
-    "Saphir_Bleu",
-    "Saphir_Incolore",
-    "Saphir_Jaune",
-    "Saphir_Orange",
-    "Saphir_Rose",
-    "Saphir_Vert",
-    "Saphir_Violet",
+    "Saphir",
     "Saphir_Change_Couleur"
    ],
    "name": "Corindons",
@@ -431,10 +425,7 @@
    "species": [
     "Fluorite",
     "Fluorite_Bandee",
-    "Fluorite_Bleue",
-    "Fluorite_Blue_John",
-    "Fluorite_Jaune",
-    "Fluorite_Verte"
+    "Fluorite_Blue_John"
    ],
    "name": "Fluorites",
    "chem": "Fluorure de calcium, CaF₂ (cubique)",

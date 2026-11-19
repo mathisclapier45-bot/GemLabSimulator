@@ -233,7 +233,7 @@ class TestEncyclopedia(SiteTestCase):
         c = Client()
         for s in catalog.data()["species"]:
             self.assertIsNotNone(s.get("palette"), s["id"])
-        self.assertIn("Naturelle", c.get("/encyclopedie/saphir-bleu").text)       # synthetic toggle
+        self.assertIn("Naturelle", c.get("/encyclopedie/saphir").text)       # synthetic toggle
         self.assertIn("Couleur D", c.get("/encyclopedie/diamant").text)            # diamond D-Z scale
         self.assertEqual(c.get("/static/js/palette.js").status, 200)
 
@@ -247,7 +247,7 @@ class TestEncyclopedia(SiteTestCase):
         for style, shapes in index["allowed"].items():
             for shape in shapes:
                 self.assertEqual(c.get("/static/data/meshes/{}__{}.json".format(shape, style)).status, 200)
-        self.assertIn("gem3d.js", c.get("/encyclopedie/saphir-bleu").text)
+        self.assertIn("gem3d.js", c.get("/encyclopedie/saphir").text)
 
     def test_every_species_has_composition(self):
         from app import catalog
@@ -1559,7 +1559,7 @@ class TestFamilies(SiteTestCase):
         page = c.get("/encyclopedie/grenat-spessartite").text
         self.assertIn('href="/encyclopedie/classes/silicates"', page)
         self.assertIn('href="/encyclopedie/familles/grenats"', page)
-        self.assertIn('href="/en/encyclopedie/classes/oxydes"', c.get("/en/encyclopedie/saphir-bleu").text)
+        self.assertIn('href="/en/encyclopedie/classes/oxydes"', c.get("/en/encyclopedie/saphir").text)
         topaz = c.get("/encyclopedie/topaze").text
         self.assertIn('href="/encyclopedie/classes/silicates"', topaz)
         self.assertNotIn("Famille :", topaz)                  # no family page for it
@@ -1749,6 +1749,56 @@ class TestNewSpecies(SiteTestCase):
     def test_search_finds_a_new_species(self):
         self.assertIn('href="/encyclopedie/charoite"', Client().get("/encyclopedie?q=charo%C3%AFte").text)
         self.assertIn('href="/en/encyclopedie/larimar"', Client().get("/en/encyclopedie?q=larimar").text)
+
+
+class TestMergedSpecies(SiteTestCase):
+    """The sapphire and the fluorite are one species each, in every colour (user, 2026-11-20)."""
+
+    def test_one_page_for_each(self):
+        c = Client()
+        for slug in ("saphir-bleu", "saphir-jaune", "saphir-rose", "saphir-orange", "saphir-vert", "saphir-violet", "saphir-incolore",
+                     "fluorite-verte", "fluorite-bleue", "fluorite-jaune"):
+            self.assertEqual(c.get("/encyclopedie/" + slug).status, 404, slug)          # the colours are no longer species
+        sapphire = c.get("/encyclopedie/saphir")
+        self.assertEqual(sapphire.status, 200)
+        self.assertIn("sauf le rouge", sapphire.text)
+        self.assertIn("Sapphire", c.get("/en/encyclopedie/saphir").text)
+        fluorite = c.get("/encyclopedie/fluorite").text
+        self.assertIn("seule la couleur change", fluorite)
+        self.assertEqual(c.get("/encyclopedie/fluorite-bandee").status, 200)          # the banded one and Blue John stay: they are another look, not a colour
+        self.assertIn("padparadscha", c.get("/encyclopedie/familles/corindons").text)
+
+    def test_the_colours_are_gathered_in_the_chart(self):
+        import json as _json
+        pal = _json.loads((SITE / "data" / "palettes.json").read_text(encoding="utf-8"))
+        names = " ".join(cell[6] for cell in pal["Saphir"]["natural"])
+        for word in ("Bleu", "Jaune", "Rose", "Orange", "Vert", "Pourpre"):
+            self.assertIn(word, names, word)
+        fluo = " ".join(cell[6] for cell in pal["Fluorite"]["natural"])
+        for word in ("Bleu", "Jaune", "Vert", "Rose", "Orange"):
+            self.assertIn(word, fluo, word)
+        hues = [cell[0] for cell in pal["Fluorite"]["natural"]]
+        self.assertTrue(any(250 <= h <= 320 for h in hues))                              # violet
+        # a sapphire is never a ruby: no deep, pure red
+        self.assertFalse([cell for cell in pal["Saphir"]["natural"] if cell[6] == "Rouge"])
+
+    def test_families_and_classes_list_them_once(self):
+        from app import catalog
+        for c in catalog.classes()["items"]:
+            ids = [e["id"] for e in c["species"]]
+            self.assertEqual(len(ids), len(set(ids)), c["id"])
+        corundum = [f for f in catalog.families()["items"] if f["id"] == "corindons"][0]
+        ids = [e["id"] for e in corundum["species"]]
+        self.assertEqual(ids.count("Saphir"), 1)
+        self.assertFalse([i for i in ids if i.startswith("Saphir_") and i != "Saphir_Change_Couleur"])
+
+    def test_the_merge_tool_is_safe_to_run_twice(self):
+        sys.path.insert(0, str(SITE / "tools"))
+        import json as _json
+        import merge_species
+        data = _json.loads((SITE / "data" / "gemlab_data.json").read_text(encoding="utf-8"))
+        self.assertFalse(merge_species.apply(data))                                      # already merged: nothing to do
+        self.assertEqual([s["id"] for s in data["species"]].count("Saphir"), 1)
 
 
 class TestCode(unittest.TestCase):

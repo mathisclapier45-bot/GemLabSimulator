@@ -199,22 +199,7 @@
   "formula": "CaF₂",
   "note": "Fluorure de calcium"
  },
- "Fluorite_Bleue": {
-  "system": "cubic",
-  "formula": "CaF₂",
-  "note": "Fluorure de calcium"
- },
  "Fluorite_Blue_John": {
-  "system": "cubic",
-  "formula": "CaF₂",
-  "note": "Fluorure de calcium"
- },
- "Fluorite_Jaune": {
-  "system": "cubic",
-  "formula": "CaF₂",
-  "note": "Fluorure de calcium"
- },
- "Fluorite_Verte": {
   "system": "cubic",
   "formula": "CaF₂",
   "note": "Fluorure de calcium"
@@ -559,45 +544,15 @@
   "formula": "(Mn,Fe,Ca)SiO₃",
   "note": "Silicate de manganèse"
  },
- "Saphir_Bleu": {
+ "Saphir": {
   "system": "trigonal",
-  "formula": "Al₂O₃ (Fe, Ti)",
-  "note": "Corindon coloré par le fer et le titane"
+  "formula": "Al₂O₃ (Fe, Ti, Cr, V)",
+  "note": "Oxyde d'aluminium (corindon) coloré par le fer, le titane, le chrome ou le vanadium selon la couleur"
  },
  "Saphir_Change_Couleur": {
   "system": "trigonal",
   "formula": "Al₂O₃ (Cr,V)",
   "note": "Oxyde d'aluminium (corindon) coloré par le chrome et le vanadium"
- },
- "Saphir_Incolore": {
-  "system": "trigonal",
-  "formula": "Al₂O₃",
-  "note": "Oxyde d'aluminium (corindon)"
- },
- "Saphir_Jaune": {
-  "system": "trigonal",
-  "formula": "Al₂O₃ (Fe)",
-  "note": "Corindon coloré par le fer"
- },
- "Saphir_Orange": {
-  "system": "trigonal",
-  "formula": "Al₂O₃ (Cr, Fe)",
-  "note": "Corindon orange"
- },
- "Saphir_Rose": {
-  "system": "trigonal",
-  "formula": "Al₂O₃ (Cr)",
-  "note": "Corindon coloré par un peu de chrome"
- },
- "Saphir_Vert": {
-  "system": "trigonal",
-  "formula": "Al₂O₃ (Fe)",
-  "note": "Corindon vert"
- },
- "Saphir_Violet": {
-  "system": "trigonal",
-  "formula": "Al₂O₃ (Fe, Ti, Cr)",
-  "note": "Corindon violet"
  },
  "Scapolite": {
   "system": "tetragonal",
