@@ -1,0 +1,75 @@
+{
+ "lesson": "testeurs_diamant",
+ "questions": [
+  {
+   "q": "The thermal tester spots diamond but does not tell it from…",
+   "choices": [
+    "moissanite",
+    "glass",
+    "cubic zirconia",
+    "quartz"
+   ],
+   "why": "Moissanite also conducts heat very well."
+  },
+  {
+   "q": "Which stone conducts electricity?",
+   "choices": [
+    "Diamond",
+    "Synthetic moissanite",
+    "Glass",
+    "Quartz"
+   ],
+   "why": "Diamond is an electrical insulator."
+  },
+  {
+   "q": "High heat conduction and blocked current: it is…",
+   "choices": [
+    "moissanite",
+    "glass",
+    "a diamond, natural or synthetic",
+    "a cubic zirconia"
+   ],
+   "why": "HPHT and CVD diamonds are real diamonds."
+  },
+  {
+   "q": "Why does diamond feel “cold” to the touch?",
+   "choices": [
+    "It is poorly insulated",
+    "It is hollow",
+    "It is magnetic",
+    "It carries heat away faster than copper"
+   ],
+   "why": "It is the best known conductor of heat."
+  },
+  {
+   "q": "How does the thermal tester work?",
+   "choices": [
+    "A slightly heated probe measures how fast heat leaves the stone",
+    "It measures the colour",
+    "It weighs the stone",
+    "It sends UV"
+   ],
+   "why": "A diamond carries heat away quickly."
+  },
+  {
+   "q": "A cubic zirconia under the thermal tester…",
+   "choices": [
+    "answers “diamond”",
+    "carries heat away poorly: it is not a diamond",
+    "answers “moissanite”",
+    "melts"
+   ],
+   "why": "Imitations (glass, synthetic spinel) hold heat back."
+  },
+  {
+   "q": "A synthetic diamond (HPHT or CVD) under the thermal tester…",
+   "choices": [
+    "answers “glass”",
+    "answers “moissanite”",
+    "answers “diamond”, like the natural one",
+    "gives no answer"
+   ],
+   "why": "They are real diamonds."
+  }
+ ]
+}

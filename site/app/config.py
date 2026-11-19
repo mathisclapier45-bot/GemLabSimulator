@@ -16,6 +16,26 @@ DEV = ENV != "prod"
 DEFAULT_LANG = env("LANG", "fr")
 BASE_URL = env("BASE_URL", "http://127.0.0.1:8000").rstrip("/")
 
+# Search engines: off by default (the site is private until it is ready). INDEXABLE=1 opens the public pages to Google (see README).
+INDEXABLE = env("INDEXABLE", "0") == "1"
+
+# Who runs the site (legal notice, privacy policy, contact). Filled in through the environment; empty = shown as "to complete".
+LEGAL_FIELDS = {
+    "name": "PUBLISHER_NAME",             # person or company that publishes the site
+    "status": "PUBLISHER_STATUS",         # e.g. micro-entreprise, association, particulier
+    "address": "PUBLISHER_ADDRESS",
+    "director": "PUBLISHER_DIRECTOR",     # director of the publication
+    "email": "CONTACT_EMAIL",
+    "host_name": "HOST_NAME",
+    "host_address": "HOST_ADDRESS",
+    "host_phone": "HOST_PHONE",
+}
+
+
+def legal(field):
+    return (env(LEGAL_FIELDS[field], "") or "").strip()
+
+
 DATA_DIR = ROOT / "data"
 I18N_DIR = ROOT / "i18n"
 STATIC_DIR = ROOT / "static"
@@ -63,6 +83,7 @@ LIMITS = {
     "post_user_hour": (10, 3600),
     "topic_user_hour": (3, 3600),
     "report_user_day": (15, 86400),
+    "price_user_day": (10, 86400),
 }
 NEW_ACCOUNT_SECONDS = 3 * 86400
 NEW_ACCOUNT_MAX_LINKS = 1

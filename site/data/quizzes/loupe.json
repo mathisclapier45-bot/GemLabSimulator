@@ -1,0 +1,82 @@
+{
+ "lesson": "loupe",
+ "questions": [
+  {
+   "q": "Quel est le grossissement standard de la loupe du gemmologue ?",
+   "choices": [
+    "× 10",
+    "× 2",
+    "× 100",
+    "× 500"
+   ],
+   "answer": 0,
+   "why": "C'est le grossissement standard pour juger une pierre."
+  },
+  {
+   "q": "Pourquoi essuyer la pierre à la chamoisine avant de la regarder ?",
+   "choices": [
+    "Pour la polir",
+    "La poussière et le gras laissent un voile qu'on prendrait pour un défaut",
+    "Pour la refroidir",
+    "Pour mesurer son poids"
+   ],
+   "answer": 1,
+   "why": "Un mauvais relevé sur une pierre sale est l'erreur n° 1 des débutants."
+  },
+  {
+   "q": "Pourquoi tourner la pierre dans tous les sens ?",
+   "choices": [
+    "Pour qu'elle chauffe",
+    "Pour la rendre plus brillante",
+    "Une inclusion ou une fracture ne se voit pas sous tous les angles",
+    "Pour changer sa couleur"
+   ],
+   "answer": 2,
+   "why": "On regarde par la table, les côtés et le dessous."
+  },
+  {
+   "q": "Que ne relève-t-on PAS à la loupe ?",
+   "choices": [
+    "L'éclat",
+    "La transparence",
+    "Les inclusions",
+    "L'indice de réfraction"
+   ],
+   "answer": 3,
+   "why": "L'indice se mesure au réfractomètre."
+  },
+  {
+   "q": "Qu'est-ce qui caractérise une pierre sale à la loupe ?",
+   "choices": [
+    "Un voile blanchâtre en surface",
+    "Une couleur plus vive",
+    "Une croix noire",
+    "Une lueur rouge"
+   ],
+   "answer": 0,
+   "why": "La poussière et le gras laissent des traces."
+  },
+  {
+   "q": "Que faire d'une pierre qui paraît voilée ?",
+   "choices": [
+    "Noter le voile comme un défaut",
+    "L'essuyer, puis la regarder de nouveau",
+    "La jeter",
+    "La chauffer"
+   ],
+   "answer": 1,
+   "why": "Ne notez rien avant d'avoir nettoyé la pierre."
+  },
+  {
+   "q": "L'éclat d'une pierre, c'est…",
+   "choices": [
+    "sa couleur",
+    "son poids",
+    "la façon dont sa surface renvoie la lumière",
+    "sa dureté"
+   ],
+   "answer": 2,
+   "why": "Vitreux, adamantin, gras, métallique…"
+  }
+ ]
+}

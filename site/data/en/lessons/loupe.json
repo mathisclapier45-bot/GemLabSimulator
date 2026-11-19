@@ -1,0 +1,42 @@
+{
+ "id": "loupe",
+ "title": "The loupe and the chamois",
+ "tool": {
+  "name": "10× loupe",
+  "measures": "luster, colour, transparency, cut, inclusions and surface flaws",
+  "where": "Gemmology House and Office, top row, on the loupe desk (the chamois is next to it)",
+  "records": [
+   "Luster",
+   "Colour",
+   "Transparency",
+   "Cut",
+   "Inclusions"
+  ],
+  "tips": [
+   "Wipe the stone before looking at it",
+   "Turn the stone in all directions"
+  ]
+ },
+ "steps": [
+  {
+   "title": "The first look",
+   "text": "The loupe is the first instrument of the gemmologist. It magnifies ten times: the standard magnification to judge a stone.\n\nIn a few seconds, it already tells you a lot: luster, colour, transparency, cut (faceted or cabochon), inclusions and surface flaws."
+  },
+  {
+   "title": "The chamois first",
+   "text": "Always wipe the stone with the chamois before looking. Dust and finger grease leave a whitish film on the surface, and these marks get mistaken for flaws of the stone.\n\nIn the window of the loupe, take the chamois and rub the stone until it is clean."
+  },
+  {
+   "title": "A whitish film?",
+   "text": "If you see whitish spots on the surface, the stone is not clean. Note nothing: wipe it and look again.\n\nA wrong reading because of a dirty stone is the first mistake of beginners."
+  },
+  {
+   "title": "Turning the stone",
+   "text": "An inclusion, a fracture or a reflection cannot always be seen from the same angle. Turn the stone in all directions, look through the table, through the sides, from below.\n\nOnly after going all the way round the stone can you say what it contains."
+  },
+  {
+   "title": "What you note",
+   "text": "• Luster: the way the surface returns light (vitreous, adamantine, greasy, metallic...).\n• Colour, transparency: transparent, translucent or opaque.\n• Cut: faceted, cabochon, bead...\n• Inclusions: needles, crystals, fractures, bubbles.\n\nThe tabs on the left of the loupe explain each piece of information."
+  }
+ ]
+}

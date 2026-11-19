@@ -1,0 +1,44 @@
+{
+ "id": "microscope",
+ "title": "The microscope",
+ "tool": {
+  "name": "Gemmological microscope",
+  "measures": "the inclusions, texture and purity of the stone, at high magnification",
+  "where": "Gemmology House and Office, laboratory",
+  "records": [
+   "Inclusions",
+   "Clarity"
+  ],
+  "tips": [
+   "Start with low magnification, then go up",
+   "Move the focus wheel: the inside is looked at in slices",
+   "A rough stone is looked at through a polished window"
+  ]
+ },
+ "steps": [
+  {
+   "title": "Seeing inside a stone",
+   "text": "The 10× loupe already shows a lot, but the <b>microscope</b> goes further: it magnifies 10 to 60 times and lights the stone so that you look <b>inside</b>.\n\nWhat you look for there are the <b>inclusions</b>: small foreign bodies, cavities or cracks trapped in the stone. They tell how it formed."
+  },
+  {
+   "title": "Magnification and focus",
+   "text": "The more you magnify, the finer you see, but the thinner the sharp zone is. At high magnification, only a very thin <b>slice</b> of the stone is sharp: you turn the wheel to go from one slice to another.\n\nThe <b>×60</b> objective (the strongest) shows the finest inclusions, but the focus must be precise."
+  },
+  {
+   "title": "Inclusions and their story",
+   "text": "• Fine, parallel <b>needles</b> (the “silk”): typical of natural ruby and sapphire.\n• A <b>garden</b> of cracks and small crystals: natural emerald.\n• Round <b>bubbles</b> and curved trails: a glass or a flame-fusion synthetic.\n• Whole <b>crystals</b> (a small zircon, a garnet): proof of a stone born in the earth.\n\nA stone with <b>no inclusion at all</b> is not necessarily synthetic, but a stone without a flaw deserves some doubt."
+  },
+  {
+   "title": "Natural or synthetic?",
+   "text": "Inclusions help tell a stone from nature from a made one:\n• synthetics often have <b>curved growth lines</b> (Verneuil method) or <b>veils</b> and remains of flux;\n• natural stones show irregular crystals and cracks.\n\nIt is a clue, never proof on its own: it is cross-checked with the other instruments."
+  },
+  {
+   "title": "Rough stone: the window",
+   "text": "A rough stone has a rough surface that scatters light: you see nothing. In the lapidary workshop, the <b>window polisher</b> polishes a small flat facet. Through this window, you look inside under the microscope and judge the <b>clarity</b> before deciding to cut.\n\nThe camera of the microscope then takes a picture of what you see, to attach to the report."
+  },
+  {
+   "title": "To remember",
+   "text": "• The microscope is mainly used to see <b>inclusions</b>.\n• You raise the magnification little by little and sweep the stone with the wheel.\n• Inclusions show the <b>nature</b> of the stone, sometimes its <b>deposit</b> and its <b>treatments</b> (filled cracks, laser holes).\n• The result is cross-checked with the other instruments."
+  }
+ ]
+}

@@ -309,8 +309,8 @@ def admin(req):
                 csrf=csrf_field(req), dp=esc(t("forum.delete_post")), rid=rep["id"], dis=esc(t("admin.dismiss")),
                 ban=ban))
     members = req.db.execute("SELECT COUNT(*) AS n FROM users").fetchone()["n"]
-    content = '<h1>{h1}</h1><p>{members}</p><h2>{h2}</h2>{body}'.format(
-        h1=esc(t("admin.title")), members=esc(t("admin.members", n=members)), h2=esc(t("admin.reports")),
+    content = '<h1>{h1}</h1><p>{members}</p><p><a class="btn small" href="/admin/prix">{prices}</a></p><h2>{h2}</h2>{body}'.format(
+        h1=esc(t("admin.title")), members=esc(t("admin.members", n=members)), prices=esc(t("admin.prices")), h2=esc(t("admin.reports")),
         body="".join(rows) or '<p class="empty">{}</p>'.format(esc(t("admin.no_reports"))))
     return page(req, t("admin.title"), content)
 

@@ -1,0 +1,93 @@
+{
+ "lesson": "filtre_chelsea",
+ "questions": [
+  {
+   "q": "Quelles couleurs laisse passer le filtre Chelsea ?",
+   "choices": [
+    "Le jaune-vert et le rouge profond",
+    "Le bleu et le violet",
+    "Toutes sauf le vert",
+    "Seulement le blanc"
+   ],
+   "answer": 0,
+   "why": "Tout le reste du spectre est arrêté."
+  },
+  {
+   "q": "Quel élément fait « rougir » une pierre sous le filtre ?",
+   "choices": [
+    "Le fer",
+    "Le chrome",
+    "Le titane",
+    "Le calcium"
+   ],
+   "answer": 1,
+   "why": "Le cobalt rougit aussi ; le fer, non."
+  },
+  {
+   "q": "Un spinelle bleu synthétique (cobalt) et un saphir bleu (fer) sous le filtre…",
+   "choices": [
+    "les deux rougissent",
+    "les deux restent vert foncé",
+    "le spinelle rougit, le saphir reste vert foncé",
+    "le saphir rougit, le spinelle reste noir"
+   ],
+   "answer": 2,
+   "why": "Le cobalt laisse passer le rouge profond, pas le fer."
+  },
+  {
+   "q": "Comment faut-il observer avec le filtre ?",
+   "choices": [
+    "Dans le noir complet",
+    "Sous une lampe UV",
+    "Pierre plongée dans l'eau",
+    "Pierre sur du papier blanc, forte lumière au tungstène, filtre près de l'œil"
+   ],
+   "answer": 3,
+   "why": "Plus la pierre est foncée, plus la réaction est difficile à voir."
+  },
+  {
+   "q": "Une réaction au filtre Chelsea est…",
+   "choices": [
+    "une indication, jamais un diagnostic",
+    "une preuve définitive",
+    "inutile",
+    "réservée aux diamants"
+   ],
+   "answer": 0,
+   "why": "Il se combine au spectroscope, à l'indice et à la densité."
+  },
+  {
+   "q": "Un verre bleu au cobalt vu sous le filtre devient…",
+   "choices": [
+    "rouge intense à rose",
+    "vert foncé",
+    "noir",
+    "incolore"
+   ],
+   "answer": 0,
+   "why": "Le cobalt rougit comme le chrome."
+  },
+  {
+   "q": "Que donne généralement un saphir bleu sous le filtre ?",
+   "choices": [
+    "Un rouge vif",
+    "Un vert foncé",
+    "Un bleu éclatant",
+    "Un jaune"
+   ],
+   "answer": 1,
+   "why": "Il est coloré par le fer."
+  },
+  {
+   "q": "Plus la couleur de la pierre est foncée…",
+   "choices": [
+    "plus la réaction est vive",
+    "plus la pierre est dure",
+    "plus la réaction est difficile à voir",
+    "plus la pierre est naturelle"
+   ],
+   "answer": 2,
+   "why": "Il faut une forte source de lumière."
+  }
+ ]
+}

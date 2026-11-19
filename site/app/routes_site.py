@@ -2,49 +2,18 @@
 import json
 import re
 
-from . import catalog, diagrams, markup
+from . import catalog, config, diagrams, home, i18n, markup, routes_learn, views
 from .views import esc, fmt_num, gem_svg, page, page_number, pagination
-from .web import HTTPError, Response, Router
+from .web import HTTPError, Response, Router, redirect
 
 router = Router()
 
 PER_PAGE = 24
 
 
-ICONS = {
-    "enc": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 9l8 12 8-12-8-6Z"/><path d="M4 9h16M9 9l3 12 3-12"/></svg>',
-    "idt": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M8 11h6M11 8v6"/></svg>',
-    "les": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5Z"/><path d="M8 7h6M8 11h8M18 19v2H6"/></svg>',
-    "sim": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M9 10l2 2 4-4"/></svg>',
-}
-
-
 @router.route("GET", "/")
-def home(req):
-    t = req.t
-    d = catalog.data()
-    counts = d["meta"].get("counts", {})
-    stats = [(len(d["species"]), t("home.stat.species")), (len(catalog.lessons()), t("home.stat.lessons")),
-             (counts.get("instruments", 26), t("home.stat.instruments")), ("13 \u00d7 8", t("home.stat.shapes"))]
-    stat_html = "".join('<div class="stat"><strong>{}</strong><span>{}</span></div>'.format(esc(str(n)), esc(label)) for n, label in stats)
-    features = [("enc", "/encyclopedie", "home.f1"), ("idt", "/identification", "home.f2"), ("les", "/lecons", "home.f3"), ("sim", "/simulateur", "home.f4")]
-    feat_html = "".join(
-        '<a class="feature" href="{h}"><span class="ico">{i}</span><h3>{ti}</h3><p>{tx}</p><span class="more">{op} \u2192</span></a>'.format(
-            h=h, i=ICONS[i], ti=esc(t(k + ".title")), tx=esc(t(k + ".text")), op=esc(t("home.open"))) for i, h, k in features)
-    join = ""
-    if not req.user:
-        join = ('<section class="join"><div><h2>{}</h2><p>{}</p></div><a class="btn big light" href="/inscription">{}</a></section>').format(
-            esc(t("home.join.title")), esc(t("home.join.text")), esc(t("home.cta.join")))
-    content = (
-        '<section class="hero2"><div class="hero-text"><span class="pill">{badge}</span><h1>{h1}</h1><p class="lead">{lead}</p>'
-        '<div class="cta"><a class="btn big" href="/encyclopedie">{c1}</a><a class="btn big ghost" href="/simulateur">{c2}</a></div></div>'
-        '<div class="hero-visual"><div id="hero-gem" role="img" aria-label="{cap}"></div><p class="small">{cap}</p></div></section>'
-        '<section class="stats">{stats}</section>'
-        '<section class="features"><h2>{fh}</h2><div class="feature-grid">{feat}</div></section>{join}'
-        '<script src="/static/js/gem3d.js" defer></script><script src="/static/js/home.js" defer></script>').format(
-        badge=esc(t("home.badge")), h1=esc(t("home.title")), lead=esc(t("home.lead")), c1=esc(t("home.cta.primary")),
-        c2=esc(t("home.cta.secondary")), cap=esc(t("home.sapphire")), stats=stat_html, fh=esc(t("home.features")), feat=feat_html, join=join)
-    return page(req, t("nav.home"), content, section="home")
+def home_page(req):
+    return home.render(req)
 
 
 # ------------------------------------------------------------------ encyclopedia
@@ -103,17 +72,18 @@ def encyclopedia(req):
     base = "/encyclopedie" + ("?" + urlencode({k: v for k, v in f.items() if v}) if any(f.values()) else "")
     content = (
         '<h1>{h1}</h1><p class="lead">{lead}</p>{form}<p class="count">{count}</p>{body}{pager}'
-        '<p class="side-link"><a href="/encyclopedie/formes">{habits}</a></p>').format(
+        '<p class="side-link"><a href="/encyclopedie/formes">{habits}</a> · <a href="/comparer">{compare}</a> · <a href="/glossaire">{gloss}</a></p>').format(
         h1=esc(t("enc.title")), lead=esc(t("enc.lead")), form=form,
         count=esc(t("enc.count", n=len(results))), body=body, pager=pagination(req, base, n, pages),
-        habits=esc(t("enc.habits.link")))
+        habits=esc(t("enc.habits.link")), compare=esc(t("cmp.title")), gloss=esc(t("gloss.title")))
     return page(req, t("enc.title"), content, section="encyclopedia")
 
 
-def _row(label, value):
+def _row(label, value, gloss=None):
     if value in (None, "", False):
         return ""
-    return "<tr><th scope=\"row\">{}</th><td>{}</td></tr>".format(esc(label), value)
+    head = '<a class="gloss" href="/glossaire#{}">{}</a>'.format(gloss, esc(label)) if gloss else esc(label)
+    return "<tr><th scope=\"row\">{}</th><td>{}</td></tr>".format(head, value)
 
 
 def _wavelength_rgb(nm):
@@ -328,24 +298,24 @@ def species_page(req):
     props = "".join([
         _row(t("sp.system"), esc(t("sys." + system)) if system else ""),
         _row(t("sp.formula"), '<span class="formula">{}</span> <span class="small">{}</span>'.format(esc(ex.get("formula", "")), esc(ex.get("note", ""))) if ex else ""),
-        _row(t("sp.ri"), esc(fmt_num(s.get("refractiveIndex"), 3))),
-        _row(t("sp.birefringence"), esc(fmt_num(s.get("birefringence"), 3)) if s.get("birefringence") else ""),
-        _row(t("sp.dispersion"), _dispersion_cell(t, s)),
-        _row(t("sp.density"), esc(fmt_num(s.get("density"), 2))),
-        _row(t("sp.hardness"), esc(fmt_num(s.get("hardness"), 1))),
-        _row(t("sp.luster"), esc(s.get("luster", ""))),
+        _row(t("sp.ri"), esc(fmt_num(s.get("refractiveIndex"), 3)), "indice-de-refraction"),
+        _row(t("sp.birefringence"), esc(fmt_num(s.get("birefringence"), 3)) if s.get("birefringence") else "", "birefringence"),
+        _row(t("sp.dispersion"), _dispersion_cell(t, s), "dispersion"),
+        _row(t("sp.density"), esc(fmt_num(s.get("density"), 2)), "densite"),
+        _row(t("sp.hardness"), esc(fmt_num(s.get("hardness"), 1)), "durete"),
+        _row(t("sp.luster"), esc(s.get("luster", "")), "eclat"),
         _row(t("sp.color"), esc(s.get("color", ""))),
-        _row(t("sp.transparency"), esc(s.get("transparency", ""))),
+        _row(t("sp.transparency"), esc(s.get("transparency", "")), "transparence"),
         _row(t("sp.optic"), esc(s.get("opticalCharacter", ""))),
-        _row(t("sp.pleochroism"), esc(s.get("pleochroicDescription") or "") if s.get("pleochroic") else esc(t("sp.none"))),
-        _row(t("sp.interference"), esc(s.get("interferenceFigure", ""))),
+        _row(t("sp.pleochroism"), esc(s.get("pleochroicDescription") or "") if s.get("pleochroic") else esc(t("sp.none")), "pleochroisme"),
+        _row(t("sp.interference"), esc(s.get("interferenceFigure", "")), "figure-d-interference"),
         _row(t("sp.magnetism"), esc(s.get("magnetism", ""))),
-        _row(t("sp.thermal"), esc(t("sp.yes")) if s.get("isThermallyConductiveLikeDiamond") else ""),
+        _row(t("sp.thermal"), esc(t("sp.yes")) if s.get("isThermallyConductiveLikeDiamond") else "", "conductivite-thermique"),
         _row(t("sp.electric"), esc(t("sp.yes")) if s.get("isElectricallyConductive") else ""),
     ])
     sections = []
     if s.get("inclusions"):
-        sections.append("<h2>{}</h2><p>{}</p>".format(esc(t("sp.inclusions")), esc(s["inclusions"])))
+        sections.append("<h2>{}</h2><p>{}</p>".format(esc(t("sp.inclusions")), markup.link_terms(esc(s["inclusions"]), set())))
     inst = []
     spec_text = s.get("absorptionSpectrum")
     entry = d["spectra"].get(s["id"])
@@ -389,15 +359,19 @@ def species_page(req):
     nav = '<nav class="prevnext">{}{}</nav>'.format(
         '<a href="/encyclopedie/{}">← {}</a>'.format(prev_s["slug"], esc(prev_s["displayName"])) if prev_s else "<span></span>",
         '<a href="/encyclopedie/{}">{} →</a>'.format(next_s["slug"], esc(next_s["displayName"])) if next_s else "<span></span>")
+    nav += '<p class="side-link"><a href="/comparer?a={}">{}</a>{}</p>'.format(esc(s["slug"]), esc(t("sp.compare")), (
+        ' \u00b7 <a href="/prix?s={}&amp;w=1">{}</a>'.format(esc(s["slug"]), esc(t("sp.price"))) if catalog.natural_species([s]) else ""))
     badge = '<span class="badge">{}</span>'.format(esc(t("sp.synthetic"))) if s["synthetic"] else ""
+    seen_terms = set()
     content = (
         '<nav class="crumbs"><a href="/encyclopedie">{back}</a></nav>'
         '<header class="species-head" style="--gem:{gemc};--gem2:{gemf}">{gem}<div><h1>{name} {badge}</h1>'
         '<p class="formula big">{formula}</p><p class="lead">{desc}</p></div></header>'
-        '{gallery}{colors}<h2>{ph}</h2><table class="props">{props}</table>{sections}{nav}').format(
+        '{note}{gallery}{colors}<h2>{ph}</h2><table class="props">{props}</table>{sections}{nav}').format(
+        note='<div class="banner warn">{}</div>'.format(esc(t("sp.french.note"))) if req.lang != "fr" else "",
         back=esc(t("sp.back")), gem=gem_svg(s["iconColor"], s["iconFacetColor"], 96), name=esc(s["displayName"]),
         gemc=esc(s["iconColor"]), gemf=esc(s["iconFacetColor"]), formula=esc(ex.get("formula", "")),
-        badge=badge, desc=esc(s.get("description", "")), gallery=gallery, colors=_colors_section(req, s), ph=esc(t("sp.properties")), props=props,
+        badge=badge, desc=markup.link_terms(esc(s.get("description", "")), seen_terms), gallery=gallery, colors=_colors_section(req, s), ph=esc(t("sp.properties")), props=props,
         sections="".join(sections), nav=nav)
     return page(req, s["displayName"], content, section="encyclopedia", description=s.get("description", "")[:160])
 
@@ -420,16 +394,16 @@ def identification(req):
 
     def num(name, label, step, tols):
         topts = "".join('<option value="{0}"{1}>±{0}</option>'.format(v, " selected" if q[name + "_tol"] == v else "") for v in tols)
-        return ('<fieldset class="numrow"><legend>{l}</legend><input type="text" inputmode="decimal" name="{n}" value="{v}" placeholder="{ph}">'
-                '<span>{tol}</span><select name="{n}_tol">{o}</select></fieldset>').format(
+        return ('<fieldset class="numrow"><legend>{l}</legend><input type="text" inputmode="decimal" name="{n}" value="{v}" placeholder="{ph}" aria-label="{l}">'
+                '<span>{tol}</span><select name="{n}_tol" aria-label="{tol}">{o}</select></fieldset>').format(
             l=esc(label), n=name, v=esc(q[name]), ph=step, tol=esc(t("idt.tol")), o=topts)
 
     yes_no = [("yes", t("idt.yes")), ("no", t("idt.no"))]
     form = (
         '<form class="filters ident" method="get" action="/identification">'
         '<h2>{h1}</h2><div class="fgrid">{ri}{de}{bi}'
-        '<fieldset class="numrow"><legend>{ha}</legend><span>{fr}</span><input type="text" inputmode="decimal" name="hardness_from" value="{hf}" placeholder="1">'
-        '<span>{to}</span><input type="text" inputmode="decimal" name="hardness_to" value="{ht}" placeholder="10"></fieldset></div>'
+        '<fieldset class="numrow"><legend>{ha}</legend><span>{fr}</span><input type="text" inputmode="decimal" name="hardness_from" value="{hf}" placeholder="1" aria-label="{ha} {fr}">'
+        '<span>{to}</span><input type="text" inputmode="decimal" name="hardness_to" value="{ht}" placeholder="10" aria-label="{ha} {to}"></fieldset></div>'
         '<h2>{h2}</h2><div class="fgrid">{optic}{pleo}{color}{transp}{luster}{uv}{chel}{spec}{therm}{magnet}{synth}</div>'
         '<p class="small">{hint}</p><button type="submit" class="btn">{go}</button> <a href="/identification" class="linklike">{reset}</a></form>').format(
         h1=esc(t("idt.measures")), h2=esc(t("idt.observations")),
@@ -474,15 +448,23 @@ def identification(req):
 def lessons_list(req):
     t = req.t
     concepts, tools = [], []
+    mine = routes_learn.results_of(req.db, req.user)
     for item in catalog.lessons():
-        card = '<li><a class="tile wide" href="/lecons/{id}"><span class="name">{title}</span><span class="sub">{n}</span></a></li>'.format(
-            id=esc(item["id"]), title=esc(item["title"]), n=esc(t("les.steps", n=len(item["steps"]))))
+        r = mine.get(item["id"])
+        mark = ""
+        if r:
+            ok = routes_learn.passed(r["best"], r["total"])
+            mark = ' <span class="chip {}">{}</span>'.format("ok" if ok else "mid", esc(t("quiz.chip", best=r["best"], total=r["total"])))
+        card = '<li><a class="tile wide" href="/lecons/{id}"><span class="name">{title}</span><span class="sub">{n}{mark}</span></a></li>'.format(
+            id=esc(item["id"]), title=esc(item["title"]), n=esc(t("les.steps", n=len(item["steps"]))), mark=mark)
         (tools if item["kind"] == "tool" else concepts).append(card)
     content = (
         '<h1>{h1}</h1><p class="lead">{lead}</p>'
-        '<h2>{h_c}</h2><ul class="tiles">{c}</ul><h2>{h_t}</h2><ul class="tiles">{tl}</ul>').format(
+        '<h2>{h_c}</h2><ul class="tiles">{c}</ul><h2>{h_t}</h2><ul class="tiles">{tl}</ul>'
+        '<p class="side-link"><a href="/glossaire">{gloss}</a>{prog}</p>').format(
         h1=esc(t("les.title")), lead=esc(t("les.lead")), h_c=esc(t("les.concepts")), c="".join(concepts),
-        h_t=esc(t("les.tools")), tl="".join(tools))
+        h_t=esc(t("les.tools")), tl="".join(tools), gloss=esc(t("gloss.title")),
+        prog=' · <a href="/progression">{}</a>'.format(esc(t("prog.title"))) if req.user else "")
     return page(req, t("les.title"), content, section="lessons")
 
 
@@ -493,6 +475,8 @@ def lesson_page(req):
     if not item:
         raise HTTPError(404)
     toc = "".join('<li><a href="#e{}">{}</a></li>'.format(i + 1, esc(s["title"])) for i, s in enumerate(item["steps"]))
+    if catalog.quiz(item["id"]):
+        toc += '<li><a href="#quiz">{}</a></li>'.format(esc(t("quiz.title")))
     animated = item["id"] == "refractometre"
     anim_names = ["refraction", "reflection", "high_low", "critical", "edge", "liquid", "two"]
     labels = {k: t("les.anim." + k) for k in (
@@ -515,15 +499,20 @@ def lesson_page(req):
         if not s.get("figure") or not re.fullmatch(r"[a-z_]+", s["figure"]):
             return ""
         figures[0] += 1
-        return ('<div class="lessonfig" data-fig="{fig}" data-focus="{focus}"><canvas role="img" aria-label="{cap}"></canvas>'
+        desc = t("fig.desc." + s["figure"]) if i18n.has(req.lang, "fig.desc." + s["figure"]) else ""
+        return ('<div class="lessonfig" data-fig="{fig}" data-focus="{focus}"><canvas role="img" aria-label="{label}"></canvas>'
                 '<div class="bar"><button type="button" data-pause="{pause}" data-play="{play}">{pause}</button>'
-                '<span class="cap">{cap}</span></div></div>').format(
-            fig=esc(s["figure"]), focus=int(s.get("focus", 0)), cap=esc(t("les.fig.label", n=i + 1, title=s["title"])),
-            pause=esc(t("les.anim.pause")), play=esc(t("les.anim.play")))
+                '<span class="cap">{cap}</span></div>{details}</div>').format(
+            fig=esc(s["figure"]), focus=int(s.get("focus", 0)), label=esc(t("les.fig.label", n=i + 1, title=s["title"], desc=desc)),
+            cap=esc(t("les.fig.caption", n=i + 1, title=s["title"])), pause=esc(t("les.anim.pause")), play=esc(t("les.anim.play")),
+            details='<details class="figdesc"><summary>{}</summary><p>{}</p></details>'.format(esc(t("les.fig.describe")), esc(desc)) if desc else "")
+    seen_terms = set()
     steps = "".join(
         '<section class="step" id="e{i}"><h2><span class="num">{i}</span> {title}</h2>{anim}{text}</section>'.format(
-            i=i + 1, title=esc(s["title"]), anim=anim_box(i) or figure_box(i, s), text=markup.lesson_html(s["text"]))
+            i=i + 1, title=esc(s["title"]), anim=anim_box(i) or figure_box(i, s),
+            text=markup.link_terms(markup.lesson_html(s["text"]), seen_terms))
         for i, s in enumerate(item["steps"]))
+    steps += routes_learn.quiz_form(req, item["id"])
     steps += '<script src="/static/js/refraction.js" defer></script>' if animated else ""
     if figures[0]:
         steps += "".join('<script src="/static/js/{}" defer></script>'.format(f) for f in (
@@ -551,4 +540,37 @@ def lesson_page(req):
 
 @router.route("GET", "/robots.txt")
 def robots(req):
-    return Response("User-agent: *\nDisallow: /\n", content_type="text/plain; charset=utf-8")
+    if not config.INDEXABLE:
+        return Response("User-agent: *\nDisallow: /\n", content_type="text/plain; charset=utf-8")
+    private = [p for p in views.PRIVATE_PREFIXES if p != "/dev"]
+    lines = ["User-agent: *"] + ["Disallow: {}".format(p) for p in private] + ["Disallow: /en{}".format(p) for p in private] + [
+        "", "Sitemap: {}/sitemap.xml".format(config.BASE_URL)]
+    return Response("\n".join(lines) + "\n", content_type="text/plain; charset=utf-8")
+
+
+PUBLIC_PATHS = ["/", "/encyclopedie", "/encyclopedie/formes", "/identification", "/comparer", "/glossaire", "/lecons", "/quiz", "/prix",
+                "/a-propos", "/contact", "/mentions-legales", "/confidentialite"]
+
+
+@router.route("GET", "/sitemap.xml")
+def sitemap(req):
+    """The list of public pages for search engines. Only served when the site is open to them."""
+    if not config.INDEXABLE:
+        raise HTTPError(404)
+    paths = list(PUBLIC_PATHS)
+    paths += ["/encyclopedie/" + s["slug"] for s in catalog.data()["species"]]
+    paths += ["/lecons/" + it["id"] for it in catalog.lessons()]
+    # every page in both languages, each one pointing to the other (hreflang)
+    def entry(p):
+        fr = config.BASE_URL + p
+        en = config.BASE_URL + "/en" + (p if p != "/" else "")
+        links = '<xhtml:link rel="alternate" hreflang="fr" href="{}"/><xhtml:link rel="alternate" hreflang="en" href="{}"/>'.format(esc(fr), esc(en))
+        return "".join("<url><loc>{}</loc>{}</url>\n".format(esc(loc), links) for loc in (fr, en))
+    body = ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+            + "".join(entry(p) for p in paths) + "</urlset>\n")
+    return Response(body, content_type="application/xml; charset=utf-8")
+
+
+@router.route("GET", "/favicon.ico")
+def favicon(req):
+    return redirect("/static/img/favicon.svg")

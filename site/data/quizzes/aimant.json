@@ -1,0 +1,82 @@
+{
+ "lesson": "aimant",
+ "questions": [
+  {
+   "q": "Que révèle l'aimant dans une pierre ?",
+   "choices": [
+    "La présence de fer",
+    "La présence d'or",
+    "La dureté",
+    "La transparence"
+   ],
+   "answer": 0,
+   "why": "Il faut un aimant très puissant."
+  },
+  {
+   "q": "Quelle pierre est fortement attirée par un aimant puissant ?",
+   "choices": [
+    "Le rubis",
+    "Le grenat almandin",
+    "L'émeraude",
+    "Le diamant naturel"
+   ],
+   "answer": 1,
+   "why": "Très riche en fer."
+  },
+  {
+   "q": "Que prouve l'absence de réaction à l'aimant ?",
+   "choices": [
+    "Que la pierre est naturelle",
+    "Que la pierre est un diamant",
+    "Rien : on recoupe avec les autres instruments",
+    "Que la pierre est synthétique"
+   ],
+   "answer": 2,
+   "why": "La plupart des pierres ne réagissent pas."
+  },
+  {
+   "q": "Un diamant synthétique HPHT peut réagir légèrement à l'aimant à cause…",
+   "choices": [
+    "de son fer naturel",
+    "de sa couleur",
+    "de sa taille",
+    "de minuscules restes de métal du procédé de croissance"
+   ],
+   "answer": 3,
+   "why": "C'est un indice parmi d'autres."
+  },
+  {
+   "q": "Comment fait-on le test à l'aimant ?",
+   "choices": [
+    "On pose la pierre sur une surface lisse et on approche lentement l'aimant, sans le toucher",
+    "On frotte la pierre avec l'aimant",
+    "On plonge l'aimant dans l'eau",
+    "On chauffe la pierre"
+   ],
+   "answer": 0,
+   "why": "On regarde si la pierre bouge ou suit l'aimant."
+  },
+  {
+   "q": "Qu'est-ce qui peut fausser le test ?",
+   "choices": [
+    "Une pierre trop transparente",
+    "Une pierre sertie dans un métal magnétique",
+    "Une pierre trop dure",
+    "Une pierre trop claire"
+   ],
+   "answer": 1,
+   "why": "Un aimant ordinaire ne suffit pas non plus."
+  },
+  {
+   "q": "Le péridot est…",
+   "choices": [
+    "fortement attiré",
+    "jamais attiré",
+    "légèrement attiré par un aimant puissant",
+    "repoussé"
+   ],
+   "answer": 2,
+   "why": "Sa teneur en fer est modérée."
+  }
+ ]
+}

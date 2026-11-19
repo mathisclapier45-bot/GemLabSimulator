@@ -1,0 +1,82 @@
+{
+ "lesson": "stabilite",
+ "questions": [
+  {
+   "q": "La stabilité d'une pierre, c'est sa résistance…",
+   "choices": [
+    "aux rayures",
+    "à la lumière, à la chaleur, aux produits chimiques et à l'humidité",
+    "aux chocs",
+    "aux variations de poids"
+   ],
+   "answer": 1,
+   "why": "C'est la troisième forme de la durabilité."
+  },
+  {
+   "q": "Quelles pierres pâlissent à la lumière ?",
+   "choices": [
+    "La kunzite et l'améthyste",
+    "Le rubis et le diamant",
+    "Le quartz incolore et le zircon",
+    "Le corindon et le spinelle"
+   ],
+   "answer": 0,
+   "why": "On les range à l'abri du soleil."
+  },
+  {
+   "q": "Pourquoi éviter le bain à ultrasons pour une émeraude huilée ?",
+   "choices": [
+    "Il la raye",
+    "Il la décolore à coup sûr",
+    "Il chasse le remplissage des fissures",
+    "Il la rend magnétique"
+   ],
+   "answer": 2,
+   "why": "L'huile ou la résine ne supportent pas les ultrasons."
+  },
+  {
+   "q": "Qu'arrive-t-il à une améthyste chauffée ?",
+   "choices": [
+    "Elle devient plus dure",
+    "Elle devient incolore et fragile à jamais",
+    "Rien du tout",
+    "Elle peut devenir jaune"
+   ],
+   "answer": 3,
+   "why": "La chaleur peut changer la couleur : c'est aussi un traitement."
+  },
+  {
+   "q": "Quel choc brise facilement une topaze ?",
+   "choices": [
+    "Un choc thermique, c'est-à-dire un brusque changement de température",
+    "Un parfum",
+    "Un bain de soleil",
+    "Une pesée"
+   ],
+   "answer": 0,
+   "why": "La chaleur peut fendre une pierre."
+  },
+  {
+   "q": "Quelles pierres craignent les produits chimiques et même la sueur ?",
+   "choices": [
+    "Le diamant et le rubis",
+    "La perle, le corail, la turquoise et l'opale",
+    "Le quartz et le zircon",
+    "Le saphir et le spinelle"
+   ],
+   "answer": 1,
+   "why": "Elles sont tendres ou poreuses."
+  },
+  {
+   "q": "Que fait la chaleur à l'opale ?",
+   "choices": [
+    "Elle la rend plus dure",
+    "Elle la colore en bleu",
+    "Elle la déshydrate, et l'opale se craquelle",
+    "Rien du tout"
+   ],
+   "answer": 2,
+   "why": "La chaleur ramollit aussi l'ambre."
+  }
+ ]
+}

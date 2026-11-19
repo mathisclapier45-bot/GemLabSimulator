@@ -1,0 +1,75 @@
+{
+ "lesson": "origine_geographique",
+ "questions": [
+  {
+   "q": "What betrays the geographic origin of a stone?",
+   "choices": [
+    "Its trace elements",
+    "Its colour alone",
+    "Its weight",
+    "Its size"
+   ],
+   "why": "Iron, chromium, vanadium, titanium, gallium…"
+  },
+  {
+   "q": "EDXRF uses…",
+   "choices": [
+    "a laser that drills the stone",
+    "X-rays and leaves no trace",
+    "a magnet",
+    "a UV lamp"
+   ],
+   "why": "Each element answers with its lines."
+  },
+  {
+   "q": "LA-ICP-MS, the reference measurement, works with…",
+   "choices": [
+    "a simple magnet",
+    "a loupe",
+    "a laser that vaporizes a microscopic amount of material",
+    "a balance"
+   ],
+   "why": "It leaves a microscopic mark on the stone."
+  },
+  {
+   "q": "To confirm an origin, you…",
+   "choices": [
+    "rely on a single instrument",
+    "ask the seller",
+    "look at the colour",
+    "compare several measurements with the known values of each deposit"
+   ],
+   "why": "If they contradict each other, the origin stays undetermined."
+  },
+  {
+   "q": "Why does origin change the value of a ruby?",
+   "choices": [
+    "A ruby from Burma is not worth a ruby from Thailand, even if the two look alike",
+    "Because the colour changes in the air",
+    "Because the weight changes",
+    "Because it becomes harder"
+   ],
+   "why": "Origin can change the price by a factor of ten."
+  },
+  {
+   "q": "Which instrument measures the absorption of light from the ultraviolet to the near infrared?",
+   "choices": [
+    "The polariscope",
+    "The spectrophotometer",
+    "The refractometer",
+    "The magnet"
+   ],
+   "why": "It reveals iron, chromium, vanadium, titanium."
+  },
+  {
+   "q": "What becomes of the origin if the measurements contradict each other?",
+   "choices": [
+    "The oldest one is chosen",
+    "The best-known deposit is taken",
+    "It stays “undetermined”",
+    "It is declared synthetic"
+   ],
+   "why": "A treated stone can also blur the measurement."
+  }
+ ]
+}

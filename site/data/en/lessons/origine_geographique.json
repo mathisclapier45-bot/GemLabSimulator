@@ -1,0 +1,40 @@
+{
+ "id": "origine_geographique",
+ "title": "Geographic origin",
+ "tool": {
+  "name": "Spectrophotometer, EDXRF and LA-ICP-MS",
+  "measures": "the trace elements of the stone, which betray its deposit of origin",
+  "where": "Diamond dealer and laboratory",
+  "records": [
+   "Confirmed origin",
+   "Trace elements"
+  ],
+  "tips": [
+   "A stone has only one origin, but several instruments confirm it",
+   "Compare ratios of elements, not a single element",
+   "LA-ICP-MS leaves a microscopic mark on the stone"
+  ]
+ },
+ "steps": [
+  {
+   "title": "Why origin matters",
+   "text": "A ruby from <b>Burma</b> is not worth a ruby from <b>Thailand</b>, even if they look alike. Geographic origin changes the price, sometimes by a factor of ten.\n\nIt cannot be read by eye: it is the laboratory that determines it."
+  },
+  {
+   "title": "Trace elements",
+   "text": "Each deposit has its own “recipe” of small chemical elements: <b>iron, chromium, vanadium, titanium, gallium, copper</b>... They are present in tiny amounts (a few millionths), but their <b>proportions</b> vary from one deposit to another. This is the fingerprint that is measured."
+  },
+  {
+   "title": "The three instruments",
+   "text": "• The UV-Vis-NIR <b>spectrophotometer</b> measures the absorption of light from the ultraviolet to the near infrared: the spectra reveal iron, chromium, vanadium, titanium.\n• <b>EDXRF</b> excites the stone with X-rays: each element answers with its lines, the more intense the more abundant it is. Fast, and it leaves no trace.\n• <b>LA-ICP-MS</b> vaporizes a microscopic amount of material with a laser and passes it into the mass spectrometer: the reference measurement, the most precise."
+  },
+  {
+   "title": "Confirming the origin",
+   "text": "You never rely on a single instrument. The results are compared with the <b>known values</b> of each deposit: if several measurements agree, the origin is <b>confirmed</b>. If they contradict each other, the stone stays “origin undetermined”.\n\nA <b>treated</b> stone (by beryllium diffusion, for example) can blur the measurement: you have to know it."
+  },
+  {
+   "title": "To remember",
+   "text": "• Origin is read in the <b>trace elements</b>.\n• Spectrophotometer (light), EDXRF (X-rays), LA-ICP-MS (laser and mass): from the simplest to the most precise.\n• A rare and renowned origin greatly increases the value of the stone."
+  }
+ ]
+}

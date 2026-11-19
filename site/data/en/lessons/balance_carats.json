@@ -1,0 +1,34 @@
+{
+ "id": "balance_carats",
+ "title": "The carat balance",
+ "tool": {
+  "name": "Carat balance",
+  "measures": "the weight of the stone, in carats or in grams",
+  "where": "Gemmology House and Office, bottom row, in the middle of the laboratory",
+  "records": [
+   "Weight"
+  ],
+  "tips": [
+   "Switch the balance on (ON/OFF) before putting the stone on it",
+   "1 g = 5 ct"
+  ]
+ },
+ "steps": [
+  {
+   "title": "The carat",
+   "text": "Stones are weighed in carats. One carat is 0.2 gram.\n\nThe word comes from the carob seed, which merchants used long ago as a weight: all the seeds weigh almost the same."
+  },
+  {
+   "title": "Weighing a stone",
+   "text": "1. Switch on the balance with the ON/OFF button.\n2. Put the stone on the pan.\n3. Wait until the display is steady, then read the weight.\n\nThe balance gives hundredths of a carat: a 2.35 ct stone weighs 0.470 g."
+  },
+  {
+   "title": "Carats or grams",
+   "text": "A button changes the display unit. Remember the conversion: 1 g = 5 ct.\n\nWe speak in carats for stones, in grams for rough crystals and heavier objects."
+  },
+  {
+   "title": "Weight is not size",
+   "text": "Two stones of the same size do not weigh the same: it all depends on the density of the material. A ruby is heavier than a quartz of the same volume.\n\nNote this weight well: it is also used to work out density, with the hydrostatic balance."
+  }
+ ]
+}

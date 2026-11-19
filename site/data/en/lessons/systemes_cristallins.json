@@ -1,0 +1,46 @@
+{
+ "id": "systemes_cristallins",
+ "title": "Crystal systems",
+ "steps": [
+  {
+   "title": "A crystal is an order",
+   "text": "In a crystal, the atoms are arranged in a pattern that repeats in space, like bricks in a wall. This pattern is described by <b>three axes</b> (a, b, c) and the <b>three angles</b> between them (α, β, γ).\n\nDepending on the lengths of the axes and on the angles, there are only <b>seven crystal systems</b>."
+  },
+  {
+   "title": "Cubic system",
+   "text": "<b>Form:</b> three equal axes, perpendicular to each other.\n<b>Symmetry:</b> the highest: 3 four-fold axes, 4 three-fold axes.\n<b>Habit:</b> cubes, octahedra, dodecahedra.\n<b>Stones:</b> diamond, garnets, spinel, fluorite.\n<b>Optics:</b> isotropic, a single refraction."
+  },
+  {
+   "title": "Tetragonal system",
+   "text": "<b>Form:</b> two equal axes, a third one different, all perpendicular.\n<b>Symmetry:</b> one four-fold axis.\n<b>Habit:</b> prisms with a square base, bipyramids.\n<b>Stones:</b> zircon, rutile, vesuvianite.\n<b>Optics:</b> uniaxial."
+  },
+  {
+   "title": "Hexagonal system",
+   "text": "<b>Form:</b> three equal axes in one plane, at 120° from each other, and a perpendicular vertical axis.\n<b>Symmetry:</b> one six-fold axis.\n<b>Habit:</b> six-sided prisms.\n<b>Stones:</b> beryl (emerald, aquamarine), apatite.\n<b>Optics:</b> uniaxial."
+  },
+  {
+   "title": "Trigonal system",
+   "text": "<b>Form:</b> close to hexagonal, but with a three-fold axis only (it is also described by a rhombohedron: three equal axes, tilted the same way).\n<b>Habit:</b> three- or six-sided prisms, rhombohedra, terminations.\n<b>Stones:</b> quartz (amethyst, citrine), corundum (ruby, sapphire), tourmaline, calcite.\n<b>Optics:</b> uniaxial."
+  },
+  {
+   "title": "Orthorhombic system",
+   "text": "<b>Form:</b> three axes of different lengths, all perpendicular.\n<b>Symmetry:</b> three two-fold axes.\n<b>Habit:</b> prisms with a diamond-shaped base, tabular crystals.\n<b>Stones:</b> topaz, peridot, chrysoberyl, tanzanite, andalusite.\n<b>Optics:</b> biaxial."
+  },
+  {
+   "title": "Monoclinic system",
+   "text": "<b>Form:</b> three unequal axes, one of which is tilted: only one angle differs from 90°.\n<b>Symmetry:</b> a single two-fold axis.\n<b>Habit:</b> flattened prisms, twinned crystals.\n<b>Stones:</b> jadeite, orthoclase, spodumene (kunzite), malachite.\n<b>Optics:</b> biaxial."
+  },
+  {
+   "title": "Triclinic system",
+   "text": "<b>Form:</b> three unequal axes, no right angle.\n<b>Symmetry:</b> the lowest: at best a centre of symmetry.\n<b>Habit:</b> irregular crystals, plates.\n<b>Stones:</b> feldspars (amazonite, labradorite), turquoise, rhodonite.\n<b>Optics:</b> biaxial."
+  },
+  {
+   "title": "Growth axes and habit",
+   "text": "A crystal does not grow the same way in all directions: it grows <b>faster along some axes</b>. If growth is fast along c, you get a needle; if it is fast along a and b, a plate. This outer shape is the <b>habit</b>.\n\nAbove all, properties change with direction: refractive index, colour (pleochroism), hardness. This is why the stone is turned under the instruments, and why the lapidary orients it to get the finest colour."
+  },
+  {
+   "title": "Three optical families",
+   "text": "The crystal system decides how the stone handles light:\n\n• <b>cubic</b>: isotropic, a single index;\n• <b>tetragonal, hexagonal, trigonal</b>: uniaxial, one optic axis, two indices;\n• <b>orthorhombic, monoclinic, triclinic</b>: biaxial, two optic axes, three indices.\n\nThis is what the refractometer showed you (one or two shadow edges) and what the polariscope will confirm."
+  }
+ ]
+}

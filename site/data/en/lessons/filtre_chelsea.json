@@ -1,0 +1,47 @@
+{
+ "id": "filtre_chelsea",
+ "title": "The Chelsea filter",
+ "tool": {
+  "name": "Chelsea filter",
+  "measures": "the reaction of a stone to a filter that only lets through yellow-green and deep red",
+  "where": "Gemmology House and Office, bottom row, in the middle of the laboratory (a lamp is placed underneath)",
+  "records": [
+   "Chelsea filter reaction"
+  ],
+  "tips": [
+   "Stone on white paper, strong tungsten light",
+   "Hold the filter close to your eye",
+   "An indication, never a diagnosis"
+  ]
+ },
+ "steps": [
+  {
+   "title": "A filter with two windows",
+   "text": "A coloured stone lets part of the light through: it can be analysed with <b>filters</b>. The most important is the <b>Chelsea filter</b>, a small coloured filter that stops almost the whole spectrum.\n\nIt only lets two windows through: <b>yellow-green</b> and <b>deep red</b>. A stone that sends back a lot of deep red therefore looks <b>red</b> through it."
+  },
+  {
+   "title": "Chromium turns red",
+   "text": "<b>Chromium</b> makes deep red glow: ruby, alexandrite and emerald look <b>red</b>, or pink, through the filter. <b>Cobalt</b> also turns red (synthetic spinel, blue glass). <b>Iron</b> does not: a stone coloured by iron stays greenish or greyish.\n\nThe filter helps separate stones of the same colour in a lot, spot an <b>intruder</b> in a piece of jewellery or a necklace, and detect a treated, assembled or synthetic stone."
+  },
+  {
+   "title": "Using the filter",
+   "text": "1. Place the stone on a sheet of <b>white paper</b>.\n2. Light it with a strong <b>tungsten</b> source: in the laboratory, switch on the lamp.\n3. Hold the filter <b>close to your eye</b> and look at the stone through it.\n4. Note the colour, and compare with a reference stone.\n\nThe darker the colour of the stone, the harder the reaction is to see."
+  },
+  {
+   "title": "What it shows",
+   "text": "• <b>Ruby</b>, natural or synthetic: red to very bright red.\n• <b>Emerald</b>: bright red or pink to greenish.\n• <b>Alexandrite</b>, <b>demantoid</b>: pink to bright red.\n• <b>Synthetic blue spinel</b> (cobalt): bright red, orange-pink or pink. Natural blue spinel: reddish to greyish green.\n• <b>Blue sapphire</b>: generally dark green.\n• <b>Almandine garnet</b>: greyish to dark red.\n• <b>Red glass</b>: dark red; cobalt blue: intense red to pink."
+  },
+  {
+   "title": "Cobalt blue spinel or sapphire?",
+   "text": "Two blue stones, almost identical to the naked eye: a <b>synthetic blue spinel</b>, coloured by <b>cobalt</b>, and a <b>blue sapphire</b>, coloured by iron.\n\nThrough the filter:\n• the cobalt spinel turns <b>red</b>: bright red, orange-pink or pink;\n• the sapphire stays <b>dark green</b>.\n\nCobalt, like chromium, lets deep red through; iron does not. Natural blue spinel is reddish to greyish green: the filter alone is not enough, it is cross-checked with the spectroscope (three cobalt bands) and the index."
+  },
+  {
+   "title": "Caution",
+   "text": "Results vary with the <b>intensity</b> of the colour, and with the relative concentration of the colouring elements when there are several.\n\nA reaction to the filter is never a diagnostic result: it is an <b>indication</b>. The test is quick and easy, but results must be interpreted with caution, because new varieties of stones, natural or synthetic, may react differently from the table."
+  },
+  {
+   "title": "To remember",
+   "text": "• The filter only lets through yellow-green and deep red.\n• Chromium turns red under the filter, and so does cobalt; iron does not.\n• You need a strong tungsten source, the stone on white paper, the filter close to the eye.\n• An indication, never an identification: it is combined with the spectroscope, the index and the density."
+  }
+ ]
+}

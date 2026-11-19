@@ -63,6 +63,24 @@ Cela relance `tools/export_game_data.py` (qui relit les fichiers du jeu), puis c
 pas besoin de le redémarrer. Les 8 leçons propres au site sont dans `site/data/lessons_extra/` : la synchronisation
 ne les touche pas (on les modifie à la main, comme les autres : un fichier JSON par leçon).
 
+**Quiz, glossaire, comparaison.**
+- *Quiz de 20 questions* : `/quiz` (présentation et choix du thème : tout le cours, notions de base, instruments), `/quiz/jouer` (le quiz) : 20 questions tirées au hasard dans toutes les banques
+  de questions des leçons, au plus 2 par leçon, dans un ordre aléatoire et avec les réponses mélangées. La correction montre la bonne réponse et l'explication de chaque
+  question, et renvoie vers les leçons à revoir. Les membres gardent l'historique (table `mixed_quiz`, visible dans `/progression`). Réglages : `MIXED_LENGTH`,
+  `MIXED_PER_LESSON` dans `app/routes_learn.py`.
+- *Recherche* : `/recherche?q=…` cherche dans les espèces, les leçons (titres et textes, avec un extrait surligné) et le glossaire ; une loupe dans l'en-tête y mène.
+  La page n'est pas indexée par Google.
+- *Quiz* : un fichier par leçon dans `site/data/quizzes/` (`{"lesson": "aimant", "questions": [{"q", "choices" (4), "answer" (0 à 3), "why"}]}`).
+  À chaque essai, 5 questions sont tirées au hasard dans la banque de la leçon (6 à 9 questions), dans un ordre aléatoire et avec les réponses
+  mélangées (`QUIZ_LENGTH` dans `app/routes_learn.py`) : on peut ajouter des questions au fichier JSON sans rien changer d'autre. Les bonnes réponses ne sont jamais
+  envoyées au navigateur : le serveur corrige. Un visiteur peut faire le quiz, un membre garde son
+  meilleur score (table `quiz_results`) et voit sa progression sur `/progression`. Un quiz est réussi à partir de 70 % (`PASS_RATIO`
+  dans `app/routes_learn.py`).
+- *Glossaire* : `site/data/glossary.json` (un mot, ses autres formes, sa définition, les leçons liées). La première mention de chaque mot
+  est soulignée en pointillé dans les leçons et dans les fiches d'espèces, et renvoie à `/glossaire`.
+- *Comparaison* : `/comparer?a=...&b=...` met deux espèces côte à côte, colore les lignes qui diffèrent et liste les instruments qui les
+  départagent (seuils dans `_verdicts`, `app/routes_learn.py`).
+
 **Schémas animés des leçons** : ce sont les dessins du jeu (`LessonFigures.cs`), refaits en JavaScript dans
 `static/js/lessonfig*.js`. Chaque étape d'une leçon nomme sa figure et son « focus » dans le JSON, comme dans le jeu ; si l'artiste
 fait de vraies images, elles remplaceront ces dessins. Ils sont en accès libre, sans compte. Les textes des dessins sont écrits
@@ -181,12 +199,23 @@ Lancer les vérifications automatiques (49 tests : comptes, forum, droits, simul
 python3 -m unittest discover -s site/tests
 ```
 
-## 5. L'anglais plus tard
+## 5. L'anglais
 
-Aucun texte n'est écrit dans les pages : tout est dans `i18n/fr.json`. Pour l'anglais : copier ce fichier en `i18n/en.json`,
-traduire les valeurs, puis ajouter le choix de langue (adresses `/en/...`). Un test refuse tout texte français écrit en dur
-dans le code. Le contenu des fiches (descriptions, leçons) vient des fichiers du jeu, qui sont en français : il faudra
-une version anglaise de `gemlab_data.json` et des leçons (`Resources/Lessons`).
+Le site existe en français (adresses sans préfixe) et en anglais (adresses qui commencent par `/en`, par exemple `/en/lecons/dichroscope`).
+Un bouton **FR / EN** dans l'en-tête passe d'une langue à l'autre sur la même page ; chaque page annonce son équivalent aux moteurs de recherche
+(balises `hreflang`, plan du site dans les deux langues). Les liens, les redirections et les liens des courriels restent dans la langue de la page.
+
+**Ce qui est traduit** (étape 1) : toute l'interface (`i18n/en.json`, mêmes clés que `fr.json`), les 22 leçons (`data/en/lessons/`), les 169 questions de quiz
+(`data/en/quizzes/`), le glossaire (`data/en/glossary.json`) et les textes des schémas animés (`static/i18n/figures.en.json`).
+**Ce qui ne l'est pas encore** : les fiches des espèces (descriptions, notes, couleurs, spectres… viennent de `gemlab_data.json`, en français ; une bannière le dit sur
+les fiches en anglais), et les noms des espèces. Les adresses gardent leurs mots français (`/en/encyclopedie`).
+
+**Comment ça marche** : un fichier anglais ne change que les textes ; la structure (étapes, figures, bonne réponse d'un quiz, nombre de choix) vient du fichier français,
+donc ajouter une question ou une étape en français sans la traduire ne casse rien (le texte français s'affiche en attendant). Un test vérifie que `en.json` a les mêmes clés
+et les mêmes `{trous}` que `fr.json`, et que chaque leçon, quiz et schéma a sa traduction. Après un changement du jeu (`sync_data.py`), relire `data/en/` pour les leçons modifiées.
+Les textes des schémas : `python3 site/tools/extract_figure_texts.py` refait la liste (`figures.template.json`) ; mettre la traduction dans `figures.en.json`.
+**Les traductions sont de moi, sans relecture par un anglophone** : le vocabulaire de gemmologie est à faire vérifier avant la mise en ligne.
+Pour une troisième langue : copier `fr.json` en `<langue>.json`, ajouter la langue dans `Request` (`app/web.py`) et dans `catalog.set_lang`.
 
 ## 6. Mettre le site en ligne (plus tard)
 
@@ -221,8 +250,76 @@ de réécrire les comptes et le forum ; ce n'est pas utile tant qu'un petit serv
   accord de l'enseignant) et « Élevé » (origine des sprites à confirmer). Le site n'utilise aucune image du jeu : les pierres
   sont de petits dessins générés avec les couleurs de la fiche. Les mentions « source : diplôme… » des données ne sont
   **pas** affichées.
-* **Obligations légales des comptes** (RGPD) : mentions légales, politique de confidentialité, case ou texte de conditions
-  d'utilisation, moyen de supprimer son compte. Rien de cela n'est écrit : à faire avant d'accepter de vrais inscrits.
-* **Pas encore là** : modifier ou supprimer son propre message, supprimer son compte, messages privés, double
-  authentification, schémas des leçons (dessinés par le code du jeu), pages sur les instruments et les traitements.
+* **Obligations légales des comptes** (RGPD) : les pages (mentions légales, confidentialité, contact, à propos) et la suppression de compte
+  existent, voir la section 8. Il reste à renseigner les informations de l'éditeur, à faire relire les textes, et à décider si
+  des conditions d'utilisation (case à cocher à l'inscription) sont nécessaires.
+* **Pas encore là** : modifier ou supprimer son propre message, messages privés, double authentification, pages sur les
+  traitements.
 * Les adresses du site sont en français (`/encyclopedie`, `/forum`…) ; elles pourront être préfixées par la langue.
+
+## 8. Avant de publier : pages légales et référencement
+
+**Pages légales.** Le site a quatre pages : `/mentions-legales`, `/confidentialite` (politique de confidentialité et cookies), `/contact` et `/a-propos`, liées dans le
+pied de page. Les textes sont dans `i18n/fr.json` (clés `legal.*`, `privacy.*`, `contact.*`, `about.*`) ; ce sont des modèles rédigés pour ce site tel qu'il fonctionne
+aujourd'hui (comptes, forum, quiz, aucun traceur) : **à faire relire par quelqu'un de compétent avant la mise en ligne**, et à mettre à jour si le site change
+(publicité, statistiques, paiement…). La date « dernière mise à jour » est `LEGAL_UPDATED` dans `app/routes_legal.py`.
+
+Les informations de l'éditeur ne sont pas dans le code : on les donne par des variables d'environnement. Tant qu'elles manquent, les pages affichent
+« à compléter » en surbrillance jaune.
+
+| Variable | Contenu |
+|---|---|
+| `GEMLAB_PUBLISHER_NAME` | Nom de la personne ou de la société qui édite le site |
+| `GEMLAB_PUBLISHER_STATUS` | Statut (micro-entreprise, association, particulier…) |
+| `GEMLAB_PUBLISHER_ADDRESS` | Adresse de l'éditeur |
+| `GEMLAB_PUBLISHER_DIRECTOR` | Directeur de la publication |
+| `GEMLAB_CONTACT_EMAIL` | Adresse de contact (affichée publiquement) |
+| `GEMLAB_HOST_NAME`, `GEMLAB_HOST_ADDRESS`, `GEMLAB_HOST_PHONE` | Hébergeur (obligatoire dans les mentions légales) |
+
+`python3 site/manage.py check-publication` liste ce qui manque encore (variables, courriels réels, adresse publique…).
+
+**Suppression de compte.** Un membre peut supprimer son compte depuis « Mon compte » (droit à l'effacement) : adresse, nom, mot de passe, sessions et scores de quiz
+sont effacés ; ses messages de forum restent, sous le nom « membre-supprime-N ». Un compte administrateur ne se supprime pas depuis cette page.
+
+**Référencement.** Par défaut le site est fermé aux moteurs de recherche (`noindex` partout, `robots.txt` interdit tout, pas de plan du site). Pour l'ouvrir,
+c'est une seule variable : `GEMLAB_INDEXABLE=1` (avec `GEMLAB_BASE_URL` = l'adresse publique en https). Alors :
+- les pages publiques (accueil, encyclopédie et ses 120 fiches, leçons, glossaire, comparateur, identification, pages légales) deviennent `index, follow`, avec une adresse
+  canonique ; les pages privées (compte, forum, simulateur, progression, connexion…) restent toujours `noindex` ;
+- `robots.txt` autorise le site, interdit les pages privées et indique le plan du site ; `/sitemap.xml` liste les pages publiques (120 fiches + leçons comprises).
+Chaque page porte aussi un titre, une description et les balises d'aperçu de partage (Facebook, Messenger, Discord, X) avec l'image `static/img/og-image.png`.
+Les icônes (`favicon.svg`, `apple-touch-icon.png`, `og-image.png`) se refont avec `python3 site/tools/make_icons.py "NomDuSite" "Phrase d'accroche"` (nécessite Pillow,
+seulement pour cet outil) : à relancer quand le nom du site sera choisi.
+
+Une fois ouvert, déclarer le plan du site dans la Search Console de Google (`https://votre-site/sitemap.xml`) et vérifier quelques pages avec l'outil « Inspection d'URL ».
+
+
+## 9. Accessibilité et relecture
+
+- **Contrastes** : `python3 site/tools/check_contrast.py` mesure les paires de couleurs du thème (clair et sombre) selon le niveau AA des règles WCAG ; un test le lance.
+- **Animations** : un bouton « Mettre les animations en pause » (accueil et pied de page de chaque page) arrête le saphir, le bandeau de pierres, les étoiles et les schémas
+  des leçons ; le choix est gardé dans le navigateur, et le site démarre déjà sans animation si l'appareil demande moins de mouvement. Le bandeau de pierres s'arrête aussi quand
+  on navigue au clavier dedans.
+- **Schémas des leçons** : chacun a un texte alternatif (`aria-label`) et un bloc « Décrire ce schéma » (clés `fig.desc.*` de `i18n/fr.json`).
+- **Structure des pages** : un test vérifie sur une vingtaine de pages la langue, un seul titre h1, les textes alternatifs des images, les libellés des champs de formulaire,
+  les noms des boutons, le lien d'évitement. Ce n'est pas un audit complet : il reste à essayer avec un lecteur d'écran et au clavier seul.
+- **Relecture par un spécialiste** : `python3 site/tools/export_review.py` écrit `Docs/RELECTURE_CONTENU.md` : toutes les questions de quiz (réponse juste marquée), le
+  glossaire et les couleurs de pléochroïsme dessinées, avec une case d'avis pour chaque point. À envoyer à un gemmologue ; à refaire après chaque changement de contenu.
+
+## 10. L'onglet Prix (estimation du prix d'une gemme)
+
+Page publique `/prix` : on choisit une espèce naturelle, un poids et, au choix, la couleur, la pureté, le traitement et le type de prix (demandé ou payé). Le site donne une **fourchette** (quart bas, valeur centrale, quart haut du prix par carat, puis pour la pierre entière), un graphique des prix relevés et le tableau par tranche de poids. Il ne cite jamais de vendeur ni de site.
+
+**Rien n'est inventé.** L'estimation ne vient que de la table `price_reports` (prix « approuvés », des 24 derniers mois). Avec moins de 5 prix proches du poids demandé, le site répond « pas assez de données » ; entre les deux, une tendance poids/prix (moins fiable, marquée « confiance faible ») n'est utilisée que s'il y a au moins 8 prix sur au moins 3 tranches de poids, et jamais très loin des poids connus. Les valeurs extrêmes sont écartées avant le calcul.
+
+D'où viennent les prix :
+- **Les membres** (compte vérifié) : `/prix/ajouter`, 10 prix par jour au plus, case « je confirme que ce prix est réel », champ anti-robot, refus des doublons. Le prix attend la vérification de l'administrateur (`/admin/prix`, avec un signalement « très éloigné des autres » pour les montants suspects). Un prix de l'administrateur est publié tout de suite.
+- **Des fichiers** importés par l'administrateur (par exemple un accord avec un négociant, ou un relevé fait à la main) :
+  ```
+  python3 site/manage.py import-prices fichier.csv      # colonnes : voir data/prices_template.csv
+  python3 site/manage.py export-prices sauvegarde.csv   # sans aucune donnée de membre
+  ```
+  Les lignes passent les mêmes contrôles que celles des membres ; les lignes refusées sont listées avec leur numéro.
+
+Ce qu'il ne faut pas faire (c'est la partie risquée) : copier automatiquement les prix d'autres sites, ou réutiliser les données d'une interface de programmation sans que sa licence le permette. Mieux vaut des prix saisis, des accords écrits ou des relevés personnels.
+
+Confidentialité : un prix ajouté n'est pas lié à son auteur après la suppression du compte (l'identifiant est effacé, le prix reste, anonyme) ; la politique de confidentialité le dit. Le code est dans `app/prices.py` (calcul) et `app/routes_prices.py` (pages) ; les tests dans `TestPrices`.

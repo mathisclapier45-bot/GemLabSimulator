@@ -1,0 +1,85 @@
+{
+ "lesson": "traitements",
+ "questions": [
+  {
+   "q": "Treating a stone is allowed, as long as you…",
+   "choices": [
+    "disclose it to the buyer",
+    "hide it",
+    "sell it cheaper",
+    "cut it afterwards"
+   ],
+   "why": "A treatment changes the value."
+  },
+  {
+   "q": "Which treatment improves the colour of ruby and sapphire, and often stays stable?",
+   "choices": [
+    "Dyeing",
+    "Heating",
+    "Oil filling",
+    "Coating"
+   ],
+   "why": "It is the oldest of the treatments."
+  },
+  {
+   "q": "What does filling an emerald do?",
+   "choices": [
+    "It hardens the stone",
+    "It colours it all the way through",
+    "Oil or resin makes the cracks less visible",
+    "It makes it synthetic"
+   ],
+   "why": "It is a purity treatment."
+  },
+  {
+   "q": "Dyeing is mostly applied…",
+   "choices": [
+    "to diamond",
+    "to very pure ruby",
+    "to glass",
+    "to porous materials (jade, agate, coral, pearl)"
+   ],
+   "why": "A dye goes into the material."
+  },
+  {
+   "q": "Beryllium or titanium diffusion…",
+   "choices": [
+    "sometimes only reaches a tenth of a millimetre at the surface",
+    "certainly colours the whole stone",
+    "hardens the stone",
+    "removes the inclusions"
+   ],
+   "why": "This is why the surface gives it away under the microscope."
+  },
+  {
+   "q": "Which treatment deposits a film of metal or lacquer, as for “mystic” topaz?",
+   "choices": [
+    "Coating",
+    "Bleaching",
+    "Laser",
+    "Irradiation"
+   ],
+   "why": "It is a colour treatment."
+  },
+  {
+   "q": "What does the laser do on a diamond?",
+   "choices": [
+    "It colours it yellow",
+    "It drills the dark inclusion, then it is bleached with acid",
+    "It hardens it",
+    "It makes it synthetic"
+   ],
+   "why": "It is a purity treatment."
+  },
+  {
+   "q": "What does a treatment almost always change?",
+   "choices": [
+    "Its chemical formula",
+    "Its crystal system",
+    "The value and the stability of the stone",
+    "Its name"
+   ],
+   "why": "A treated stone is generally worth less than an equivalent natural stone."
+  }
+ ]
+}

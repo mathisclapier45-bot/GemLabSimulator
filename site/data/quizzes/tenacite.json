@@ -1,0 +1,93 @@
+{
+ "lesson": "tenacite",
+ "questions": [
+  {
+   "q": "La ténacité est la résistance d'une pierre…",
+   "choices": [
+    "aux chocs",
+    "aux rayures",
+    "à la lumière",
+    "aux acides"
+   ],
+   "answer": 0,
+   "why": "La dureté, c'est la résistance aux rayures : ce n'est pas la même chose."
+  },
+  {
+   "q": "Le diamant est…",
+   "choices": [
+    "la pierre la plus dure et la plus tenace",
+    "la pierre la plus dure, mais pas la plus tenace",
+    "tendre mais très tenace",
+    "ni dur ni tenace"
+   ],
+   "answer": 1,
+   "why": "Un diamant peut se fendre selon un plan de clivage."
+  },
+  {
+   "q": "Qu'est-ce que le clivage ?",
+   "choices": [
+    "Un éclat irrégulier",
+    "Une rayure sur la table",
+    "Une fente selon un plan lisse",
+    "Un changement de couleur"
+   ],
+   "answer": 2,
+   "why": "Certains plans du cristal sont plus faibles : un choc peut les fendre."
+  },
+  {
+   "q": "Quelle est la gemme la plus tenace ?",
+   "choices": [
+    "Le diamant",
+    "L'opale",
+    "La fluorite",
+    "Le jade néphrite"
+   ],
+   "answer": 3,
+   "why": "Ses fibres enchevêtrées se serrent les unes contre les autres."
+  },
+  {
+   "q": "Une cassure « conchoïdale » ressemble…",
+   "choices": [
+    "à l'intérieur d'une coquille",
+    "à un plan lisse",
+    "à des fibres",
+    "à une poudre fine"
+   ],
+   "answer": 0,
+   "why": "On la voit dans le quartz, le verre, l'obsidienne."
+  },
+  {
+   "q": "Quelles pierres ont des plans de clivage ?",
+   "choices": [
+    "Le diamant, la topaze, la fluorite et la kunzite",
+    "Le jade et le quartz",
+    "Le rubis et le saphir",
+    "L'opale et l'obsidienne"
+   ],
+   "answer": 0,
+   "why": "Le lapidier doit en tenir compte, et on évite de les porter à un endroit exposé."
+  },
+  {
+   "q": "Une émeraude très incluse est…",
+   "choices": [
+    "plus tenace que le diamant",
+    "plus fragile que sa dureté ne le laisse croire",
+    "à l'abri des chocs",
+    "plus dure que le corindon"
+   ],
+   "answer": 1,
+   "why": "Les inclusions et les fractures diminuent la ténacité."
+  },
+  {
+   "q": "Pour un bijou porté tous les jours, il faut une pierre…",
+   "choices": [
+    "très dure seulement",
+    "très rare seulement",
+    "qui a une bonne ténacité autant qu'une bonne dureté",
+    "très transparente seulement"
+   ],
+   "answer": 2,
+   "why": "Ténacité et dureté sont deux choses différentes."
+  }
+ ]
+}

@@ -1,0 +1,44 @@
+{
+ "id": "diamant_laboratoire",
+ "title": "Diamond in the laboratory",
+ "tool": {
+  "name": "DiamondSure, DiamondView and photoluminescence",
+  "measures": "whether a diamond is natural or synthetic (HPHT, CVD), and whether it has been treated",
+  "where": "Diamond dealer",
+  "records": [
+   "Diamond screening",
+   "Diamond growth"
+  ],
+  "tips": [
+   "DiamondSure first: “Pass” or “Refer”",
+   "A “Refer” does not mean synthetic, only “to be examined”",
+   "DiamondView then photoluminescence to decide"
+  ]
+ },
+ "steps": [
+  {
+   "title": "Three ways to make a diamond",
+   "text": "• <b>Natural</b>: formed in the Earth's mantle, billions of years ago.\n• <b>HPHT</b> (high pressure, high temperature): the conditions of nature are reproduced in a machine.\n• <b>CVD</b>: diamond is grown layer by layer, from a gas.\n\nAll three are <b>real diamonds</b>: they pass the thermal tester. Yet their value is not the same, and you must be able to tell them apart."
+  },
+  {
+   "title": "DiamondSure: the quick sort",
+   "text": "The <b>DiamondSure</b> analyses the <b>UV transmission</b> of the diamond, and sorts the stone into two groups:\n• <b>Pass</b>: consistent with an ordinary natural diamond;\n• <b>Refer</b>: “to be looked at more closely”.\n\nA “Refer” is not a condemnation: it only asks for a further examination."
+  },
+  {
+   "title": "DiamondView: growth patterns",
+   "text": "The <b>DiamondView</b> lights the stone with very short UV and photographs the glow. Each growth mode draws different patterns:\n• <b>natural</b> diamond shows wavy growth lines, in irregular layers;\n• <b>HPHT</b> diamond shows cross-shaped or dial-shaped patterns;\n• <b>CVD</b> diamond shows parallel, fine and regular layers."
+  },
+  {
+   "title": "Photoluminescence",
+   "text": "<b>Photoluminescence</b> cools the stone with liquid nitrogen (77 K) and excites it with a laser. The <b>lattice defects</b> of the diamond (the H3, NV, silicon-vacancy and nickel centres) give off sharp lines.\n\nThe combination of these lines is the <b>signature</b> of the growth mode, and it also betrays <b>treatments</b>, such as irradiation or HPHT annealing."
+  },
+  {
+   "title": "The laboratory report",
+   "text": "At the end, a serious laboratory issues a <b>certificate</b>: the weight, colour, clarity, cut, and the statement <b>natural</b> or <b>synthetic</b>. A <b>treated</b> diamond (irradiated, HPHT, filled) or a fancy one loses its “colourless” diamond certificate.\n\nThe statement changes the price completely: a natural diamond is worth far more than the same laboratory-grown diamond."
+  },
+  {
+   "title": "To remember",
+   "text": "• Natural, HPHT and CVD diamonds look alike to the eye and to the thermal tester.\n• <b>DiamondSure</b>: quick sort; <b>DiamondView</b>: growth patterns; <b>photoluminescence</b>: signature of the lattice.\n• You always cross-check several results before concluding."
+  }
+ ]
+}

@@ -1,0 +1,71 @@
+{
+ "lesson": "micrometre",
+ "questions": [
+  {
+   "q": "Quelles trois dimensions mesure-t-on ?",
+   "choices": [
+    "La longueur, la largeur et la profondeur",
+    "Le poids, la densité et l'indice",
+    "La hauteur, la couleur et l'éclat",
+    "La dureté, la ténacité et la stabilité"
+   ],
+   "answer": 0,
+   "why": "De la table à la pointe pour la profondeur."
+  },
+  {
+   "q": "En quelle unité lit-on les mesures ?",
+   "choices": [
+    "En carats",
+    "En millimètres",
+    "En grammes",
+    "En degrés"
+   ],
+   "answer": 1,
+   "why": "Au dixième de millimètre."
+  },
+  {
+   "q": "À quoi servent aussi les dimensions ?",
+   "choices": [
+    "À calculer la couleur",
+    "À mesurer l'indice",
+    "À estimer le poids d'une pierre sertie, qu'on ne peut pas peser",
+    "À détecter un traitement"
+   ],
+   "answer": 2,
+   "why": "Chaque taille a sa formule."
+  },
+  {
+   "q": "Sur une pierre ronde, la longueur et la largeur sont…",
+   "choices": [
+    "presque égales",
+    "très différentes",
+    "toujours nulles",
+    "égales à la profondeur"
+   ],
+   "answer": 0,
+   "why": "On mesure quand même les trois dimensions."
+  },
+  {
+   "q": "Comment faut-il serrer la pierre ?",
+   "choices": [
+    "Le plus fort possible",
+    "Doucement, sans forcer",
+    "En la frappant",
+    "Avec un marteau"
+   ],
+   "answer": 1,
+   "why": "On ne force jamais sur la pierre."
+  },
+  {
+   "q": "Où mesure-t-on la profondeur ?",
+   "choices": [
+    "D'un bord à l'autre",
+    "De la couronne au sol",
+    "De la table à la pointe",
+    "Autour de la ceinture"
+   ],
+   "answer": 2,
+   "why": "Les trois dimensions sont la longueur, la largeur et la profondeur."
+  }
+ ]
+}

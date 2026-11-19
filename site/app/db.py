@@ -68,6 +68,47 @@ CREATE TABLE IF NOT EXISTS reports (
     UNIQUE (post_id, reporter_id)
 );
 
+CREATE TABLE IF NOT EXISTS quiz_results (
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    lesson_id TEXT NOT NULL,
+    best INTEGER NOT NULL,
+    total INTEGER NOT NULL,
+    last INTEGER NOT NULL,
+    attempts INTEGER NOT NULL DEFAULT 1,
+    updated_at INTEGER NOT NULL,
+    PRIMARY KEY (user_id, lesson_id)
+);
+
+CREATE TABLE IF NOT EXISTS mixed_quiz (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    score INTEGER NOT NULL,
+    total INTEGER NOT NULL,
+    theme TEXT NOT NULL,
+    created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS mixed_user ON mixed_quiz(user_id, id);
+
+CREATE TABLE IF NOT EXISTS price_reports (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    species_id TEXT NOT NULL,
+    weight_ct REAL NOT NULL CHECK (weight_ct > 0),
+    price_eur REAL NOT NULL CHECK (price_eur > 0),
+    kind TEXT NOT NULL CHECK (kind IN ('asking', 'paid')),
+    color_tier INTEGER NOT NULL CHECK (color_tier BETWEEN 1 AND 4),
+    clarity TEXT NOT NULL,
+    treatment TEXT NOT NULL,
+    observed_at TEXT NOT NULL,
+    source TEXT NOT NULL DEFAULT 'member',
+    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+    created_at INTEGER NOT NULL,
+    reviewed_at INTEGER,
+    reviewed_by INTEGER
+);
+CREATE INDEX IF NOT EXISTS price_species ON price_reports(species_id, status);
+CREATE INDEX IF NOT EXISTS price_user ON price_reports(user_id, id);
+
 CREATE TABLE IF NOT EXISTS rate_events (
     key TEXT NOT NULL,
     ts INTEGER NOT NULL

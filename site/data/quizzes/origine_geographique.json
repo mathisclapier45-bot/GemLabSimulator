@@ -1,0 +1,82 @@
+{
+ "lesson": "origine_geographique",
+ "questions": [
+  {
+   "q": "Qu'est-ce qui trahit l'origine géographique d'une pierre ?",
+   "choices": [
+    "Ses éléments traces",
+    "Sa couleur seule",
+    "Son poids",
+    "Sa taille"
+   ],
+   "answer": 0,
+   "why": "Fer, chrome, vanadium, titane, gallium…"
+  },
+  {
+   "q": "L'EDXRF utilise…",
+   "choices": [
+    "un laser qui perce la pierre",
+    "des rayons X et ne laisse aucune trace",
+    "un aimant",
+    "une lampe UV"
+   ],
+   "answer": 1,
+   "why": "Chaque élément répond par ses raies."
+  },
+  {
+   "q": "Le LA-ICP-MS, la mesure de référence, fonctionne avec…",
+   "choices": [
+    "un simple aimant",
+    "une loupe",
+    "un laser qui vaporise une quantité microscopique de matière",
+    "une balance"
+   ],
+   "answer": 2,
+   "why": "Il laisse une trace microscopique sur la pierre."
+  },
+  {
+   "q": "Pour confirmer une origine, on…",
+   "choices": [
+    "se fie à un seul instrument",
+    "demande au vendeur",
+    "regarde la couleur",
+    "compare plusieurs mesures aux valeurs connues de chaque gisement"
+   ],
+   "answer": 3,
+   "why": "Si elles se contredisent, l'origine reste indéterminée."
+  },
+  {
+   "q": "Pourquoi l'origine change-t-elle la valeur d'un rubis ?",
+   "choices": [
+    "Un rubis de Birmanie ne vaut pas un rubis de Thaïlande, même si les deux se ressemblent",
+    "Parce que la couleur change à l'air",
+    "Parce que le poids change",
+    "Parce qu'il devient plus dur"
+   ],
+   "answer": 0,
+   "why": "L'origine peut changer le prix du simple au décuple."
+  },
+  {
+   "q": "Quel instrument mesure l'absorption de la lumière de l'ultraviolet à l'infrarouge proche ?",
+   "choices": [
+    "Le polariscope",
+    "Le spectrophotomètre",
+    "Le réfractomètre",
+    "L'aimant"
+   ],
+   "answer": 1,
+   "why": "Il révèle le fer, le chrome, le vanadium, le titane."
+  },
+  {
+   "q": "Que devient l'origine si les mesures se contredisent ?",
+   "choices": [
+    "On choisit la plus ancienne",
+    "On prend le gisement le plus connu",
+    "Elle reste « indéterminée »",
+    "On la déclare synthétique"
+   ],
+   "answer": 2,
+   "why": "Une pierre traitée peut aussi brouiller la mesure."
+  }
+ ]
+}

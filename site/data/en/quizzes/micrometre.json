@@ -1,0 +1,65 @@
+{
+ "lesson": "micrometre",
+ "questions": [
+  {
+   "q": "Which three dimensions are measured?",
+   "choices": [
+    "Length, width and depth",
+    "Weight, density and index",
+    "Height, colour and luster",
+    "Hardness, toughness and stability"
+   ],
+   "why": "From the table to the point for the depth."
+  },
+  {
+   "q": "In which unit are the measurements read?",
+   "choices": [
+    "In carats",
+    "In millimetres",
+    "In grams",
+    "In degrees"
+   ],
+   "why": "To a tenth of a millimetre."
+  },
+  {
+   "q": "What else are the dimensions used for?",
+   "choices": [
+    "To calculate the colour",
+    "To measure the index",
+    "To estimate the weight of a set stone, which cannot be weighed",
+    "To detect a treatment"
+   ],
+   "why": "Each cut has its formula."
+  },
+  {
+   "q": "On a round stone, length and width are…",
+   "choices": [
+    "almost equal",
+    "very different",
+    "always zero",
+    "equal to the depth"
+   ],
+   "why": "The three dimensions are still measured."
+  },
+  {
+   "q": "How should you tighten the stone?",
+   "choices": [
+    "As hard as possible",
+    "Gently, without forcing",
+    "By hitting it",
+    "With a hammer"
+   ],
+   "why": "You never force the stone."
+  },
+  {
+   "q": "Where is the depth measured?",
+   "choices": [
+    "From one edge to the other",
+    "From the crown to the ground",
+    "From the table to the point",
+    "Around the girdle"
+   ],
+   "why": "The three dimensions are length, width and depth."
+  }
+ ]
+}

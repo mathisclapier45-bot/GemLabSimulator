@@ -1,0 +1,40 @@
+{
+ "id": "infrarouge_raman",
+ "title": "Infrared and Raman",
+ "tool": {
+  "name": "FTIR and Raman spectrometers",
+  "measures": "the chemical bonds of the stone (infrared) and the signature of its crystal lattice (Raman)",
+  "where": "Diamond dealer and laboratory",
+  "records": [
+   "Infrared spectrum",
+   "Raman spectrum"
+  ],
+  "tips": [
+   "Clean the stone before analysing it",
+   "Read the peaks, not the general shape",
+   "Compare with reference spectra"
+  ]
+ },
+ "steps": [
+  {
+   "title": "Going further than visible light",
+   "text": "The instruments of the basic laboratory use visible light. To go further, more expensive instruments are used, which <b>analyse the very material</b> of the stone, without destroying it."
+  },
+  {
+   "title": "Infrared (FTIR)",
+   "text": "The <b>FTIR</b> spectrometer (Fourier-transform infrared spectroscopy) sends infrared light onto the stone. Each type of chemical bond (O–H, C–H...) <b>absorbs</b> at a precise wavelength and leaves a <b>peak</b> in the spectrum.\n\nIt is the instrument for <b>treatments</b>: it reveals <b>oil</b> or <b>resin</b> in the cracks of an emerald, the polymer in a jade, the water in an opal. Epoxy resin is however hard to spot."
+  },
+  {
+   "title": "Raman",
+   "text": "The <b>Raman</b> spectrometer lights the stone with a laser and measures how the light is scattered. The way the <b>crystal lattice</b> vibrates gives each mineral a unique signature, even for a very small inclusion.\n\nIt <b>identifies</b> the stone with certainty (quartz, beryl, corundum...), and even the inclusion it carries: it thus helps separate a natural growth from a synthesis."
+  },
+  {
+   "title": "The electron microscope (SEM)",
+   "text": "The <b>SEM</b> (scanning electron microscope) magnifies thousands of times. It shows the <b>growth structures</b> at the microscopic scale: a natural stone and a laboratory stone do not grow the same way, and the SEM shows it.\n\nIt is a laboratory examination, long and expensive, kept for difficult cases."
+  },
+  {
+   "title": "To remember",
+   "text": "• <b>FTIR</b>: chemical bonds, so treatments (oil, resin) and water.\n• <b>Raman</b>: the exact identity of the mineral and of its inclusions.\n• <b>SEM</b>: the growth structure, natural or synthetic.\n• These instruments confirm what simple instruments leave you suspecting."
+  }
+ ]
+}

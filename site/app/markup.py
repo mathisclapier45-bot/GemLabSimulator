@@ -51,3 +51,37 @@ def lesson_html(text):
         escaped = escaped.replace("&lt;/{}&gt;".format(tag), "</{}>".format(tag))
     paras = [p.strip() for p in re.split(r"\n{2,}", escaped) if p.strip()]
     return "\n".join("<p>{}</p>".format(p.replace("\n", "<br>")) for p in paras)
+
+
+_TAG = re.compile(r"(<[^>]+>)")
+
+
+def link_terms(html_text, seen):
+    """Turns the first mention of each glossary term into a link to the glossary. `seen` (a set of term ids) is shared
+    by every text of the same page, so a term is linked once per page. The text is already escaped; tags are left alone."""
+    from . import catalog
+    _, by_id, pattern, forms = catalog.glossary()
+    if pattern is None:
+        return html_text
+    inside_link = [False]
+
+    def repl(match):
+        word = match.group(1)
+        tid = forms.get(word.lower())
+        if not tid or tid in seen:
+            return word
+        seen.add(tid)
+        return '<a class="gloss" href="/glossaire#{}" title="{}">{}</a>'.format(tid, html.escape(by_id[tid]["def"]), word)
+
+    out = []
+    for part in _TAG.split(html_text):
+        if part.startswith("<"):
+            low = part.lower()
+            if low.startswith("<a ") or low == "<a>":
+                inside_link[0] = True
+            elif low == "</a>":
+                inside_link[0] = False
+            out.append(part)
+        else:
+            out.append(part if inside_link[0] else pattern.sub(repl, part))
+    return "".join(out)

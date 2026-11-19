@@ -198,7 +198,7 @@
     }
     var shown = underwater ? waterWeight : airWeight;
     c.rect(V(-135, 60), V(130, 34), Dark);
-    c.label((underwater ? "P eau = " : "P air = ") + shown.toFixed(2) + " ct", V(-135, 60), 15, green, 130);
+    c.label(K.t(underwater ? "P eau" : "P air") + " = " + shown.toFixed(2) + " ct", V(-135, 60), 15, green, 130);
     if (focus >= 2) {
       c.label("d  =  P air  ÷  (P air − P eau)", V(-100, -30), 15, Ink, 200);
       c.label("d  =  2,00 ÷ 0,55  ≈  3,64", V(-100, -70), 15, Gold, 200);
@@ -263,8 +263,9 @@
       c.label("\u2212" + names[i], project(v3mul(tip, -1.2), spin, scale, origin), 14, colors[i], 40);
     }
     var top = [0, 0, halfHeight * 1.35];
-    c.line(center, project(top, spin, scale, origin), 3, AxisC);
+    c.line(project(v3mul(top, -1), spin, scale, origin), project(top, spin, scale, origin), 3, AxisC);
     c.label("c", project(v3mul(top, 1.12), spin, scale, origin), 15, AxisC, 30);
+    c.label("\u2212c", project(v3mul(top, -1.15), spin, scale, origin), 14, AxisC, 30);
   }
 
   function habits(c, t) {

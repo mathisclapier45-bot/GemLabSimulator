@@ -1,0 +1,104 @@
+{
+ "lesson": "polariscope",
+ "questions": [
+  {
+   "q": "Que voit-on avec deux filtres polarisants croisés et sans pierre ?",
+   "choices": [
+    "Du noir",
+    "Une lumière blanche",
+    "Un arc-en-ciel",
+    "Une croix colorée"
+   ],
+   "answer": 0,
+   "why": "Plus aucune lumière ne passe."
+  },
+  {
+   "q": "Une pierre isotrope entre les filtres croisés…",
+   "choices": [
+    "s'éclaire quatre fois par tour",
+    "reste sombre quand on la tourne",
+    "reste toujours claire",
+    "change de couleur"
+   ],
+   "answer": 1,
+   "why": "Les grenats, le spinelle et le verre sont isotropes."
+  },
+  {
+   "q": "Une pierre anisotrope tournée d'un tour complet s'éclaire…",
+   "choices": [
+    "une seule fois",
+    "deux fois",
+    "quatre fois",
+    "jamais"
+   ],
+   "answer": 2,
+   "why": "Tous les 90°."
+  },
+  {
+   "q": "Un agrégat de petits cristaux (jade, calcédoine) reste…",
+   "choices": [
+    "sombre tout le temps",
+    "clair seulement deux fois par tour",
+    "invisible",
+    "clair quelle que soit sa position"
+   ],
+   "answer": 3,
+   "why": "Résumé : sombre = isotrope, quatre éclairs = anisotrope, clair = agrégat."
+  },
+  {
+   "q": "Quelle figure montre une pierre uniaxe au conoscope ?",
+   "choices": [
+    "Une croix noire entourée d'anneaux colorés",
+    "Deux yeux et une moustache",
+    "Un cercle noir uni",
+    "Des rayures parallèles"
+   ],
+   "answer": 0,
+   "why": "La croix ne bouge pas quand on tourne la pierre."
+  },
+  {
+   "q": "Quelle pierre a un « œil-de-taureau » au centre de sa figure uniaxe ?",
+   "choices": [
+    "Le rubis",
+    "Le quartz",
+    "La tourmaline",
+    "Le corindon"
+   ],
+   "answer": 1,
+   "why": "Le quartz fait tourner le plan de polarisation le long de son axe."
+  },
+  {
+   "q": "Qu'est-ce qu'un conoscope ?",
+   "choices": [
+    "Un polariscope muni d'une lentille, qui montre la figure d'interférence",
+    "Un instrument qui pèse les pierres",
+    "Un filtre rouge",
+    "Une lampe UV"
+   ],
+   "answer": 0,
+   "why": "On regarde la pierre sous une lumière convergente."
+  },
+  {
+   "q": "Que montre la figure d'une pierre biaxe ?",
+   "choices": [
+    "Une croix noire immobile",
+    "Deux « yeux » traversés de bandes sombres, et la croix qui s'ouvre en moustache",
+    "Un disque coloré uni",
+    "Rien du tout"
+   ],
+   "answer": 1,
+   "why": "Quand on tourne la pierre, la croix s'ouvre en deux branches courbes."
+  },
+  {
+   "q": "Que peut montrer une pierre isotrope très contrainte ?",
+   "choices": [
+    "Quatre éclairs par tour",
+    "Aucune lumière jamais",
+    "Des taches ou une croix : c'est la double réfraction anormale",
+    "Un œil-de-taureau"
+   ],
+   "answer": 2,
+   "why": "Elle reste pourtant isotrope."
+  }
+ ]
+}

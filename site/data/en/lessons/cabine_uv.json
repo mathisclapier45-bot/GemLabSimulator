@@ -1,0 +1,48 @@
+{
+ "id": "cabine_uv",
+ "title": "The UV cabinet",
+ "tool": {
+  "name": "UV cabinet",
+  "measures": "the glow of a stone under ultraviolet rays, long-wave (365 nm) and short-wave (254 nm)",
+  "where": "Gemmology House and Office, bottom row, far left of the laboratory",
+  "records": [
+   "Long-wave UV fluorescence",
+   "Short-wave UV fluorescence"
+  ],
+  "tips": [
+   "Try both lamps",
+   "Switch off the lamp: does the glow stay?",
+   "Compare with a reference stone"
+  ]
+ },
+ "steps": [
+  {
+   "title": "An invisible light",
+   "text": "Beyond violet, there are rays that the eye cannot see: <b>ultraviolet</b> (UV). The cabinet has two lamps:\n• <b>long-wave UV</b>: 365 nm, the most common;\n• <b>short-wave UV</b>: 254 nm, more energetic.\n\nThe cabinet is closed and black: you never look directly at a UV lamp, it harms the eyes."
+  },
+  {
+   "title": "The stone lights up",
+   "text": "Some stones <b>absorb</b> UV and send it back as <b>visible</b> light, of a longer wavelength: this is <b>fluorescence</b>. In the dark, the stone glows.\n\nThe colour and strength of the glow depend on the stone: ruby glows <b>red</b> (chromium), some diamonds <b>blue</b>."
+  },
+  {
+   "title": "Two lamps, two answers",
+   "text": "The same stone can react <b>differently</b> to long-wave and short-wave UV. So you must try <b>both</b>.\n\nExample: a <b>natural blue sapphire</b> does not react (or hardly) to UV. A <b>synthetic blue sapphire</b> glows <b>green</b> under short-wave UV, and stays black under long-wave UV. The <b>synthetic blue spinel</b>, for its part, glows <b>red</b> under long-wave UV."
+  },
+  {
+   "title": "Fluorescence or phosphorescence?",
+   "text": "When the lamp is switched off, <b>fluorescence</b> stops at once. <b>Phosphorescence</b>, on the other hand, <b>goes on</b>: the stone keeps the energy and gives it back slowly, for a few seconds.\n\nA natural diamond is rarely phosphorescent. Some synthetic diamonds (HPHT) are: it is a clue."
+  },
+  {
+   "title": "What the cabinet reveals",
+   "text": "• <b>Ruby</b>, natural or synthetic: red (chromium).\n• <b>Blue sapphire</b>: natural, nothing; synthetic, green under short-wave UV.\n• <b>Diamond</b>: variable reaction, from none to strong; blue is the most common.\n• <b>Fluorite</b>: blue or violet. <b>Pearl</b>: bluish white.\n• <b>Emerald</b>: red. <b>Kunzite</b>: orange under long-wave UV.\n• <b>Glass</b>: variable, sometimes a chalky white veil."
+  },
+  {
+   "title": "Using the cabinet",
+   "text": "1. Put the stone in the cabinet: it is black.\n2. Switch on the long-wave UV lamp, look at the glow.\n3. Switch off, then try the short-wave UV.\n4. Switch off the lamp and look: does the glow stay?\n\nEach stone glows a little more or less than the average of its species: always compare with a reference stone."
+  },
+  {
+   "title": "To remember",
+   "text": "• UV makes some stones glow: the colour often says what colours or treats them.\n• You must try <b>both</b> lamps.\n• A glow that <b>lasts</b> after switching off is phosphorescence.\n• The reaction depends on the amount of trace elements, in natural as in synthetic stones: it is an <b>indication</b>, never proof of identity."
+  }
+ ]
+}

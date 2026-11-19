@@ -101,7 +101,7 @@ class SiteTestCase(unittest.TestCase):
 
     def setUp(self):
         conn = db.connect()
-        for table in ("rate_events", "reports", "posts", "topics", "tokens", "sessions", "outbox", "users"):
+        for table in ("rate_events", "price_reports", "reports", "posts", "topics", "tokens", "sessions", "outbox", "users"):
             conn.execute("DELETE FROM " + table)
         conn.commit()
         conn.close()
@@ -300,6 +300,586 @@ class TestEncyclopedia(SiteTestCase):
         out = markup.lesson_html("Un <b>mot</b> et <script>alert(1)</script>")
         self.assertIn("<b>mot</b>", out)
         self.assertNotIn("<script>", out)
+
+
+class TestLearning(SiteTestCase):
+    def test_quiz_data_is_valid(self):
+        from app import catalog
+        ids = [it["id"] for it in catalog.lessons()]
+        for lid in ids:
+            qs = catalog.quiz(lid)
+            self.assertTrue(qs, "no quiz for " + lid)
+            for q in qs:
+                self.assertEqual(len(q["choices"]), 4, q["q"])
+                self.assertTrue(0 <= q["answer"] < 4, q["q"])
+                self.assertTrue(q["why"], q["q"])
+        terms = catalog.glossary()[0]
+        for term in terms:
+            for lid in term.get("lessons", []):
+                self.assertIn(lid, ids, term["id"])
+
+    def test_glossary_page_and_links(self):
+        c = Client()
+        r = c.get("/glossaire")
+        self.assertEqual(r.status, 200)
+        self.assertIn('id="pleochroisme"', r.text)
+        lesson = c.get("/lecons/dichroscope").text
+        self.assertIn('class="gloss"', lesson)
+        self.assertIn('/glossaire#pleochroisme', lesson)
+        species = c.get("/encyclopedie/corindon-rubis").text
+        self.assertIn('/glossaire#indice-de-refraction', species)
+        self.assertIn('/comparer?a=corindon-rubis', species)
+
+    def test_each_term_is_linked_once_per_page(self):
+        from app import markup
+        seen = set()
+        out = markup.link_terms("<p>La dureté, la dureté, et un <a href=\"/x\">dureté</a>.</p>", seen)
+        self.assertEqual(out.count('class="gloss"'), 1)
+
+    def take(self, c, lesson_id, right=True):
+        """Fills in the quiz of a lesson exactly as the page asked it (the questions are drawn at random) and sends it."""
+        from app import catalog
+        page = c.get("/lecons/" + lesson_id).text
+        asked = re.search(r'name="asked" value="([0-9,]+)"', page).group(1)
+        bank = catalog.quiz(lesson_id)
+        data = {"asked": asked}
+        for i in map(int, asked.split(",")):
+            data["q%d" % i] = str(bank[i]["answer"] if right else (bank[i]["answer"] + 1) % len(bank[i]["choices"]))
+        return c.post("/lecons/%s/quiz" % lesson_id, data)
+
+    def test_quiz_as_visitor(self):
+        c = Client()
+        page = c.get("/lecons/aimant").text
+        self.assertIn('id="quiz"', page)
+        self.assertNotIn("data-answer", page)
+        r = self.take(c, "aimant")
+        self.assertEqual(r.status, 200)
+        self.assertIn("5</strong> / 5", r.text)
+        self.assertIn("pas enregistré", r.text)
+        self.assertEqual(c.get("/progression").status, 303)
+        self.assertEqual(c.post("/lecons/nimporte/quiz", {}).status, 404)
+
+    def test_quiz_is_drawn_and_shuffled(self):
+        from app import catalog
+        c = Client()
+        draws, first_choice = set(), set()
+        for _ in range(12):
+            page = c.get("/lecons/diamant_laboratoire").text
+            asked = re.search(r'name="asked" value="([0-9,]+)"', page).group(1)
+            ids = asked.split(",")
+            self.assertEqual(len(ids), 5)
+            self.assertEqual(len(set(ids)), 5)
+            draws.add(asked)
+            for i in ids:
+                self.assertEqual(len(re.findall(r'name="q%s"' % i, page)), 4)
+            first_choice.add(re.search(r'name="q%s" value="(\d)"' % ids[0], page).group(1))
+        self.assertGreater(len(draws), 1, "the questions never change")
+        self.assertGreater(len(first_choice), 1, "the choices are never shuffled")
+        self.assertGreaterEqual(len(catalog.quiz("diamant_laboratoire")), 6)
+
+    def test_quiz_ignores_bad_questions_ids(self):
+        c = Client()
+        r = c.post("/lecons/aimant/quiz", {"asked": "999,abc,-1,0,0", "q0": "0"})
+        self.assertEqual(r.status, 200)
+        self.assertIn("/ 1", r.text)
+
+    def test_quiz_progress_of_a_member(self):
+        c = self.member("quizzer")
+        r = self.take(c, "aimant", right=False)
+        self.assertEqual(r.status, 200)
+        self.assertIn("Pas encore réussi", r.text)
+        self.take(c, "aimant", right=True)
+        self.take(c, "aimant", right=False)
+        prog = c.get("/progression")
+        self.assertEqual(prog.status, 200)
+        self.assertIn("1</strong> / 22", prog.text)
+        conn = db.connect()
+        row = conn.execute("SELECT best, last, attempts FROM quiz_results").fetchone()
+        conn.close()
+        self.assertEqual((row["best"], row["attempts"]), (5, 3))
+        self.assertIn("5/5", c.get("/lecons").text)
+        self.assertIn("Mon compte", c.get("/compte").text)
+
+    def play_mixed(self, c, theme="all", right=True):
+        from app import catalog
+        page = c.get("/quiz/jouer?theme=" + theme).text
+        asked = re.search(r'name="asked" value="([^"]+)"', page).group(1)
+        data = {"theme": theme, "asked": asked}
+        for token in asked.split(","):
+            lid, num = token.split(":")
+            q = catalog.quiz(lid)[int(num)]
+            data["m_%s_%s" % (lid, num)] = str(q["answer"] if right else (q["answer"] + 1) % len(q["choices"]))
+        return page, asked, c.post("/quiz/jouer", data)
+
+    def test_mixed_quiz_draw(self):
+        c = Client()
+        self.assertEqual(c.get("/quiz").status, 200)
+        self.assertIn('href="/quiz"', c.get("/").text)
+        seen = set()
+        for theme in ("all", "base", "instruments"):
+            page = c.get("/quiz/jouer?theme=" + theme).text
+            self.assertEqual(page.count('<fieldset class="question">'), 20, theme)
+            asked = re.search(r'name="asked" value="([^"]+)"', page).group(1).split(",")
+            self.assertEqual(len(set(asked)), 20, theme)
+            seen.add(tuple(asked))
+            if theme == "all":
+                per_lesson = {}
+                for token in asked:
+                    per_lesson[token.split(":")[0]] = per_lesson.get(token.split(":")[0], 0) + 1
+                self.assertLessEqual(max(per_lesson.values()), 2)
+                self.assertGreaterEqual(len(per_lesson), 10)
+        self.assertEqual(len(seen), 3)
+        a = re.search(r'name="asked" value="([^"]+)"', c.get("/quiz/jouer").text).group(1)
+        b = re.search(r'name="asked" value="([^"]+)"', c.get("/quiz/jouer").text).group(1)
+        self.assertNotEqual(a, b)
+        self.assertNotEqual(c.get("/quiz/jouer?theme=n-importe-quoi").status, 500)
+
+    def test_mixed_quiz_correction(self):
+        c = Client()
+        page, asked, r = self.play_mixed(c, right=True)
+        self.assertEqual(r.status, 200)
+        self.assertIn("20</strong> / 20", r.text)
+        self.assertIn("Excellent", r.text)
+        self.assertEqual(r.text.count('class="answer ok"'), 20)
+        page, asked, r = self.play_mixed(c, theme="instruments", right=False)
+        self.assertIn("0</strong> / 20", r.text)
+        self.assertEqual(r.text.count('class="answer ko"'), 20)
+        self.assertIn("La bonne réponse", r.text)
+        self.assertIn("À revoir", r.text)
+        self.assertIn("Revoir la leçon", r.text)
+        self.assertIn("pas enregistré", r.text)
+        self.assertEqual(c.post("/quiz/jouer", {"asked": "x:1,zzz,aimant:999", "theme": "all"}).status, 303)
+
+    def test_mixed_quiz_is_kept_for_members(self):
+        c = self.member("mixer")
+        self.play_mixed(c, right=True)
+        self.play_mixed(c, right=False)
+        conn = db.connect()
+        rows = conn.execute("SELECT score, total FROM mixed_quiz ORDER BY id").fetchall()
+        conn.close()
+        self.assertEqual([(r["score"], r["total"]) for r in rows], [(20, 20), (0, 20)])
+        prog = c.get("/progression").text
+        self.assertIn("2 quiz faits", prog)
+        self.assertIn("meilleur score 100", prog)
+        self.assertIn("meilleur score est 100", c.get("/quiz").text)
+        c.post("/compte/supprimer", {"current": "correct-horse-battery"})
+        conn = db.connect()
+        self.assertEqual(conn.execute("SELECT COUNT(*) AS n FROM mixed_quiz").fetchone()["n"], 0)
+        conn.close()
+
+    def test_mixed_quiz_is_not_indexed_but_the_menu_page_is(self):
+        config.INDEXABLE = True
+        try:
+            c = Client()
+            self.assertEqual(c.get("/quiz").headers.get("x-robots-tag"), "index, follow")
+            self.assertIn("noindex", c.get("/quiz/jouer").headers.get("x-robots-tag", ""))
+            self.assertIn("<loc>http://127.0.0.1:8000/quiz</loc>", c.get("/sitemap.xml").text)
+        finally:
+            config.INDEXABLE = False
+
+    def test_site_search(self):
+        c = Client()
+        r = c.get("/recherche?q=pl%C3%A9ochro%C3%AFsme")
+        self.assertEqual(r.status, 200)
+        self.assertIn("Leçons", r.text)
+        self.assertIn("Glossaire", r.text)
+        self.assertIn('href="/glossaire#pleochroisme"', r.text)
+        self.assertIn('href="/lecons/dichroscope', r.text)
+        self.assertIn("<mark>", r.text)
+        self.assertIn("pleochroisme", c.get("/recherche?q=pleochroisme").text)
+        rubis = c.get("/recherche?q=rubis").text
+        self.assertIn('href="/encyclopedie/corindon-rubis"', rubis)
+        self.assertIn("Espèces", rubis)
+        self.assertIn("Rien trouvé", c.get("/recherche?q=zzzzqqq").text)
+        self.assertIn("Écris un nom", c.get("/recherche").text)
+        injected = c.get("/recherche?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E").text
+        self.assertNotIn("<script>alert(1)", injected)
+
+    def test_search_is_reachable_and_not_indexed(self):
+        c = Client()
+        self.assertIn('href="/recherche"', c.get("/").text)
+        self.assertIn('action="/recherche"', c.get("/").text)
+        config.INDEXABLE = True
+        try:
+            self.assertIn("noindex", c.get("/recherche?q=rubis").headers.get("x-robots-tag", ""))
+            self.assertIn("Disallow: /recherche", c.get("/robots.txt").text)
+        finally:
+            config.INDEXABLE = False
+
+    def test_home_page_sections(self):
+        c = Client()
+        r = c.get("/")
+        self.assertEqual(r.status, 200)
+        for marker in ('class="ribbon"', 'class="star"', 'class="facts"', 'class="path"', 'class="instruments"', 'class="quickform"', 'class="lessons-home"', 'herosearch'):
+            self.assertIn(marker, r.text, marker)
+        self.assertIn('action="/identification"', r.text)
+        self.assertEqual(c.get("/identification?ri=1.76&density=4.0").status, 200)
+
+    def test_home_never_shows_an_artificial_stone_of_the_day(self):
+        import datetime
+        from app import catalog, home
+        natural = {s["id"] for s in home.natural_species(catalog.data()["species"])}
+        for forbidden in ("CZ", "Verre", "YAG", "GGG", "Titanate_Strontium"):
+            self.assertNotIn(forbidden, natural)
+        self.assertGreater(len(natural), 90)
+
+    def test_compare(self):
+        c = Client()
+        self.assertEqual(c.get("/comparer").status, 200)
+        r = c.get("/comparer?a=corindon-rubis&b=spinelle")
+        self.assertEqual(r.status, 200)
+        self.assertIn("Tableau comparatif", r.text)
+        self.assertIn("polariscope", r.text)
+        self.assertIn("réfractomètre", r.text.lower())
+        self.assertIn("Choisis deux espèces différentes", c.get("/comparer?a=spinelle&b=spinelle").text)
+        self.assertIn("Choisis la deuxième", c.get("/comparer?a=spinelle").text)
+        self.assertEqual(c.get("/comparer?a=n-importe-quoi&b=x").status, 200)
+
+
+class TestPublication(SiteTestCase):
+    FIELDS = {"GEMLAB_PUBLISHER_NAME": "Jeanne Dupont", "GEMLAB_PUBLISHER_STATUS": "micro-entreprise", "GEMLAB_PUBLISHER_ADDRESS": "1 rue des Gemmes, 75001 Paris",
+              "GEMLAB_PUBLISHER_DIRECTOR": "Jeanne Dupont", "GEMLAB_CONTACT_EMAIL": "contact@example.org", "GEMLAB_HOST_NAME": "Hebergeur SA",
+              "GEMLAB_HOST_ADDRESS": "2 rue du Serveur, 59000 Lille", "GEMLAB_HOST_PHONE": "03 00 00 00 00"}
+
+    def test_legal_pages_exist_and_ask_to_complete(self):
+        c = Client()
+        for path, marker in (("/mentions-legales", "Éditeur du site"), ("/confidentialite", "Cookies"), ("/contact", "Contact"), ("/a-propos", "Le simulateur")):
+            r = c.get(path)
+            self.assertEqual(r.status, 200, path)
+            self.assertIn(marker, r.text, path)
+        self.assertIn('class="todo"', c.get("/mentions-legales").text)
+        home = c.get("/").text
+        for link in ("/mentions-legales", "/confidentialite", "/contact", "/a-propos"):
+            self.assertIn('href="{}"'.format(link), home)
+
+    def test_legal_pages_show_the_publisher(self):
+        os.environ.update(self.FIELDS)
+        try:
+            c = Client()
+            notice = c.get("/mentions-legales").text
+            for value in ("Jeanne Dupont", "micro-entreprise", "Hebergeur SA", "03 00 00 00 00"):
+                self.assertIn(value, notice)
+            self.assertNotIn('class="todo"', notice)
+            self.assertIn("mailto:contact@example.org", c.get("/contact").text)
+            self.assertIn("1 rue des Gemmes", c.get("/confidentialite").text)
+        finally:
+            for k in self.FIELDS:
+                os.environ.pop(k, None)
+
+    def test_private_by_default(self):
+        c = Client()
+        self.assertEqual(c.get("/sitemap.xml").status, 404)
+        self.assertIn("Disallow: /\n", c.get("/robots.txt").text)
+        r = c.get("/encyclopedie/diamant")
+        self.assertNotIn("canonical", r.text)
+        self.assertIn("noindex", r.headers.get("x-robots-tag", ""))
+
+    def test_open_to_search_engines(self):
+        config.INDEXABLE = True
+        try:
+            c = Client()
+            r = c.get("/encyclopedie/diamant")
+            self.assertEqual(r.headers.get("x-robots-tag"), "index, follow")
+            self.assertIn('<meta name="robots" content="index, follow">', r.text)
+            self.assertIn('rel="canonical"', r.text)
+            for private in ("/connexion", "/inscription", "/forum", "/simulateur", "/compte"):
+                self.assertIn("noindex", c.get(private).headers.get("x-robots-tag", ""), private)
+            robots = c.get("/robots.txt").text
+            self.assertIn("Sitemap:", robots)
+            self.assertIn("Disallow: /forum", robots)
+            self.assertNotIn("Disallow: /\n", robots)
+            sitemap = c.get("/sitemap.xml")
+            self.assertEqual(sitemap.status, 200)
+            self.assertIn("/encyclopedie/diamant", sitemap.text)
+            self.assertIn("/lecons/aimant", sitemap.text)
+            self.assertIn("/glossaire", sitemap.text)
+            self.assertNotIn("/forum", sitemap.text)
+            self.assertNotIn("/simulateur", sitemap.text)
+        finally:
+            config.INDEXABLE = False
+
+    def test_share_tags_and_icon(self):
+        c = Client()
+        r = c.get("/lecons/aimant")
+        for tag in ('property="og:title"', 'property="og:image"', 'name="twitter:card"', 'name="description"', 'rel="icon"'):
+            self.assertIn(tag, r.text, tag)
+        self.assertEqual(c.get("/favicon.ico").status, 303)
+        for path in ("/static/img/favicon.svg", "/static/img/og-image.png", "/static/img/apple-touch-icon.png"):
+            self.assertEqual(c.get(path).status, 200, path)
+
+    def test_not_found_page_helps(self):
+        r = Client().get("/page-qui-nexiste-pas")
+        self.assertEqual(r.status, 404)
+        self.assertIn('name="q"', r.text)
+        self.assertIn('href="/glossaire"', r.text)
+
+    def test_delete_account(self):
+        c = self.member("bye")
+        c.post("/lecons/aimant/quiz", {"q0": "0", "q1": "1", "q2": "2", "q3": "3"})
+        r = c.post("/forum/libre/nouveau", {"title": "Mon sujet", "body": "Un message qui doit rester"})
+        self.assertEqual(r.status, 303)
+        topic_url = r.headers["location"]
+        self.assertEqual(c.post("/compte/supprimer", {"current": "mauvais mot de passe"}).status, 400)
+        r = c.post("/compte/supprimer", {"current": "correct-horse-battery"})
+        self.assertEqual(r.status, 303)
+        conn = db.connect()
+        user = conn.execute("SELECT * FROM users WHERE username LIKE 'membre-supprime-%'").fetchone()
+        self.assertIsNotNone(user)
+        self.assertNotIn("bye", user["email"])
+        self.assertEqual(conn.execute("SELECT COUNT(*) AS n FROM quiz_results WHERE user_id = ?", (user["id"],)).fetchone()["n"], 0)
+        conn.close()
+        self.assertEqual(c.get("/compte").status, 303)
+        reader = self.member("reader")
+        page = reader.get(topic_url).text
+        self.assertIn("Un message qui doit rester", page)
+        self.assertIn("membre-supprime-", page)
+        login = Client().post("/connexion", {"email": "bye@example.com", "password": "correct-horse-battery"})
+        self.assertNotEqual(login.status, 303)
+
+    def test_admin_cannot_delete_account_here(self):
+        c = self.member("boss", admin=True)
+        self.assertEqual(c.post("/compte/supprimer", {"current": "correct-horse-battery"}).status, 400)
+
+
+class TestAccessibility(SiteTestCase):
+    PAGES = ["/", "/encyclopedie", "/encyclopedie/diamant", "/encyclopedie/formes", "/identification", "/comparer?a=corindon-rubis&b=spinelle",
+             "/glossaire", "/lecons", "/lecons/dichroscope", "/quiz", "/quiz/jouer", "/recherche?q=rubis", "/connexion", "/inscription",
+             "/mentions-legales", "/confidentialite", "/contact", "/a-propos", "/page-introuvable"]
+
+    @staticmethod
+    def audit(page):
+        """Basic structure problems of a page: language, one h1, alt texts, labels of the fields, names of the buttons."""
+        from html.parser import HTMLParser
+        problems = []
+
+        class P(HTMLParser):
+            def __init__(self):
+                super().__init__()
+                self.h1 = 0
+                self.stack = []
+                self.label_for = set()
+                self.fields = []
+                self.lang = False
+                self.button_text = None
+                self.buttons = []
+
+            def handle_starttag(self, tag, attrs):
+                a = dict(attrs)
+                if tag == "html" and a.get("lang"):
+                    self.lang = True
+                if tag == "h1":
+                    self.h1 += 1
+                if tag == "img" and "alt" not in a:
+                    problems.append("image sans alt : " + str(a.get("src")))
+                if tag == "label":
+                    if a.get("for"):
+                        self.label_for.add(a["for"])
+                    self.stack.append("label")
+                if tag in ("input", "select", "textarea") and a.get("type") not in ("hidden", "submit", "button"):
+                    self.fields.append((a, "label" in self.stack))
+                if tag == "button":
+                    self.button_text = ""
+                    self.buttons.append([a, ""])
+                if tag == "a" and a.get("href", "").startswith("/") is False and a.get("target") == "_blank" and "noopener" not in a.get("rel", ""):
+                    problems.append("lien externe sans noopener : " + a.get("href", ""))
+
+            def handle_endtag(self, tag):
+                if tag == "label" and "label" in self.stack:
+                    self.stack.remove("label")
+                if tag == "button":
+                    self.button_text = None
+
+            def handle_data(self, data):
+                if self.button_text is not None:
+                    self.buttons[-1][1] += data.strip()
+
+        p = P()
+        p.feed(page)
+        if not p.lang:
+            problems.append("pas d'attribut lang")
+        if p.h1 != 1:
+            problems.append("{} titres h1".format(p.h1))
+        for a, inside in p.fields:
+            if not (inside or a.get("aria-label") or a.get("id") in p.label_for):
+                problems.append("champ sans libellé : " + str(a.get("name")))
+        for a, text in p.buttons:
+            if not (text or a.get("aria-label")):
+                problems.append("bouton sans nom")
+        if 'id="main"' not in page or 'class="skip"' not in page:
+            problems.append("pas de lien d'évitement ni de zone principale")
+        return problems
+
+    def test_pages_are_well_structured(self):
+        c = Client()
+        for path in self.PAGES:
+            r = c.get(path)
+            self.assertIn(r.status, (200, 404), path)
+            self.assertEqual(self.audit(r.text), [], path)
+
+    def test_contrast_of_the_theme(self):
+        sys.path.insert(0, str(SITE / "tools"))
+        import check_contrast
+        self.assertEqual(check_contrast.main(), 0)
+
+    def test_every_drawing_has_a_text_description(self):
+        from app import catalog
+        c = Client()
+        for item in catalog.lessons():
+            page = c.get("/lecons/" + item["id"]).text
+            figures = [s["figure"] for s in item["steps"] if s.get("figure")]
+            self.assertEqual(page.count('class="figdesc"'), len(figures), item["id"])
+            for fig in figures:
+                self.assertTrue(i18n.has("fr", "fig.desc." + fig), fig)
+        self.assertIn("Décrire ce schéma", c.get("/lecons/dichroscope").text)
+
+    def test_animations_can_be_paused(self):
+        c = Client()
+        home = c.get("/").text
+        self.assertIn('class="motion-toggle', home)
+        self.assertIn('/static/js/motion.js', home)
+        self.assertEqual(c.get("/static/js/motion.js").status, 200)
+        self.assertIn("[data-motion=\"off\"]", c.get("/static/css/theme.css").text)
+
+    def test_drawing_texts_are_ready_to_translate(self):
+        sys.path.insert(0, str(SITE / "tools"))
+        import extract_figure_texts
+        import json as _json
+        template = _json.loads((SITE / "static" / "i18n" / "figures.template.json").read_text(encoding="utf-8"))
+        self.assertEqual(list(template), extract_figure_texts.figure_texts(), "relancer tools/extract_figure_texts.py")
+        js = (SITE / "static" / "js" / "lessonfig.js").read_text(encoding="utf-8")
+        self.assertIn("figures.", js)
+        self.assertIn("kit.t(String(text))", js)
+
+
+class TestEnglish(SiteTestCase):
+    def test_every_text_is_translated_with_the_same_holes(self):
+        import json as _json
+        fr = _json.loads((SITE / "i18n" / "fr.json").read_text(encoding="utf-8"))
+        en = _json.loads((SITE / "i18n" / "en.json").read_text(encoding="utf-8"))
+        self.assertEqual(set(fr), set(en), "i18n/en.json n'a pas les mêmes clés que fr.json")
+        hole = re.compile(r"\{[a-z_0-9]+\}")
+        for key in fr:
+            self.assertEqual(sorted(hole.findall(fr[key])), sorted(hole.findall(en[key])), key)
+        self.assertEqual(sum(1 for v in en.values() if not v.strip()), 0)
+
+    def test_content_files_are_complete(self):
+        import json as _json
+        from app import catalog
+        for item in catalog.lessons():
+            over = SITE / "data" / "en" / "lessons" / (item["id"] + ".json")
+            self.assertTrue(over.exists(), item["id"])
+            data = _json.loads(over.read_text(encoding="utf-8"))
+            self.assertEqual(len(data["steps"]), len(item["steps"]), item["id"])
+            quiz = _json.loads((SITE / "data" / "en" / "quizzes" / (item["id"] + ".json")).read_text(encoding="utf-8"))["questions"]
+            french = catalog.quiz(item["id"])
+            self.assertEqual(len(quiz), len(french), item["id"])
+            for q, f in zip(quiz, french):
+                self.assertEqual(len(q["choices"]), len(f["choices"]), q["q"])
+        glossary = _json.loads((SITE / "data" / "en" / "glossary.json").read_text(encoding="utf-8"))
+        self.assertEqual([g["id"] for g in glossary], [g["id"] for g in catalog.glossary()[0]] if False else [t["id"] for t in _json.loads((SITE / "data" / "glossary.json").read_text(encoding="utf-8"))])
+        figures = _json.loads((SITE / "static" / "i18n" / "figures.en.json").read_text(encoding="utf-8"))
+        template = _json.loads((SITE / "static" / "i18n" / "figures.template.json").read_text(encoding="utf-8"))
+        self.assertEqual(list(figures), list(template), "figures.en.json n'est plus à jour")
+        self.assertEqual(sum(1 for v in figures.values() if not v), 0)
+
+    def test_english_pages_and_links(self):
+        c = Client()
+        r = c.get("/en")
+        self.assertEqual(r.status, 200)
+        self.assertIn('<html lang="en">', r.text)
+        self.assertIn("Learn to recognize gemstones", r.text)
+        self.assertIn('href="/en/encyclopedie"', r.text)
+        self.assertIn('href="/en/lecons"', r.text)
+        self.assertIn('href="/static/css/theme.css"', r.text)
+        self.assertNotIn('href="/encyclopedie"', r.text)
+        self.assertIn('action="/en/recherche"', r.text)
+        for path in ("/en/encyclopedie", "/en/encyclopedie/diamant", "/en/lecons", "/en/lecons/dichroscope", "/en/glossaire", "/en/quiz", "/en/quiz/jouer",
+                     "/en/comparer", "/en/identification", "/en/recherche?q=hardness", "/en/connexion", "/en/inscription", "/en/mentions-legales",
+                     "/en/confidentialite", "/en/contact", "/en/a-propos", "/en/page-qui-nexiste-pas"):
+            page = c.get(path)
+            self.assertIn(page.status, (200, 404), path)
+            self.assertIn('<html lang="en">', page.text, path)
+            body = re.sub(r'<a class="langswitch"[^>]*>', "", page.text)
+            self.assertNotIn('href="/encyclopedie', body, path)
+        self.assertEqual(c.get("/en/page-qui-nexiste-pas").status, 404)
+        self.assertIn("Hardness 10 · RI 2.417", c.get("/en/encyclopedie?q=diamant").text)
+        self.assertIn("Dureté 10 · IR 2,417", c.get("/encyclopedie?q=diamant").text)
+
+    def test_language_switch_and_alternates(self):
+        c = Client()
+        fr = c.get("/lecons/dichroscope?x=1").text
+        self.assertIn('hreflang="en" lang="en"', fr)
+        self.assertIn('href="/en/lecons/dichroscope?x=1" hreflang="en"', fr)
+        self.assertIn('rel="alternate" hreflang="en"', fr)
+        en = c.get("/en/lecons/dichroscope").text
+        self.assertIn('href="/lecons/dichroscope" hreflang="fr"', en)
+        self.assertIn('rel="alternate" hreflang="fr"', en)
+        self.assertIn('href="/en"', c.get("/en/encyclopedie").text)
+        self.assertIn('href="/en" hreflang="fr"' if False else 'hreflang="fr" lang="fr"', c.get("/en").text)
+
+    def test_lessons_quiz_and_glossary_in_english(self):
+        c = Client()
+        lesson = c.get("/en/lecons/dichroscope").text
+        self.assertIn("The dichroscope", lesson)
+        self.assertIn("pleochroism", lesson)
+        self.assertIn('href="/en/glossaire#pleochroisme"', lesson)
+        self.assertIn("Describe this drawing", lesson)
+        self.assertIn("Pleochroism", c.get("/en/glossaire").text)
+        quiz = c.get("/en/lecons/aimant").text
+        self.assertIn("Check my answers", quiz)
+        from app import catalog
+        bank = catalog.quiz("aimant")
+        page = quiz
+        asked = re.search(r'name="asked" value="([0-9,]+)"', page).group(1)
+        data = {"asked": asked}
+        for i in map(int, asked.split(",")):
+            data["q%d" % i] = str(bank[i]["answer"])
+        result = c.post("/en/lecons/aimant/quiz", data)
+        self.assertIn("5</strong> / 5", result.text)
+        self.assertIn("Passed!", result.text)
+        self.assertIn("Correct", result.text)
+        mixed = c.get("/en/quiz/jouer").text
+        self.assertEqual(mixed.count('<fieldset class="question">'), 20)
+        self.assertIn("/en/quiz", mixed)
+
+    def test_english_search(self):
+        c = Client()
+        r = c.get("/en/recherche?q=cleavage")
+        self.assertIn("Cleavage", r.text)
+        self.assertIn('href="/en/lecons/tenacite', r.text)
+        self.assertIn("<mark>", r.text)
+
+    def test_redirects_keep_the_language(self):
+        c = Client()
+        r = c.get("/en/compte")
+        self.assertEqual(r.status, 303)
+        self.assertTrue(r.headers["location"].startswith("/en/connexion"), r.headers["location"])
+        self.assertTrue(Client().get("/compte").headers["location"].startswith("/connexion"))
+
+    def test_english_member_flow(self):
+        c = Client()
+        r = c.post("/en/inscription", {"username": "eve", "email": "eve@example.com", "password": "correct-horse-battery", "password2": "correct-horse-battery"})
+        self.assertEqual(r.status, 200)
+        self.assertIn("Almost done", r.text)
+        mail = self.mails()[-1]
+        self.assertIn("Hello eve", mail["body"])
+        self.assertIn("/en/verification?token=", mail["body"])
+
+    def test_sitemap_and_robots_list_both_languages(self):
+        config.INDEXABLE = True
+        try:
+            c = Client()
+            sitemap = c.get("/sitemap.xml").text
+            self.assertIn("/en/encyclopedie/diamant", sitemap)
+            self.assertIn('hreflang="en"', sitemap)
+            self.assertIn("<loc>http://127.0.0.1:8000/en</loc>", sitemap)
+            self.assertIn("Disallow: /en/forum", c.get("/robots.txt").text)
+            en = c.get("/en/encyclopedie/diamant")
+            self.assertEqual(en.headers.get("x-robots-tag"), "index, follow")
+            self.assertIn('rel="canonical" href="http://127.0.0.1:8000/en/encyclopedie/diamant"', en.text)
+            self.assertIn("noindex", c.get("/en/forum").headers.get("x-robots-tag", ""))
+        finally:
+            config.INDEXABLE = False
 
 
 class TestAccounts(SiteTestCase):
@@ -640,6 +1220,219 @@ class TestSimulator(SiteTestCase):
         self.assertEqual(c.get("/simulateur/fichiers/WebCours.loader.js").status, 200)
         c.post("/deconnexion")
         self.assertEqual(c.get("/simulateur/fichiers/WebCours.loader.js").status, 403)
+
+
+class TestPrices(SiteTestCase):
+    SP = "Grenat_Spessartite"
+    SLUG = "grenat-spessartite"
+
+    def add_rows(self, weights_prices, kind="asking", status="approved", species=None, color=3, clarity="eye_clean", treatment="none", user=None):
+        from app import prices
+        conn = db.connect()
+        for w, p in weights_prices:
+            prices.add_report(conn, user, {"species": species or self.SP, "weight": w, "price": p, "kind": kind, "color": color,
+                                           "clarity": clarity, "treatment": treatment, "observed": prices.this_month()}, status)
+        conn.commit()
+        conn.close()
+
+    def form(self, **kw):
+        from app import prices
+        data = {"species": self.SLUG, "weight": "1,5", "price": "900", "kind": "asking", "color": "3", "clarity": "eye_clean",
+                "treatment": "none", "observed": prices.this_month(), "confirm": "1"}
+        data.update(kw)
+        return data
+
+    # -- the calculation
+    def test_no_price_gives_no_estimate(self):
+        from app import prices
+        self.assertEqual(prices.estimate([], 1.0)["status"], "none")
+
+    def test_too_few_prices_give_no_range(self):
+        from app import prices
+        rows = [{"weight": 1.0, "ppc": 500 + i, "price": 500, "kind": "asking", "observed": prices.this_month()} for i in range(4)]
+        self.assertEqual(prices.estimate(rows, 1.0)["status"], "few")
+
+    def test_band_estimate_ignores_extreme_values(self):
+        from app import prices
+        values = [480, 500, 510, 520, 540, 560, 9000]
+        rows = [{"weight": 1.2, "ppc": v, "price": v * 1.2, "kind": "asking", "observed": prices.this_month()} for v in values]
+        est = prices.estimate(rows, 1.2)
+        self.assertEqual(est["status"], "ok")
+        self.assertEqual(est["method"], "band")
+        low, med, high = est["ppc"]
+        self.assertTrue(low <= med <= high)
+        self.assertLess(high, 1000)           # the 9000 outlier does not stretch the range
+        self.assertAlmostEqual(est["total"][1], med * 1.2)
+
+    def test_trend_when_the_band_is_thin_but_the_whole_is_rich(self):
+        from app import prices
+        rows = [{"weight": w, "ppc": 100 * w ** 0.4, "price": 0, "kind": "paid", "observed": prices.this_month()}
+                for w in (0.3, 0.4, 0.6, 0.8, 1.2, 1.6, 2.5, 3.5, 6.0)]
+        est = prices.estimate(rows, 2.0)
+        self.assertEqual(est["status"], "ok")
+        self.assertEqual(est["method"], "trend")
+        self.assertEqual(est["confidence"], "low")
+        self.assertAlmostEqual(est["ppc"][1], 100 * 2.0 ** 0.4, delta=3)
+        self.assertEqual(prices.estimate(rows, 80.0)["status"], "few")   # far outside the data: no extrapolation
+
+    def test_checks_on_a_contribution(self):
+        from app import prices
+        ids = {self.SP}
+        good = {"species": self.SP, "weight": "1,5", "price": "900", "kind": "paid", "color": "3", "clarity": "eye_clean", "treatment": "none", "observed": prices.this_month()}
+        self.assertEqual(prices.clean_report(good, ids)["weight"], 1.5)
+        for change in ({"species": "Inconnue"}, {"weight": "0"}, {"weight": "abc"}, {"price": "-5"}, {"price": "5000000"}, {"price": "1", "weight": "400"},
+                       {"kind": "x"}, {"color": "9"}, {"observed": "2999-01"}, {"observed": "2001-01"}, {"observed": "oups"}):
+            with self.assertRaises(Exception, msg=str(change)):
+                prices.clean_report(dict(good, **change), ids)
+
+    # -- the pages
+    def test_prices_page_is_public_in_both_languages(self):
+        c = Client()
+        for path, word in (("/prix", "Estimer le prix"), ("/en/prix", "Estimate the price")):
+            r = c.get(path)
+            self.assertEqual(r.status, 200, path)
+            self.assertIn(word, r.text)
+        self.assertNotIn("Grenat Spessartite 1 ct", c.get("/prix").text)
+
+    def test_empty_table_says_no_data(self):
+        r = Client().get("/prix?s=" + self.SLUG + "&w=1")
+        self.assertIn("Aucun prix n&#x27;est encore enregistré", r.text)
+        self.assertNotIn('class="estimate"', r.text)
+
+    def test_range_is_shown_from_approved_prices_only(self):
+        self.add_rows([(1.0, 450), (1.1, 500), (1.2, 560), (1.3, 600), (1.4, 640), (1.5, 700)])
+        self.add_rows([(1.2, 99999)], status="pending")
+        r = Client().get("/prix?s=" + self.SLUG + "&w=1,2")
+        self.assertIn('class="estimate"', r.text)
+        self.assertIn("par carat", r.text)
+        self.assertNotIn("99999", r.text)
+        self.assertIn("<svg", r.text)
+        self.assertIn('role="img"', r.text)
+        en = Client().get("/en/prix?s=" + self.SLUG + "&w=1.2").text
+        self.assertIn("per carat", en)
+        self.assertIn("This figure is a guide only", en)
+
+    def test_filters_reduce_the_prices_used(self):
+        self.add_rows([(1.0, 450), (1.1, 500), (1.2, 560), (1.3, 600), (1.4, 640)], treatment="heated")
+        r = Client().get("/prix?s=" + self.SLUG + "&w=1.2&t=none")
+        self.assertNotIn('class="estimate"', r.text)
+
+    def test_bad_input_does_not_crash(self):
+        c = Client()
+        for q in ("?s=nope&w=1", "?s=" + self.SLUG + "&w=abc", "?s=" + self.SLUG + "&w=-3", "?s=" + self.SLUG + "&w=1e999", "?s=" + self.SLUG + "&w=1&c=zz&q=zz&t=zz&k=zz"):
+            self.assertEqual(c.get("/prix" + q).status, 200, q)
+
+    def test_synthetics_have_no_price_page(self):
+        self.assertNotIn('value="cz"', Client().get("/prix").text)
+
+    # -- adding a price
+    def test_visitors_cannot_add(self):
+        c = Client()
+        self.assertEqual(c.get("/prix/ajouter").status, 303)
+        self.assertEqual(c.post("/prix/ajouter", self.form()).status, 303)
+
+    def test_unverified_member_cannot_add(self):
+        c = self.member("alice", verified=False)
+        self.assertEqual(c.post("/prix/ajouter", self.form()).status, 403)
+
+    def test_a_member_price_waits_for_the_administrator(self):
+        c = self.member("alice")
+        r = c.post("/prix/ajouter", self.form())
+        self.assertEqual(r.status, 303)
+        self.assertIn("En attente de vérification", c.get("/prix/ajouter").text)
+        self.assertEqual(len(__import__("app.prices", fromlist=["x"]).approved_rows(db.connect(), self.SP)), 0)
+        boss = self.member("boss", admin=True)
+        page = boss.get("/admin/prix").text
+        self.assertIn("1 en attente", page)
+        conn = db.connect()
+        rid = conn.execute("SELECT id FROM price_reports").fetchone()["id"]
+        conn.close()
+        self.assertEqual(c.post("/admin/prix/{}/approuver".format(rid)).status, 403)
+        self.assertEqual(boss.post("/admin/prix/{}/approuver".format(rid)).status, 303)
+        conn = db.connect()
+        self.assertEqual(len(__import__("app.prices", fromlist=["x"]).approved_rows(conn, self.SP)), 1)
+        conn.close()
+
+    def test_rejected_price_is_not_used(self):
+        c = self.member("alice")
+        c.post("/prix/ajouter", self.form())
+        boss = self.member("boss", admin=True)
+        conn = db.connect()
+        rid = conn.execute("SELECT id FROM price_reports").fetchone()["id"]
+        conn.close()
+        boss.post("/admin/prix/{}/rejeter".format(rid))
+        conn = db.connect()
+        self.assertEqual(conn.execute("SELECT status FROM price_reports").fetchone()["status"], "rejected")
+        conn.close()
+
+    def test_administrator_prices_are_published_at_once(self):
+        boss = self.member("boss", admin=True)
+        boss.post("/prix/ajouter", self.form())
+        conn = db.connect()
+        self.assertEqual(conn.execute("SELECT status FROM price_reports").fetchone()["status"], "approved")
+        conn.close()
+
+    def test_invalid_and_repeated_prices_are_refused(self):
+        c = self.member("alice")
+        self.assertEqual(c.post("/prix/ajouter", self.form(weight="0")).status, 400)
+        self.assertEqual(c.post("/prix/ajouter", self.form(confirm="")).status, 400)
+        self.assertEqual(c.post("/prix/ajouter", self.form(species="cz")).status, 400)
+        self.assertEqual(c.post("/prix/ajouter", {**self.form(), "website": "http://spam"}).status, 400)
+        self.assertEqual(c.post("/prix/ajouter", self.form()).status, 303)
+        self.assertEqual(c.post("/prix/ajouter", self.form()).status, 400)       # same price again
+        conn = db.connect()
+        self.assertEqual(conn.execute("SELECT COUNT(*) AS n FROM price_reports").fetchone()["n"], 1)
+        conn.close()
+
+    def test_daily_limit(self):
+        c = self.member("alice")
+        for i in range(10):
+            self.assertEqual(c.post("/prix/ajouter", self.form(price=str(900 + i))).status, 303)
+        self.assertEqual(c.post("/prix/ajouter", self.form(price="1500")).status, 429)
+
+    def test_form_needs_csrf(self):
+        c = self.member("alice")
+        self.assertEqual(c.post("/prix/ajouter", self.form(), csrf=False).status, 403)
+
+    def test_deleting_the_account_keeps_the_price_but_not_the_link(self):
+        c = self.member("alice")
+        c.post("/prix/ajouter", self.form())
+        c.post("/compte/supprimer", {"current": "correct-horse-battery"})
+        conn = db.connect()
+        row = conn.execute("SELECT * FROM price_reports").fetchone()
+        self.assertIsNotNone(row)
+        self.assertIsNone(row["user_id"])
+        conn.close()
+
+    # -- files
+    def test_import_and_export(self):
+        from app import prices
+        conn = db.connect()
+        text = ("species,weight_ct,price_eur,kind,color_tier,clarity,treatment,observed\n"
+                "{sp},1.2,600,asking,3,eye_clean,none,{m}\n{sp},1.2,600,asking,3,eye_clean,none,{m}\nInconnue,1,100,asking,3,eye_clean,none,{m}\n"
+                "{slug},2,1500,paid,4,loupe_clean,heated,{m}\n").format(sp=self.SP, slug=self.SLUG, m=prices.this_month())
+        added, problems = prices.import_csv(conn, text)
+        conn.commit()
+        self.assertEqual(added, 2)
+        self.assertEqual([n for n, _ in problems], [3, 4])
+        out = prices.export_csv(conn)
+        conn.close()
+        self.assertEqual(len(out.strip().splitlines()), 3)
+        self.assertNotIn("user", out.lower().split("\n")[0])
+        self.assertEqual(prices.import_csv(db.connect(), "a,b\n1,2\n")[0], 0)
+
+    # -- integration
+    def test_navigation_and_sitemap(self):
+        self.assertIn('href="/prix"', Client().get("/").text)
+        self.assertIn('href="/en/prix"', Client().get("/en/").text)
+        self.assertIn("/prix?s=grenat-spessartite", Client().get("/encyclopedie/" + self.SLUG).text)
+        config.INDEXABLE = True
+        try:
+            self.assertIn("<loc>http://127.0.0.1:8000/prix</loc>", Client().get("/sitemap.xml").text)
+            self.assertEqual(Client().get("/prix").headers.get("x-robots-tag"), "index, follow")
+            self.assertIn("noindex", self.member("alice").get("/prix/ajouter").headers.get("x-robots-tag", ""))
+        finally:
+            config.INDEXABLE = False
 
 
 class TestCode(unittest.TestCase):

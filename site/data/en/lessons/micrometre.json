@@ -1,0 +1,35 @@
+{
+ "id": "micrometre",
+ "title": "The micrometer",
+ "tool": {
+  "name": "Micrometer (calliper)",
+  "measures": "the dimensions of the stone: length, width, depth, in millimetres",
+  "where": "Gemmology House and Office, laboratory",
+  "records": [
+   "Dimensions"
+  ],
+  "tips": [
+   "Measure the greatest length, then the width, then the height",
+   "Tighten gently: never force the stone",
+   "Write down the three numbers: they are used to estimate the weight"
+  ]
+ },
+ "steps": [
+  {
+   "title": "Measuring without a balance",
+   "text": "The <b>micrometer</b> is a small precision calliper. It measures the stone to a tenth of a millimetre. You tighten it gently against the two sides of the stone and read the scale."
+  },
+  {
+   "title": "Three measurements",
+   "text": "Three dimensions are always taken:\n• the <b>length</b> (the greatest);\n• the <b>width</b>;\n• the <b>depth</b>, from the table to the point.\n\nOn a round stone, length and width are almost equal."
+  },
+  {
+   "title": "Why measure?",
+   "text": "The dimensions describe the stone in a report, and above all they allow you to <b>estimate the weight</b> of a set stone, which cannot be put on the balance. Each cut and each material has its formula: the density of the stone comes into play.\n\nThey also say whether the cut is <b>well proportioned</b>: a stone that is too deep or too flat loses its life."
+  },
+  {
+   "title": "To remember",
+   "text": "• Length, width, depth, in <b>millimetres</b>.\n• Tighten without forcing, on the edges of the stone.\n• The dimensions are used to describe the stone and to estimate its weight when the balance is impossible."
+  }
+ ]
+}

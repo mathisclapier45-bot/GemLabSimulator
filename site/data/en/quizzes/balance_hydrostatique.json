@@ -1,0 +1,75 @@
+{
+ "lesson": "balance_hydrostatique",
+ "questions": [
+  {
+   "q": "Which principle makes it possible to calculate the density of a stone?",
+   "choices": [
+    "Archimedes' principle",
+    "Descartes' law",
+    "Mohs' law",
+    "Raman's principle"
+   ],
+   "why": "In water, the stone seems lighter: the water pushes it upwards."
+  },
+  {
+   "q": "What is the formula for density?",
+   "choices": [
+    "d = P air × P water",
+    "d = P air ÷ (P air − P water)",
+    "d = P water ÷ P air",
+    "d = P air + P water"
+   ],
+   "why": "Two weighings are needed."
+  },
+  {
+   "q": "A stone weighs 2.00 ct in air and 1.45 ct in water. Its density is about…",
+   "choices": [
+    "1.38",
+    "0.55",
+    "3.64",
+    "2.90"
+   ],
+   "why": "2.00 ÷ (2.00 − 1.45) = 2.00 ÷ 0.55."
+  },
+  {
+   "q": "What precaution should be taken before weighing in water?",
+   "choices": [
+    "Heat it",
+    "Polish it",
+    "Weigh it with leather gloves",
+    "The stone must be dry and with no air bubble stuck to it"
+   ],
+   "why": "A bubble would distort the push."
+  },
+  {
+   "q": "What is the approximate density of quartz?",
+   "choices": [
+    "About 2.65",
+    "About 4.0",
+    "About 3.52",
+    "About 1.0"
+   ],
+   "why": "Corundum is around 4.0 and diamond 3.52."
+  },
+  {
+   "q": "The denser the stone, the more…",
+   "choices": [
+    "it floats",
+    "the push of the water relieves it little compared with its weight",
+    "it seems light in water",
+    "it is hard"
+   ],
+   "why": "This is Archimedes' principle."
+  },
+  {
+   "q": "Is density alone enough to identify a stone?",
+   "choices": [
+    "Yes, always",
+    "Yes, if the stone is cut",
+    "No: several species look alike, so measurements must be cross-checked",
+    "Yes, for coloured stones"
+   ],
+   "why": "Each species has its density, but some overlap."
+  }
+ ]
+}

@@ -1,0 +1,82 @@
+{
+ "lesson": "balance_carats",
+ "questions": [
+  {
+   "q": "Un carat vaut…",
+   "choices": [
+    "0,2 gramme",
+    "1 gramme",
+    "0,5 gramme",
+    "0,02 gramme"
+   ],
+   "answer": 0,
+   "why": "Donc 1 g = 5 ct."
+  },
+  {
+   "q": "Combien de carats dans un gramme ?",
+   "choices": [
+    "2",
+    "5",
+    "10",
+    "50"
+   ],
+   "answer": 1,
+   "why": "1 g = 5 ct."
+  },
+  {
+   "q": "D'où vient le mot « carat » ?",
+   "choices": [
+    "D'un poids de cuivre",
+    "D'une pièce de monnaie",
+    "De la graine de caroubier",
+    "D'une unité romaine"
+   ],
+   "answer": 2,
+   "why": "Toutes les graines pèsent presque la même chose."
+  },
+  {
+   "q": "Deux pierres de même taille ne pèsent pas pareil à cause…",
+   "choices": [
+    "de leur couleur",
+    "de leur éclat",
+    "de leur dureté",
+    "de la densité du matériau"
+   ],
+   "answer": 3,
+   "why": "Un rubis est plus lourd qu'un quartz de même volume."
+  },
+  {
+   "q": "Une pierre de 2,35 ct pèse…",
+   "choices": [
+    "0,470 g",
+    "2,35 g",
+    "11,75 g",
+    "0,047 g"
+   ],
+   "answer": 0,
+   "why": "2,35 × 0,2 = 0,47 g."
+  },
+  {
+   "q": "Combien de carats font 1,5 g ?",
+   "choices": [
+    "0,3 ct",
+    "7,5 ct",
+    "1,5 ct",
+    "15 ct"
+   ],
+   "answer": 1,
+   "why": "1 g = 5 ct."
+  },
+  {
+   "q": "Que faut-il faire avant de lire le poids ?",
+   "choices": [
+    "Souffler sur la pierre",
+    "Poser un doigt sur le plateau",
+    "Attendre que l'affichage soit stable",
+    "Éteindre la balance"
+   ],
+   "answer": 2,
+   "why": "La balance donne le centième de carat."
+  }
+ ]
+}

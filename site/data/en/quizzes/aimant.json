@@ -1,0 +1,75 @@
+{
+ "lesson": "aimant",
+ "questions": [
+  {
+   "q": "What does the magnet reveal in a stone?",
+   "choices": [
+    "The presence of iron",
+    "The presence of gold",
+    "The hardness",
+    "The transparency"
+   ],
+   "why": "A very strong magnet is needed."
+  },
+  {
+   "q": "Which stone is strongly attracted by a strong magnet?",
+   "choices": [
+    "Ruby",
+    "Almandine garnet",
+    "Emerald",
+    "Natural diamond"
+   ],
+   "why": "Very rich in iron."
+  },
+  {
+   "q": "What does the absence of a reaction to the magnet prove?",
+   "choices": [
+    "That the stone is natural",
+    "That the stone is a diamond",
+    "Nothing: you cross-check with the other instruments",
+    "That the stone is synthetic"
+   ],
+   "why": "Most stones do not react."
+  },
+  {
+   "q": "A synthetic HPHT diamond can react slightly to the magnet because of…",
+   "choices": [
+    "its natural iron",
+    "its colour",
+    "its size",
+    "tiny remains of metal from the growth process"
+   ],
+   "why": "It is one clue among others."
+  },
+  {
+   "q": "How is the magnet test done?",
+   "choices": [
+    "You put the stone on a smooth surface and slowly bring the magnet close, without touching it",
+    "You rub the stone with the magnet",
+    "You dip the magnet in water",
+    "You heat the stone"
+   ],
+   "why": "You watch whether the stone moves or follows the magnet."
+  },
+  {
+   "q": "What can distort the test?",
+   "choices": [
+    "A stone that is too transparent",
+    "A stone set in a magnetic metal",
+    "A stone that is too hard",
+    "A stone that is too pale"
+   ],
+   "why": "An ordinary magnet is not enough either."
+  },
+  {
+   "q": "Peridot is…",
+   "choices": [
+    "strongly attracted",
+    "never attracted",
+    "slightly attracted by a strong magnet",
+    "repelled"
+   ],
+   "why": "Its iron content is moderate."
+  }
+ ]
+}

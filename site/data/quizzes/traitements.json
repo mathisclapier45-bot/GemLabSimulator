@@ -1,0 +1,93 @@
+{
+ "lesson": "traitements",
+ "questions": [
+  {
+   "q": "Traiter une pierre est permis, à condition de…",
+   "choices": [
+    "le déclarer à l'acheteur",
+    "le cacher",
+    "la vendre moins cher",
+    "la tailler après"
+   ],
+   "answer": 0,
+   "why": "Un traitement change la valeur."
+  },
+  {
+   "q": "Quel traitement améliore la couleur du rubis et du saphir, et reste souvent stable ?",
+   "choices": [
+    "La teinture",
+    "Le chauffage",
+    "Le remplissage à l'huile",
+    "Le revêtement"
+   ],
+   "answer": 1,
+   "why": "C'est le plus ancien des traitements."
+  },
+  {
+   "q": "Que fait le remplissage d'une émeraude ?",
+   "choices": [
+    "Il durcit la pierre",
+    "Il la colore en profondeur",
+    "L'huile ou la résine rend les fissures moins visibles",
+    "Il la rend synthétique"
+   ],
+   "answer": 2,
+   "why": "C'est un traitement de pureté."
+  },
+  {
+   "q": "La teinture s'applique surtout…",
+   "choices": [
+    "au diamant",
+    "au rubis très pur",
+    "au verre",
+    "aux matières poreuses (jade, agate, corail, perle)"
+   ],
+   "answer": 3,
+   "why": "Un colorant pénètre dans la matière."
+  },
+  {
+   "q": "La diffusion de béryllium ou de titane…",
+   "choices": [
+    "n'atteint parfois que le dixième de millimètre en surface",
+    "colore toute la pierre à coup sûr",
+    "durcit la pierre",
+    "supprime les inclusions"
+   ],
+   "answer": 0,
+   "why": "C'est pourquoi la surface se trahit au microscope."
+  },
+  {
+   "q": "Quel traitement dépose un film de métal ou de laque, comme pour la topaze « mystique » ?",
+   "choices": [
+    "Le revêtement",
+    "Le blanchiment",
+    "Le laser",
+    "L'irradiation"
+   ],
+   "answer": 0,
+   "why": "C'est un traitement de couleur."
+  },
+  {
+   "q": "Que fait le laser sur un diamant ?",
+   "choices": [
+    "Il le colore en jaune",
+    "Il perce l'inclusion sombre, puis on la blanchit à l'acide",
+    "Il le durcit",
+    "Il le rend synthétique"
+   ],
+   "answer": 1,
+   "why": "C'est un traitement de pureté."
+  },
+  {
+   "q": "Qu'est-ce qu'un traitement change presque toujours ?",
+   "choices": [
+    "Sa formule chimique",
+    "Son système cristallin",
+    "La valeur et la stabilité de la pierre",
+    "Son nom"
+   ],
+   "answer": 2,
+   "why": "Une pierre traitée vaut généralement moins qu'une pierre naturelle équivalente."
+  }
+ ]
+}

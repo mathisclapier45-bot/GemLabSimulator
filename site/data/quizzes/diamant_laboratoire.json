@@ -1,0 +1,82 @@
+{
+ "lesson": "diamant_laboratoire",
+ "questions": [
+  {
+   "q": "Que signifie « Refer » au DiamondSure ?",
+   "choices": [
+    "La pierre demande un examen complémentaire",
+    "La pierre est synthétique",
+    "La pierre est fausse",
+    "La pierre est naturelle à coup sûr"
+   ],
+   "answer": 0,
+   "why": "Ce n'est pas une condamnation."
+  },
+  {
+   "q": "Que montre le DiamondView ?",
+   "choices": [
+    "La densité",
+    "Les motifs de croissance internes",
+    "L'indice de réfraction",
+    "Le poids"
+   ],
+   "answer": 1,
+   "why": "Chaque mode de croissance dessine des motifs différents."
+  },
+  {
+   "q": "Quel motif trahit un diamant CVD ?",
+   "choices": [
+    "Des motifs en croix",
+    "Des lignes ondulées irrégulières",
+    "Des couches parallèles, fines et régulières",
+    "Aucun motif"
+   ],
+   "answer": 2,
+   "why": "Le HPHT montre plutôt des motifs en croix ou en cadran."
+  },
+  {
+   "q": "La photoluminescence refroidit la pierre à…",
+   "choices": [
+    "l'eau glacée",
+    "la température ambiante",
+    "l'hélium seulement",
+    "l'azote liquide (77 K)"
+   ],
+   "answer": 3,
+   "why": "Puis on l'excite au laser."
+  },
+  {
+   "q": "Les diamants naturels, HPHT et CVD sont…",
+   "choices": [
+    "tous de vrais diamants",
+    "tous des imitations",
+    "tous naturels",
+    "tous de la moissanite"
+   ],
+   "answer": 0,
+   "why": "Ils passent le testeur thermique, mais leur valeur n'est pas la même."
+  },
+  {
+   "q": "Le procédé HPHT reproduit…",
+   "choices": [
+    "en machine la haute pression et la haute température de la nature",
+    "un gaz qui dépose du carbone",
+    "un bain d'acide",
+    "une irradiation"
+   ],
+   "answer": 0,
+   "why": "Il fabrique des diamants de synthèse."
+  },
+  {
+   "q": "Le procédé CVD fait croître le diamant…",
+   "choices": [
+    "à partir d'un bloc de graphite chauffé",
+    "couche par couche, à partir d'un gaz",
+    "dans un four à pression",
+    "dans l'eau"
+   ],
+   "answer": 1,
+   "why": "Ses couches sont fines et parallèles."
+  }
+ ]
+}

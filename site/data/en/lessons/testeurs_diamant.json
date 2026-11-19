@@ -1,0 +1,40 @@
+{
+ "id": "testeurs_diamant",
+ "title": "Diamond testers",
+ "tool": {
+  "name": "Thermal tester and electrical tester",
+  "measures": "the thermal conductivity (heat) and the electrical conductivity of the stone",
+  "where": "Diamond dealer",
+  "records": [
+   "Thermal conductivity",
+   "Electrical conductivity"
+  ],
+  "tips": [
+   "Press the tip flat on a clean facet",
+   "The thermal tester does not tell diamond from moissanite",
+   "Then move on to the electrical tester"
+  ]
+ },
+ "steps": [
+  {
+   "title": "Diamond conducts heat",
+   "text": "<b>Diamond</b> is the best known conductor of heat: it carries heat away faster than copper. This is what makes it feel “cold” to the touch.\n\nThe <b>thermal tester</b> (the Diamond Selector) slightly heats the tip of a probe, presses it on the stone and measures how fast the heat goes away. A diamond carries it away quickly; most imitations (cubic zirconia, glass, synthetic spinel) hold it back."
+  },
+  {
+   "title": "Moissanite confuses the test",
+   "text": "Synthetic <b>moissanite</b> (silicon carbide) also conducts heat very well. A thermal tester therefore cannot tell it from diamond: it answers “diamond” in both cases.\n\nSynthetic diamonds (HPHT and CVD) are real diamonds too: they conduct heat like natural diamond."
+  },
+  {
+   "title": "The electrical tester",
+   "text": "<b>Diamond</b> is an insulator: it does not conduct electricity. Synthetic <b>moissanite</b>, on the other hand, <b>does conduct</b>.\n\nThe electrical tester (Moissanite/Diamond) passes a weak current through the tip: if current goes through, it is not a diamond. It is the test that tells these two stones apart."
+  },
+  {
+   "title": "What to conclude?",
+   "text": "• <b>Low</b> heat: an imitation (glass, cubic zirconia, etc.).\n• <b>High</b> heat and current <b>that goes through</b>: a moissanite.\n• <b>High</b> heat and current <b>blocked</b>: a diamond, natural or synthetic.\n\nTo know whether this diamond is <b>natural</b> or <b>made</b>, other instruments are needed (see the lesson on the diamond in the laboratory)."
+  },
+  {
+   "title": "To remember",
+   "text": "• The thermal tester spots diamond, but confuses moissanite with it.\n• The electrical tester separates moissanite from diamond.\n• Neither says whether the diamond is natural or synthetic."
+  }
+ ]
+}

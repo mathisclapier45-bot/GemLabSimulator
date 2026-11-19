@@ -5,15 +5,16 @@ import mimetypes
 import os
 import re
 
-from . import config, db
-from . import routes_account, routes_forum, routes_site
+from . import catalog, config, db
+from . import routes_account, routes_forum, routes_learn, routes_legal, routes_prices, routes_site
+from . import views
 from .views import esc, page
 from .web import HTTPError, Request, Response, Router
 
 log = logging.getLogger("gemlab")
 
 router = Router()
-for part in (routes_site, routes_account, routes_forum):
+for part in (routes_site, routes_account, routes_forum, routes_learn, routes_legal, routes_prices):
     router.routes.extend(part.router.routes)
 
 CSP_DEFAULT = ("default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; "
@@ -81,8 +82,17 @@ def error_response(req, status, key=None):
     text_key = key or "error.{}".format(status)
     try:
         title = req.t("error.title.{}".format(status)) if status in (400, 403, 404, 405, 413, 429) else req.t("error.title.500")
-        resp = page(req, title, '<section class="narrow"><h1>{}</h1><p>{}</p><p><a class="btn" href="/">{}</a></p></section>'.format(
-            esc(title), esc(req.t(text_key)), esc(req.t("error.home"))), status=status)
+        extra = ""
+        if status == 404:
+            links = "".join('<li><a href="{}">{}</a></li>'.format(href, esc(req.t(label))) for href, label in (
+                ("/encyclopedie", "nav.encyclopedia"), ("/identification", "nav.identify"), ("/lecons", "nav.lessons"),
+                ("/glossaire", "gloss.title"), ("/comparer", "cmp.title")))
+            extra = ('<form class="herosearch" method="get" action="/recherche" role="search"><input type="search" name="q" '
+                     'placeholder="{ph}" aria-label="{ph}"><button class="btn" type="submit">{go}</button></form>'
+                     '<h2>{h}</h2><ul class="notfound">{links}</ul>').format(
+                ph=esc(req.t("home.search")), go=esc(req.t("home.search.go")), h=esc(req.t("error.404.links")), links=links)
+        resp = page(req, title, '<section class="narrow"><h1>{}</h1><p>{}</p>{}<p><a class="btn" href="/">{}</a></p></section>'.format(
+            esc(title), esc(req.t(text_key)), extra, esc(req.t("error.home"))), status=status)
     except Exception:
         resp = Response("Error {}".format(status), status=status, content_type="text/plain; charset=utf-8")
     return resp
@@ -90,6 +100,7 @@ def error_response(req, status, key=None):
 
 def application(environ, start_response):
     req = Request(environ)
+    catalog.set_lang(req.lang)       # lessons, quizzes and glossary are read in the language of the page
     ok = False
     try:
         try:
@@ -110,6 +121,10 @@ def application(environ, start_response):
     finally:
         req.finish_db(ok)
 
+    # A redirection keeps the visitor in the language of the page
+    if req.prefix:
+        resp.headers = [(k, req.localize_location(v)) if k.lower() == "location" else (k, v) for k, v in resp.headers]
+
     # Cookies set during the request
     if not req.path.startswith("/static/"):
         req.csrf  # makes sure every visitor has a CSRF cookie before any form is sent
@@ -122,7 +137,7 @@ def application(environ, start_response):
 
     # Headers for every answer
     resp.headers += [
-        ("X-Robots-Tag", "noindex, nofollow"),
+        ("X-Robots-Tag", views.robots_value(req.path) if not req.path.startswith("/static/") else "noindex, nofollow"),
         ("X-Content-Type-Options", "nosniff"),
         ("X-Frame-Options", "DENY"),
         ("Referrer-Policy", "same-origin"),

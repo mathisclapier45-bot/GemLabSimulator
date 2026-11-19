@@ -1,0 +1,75 @@
+{
+ "lesson": "infrarouge_raman",
+ "questions": [
+  {
+   "q": "Which instrument reveals oil or resin in the cracks of an emerald?",
+   "choices": [
+    "The infrared spectrometer (FTIR)",
+    "The refractometer",
+    "The hydrostatic balance",
+    "The dichroscope"
+   ],
+   "why": "Each chemical bond absorbs infrared at a precise wavelength."
+  },
+  {
+   "q": "Raman is mainly used…",
+   "choices": [
+    "to weigh the stone",
+    "to identify the mineral and its inclusions with certainty",
+    "to measure its hardness",
+    "to colour it"
+   ],
+   "why": "Each crystal lattice vibrates in its own way."
+  },
+  {
+   "q": "The SEM (scanning electron microscope) shows…",
+   "choices": [
+    "the density",
+    "the fluorescence",
+    "the growth structures, natural or synthetic",
+    "the refractive index"
+   ],
+   "why": "It is a long and expensive examination."
+  },
+  {
+   "q": "These laboratory instruments are used to…",
+   "choices": [
+    "replace the loupe",
+    "measure the weight",
+    "cut the stone",
+    "confirm what the simple instruments leave you suspecting"
+   ],
+   "why": "They are not used first."
+  },
+  {
+   "q": "What do you read on an infrared (FTIR) spectrum?",
+   "choices": [
+    "Peaks that match chemical bonds (O–H, C–H…)",
+    "The weight of the stone",
+    "Its colour",
+    "Its size"
+   ],
+   "why": "Each bond absorbs at a precise wavelength."
+  },
+  {
+   "q": "Which instrument identifies even a tiny inclusion?",
+   "choices": [
+    "The loupe",
+    "Raman",
+    "The balance",
+    "The dichroscope"
+   ],
+   "why": "It gives the signature of the crystal lattice."
+  },
+  {
+   "q": "Which long and expensive examination is kept for difficult cases?",
+   "choices": [
+    "The loupe",
+    "The polariscope",
+    "The scanning electron microscope (SEM)",
+    "The Chelsea filter"
+   ],
+   "why": "It shows the growth structures."
+  }
+ ]
+}

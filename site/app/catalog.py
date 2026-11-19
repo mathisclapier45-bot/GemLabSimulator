@@ -18,6 +18,28 @@ LESSON_ORDER = ["gemmes", "durete", "tenacite", "stabilite", "systemes_cristalli
                 "origine_geographique", "diamant_laboratoire"]
 
 
+# ------------------------------------------------------------------ language of the page
+
+_ctx = threading.local()
+
+
+def set_lang(lang):
+    """Set by the server at the start of each request: lessons, quizzes and glossary are then read in that language."""
+    _ctx.lang = lang if lang in ("fr", "en") else "fr"
+
+
+def current_lang():
+    return getattr(_ctx, "lang", "fr")
+
+
+# Made by people, though not flagged "synthetic" in the data: these are not natural stones.
+ARTIFICIAL = {"CZ", "GGG", "YAG", "Titanate_Strontium", "Verre", "Moissanite_Synthetique"}
+
+
+def natural_species(species):
+    return [s for s in species if not s["synthetic"] and s["id"] not in ARTIFICIAL]
+
+
 def fold(text):
     """Lower case, no accents: 'Béryl' and 'beryl' match each other."""
     nfd = unicodedata.normalize("NFD", text or "")
@@ -142,24 +164,54 @@ def search(q="", transparency="", optic="", hardness="", extra="", synthetic="")
 
 # ------------------------------------------------------------------ lessons
 
-_lessons = {"mtime": None, "data": None}
+_lessons = {}        # language -> {"mtime": ..., "data": [...]}
+
+
+def _read_json(path):
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _overlay_lesson(item, over):
+    """The lesson with the texts of its translation (same structure: titles, texts of the steps, card of the instrument)."""
+    new = dict(item)
+    new["title"] = over.get("title", item["title"])
+    if over.get("tool"):
+        tool = dict(item.get("tool") or {})
+        tool.update(over["tool"])
+        new["tool"] = tool
+    steps = []
+    translated = over.get("steps") or []
+    for i, step in enumerate(item["steps"]):
+        s = dict(step)
+        o = translated[i] if i < len(translated) else {}
+        s["title"] = o.get("title", step["title"])
+        s["text"] = o.get("text", step["text"])
+        steps.append(s)
+    new["steps"] = steps
+    return new
 
 
 def lessons():
+    lang = current_lang()
     files = sorted((config.DATA_DIR / "lessons").glob("*.json")) + sorted((config.DATA_DIR / "lessons_extra").glob("*.json"))
-    mtime = max([f.stat().st_mtime for f in files] or [0])
+    over_files = sorted((config.DATA_DIR / lang / "lessons").glob("*.json")) if lang != "fr" else []
+    mtime = max([f.stat().st_mtime for f in files + over_files] or [0])
     with _lock:
-        if _lessons["mtime"] != mtime:
+        cache = _lessons.get(lang)
+        if not cache or cache["mtime"] != mtime:
             found = {}
             for f in files:
-                with open(f, encoding="utf-8") as fh:
-                    item = json.load(fh)
+                item = _read_json(f)
                 found[item["id"]] = item
+            for f in over_files:
+                over = _read_json(f)
+                if over["id"] in found:
+                    found[over["id"]] = _overlay_lesson(found[over["id"]], over)
             ordered = [found[i] for i in LESSON_ORDER if i in found]
             ordered += [found[i] for i in sorted(found) if i not in LESSON_ORDER]
-            _lessons["data"] = ordered
-            _lessons["mtime"] = mtime
-        return _lessons["data"]
+            cache = _lessons[lang] = {"mtime": mtime, "data": ordered}
+        return cache["data"]
 
 
 def lesson(lesson_id):
@@ -186,6 +238,65 @@ def dispersion(species):
 
 
 SAFE_ID = re.compile(r"^[a-z0-9_-]+$")
+
+
+# ------------------------------------------------------------------ glossary and quizzes
+
+_glossary = {}       # language -> {"mtime": ..., "data": (...)}
+_quizzes = {}        # (language, lesson id) -> {"mtime": ..., "data": [...]}
+
+
+def glossary():
+    """(terms sorted for the page, dict id -> term, compiled regex of every written form, dict lower form -> id)."""
+    lang = current_lang()
+    path = config.DATA_DIR / "glossary.json"
+    over_path = config.DATA_DIR / lang / "glossary.json" if lang != "fr" else None
+    mtime = (path.stat().st_mtime if path.exists() else 0) + (over_path.stat().st_mtime if over_path and over_path.exists() else 0)
+    with _lock:
+        cache = _glossary.get(lang)
+        if not cache or cache["mtime"] != mtime:
+            terms = _read_json(path) if path.exists() else []
+            if over_path and over_path.exists():
+                over = {o["id"]: o for o in _read_json(over_path)}
+                terms = [dict(t, **{k: over[t["id"]][k] for k in ("term", "aliases", "def") if k in over[t["id"]]}) if t["id"] in over else t for t in terms]
+            by_id = {t["id"]: t for t in terms}
+            forms = {}
+            for t in terms:
+                for form in [t["term"]] + t.get("aliases", []):
+                    forms[form.lower()] = t["id"]
+            pattern = None
+            if forms:
+                alternatives = "|".join(re.escape(f) for f in sorted(forms, key=len, reverse=True))
+                pattern = re.compile(r"(?<![\w-])(" + alternatives + r")(?![\w-])", re.IGNORECASE)
+            cache = _glossary[lang] = {"mtime": mtime, "data": (sorted(terms, key=lambda t: fold(t["term"])), by_id, pattern, forms)}
+        return cache["data"]
+
+
+def quiz(lesson_id):
+    """The questions of a lesson (data/quizzes/<id>.json, translated by data/<lang>/quizzes/<id>.json), or None.
+    A translation changes the texts only: the right answer stays the one of the French file."""
+    if not SAFE_ID.match(lesson_id):
+        return None
+    lang = current_lang()
+    path = config.DATA_DIR / "quizzes" / (lesson_id + ".json")
+    if not path.exists():
+        return None
+    over_path = config.DATA_DIR / lang / "quizzes" / (lesson_id + ".json") if lang != "fr" else None
+    mtime = path.stat().st_mtime + (over_path.stat().st_mtime if over_path and over_path.exists() else 0)
+    cache = _quizzes.get((lang, lesson_id))
+    if cache and cache["mtime"] == mtime:
+        return cache["data"]
+    questions = _read_json(path)["questions"]
+    if over_path and over_path.exists():
+        over = _read_json(over_path)["questions"]
+        merged = []
+        for i, q in enumerate(questions):
+            o = over[i] if i < len(over) else {}
+            ok = len(o.get("choices", [])) == len(q["choices"])
+            merged.append({"q": o.get("q", q["q"]), "choices": o["choices"] if ok else q["choices"], "answer": q["answer"], "why": o.get("why", q["why"])})
+        questions = merged
+    _quizzes[(lang, lesson_id)] = {"mtime": mtime, "data": questions}
+    return questions
 
 
 # ------------------------------------------------------------------ search by data (identification)

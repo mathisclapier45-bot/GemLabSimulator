@@ -1,0 +1,93 @@
+{
+ "lesson": "dichroscope",
+ "questions": [
+  {
+   "q": "Le pléochroïsme, c'est…",
+   "choices": [
+    "une pierre dont la couleur change selon la direction d'observation",
+    "une pierre qui brille aux UV",
+    "une pierre qui change de couleur à la chaleur",
+    "une pierre qui devient opaque"
+   ],
+   "answer": 0,
+   "why": "La lumière est absorbée différemment selon l'axe."
+  },
+  {
+   "q": "Comment est fait le dichroscope de Londres ?",
+   "choices": [
+    "Un prisme de verre et une fente",
+    "Deux filtres polarisants collés à angle droit dans une loupe pliante",
+    "Un cristal de calcite dans un tube",
+    "Deux miroirs"
+   ],
+   "answer": 1,
+   "why": "Chaque moitié de la lentille laisse passer une direction de vibration."
+  },
+  {
+   "q": "Que montre un spinelle rouge au dichroscope ?",
+   "choices": [
+    "Deux couleurs rouges différentes",
+    "Trois couleurs",
+    "Aucun changement : les deux fenêtres sont pareilles",
+    "Du noir"
+   ],
+   "answer": 2,
+   "why": "Il est isotrope : ce n'est pas un rubis."
+  },
+  {
+   "q": "Combien de couleurs peut montrer une pierre biaxe ?",
+   "choices": [
+    "Une seule",
+    "Deux seulement",
+    "Cinq",
+    "Jusqu'à trois (trichroïsme)"
+   ],
+   "answer": 3,
+   "why": "La tanzanite et l'iolite sont trichroïques."
+  },
+  {
+   "q": "Quel est un avantage du dichroscope ?",
+   "choices": [
+    "Il marche même sur une pierre sertie, sans la toucher",
+    "Il mesure l'indice de réfraction",
+    "Il pèse la pierre",
+    "Il donne la densité"
+   ],
+   "answer": 0,
+   "why": "Aucun des deux modèles ne touche la pierre."
+  },
+  {
+   "q": "Pourquoi un grenat montre-t-il la même couleur dans les deux fenêtres A et B ?",
+   "choices": [
+    "Il est trop petit",
+    "Il est trop dur",
+    "Il est synthétique",
+    "Il est isotrope : il n'y a pas de pléochroïsme"
+   ],
+   "answer": 3,
+   "why": "Les pierres cubiques n'ont qu'une couleur."
+  },
+  {
+   "q": "Que faut-il pour que le dichroscope donne un résultat ?",
+   "choices": [
+    "Une pierre colorée et transparente",
+    "Une pierre incolore",
+    "Une pierre opaque",
+    "Une pierre très petite"
+   ],
+   "answer": 0,
+   "why": "Une pierre très pâle ou incolore donne peu de résultat."
+  },
+  {
+   "q": "Quel modèle utilise un cristal de spath d'Islande ?",
+   "choices": [
+    "Le dichroscope de Londres",
+    "Le dichroscope à calcite",
+    "Le spectroscope",
+    "Le polariscope"
+   ],
+   "answer": 1,
+   "why": "Il donne deux images côte à côte."
+  }
+ ]
+}

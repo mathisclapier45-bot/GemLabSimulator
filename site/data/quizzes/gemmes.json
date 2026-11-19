@@ -1,0 +1,115 @@
+{
+ "lesson": "gemmes",
+ "questions": [
+  {
+   "q": "Quelles sont les cinq qualités qui font une gemme ?",
+   "choices": [
+    "La beauté, la rareté, la durabilité, la valeur et l'acceptabilité",
+    "La couleur, le poids, la taille, le prix et l'origine",
+    "La dureté, la ténacité, la stabilité, l'éclat et la densité",
+    "La rareté, la mode, la taille, le feu et la couleur"
+   ],
+   "answer": 0,
+   "why": "Une pierre devient une gemme quand elle réunit ces cinq qualités."
+  },
+  {
+   "q": "Un rubis de synthèse est…",
+   "choices": [
+    "une imitation en verre coloré",
+    "un rubis naturel chauffé",
+    "un vrai corindon rouge, fabriqué par l'homme",
+    "un doublet collé"
+   ],
+   "answer": 2,
+   "why": "Une gemme synthétique a la même composition et la même structure que la gemme naturelle."
+  },
+  {
+   "q": "L'opale est une gemme…",
+   "choices": [
+    "cristalline, du système cubique",
+    "non cristalline, de type amorphe",
+    "d'origine organique, comme la perle",
+    "synthétique, jamais naturelle"
+   ],
+   "answer": 1,
+   "why": "L'opale et l'obsidienne n'ont pas d'ordre régulier : elles sont amorphes."
+  },
+  {
+   "q": "Quelles sont les trois composantes de la durabilité ?",
+   "choices": [
+    "La couleur, l'éclat et la transparence",
+    "Le poids, la taille et la forme",
+    "La rareté, la valeur et la mode",
+    "La dureté, la ténacité et la stabilité"
+   ],
+   "answer": 3,
+   "why": "Rayures, chocs, environnement : trois façons de résister dans le temps."
+  },
+  {
+   "q": "Les doublets et les triplets sont…",
+   "choices": [
+    "des gemmes assemblées",
+    "des gemmes synthétiques",
+    "des gemmes sans contrepartie dans la nature",
+    "des gemmes naturelles amorphes"
+   ],
+   "answer": 0,
+   "why": "Ce sont plusieurs morceaux collés ensemble."
+  },
+  {
+   "q": "Que dit la loi du commerce international de l'ivoire d'éléphant ?",
+   "choices": [
+    "Il est libre partout dans le monde",
+    "Il n'est interdit que pour le mammouth",
+    "Il est interdit depuis 1989 (CITES)",
+    "Il est autorisé avec un simple certificat de vente"
+   ],
+   "answer": 2,
+   "why": "L'acceptabilité est aussi une question de loi : un vendeur doit prouver l'origine de la matière."
+  },
+  {
+   "q": "Que sont des gemmes « sans contrepartie dans la nature » ?",
+   "choices": [
+    "Des gemmes trop rares pour être vendues",
+    "Des gemmes qui n'existent pas à l'état naturel, comme le YAG ou le cubic zirconia",
+    "Des gemmes assemblées de plusieurs morceaux",
+    "Des perles de culture"
+   ],
+   "answer": 1,
+   "why": "Elles sont faites par l'homme et n'ont pas d'équivalent naturel."
+  },
+  {
+   "q": "Laquelle de ces matières est d'origine organique ?",
+   "choices": [
+    "L'opale",
+    "Le quartz",
+    "L'ambre",
+    "Le diamant"
+   ],
+   "answer": 2,
+   "why": "Les perles, l'ambre, le corail et le jais sont produits par des êtres vivants."
+  },
+  {
+   "q": "À quoi sert surtout un gemmologue ?",
+   "choices": [
+    "À reconnaître l'espèce, repérer les traitements et les imitations, et vérifier la qualité",
+    "À tailler les pierres brutes",
+    "À fixer le prix du marché",
+    "À extraire les pierres de la mine"
+   ],
+   "answer": 0,
+   "why": "On ne devine pas les qualités d'une pierre : on les mesure."
+  },
+  {
+   "q": "Le processus de Kimberley garantit…",
+   "choices": [
+    "la pureté des diamants",
+    "le poids exact des diamants",
+    "la couleur des diamants",
+    "la provenance des diamants, qui ne sont pas des diamants de conflit"
+   ],
+   "answer": 3,
+   "why": "Les diamants de conflit sont bannis du commerce."
+  }
+ ]
+}

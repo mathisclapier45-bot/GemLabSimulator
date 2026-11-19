@@ -1,0 +1,82 @@
+{
+ "lesson": "infrarouge_raman",
+ "questions": [
+  {
+   "q": "Quel instrument révèle l'huile ou la résine dans les fissures d'une émeraude ?",
+   "choices": [
+    "Le spectromètre infrarouge (FTIR)",
+    "Le réfractomètre",
+    "La balance hydrostatique",
+    "Le dichroscope"
+   ],
+   "answer": 0,
+   "why": "Chaque liaison chimique absorbe l'infrarouge à une longueur d'onde précise."
+  },
+  {
+   "q": "Le Raman permet surtout…",
+   "choices": [
+    "de peser la pierre",
+    "d'identifier le minéral et ses inclusions avec certitude",
+    "de mesurer sa dureté",
+    "de la colorer"
+   ],
+   "answer": 1,
+   "why": "Chaque réseau cristallin vibre à sa manière."
+  },
+  {
+   "q": "Le MEB (microscope électronique à balayage) montre…",
+   "choices": [
+    "la densité",
+    "la fluorescence",
+    "les structures de croissance, naturelles ou de synthèse",
+    "l'indice de réfraction"
+   ],
+   "answer": 2,
+   "why": "C'est un examen long et coûteux."
+  },
+  {
+   "q": "Ces instruments de laboratoire servent à…",
+   "choices": [
+    "remplacer la loupe",
+    "mesurer le poids",
+    "tailler la pierre",
+    "confirmer ce que les instruments simples laissent soupçonner"
+   ],
+   "answer": 3,
+   "why": "On ne les utilise pas en premier."
+  },
+  {
+   "q": "Que lit-on sur un spectre infrarouge (FTIR) ?",
+   "choices": [
+    "Des pics qui correspondent aux liaisons chimiques (O–H, C–H…)",
+    "Le poids de la pierre",
+    "Sa couleur",
+    "Sa taille"
+   ],
+   "answer": 0,
+   "why": "Chaque liaison absorbe à une longueur d'onde précise."
+  },
+  {
+   "q": "Quel instrument identifie même une inclusion minuscule ?",
+   "choices": [
+    "La loupe",
+    "Le Raman",
+    "La balance",
+    "Le dichroscope"
+   ],
+   "answer": 1,
+   "why": "Il donne la signature du réseau cristallin."
+  },
+  {
+   "q": "Quel examen long et coûteux réserve-t-on aux cas difficiles ?",
+   "choices": [
+    "La loupe",
+    "Le polariscope",
+    "Le microscope électronique à balayage (MEB)",
+    "Le filtre Chelsea"
+   ],
+   "answer": 2,
+   "why": "Il montre les structures de croissance."
+  }
+ ]
+}

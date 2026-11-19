@@ -141,7 +141,7 @@
       if (cycle >= start) {
         var done = cycle >= start + 1.6;
         if (scratches && progress > 0) c.line(V(-130, rowY), V(-130 + 260 * progress, rowY), 3, C(1, 1, 1, 0.9));
-        if (!done || cycle < start + 3) result = "Crayon " + pencilHardness[k] + " : " + (scratches ? "raye la pierre" : "ne raye pas");
+        if (!done || cycle < start + 3) result = K.t("Crayon") + " " + pencilHardness[k] + " : " + K.t(scratches ? "raye la pierre" : "ne raye pas");
       }
       if (cycle >= start && cycle < start + 1.8) {
         var tip = V(-130 + 260 * progress, rowY), dir = V(cos(35 * M.deg), sin(35 * M.deg));

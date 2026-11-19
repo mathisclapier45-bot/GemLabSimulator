@@ -1,0 +1,115 @@
+{
+ "lesson": "systemes_cristallins",
+ "questions": [
+  {
+   "q": "Combien y a-t-il de systèmes cristallins ?",
+   "choices": [
+    "Sept",
+    "Trois",
+    "Cinq",
+    "Douze"
+   ],
+   "answer": 0,
+   "why": "Du cubique au triclinique."
+  },
+  {
+   "q": "Une pierre du système cubique est…",
+   "choices": [
+    "uniaxe",
+    "isotrope, avec un seul indice",
+    "biaxe",
+    "toujours opaque"
+   ],
+   "answer": 1,
+   "why": "C'est la famille optique la plus simple."
+  },
+  {
+   "q": "Comment décrit-on le système hexagonal ?",
+   "choices": [
+    "Trois axes égaux et perpendiculaires",
+    "Trois axes inégaux et inclinés",
+    "Trois axes égaux à 120° dans un plan, et un axe vertical perpendiculaire",
+    "Deux axes égaux et un troisième oblique"
+   ],
+   "answer": 2,
+   "why": "C'est celui de l'émeraude et de l'aigue-marine."
+  },
+  {
+   "q": "Le quartz, le rubis et la tourmaline appartiennent au système…",
+   "choices": [
+    "cubique",
+    "orthorhombique",
+    "triclinique",
+    "trigonal"
+   ],
+   "answer": 3,
+   "why": "Il est proche de l'hexagonal, avec un axe d'ordre 3."
+  },
+  {
+   "q": "Quels systèmes donnent des pierres biaxes ?",
+   "choices": [
+    "Orthorhombique, monoclinique et triclinique",
+    "Cubique, quadratique et hexagonal",
+    "Hexagonal et trigonal",
+    "Seulement le triclinique"
+   ],
+   "answer": 0,
+   "why": "Deux axes optiques et trois indices."
+  },
+  {
+   "q": "L'habitus d'un cristal, c'est…",
+   "choices": [
+    "sa couleur",
+    "sa forme extérieure, liée à la vitesse de croissance selon chaque axe",
+    "sa densité",
+    "son indice de réfraction"
+   ],
+   "answer": 1,
+   "why": "Rapide selon c : une aiguille ; rapide selon a et b : une tablette."
+  },
+  {
+   "q": "Un cristal qui grandit très vite selon l'axe c prend la forme…",
+   "choices": [
+    "d'une tablette",
+    "d'un cube",
+    "d'une sphère",
+    "d'une aiguille"
+   ],
+   "answer": 3,
+   "why": "Rapide selon a et b : une tablette."
+  },
+  {
+   "q": "Quels systèmes donnent des pierres uniaxes ?",
+   "choices": [
+    "Quadratique, hexagonal et trigonal",
+    "Cubique seulement",
+    "Orthorhombique et triclinique",
+    "Monoclinique seulement"
+   ],
+   "answer": 0,
+   "why": "Un axe optique et deux indices."
+  },
+  {
+   "q": "Pourquoi tourne-t-on la pierre sous les instruments ?",
+   "choices": [
+    "Pour la refroidir",
+    "Parce que l'indice, la couleur ou la dureté changent selon la direction",
+    "Pour la nettoyer",
+    "Pour la peser"
+   ],
+   "answer": 1,
+   "why": "C'est pourquoi le lapidaire l'oriente aussi pour obtenir la plus belle couleur."
+  },
+  {
+   "q": "Que dit-on du système monoclinique ?",
+   "choices": [
+    "Trois axes égaux et perpendiculaires",
+    "Aucun angle de 90°",
+    "Trois axes inégaux, dont un incliné : un seul angle diffère de 90°",
+    "Un axe d'ordre 6"
+   ],
+   "answer": 2,
+   "why": "On y trouve la jadéite, le spodumène (kunzite), la malachite."
+  }
+ ]
+}

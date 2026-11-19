@@ -1,0 +1,49 @@
+{
+ "id": "refractometre",
+ "title": "The refractometer",
+ "tool": {
+  "name": "Refractometer",
+  "measures": "the refractive index of the stone, birefringence and optic sign",
+  "where": "Gemmology House and Office, top row, next to the loupe",
+  "records": [
+   "Refractive index",
+   "Birefringence",
+   "Optic sign",
+   "Optic character"
+  ],
+  "tips": [
+   "The drop of liquid first, the stone after",
+   "Turn the lens a full turn"
+  ]
+ },
+ "steps": [
+  {
+   "title": "Refraction",
+   "text": "When light goes from one medium to another, it changes direction: this is <b>refraction</b>. Descartes' law: n₁ × sin θ₁ = n₂ × sin θ₂."
+  },
+  {
+   "title": "Reflection",
+   "text": "Part of the light is <b>reflected</b>, at the same angle as the incoming ray."
+  },
+  {
+   "title": "From high index to low index",
+   "text": "In the refractometer, light arrives through the glass (index 1.81) and meets the stone, which has a lower index. There is a <b>critical angle</b>."
+  },
+  {
+   "title": "The critical angle",
+   "text": "Beyond the critical angle, all the light is sent back into the glass: this is <b>total reflection</b>."
+  },
+  {
+   "title": "The shadow edge",
+   "text": "The border between the bright zone and the dark zone is the <b>shadow edge</b>: its position on the scale gives the index directly."
+  },
+  {
+   "title": "The drop of liquid",
+   "text": "A drop of <b>contact liquid</b> fills the gap between the glass and the stone. The drop first, the stone after."
+  },
+  {
+   "title": "One or two edges",
+   "text": "An isotropic stone has a single shadow edge; an anisotropic stone has two, which move when the lens is turned. The extreme values are noted: nα, nβ, nγ."
+  }
+ ]
+}

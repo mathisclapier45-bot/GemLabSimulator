@@ -1,0 +1,34 @@
+{
+ "id": "balance_hydrostatique",
+ "title": "The hydrostatic balance",
+ "tool": {
+  "name": "Hydrostatic balance",
+  "measures": "the weight of the stone in water, and its density",
+  "where": "Gemmology House and Office, top row, near the loupe",
+  "records": [
+   "Density"
+  ],
+  "tips": [
+   "Weigh the stone in air first",
+   "No bubble on the stone"
+  ]
+ },
+ "steps": [
+  {
+   "title": "Archimedes' principle",
+   "text": "Dipped in water, a stone seems <b>lighter</b>: the water pushes it upwards. This push is equal to the weight of the water displaced.\n\nThe denser the stone, the less the push relieves it compared with its weight."
+  },
+  {
+   "title": "Two weighings",
+   "text": "1. Weigh the stone in air (carat balance): <b>P air</b>.\n2. Put it in the basket dipped in water: the balance gives <b>P water</b>.\n\nThe stone must be quite dry at the start, with no air bubble stuck to it."
+  },
+  {
+   "title": "The density",
+   "text": "Density is worked out from the two weights:\n\n<b>d = P air ÷ (P air − P water)</b>\n\nFor example, 2.00 ct in air and 1.45 ct in water give 2.00 ÷ 0.55 ≈ <b>3.64</b>. Since you have already weighed the stone, the balance does the calculation on its own."
+  },
+  {
+   "title": "Reading the density",
+   "text": "Each species has its own density: quartz around 2.65, beryl 2.7, corundum 4.0, diamond 3.52, garnet 3.6 to 4.3.\n\nDensity alone is not enough: several species look alike. It is by crossing measurements that you get the answer."
+  }
+ ]
+}

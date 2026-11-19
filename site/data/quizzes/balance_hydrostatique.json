@@ -1,0 +1,82 @@
+{
+ "lesson": "balance_hydrostatique",
+ "questions": [
+  {
+   "q": "Quel principe permet de calculer la densité d'une pierre ?",
+   "choices": [
+    "Le principe d'Archimède",
+    "La loi de Descartes",
+    "La loi de Mohs",
+    "Le principe de Raman"
+   ],
+   "answer": 0,
+   "why": "Dans l'eau, la pierre paraît plus légère : l'eau la pousse vers le haut."
+  },
+  {
+   "q": "Quelle est la formule de la densité ?",
+   "choices": [
+    "d = P air × P eau",
+    "d = P air ÷ (P air − P eau)",
+    "d = P eau ÷ P air",
+    "d = P air + P eau"
+   ],
+   "answer": 1,
+   "why": "Il faut deux pesées."
+  },
+  {
+   "q": "Une pierre pèse 2,00 ct dans l'air et 1,45 ct dans l'eau. Sa densité est d'environ…",
+   "choices": [
+    "1,38",
+    "0,55",
+    "3,64",
+    "2,90"
+   ],
+   "answer": 2,
+   "why": "2,00 ÷ (2,00 − 1,45) = 2,00 ÷ 0,55."
+  },
+  {
+   "q": "Quelle précaution prendre avant la pesée dans l'eau ?",
+   "choices": [
+    "La chauffer",
+    "La polir",
+    "La peser avec ses gants de cuir",
+    "La pierre doit être sèche et sans bulle d'air accrochée"
+   ],
+   "answer": 3,
+   "why": "Une bulle fausserait la poussée."
+  },
+  {
+   "q": "Quelle est la densité approximative du quartz ?",
+   "choices": [
+    "Environ 2,65",
+    "Environ 4,0",
+    "Environ 3,52",
+    "Environ 1,0"
+   ],
+   "answer": 0,
+   "why": "Le corindon est autour de 4,0 et le diamant 3,52."
+  },
+  {
+   "q": "Plus la pierre est dense, plus…",
+   "choices": [
+    "elle flotte",
+    "la poussée de l'eau la soulage peu par rapport à son poids",
+    "elle paraît légère dans l'eau",
+    "elle est dure"
+   ],
+   "answer": 1,
+   "why": "C'est le principe d'Archimède."
+  },
+  {
+   "q": "La densité seule suffit-elle à identifier une pierre ?",
+   "choices": [
+    "Oui, toujours",
+    "Oui, si la pierre est taillée",
+    "Non : plusieurs espèces se ressemblent, il faut croiser les mesures",
+    "Oui, pour les pierres colorées"
+   ],
+   "answer": 2,
+   "why": "Chaque espèce a sa densité, mais certaines se recoupent."
+  }
+ ]
+}

@@ -1,0 +1,82 @@
+{
+ "lesson": "microscope",
+ "questions": [
+  {
+   "q": "Que cherche-t-on surtout avec le microscope gemmologique ?",
+   "choices": [
+    "Les inclusions",
+    "Le poids",
+    "La densité",
+    "L'indice de réfraction"
+   ],
+   "answer": 0,
+   "why": "Elles racontent comment la pierre s'est formée."
+  },
+  {
+   "q": "À fort grossissement, on voit nette…",
+   "choices": [
+    "toute la pierre d'un coup",
+    "une tranche très mince de la pierre : il faut tourner la molette",
+    "seulement la surface",
+    "rien du tout"
+   ],
+   "answer": 1,
+   "why": "On passe d'une tranche à l'autre."
+  },
+  {
+   "q": "Des aiguilles fines et parallèles (la « soie ») indiquent plutôt…",
+   "choices": [
+    "un verre",
+    "un diamant synthétique",
+    "un rubis ou un saphir naturel",
+    "une perle"
+   ],
+   "answer": 2,
+   "why": "Les synthétiques ont plutôt des stries courbes."
+  },
+  {
+   "q": "Pourquoi polit-on une « fenêtre » sur une pierre brute ?",
+   "choices": [
+    "Pour la peser",
+    "Pour mesurer sa dureté",
+    "Pour la colorer",
+    "Pour voir l'intérieur et juger la clarté avant de tailler"
+   ],
+   "answer": 3,
+   "why": "La surface brute diffuse la lumière."
+  },
+  {
+   "q": "Des bulles rondes dans une pierre font penser…",
+   "choices": [
+    "à un verre ou à une synthèse à la flamme",
+    "à un rubis naturel",
+    "à une émeraude naturelle",
+    "à un diamant"
+   ],
+   "answer": 0,
+   "why": "C'est un indice, à recouper avec les autres instruments."
+  },
+  {
+   "q": "Quel objectif donne le plus fort grossissement ?",
+   "choices": [
+    "Le × 60",
+    "Le × 10",
+    "Le × 2",
+    "Le × 100 000"
+   ],
+   "answer": 0,
+   "why": "La mise au point doit alors être très précise."
+  },
+  {
+   "q": "À quoi sert la caméra du microscope ?",
+   "choices": [
+    "À peser la pierre",
+    "À photographier ce qu'on observe, pour le joindre au rapport",
+    "À mesurer sa dureté",
+    "À la chauffer"
+   ],
+   "answer": 1,
+   "why": "La photo est envoyée à l'ordinateur du laboratoire."
+  }
+ ]
+}

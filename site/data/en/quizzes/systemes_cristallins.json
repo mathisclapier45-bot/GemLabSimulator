@@ -1,0 +1,105 @@
+{
+ "lesson": "systemes_cristallins",
+ "questions": [
+  {
+   "q": "How many crystal systems are there?",
+   "choices": [
+    "Seven",
+    "Three",
+    "Five",
+    "Twelve"
+   ],
+   "why": "From cubic to triclinic."
+  },
+  {
+   "q": "A stone of the cubic system is…",
+   "choices": [
+    "uniaxial",
+    "isotropic, with a single index",
+    "biaxial",
+    "always opaque"
+   ],
+   "why": "It is the simplest optical family."
+  },
+  {
+   "q": "How is the hexagonal system described?",
+   "choices": [
+    "Three equal, perpendicular axes",
+    "Three unequal, tilted axes",
+    "Three equal axes at 120° in one plane, and a perpendicular vertical axis",
+    "Two equal axes and a third oblique one"
+   ],
+   "why": "It is the system of emerald and aquamarine."
+  },
+  {
+   "q": "Quartz, ruby and tourmaline belong to the…",
+   "choices": [
+    "cubic system",
+    "orthorhombic system",
+    "triclinic system",
+    "trigonal system"
+   ],
+   "why": "It is close to hexagonal, with a three-fold axis."
+  },
+  {
+   "q": "Which systems give biaxial stones?",
+   "choices": [
+    "Orthorhombic, monoclinic and triclinic",
+    "Cubic, tetragonal and hexagonal",
+    "Hexagonal and trigonal",
+    "Only triclinic"
+   ],
+   "why": "Two optic axes and three indices."
+  },
+  {
+   "q": "The habit of a crystal is…",
+   "choices": [
+    "its colour",
+    "its outer shape, linked to the speed of growth along each axis",
+    "its density",
+    "its refractive index"
+   ],
+   "why": "Fast along c: a needle; fast along a and b: a plate."
+  },
+  {
+   "q": "A crystal that grows very fast along the c axis takes the shape of…",
+   "choices": [
+    "a plate",
+    "a cube",
+    "a sphere",
+    "a needle"
+   ],
+   "why": "Fast along a and b: a plate."
+  },
+  {
+   "q": "Which systems give uniaxial stones?",
+   "choices": [
+    "Tetragonal, hexagonal and trigonal",
+    "Cubic only",
+    "Orthorhombic and triclinic",
+    "Monoclinic only"
+   ],
+   "why": "One optic axis and two indices."
+  },
+  {
+   "q": "Why is the stone turned under the instruments?",
+   "choices": [
+    "To cool it",
+    "Because the index, colour or hardness change with the direction",
+    "To clean it",
+    "To weigh it"
+   ],
+   "why": "This is also why the lapidary orients it to get the finest colour."
+  },
+  {
+   "q": "What is said of the monoclinic system?",
+   "choices": [
+    "Three equal, perpendicular axes",
+    "No angle of 90°",
+    "Three unequal axes, one of them tilted: only one angle differs from 90°",
+    "A six-fold axis"
+   ],
+   "why": "You find jadeite, spodumene (kunzite) and malachite in it."
+  }
+ ]
+}

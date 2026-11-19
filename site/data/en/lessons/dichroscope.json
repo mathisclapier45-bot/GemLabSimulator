@@ -1,0 +1,43 @@
+{
+ "id": "dichroscope",
+ "title": "The dichroscope",
+ "tool": {
+  "name": "London dichroscope",
+  "measures": "pleochroism: the different colours of a coloured stone depending on the direction of observation (two halves, A and B)",
+  "where": "Gemmology House and Office, top row, in the middle of the laboratory (a lamp is placed underneath)",
+  "records": [
+   "Pleochroism"
+  ],
+  "tips": [
+   "Turn the stone in all directions, through a full turn",
+   "Compare the two windows A and B",
+   "It also works on a set stone, without touching it"
+  ]
+ },
+ "steps": [
+  {
+   "title": "Pleochroism",
+   "text": "Some coloured stones do not have the same colour when seen from different directions: this is <b>pleochroism</b>.\n\nLight goes through the crystal differently depending on the axis, and each direction absorbs other colours. A ruby, seen one way, looks red; seen another way, it looks orange-red."
+  },
+  {
+   "title": "The London dichroscope",
+   "text": "With the naked eye, the two colours of a pleochroic stone mix and you only see an average shade. The <b>London dichroscope</b> separates them.\n\nIt is a small folding loupe that contains <b>two polarizing filters glued at right angles</b>, each in one half of the lens. Each filter only lets through <b>a single direction of vibration</b> of the light: half A shows one of the two colours of the stone, half B the other.\n\nYou look at the stone through both halves at once, and compare."
+  },
+  {
+   "title": "None, two or three colours",
+   "text": "The number of colours depends on the crystal system:\n\n• <b>isotropic</b> (cubic or amorphous: spinel, garnet, glass): no difference, the two windows are the same;\n• <b>uniaxial</b>: two colours, this is <b>dichroism</b> (ruby, sapphire, emerald);\n• <b>biaxial</b>: up to three colours, this is <b>trichroism</b> (tanzanite, iolite)."
+  },
+  {
+   "title": "Using the dichroscope",
+   "text": "1. Put the stone on a well-lit surface: the lamp of the laboratory.\n2. Bring the London dichroscope close to your eye and look at the stone through the lens: it appears in both halves, A and B.\n3. <b>Turn the stone</b> a full turn, then in other directions: pleochroism only shows in certain positions.\n4. If A and B differ at some point, the stone is pleochroic; if they stay the same everywhere, it is not.\n\nYou need a coloured, transparent stone: a very pale or colourless stone gives little result."
+  },
+  {
+   "title": "The London dichroscope and the calcite dichroscope",
+   "text": "The <b>London dichroscope</b> is the one of the laboratory, and the one you use here: two polarizing filters glued perpendicular to each other in a folding loupe, simple, light, fits in a pocket.\n\nThere is another model, the <b>calcite</b> dichroscope: a crystal of Iceland spar splits the light into two beams and gives <b>two images side by side</b>. You find it at the GemStore, for the bag. Both rely on the same idea: separating the two directions of vibration of light.\n\nNeither one <b>touches the stone</b>: they even work on a set stone, in a piece of jewellery."
+  },
+  {
+   "title": "A few examples",
+   "text": "• <b>Ruby</b>: red / orange-red.\n• <b>Blue sapphire</b>: blue / blue-green.\n• <b>Emerald</b>: blue-green / yellow-green.\n• <b>Tanzanite</b>: blue / violet / red-brown.\n• <b>Iolite</b>: blue / violet / pale yellow.\n• <b>Spinel</b>: no change.\n\nA red spinel therefore cannot pass for a ruby in front of a dichroscope: it is one of the finest tests of gemmology."
+  }
+ ]
+}

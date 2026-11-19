@@ -1,0 +1,85 @@
+{
+ "lesson": "cabine_uv",
+ "questions": [
+  {
+   "q": "What are the two wavelengths of the lamps of the UV cabinet?",
+   "choices": [
+    "365 nm (long-wave) and 254 nm (short-wave)",
+    "400 nm and 700 nm",
+    "100 nm and 200 nm",
+    "550 nm and 650 nm"
+   ],
+   "why": "The two lamps sometimes give different answers."
+  },
+  {
+   "q": "Fluorescence is…",
+   "choices": [
+    "a stone that becomes magnetic",
+    "a stone that absorbs UV and gives back visible light",
+    "a stone that melts",
+    "a stone that becomes transparent"
+   ],
+   "why": "In the dark, the stone glows."
+  },
+  {
+   "q": "A synthetic blue sapphire under the short-wave UV lamp…",
+   "choices": [
+    "stays black",
+    "glows red",
+    "glows green",
+    "becomes colourless"
+   ],
+   "why": "The natural one does not react (or hardly)."
+  },
+  {
+   "q": "Phosphorescence is…",
+   "choices": [
+    "a glow that stops at once",
+    "a black light",
+    "a surface reflection",
+    "a glow that goes on after the lamp is switched off"
+   ],
+   "why": "Some synthetic HPHT diamonds are phosphorescent."
+  },
+  {
+   "q": "Which safety rule must be followed?",
+   "choices": [
+    "Never look straight at a UV lamp",
+    "Always touch the lamp",
+    "Look at the lamp up close",
+    "Leave the cabinet open"
+   ],
+   "why": "UV harms the eyes."
+  },
+  {
+   "q": "Which glow does ruby give under UV?",
+   "choices": [
+    "Red, because of chromium",
+    "Green",
+    "Blue",
+    "None"
+   ],
+   "why": "Natural or synthetic, the reaction is the same."
+  },
+  {
+   "q": "How does a pearl react under UV?",
+   "choices": [
+    "Bright red",
+    "Bluish white",
+    "Green",
+    "It never reacts"
+   ],
+   "why": "Fluorite glows blue or violet."
+  },
+  {
+   "q": "A synthetic blue spinel under long-wave UV…",
+   "choices": [
+    "stays black",
+    "glows green",
+    "glows red",
+    "becomes colourless"
+   ],
+   "why": "The synthetic sapphire, for its part, glows green under short-wave UV."
+  }
+ ]
+}

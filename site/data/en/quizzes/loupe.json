@@ -1,0 +1,75 @@
+{
+ "lesson": "loupe",
+ "questions": [
+  {
+   "q": "What is the standard magnification of the gemmologist's loupe?",
+   "choices": [
+    "× 10",
+    "× 2",
+    "× 100",
+    "× 500"
+   ],
+   "why": "It is the standard magnification to judge a stone."
+  },
+  {
+   "q": "Why wipe the stone with the chamois before looking at it?",
+   "choices": [
+    "To polish it",
+    "Dust and grease leave a film that would be mistaken for a flaw",
+    "To cool it",
+    "To measure its weight"
+   ],
+   "why": "A wrong reading on a dirty stone is beginners' mistake number 1."
+  },
+  {
+   "q": "Why turn the stone in all directions?",
+   "choices": [
+    "So that it warms up",
+    "To make it shinier",
+    "An inclusion or a fracture cannot be seen from every angle",
+    "To change its colour"
+   ],
+   "why": "You look through the table, the sides and from below."
+  },
+  {
+   "q": "What do you NOT note with the loupe?",
+   "choices": [
+    "Luster",
+    "Transparency",
+    "Inclusions",
+    "Refractive index"
+   ],
+   "why": "The index is measured with the refractometer."
+  },
+  {
+   "q": "What characterizes a dirty stone under the loupe?",
+   "choices": [
+    "A whitish film on the surface",
+    "A more vivid colour",
+    "A black cross",
+    "A red glow"
+   ],
+   "why": "Dust and grease leave marks."
+  },
+  {
+   "q": "What should you do with a stone that looks veiled?",
+   "choices": [
+    "Note the film as a flaw",
+    "Wipe it, then look at it again",
+    "Throw it away",
+    "Heat it"
+   ],
+   "why": "Note nothing before cleaning the stone."
+  },
+  {
+   "q": "The luster of a stone is…",
+   "choices": [
+    "its colour",
+    "its weight",
+    "the way its surface returns light",
+    "its hardness"
+   ],
+   "why": "Vitreous, adamantine, greasy, metallic…"
+  }
+ ]
+}

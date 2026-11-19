@@ -1,0 +1,85 @@
+{
+ "lesson": "spectroscope",
+ "questions": [
+  {
+   "q": "Over which range of wavelengths does the visible spectrum of the spectroscope extend?",
+   "choices": [
+    "From 400 nm (violet) to 700 nm (red)",
+    "From 100 to 400 nm",
+    "From 700 to 1,000 nm",
+    "From 0 to 100 nm"
+   ],
+   "why": "It is the scale of the instrument."
+  },
+  {
+   "q": "The fine line of ruby around 694 nm is due to…",
+   "choices": [
+    "iron",
+    "chromium",
+    "copper",
+    "manganese"
+   ],
+   "why": "Fine lines: most often chromium."
+  },
+  {
+   "q": "Broad bands in a spectrum most often betray…",
+   "choices": [
+    "chromium",
+    "carbon",
+    "iron",
+    "water"
+   ],
+   "why": "Iron gives broad bands."
+  },
+  {
+   "q": "What does a spectroscope show?",
+   "choices": [
+    "Its exact name",
+    "Its weight",
+    "Its hardness",
+    "What the stone absorbs, so what colours it"
+   ],
+   "why": "The spectrum is the fingerprint of the colour."
+  },
+  {
+   "q": "Peridot shows…",
+   "choices": [
+    "an iron triplet in the blue (451, 470, 494 nm)",
+    "a fine line at 694 nm",
+    "no line, ever",
+    "lines in the violet only"
+   ],
+   "why": "It is one of its fingerprints."
+  },
+  {
+   "q": "Which colour occupies the band from 490 to 560 nm?",
+   "choices": [
+    "Green",
+    "Blue",
+    "Yellow",
+    "Orange"
+   ],
+   "why": "Violet 400-450, blue 450-490, green 490-560, yellow 560-590."
+  },
+  {
+   "q": "Two green stones can have…",
+   "choices": [
+    "always the same spectrum",
+    "very different spectra",
+    "no spectrum",
+    "the same weight"
+   ],
+   "why": "The spectroscope sees the cause of the colour."
+  },
+  {
+   "q": "Why does the spectroscope help unmask an imitation?",
+   "choices": [
+    "It measures the weight",
+    "It gives the size",
+    "Two stones of the same colour can have two different spectra",
+    "It shows the size of the facets"
+   ],
+   "why": "You then cross-check with the other measurements."
+  }
+ ]
+}

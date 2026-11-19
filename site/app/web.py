@@ -49,13 +49,21 @@ STATUS_TEXT = {200: "OK", 303: "See Other", 301: "Moved Permanently", 304: "Not 
                413: "Payload Too Large", 429: "Too Many Requests", 500: "Internal Server Error"}
 
 
+_LINK = re.compile(r'(href|action)="/(?!static/|en/|en"|favicon\.ico|robots\.txt|sitemap\.xml|simulateur/fichiers/)([^"]*)"')
+
+
 class Request:
     def __init__(self, environ):
         self.environ = environ
         self.method = environ.get("REQUEST_METHOD", "GET").upper()
         self.path = environ.get("PATH_INFO", "/") or "/"
-        self.query = {k: v[0] for k, v in parse_qs(environ.get("QUERY_STRING", ""), keep_blank_values=True).items()}
+        # Language of the page: the French pages have no prefix, the English ones start with /en (the path used by the routes has no prefix).
+        self.prefix = ""
         self.lang = config.DEFAULT_LANG
+        if self.path == "/en" or self.path.startswith("/en/"):
+            self.prefix, self.lang = "/en", "en"
+            self.path = self.path[3:] or "/"
+        self.query = {k: v[0] for k, v in parse_qs(environ.get("QUERY_STRING", ""), keep_blank_values=True).items()}
         self.cookies = {}
         raw = environ.get("HTTP_COOKIE", "")
         if raw:
@@ -88,6 +96,18 @@ class Request:
         if config.DEV and host:
             return "http://" + host
         return config.BASE_URL
+
+    # -- language of the links: the pages of a language keep their visitors in that language
+    def localize(self, html):
+        """Adds the language prefix to the internal links of a page (href="/x" becomes href="/en/x" on the English pages)."""
+        if not self.prefix:
+            return html
+        return _LINK.sub(lambda m: '{}="{}{}"'.format(m.group(1), self.prefix, "/" + m.group(2) if m.group(2) else ""), html)
+
+    def localize_location(self, location):
+        if self.prefix and location.startswith("/") and not location.startswith(("/static/", self.prefix + "/")) and location != self.prefix:
+            return self.prefix + (location if location != "/" else "")
+        return location
 
     # -- text
     def t(self, key, **kw):

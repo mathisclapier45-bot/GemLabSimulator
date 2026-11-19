@@ -1,0 +1,675 @@
+[
+ {
+  "id": "absorption",
+  "term": "Absorption",
+  "aliases": [
+   "absorbe",
+   "absorbent",
+   "absorbée"
+  ],
+  "def": "Quand une pierre garde certaines couleurs de la lumière qui la traverse. Ce qui manque dans le spectre est la trace de ce qui la colore.",
+  "lessons": [
+   "spectroscope"
+  ]
+ },
+ {
+  "id": "acceptabilite",
+  "term": "Acceptabilité",
+  "aliases": [],
+  "def": "L'une des cinq qualités d'une gemme : le marché doit la désirer et lui faire confiance (pas de traitement caché, pas de synthèse vendue pour naturelle), et la loi doit permettre de la vendre.",
+  "lessons": [
+   "gemmes"
+  ]
+ },
+ {
+  "id": "agregat",
+  "term": "Agrégat",
+  "aliases": [
+   "agrégats"
+  ],
+  "def": "Matière faite de petits cristaux orientés dans tous les sens (jade, calcédoine, lapis-lazuli). Entre deux filtres polarisants croisés, elle reste claire.",
+  "lessons": [
+   "polariscope"
+  ]
+ },
+ {
+  "id": "amorphe",
+  "term": "Amorphe",
+  "aliases": [
+   "amorphes"
+  ],
+  "def": "Qui n'a pas d'ordre régulier à l'échelle des atomes : l'opale, l'obsidienne, le verre.",
+  "lessons": [
+   "gemmes"
+  ]
+ },
+ {
+  "id": "angle-critique",
+  "term": "Angle critique",
+  "aliases": [],
+  "def": "Angle au-delà duquel toute la lumière qui arrive du verre vers la pierre est renvoyée dans le verre. C'est lui qui fait la limite d'ombre du réfractomètre.",
+  "lessons": [
+   "refractometre"
+  ]
+ },
+ {
+  "id": "anisotrope",
+  "term": "Anisotrope",
+  "aliases": [
+   "anisotropes"
+  ],
+  "def": "Se dit d'une pierre qui sépare la lumière en deux rayons (uniaxe ou biaxe). Au polariscope, elle s'éclaire et s'éteint quatre fois par tour.",
+  "lessons": [
+   "polariscope"
+  ]
+ },
+ {
+  "id": "asterisme",
+  "term": "Astérisme",
+  "aliases": [
+   "astérisme",
+   "astérismes"
+  ],
+  "def": "Étoile à quatre ou six branches visible sur un cabochon, due à de fines aiguilles alignées (rubis et saphirs étoilés).",
+  "lessons": [
+   "microscope"
+  ]
+ },
+ {
+  "id": "axe-optique",
+  "term": "Axe optique",
+  "aliases": [
+   "axes optiques"
+  ],
+  "def": "Direction, dans un cristal, où la lumière ne se sépare pas en deux rayons. Une pierre uniaxe en a un, une pierre biaxe en a deux.",
+  "lessons": [
+   "polariscope",
+   "systemes_cristallins"
+  ]
+ },
+ {
+  "id": "balance-hydrostatique",
+  "term": "Balance hydrostatique",
+  "aliases": [],
+  "def": "Balance qui pèse une pierre dans l'air puis dans l'eau, pour en déduire la densité par le principe d'Archimède.",
+  "lessons": [
+   "balance_hydrostatique"
+  ]
+ },
+ {
+  "id": "biaxe",
+  "term": "Biaxe",
+  "aliases": [
+   "biaxes"
+  ],
+  "def": "Pierre à deux axes optiques et trois indices de réfraction (systèmes orthorhombique, monoclinique, triclinique).",
+  "lessons": [
+   "polariscope",
+   "systemes_cristallins"
+  ]
+ },
+ {
+  "id": "birefringence",
+  "term": "Biréfringence",
+  "aliases": [],
+  "def": "Différence entre l'indice le plus grand et l'indice le plus petit d'une pierre anisotrope. Elle se mesure au réfractomètre.",
+  "lessons": [
+   "refractometre"
+  ]
+ },
+ {
+  "id": "cabochon",
+  "term": "Cabochon",
+  "aliases": [
+   "cabochons"
+  ],
+  "def": "Pierre taillée en dôme, à surface lisse et bombée, sans facettes. Le test de dureté peut se faire sous sa base.",
+  "lessons": [
+   "durete"
+  ]
+ },
+ {
+  "id": "carat",
+  "term": "Carat",
+  "aliases": [
+   "carats"
+  ],
+  "def": "Unité de poids des pierres : 1 carat = 0,2 gramme (donc 1 g = 5 ct). Le mot vient de la graine de caroubier.",
+  "lessons": [
+   "balance_carats"
+  ]
+ },
+ {
+  "id": "cassure",
+  "term": "Cassure",
+  "aliases": [],
+  "def": "Façon dont une pierre se brise quand il n'y a pas de plan de faiblesse. Conchoïdale (en arcs, comme une coquille) ou esquilleuse (en fibres).",
+  "lessons": [
+   "tenacite"
+  ]
+ },
+ {
+  "id": "chamoisine",
+  "term": "Chamoisine",
+  "aliases": [],
+  "def": "Peau douce avec laquelle on essuie la pierre avant de la regarder, pour enlever la poussière et le gras.",
+  "lessons": [
+   "loupe"
+  ]
+ },
+ {
+  "id": "chelsea",
+  "term": "Filtre Chelsea",
+  "aliases": [
+   "filtre Chelsea"
+  ],
+  "def": "Petit filtre coloré qui ne laisse passer que le jaune-vert et le rouge profond. Le chrome (et le cobalt) rougit sous le filtre, le fer non.",
+  "lessons": [
+   "filtre_chelsea"
+  ]
+ },
+ {
+  "id": "clarte",
+  "term": "Clarté",
+  "aliases": [],
+  "def": "Degré de pureté d'une pierre : plus il y a d'inclusions visibles, plus la clarté est faible.",
+  "lessons": [
+   "microscope"
+  ]
+ },
+ {
+  "id": "clivage",
+  "term": "Clivage",
+  "aliases": [],
+  "def": "Fente d'une pierre selon un plan lisse, là où les liaisons entre atomes sont plus faibles. Le diamant, la topaze, la fluorite et la kunzite en ont.",
+  "lessons": [
+   "tenacite"
+  ]
+ },
+ {
+  "id": "conoscope",
+  "term": "Conoscope",
+  "aliases": [],
+  "def": "Polariscope muni d'une lentille, qui permet de voir la figure d'interférence d'une pierre et donc de distinguer uniaxe et biaxe.",
+  "lessons": [
+   "polariscope"
+  ]
+ },
+ {
+  "id": "conductivite-thermique",
+  "term": "Conductivité thermique",
+  "aliases": [],
+  "def": "Facilité avec laquelle un matériau évacue la chaleur. Le diamant est le meilleur conducteur connu.",
+  "lessons": [
+   "testeurs_diamant"
+  ]
+ },
+ {
+  "id": "cvd",
+  "term": "CVD",
+  "aliases": [],
+  "def": "Diamant de synthèse obtenu en faisant croître le diamant couche par couche à partir d'un gaz. C'est un vrai diamant.",
+  "lessons": [
+   "diamant_laboratoire"
+  ]
+ },
+ {
+  "id": "densite",
+  "term": "Densité",
+  "aliases": [],
+  "def": "Rapport entre le poids d'une pierre et celui du même volume d'eau. Chaque espèce a la sienne (quartz 2,65, diamant 3,52, corindon 4,0).",
+  "lessons": [
+   "balance_hydrostatique"
+  ]
+ },
+ {
+  "id": "dichroscope",
+  "term": "Dichroscope",
+  "aliases": [],
+  "def": "Petit instrument qui sépare les deux directions de vibration de la lumière et montre côte à côte les couleurs d'une pierre pléochroïque.",
+  "lessons": [
+   "dichroscope"
+  ]
+ },
+ {
+  "id": "diffusion",
+  "term": "Diffusion",
+  "aliases": [],
+  "def": "Traitement qui fait pénétrer un élément (titane, chrome, béryllium) dans la surface d'une pierre pour la colorer. La couche ne dépasse parfois pas 0,1 mm.",
+  "lessons": [
+   "traitements"
+  ]
+ },
+ {
+  "id": "dispersion",
+  "term": "Dispersion",
+  "aliases": [],
+  "def": "Écart d'indice de réfraction entre la lumière bleue et la lumière rouge. C'est elle qui donne le « feu » d'une pierre (très forte dans le diamant, le sphène, le démantoïde).",
+  "lessons": []
+ },
+ {
+  "id": "durabilite",
+  "term": "Durabilité",
+  "aliases": [],
+  "def": "Qualité d'une gemme qui résiste dans le temps : à la rayure (dureté), au choc (ténacité) et à l'environnement (stabilité).",
+  "lessons": [
+   "gemmes",
+   "stabilite"
+  ]
+ },
+ {
+  "id": "durete",
+  "term": "Dureté",
+  "aliases": [
+   "dureté absolue"
+  ],
+  "def": "Résistance d'une pierre aux rayures. On la repère sur l'échelle de Mohs (de 1 à 10).",
+  "lessons": [
+   "durete"
+  ]
+ },
+ {
+  "id": "eclat",
+  "term": "Éclat",
+  "aliases": [],
+  "def": "Façon dont la surface d'une pierre renvoie la lumière : vitreux, adamantin, résineux, gras, soyeux, métallique, nacré…",
+  "lessons": [
+   "loupe"
+  ]
+ },
+ {
+  "id": "edxrf",
+  "term": "EDXRF",
+  "aliases": [],
+  "def": "Spectrométrie de fluorescence X : des rayons X font répondre chaque élément chimique de la pierre par ses raies. Rapide, elle ne laisse pas de trace.",
+  "lessons": [
+   "origine_geographique"
+  ]
+ },
+ {
+  "id": "elements-traces",
+  "term": "Éléments traces",
+  "aliases": [
+   "éléments traces"
+  ],
+  "def": "Éléments chimiques présents en quantités infimes (fer, chrome, vanadium, titane, gallium…). Leurs proportions varient d'un gisement à l'autre.",
+  "lessons": [
+   "origine_geographique"
+  ]
+ },
+ {
+  "id": "facette",
+  "term": "Facette",
+  "aliases": [
+   "facettes",
+   "facettée",
+   "facettées"
+  ],
+  "def": "Petite surface plane polie sur une pierre taillée.",
+  "lessons": [
+   "loupe"
+  ]
+ },
+ {
+  "id": "fluorescence",
+  "term": "Fluorescence",
+  "aliases": [],
+  "def": "Lueur visible d'une pierre qui absorbe des ultraviolets et les renvoie sous forme de lumière visible. Elle s'arrête quand on éteint la lampe.",
+  "lessons": [
+   "cabine_uv"
+  ]
+ },
+ {
+  "id": "ftir",
+  "term": "FTIR",
+  "aliases": [],
+  "def": "Spectroscopie infrarouge à transformée de Fourier : elle repère les liaisons chimiques, donc l'huile, la résine ou l'eau dans une pierre.",
+  "lessons": [
+   "infrarouge_raman"
+  ]
+ },
+ {
+  "id": "figure-d-interference",
+  "term": "Figure d'interférence",
+  "aliases": [
+   "figures d'interférence",
+   "figure d'interférence"
+  ],
+  "def": "Dessin vu au conoscope : une croix noire et des anneaux colorés (uniaxe) ou deux yeux et une moustache (biaxe).",
+  "lessons": [
+   "polariscope"
+  ]
+ },
+ {
+  "id": "gemme",
+  "term": "Gemme",
+  "aliases": [
+   "gemmes"
+  ],
+  "def": "Matériau, le plus souvent un minéral, qui réunit assez de beauté, de rareté, de durabilité, de valeur et d'acceptabilité pour être porté en bijou ou collectionné.",
+  "lessons": [
+   "gemmes"
+  ]
+ },
+ {
+  "id": "habitus",
+  "term": "Habitus",
+  "aliases": [],
+  "def": "Forme extérieure d'un cristal (aiguille, prisme, tablette), liée à la vitesse de croissance selon chaque axe.",
+  "lessons": [
+   "systemes_cristallins"
+  ]
+ },
+ {
+  "id": "hpht",
+  "term": "HPHT",
+  "aliases": [],
+  "def": "Haute pression, haute température : procédé qui fabrique des diamants de synthèse, ou qui éclaircit ou décolore certains diamants naturels.",
+  "lessons": [
+   "diamant_laboratoire",
+   "traitements"
+  ]
+ },
+ {
+  "id": "imitation",
+  "term": "Imitation",
+  "aliases": [
+   "imitations"
+  ],
+  "def": "Matière qui ressemble à une gemme sans en avoir la nature (verre coloré, zircon cubique vendu pour un diamant).",
+  "lessons": [
+   "gemmes"
+  ]
+ },
+ {
+  "id": "inclusion",
+  "term": "Inclusion",
+  "aliases": [
+   "inclusions"
+  ],
+  "def": "Corps étranger, cavité ou fissure prisonnier d'une pierre. Les inclusions racontent sa formation et aident à distinguer naturel et synthétique.",
+  "lessons": [
+   "microscope"
+  ]
+ },
+ {
+  "id": "indice-de-refraction",
+  "term": "Indice de réfraction",
+  "aliases": [
+   "indices de réfraction"
+  ],
+  "def": "Nombre qui dit de combien la lumière est ralentie et déviée dans une pierre. Il se mesure au réfractomètre.",
+  "lessons": [
+   "refractometre"
+  ]
+ },
+ {
+  "id": "isotrope",
+  "term": "Isotrope",
+  "aliases": [
+   "isotropes"
+  ],
+  "def": "Se dit d'une pierre qui ne sépare pas la lumière (cubique ou amorphe : grenat, spinelle, verre). Elle n'a qu'un indice de réfraction.",
+  "lessons": [
+   "polariscope"
+  ]
+ },
+ {
+  "id": "la-icp-ms",
+  "term": "LA-ICP-MS",
+  "aliases": [],
+  "def": "Spectrométrie de masse avec ablation laser : un laser vaporise une quantité microscopique de matière, analysée pour doser les éléments traces. Mesure de référence pour l'origine.",
+  "lessons": [
+   "origine_geographique"
+  ]
+ },
+ {
+  "id": "limite-d-ombre",
+  "term": "Limite d'ombre",
+  "aliases": [
+   "limites d'ombre"
+  ],
+  "def": "Frontière entre la zone claire et la zone sombre dans le réfractomètre. Sa position sur l'échelle donne l'indice.",
+  "lessons": [
+   "refractometre"
+  ]
+ },
+ {
+  "id": "luminescence",
+  "term": "Luminescence",
+  "aliases": [],
+  "def": "Émission de lumière par une pierre : fluorescence (qui s'arrête avec la lampe) ou phosphorescence (qui continue).",
+  "lessons": [
+   "cabine_uv"
+  ]
+ },
+ {
+  "id": "macle",
+  "term": "Macle",
+  "aliases": [
+   "maclés"
+  ],
+  "def": "Association de deux cristaux de même nature, orientés symétriquement l'un par rapport à l'autre.",
+  "lessons": [
+   "systemes_cristallins"
+  ]
+ },
+ {
+  "id": "moissanite",
+  "term": "Moissanite",
+  "aliases": [],
+  "def": "Carbure de silicium synthétique qui ressemble au diamant. Elle conduit la chaleur comme lui, mais aussi l'électricité.",
+  "lessons": [
+   "testeurs_diamant"
+  ]
+ },
+ {
+  "id": "naturelle",
+  "term": "Gemme naturelle",
+  "aliases": [],
+  "def": "Gemme formée sans l'homme, même si l'homme l'a ensuite taillée ou traitée.",
+  "lessons": [
+   "gemmes"
+  ]
+ },
+ {
+  "id": "origine",
+  "term": "Origine géographique",
+  "aliases": [],
+  "def": "Gisement d'où vient une pierre. Elle change fortement la valeur d'un rubis, d'un saphir ou d'une émeraude et se déduit des éléments traces.",
+  "lessons": [
+   "origine_geographique"
+  ]
+ },
+ {
+  "id": "phosphorescence",
+  "term": "Phosphorescence",
+  "aliases": [],
+  "def": "Lueur qui continue quelques secondes après l'extinction de la lampe UV.",
+  "lessons": [
+   "cabine_uv"
+  ]
+ },
+ {
+  "id": "pleochroisme",
+  "term": "Pléochroïsme",
+  "aliases": [
+   "pléochroïque",
+   "pléochroïques",
+   "dichroïsme",
+   "trichroïsme"
+  ],
+  "def": "Propriété d'une pierre colorée de montrer des couleurs différentes selon la direction d'observation : deux (dichroïsme, uniaxe) ou trois (trichroïsme, biaxe).",
+  "lessons": [
+   "dichroscope"
+  ]
+ },
+ {
+  "id": "polariscope",
+  "term": "Polariscope",
+  "aliases": [],
+  "def": "Deux filtres polarisants croisés entre lesquels on tourne la pierre. Il distingue isotrope, anisotrope et agrégat.",
+  "lessons": [
+   "polariscope"
+  ]
+ },
+ {
+  "id": "raman",
+  "term": "Raman",
+  "aliases": [
+   "spectroscopie Raman"
+  ],
+  "def": "Spectroscopie au laser qui donne la signature du réseau cristallin d'un minéral : elle l'identifie avec certitude, même pour une inclusion minuscule.",
+  "lessons": [
+   "infrarouge_raman"
+  ]
+ },
+ {
+  "id": "rarete",
+  "term": "Rareté",
+  "aliases": [],
+  "def": "L'une des cinq qualités d'une gemme : plus une pierre de belle qualité est rare, plus elle est recherchée.",
+  "lessons": [
+   "gemmes"
+  ]
+ },
+ {
+  "id": "reflexion-totale",
+  "term": "Réflexion totale",
+  "aliases": [],
+  "def": "Au-delà de l'angle critique, toute la lumière est renvoyée dans le verre du réfractomètre.",
+  "lessons": [
+   "refractometre"
+  ]
+ },
+ {
+  "id": "refractometre",
+  "term": "Réfractomètre",
+  "aliases": [],
+  "def": "Instrument qui mesure l'indice de réfraction d'une pierre grâce à l'angle critique, avec une goutte de liquide de contact.",
+  "lessons": [
+   "refractometre"
+  ]
+ },
+ {
+  "id": "refraction",
+  "term": "Réfraction",
+  "aliases": [],
+  "def": "Changement de direction de la lumière quand elle passe d'un milieu à un autre (loi de Descartes).",
+  "lessons": [
+   "refractometre"
+  ]
+ },
+ {
+  "id": "soie",
+  "term": "Soie",
+  "aliases": [],
+  "def": "Fines aiguilles parallèles dans un rubis ou un saphir naturel, qui diffusent la lumière comme de la soie.",
+  "lessons": [
+   "microscope"
+  ]
+ },
+ {
+  "id": "spectre-d-absorption",
+  "term": "Spectre d'absorption",
+  "aliases": [],
+  "def": "Spectre de la lumière après son passage dans une pierre : les raies et bandes sombres sont ce que la pierre a absorbé. C'est l'empreinte de sa couleur.",
+  "lessons": [
+   "spectroscope"
+  ]
+ },
+ {
+  "id": "spectroscope",
+  "term": "Spectroscope",
+  "aliases": [],
+  "def": "Petit prisme (ou réseau) qui étale la lumière ayant traversé la pierre, pour lire ses raies d'absorption.",
+  "lessons": [
+   "spectroscope"
+  ]
+ },
+ {
+  "id": "stabilite",
+  "term": "Stabilité",
+  "aliases": [],
+  "def": "Résistance d'une pierre à la lumière, à la chaleur, aux produits chimiques et à l'humidité.",
+  "lessons": [
+   "stabilite"
+  ]
+ },
+ {
+  "id": "synthetique",
+  "term": "Synthétique",
+  "aliases": [
+   "synthèse",
+   "synthétiques"
+  ],
+  "def": "Gemme fabriquée par l'homme qui a la même composition et la même structure qu'une gemme naturelle (un rubis de synthèse est un vrai corindon).",
+  "lessons": [
+   "gemmes"
+  ]
+ },
+ {
+  "id": "systeme-cristallin",
+  "term": "Système cristallin",
+  "aliases": [
+   "systèmes cristallins"
+  ],
+  "def": "Façon dont les atomes sont rangés : il existe sept systèmes (cubique, quadratique, hexagonal, trigonal, orthorhombique, monoclinique, triclinique).",
+  "lessons": [
+   "systemes_cristallins"
+  ]
+ },
+ {
+  "id": "tenacite",
+  "term": "Ténacité",
+  "aliases": [],
+  "def": "Résistance d'une pierre aux chocs. Le jade est la gemme la plus tenace ; le diamant, très dur, ne l'est pas autant.",
+  "lessons": [
+   "tenacite"
+  ]
+ },
+ {
+  "id": "traitement",
+  "term": "Traitement",
+  "aliases": [
+   "traitements"
+  ],
+  "def": "Opération qui améliore l'aspect d'une pierre (chauffage, irradiation, teinture, remplissage…). Il est permis à condition d'être déclaré.",
+  "lessons": [
+   "traitements"
+  ]
+ },
+ {
+  "id": "transparence",
+  "term": "Transparence",
+  "aliases": [],
+  "def": "Capacité d'une pierre à laisser passer la lumière : transparente, translucide ou opaque.",
+  "lessons": [
+   "loupe"
+  ]
+ },
+ {
+  "id": "uniaxe",
+  "term": "Uniaxe",
+  "aliases": [
+   "uniaxes"
+  ],
+  "def": "Pierre à un seul axe optique et deux indices de réfraction (systèmes quadratique, hexagonal, trigonal).",
+  "lessons": [
+   "polariscope",
+   "systemes_cristallins"
+  ]
+ },
+ {
+  "id": "ultraviolet",
+  "term": "Ultraviolet",
+  "aliases": [
+   "ultraviolets",
+   "UV"
+  ],
+  "def": "Rayonnement invisible au-delà du violet. La cabine a deux lampes : UV longs (365 nm) et UV courts (254 nm).",
+  "lessons": [
+   "cabine_uv"
+  ]
+ }
+]

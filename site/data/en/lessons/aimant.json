@@ -1,0 +1,39 @@
+{
+ "id": "aimant",
+ "title": "The magnet",
+ "tool": {
+  "name": "Strong magnet",
+  "measures": "the magnetic sensitivity of the stone, linked to its iron content",
+  "where": "Gemmology House and Office, laboratory",
+  "records": [
+   "Magnetism"
+  ],
+  "tips": [
+   "Put the stone on a smooth surface and bring the magnet close",
+   "An ordinary magnet is not enough: you need a very strong magnet",
+   "A stone set in a magnetic metal gives a false result"
+  ]
+ },
+ "steps": [
+  {
+   "title": "Iron attracts the magnet",
+   "text": "Some stones contain <b>iron</b> (or manganese), and iron reacts to a magnet. With a very strong magnet, you can thus see a stone <b>move</b> or roll towards it."
+  },
+  {
+   "title": "How to do the test",
+   "text": "1. Put the stone flat on a smooth surface (or float it on water).\n2. Slowly bring the magnet close, without touching it.\n3. Watch whether the stone moves, turns or follows the magnet.\n\nThe test destroys nothing and takes only a moment."
+  },
+  {
+   "title": "What you observe",
+   "text": "• <b>Strongly attracted</b>: almandine garnet (very rich in iron).\n• <b>Attracted</b>: rhodolite, spessartine and demantoid garnets.\n• <b>Slightly attracted</b>: peridot, hematite, black tourmaline (schorl).\n• <b>Almost nothing</b>: sapphire, kyanite (traces of iron).\n• <b>No reaction</b>: most stones, including ruby, emerald and natural diamond."
+  },
+  {
+   "title": "What the test allows",
+   "text": "The magnet helps tell apart stones that look alike: a red <b>garnet</b> from a ruby, for example. It can also point to a <b>synthetic HPHT diamond</b>, whose growth sometimes leaves tiny remains of metal.\n\nBut the absence of a reaction proves nothing: you always cross-check with the other instruments."
+  },
+  {
+   "title": "To remember",
+   "text": "• The magnet reveals the <b>iron</b> contained in the stone.\n• You need a <b>very strong</b> magnet and a little patience.\n• The test is one clue among others, quick and harmless for the stone."
+  }
+ ]
+}

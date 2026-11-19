@@ -1,0 +1,93 @@
+{
+ "lesson": "spectroscope",
+ "questions": [
+  {
+   "q": "Sur quelle plage de longueurs d'onde s'étend le spectre visible du spectroscope ?",
+   "choices": [
+    "De 400 nm (violet) à 700 nm (rouge)",
+    "De 100 à 400 nm",
+    "De 700 à 1 000 nm",
+    "De 0 à 100 nm"
+   ],
+   "answer": 0,
+   "why": "C'est l'échelle de l'instrument."
+  },
+  {
+   "q": "La raie fine du rubis vers 694 nm est due…",
+   "choices": [
+    "au fer",
+    "au chrome",
+    "au cuivre",
+    "au manganèse"
+   ],
+   "answer": 1,
+   "why": "Raies fines : chrome le plus souvent."
+  },
+  {
+   "q": "Les larges bandes d'un spectre trahissent le plus souvent…",
+   "choices": [
+    "le chrome",
+    "le carbone",
+    "le fer",
+    "l'eau"
+   ],
+   "answer": 2,
+   "why": "Le fer donne des bandes larges."
+  },
+  {
+   "q": "Que montre un spectroscope ?",
+   "choices": [
+    "Son nom exact",
+    "Son poids",
+    "Sa dureté",
+    "Ce que la pierre absorbe, donc ce qui la colore"
+   ],
+   "answer": 3,
+   "why": "Le spectre est l'empreinte de la couleur."
+  },
+  {
+   "q": "Le péridot montre…",
+   "choices": [
+    "un triplet du fer dans le bleu (451, 470, 494 nm)",
+    "une raie fine à 694 nm",
+    "aucune raie, jamais",
+    "des raies dans le violet seulement"
+   ],
+   "answer": 0,
+   "why": "C'est l'une de ses empreintes."
+  },
+  {
+   "q": "Quelle couleur occupe la bande de 490 à 560 nm ?",
+   "choices": [
+    "Le vert",
+    "Le bleu",
+    "Le jaune",
+    "L'orange"
+   ],
+   "answer": 0,
+   "why": "Violet 400-450, bleu 450-490, vert 490-560, jaune 560-590."
+  },
+  {
+   "q": "Deux pierres vertes peuvent avoir…",
+   "choices": [
+    "toujours le même spectre",
+    "des spectres très différents",
+    "aucun spectre",
+    "le même poids"
+   ],
+   "answer": 1,
+   "why": "Le spectroscope voit la cause de la couleur."
+  },
+  {
+   "q": "Pourquoi le spectroscope aide-t-il à démasquer une imitation ?",
+   "choices": [
+    "Il mesure le poids",
+    "Il donne la taille",
+    "Deux pierres de même couleur peuvent avoir deux spectres différents",
+    "Il montre la taille des facettes"
+   ],
+   "answer": 2,
+   "why": "On croise ensuite avec les autres mesures."
+  }
+ ]
+}

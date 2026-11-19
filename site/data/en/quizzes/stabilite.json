@@ -1,0 +1,75 @@
+{
+ "lesson": "stabilite",
+ "questions": [
+  {
+   "q": "The stability of a stone is its resistance…",
+   "choices": [
+    "to scratches",
+    "to light, heat, chemicals and humidity",
+    "to blows",
+    "to changes of weight"
+   ],
+   "why": "It is the third form of durability."
+  },
+  {
+   "q": "Which stones fade in light?",
+   "choices": [
+    "Kunzite and amethyst",
+    "Ruby and diamond",
+    "Colourless quartz and zircon",
+    "Corundum and spinel"
+   ],
+   "why": "They are kept away from the sun."
+  },
+  {
+   "q": "Why avoid an ultrasonic bath for an oiled emerald?",
+   "choices": [
+    "It scratches it",
+    "It certainly removes its colour",
+    "It drives the filling out of the cracks",
+    "It makes it magnetic"
+   ],
+   "why": "Oil or resin do not tolerate ultrasound."
+  },
+  {
+   "q": "What happens to a heated amethyst?",
+   "choices": [
+    "It becomes harder",
+    "It becomes colourless and fragile for ever",
+    "Nothing at all",
+    "It can turn yellow"
+   ],
+   "why": "Heat can change the colour: it is also a treatment."
+  },
+  {
+   "q": "Which blow easily breaks a topaz?",
+   "choices": [
+    "A thermal shock, that is a sudden change of temperature",
+    "A perfume",
+    "A sunbath",
+    "A weighing"
+   ],
+   "why": "Heat can crack a stone."
+  },
+  {
+   "q": "Which stones fear chemicals and even sweat?",
+   "choices": [
+    "Diamond and ruby",
+    "Pearl, coral, turquoise and opal",
+    "Quartz and zircon",
+    "Sapphire and spinel"
+   ],
+   "why": "They are soft or porous."
+  },
+  {
+   "q": "What does heat do to opal?",
+   "choices": [
+    "It makes it harder",
+    "It colours it blue",
+    "It dries it out, and the opal crazes",
+    "Nothing at all"
+   ],
+   "why": "Heat also softens amber."
+  }
+ ]
+}

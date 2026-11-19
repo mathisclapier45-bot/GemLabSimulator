@@ -1,0 +1,93 @@
+{
+ "lesson": "cabine_uv",
+ "questions": [
+  {
+   "q": "Quelles sont les deux longueurs d'onde des lampes de la cabine UV ?",
+   "choices": [
+    "365 nm (longs) et 254 nm (courts)",
+    "400 nm et 700 nm",
+    "100 nm et 200 nm",
+    "550 nm et 650 nm"
+   ],
+   "answer": 0,
+   "why": "Les deux lampes donnent parfois des réponses différentes."
+  },
+  {
+   "q": "La fluorescence, c'est…",
+   "choices": [
+    "une pierre qui devient magnétique",
+    "une pierre qui absorbe les UV et renvoie de la lumière visible",
+    "une pierre qui fond",
+    "une pierre qui devient transparente"
+   ],
+   "answer": 1,
+   "why": "Dans le noir, la pierre brille."
+  },
+  {
+   "q": "Un saphir bleu de synthèse sous la lampe UV courts…",
+   "choices": [
+    "reste noir",
+    "brille en rouge",
+    "brille en vert",
+    "devient incolore"
+   ],
+   "answer": 2,
+   "why": "Le naturel ne réagit pas (ou presque)."
+  },
+  {
+   "q": "La phosphorescence est…",
+   "choices": [
+    "une lueur qui s'arrête aussitôt",
+    "une lumière noire",
+    "un reflet de surface",
+    "une lueur qui continue après l'extinction de la lampe"
+   ],
+   "answer": 3,
+   "why": "Certains diamants de synthèse HPHT sont phosphorescents."
+  },
+  {
+   "q": "Quelle règle de sécurité faut-il respecter ?",
+   "choices": [
+    "Ne jamais regarder une lampe UV en face",
+    "Toujours toucher la lampe",
+    "Regarder la lampe de près",
+    "Laisser la cabine ouverte"
+   ],
+   "answer": 0,
+   "why": "Les UV abîment les yeux."
+  },
+  {
+   "q": "Quelle lueur donne le rubis aux UV ?",
+   "choices": [
+    "Rouge, à cause du chrome",
+    "Verte",
+    "Bleue",
+    "Aucune"
+   ],
+   "answer": 0,
+   "why": "Naturel ou synthétique, la réaction est la même."
+  },
+  {
+   "q": "Comment réagit une perle aux UV ?",
+   "choices": [
+    "Rouge vif",
+    "Blanc bleuté",
+    "Vert",
+    "Elle ne réagit jamais"
+   ],
+   "answer": 1,
+   "why": "La fluorite brille en bleu ou violet."
+  },
+  {
+   "q": "Un spinelle bleu synthétique sous les UV longs…",
+   "choices": [
+    "reste noir",
+    "brille en vert",
+    "brille en rouge",
+    "devient incolore"
+   ],
+   "answer": 2,
+   "why": "Le saphir de synthèse, lui, brille en vert aux UV courts."
+  }
+ ]
+}

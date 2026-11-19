@@ -1,0 +1,85 @@
+{
+ "lesson": "refractometre",
+ "questions": [
+  {
+   "q": "Which law describes the change of direction of light between two media?",
+   "choices": [
+    "Descartes' law",
+    "Mohs' law",
+    "Archimedes' law",
+    "Bragg's law"
+   ],
+   "why": "n₁ sin θ₁ = n₂ sin θ₂."
+  },
+  {
+   "q": "What is the index of the glass of the refractometer?",
+   "choices": [
+    "1.33",
+    "1.81",
+    "2.42",
+    "1.00"
+   ],
+   "why": "The stone must have a lower index for the test to work."
+  },
+  {
+   "q": "Beyond the critical angle, the light is…",
+   "choices": [
+    "absorbed by the stone",
+    "transmitted unchanged",
+    "entirely sent back into the glass (total reflection)",
+    "polarized"
+   ],
+   "why": "This is total reflection."
+  },
+  {
+   "q": "How many shadow edges do you see on an anisotropic stone?",
+   "choices": [
+    "None",
+    "Only one",
+    "Four",
+    "Two"
+   ],
+   "why": "An isotropic stone has only one."
+  },
+  {
+   "q": "In which order do you put the liquid and the stone?",
+   "choices": [
+    "The drop of liquid first, the stone after",
+    "The stone first, then the drop",
+    "No liquid at all",
+    "The liquid on the loupe"
+   ],
+   "why": "The contact drop fills the gap between the glass and the stone."
+  },
+  {
+   "q": "What does the position of the shadow edge on the scale give?",
+   "choices": [
+    "Directly the refractive index",
+    "The weight of the stone",
+    "Its hardness",
+    "Its colour"
+   ],
+   "why": "The border between the bright zone and the dark zone."
+  },
+  {
+   "q": "A stone with an index higher than that of the glass (1.81)…",
+   "choices": [
+    "is measured very well",
+    "cannot be measured with the refractometer",
+    "is always a diamond",
+    "is always opaque"
+   ],
+   "why": "The reading goes out of the range of the prism."
+  },
+  {
+   "q": "What do you note on an anisotropic stone?",
+   "choices": [
+    "Its weight in water",
+    "Its fluorescence",
+    "The extreme values: nα, nβ, nγ",
+    "Its luster"
+   ],
+   "why": "The shadow edges move when the lens is turned."
+  }
+ ]
+}

@@ -63,6 +63,7 @@
   };
   Board.prototype.label = function (text, center, size, color, width) {
     if (!text) return;
+    text = kit.t(String(text));
     var g = this.g;
     width = width || 220;
     g.font = size + "px system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
@@ -159,8 +160,11 @@
     return cv;
   }
 
-  var figs = {};
+  var figs = {}, dict = {};
   var kit = {
+    // The texts of the drawings are written in French in the code; a translation is a dictionary { "texte français": "translated text" }
+    // loaded from /static/i18n/figures.<lang>.json (see tools/extract_figure_texts.py). Unknown texts stay as they are.
+    t: function (text) { return Object.prototype.hasOwnProperty.call(dict, text) && dict[text] ? dict[text] : text; },
     M: M, C: C, alpha: alpha, mix: mix, brighter: brighter, V: V, add: add, mul: mul, rot: rot, WHITE: WHITE,
     strip: strip, interference: interference, bands: [["Violet", 400, 450], ["Bleu", 450, 490], ["Vert", 490, 560], ["Jaune", 560, 590], ["Orange", 590, 610], ["Rouge", 610, 700]],
     register: function (id, fn) { figs[id] = fn; }
@@ -168,14 +172,15 @@
   window.LessonKit = kit;
 
   // ---- The player: one canvas per step, animated while it is on screen ----
-  var ready = false, queue = [], reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function motionOff() { return reduced || document.documentElement.getAttribute("data-motion") === "off"; }
 
   function setup(host) {
     var cv = host.querySelector("canvas"), btn = host.querySelector("button");
     var id = host.getAttribute("data-fig"), focus = parseInt(host.getAttribute("data-focus"), 10) || 0;
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     cv.width = W * dpr; cv.height = H * dpr;
-    var g = cv.getContext("2d"), board = new Board(g), clock = 0, last = 0, visible = false, playing = !reduced, raf = 0;
+    var g = cv.getContext("2d"), board = new Board(g), clock = 0, last = 0, visible = false, playing = !motionOff(), raf = 0;
     function frame(now) {
       raf = 0;
       if (playing && last) clock += Math.min((now - last) / 1000, 0.1);
@@ -184,7 +189,7 @@
       g.fillStyle = "#14171f";
       g.fillRect(0, 0, W, H);
       var fn = figs[id];
-      if (fn) fn(board, focus, reduced && !playing && clock === 0 ? 2.5 : clock);
+      if (fn) fn(board, focus, motionOff() && !playing && clock === 0 ? 2.5 : clock);
       else board.label("Schéma à venir", [0, 0], 16, C(0.5, 0.55, 0.63));
       if (visible && playing) raf = requestAnimationFrame(frame);
     }
@@ -203,6 +208,13 @@
         if (playing) start(); else frame(performance.now());
       });
     }
+    // The global "pause the animations" switch (see motion.js) stops the drawing at once; the button of the figure can start it again.
+    window.addEventListener("gl-motion", function () {
+      if (motionOff() && playing) {
+        playing = false;
+        if (btn) btn.textContent = btn.getAttribute("data-play");
+      }
+    });
     frame(performance.now());
   }
 
@@ -210,8 +222,11 @@
     var hosts = document.querySelectorAll(".lessonfig");
     if (!hosts.length) return;
     var url = (SELF && SELF.getAttribute("data-spectra")) || "/static/data/lesson_spectra.json";
-    fetch(url).then(function (r) { return r.json(); }).catch(function () { return {}; }).then(function (data) {
-      spectra = data || {};
+    var lang = (document.documentElement.getAttribute("lang") || "fr").slice(0, 2).toLowerCase();
+    var load = function (u) { return fetch(u).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; }); };
+    Promise.all([load(url), lang === "fr" ? Promise.resolve({}) : load("/static/i18n/figures." + lang + ".json")]).then(function (res) {
+      spectra = res[0] || {};
+      dict = res[1] || {};
       stripCache = {};
       hosts.forEach(setup);
     });

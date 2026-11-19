@@ -1,0 +1,75 @@
+{
+ "lesson": "microscope",
+ "questions": [
+  {
+   "q": "What do you mainly look for with the gemmological microscope?",
+   "choices": [
+    "Inclusions",
+    "Weight",
+    "Density",
+    "Refractive index"
+   ],
+   "why": "They tell how the stone formed."
+  },
+  {
+   "q": "At high magnification, what is sharp?",
+   "choices": [
+    "The whole stone at once",
+    "A very thin slice of the stone: you must turn the wheel",
+    "Only the surface",
+    "Nothing at all"
+   ],
+   "why": "You go from one slice to another."
+  },
+  {
+   "q": "Fine, parallel needles (the “silk”) rather point to…",
+   "choices": [
+    "a glass",
+    "a synthetic diamond",
+    "a natural ruby or sapphire",
+    "a pearl"
+   ],
+   "why": "Synthetics rather have curved lines."
+  },
+  {
+   "q": "Why is a “window” polished on a rough stone?",
+   "choices": [
+    "To weigh it",
+    "To measure its hardness",
+    "To colour it",
+    "To see the inside and judge the clarity before cutting"
+   ],
+   "why": "The rough surface scatters light."
+  },
+  {
+   "q": "Round bubbles in a stone suggest…",
+   "choices": [
+    "a glass or a flame-fusion synthetic",
+    "a natural ruby",
+    "a natural emerald",
+    "a diamond"
+   ],
+   "why": "It is a clue, to be cross-checked with the other instruments."
+  },
+  {
+   "q": "Which objective gives the highest magnification?",
+   "choices": [
+    "The × 60",
+    "The × 10",
+    "The × 2",
+    "The × 100,000"
+   ],
+   "why": "The focus must then be very precise."
+  },
+  {
+   "q": "What is the camera of the microscope for?",
+   "choices": [
+    "To weigh the stone",
+    "To photograph what you observe, to attach it to the report",
+    "To measure its hardness",
+    "To heat it"
+   ],
+   "why": "The photo is sent to the computer of the laboratory."
+  }
+ ]
+}

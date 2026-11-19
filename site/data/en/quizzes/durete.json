@@ -1,0 +1,85 @@
+{
+ "lesson": "durete",
+ "questions": [
+  {
+   "q": "A material that is harder than another…",
+   "choices": [
+    "is scratched by it",
+    "scratches it, and the reverse is impossible",
+    "gets scratched at the same time as it",
+    "leaves no mark on it"
+   ],
+   "why": "The hardest stone scratches the softest."
+  },
+  {
+   "q": "What is the hardness of quartz on the Mohs scale?",
+   "choices": [
+    "7",
+    "5",
+    "9",
+    "10"
+   ],
+   "why": "Talc 1, quartz 7, corundum 9, diamond 10."
+  },
+  {
+   "q": "Between corundum (9) and diamond (10), the gap in absolute hardness is…",
+   "choices": [
+    "barely noticeable",
+    "about two times",
+    "about ten times",
+    "about three times"
+   ],
+   "why": "The Mohs scale gives the order, not the gaps: diamond is about three times harder than corundum."
+  },
+  {
+   "q": "Where is a hardness test done?",
+   "choices": [
+    "On a rough stone, or under the base of a cabochon",
+    "On the table of a cut stone",
+    "On a facet of the crown",
+    "On a stone set in a piece of jewellery"
+   ],
+   "why": "It is a destructive test: never on a cut gem."
+  },
+  {
+   "q": "With hardness pencils, 6 does not scratch the stone and 7 does. Its hardness is…",
+   "choices": [
+    "below 6",
+    "above 7",
+    "between 6 and 7",
+    "exactly 6.5"
+   ],
+   "why": "The first pencil that scratches gives the range."
+  },
+  {
+   "q": "What is the approximate hardness of a fingernail on the Mohs scale?",
+   "choices": [
+    "About 2.5",
+    "About 5.5",
+    "About 7",
+    "About 9"
+   ],
+   "why": "Glass and a knife blade are about 5.5, a steel file 6.5."
+  },
+  {
+   "q": "Why does a gem with a hardness below 7 get scratched little by little?",
+   "choices": [
+    "Because it is always fragile to blows",
+    "The dust in the air contains quartz, of hardness 7",
+    "Because light wears it",
+    "Because it is magnetic"
+   ],
+   "why": "A stone softer than quartz loses its polish from being worn."
+  },
+  {
+   "q": "Which stone can cut a diamond?",
+   "choices": [
+    "Corundum",
+    "Quartz",
+    "Only another diamond",
+    "Topaz"
+   ],
+   "why": "Diamond is about three times harder than corundum."
+  }
+ ]
+}

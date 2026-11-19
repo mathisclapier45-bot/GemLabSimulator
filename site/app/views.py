@@ -3,19 +3,45 @@ import html
 import re
 import time
 
-from . import config
+from . import catalog, config
 from .web import Response
 
 esc = html.escape
+
+# Second menu shown under the header on the pages of the encyclopedia: (path, label key).
+ENCYCLOPEDIA_MENU = [
+    ("/encyclopedie", "sub.species"),
+    ("/encyclopedie/formes", "sub.habits"),
+    ("/comparer", "sub.compare"),
+    ("/glossaire", "sub.glossary"),
+]
 
 NAV = [
     ("home", "/", "nav.home"),
     ("encyclopedia", "/encyclopedie", "nav.encyclopedia"),
     ("identify", "/identification", "nav.identify"),
     ("lessons", "/lecons", "nav.lessons"),
+    ("quiz", "/quiz", "nav.quiz"),
+    ("prices", "/prix", "nav.prices"),
     ("simulator", "/simulateur", "nav.simulator"),
     ("forum", "/forum", "nav.forum"),
 ]
+
+
+# Pages that are never shown to search engines, even when the site is open to them: accounts, forum, simulator, results.
+PRIVATE_PREFIXES = ("/forum", "/compte", "/connexion", "/inscription", "/deconnexion", "/admin", "/simulateur", "/progression",
+                    "/mot-de-passe-oublie", "/reinitialisation", "/verification", "/recherche", "/quiz/jouer", "/prix/ajouter", "/dev")
+
+
+def is_private(path):
+    return path.startswith(PRIVATE_PREFIXES) or (path.startswith("/lecons/") and path.endswith("/quiz"))
+
+
+def robots_value(path):
+    """The robots directive of a page: closed while the site is private, open for public pages once INDEXABLE is on."""
+    if config.INDEXABLE and not is_private(path):
+        return "index, follow"
+    return "noindex, nofollow"
 
 
 def csrf_field(req):
@@ -41,7 +67,7 @@ def fmt_num(value, digits=3):
     if value is None:
         return ""
     text = ("{:." + str(digits) + "f}").format(value).rstrip("0").rstrip(".")
-    return text.replace(".", ",")
+    return text.replace(".", ",") if catalog.current_lang() == "fr" else text   # decimal comma in French, point in English
 
 
 def gem_svg(color, facet, size=48):
@@ -64,6 +90,12 @@ BRAND_MARK = ('<svg class="mark" viewBox="0 0 48 48" width="28" height="28" aria
               '<polygon points="36,6 24,18 45,18" fill="#fff" opacity=".2"/><polygon points="12,6 36,6 24,18" fill="#fff" opacity=".7"/></svg>')
 
 
+def motion_button(t):
+    """The switch that pauses the animations (behaviour in static/js/motion.js)."""
+    return '<button type="button" class="motion-toggle linklike" data-pause="{p}" data-resume="{r}">{p}</button>'.format(
+        p=esc(t("motion.pause")), r=esc(t("motion.resume")))
+
+
 def _footer(req):
     t = req.t
     user = req.user
@@ -71,12 +103,18 @@ def _footer(req):
             '<a href="/connexion">{}</a><a href="/inscription">{}</a>'.format(esc(t("nav.login")), esc(t("nav.register"))))
     return (
         '<footer class="foot"><div class="wrap foot-grid"><div class="foot-brand"><a class="brand" href="/">{mark}<span>{site}</span></a>'
-        '<p>{tag}</p></div><nav aria-label="{e}"><h3>{e}</h3><a href="/encyclopedie">{enc}</a><a href="/identification">{idt}</a><a href="/lecons">{les}</a></nav>'
+        '<p>{tag}</p></div><nav aria-label="{e}"><h3>{e}</h3><a href="/encyclopedie">{enc}</a><a href="/identification">{idt}</a><a href="/comparer">{cmp}</a><a href="/glossaire">{gl}</a><a href="/lecons">{les}</a><a href="/quiz">{qz}</a><a href="/prix">{pr}</a></nav>'
         '<nav aria-label="{m}"><h3>{m}</h3><a href="/simulateur">{sim}</a><a href="/forum">{forum}</a></nav>'
-        '<nav aria-label="{a}"><h3>{a}</h3>{acct}</nav></div><div class="wrap foot-note">{note}</div></footer>').format(
+        '<nav aria-label="{a}"><h3>{a}</h3>{acct}</nav>'
+        '<nav aria-label="{lg}"><h3>{lg}</h3><a href="/a-propos">{about}</a><a href="/contact">{contact}</a><a href="/mentions-legales">{legal}</a>'
+        '<a href="/confidentialite">{privacy}</a></nav></div><div class="wrap foot-note">{note} {motion}</div></footer>').format(
         mark=BRAND_MARK, site=esc(t("site.name")), tag=esc(t("footer.tag")), e=esc(t("footer.explore")), enc=esc(t("nav.encyclopedia")),
-        idt=esc(t("nav.identify")), les=esc(t("nav.lessons")), m=esc(t("footer.members")), sim=esc(t("nav.simulator")),
-        forum=esc(t("nav.forum")), a=esc(t("footer.account")), acct=acct, note=esc(t("footer.note")))
+        idt=esc(t("nav.identify")), cmp=esc(t("cmp.title")), gl=esc(t("gloss.title")), les=esc(t("nav.lessons")), qz=esc(t("nav.quiz")), pr=esc(t("nav.prices")), m=esc(t("footer.members")), sim=esc(t("nav.simulator")),
+        forum=esc(t("nav.forum")), a=esc(t("footer.account")), acct=acct,
+        lg=esc(t("footer.legal")), about=esc(t("footer.about")), contact=esc(t("footer.contact")), legal=esc(t("footer.legal.notice")),
+        privacy=esc(t("footer.privacy")),
+        note=esc(t("footer.copyright", year=time.gmtime().tm_year, name=config.legal("name") or t("site.name")) if config.INDEXABLE else t("footer.note")),
+        motion=motion_button(t))
 
 
 def page(req, title, content, section="", sim=False, status=200, description=""):
@@ -98,6 +136,14 @@ def page(req, title, content, section="", sim=False, status=200, description="")
         who = '<span class="who"><a href="/connexion">{}</a><a href="/inscription" class="btn small">{}</a></span>'.format(
             esc(t("nav.login")), esc(t("nav.register")))
 
+    submenu = ""
+    if section == "encyclopedia":
+        here = req.path.rstrip("/") or "/"
+        links = "".join('<a href="{}"{}>{}</a>'.format(
+            href, ' class="current" aria-current="page"' if (here == href or (href == "/encyclopedie" and here.startswith("/encyclopedie/") and here != "/encyclopedie/formes")) else "",
+            esc(t(label))) for href, label in ENCYCLOPEDIA_MENU)
+        submenu = '<div class="wrap subnav"><nav aria-label="{}">{}</nav></div>'.format(esc(t("sub.label")), links)
+
     banners = []
     flash = req.pop_flash()
     if flash:
@@ -108,16 +154,44 @@ def page(req, title, content, section="", sim=False, status=200, description="")
             '{csrf}<button type="submit" class="linklike">{btn}</button></form></div>'.format(
                 msg=esc(t("banner.unverified")), csrf=csrf_field(req), btn=esc(t("banner.resend"))))
 
-    desc = '<meta name="description" content="{}">'.format(esc(description)) if description else ""
+    description = description or t("meta.description")
+    desc = '<meta name="description" content="{}">'.format(esc(description))
+    base = config.BASE_URL if not config.DEV else req.base_url
+    canonical_url = base + req.prefix + (req.path if req.path != "/" else ("" if req.prefix else "/"))
+    page_no = req.query.get("page")
+    if page_no and page_no.isdigit() and page_no != "1":
+        canonical_url += "?page=" + page_no
+    social = ('<meta property="og:site_name" content="{site}"><meta property="og:type" content="website">'
+              '<meta property="og:title" content="{title}"><meta property="og:description" content="{d}">'
+              '<meta property="og:url" content="{url}"><meta property="og:image" content="{img}">'
+              '<meta property="og:locale" content="{loc}"><meta name="twitter:card" content="summary_large_image">').format(
+        site=esc(t("site.name")), title=esc(title), d=esc(description), url=esc(canonical_url), img=esc(base + "/static/img/og-image.png"),
+        loc=esc({"fr": "fr_FR", "en": "en_US"}.get(req.lang, req.lang)))
+    if not is_private(req.path):
+        # The same page in the other language, for search engines (the French version is the default one).
+        fr_url = base + req.path
+        en_url = base + "/en" + (req.path if req.path != "/" else "")
+        social += ('<link rel="alternate" hreflang="fr" href="{fr}"><link rel="alternate" hreflang="en" href="{en}">'
+                   '<link rel="alternate" hreflang="x-default" href="{fr}">').format(fr=esc(fr_url), en=esc(en_url))
+        if config.INDEXABLE:
+            social += '<link rel="canonical" href="{}">'.format(esc(canonical_url))
+    other = "en" if req.lang == "fr" else "fr"
+    qs = req.environ.get("QUERY_STRING", "")
+    switch_path = ("/en" + (req.path if req.path != "/" else "")) if other == "en" else req.path
+    switcher = '<a class="langswitch" href="{}" hreflang="{}" lang="{}" aria-label="{}" title="{}">{}</a>'.format(
+        esc(switch_path + ("?" + qs if qs else "")), other, other, esc(t("lang.switch.label")), esc(t("lang.switch.label")), other.upper())
     body_class = "sim" if sim else ""
     doc = """<!doctype html>
 <html lang="{lang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="{robots}">
 <title>{title} · {site}</title>
-{desc}
+{desc}{social}
+<link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png">
+<script src="/static/js/motion.js" defer></script>
 <link rel="stylesheet" href="/static/css/site.css">
 <link rel="stylesheet" href="/static/css/theme.css">
 <meta name="color-scheme" content="light dark">
@@ -128,8 +202,11 @@ def page(req, title, content, section="", sim=False, status=200, description="")
   <div class="wrap bar">
     <a class="brand" href="/">{mark}<span>{site}</span></a>
     <nav aria-label="{navlabel}">{nav}</nav>
+    <a class="searchlink" href="/recherche" aria-label="{searchlabel}" title="{searchlabel}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></a>
+    @@LANGSWITCH@@
     {who}
   </div>
+  {submenu}
 </header>
 <main id="main" class="wrap">
 {banners}
@@ -138,10 +215,10 @@ def page(req, title, content, section="", sim=False, status=200, description="")
 {footer}
 </body>
 </html>""".format(
-        lang=req.lang, title=esc(title), site=esc(t("site.name")), desc=desc, body_class=body_class,
-        skip=esc(t("nav.skip")), navlabel=esc(t("nav.label")), nav="".join(nav), who=who,
-        banners="".join(banners), content=content, footer=_footer(req), mark=BRAND_MARK)
-    return Response(doc, status=status)
+        lang=req.lang, title=esc(title), site=esc(t("site.name")), desc=desc, social=social, robots=robots_value(req.path), body_class=body_class,
+        skip=esc(t("nav.skip")), navlabel=esc(t("nav.label")), searchlabel=esc(t("search.title")), nav="".join(nav), who=who,
+        banners="".join(banners), submenu=submenu, content=content, footer=_footer(req), mark=BRAND_MARK)
+    return Response(req.localize(doc).replace("@@LANGSWITCH@@", switcher), status=status)
 
 
 def message_page(req, title, text, status=200, link=None):

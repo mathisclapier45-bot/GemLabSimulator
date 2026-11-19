@@ -1,0 +1,75 @@
+{
+ "lesson": "diamant_laboratoire",
+ "questions": [
+  {
+   "q": "What does “Refer” mean at the DiamondSure?",
+   "choices": [
+    "The stone needs a further examination",
+    "The stone is synthetic",
+    "The stone is fake",
+    "The stone is certainly natural"
+   ],
+   "why": "It is not a condemnation."
+  },
+  {
+   "q": "What does the DiamondView show?",
+   "choices": [
+    "The density",
+    "The internal growth patterns",
+    "The refractive index",
+    "The weight"
+   ],
+   "why": "Each growth mode draws different patterns."
+  },
+  {
+   "q": "Which pattern betrays a CVD diamond?",
+   "choices": [
+    "Cross-shaped patterns",
+    "Irregular wavy lines",
+    "Parallel, fine and regular layers",
+    "No pattern"
+   ],
+   "why": "HPHT rather shows cross-shaped or dial-shaped patterns."
+  },
+  {
+   "q": "Photoluminescence cools the stone with…",
+   "choices": [
+    "ice water",
+    "room temperature",
+    "helium only",
+    "liquid nitrogen (77 K)"
+   ],
+   "why": "Then it is excited with a laser."
+  },
+  {
+   "q": "Natural, HPHT and CVD diamonds are…",
+   "choices": [
+    "all real diamonds",
+    "all imitations",
+    "all natural",
+    "all moissanite"
+   ],
+   "why": "They pass the thermal tester, but their value is not the same."
+  },
+  {
+   "q": "The HPHT process reproduces…",
+   "choices": [
+    "in a machine the high pressure and high temperature of nature",
+    "a gas that deposits carbon",
+    "an acid bath",
+    "an irradiation"
+   ],
+   "why": "It makes synthetic diamonds."
+  },
+  {
+   "q": "The CVD process grows diamond…",
+   "choices": [
+    "from a heated block of graphite",
+    "layer by layer, from a gas",
+    "in a pressure oven",
+    "in water"
+   ],
+   "why": "Its layers are fine and parallel."
+  }
+ ]
+}

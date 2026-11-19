@@ -1,0 +1,85 @@
+{
+ "lesson": "filtre_chelsea",
+ "questions": [
+  {
+   "q": "Which colours does the Chelsea filter let through?",
+   "choices": [
+    "Yellow-green and deep red",
+    "Blue and violet",
+    "All but green",
+    "Only white"
+   ],
+   "why": "All the rest of the spectrum is stopped."
+  },
+  {
+   "q": "Which element makes a stone “turn red” under the filter?",
+   "choices": [
+    "Iron",
+    "Chromium",
+    "Titanium",
+    "Calcium"
+   ],
+   "why": "Cobalt also turns red; iron does not."
+  },
+  {
+   "q": "A synthetic blue spinel (cobalt) and a blue sapphire (iron) under the filter…",
+   "choices": [
+    "both turn red",
+    "both stay dark green",
+    "the spinel turns red, the sapphire stays dark green",
+    "the sapphire turns red, the spinel stays black"
+   ],
+   "why": "Cobalt lets deep red through, iron does not."
+  },
+  {
+   "q": "How should you observe with the filter?",
+   "choices": [
+    "In complete darkness",
+    "Under a UV lamp",
+    "Stone dipped in water",
+    "Stone on white paper, strong tungsten light, filter close to the eye"
+   ],
+   "why": "The darker the stone, the harder the reaction is to see."
+  },
+  {
+   "q": "A reaction to the Chelsea filter is…",
+   "choices": [
+    "an indication, never a diagnosis",
+    "a definitive proof",
+    "useless",
+    "reserved for diamonds"
+   ],
+   "why": "It is combined with the spectroscope, the index and the density."
+  },
+  {
+   "q": "A cobalt blue glass seen under the filter becomes…",
+   "choices": [
+    "intense red to pink",
+    "dark green",
+    "black",
+    "colourless"
+   ],
+   "why": "Cobalt turns red like chromium."
+  },
+  {
+   "q": "What does a blue sapphire generally give under the filter?",
+   "choices": [
+    "A bright red",
+    "A dark green",
+    "A brilliant blue",
+    "A yellow"
+   ],
+   "why": "It is coloured by iron."
+  },
+  {
+   "q": "The darker the colour of the stone…",
+   "choices": [
+    "the more vivid the reaction",
+    "the harder the stone",
+    "the harder the reaction is to see",
+    "the more natural the stone"
+   ],
+   "why": "A strong light source is needed."
+  }
+ ]
+}

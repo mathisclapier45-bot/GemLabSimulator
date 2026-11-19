@@ -31,7 +31,7 @@ def _start_session(req, user_id, resp):
 
 def _send_verification(req, user):
     token = security.create_token(req.db, user["id"], "verify", config.VERIFY_TOKEN_HOURS)
-    link = "{}/verification?token={}".format(req.base_url, token)
+    link = "{}{}/verification?token={}".format(req.base_url, req.prefix, token)
     mailer.send(req.db, user["email"], req.t("mail.verify.subject"),
                 req.t("mail.verify.body", name=user["username"], link=link, hours=config.VERIFY_TOKEN_HOURS))
 
@@ -102,7 +102,7 @@ def register(req):
     if existing:
         # Same answer as a real sign-up (same work, same text), so nobody can find out which e-mails have an account.
         security.hash_password(pw)
-        link = req.base_url + "/mot-de-passe-oublie"
+        link = req.base_url + req.prefix + "/mot-de-passe-oublie"
         mailer.send(req.db, email, req.t("mail.exists.subject"), req.t("mail.exists.body", link=link))
     else:
         cur = req.db.execute(
@@ -222,7 +222,7 @@ def forgot(req):
     user = req.db.execute("SELECT * FROM users WHERE email = ? AND banned_at IS NULL", (email,)).fetchone()
     if user and security.hit(req.db, "mail_email", email):
         token = security.create_token(req.db, user["id"], "reset", config.RESET_TOKEN_HOURS)
-        link = "{}/reinitialisation?token={}".format(req.base_url, token)
+        link = "{}{}/reinitialisation?token={}".format(req.base_url, req.prefix, token)
         mailer.send(req.db, email, req.t("mail.reset.subject"),
                     req.t("mail.reset.body", name=user["username"], link=link, hours=config.RESET_TOKEN_HOURS))
     # Always the same answer, whether or not the e-mail has an account.
@@ -286,11 +286,15 @@ def account(req):
     t = req.t
     status = t("acc.verified") if user["email_verified_at"] else t("acc.unverified")
     content = (
-        '<section class="narrow"><h1>{h1}</h1><table class="props">'
+        '<section class="narrow"><h1>{h1}</h1><p><a class="btn ghost" href="/progression">{prog}</a></p><table class="props">'
         '<tr><th scope="row">{lu}</th><td>{u}</td></tr><tr><th scope="row">{le}</th><td>{e} — {st}</td></tr></table>'
         '<h2>{hp}</h2><form method="post" action="/compte/mot-de-passe" class="form">{csrf}{old}{pw}{pw2}'
-        '<button type="submit" class="btn">{go}</button></form></section>').format(
-        h1=esc(t("acc.title")), lu=esc(t("reg.username")), u=esc(user["username"]), le=esc(t("reg.email")),
+        '<button type="submit" class="btn">{go}</button></form>'
+        '<h2>{hd}</h2><p>{dtext}</p><form method="post" action="/compte/supprimer" class="form">{csrf}{dold}'
+        '<button type="submit" class="btn danger">{dgo}</button></form></section>').format(
+        hd=esc(t("acc.delete.title")), dtext=esc(t("acc.delete.text")), dgo=esc(t("acc.delete.submit")),
+        dold=_field(t("acc.password.current"), "current", "password", "", 'required autocomplete="current-password"'),
+        h1=esc(t("acc.title")), prog=esc(t("prog.title")), lu=esc(t("reg.username")), u=esc(user["username"]), le=esc(t("reg.email")),
         e=esc(user["email"]), st=esc(status), hp=esc(t("acc.password")), csrf=csrf_field(req),
         old=_field(t("acc.password.current"), "current", "password", "", 'required autocomplete="current-password"'),
         pw=_field(t("reset.password"), "password", "password", "",
@@ -322,4 +326,37 @@ def change_password(req):
     resp = redirect("/connexion")
     resp.delete_cookie("gl_session")
     req.flash("flash.password_changed")
+    return resp
+
+
+@router.route("POST", "/compte/supprimer")
+def delete_account(req):
+    """Right to erasure: the personal data of the account (address, name, password, sessions, scores) is erased. The messages the member wrote
+    stay in the forum under a neutral name, so that the discussions still make sense."""
+    user = req.user
+    if not user:
+        return redirect("/connexion")
+    t = req.t
+    errs = []
+    if user["role"] == "admin":
+        errs.append("err.delete_admin")
+    elif not security.verify_password(req.form.get("current", ""), user["pw_hash"]):
+        errs.append("err.password_current")
+    if errs:
+        return page(req, t("acc.title"), '<section class="narrow">{}<p><a href="/compte">{}</a></p></section>'.format(
+            _errors(req, errs), esc(t("acc.back"))), status=400)
+    uid = user["id"]
+    db = req.db
+    db.execute("UPDATE users SET email = ?, username = ?, pw_hash = ?, email_verified_at = NULL, banned_at = ? WHERE id = ?",
+               ("supprime-{}@supprime.invalid".format(uid), "membre-supprime-{}".format(uid),
+                security.hash_password(security.new_secret()), now(), uid))
+    db.execute("DELETE FROM sessions WHERE user_id = ?", (uid,))
+    db.execute("DELETE FROM tokens WHERE user_id = ?", (uid,))
+    db.execute("DELETE FROM quiz_results WHERE user_id = ?", (uid,))
+    db.execute("DELETE FROM mixed_quiz WHERE user_id = ?", (uid,))
+    db.execute("UPDATE price_reports SET user_id = NULL WHERE user_id = ?", (uid,))   # the prices stay, no longer linked to the person
+    db.execute("DELETE FROM reports WHERE reporter_id = ?", (uid,))
+    resp = redirect("/")
+    resp.delete_cookie("gl_session")
+    req.flash("flash.account_deleted")
     return resp

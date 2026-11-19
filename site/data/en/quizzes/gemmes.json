@@ -1,0 +1,105 @@
+{
+ "lesson": "gemmes",
+ "questions": [
+  {
+   "q": "What are the five qualities that make a gem?",
+   "choices": [
+    "Beauty, rarity, durability, value and acceptability",
+    "Colour, weight, size, price and origin",
+    "Hardness, toughness, stability, luster and density",
+    "Rarity, fashion, size, fire and colour"
+   ],
+   "why": "A stone becomes a gem when it brings together these five qualities."
+  },
+  {
+   "q": "A synthetic ruby is…",
+   "choices": [
+    "a coloured glass imitation",
+    "a heated natural ruby",
+    "a real red corundum, made by people",
+    "a glued doublet"
+   ],
+   "why": "A synthetic gem has the same composition and the same structure as the natural gem."
+  },
+  {
+   "q": "Opal is a gem that is…",
+   "choices": [
+    "crystalline, of the cubic system",
+    "non-crystalline, of the amorphous type",
+    "of organic origin, like pearl",
+    "synthetic, never natural"
+   ],
+   "why": "Opal and obsidian have no regular order: they are amorphous."
+  },
+  {
+   "q": "What are the three components of durability?",
+   "choices": [
+    "Colour, luster and transparency",
+    "Weight, size and shape",
+    "Rarity, value and fashion",
+    "Hardness, toughness and stability"
+   ],
+   "why": "Scratches, blows, environment: three ways to hold up over time."
+  },
+  {
+   "q": "Doublets and triplets are…",
+   "choices": [
+    "assembled gems",
+    "synthetic gems",
+    "gems with no counterpart in nature",
+    "natural amorphous gems"
+   ],
+   "why": "They are several pieces glued together."
+  },
+  {
+   "q": "What does the law say about the international trade in elephant ivory?",
+   "choices": [
+    "It is free everywhere in the world",
+    "It is only banned for mammoth",
+    "It has been banned since 1989 (CITES)",
+    "It is allowed with a simple sales certificate"
+   ],
+   "why": "Acceptability is also a matter of law: a seller must prove the origin of the material."
+  },
+  {
+   "q": "What are gems “with no counterpart in nature”?",
+   "choices": [
+    "Gems too rare to be sold",
+    "Gems that do not exist naturally, like YAG or cubic zirconia",
+    "Gems assembled from several pieces",
+    "Cultured pearls"
+   ],
+   "why": "They are made by people and have no natural equivalent."
+  },
+  {
+   "q": "Which of these materials is of organic origin?",
+   "choices": [
+    "Opal",
+    "Quartz",
+    "Amber",
+    "Diamond"
+   ],
+   "why": "Pearls, amber, coral and jet are produced by living beings."
+  },
+  {
+   "q": "What is a gemmologist mainly for?",
+   "choices": [
+    "To recognize the species, spot treatments and imitations, and check quality",
+    "To cut rough stones",
+    "To set the market price",
+    "To extract stones from the mine"
+   ],
+   "why": "The qualities of a stone are not guessed: they are measured."
+  },
+  {
+   "q": "The Kimberley process guarantees…",
+   "choices": [
+    "the purity of diamonds",
+    "the exact weight of diamonds",
+    "the colour of diamonds",
+    "where diamonds come from, so that they are not conflict diamonds"
+   ],
+   "why": "Conflict diamonds are banned from trade."
+  }
+ ]
+}

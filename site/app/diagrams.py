@@ -111,9 +111,11 @@ def hexagonal_svg(label):
             tip = _project((sign * 1.3 * math.cos(ang), sign * 1.3 * math.sin(ang), h / 2), yaw=-20, pitch=26)
             arrows.append(_arrow(centre, tip, color, name))
             extra.append(tip)
-    tip = _project((0, 0, h / 2 + 1.25), yaw=-20, pitch=26)
-    arrows.append(_arrow(centre, tip, AXIS_COLORS["c"], "c"))
-    extra.append(tip)
+    # The c axis also goes right through the crystal: out at the top, and out at the bottom (negative end).
+    for sign, name in ((1, "c"), (-1, "\u2212c")):
+        tip = _project((0, 0, h / 2 + sign * 1.25), yaw=-20, pitch=26)
+        arrows.append(_arrow(centre, tip, AXIS_COLORS["c"], name))
+        extra.append(tip)
     return _wrap(extra, "".join(body) + "".join(arrows), label)
 
 

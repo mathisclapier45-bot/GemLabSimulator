@@ -1,0 +1,85 @@
+{
+ "lesson": "tenacite",
+ "questions": [
+  {
+   "q": "Toughness is the resistance of a stone…",
+   "choices": [
+    "to blows",
+    "to scratches",
+    "to light",
+    "to acids"
+   ],
+   "why": "Hardness is the resistance to scratches: it is not the same thing."
+  },
+  {
+   "q": "Diamond is…",
+   "choices": [
+    "the hardest and the toughest stone",
+    "the hardest stone, but not the toughest",
+    "soft but very tough",
+    "neither hard nor tough"
+   ],
+   "why": "A diamond can split along a cleavage plane."
+  },
+  {
+   "q": "What is cleavage?",
+   "choices": [
+    "An irregular chip",
+    "A scratch on the table",
+    "A split along a smooth plane",
+    "A change of colour"
+   ],
+   "why": "Some planes of the crystal are weaker: a blow can split them."
+  },
+  {
+   "q": "Which is the toughest gem?",
+   "choices": [
+    "Diamond",
+    "Opal",
+    "Fluorite",
+    "Nephrite jade"
+   ],
+   "why": "Its tangled fibres press tightly against each other."
+  },
+  {
+   "q": "A “conchoidal” fracture looks like…",
+   "choices": [
+    "the inside of a shell",
+    "a smooth plane",
+    "fibres",
+    "a fine powder"
+   ],
+   "why": "You see it in quartz, glass and obsidian."
+  },
+  {
+   "q": "Which stones have cleavage planes?",
+   "choices": [
+    "Diamond, topaz, fluorite and kunzite",
+    "Jade and quartz",
+    "Ruby and sapphire",
+    "Opal and obsidian"
+   ],
+   "why": "The lapidary must take it into account, and these stones are not worn where they are exposed."
+  },
+  {
+   "q": "A heavily included emerald is…",
+   "choices": [
+    "tougher than diamond",
+    "more fragile than its hardness suggests",
+    "safe from blows",
+    "harder than corundum"
+   ],
+   "why": "Inclusions and fractures reduce toughness."
+  },
+  {
+   "q": "For a piece of jewellery worn every day, you need a stone…",
+   "choices": [
+    "that is very hard only",
+    "that is very rare only",
+    "with good toughness as much as good hardness",
+    "that is very transparent only"
+   ],
+   "why": "Toughness and hardness are two different things."
+  }
+ ]
+}

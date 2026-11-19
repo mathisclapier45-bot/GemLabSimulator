@@ -1,0 +1,93 @@
+{
+ "lesson": "durete",
+ "questions": [
+  {
+   "q": "Un matériau plus dur qu'un autre…",
+   "choices": [
+    "est rayé par lui",
+    "le raye, et l'inverse est impossible",
+    "se raye en même temps que lui",
+    "ne laisse aucune trace sur lui"
+   ],
+   "answer": 1,
+   "why": "La pierre la plus dure raye la plus tendre."
+  },
+  {
+   "q": "Quelle est la dureté du quartz sur l'échelle de Mohs ?",
+   "choices": [
+    "7",
+    "5",
+    "9",
+    "10"
+   ],
+   "answer": 0,
+   "why": "Talc 1, quartz 7, corindon 9, diamant 10."
+  },
+  {
+   "q": "Entre le corindon (9) et le diamant (10), l'écart de dureté absolue est…",
+   "choices": [
+    "à peine perceptible",
+    "d'environ deux fois",
+    "d'environ dix fois",
+    "d'environ trois fois"
+   ],
+   "answer": 3,
+   "why": "L'échelle de Mohs donne l'ordre, pas les écarts : le diamant est environ trois fois plus dur que le corindon."
+  },
+  {
+   "q": "Où fait-on un test de dureté ?",
+   "choices": [
+    "Sur une pierre brute, ou sous la base d'un cabochon",
+    "Sur la table d'une pierre taillée",
+    "Sur une facette de la couronne",
+    "Sur une pierre sertie dans un bijou"
+   ],
+   "answer": 0,
+   "why": "C'est un test destructif : jamais sur une gemme taillée."
+  },
+  {
+   "q": "Avec les crayons de dureté, le 6 ne raye pas la pierre et le 7 la raye. Sa dureté est…",
+   "choices": [
+    "inférieure à 6",
+    "supérieure à 7",
+    "entre 6 et 7",
+    "exactement 6,5"
+   ],
+   "answer": 2,
+   "why": "Le premier crayon qui raye donne l'encadrement."
+  },
+  {
+   "q": "Quelle est la dureté approximative de l'ongle sur l'échelle de Mohs ?",
+   "choices": [
+    "Environ 2,5",
+    "Environ 5,5",
+    "Environ 7",
+    "Environ 9"
+   ],
+   "answer": 0,
+   "why": "Le verre et la lame d'un couteau valent environ 5,5, une lime d'acier 6,5."
+  },
+  {
+   "q": "Pourquoi une gemme de dureté inférieure à 7 se raye-t-elle peu à peu ?",
+   "choices": [
+    "Parce qu'elle est toujours fragile aux chocs",
+    "La poussière de l'air contient du quartz, de dureté 7",
+    "Parce que la lumière l'use",
+    "Parce qu'elle est magnétique"
+   ],
+   "answer": 1,
+   "why": "Une pierre plus tendre que le quartz perd son poli à force d'être portée."
+  },
+  {
+   "q": "Quelle pierre peut tailler un diamant ?",
+   "choices": [
+    "Le corindon",
+    "Le quartz",
+    "Seulement un autre diamant",
+    "La topaze"
+   ],
+   "answer": 2,
+   "why": "Le diamant est environ trois fois plus dur que le corindon."
+  }
+ ]
+}

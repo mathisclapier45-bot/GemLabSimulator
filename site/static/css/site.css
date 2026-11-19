@@ -255,3 +255,66 @@ fieldset.numrow select { width: auto; }
 fieldset.numrow span { font-size: 0.9rem; color: var(--muted); }
 .top nav { gap: 0.2rem 0.8rem; font-size: 0.95rem; }
 .wrap.bar { gap: 0.4rem 1rem; }
+
+/* ---- Quiz, glossary, comparison ---- */
+.quiz { margin-top: 2rem; padding: 1rem 1.2rem; border: 1px solid var(--line, #d7dbe6); border-radius: 12px; }
+.quiz .question { border: 0; padding: 0; margin: 1rem 0; }
+.quiz legend { font-weight: 600; margin-bottom: 0.4rem; }
+.quiz .choice { display: flex; gap: 0.5rem; align-items: flex-start; padding: 0.35rem 0.5rem; border-radius: 8px; cursor: pointer; }
+.quiz .choice:hover { background: rgba(110, 120, 220, 0.1); }
+.quiz .quizstatus { font-weight: 600; }
+.answer { border-left: 4px solid #999; padding: 0.4rem 0.9rem; margin: 0.9rem 0; background: rgba(120, 120, 140, 0.06); border-radius: 0 8px 8px 0; }
+.answer.ok { border-color: #2e9d62; }
+.answer.ko { border-color: #d2543e; }
+.answer .verdict { font-weight: 700; margin: 0; }
+.answer.ok .verdict { color: var(--good); }
+.answer.ko .verdict { color: var(--bad); }
+.answer .why { font-style: italic; opacity: 0.9; }
+.score { font-size: 1.4rem; }
+.chip { display: inline-block; font-size: 0.78rem; padding: 0.05rem 0.5rem; border-radius: 999px; background: #e7ebf7; color: #333; margin-left: 0.4rem; }
+.chip.ok { background: #d4f1df; color: #17633b; }
+.chip.mid { background: #fbe7c6; color: #7a4d06; }
+a.gloss { text-decoration: underline dotted; text-underline-offset: 3px; color: inherit; }
+a.gloss:hover { color: var(--accent, #5a4fe0); }
+.glossary dt { font-weight: 700; margin-top: 1rem; scroll-margin-top: 5rem; }
+.glossary dd { margin: 0.2rem 0 0 0; }
+.alpha { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1rem 0; font-weight: 600; }
+.progtable td, .progtable th { padding: 0.4rem 0.7rem; }
+.progtable tr.ok td:last-child { color: var(--good); font-weight: 600; }
+.progtable tr.mid td:last-child { color: var(--mid); font-weight: 600; }
+progress { width: 100%; max-width: 480px; height: 14px; }
+.cmp th, .cmp td { vertical-align: top; }
+.cmp thead th { text-align: center; }
+.cmphead { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; text-decoration: none; font-weight: 700; }
+.cmp tr.diff th, .cmp tr.diff td { background: rgba(110, 120, 240, 0.12); }
+.sep li { margin: 0.4rem 0; }
+.btn.ghost { background: transparent; color: inherit; border: 1px solid currentColor; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.4rem; }
+
+/* Price estimator */
+.pricewarn { margin: 1rem 0; }
+.pricesform { margin-bottom: 1.4rem; }
+.estimate { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem 1.2rem; box-shadow: var(--shadow); }
+.estimate .range { font-size: 1.6rem; font-weight: 800; margin: 0 0 0.2rem; letter-spacing: -0.02em; }
+.estimate .mid { color: var(--muted); margin: 0 0 0.6rem; }
+.conf { font-weight: 650; }
+.conf-high { color: var(--good); }
+.conf-medium { color: var(--mid); }
+.conf-low { color: var(--bad); }
+.small { font-size: 0.9rem; color: var(--muted); }
+.chartbox { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.5rem; max-width: 640px; }
+.pricechart { width: 100%; height: auto; display: block; }
+.pricechart .grid { stroke: var(--line); stroke-width: 1; }
+.pricechart .tick, .pricechart .axis { fill: var(--muted); font-size: 11px; }
+.pricechart .pt { stroke-width: 1.6; }
+.pricechart .pt.asking { fill: var(--accent); stroke: var(--accent); fill-opacity: .7; }
+.pricechart .pt.paid { fill: none; stroke: var(--accent2); }
+.pricechart .median { fill: none; stroke: var(--muted); stroke-width: 1.6; stroke-dasharray: 4 3; }
+.pricechart .ask { stroke: var(--mid); stroke-width: 1.2; stroke-dasharray: 2 3; }
+.pricechart .range { stroke: var(--text); stroke-width: 3; stroke-linecap: round; }
+.pricechart .mid { fill: var(--surface); stroke: var(--text); stroke-width: 2.4; }
+.bands { max-width: 640px; margin-top: 0.8rem; }
+.bands td, .bands th { padding: 0.35rem 0.7rem; }
+.how { margin: 1.4rem 0; }
+.how summary { cursor: pointer; font-weight: 650; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

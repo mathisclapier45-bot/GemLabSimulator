@@ -1,0 +1,82 @@
+{
+ "lesson": "testeurs_diamant",
+ "questions": [
+  {
+   "q": "Le testeur thermique repère le diamant mais ne le distingue pas…",
+   "choices": [
+    "de la moissanite",
+    "du verre",
+    "du zircon cubique",
+    "du quartz"
+   ],
+   "answer": 0,
+   "why": "La moissanite conduit aussi très bien la chaleur."
+  },
+  {
+   "q": "Quelle pierre conduit l'électricité ?",
+   "choices": [
+    "Le diamant",
+    "La moissanite synthétique",
+    "Le verre",
+    "Le quartz"
+   ],
+   "answer": 1,
+   "why": "Le diamant est un isolant électrique."
+  },
+  {
+   "q": "Chaleur haute et courant bloqué : c'est…",
+   "choices": [
+    "de la moissanite",
+    "du verre",
+    "un diamant, naturel ou de synthèse",
+    "un zircon cubique"
+   ],
+   "answer": 2,
+   "why": "Les diamants HPHT et CVD sont de vrais diamants."
+  },
+  {
+   "q": "Pourquoi le diamant est-il « froid » au toucher ?",
+   "choices": [
+    "Il est mal isolé",
+    "Il est creux",
+    "Il est magnétique",
+    "Il évacue la chaleur plus vite que le cuivre"
+   ],
+   "answer": 3,
+   "why": "C'est le meilleur conducteur de chaleur connu."
+  },
+  {
+   "q": "Comment fonctionne le testeur thermique ?",
+   "choices": [
+    "Une sonde légèrement chauffée mesure la vitesse à laquelle la chaleur quitte la pierre",
+    "Il mesure la couleur",
+    "Il pèse la pierre",
+    "Il envoie des UV"
+   ],
+   "answer": 0,
+   "why": "Un diamant évacue vite la chaleur."
+  },
+  {
+   "q": "Un zircon cubique au testeur thermique…",
+   "choices": [
+    "répond « diamant »",
+    "évacue mal la chaleur : ce n'est pas un diamant",
+    "répond « moissanite »",
+    "fond"
+   ],
+   "answer": 1,
+   "why": "Les imitations (verre, spinelle synthétique) retiennent la chaleur."
+  },
+  {
+   "q": "Un diamant de synthèse (HPHT ou CVD) au testeur thermique…",
+   "choices": [
+    "répond « verre »",
+    "répond « moissanite »",
+    "répond « diamant », comme le naturel",
+    "ne répond pas"
+   ],
+   "answer": 2,
+   "why": "Ce sont de vrais diamants."
+  }
+ ]
+}

@@ -1,0 +1,93 @@
+{
+ "lesson": "refractometre",
+ "questions": [
+  {
+   "q": "Quelle loi décrit le changement de direction de la lumière entre deux milieux ?",
+   "choices": [
+    "La loi de Descartes",
+    "La loi de Mohs",
+    "La loi d'Archimède",
+    "La loi de Bragg"
+   ],
+   "answer": 0,
+   "why": "n₁ sin θ₁ = n₂ sin θ₂."
+  },
+  {
+   "q": "Quel est l'indice du verre du réfractomètre ?",
+   "choices": [
+    "1,33",
+    "1,81",
+    "2,42",
+    "1,00"
+   ],
+   "answer": 1,
+   "why": "La pierre doit avoir un indice plus faible pour que le test marche."
+  },
+  {
+   "q": "Au-delà de l'angle critique, la lumière est…",
+   "choices": [
+    "absorbée par la pierre",
+    "transmise sans changement",
+    "entièrement renvoyée dans le verre (réflexion totale)",
+    "polarisée"
+   ],
+   "answer": 2,
+   "why": "C'est la réflexion totale."
+  },
+  {
+   "q": "Combien de limites d'ombre voit-on sur une pierre anisotrope ?",
+   "choices": [
+    "Aucune",
+    "Une seule",
+    "Quatre",
+    "Deux"
+   ],
+   "answer": 3,
+   "why": "Une pierre isotrope n'en a qu'une."
+  },
+  {
+   "q": "Dans quel ordre pose-t-on liquide et pierre ?",
+   "choices": [
+    "La goutte de liquide d'abord, la pierre ensuite",
+    "La pierre d'abord, puis la goutte",
+    "Sans liquide du tout",
+    "Le liquide sur la loupe"
+   ],
+   "answer": 0,
+   "why": "La goutte de contact remplit l'espace entre le verre et la pierre."
+  },
+  {
+   "q": "Que donne la position de la limite d'ombre sur l'échelle ?",
+   "choices": [
+    "Directement l'indice de réfraction",
+    "Le poids de la pierre",
+    "Sa dureté",
+    "Sa couleur"
+   ],
+   "answer": 0,
+   "why": "La frontière entre la zone claire et la zone sombre."
+  },
+  {
+   "q": "Une pierre d'indice plus fort que celui du verre (1,81)…",
+   "choices": [
+    "se mesure très bien",
+    "ne se mesure pas au réfractomètre",
+    "est toujours un diamant",
+    "est toujours opaque"
+   ],
+   "answer": 1,
+   "why": "La lecture sort de la plage du prisme."
+  },
+  {
+   "q": "Que note-t-on sur une pierre anisotrope ?",
+   "choices": [
+    "Son poids dans l'eau",
+    "Sa fluorescence",
+    "Les valeurs extrêmes : nα, nβ, nγ",
+    "Son éclat"
+   ],
+   "answer": 2,
+   "why": "Les limites d'ombre se déplacent quand on tourne la lentille."
+  }
+ ]
+}

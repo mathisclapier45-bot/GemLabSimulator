@@ -1,0 +1,85 @@
+{
+ "lesson": "dichroscope",
+ "questions": [
+  {
+   "q": "Pleochroism is…",
+   "choices": [
+    "a stone whose colour changes with the direction of observation",
+    "a stone that glows under UV",
+    "a stone that changes colour with heat",
+    "a stone that becomes opaque"
+   ],
+   "why": "Light is absorbed differently depending on the axis."
+  },
+  {
+   "q": "How is the London dichroscope made?",
+   "choices": [
+    "A glass prism and a slit",
+    "Two polarizing filters glued at right angles in a folding loupe",
+    "A calcite crystal in a tube",
+    "Two mirrors"
+   ],
+   "why": "Each half of the lens lets through one direction of vibration."
+  },
+  {
+   "q": "What does a red spinel show in the dichroscope?",
+   "choices": [
+    "Two different reds",
+    "Three colours",
+    "No change: the two windows are the same",
+    "Black"
+   ],
+   "why": "It is isotropic: it is not a ruby."
+  },
+  {
+   "q": "How many colours can a biaxial stone show?",
+   "choices": [
+    "Only one",
+    "Only two",
+    "Five",
+    "Up to three (trichroism)"
+   ],
+   "why": "Tanzanite and iolite are trichroic."
+  },
+  {
+   "q": "What is an advantage of the dichroscope?",
+   "choices": [
+    "It works even on a set stone, without touching it",
+    "It measures the refractive index",
+    "It weighs the stone",
+    "It gives the density"
+   ],
+   "why": "Neither of the two models touches the stone."
+  },
+  {
+   "q": "Why does a garnet show the same colour in the two windows A and B?",
+   "choices": [
+    "It is too small",
+    "It is too hard",
+    "It is synthetic",
+    "It is isotropic: there is no pleochroism"
+   ],
+   "why": "Cubic stones have only one colour."
+  },
+  {
+   "q": "What is needed for the dichroscope to give a result?",
+   "choices": [
+    "A coloured, transparent stone",
+    "A colourless stone",
+    "An opaque stone",
+    "A very small stone"
+   ],
+   "why": "A very pale or colourless stone gives little result."
+  },
+  {
+   "q": "Which model uses a crystal of Iceland spar?",
+   "choices": [
+    "The London dichroscope",
+    "The calcite dichroscope",
+    "The spectroscope",
+    "The polariscope"
+   ],
+   "why": "It gives two images side by side."
+  }
+ ]
+}

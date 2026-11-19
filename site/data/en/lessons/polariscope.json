@@ -1,0 +1,51 @@
+{
+ "id": "polariscope",
+ "title": "The polariscope and the conoscope",
+ "tool": {
+  "name": "Polariscope and conoscope",
+  "measures": "the optic character (isotropic, anisotropic, aggregate) and the interference figure (uniaxial or biaxial)",
+  "where": "Gemmology House and Office, laboratory",
+  "records": [
+   "Optic character",
+   "Interference figure"
+  ],
+  "tips": [
+   "Turn the stone a full turn",
+   "Watch both the dark stone and the bright stone"
+  ]
+ },
+ "steps": [
+  {
+   "title": "Polarized light",
+   "text": "Ordinary light vibrates in all planes. A <b>polarizing filter</b> only lets one plane of vibration through.\n\nWith <b>two crossed filters</b> (the polarizer and the analyzer), no light gets through any more: you see black. A stone placed between the two can change that."
+  },
+  {
+   "title": "Isotropic stone",
+   "text": "An <b>isotropic</b> stone (cubic or amorphous: garnet, spinel, glass) does not change the polarization of light. Between crossed filters, it stays <b>dark</b> when turned.\n\nCareful: some strongly strained isotropic stones show patches or a cross (anomalous double refraction)."
+  },
+  {
+   "title": "Anisotropic stone",
+   "text": "An <b>anisotropic</b> stone (uniaxial or biaxial) splits light into two rays. When turned a full turn, it lights up and goes dark <b>four times</b>, every 90°.\n\nThis is the sign of a doubly refractive single crystal: quartz, corundum, beryl, topaz..."
+  },
+  {
+   "title": "Aggregate",
+   "text": "An <b>aggregate</b> is made of small crystals pointing in all directions (jade, chalcedony, lapis lazuli). It stays <b>bright</b> whatever the position.\n\nSummary: dark all the time = isotropic; four flashes = anisotropic; bright all the time = aggregate."
+  },
+  {
+   "title": "The conoscope: uniaxial stone",
+   "text": "By adding a lens, the polariscope becomes a <b>conoscope</b>. You look at the stone under converging light, along the direction of the optic axis, and you see an <b>interference figure</b>.\n\nA <b>uniaxial</b> stone (a single optic axis) shows a <b>black cross</b> surrounded by <b>coloured rings</b>. If you turn the stone on itself, the cross <b>does not move</b>: the optic axis stays in front of the filters."
+  },
+  {
+   "title": "Quartz: the bull's eye",
+   "text": "In <b>quartz</b> (amethyst, citrine, smoky quartz, prasiolite...), and only in quartz, the uniaxial figure has a particular centre: the cross does not clearly meet in the middle, and instead you see a <b>round, pale spot</b>. This is the <b>bull's eye</b>.\n\nIt comes from the fact that quartz rotates the plane of polarized light along its axis. On a corundum or a tourmaline, the cross meets sharply: this is a way to recognize a quartz."
+  },
+  {
+   "title": "Biaxial: the cross that opens",
+   "text": "A <b>biaxial</b> stone has two optic axes. Its figure shows two “eyes” surrounded by rings, crossed by dark bands.\n\nWhen you <b>turn the stone</b>, the black cross <b>opens</b> into two curved branches, which move apart towards the outside: they are sometimes called the <b>“moustache”</b>. A little further, the branches come back towards the centre and form a cross again. The cycle starts again every 90°."
+  },
+  {
+   "title": "The biaxial figures",
+   "text": "The figure of a biaxial stone depends on the <b>position of the stone</b> on the lens:\n\n• <b>a</b>: both axes are in the field, the dark band forms a <b>cross</b> with two “eyes”;\n• <b>b</b>: the stone turned by 45°, the cross has opened into a <b>moustache</b>, two curved branches around the eyes;\n• <b>c</b>: only one axis is in the field: you see just one curved branch and a single eye.\n\nWith an auxiliary plate, you also read the <b>optic sign</b>, positive or negative: it is the same as the one of the refractometer."
+  }
+ ]
+}

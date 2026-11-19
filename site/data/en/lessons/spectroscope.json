@@ -1,0 +1,43 @@
+{
+ "id": "spectroscope",
+ "title": "The spectroscope",
+ "tool": {
+  "name": "Spectroscope",
+  "measures": "the absorption spectrum: the dark lines and bands that the stone adds to white light",
+  "where": "Gemmology House and Office, top row, on the right of the laboratory (a lamp is placed underneath)",
+  "records": [
+   "Absorption spectrum"
+  ],
+  "tips": [
+   "Put the stone on the lamp",
+   "Move the mouse over the lines to read their wavelength",
+   "Compare with a reference stone"
+  ]
+ },
+ "steps": [
+  {
+   "title": "White light and the prism",
+   "text": "White light contains all the colours. A <b>prism</b> separates them, from violet (around 400 nm) to red (around 700 nm): this is the <b>spectrum</b>.\n\nThe <b>spectroscope</b> is a small prism placed in an instrument: you look at the light that went through the stone, spread out into its colours."
+  },
+  {
+   "title": "What the stone absorbs",
+   "text": "When light goes through a coloured stone, the stone <b>keeps</b> some colours: they are missing in the spectrum, and leave dark <b>lines</b> or <b>bands</b> there. What remains is the colour you see.\n\nThe lines depend on the element that colours the stone: <b>chromium</b> (ruby, emerald), <b>iron</b> (garnets, peridot), manganese, vanadium, copper...\n\nThe spectrum is therefore a <b>fingerprint of the colour</b>."
+  },
+  {
+   "title": "Reading the spectrum",
+   "text": "The scale goes from <b>400 nm</b> to <b>700 nm</b>:\n• <b>Violet</b> 400-450 nm\n• <b>Blue</b> 450-490 nm\n• <b>Green</b> 490-560 nm\n• <b>Yellow</b> 560-590 nm\n• <b>Orange</b> 590-610 nm\n• <b>Red</b> 610-700 nm\n\nRuby shows a fine line around <b>694 nm</b>. <b>Fine</b> lines: chromium. <b>Broad</b> bands: iron. In the instrument, move the mouse over the spectrum to read the wavelength."
+  },
+  {
+   "title": "A few spectra",
+   "text": "• <b>Ruby</b>: chromium lines in the red, a broad yellow-green band.\n• <b>Emerald</b>: chromium lines in the red (664, 683 nm), nothing in the blue.\n• <b>Peridot</b>: iron triplet in the blue (451, 470, 494 nm).\n• <b>Almandine garnet</b>: iron bands, yellow absorbed and two bands in the green.\n\nTwo green stones, or two red ones, can have very different spectra: the spectroscope sees the <b>cause</b> of the colour."
+  },
+  {
+   "title": "Using the spectroscope",
+   "text": "1. Put the stone on the lamp, under the spectroscope.\n2. The spectrum appears: look for the dark lines and bands.\n3. Move the mouse over them to read their wavelength.\n4. Compare with a reference stone, and note what differs.\n\nThe instrument does not touch the stone. It needs a coloured, transparent stone: a colourless stone usually gives nothing (except some diamonds, whose spectrum can show lines in the violet)."
+  },
+  {
+   "title": "To remember",
+   "text": "• The spectroscope shows what the stone absorbs, so <b>what colours it</b>, not its name.\n• Fine lines: most often chromium. Broad bands: iron.\n• Two stones of the same colour can have two spectra: this is how an imitation is unmasked.\n• You then need to cross-check with the other measurements."
+  }
+ ]
+}

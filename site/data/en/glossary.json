@@ -1,0 +1,460 @@
+[
+ {
+  "id": "absorption",
+  "term": "Absorption",
+  "aliases": [
+   "absorbs",
+   "absorb",
+   "absorbed"
+  ],
+  "def": "When a stone keeps some colours of the light that goes through it. What is missing in the spectrum is the trace of what colours the stone."
+ },
+ {
+  "id": "acceptabilite",
+  "term": "Acceptability",
+  "aliases": [],
+  "def": "One of the five qualities of a gem: the market must want it and trust it (no hidden treatment, no synthetic sold as natural), and the law must allow it to be sold."
+ },
+ {
+  "id": "agregat",
+  "term": "Aggregate",
+  "aliases": [
+   "aggregates"
+  ],
+  "def": "A material made of small crystals pointing in all directions (jade, chalcedony, lapis lazuli). Between crossed polarizing filters, it stays bright."
+ },
+ {
+  "id": "amorphe",
+  "term": "Amorphous",
+  "aliases": [],
+  "def": "Without a regular order at the scale of the atoms: opal, obsidian, glass."
+ },
+ {
+  "id": "angle-critique",
+  "term": "Critical angle",
+  "aliases": [],
+  "def": "The angle beyond which all the light coming from the glass towards the stone is sent back into the glass. It makes the shadow edge of the refractometer."
+ },
+ {
+  "id": "anisotrope",
+  "term": "Anisotropic",
+  "aliases": [],
+  "def": "Said of a stone that splits light into two rays (uniaxial or biaxial). In the polariscope, it lights up and goes dark four times per turn."
+ },
+ {
+  "id": "asterisme",
+  "term": "Asterism",
+  "aliases": [
+   "star effect"
+  ],
+  "def": "A four- or six-rayed star seen on a cabochon, caused by fine aligned needles (star rubies and star sapphires)."
+ },
+ {
+  "id": "axe-optique",
+  "term": "Optic axis",
+  "aliases": [
+   "optic axes"
+  ],
+  "def": "A direction in a crystal along which light is not split into two rays. A uniaxial stone has one, a biaxial stone has two."
+ },
+ {
+  "id": "balance-hydrostatique",
+  "term": "Hydrostatic balance",
+  "aliases": [],
+  "def": "A balance that weighs a stone in air and then in water, to work out the density with Archimedes' principle."
+ },
+ {
+  "id": "biaxe",
+  "term": "Biaxial",
+  "aliases": [],
+  "def": "A stone with two optic axes and three refractive indices (orthorhombic, monoclinic and triclinic systems)."
+ },
+ {
+  "id": "birefringence",
+  "term": "Birefringence",
+  "aliases": [],
+  "def": "The difference between the largest and the smallest index of an anisotropic stone. It is measured with the refractometer."
+ },
+ {
+  "id": "cabochon",
+  "term": "Cabochon",
+  "aliases": [
+   "cabochons"
+  ],
+  "def": "A stone cut as a smooth, domed surface, without facets. The hardness test can be done under its base."
+ },
+ {
+  "id": "carat",
+  "term": "Carat",
+  "aliases": [
+   "carats"
+  ],
+  "def": "The unit of weight of stones: 1 carat = 0.2 gram (so 1 g = 5 ct). The word comes from the carob seed."
+ },
+ {
+  "id": "cassure",
+  "term": "Fracture",
+  "aliases": [],
+  "def": "The way a stone breaks when there is no plane of weakness. Conchoidal (in arcs, like a shell) or splintery (fibrous)."
+ },
+ {
+  "id": "chamoisine",
+  "term": "Chamois",
+  "aliases": [
+   "chamois cloth"
+  ],
+  "def": "A soft leather cloth used to wipe the stone before looking at it, to remove dust and grease."
+ },
+ {
+  "id": "chelsea",
+  "term": "Chelsea filter",
+  "aliases": [],
+  "def": "A small coloured filter that only lets through yellow-green and deep red. Chromium (and cobalt) turns red under the filter, iron does not."
+ },
+ {
+  "id": "clarte",
+  "term": "Clarity",
+  "aliases": [],
+  "def": "The degree of purity of a stone: the more visible inclusions, the lower the clarity."
+ },
+ {
+  "id": "clivage",
+  "term": "Cleavage",
+  "aliases": [],
+  "def": "The splitting of a stone along a smooth plane, where the bonds between atoms are weaker. Diamond, topaz, fluorite and kunzite have it."
+ },
+ {
+  "id": "conoscope",
+  "term": "Conoscope",
+  "aliases": [],
+  "def": "A polariscope fitted with a lens, which shows the interference figure of a stone and so tells uniaxial from biaxial."
+ },
+ {
+  "id": "conductivite-thermique",
+  "term": "Thermal conductivity",
+  "aliases": [],
+  "def": "How easily a material carries heat away. Diamond is the best known conductor."
+ },
+ {
+  "id": "cvd",
+  "term": "CVD",
+  "aliases": [],
+  "def": "A synthetic diamond obtained by growing diamond layer by layer from a gas. It is a real diamond."
+ },
+ {
+  "id": "densite",
+  "term": "Density",
+  "aliases": [],
+  "def": "The ratio between the weight of a stone and that of the same volume of water. Each species has its own (quartz 2.65, diamond 3.52, corundum 4.0)."
+ },
+ {
+  "id": "dichroscope",
+  "term": "Dichroscope",
+  "aliases": [],
+  "def": "A small instrument that separates the two directions of vibration of light and shows side by side the colours of a pleochroic stone."
+ },
+ {
+  "id": "diffusion",
+  "term": "Diffusion",
+  "aliases": [],
+  "def": "A treatment that makes an element (titanium, chromium, beryllium) enter the surface of a stone to colour it. The layer is sometimes no thicker than 0.1 mm."
+ },
+ {
+  "id": "dispersion",
+  "term": "Dispersion",
+  "aliases": [],
+  "def": "The difference in refractive index between blue light and red light. It gives a stone its “fire” (very strong in diamond, sphene and demantoid)."
+ },
+ {
+  "id": "durabilite",
+  "term": "Durability",
+  "aliases": [],
+  "def": "The quality of a gem that lasts: it resists scratches (hardness), blows (toughness) and its environment (stability)."
+ },
+ {
+  "id": "durete",
+  "term": "Hardness",
+  "aliases": [
+   "absolute hardness"
+  ],
+  "def": "The resistance of a stone to scratching. It is placed on the Mohs scale (from 1 to 10)."
+ },
+ {
+  "id": "eclat",
+  "term": "Luster",
+  "aliases": [
+   "lustre"
+  ],
+  "def": "The way the surface of a stone reflects light: vitreous, adamantine, resinous, greasy, silky, metallic, pearly…"
+ },
+ {
+  "id": "edxrf",
+  "term": "EDXRF",
+  "aliases": [],
+  "def": "X-ray fluorescence spectrometry: X-rays make every chemical element of the stone answer with its own lines. Fast, and it leaves no trace."
+ },
+ {
+  "id": "elements-traces",
+  "term": "Trace elements",
+  "aliases": [],
+  "def": "Chemical elements present in tiny amounts (iron, chromium, vanadium, titanium, gallium…). Their proportions vary from one deposit to another."
+ },
+ {
+  "id": "facette",
+  "term": "Facet",
+  "aliases": [
+   "facets",
+   "faceted"
+  ],
+  "def": "A small flat surface polished on a cut stone."
+ },
+ {
+  "id": "fluorescence",
+  "term": "Fluorescence",
+  "aliases": [],
+  "def": "The visible glow of a stone that absorbs ultraviolet light and gives it back as visible light. It stops when the lamp is switched off."
+ },
+ {
+  "id": "ftir",
+  "term": "FTIR",
+  "aliases": [],
+  "def": "Fourier-transform infrared spectroscopy: it detects chemical bonds, so oil, resin or water in a stone."
+ },
+ {
+  "id": "figure-d-interference",
+  "term": "Interference figure",
+  "aliases": [
+   "interference figures"
+  ],
+  "def": "The pattern seen in the conoscope: a black cross and coloured rings (uniaxial) or two eyes and a moustache (biaxial)."
+ },
+ {
+  "id": "gemme",
+  "term": "Gem",
+  "aliases": [
+   "gems",
+   "gemstone",
+   "gemstones"
+  ],
+  "def": "A material, most often a mineral, with enough beauty, rarity, durability, value and acceptability to be worn as jewellery or collected."
+ },
+ {
+  "id": "habitus",
+  "term": "Crystal habit",
+  "aliases": [
+   "habit"
+  ],
+  "def": "The outer shape of a crystal (needle, prism, plate), linked to the speed of growth along each axis."
+ },
+ {
+  "id": "hpht",
+  "term": "HPHT",
+  "aliases": [],
+  "def": "High pressure, high temperature: a process that makes synthetic diamonds, or that lightens or removes the colour of some natural diamonds."
+ },
+ {
+  "id": "imitation",
+  "term": "Imitation",
+  "aliases": [
+   "imitations"
+  ],
+  "def": "A material that looks like a gem without being one (coloured glass, cubic zirconia sold as a diamond)."
+ },
+ {
+  "id": "inclusion",
+  "term": "Inclusion",
+  "aliases": [
+   "inclusions"
+  ],
+  "def": "A foreign body, cavity or crack trapped in a stone. Inclusions tell how it formed and help tell natural from synthetic."
+ },
+ {
+  "id": "indice-de-refraction",
+  "term": "Refractive index",
+  "aliases": [
+   "refractive indices"
+  ],
+  "def": "A number that says how much light is slowed down and bent in a stone. It is measured with the refractometer."
+ },
+ {
+  "id": "isotrope",
+  "term": "Isotropic",
+  "aliases": [],
+  "def": "Said of a stone that does not split light (cubic or amorphous: garnet, spinel, glass). It has a single refractive index."
+ },
+ {
+  "id": "la-icp-ms",
+  "term": "LA-ICP-MS",
+  "aliases": [],
+  "def": "Laser ablation mass spectrometry: a laser vaporizes a microscopic amount of matter, which is analysed to measure the trace elements. The reference method for origin."
+ },
+ {
+  "id": "limite-d-ombre",
+  "term": "Shadow edge",
+  "aliases": [
+   "shadow edges"
+  ],
+  "def": "The border between the bright zone and the dark zone in the refractometer. Its position on the scale gives the index."
+ },
+ {
+  "id": "luminescence",
+  "term": "Luminescence",
+  "aliases": [],
+  "def": "Light given off by a stone: fluorescence (which stops with the lamp) or phosphorescence (which goes on)."
+ },
+ {
+  "id": "macle",
+  "term": "Twin crystal",
+  "aliases": [
+   "twinned crystals",
+   "twinned"
+  ],
+  "def": "Two crystals of the same nature joined, one being the mirror image of the other."
+ },
+ {
+  "id": "moissanite",
+  "term": "Moissanite",
+  "aliases": [],
+  "def": "Synthetic silicon carbide that looks like diamond. It conducts heat like diamond, but it also conducts electricity."
+ },
+ {
+  "id": "naturelle",
+  "term": "Natural gem",
+  "aliases": [],
+  "def": "A gem formed without human help, even if people later cut or treated it."
+ },
+ {
+  "id": "origine",
+  "term": "Geographic origin",
+  "aliases": [],
+  "def": "The deposit a stone comes from. It strongly changes the value of a ruby, a sapphire or an emerald and is worked out from the trace elements."
+ },
+ {
+  "id": "phosphorescence",
+  "term": "Phosphorescence",
+  "aliases": [],
+  "def": "A glow that goes on for a few seconds after the UV lamp is switched off."
+ },
+ {
+  "id": "pleochroisme",
+  "term": "Pleochroism",
+  "aliases": [
+   "pleochroic",
+   "dichroism",
+   "trichroism"
+  ],
+  "def": "The property of a coloured stone to show different colours depending on the direction of observation: two (dichroism, uniaxial) or three (trichroism, biaxial)."
+ },
+ {
+  "id": "polariscope",
+  "term": "Polariscope",
+  "aliases": [],
+  "def": "Two crossed polarizing filters between which the stone is turned. It tells isotropic, anisotropic and aggregate apart."
+ },
+ {
+  "id": "raman",
+  "term": "Raman",
+  "aliases": [
+   "Raman spectroscopy"
+  ],
+  "def": "A laser spectroscopy that gives the signature of the crystal lattice of a mineral: it identifies it with certainty, even for a tiny inclusion."
+ },
+ {
+  "id": "rarete",
+  "term": "Rarity",
+  "aliases": [],
+  "def": "One of the five qualities of a gem: the rarer a good stone is, the more it is sought after."
+ },
+ {
+  "id": "reflexion-totale",
+  "term": "Total reflection",
+  "aliases": [],
+  "def": "Beyond the critical angle, all the light is sent back into the glass of the refractometer."
+ },
+ {
+  "id": "refractometre",
+  "term": "Refractometer",
+  "aliases": [],
+  "def": "An instrument that measures the refractive index of a stone with the critical angle, using a drop of contact liquid."
+ },
+ {
+  "id": "refraction",
+  "term": "Refraction",
+  "aliases": [],
+  "def": "The change of direction of light when it goes from one medium to another (Descartes' law)."
+ },
+ {
+  "id": "soie",
+  "term": "Silk",
+  "aliases": [],
+  "def": "Fine parallel needles in a natural ruby or sapphire, which scatter light like silk."
+ },
+ {
+  "id": "spectre-d-absorption",
+  "term": "Absorption spectrum",
+  "aliases": [],
+  "def": "The spectrum of light after it has gone through a stone: the dark lines and bands are what the stone absorbed. It is the fingerprint of its colour."
+ },
+ {
+  "id": "spectroscope",
+  "term": "Spectroscope",
+  "aliases": [],
+  "def": "A small prism (or grating) that spreads out the light that went through the stone, to read its absorption lines."
+ },
+ {
+  "id": "stabilite",
+  "term": "Stability",
+  "aliases": [],
+  "def": "The resistance of a stone to light, heat, chemicals and humidity."
+ },
+ {
+  "id": "synthetique",
+  "term": "Synthetic",
+  "aliases": [
+   "synthetics"
+  ],
+  "def": "A gem made by people with the same composition and structure as a natural gem (a synthetic ruby is a real corundum)."
+ },
+ {
+  "id": "systeme-cristallin",
+  "term": "Crystal system",
+  "aliases": [
+   "crystal systems"
+  ],
+  "def": "The way atoms are arranged: there are seven systems (cubic, tetragonal, hexagonal, trigonal, orthorhombic, monoclinic, triclinic)."
+ },
+ {
+  "id": "tenacite",
+  "term": "Toughness",
+  "aliases": [],
+  "def": "The resistance of a stone to blows. Jade is the toughest gem; diamond, though very hard, is not as tough."
+ },
+ {
+  "id": "traitement",
+  "term": "Treatment",
+  "aliases": [
+   "treatments"
+  ],
+  "def": "An operation that improves the look of a stone (heating, irradiation, dyeing, filling…). It is allowed as long as it is disclosed."
+ },
+ {
+  "id": "transparence",
+  "term": "Transparency",
+  "aliases": [],
+  "def": "The ability of a stone to let light through: transparent, translucent or opaque."
+ },
+ {
+  "id": "uniaxe",
+  "term": "Uniaxial",
+  "aliases": [],
+  "def": "A stone with a single optic axis and two refractive indices (tetragonal, hexagonal and trigonal systems)."
+ },
+ {
+  "id": "ultraviolet",
+  "term": "Ultraviolet",
+  "aliases": [
+   "UV"
+  ],
+  "def": "An invisible radiation beyond violet. The cabinet has two lamps: long-wave UV (365 nm) and short-wave UV (254 nm)."
+ }
+]

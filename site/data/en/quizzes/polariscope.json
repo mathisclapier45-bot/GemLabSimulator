@@ -1,0 +1,95 @@
+{
+ "lesson": "polariscope",
+ "questions": [
+  {
+   "q": "What do you see with two crossed polarizing filters and no stone?",
+   "choices": [
+    "Black",
+    "A white light",
+    "A rainbow",
+    "A coloured cross"
+   ],
+   "why": "No light gets through any more."
+  },
+  {
+   "q": "An isotropic stone between crossed filters…",
+   "choices": [
+    "lights up four times per turn",
+    "stays dark when turned",
+    "stays bright all the time",
+    "changes colour"
+   ],
+   "why": "Garnets, spinel and glass are isotropic."
+  },
+  {
+   "q": "An anisotropic stone turned a full turn lights up…",
+   "choices": [
+    "only once",
+    "twice",
+    "four times",
+    "never"
+   ],
+   "why": "Every 90°."
+  },
+  {
+   "q": "An aggregate of small crystals (jade, chalcedony) stays…",
+   "choices": [
+    "dark all the time",
+    "bright only twice per turn",
+    "invisible",
+    "bright whatever its position"
+   ],
+   "why": "Summary: dark = isotropic, four flashes = anisotropic, bright = aggregate."
+  },
+  {
+   "q": "Which figure does a uniaxial stone show in the conoscope?",
+   "choices": [
+    "A black cross surrounded by coloured rings",
+    "Two eyes and a moustache",
+    "A plain black circle",
+    "Parallel stripes"
+   ],
+   "why": "The cross does not move when the stone is turned."
+  },
+  {
+   "q": "Which stone has a “bull's eye” at the centre of its uniaxial figure?",
+   "choices": [
+    "Ruby",
+    "Quartz",
+    "Tourmaline",
+    "Corundum"
+   ],
+   "why": "Quartz rotates the plane of polarization along its axis."
+  },
+  {
+   "q": "What is a conoscope?",
+   "choices": [
+    "A polariscope fitted with a lens, which shows the interference figure",
+    "An instrument that weighs stones",
+    "A red filter",
+    "A UV lamp"
+   ],
+   "why": "The stone is looked at under converging light."
+  },
+  {
+   "q": "What does the figure of a biaxial stone show?",
+   "choices": [
+    "A motionless black cross",
+    "Two “eyes” crossed by dark bands, and the cross that opens into a moustache",
+    "A plain coloured disc",
+    "Nothing at all"
+   ],
+   "why": "When the stone is turned, the cross opens into two curved branches."
+  },
+  {
+   "q": "What can a strongly strained isotropic stone show?",
+   "choices": [
+    "Four flashes per turn",
+    "Never any light",
+    "Patches or a cross: this is anomalous double refraction",
+    "A bull's eye"
+   ],
+   "why": "It nevertheless stays isotropic."
+  }
+ ]
+}
