@@ -3,12 +3,10 @@ import json
 import re
 
 from . import catalog, config, diagrams, home, i18n, markup, routes_learn, views
-from .views import esc, fmt_num, gem_svg, page, page_number, pagination
+from .views import esc, fmt_num, gem_svg, page
 from .web import HTTPError, Response, Router, redirect
 
 router = Router()
-
-PER_PAGE = 24
 
 
 @router.route("GET", "/")
@@ -30,9 +28,7 @@ def encyclopedia(req):
     q = req.query
     f = {k: q.get(k, "")[:80] for k in ("q", "transparency", "optic", "hardness", "extra", "synthetic")}
     results = catalog.search(**f)
-    pages = max(1, -(-len(results) // PER_PAGE))
-    n = page_number(req, pages)
-    shown = results[(n - 1) * PER_PAGE:n * PER_PAGE]
+    shown = results                      # every stone on one page: no pagination
     all_label = t("enc.filter.all")
     form = (
         '<form class="filters" method="get" action="/encyclopedie" role="search">'
@@ -68,13 +64,11 @@ def encyclopedia(req):
         body = '<ul class="tiles">{}</ul>'.format(tiles)
     else:
         body = '<p class="empty">{}</p>'.format(esc(t("enc.empty")))
-    from urllib.parse import urlencode
-    base = "/encyclopedie" + ("?" + urlencode({k: v for k, v in f.items() if v}) if any(f.values()) else "")
     content = (
-        '<h1>{h1}</h1><p class="lead">{lead}</p>{form}<p class="count">{count}</p>{body}{pager}'
+        '<h1>{h1}</h1><p class="lead">{lead}</p>{form}<p class="count">{count}</p>{body}'
         '<p class="side-link"><a href="/encyclopedie/formes">{habits}</a> · <a href="/comparer">{compare}</a> · <a href="/glossaire">{gloss}</a></p>').format(
         h1=esc(t("enc.title")), lead=esc(t("enc.lead")), form=form,
-        count=esc(t("enc.count", n=len(results))), body=body, pager=pagination(req, base, n, pages),
+        count=esc(t("enc.count", n=len(results))), body=body,
         habits=esc(t("enc.habits.link")), compare=esc(t("cmp.title")), gloss=esc(t("gloss.title")))
     return page(req, t("enc.title"), content, section="encyclopedia")
 
@@ -209,7 +203,7 @@ def _colors_section(req, s):
     shape_key = catalog.fold(s.get("shape") or "ovale")
     shape = shape_map.get(shape_key, shape_key[:1].upper() + shape_key[1:])
     cut = cut_map.get(catalog.fold(s.get("cutStyle") or ""), "brillant")
-    transp = catalog.fold(s.get("transparency") or "")
+    transp = catalog.fold(catalog.fr(s, "transparency") or "")
     milky = 1.0 if transp == "opaque" else 0.75 if transp in ("translucide a opaque", "opaque a translucide") else \
         0.42 if transp == "translucide" else 0.2 if transp == "transparent a translucide" else 0.0
     sid = s["id"]
@@ -278,11 +272,11 @@ def species_page(req):
     # dichroscope: windows with the colours seen in each direction, and how strong the dichroism is
     if optic in ("Uniaxe", "Biaxe") and not poly:
         if s.get("pleochroic"):
-            colors = [c for _, c in diagrams.pleochroism_colors(s.get("pleochroicDescription") or "")]
+            colors = [c for _, c in diagrams.pleochroism_colors(catalog.fr(s, "pleochroicDescription") or "")]
             if not colors:
                 base = diagrams.tonal_range(s["iconColor"])
                 colors = [base[2][1], base[4][1]]
-            strength = diagrams.pleo_strength(s.get("pleochroicDescription") or "")
+            strength = diagrams.pleo_strength(catalog.fr(s, "pleochroicDescription") or "")
             cap = '<strong>{}</strong><br>{}<br><span class="small">{}</span>'.format(
                 esc(t("sp.dichroscope")), esc(t("sp.dichro.strength", level=t("pleo." + strength))), esc(s.get("pleochroicDescription", "")))
         else:
@@ -367,8 +361,7 @@ def species_page(req):
         '<nav class="crumbs"><a href="/encyclopedie">{back}</a></nav>'
         '<header class="species-head" style="--gem:{gemc};--gem2:{gemf}">{gem}<div><h1>{name} {badge}</h1>'
         '<p class="formula big">{formula}</p><p class="lead">{desc}</p></div></header>'
-        '{note}{gallery}{colors}<h2>{ph}</h2><table class="props">{props}</table>{sections}{nav}').format(
-        note='<div class="banner warn">{}</div>'.format(esc(t("sp.french.note"))) if req.lang != "fr" else "",
+        '{gallery}{colors}<h2>{ph}</h2><table class="props">{props}</table>{sections}{nav}').format(
         back=esc(t("sp.back")), gem=gem_svg(s["iconColor"], s["iconFacetColor"], 96), name=esc(s["displayName"]),
         gemc=esc(s["iconColor"]), gemf=esc(s["iconFacetColor"]), formula=esc(ex.get("formula", "")),
         badge=badge, desc=markup.link_terms(esc(s.get("description", "")), seen_terms), gallery=gallery, colors=_colors_section(req, s), ph=esc(t("sp.properties")), props=props,

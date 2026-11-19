@@ -762,6 +762,49 @@ class TestEnglish(SiteTestCase):
             self.assertEqual(sorted(hole.findall(fr[key])), sorted(hole.findall(en[key])), key)
         self.assertEqual(sum(1 for v in en.values() if not v.strip()), 0)
 
+    def test_every_species_text_is_translated(self):
+        """data/en/species.json must have an English text for every French text of the species data (python3 site/tools/species_strings.py lists the missing ones)."""
+        import json as _json
+        sys.path.insert(0, str(SITE / "tools"))
+        import species_strings
+        texts = species_strings.collect()
+        done = _json.loads((SITE / "data" / "en" / "species.json").read_text(encoding="utf-8"))
+        self.assertEqual([t for t in texts if t not in done], [])
+        self.assertEqual([k for k in done if k not in texts], [], "traductions de textes qui n'existent plus")
+        self.assertEqual([k for k, v in done.items() if not v.strip()], [])
+
+    def test_species_page_in_english(self):
+        c = Client()
+        r = c.get("/en/encyclopedie/grenat-spessartite")
+        self.assertEqual(r.status, 200)
+        self.assertIn("<h1>Spessartite Garnet", r.text)
+        self.assertIn("A vivid orange garnet", r.text)
+        self.assertIn("Manganese absorption bands.", r.text)
+        self.assertNotIn("Un grenat orangé", r.text)
+        self.assertNotIn("still in French", r.text)
+        fr = c.get("/encyclopedie/grenat-spessartite").text
+        self.assertIn("Un grenat orangé vif", fr)
+        self.assertNotIn("A vivid orange garnet", fr)
+
+    def test_english_search_and_names(self):
+        c = Client()
+        slugs = lambda path: set(re.findall(r'href="/en/encyclopedie/([\w-]+)"', c.get(path).text))
+        ruby = slugs("/en/encyclopedie?q=ruby")
+        self.assertIn("corindon-rubis", ruby)
+        self.assertIn("garnet", c.get("/en/encyclopedie/grenat-almandin").text.lower())
+        self.assertIn("corindon-rubis", slugs("/en/encyclopedie?q=rubis"))     # the French name still works
+        self.assertIn("corindon-rubis", set(re.findall(r'href="/encyclopedie/([\w-]+)"', c.get("/encyclopedie?q=rubis").text)))
+
+    def test_english_pages_find_the_same_species_as_french(self):
+        """The identification and comparison read French words in the data; they must give the same answer in both languages."""
+        c = Client()
+        found = lambda path, prefix: sorted(re.findall(r'href="{}/encyclopedie/([\w-]+)"'.format(prefix), c.get(path).text))
+        for q in ("color=red&luster=vitreous&magnet=yes", "color=blue&uv=yes&spectrum=yes", "magnet=no&transparency=opaque", "color=green&pleo=yes&chelsea=red"):
+            self.assertEqual(found("/identification?" + q, ""), found("/en/identification?" + q, "/en"), q)
+        lessons = lambda path: re.findall(r'href="(?:/en)?/lecons/(\w+)', c.get(path).text)
+        for a, b in (("grenat-almandin", "corindon-rubis"), ("emeraude", "verre"), ("ambre", "jais")):
+            self.assertEqual(lessons("/comparer?a={}&b={}".format(a, b)), lessons("/en/comparer?a={}&b={}".format(a, b)), a + b)
+
     def test_content_files_are_complete(self):
         import json as _json
         from app import catalog

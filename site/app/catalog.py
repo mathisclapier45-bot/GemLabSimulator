@@ -8,7 +8,7 @@ import unicodedata
 from . import config
 
 _lock = threading.Lock()
-_state = {"mtime": None, "data": None}
+_state = {}          # language -> {"mtime": ..., "data": ...}
 
 LESSON_ORDER = ["gemmes", "durete", "tenacite", "stabilite", "systemes_cristallins", "loupe",
                 "balance_carats", "balance_hydrostatique", "refractometre", "polariscope",
@@ -54,10 +54,48 @@ def _first_word(text):
     return fold(text).split(" ")[0] if text else ""
 
 
-def _build():
+# Texts of a species that the English pages translate (data/en/species.json maps each French text to its English).
+TEXT_FIELDS = ("displayName", "description", "luster", "color", "transparency", "pleochroicDescription", "fluorescenceLongWave",
+               "fluorescenceShortWave", "opticalCharacter", "absorptionSpectrum", "inclusions", "interferenceFigure",
+               "chelseaFilterReaction", "magnetism")
+
+
+def fr(species, field):
+    """The French text of a field: the code that reads colours, lustres or spectra in the text needs the French words, whatever the page language."""
+    return (species.get("_fr") or {}).get(field, species.get(field))
+
+
+def _translations(lang):
+    path = config.DATA_DIR / lang / "species.json"
+    if lang == "fr" or not path.exists():
+        return {}
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _translate_deep(x, tr):
+    """A copy of lists and dictionaries where each colour name of a palette (the 7th item of a list that starts with numbers) is translated."""
+    if isinstance(x, list):
+        if len(x) > 6 and isinstance(x[6], str) and isinstance(x[0], (int, float)):
+            return x[:6] + [tr.get(x[6], x[6])] + x[7:]
+        return [_translate_deep(y, tr) for y in x]
+    if isinstance(x, dict):
+        return {k: _translate_deep(v, tr) for k, v in x.items()}
+    return x
+
+
+def _build(lang="fr"):
     path = config.DATA_DIR / "gemlab_data.json"
     with open(path, encoding="utf-8") as f:
         raw = json.load(f)
+    tr = _translations(lang)
+
+    def t_(text):
+        return tr.get(text, text) if isinstance(text, str) else text
+
+    def t_entry(entry, fields):
+        return dict(entry, _fr={k: entry[k] for k in fields if k in entry}, **{k: t_(entry[k]) for k in fields if k in entry}) if tr else entry
+
     species = []
     for s in raw["species"]:
         s = dict(s)
@@ -66,15 +104,24 @@ def _build():
         h = s.get("hardness") or 0
         s["hardness_group"] = "soft" if h < 5 else ("medium" if h <= 7 else "hard")
         s["synthetic"] = bool(s.get("forcedSynthetic")) or "synth" in fold(s["id"])
-        s["search_text"] = fold(" ".join([
-            s["displayName"], s["id"].replace("_", " "), s.get("description", ""), s.get("color", ""),
-            s.get("inclusions", "")]))
+        french = " ".join([s["displayName"], s["id"].replace("_", " "), s.get("description", ""), s.get("color", ""), s.get("inclusions", "")])
+        if tr:
+            s["_fr"] = {f: s[f] for f in TEXT_FIELDS if f in s}
+            for f in TEXT_FIELDS:
+                if s.get(f):
+                    s[f] = t_(s[f])
+            s["origins"] = [t_entry(o, ("name",)) for o in s.get("origins", [])]
+            # English words first, and the French name still finds the species
+            s["search_text"] = fold(" ".join([s["displayName"], s["id"].replace("_", " "), s.get("description", ""), s.get("color", ""), s.get("inclusions", ""), s["_fr"]["displayName"]]))
+        else:
+            s["search_text"] = fold(french)
         s["name_key"] = fold(s["displayName"])
         species.append(s)
     species.sort(key=lambda s: s["name_key"])
 
     def by_key(block):
-        return {e["key"]: e for e in raw[block]["entries"] if not e.get("variant")}
+        fields = {"spectra": ("description",), "fluorescence": ("longText", "shortText"), "chelsea": ("reaction",)}[block]
+        return {e["key"]: t_entry(e, fields) for e in raw[block]["entries"] if not e.get("variant")}
 
     extra_path = config.DATA_DIR / "species_extra.json"
     extra = {}
@@ -92,12 +139,12 @@ def _build():
         with open(pal_path, encoding="utf-8") as f:
             palettes = json.load(f)
     for s in species:
-        s["palette"] = palettes.get(s["id"])
-        s["extra"] = extra.get(s["id"], {})
+        s["palette"] = _translate_deep(palettes.get(s["id"]), tr) if tr else palettes.get(s["id"])
+        s["extra"] = t_entry(extra.get(s["id"], {}), ("note",))
         photo = credits.get(s["slug"])
         s["photo"] = photo if photo and (config.STATIC_DIR / "photos" / photo["file"]).is_file() else None
 
-    habits = {h["id"]: h for h in raw["crystal_habits"]}
+    habits = {h["id"]: t_entry(h, ("name", "short", "description")) for h in raw["crystal_habits"]}
     for s in species:
         s["habit_list"] = [habits[h["habit"]] for h in s.get("habits", []) if h["habit"] in habits]
         s["has_spectrum"] = False
@@ -113,7 +160,7 @@ def _build():
         "meta": raw["meta"],
         "species": species,
         "by_slug": {s["slug"]: s for s in species},
-        "habits": raw["crystal_habits"],
+        "habits": list(habits.values()),
         "habit_species": habit_species,
         "spectra": spectra,
         "scale_bands": raw["spectra"].get("scale_bands", []),
@@ -123,14 +170,16 @@ def _build():
 
 
 def data():
-    """Loaded once, and again whenever the JSON file changes (so a data update needs no restart)."""
+    """The encyclopedia in the language of the page. Loaded once per language, and again whenever a JSON file changes (so a data update needs no restart)."""
+    lang = current_lang()
     path = config.DATA_DIR / "gemlab_data.json"
-    mtime = tuple(p.stat().st_mtime for p in (path, config.DATA_DIR / "species_extra.json", config.DATA_DIR / "photo_credits.json", config.DATA_DIR / "palettes.json") if p.exists())
+    files = (path, config.DATA_DIR / "species_extra.json", config.DATA_DIR / "photo_credits.json", config.DATA_DIR / "palettes.json", config.DATA_DIR / lang / "species.json")
+    mtime = tuple(p.stat().st_mtime for p in files if p.exists())
     with _lock:
-        if _state["mtime"] != mtime:
-            _state["data"] = _build()
-            _state["mtime"] = mtime
-        return _state["data"]
+        cache = _state.get(lang)
+        if not cache or cache["mtime"] != mtime:
+            cache = _state[lang] = {"mtime": mtime, "data": _build(lang)}
+        return cache["data"]
 
 
 def search(q="", transparency="", optic="", hardness="", extra="", synthetic=""):
@@ -358,10 +407,10 @@ def identify(q):
         if q.get("transparency") and s["transparency_group"] != q["transparency"]:
             continue
         fam = q.get("color")
-        if fam in COLOR_FAMILIES and not re.search(COLOR_FAMILIES[fam], fold(s.get("color", ""))):
+        if fam in COLOR_FAMILIES and not re.search(COLOR_FAMILIES[fam], fold(fr(s, "color") or "")):
             continue
         lus = q.get("luster")
-        if lus in LUSTER_FAMILIES and LUSTER_FAMILIES[lus] not in fold(s.get("luster", "")):
+        if lus in LUSTER_FAMILIES and LUSTER_FAMILIES[lus] not in fold(fr(s, "luster") or ""):
             continue
         fl = d["fluorescence"].get(s["id"]) or {}
         glows = max(fl.get("longIntensity", 0), fl.get("shortIntensity", 0)) >= 0.15
@@ -380,9 +429,9 @@ def identify(q):
             continue
         if q.get("thermal") == "yes" and not s.get("isThermallyConductiveLikeDiamond"):
             continue
-        if q.get("magnet") == "yes" and "aucune reaction" in fold(s.get("magnetism", "")):
+        if q.get("magnet") == "yes" and "aucune reaction" in fold(fr(s, "magnetism") or ""):
             continue
-        if q.get("magnet") == "no" and "aucune reaction" not in fold(s.get("magnetism", "")):
+        if q.get("magnet") == "no" and "aucune reaction" not in fold(fr(s, "magnetism") or ""):
             continue
         if q.get("synthetic") == "yes" and not s["synthetic"]:
             continue

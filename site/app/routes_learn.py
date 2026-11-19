@@ -216,8 +216,9 @@ def _uv(s, fl):
             return (round(float(inten), 2), (col or "").lower() if inten >= 0.2 else "")
         return (0.0 if re.match(r"\s*aucun", text or "", re.I) else 0.5, "")
     if fl:
-        return one(fl.get("longText"), fl.get("longIntensity"), fl.get("longColor")), one(fl.get("shortText"), fl.get("shortIntensity"), fl.get("shortColor"))
-    return one(s.get("fluorescenceLongWave"), None, None), one(s.get("fluorescenceShortWave"), None, None)
+        return (one(catalog.fr(fl, "longText"), fl.get("longIntensity"), fl.get("longColor")),
+                one(catalog.fr(fl, "shortText"), fl.get("shortIntensity"), fl.get("shortColor")))
+    return one(catalog.fr(s, "fluorescenceLongWave"), None, None), one(catalog.fr(s, "fluorescenceShortWave"), None, None)
 
 
 def _uv_differs(a, b):
@@ -238,11 +239,11 @@ def _elements(text):
 
 
 def _magnetic(s):
-    return not re.match(r"\s*aucune", s.get("magnetism") or "", re.I)
+    return not re.match(r"\s*aucune", catalog.fr(s, "magnetism") or "", re.I)
 
 
 def _chelsea(s):
-    return not re.match(r"\s*aucune", s.get("chelseaFilterReaction") or "", re.I)
+    return not re.match(r"\s*aucune", catalog.fr(s, "chelseaFilterReaction") or "", re.I)
 
 
 def _verdicts(req, a, b, d):
@@ -271,7 +272,7 @@ def _verdicts(req, a, b, d):
         add("cabine_uv", "uv")
     if _chelsea(a) != _chelsea(b):
         add("filtre_chelsea", "chelsea", who=A if _chelsea(a) else B)
-    ea, eb = _elements(a.get("absorptionSpectrum")), _elements(b.get("absorptionSpectrum"))
+    ea, eb = _elements(catalog.fr(a, "absorptionSpectrum")), _elements(catalog.fr(b, "absorptionSpectrum"))
     if ea != eb or (a["has_spectrum"] != b["has_spectrum"]):
         add("spectroscope", "spectrum")
     if bool(a.get("isThermallyConductiveLikeDiamond")) != bool(b.get("isThermallyConductiveLikeDiamond")):

@@ -207,8 +207,12 @@ Un bouton **FR / EN** dans l'en-tête passe d'une langue à l'autre sur la même
 
 **Ce qui est traduit** (étape 1) : toute l'interface (`i18n/en.json`, mêmes clés que `fr.json`), les 22 leçons (`data/en/lessons/`), les 169 questions de quiz
 (`data/en/quizzes/`), le glossaire (`data/en/glossary.json`) et les textes des schémas animés (`static/i18n/figures.en.json`).
-**Ce qui ne l'est pas encore** : les fiches des espèces (descriptions, notes, couleurs, spectres… viennent de `gemlab_data.json`, en français ; une bannière le dit sur
-les fiches en anglais), et les noms des espèces. Les adresses gardent leurs mots français (`/en/encyclopedie`).
+Les **fiches des espèces** sont aussi traduites (étape 2) : noms, descriptions, propriétés, spectres, fluorescence, formes cristallines, gisements et couleurs possibles
+(`data/en/species.json`, 1154 textes). C'est un dictionnaire « texte français → texte anglais » : un même texte n'est traduit qu'une fois. En anglais on cherche « ruby » ou
+« garnet » (le nom français marche encore). Les adresses gardent leurs mots français (`/en/encyclopedie/grenat-spessartite`). Quand le jeu change un texte
+(`sync_data.py`), `python3 site/tools/species_strings.py` liste les textes sans traduction ; un test échoue tant qu'il en reste. Le code qui lit des mots français dans les fiches
+(familles de couleurs, pléochroïsme, magnétisme, spectres) utilise `catalog.fr(espece, champ)`, le texte d'origine, donc l'identification et la comparaison donnent les mêmes
+résultats dans les deux langues.
 
 **Comment ça marche** : un fichier anglais ne change que les textes ; la structure (étapes, figures, bonne réponse d'un quiz, nombre de choix) vient du fichier français,
 donc ajouter une question ou une étape en français sans la traduire ne casse rien (le texte français s'affiche en attendant). Un test vérifie que `en.json` a les mêmes clés
