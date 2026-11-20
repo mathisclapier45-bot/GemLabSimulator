@@ -174,7 +174,7 @@
         var my = ++token; params = opts;
         return Promise.all([fetchIndex(), fetchMesh(opts.shape, opts.style)]).then(function (res) {
           if (my !== token) return;
-          var ar = res[0].aspect[opts.shape] || 1, d = opts.dims, Lp = Math.sqrt(d[0] * d[1] / ar), Wp = Lp * ar, D = Math.max(d[2], 0.1), mx = Math.max(Lp, Wp, D);
+          var ar = res[0].aspect[opts.shape] || 1, d = opts.dims, Lp = Math.sqrt(d[0] * d[1] / ar), Wp = Lp * ar, D = Math.max(d[2] * (opts.height || 1), 0.1), mx = Math.max(Lp, Wp, D);   // opts.height: the dome of a cabochon, low / medium / high
           var ratios = [Lp / mx, Wp / mx, D / mx];
           upload(res[1], ratios); schedule();
         });

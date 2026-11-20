@@ -40,6 +40,12 @@ def collect():
             add(s.get(f), f)
         for o in s.get("origins", []):
             add(o.get("name"), "origin")
+    pv_path = DATA / "pleochroism_variants.json"
+    if pv_path.exists():
+        for rows in _load(pv_path).values():
+            for row in rows:
+                add(row["label"], "pleochroism")
+                add(row["text"], "pleochroism")
     for e in raw["spectra"]["entries"]:
         add(e.get("description"), "spectrum")
         add(e.get("label"), "spectrum")

@@ -2,6 +2,7 @@
 or, from the site folder:  python3 -m unittest discover tests"""
 import glob
 import io
+import json
 import os
 import re
 import sys
@@ -14,7 +15,7 @@ from urllib.parse import urlencode
 SITE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SITE))
 
-from app import config, db, i18n, security  # noqa: E402
+from app import catalog, config, db, i18n, security  # noqa: E402
 from app import main as site_main  # noqa: E402
 
 config.PBKDF2_ITERATIONS = 1000   # fast hashing for tests only
@@ -1496,7 +1497,7 @@ class TestPrices(SiteTestCase):
 
 
 class TestFamilies(SiteTestCase):
-    SHOWN = ("beryls", "corindons", "grenats", "scapolites")          # the families shown on the site for now
+    SHOWN = ("aluminosilicates", "ambre-jais", "beryls", "borates", "calcedoines", "carbonates", "chrysoberyls", "cordierites", "corindons", "cornes-ecailles", "diamants", "feldspathoides", "feldspaths", "fluorites", "grenats", "ivoires", "jades", "metalliques", "opales", "perles", "phosphates", "pyroxenes", "quartz", "scapolites", "serpentines-talc", "simulants", "spinelles", "sulfates", "tourmalines", "verres", "zoisites")          # the families shown on the site: every family with two species or more, and the scapolites
 
     def test_data_files_are_consistent_and_translated(self):
         import json as _json
@@ -1531,7 +1532,7 @@ class TestFamilies(SiteTestCase):
             self.assertIn('href="/encyclopedie/classes/' + cid + '"', text, cid)
         for fid in self.SHOWN:
             self.assertIn('href="/encyclopedie/familles/' + fid + '"', text, fid)
-        self.assertNotIn('href="/encyclopedie/familles/quartz"', text)
+        self.assertNotIn('href="/encyclopedie/familles/olivines"', text)               # a family of one species stays hidden
 
     def test_class_and_family_pages(self):
         c = Client()
@@ -1541,7 +1542,7 @@ class TestFamilies(SiteTestCase):
             r = c.get(path)
             self.assertEqual(r.status, 200, path)
             self.assertIn(word, r.text, path)
-        for path in ("/encyclopedie/classes/nope", "/encyclopedie/familles/nope", "/encyclopedie/familles/quartz"):
+        for path in ("/encyclopedie/classes/nope", "/encyclopedie/familles/nope", "/encyclopedie/familles/olivines"):
             self.assertEqual(c.get(path).status, 404, path)
 
     def test_a_page_lists_its_species_and_common_properties(self):
@@ -1563,7 +1564,7 @@ class TestFamilies(SiteTestCase):
         topaz = c.get("/encyclopedie/topaze").text
         self.assertIn('href="/encyclopedie/classes/silicates"', topaz)
         self.assertNotIn("Famille :", topaz)                  # no family page for it
-        self.assertNotIn('href="/encyclopedie/familles/quartz"', c.get("/encyclopedie/quartz").text)   # the quartz family is not shown yet
+        self.assertIn('href="/encyclopedie/familles/quartz"', c.get("/encyclopedie/quartz").text)         # the quartz family is shown now
 
     def test_garnet_diagram(self):
         fr = Client().get("/encyclopedie/familles/grenats").text
@@ -1652,7 +1653,8 @@ class TestFamilies(SiteTestCase):
             self.assertIn("<loc>http://127.0.0.1:8000/encyclopedie/familles</loc>", sm)
             self.assertIn("/encyclopedie/classes/silicates</loc>", sm)
             self.assertIn("/encyclopedie/familles/grenats</loc>", sm)
-            self.assertNotIn("/encyclopedie/familles/quartz</loc>", sm)
+            self.assertIn("/encyclopedie/familles/quartz</loc>", sm)
+            self.assertNotIn("/encyclopedie/familles/olivines</loc>", sm)
             self.assertEqual(Client().get("/encyclopedie/classes/silicates").headers.get("x-robots-tag"), "index, follow")
         finally:
             config.INDEXABLE = False
@@ -1724,7 +1726,7 @@ class TestNewSpecies(SiteTestCase):
         from new_species_spec import SPECIES
         c = Client()
         words = re.compile(r"\b(?:les|des|une|est|avec|selon|très|pierre|couleur|toujours)\b")
-        self.assertEqual(len(SPECIES), 30)                                              # 22 + the low (metamict) zircon + the green beryl + the six of the site
+        self.assertEqual(len(SPECIES), 42)                                              # 22 + the low (metamict) zircon + the green beryl + the six of the site
         for sp in SPECIES:
             slug = sp["id"].lower().replace("_", "-")
             fr = c.get("/encyclopedie/" + slug)
@@ -1750,8 +1752,8 @@ class TestNewSpecies(SiteTestCase):
         self.assertNotIn("Jaspe", classes["silicates"])
         text = Client().get("/encyclopedie/classes/silicates").text
         self.assertIn('href="/encyclopedie/larimar"', text)
-        # the families these species belong to exist but stay hidden, like the other ones
-        self.assertEqual(Client().get("/encyclopedie/familles/tourmalines").status, 404)
+        # the families these species belong to are shown
+        self.assertEqual(Client().get("/encyclopedie/familles/tourmalines").status, 200)
 
     def test_zultanite_changes_color_and_benitoite_glows(self):
         c = Client()
@@ -2019,6 +2021,171 @@ class TestChelsea(SiteTestCase):
         self.assertTrue(dot("corindon-rubis").startswith("#F7"))
         self.assertNotIn("Filtre Chelsea</h3><p><span", c.get("/encyclopedie/hematite").text)    # opaque: no dot
 
+class TestRefractiveRanges(SiteTestCase):
+    """Each species page shows the lowest and the highest refractive index it can show, not one value (user, 2026-11-20)."""
+
+    def test_every_species_has_a_range_that_holds_its_index(self):
+        import json as _json
+        from app import catalog
+        ranges = _json.loads((SITE / "data" / "refractive_ranges.json").read_text(encoding="utf-8"))
+        for s in catalog.data()["species"]:
+            self.assertIn(s["id"], ranges, s["id"])
+            low, high = ranges[s["id"]]
+            self.assertLessEqual(low, high, s["id"])
+            self.assertTrue(low - 0.0005 <= s["refractiveIndex"] <= high + 0.0005, s["id"])      # the index of the game lies inside
+            self.assertEqual((s["ri_min"], s["ri_max"]), (low, high))
+
+    def test_the_page_shows_min_and_max(self):
+        c = Client()
+        self.assertIn("1,567 – 1,590", c.get("/encyclopedie/aigue-marine").text)
+        self.assertIn("uniaxe : nω et nε", c.get("/encyclopedie/aigue-marine").text)
+        self.assertIn("nα à nγ", c.get("/encyclopedie/tanzanite").text.replace("de nα à nγ", "nα à nγ"))
+        self.assertIn("1.567 – 1.590", c.get("/en/encyclopedie/aigue-marine").text)               # decimal point in English
+        self.assertIn("2,417 – 2,419", c.get("/encyclopedie/diamant").text)                       # isotropic: a narrow range
+        self.assertIn("IR 1,567 – 1,590", c.get("/encyclopedie?q=aigue").text)                   # the lists too
+
+    def test_birefringence_range_and_transparency_dots(self):
+        """The birefringence is shown as lowest - highest, and the transparency as round dots (user, 2026-11-20)."""
+        import json as _json
+        import re as _re
+        from app import catalog, views
+        ranges = _json.loads((SITE / "data" / "birefringence_ranges.json").read_text(encoding="utf-8"))
+        for s in catalog.data()["species"]:
+            low, high = ranges[s["id"]]
+            self.assertLessEqual(low, high, s["id"])
+            self.assertTrue(low - 0.0005 <= (s.get("birefringence") or 0) <= high + 0.0005, s["id"])
+        c = Client()
+        self.assertIn("0,004 – 0,009", c.get("/encyclopedie/aigue-marine").text)
+        self.assertIn("0.004 – 0.009", c.get("/en/encyclopedie/aigue-marine").text)
+        self.assertEqual(views.transparency_levels("Transparent"), [0])
+        self.assertEqual(views.transparency_levels("Translucide"), [1])
+        self.assertEqual(views.transparency_levels("Opaque"), [2])
+        self.assertEqual(views.transparency_levels("Transparent à translucide"), [0, 1])
+        self.assertEqual(views.transparency_levels("Translucide à opaque"), [1, 2])
+        self.assertEqual(views.transparency_levels("Opaque à translucide"), [1, 2])
+        def dots(slug, lang=""):
+            text = c.get(lang + "/encyclopedie/" + slug).text
+            cell = text.split("Transparence")[1].split("</tr>")[0] if lang == "" else text.split("Transparency")[1].split("</tr>")[0]
+            return _re.findall(r'class="tdot (t\d)"', cell)
+        self.assertEqual(dots("emeraude"), ["t0"])                                           # transparent: one white dot
+        self.assertEqual(dots("agate"), ["t1"])                                              # translucent: one gray dot
+        self.assertEqual(dots("hematite"), ["t2"])                                           # opaque: one black dot
+        self.assertEqual(dots("fluorite"), ["t0", "t1"])                                     # transparent to translucent: white and gray
+        self.assertEqual(dots("emeraude", "/en"), ["t0"])
+
+    def test_identification_by_index_uses_the_range(self):
+        # 1.585 is not the index of the game for aquamarine (1.577) but it is inside its range 1.567 - 1.590
+        from app import catalog
+        found = [s["id"] for s, _, _ in catalog.identify({"ri": "1.585", "ri_tol": "0.001"})]
+        self.assertIn("Aigue_Marine", found)
+        self.assertNotIn("Diamant", found)
+
+class TestSearchByData(SiteTestCase):
+    """The search by data takes ranges, the colours a species can have, and the transparency levels (user, 2026-11-20)."""
+
+    def ids(self, **q):
+        from app import catalog
+        return {s["id"] for s, _, _ in catalog.identify({k: str(v) for k, v in q.items()})}
+
+    def test_refractive_index_range(self):
+        found = self.ids(ri_from="1.58", ri_to="1.60")
+        self.assertIn("Aigue_Marine", found)                # 1.567 - 1.590 overlaps 1.58 - 1.60
+        self.assertNotIn("Diamant", found)
+        self.assertNotIn("Fluorite", found)
+        self.assertIn("Diamant", self.ids(ri_from="2.4"))                      # only a lower bound
+
+    def test_density_birefringence_and_hardness_ranges(self):
+        self.assertIn("Scheelite", self.ids(density_from="5.9", density_to="6.2"))
+        self.assertNotIn("Quartz", self.ids(density_from="5.9"))
+        self.assertIn("Rutile_Synthetique", self.ids(birefringence_from="0.25"))
+        self.assertNotIn("Diamant", self.ids(birefringence_from="0.01"))
+        hard = self.ids(hardness_from="9")
+        self.assertIn("Saphir", hard)
+        self.assertNotIn("Quartz", hard)
+        self.assertIn("Beryl_Vert", self.ids(hardness_from="7.8", hardness_to="8"))       # its range is 7.5 - 8: it overlaps
+
+    def test_transparency_boxes(self):
+        opaque = self.ids(tr2="1")
+        self.assertIn("Hematite", opaque)
+        self.assertIn("Jaspe", opaque)
+        self.assertNotIn("Emeraude", opaque)
+        self.assertIn("Agate", self.ids(tr1="1"))
+        both = self.ids(tr0="1", tr2="1")                                          # white or black ticked: transparent or opaque stones
+        self.assertIn("Emeraude", both)
+        self.assertIn("Hematite", both)
+        self.assertNotIn("Agate", both)
+        self.assertIn("Fluorite", self.ids(tr1="1"))                                # transparent to translucent: it has the gray level too
+
+    def test_colour_a_species_can_have(self):
+        import json as _json
+        from app import catalog
+        blue = self.ids(color="blue")
+        pal = _json.loads((SITE / "data" / "palettes.json").read_text(encoding="utf-8"))
+        for sid, entry in pal.items():
+            if isinstance(entry, dict) and any(isinstance(c, list) and len(c) > 6 and "bleu" in catalog.fold(c[6]) for c in entry.get("natural", [])) and sid in {s["id"] for s in catalog.data()["species"]}:
+                self.assertIn(sid, blue, sid)                                           # every species with a blue in its chart is found
+
+    def test_comparator_works_with_ranges(self):
+        c = Client()
+        text = c.get("/comparer?a=aigue-marine&b=fluorite").text
+        self.assertIn("1,567 – 1,590", text)                                        # the ranges are in the table
+        self.assertIn("1,433 – 1,435", text)
+        self.assertIn("leur indice de réfraction est différent", text)              # ranges far apart: the refractometer tells them apart
+        same = c.get("/comparer?a=aigue-marine&b=beryl-vert").text
+        self.assertNotIn("leur indice de réfraction est différent", same)            # overlapping ranges: it does not
+        self.assertNotIn("leur densité est différente", same)
+        self.assertIn("Saphir bleu", c.get("/encyclopedie/saphir").text)              # several pleochroism values: one line per variety
+        self.assertIn("pleo-list", c.get("/encyclopedie/saphir").text)
+        self.assertNotIn("pleo-list", c.get("/encyclopedie/emeraude").text)
+
+    def test_the_form_has_ranges_and_dots(self):
+        text = Client().get("/identification").text
+        for name in ("ri_from", "ri_to", "density_from", "birefringence_to", "tr0", "tr1", "tr2"):
+            self.assertIn('name="%s"' % name, text)
+        self.assertIn('class="tdot t2"', text)
+        result = Client().get("/identification?tr2=1").text
+        self.assertIn("class=\"tdots\"", result)
+
+class TestShapeAndCutMenus(SiteTestCase):
+    """Two drop-down menus for the shape and the cut style, with a low, a medium and a high cabochon (user, 2026-11-20)."""
+
+    def test_two_menus_instead_of_buttons(self):
+        c = Client()
+        text = c.get("/encyclopedie/aigue-marine").text
+        self.assertEqual(text.count('<select name="shape"'), 1)
+        self.assertEqual(text.count('<select name="cut"'), 1)
+        self.assertNotIn('<button type="button" data-shape=', text)                         # the wall of buttons is gone
+        self.assertNotIn('<button type="button" data-cut=', text)
+        for key in ("cabochon-bas", "cabochon-moyen", "cabochon-haut"):
+            self.assertIn('value="%s"' % key, text)
+        self.assertIn("Cabochon bas", text)
+        self.assertIn("Cabochon haut", text)
+        for name in ("Peruzzi", "Quadrillion", "Barion", "Flanders", "Lisbonne", "Brésilienne", "Coussin ancien"):   # the square cuts of the chart
+            self.assertIn(name, text)
+        self.assertIn('data-near="', text)                                                    # the ones that are not modelled say which cut draws them
+        en = c.get("/en/encyclopedie/aigue-marine").text
+        self.assertIn("Low cabochon", en)
+        self.assertIn("Antique cushion", en)
+
+    def test_a_cabochon_species_starts_on_the_medium_cabochon(self):
+        text = Client().get("/encyclopedie/jaspe").text
+        self.assertIn('<option value="cabochon-moyen" data-mesh="cabochon" data-height="1" selected>', text)
+        self.assertIn('data-cut="cabochon-moyen"', text)
+
+    def test_cut_styles_are_consistent(self):
+        from app import cut_styles
+        keys = [k for k, *_ in cut_styles.STYLES]
+        self.assertEqual(len(keys), len(set(keys)))
+        heights = {k: h for k, _, _, h, _, _ in cut_styles.STYLES if k.startswith("cabochon")}
+        self.assertLess(heights["cabochon-bas"], heights["cabochon-moyen"])
+        self.assertLess(heights["cabochon-moyen"], heights["cabochon-haut"])
+        import json as _json
+        index = _json.loads((SITE / "static" / "data" / "meshes" / "index.json").read_text(encoding="utf-8"))
+        for key, group, mesh, _, shapes, near in cut_styles.STYLES:
+            self.assertIn(mesh, index["styles"], key)                                          # drawn with a mesh that exists
+            if near:
+                self.assertEqual(mesh, near, key)
+
 class TestCode(unittest.TestCase):
     def test_all_translation_keys_exist(self):
         table = i18n.load("fr")
@@ -2057,6 +2224,40 @@ class TestCode(unittest.TestCase):
                     if pattern.search(node.value):
                         offenders.append((os.path.basename(f), node.value[:40]))
         self.assertEqual(offenders, [])
+
+
+class TestToughnessAndStability(SiteTestCase):
+    """A toughness line and a stability line (weak / medium / strong / very strong) with a sentence on what the stone fears (user, 2026-11-20)."""
+
+    def test_every_species_has_both_levels_and_a_sentence(self):
+        levels = ("faible", "moyenne", "forte", "tres-forte")
+        care = json.loads((config.DATA_DIR / "care.json").read_text(encoding="utf-8"))
+        ids = {s["id"] for s in catalog.data()["species"]}
+        self.assertEqual(sorted(ids - set(care)), [], "species without toughness / stability")
+        self.assertEqual(sorted(set(care) - ids), [], "entries of unknown species")
+        for sid, c in care.items():
+            self.assertIn(c["toughness"], levels, sid)
+            self.assertIn(c["stability"], levels, sid)
+            self.assertTrue(c["fr"].strip() and c["en"].strip(), sid)
+
+    def test_the_lines_are_on_the_species_page_in_both_languages(self):
+        c = Client()
+        fr = c.get("/encyclopedie/emeraude").text
+        self.assertIn("Ténacité", fr)
+        self.assertIn("Stabilité", fr)
+        self.assertIn("ultrasons", fr)                                                 # the sentence on what the emerald fears
+        self.assertEqual(fr.count('class="care care'), 2)
+        en = c.get("/en/encyclopedie/emeraude").text
+        self.assertIn("Toughness", en)
+        self.assertIn("ultrasonic", en)
+
+    def test_known_values(self):
+        by_id = {s["id"]: s["care"] for s in catalog.data()["species"]}
+        self.assertEqual(by_id["Jade_Nephrite"]["toughness"], "tres-forte")           # jade is exceptionally tough
+        self.assertEqual(by_id["Diamant"]["stability"], "tres-forte")
+        self.assertEqual(by_id["Opale_Noble"]["stability"], "faible")
+        self.assertEqual(by_id["Kunzite"]["toughness"], "faible")                      # perfect cleavage
+        self.assertEqual(by_id["Perle"]["stability"], "faible")                        # acids, perfumes
 
 
 if __name__ == "__main__":

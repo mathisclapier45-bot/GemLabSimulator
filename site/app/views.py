@@ -71,6 +71,73 @@ def fmt_num(value, digits=3):
     return text.replace(".", ",") if catalog.current_lang() == "fr" else text   # decimal comma in French, point in English
 
 
+def fmt_ri(species):
+    """The refractive index of a species as "lowest - highest" (the readings of the refractometer: both rays of a uniaxial stone, the lowest and the highest of a biaxial one,
+    and the variation between specimens); one value when both are the same."""
+    low, high = species.get("ri_min"), species.get("ri_max")
+    if low is None or high is None:
+        return fmt_num(species.get("refractiveIndex"), 3)
+    if high <= 0:
+        return "—"                                      # an opaque mineral has no index to read
+
+    def fixed(v):                                       # always three decimals, so that both ends line up (1,567 - 1,590)
+        text = "{:.3f}".format(v)
+        return text.replace(".", ",") if catalog.current_lang() == "fr" else text
+    if abs(high - low) < 0.0005:
+        return fixed(low)
+    return "{} – {}".format(fixed(low), fixed(high))
+
+
+def fmt_bir(species):
+    """The birefringence of a species as "lowest - highest" (three decimals); empty when it has none (isotropic, opaque)."""
+    low, high = species.get("bir_min"), species.get("bir_max")
+    if low is None or high is None:
+        low = high = species.get("birefringence") or 0.0
+    if high <= 0:
+        return ""
+
+    def fixed(v):
+        text = "{:.3f}".format(v)
+        return text.replace(".", ",") if catalog.current_lang() == "fr" else text
+    return fixed(low) if abs(high - low) < 0.0005 else "{} – {}".format(fixed(low), fixed(high))
+
+
+def _span(low, high, fixed_digits=None, strip_digits=1):
+    """"lowest - highest" with a decimal comma in French; one value when both are the same."""
+    def one(v):
+        text = ("{:." + str(fixed_digits) + "f}").format(v) if fixed_digits is not None else ("{:." + str(strip_digits) + "f}").format(v).rstrip("0").rstrip(".")
+        return text.replace(".", ",") if catalog.current_lang() == "fr" else text
+    return one(low) if abs(high - low) < 0.0005 else "{} – {}".format(one(low), one(high))
+
+
+def fmt_density(species):
+    """The density of a species as "lowest - highest" (two decimals)."""
+    low, high = species.get("density_min"), species.get("density_max")
+    if low is None or high is None:
+        return fmt_num(species.get("density"), 2)
+    return _span(low, high, fixed_digits=2)
+
+
+def fmt_hardness(species):
+    """The Mohs hardness of a species as "lowest - highest"."""
+    low, high = species.get("hardness_min"), species.get("hardness_max")
+    if low is None or high is None:
+        return fmt_num(species.get("hardness"), 1)
+    return _span(low, high, strip_digits=1)
+
+
+def transparency_levels(french_text):
+    """The levels a species can have (see catalog.transparency_levels)."""
+    return catalog.transparency_levels(french_text)
+
+
+def transparency_cell(species, label):
+    """Round dots for the transparency of a species: white for transparent, gray for semi-transparent, black for opaque, several when the species can be several."""
+    levels = transparency_levels(catalog.fr(species, "transparency"))
+    dots = "".join('<span class="tdot t{}"></span>'.format(i) for i in levels)
+    return '<span class="tdots" aria-hidden="true">{}</span> {}'.format(dots, html.escape(label or ""))
+
+
 def gem_svg(color, facet, size=48, style=None):
     """A small gem drawn from two colours, in the shape and the cut of the species when `style` (shape, cut, habit) is given (see gem_icons.py)."""
     return gem_icons.draw(color, facet, size, style)

@@ -13,13 +13,20 @@
   var view2 = stoneBox2 && window.GemView3D ? window.GemView3D.create(stoneBox2) : null;
   var allowed = null;       // from the exported cuts: which sizes each shape accepts
   if (view) view.index().then(function (ix) { allowed = ix.allowed; fixCut(); refresh(); });
-  function cutAllowed(cut, shape) {
-    if (cut === "cabochon") return true;
-    if (L.phys.cabonly) return false;
-    if (cut === "mixte" || !allowed) return true;
-    return (allowed[cut] || []).indexOf(SLUG[shape]) >= 0;
+  // the cut menu: each option says which mesh draws it, the height of a cabochon, the shapes it belongs to, and (when its geometry is not modelled) the cut it is drawn with
+  function meta(cut) {
+    var o = root.querySelector('select[data-kind="cut"] option[value="' + cut + '"]');
+    if (!o) return { mesh: "brillant", height: 1, shapes: [], near: "" };
+    return { mesh: o.getAttribute("data-mesh"), height: parseFloat(o.getAttribute("data-height")) || 1, shapes: (o.getAttribute("data-shapes") || "").split(",").filter(Boolean), near: o.getAttribute("data-near") || "" };
   }
-  function fixCut() { if (!cutAllowed(state.cut, state.shape)) state.cut = "cabochon"; }
+  function cutAllowed(cut, shape) {
+    var m = meta(cut);
+    if (L.phys.cabonly) return m.mesh === "cabochon";
+    if (m.shapes.length && m.shapes.indexOf(shape) < 0) return false;
+    if (m.mesh === "cabochon" || m.mesh === "mixte" || !allowed) return true;
+    return (allowed[m.mesh] || []).indexOf(SLUG[shape]) >= 0;
+  }
+  function fixCut() { if (!cutAllowed(state.cut, state.shape)) state.cut = "cabochon-moyen"; }
   var NS = "http://www.w3.org/2000/svg";
 
   // ---------- colour maths
@@ -70,10 +77,12 @@
     var body = hsv(c.h, c.s, c.b), facet = facetOf(c);
     if (view) {
       var ph = L.phys;
-      view.set({ shape: SLUG[state.shape], style: state.cut, body: body, ior: ph.ior, disp: ph.disp, depth: ph.depth, milky: ph.milky, dims: ph.dims });
+      var mt = meta(state.cut);
+      view.set({ shape: SLUG[state.shape], style: mt.mesh, height: mt.height, body: body, ior: ph.ior, disp: ph.disp, depth: ph.depth, milky: ph.milky, dims: ph.dims });
       return;
     }
-    var cutKind = state.cut === "cabochon" ? "cabochon" : (state.cut === "a-degres" || state.cut === "ascher" ? "step" : (state.cut === "mixte" ? "mixed" : "brilliant"));
+    var ms = meta(state.cut).mesh;
+    var cutKind = ms === "cabochon" ? "cabochon" : (ms === "a-degres" || ms === "ascher" ? "step" : (ms === "mixte" ? "mixed" : "brilliant"));
     var make = OUTLINES[state.shape] || OUTLINES.Ovale, out = make(), cen = centroid(out), n = out.length;
     var svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", "0 0 200 200"); svg.setAttribute("class", "gemview");
     var defs = el("defs", {}, svg);
@@ -123,12 +132,14 @@
   }
   function mark() {
     root.querySelectorAll(".sw").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-v") === state.variant && +b.getAttribute("data-i") === state.index); });
-    root.querySelectorAll("[data-shape]").forEach(function (b) { if (b.tagName === "BUTTON") b.classList.toggle("on", b.getAttribute("data-shape") === state.shape); });
-    root.querySelectorAll("[data-cut]").forEach(function (b) {
-      if (b.tagName !== "BUTTON") return;
-      b.classList.toggle("on", b.getAttribute("data-cut") === state.cut);
-      b.disabled = !cutAllowed(b.getAttribute("data-cut"), state.shape);
-    });
+    var shapeSel = root.querySelector('select[data-kind="shape"]'), cutSel = root.querySelector('select[data-kind="cut"]');
+    if (shapeSel) shapeSel.value = state.shape;
+    if (cutSel) {
+      Array.prototype.forEach.call(cutSel.options, function (o) { o.disabled = !cutAllowed(o.value, state.shape); });      // a cut that does not exist for this shape is greyed out
+      cutSel.value = state.cut;
+    }
+    var note = root.querySelector(".approx"), near = meta(state.cut).near;
+    if (note) { note.hidden = !near; note.textContent = near ? L.approx.replace("{near}", near) : ""; }
   }
   function refresh() { draw(); describe(); mark(); }
 
@@ -136,13 +147,16 @@
   root.addEventListener("click", function (e) {
     var b = e.target.closest("button"); if (!b || !root.contains(b)) return;
     if (b.classList.contains("sw")) { state.variant = b.getAttribute("data-v"); state.index = +b.getAttribute("data-i"); }
-    else if (b.hasAttribute("data-shape")) { state.shape = b.getAttribute("data-shape"); fixCut(); }
-    else if (b.hasAttribute("data-cut")) state.cut = b.getAttribute("data-cut");
     else if (b.hasAttribute("data-variant")) {
       state.variant = b.getAttribute("data-variant"); state.index = best(state.variant);
       root.querySelectorAll(".grid-wrap").forEach(function (g) { g.hidden = g.getAttribute("data-variant") !== state.variant; });
       root.querySelectorAll(".seg [data-variant]").forEach(function (x) { x.classList.toggle("on", x === b); });
     } else return;
+    refresh();
+  });
+  root.addEventListener("change", function (e) {
+    var sel = e.target.closest("select[data-kind]"); if (!sel || !root.contains(sel)) return;
+    if (sel.getAttribute("data-kind") === "shape") { state.shape = sel.value; fixCut(); } else state.cut = sel.value;
     refresh();
   });
   state.index = best("natural");

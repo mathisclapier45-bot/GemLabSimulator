@@ -3253,6 +3253,1296 @@
    "roughOnly": 0,
    "isTunnelExclusive": false,
    "tunnelMinPrice": 0
+  },
+  {
+   "id": "Odontolite",
+   "displayName": "Odontolite",
+   "description": "Une dent ou un os fossile, d'ivoire de mammouth ou de mastodonte, coloré en bleu par la vivianite (un phosphate de fer) : la « turquoise osseuse ». Elle a longtemps servi de fausse turquoise, mais on y reconnaît la structure de l'ivoire.",
+   "iconColor": "#52A8B2",
+   "iconFacetColor": "#9EDBE0",
+   "refractiveIndex": 1.61,
+   "density": 3.1,
+   "hardness": 5.0,
+   "lengthMm": 10.0,
+   "widthMm": 8.0,
+   "depthMm": 4.0,
+   "weightCarats": 4.0,
+   "luster": "Cireux à terne",
+   "color": "Bleu à bleu-vert, bleu turquoise",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide à opaque",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.04,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Structure de l'ivoire fossile : fines lignes croisées (lignes de Schreger) ou fibres de l'os, taches de couleur inégale ; contient de la calcite, donc réagit à l'acide.",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Non applicable (matériau opaque).",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 10,
+   "origins": [
+    {
+     "name": "France (Gers, Simorre)",
+     "rarityWeight": 100,
+     "valueMultiplier": 1.0,
+     "inclusionOverride": "Gisement historique de Simorre, qui a donné la « turquoise de la nouvelle roche »."
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    165,
+    205,
+    0.3,
+    0.75,
+    0.45,
+    0.85
+   ],
+   "colorModes": [
+    [
+     0.45,
+     175,
+     195,
+     0.4,
+     0.7,
+     0.55,
+     0.8
+    ],
+    [
+     0.3,
+     165,
+     185,
+     0.3,
+     0.55,
+     0.6,
+     0.85
+    ],
+    [
+     0.25,
+     190,
+     205,
+     0.4,
+     0.7,
+     0.45,
+     0.7
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Bezoard",
+   "displayName": "Bézoard",
+   "description": "Une concrétion qui se forme dans l'estomac des ruminants (chèvres, lamas…) autour d'un noyau de poils, de fibres ou de pierre. Brune à vert olive, en couches, elle passait autrefois pour un contrepoison et se garde comme curiosité.",
+   "iconColor": "#8C7340",
+   "iconFacetColor": "#C7AD73",
+   "refractiveIndex": 1.54,
+   "density": 1.5,
+   "hardness": 2.5,
+   "lengthMm": 14.0,
+   "widthMm": 11.0,
+   "depthMm": 8.0,
+   "weightCarats": 12.0,
+   "luster": "Résineux à terne",
+   "color": "Brun, vert olive ou jaune-brun, en couches",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Opaque",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Opaque : aucune lecture optique en lumière transmise.",
+   "opticalCharacterClassName": "Opaque",
+   "opticalCharacterClass": 3,
+   "birefringence": 0.0,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Couches concentriques autour d'un noyau (poils, fibres végétales, petit caillou) ; la cassure montre les lamelles, parfois des fibres.",
+   "interferenceFigure": "Aucune figure d'interférence exploitable (pierre opaque).",
+   "chelseaFilterReaction": "Non applicable (matériau opaque).",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 8,
+   "origins": [
+    {
+     "name": "Iran",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Inde",
+     "rarityWeight": 35,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Pérou",
+     "rarityWeight": 25,
+     "valueMultiplier": 0.9
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    25,
+    85,
+    0.2,
+    0.65,
+    0.25,
+    0.65
+   ],
+   "colorModes": [
+    [
+     0.4,
+     30,
+     50,
+     0.3,
+     0.6,
+     0.3,
+     0.55
+    ],
+    [
+     0.3,
+     55,
+     85,
+     0.25,
+     0.55,
+     0.3,
+     0.55
+    ],
+    [
+     0.2,
+     40,
+     60,
+     0.35,
+     0.65,
+     0.45,
+     0.65
+    ],
+    [
+     0.1,
+     25,
+     40,
+     0.3,
+     0.55,
+     0.25,
+     0.4
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Nacre",
+   "displayName": "Nacre",
+   "description": "La couche intérieure irisée de la coquille de certains mollusques : de fines lamelles d'aragonite collées par une matière organique (la conchyoline). C'est la même matière que la perle fine, mais en plaque ; elle sert à la marqueterie, aux boutons et aux bijoux.",
+   "iconColor": "#EBE6E0",
+   "iconFacetColor": "#FAF7FC",
+   "refractiveIndex": 1.6,
+   "density": 2.7,
+   "hardness": 3.5,
+   "lengthMm": 12.0,
+   "widthMm": 9.0,
+   "depthMm": 3.0,
+   "weightCarats": 3.0,
+   "luster": "Nacré",
+   "color": "Blanc, crème, rosé, gris à noir, à reflets irisés",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide à opaque",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Variable : nulle à bleu-blanc faible.",
+   "fluorescenceShortWave": "Variable : nulle à bleu-blanc faible.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.155,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Lamelles d'aragonite superposées qui donnent l'irisation ; surface finement striée, sans inclusion visible ; la couche est mince.",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Non applicable (matériau opaque).",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 6,
+   "origins": [
+    {
+     "name": "Indonésie",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Australie",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "Philippines",
+     "rarityWeight": 20,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Polynésie française",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.2
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    0,
+    60,
+    0.0,
+    0.25,
+    0.55,
+    1.0
+   ],
+   "colorModes": [
+    [
+     0.4,
+     30,
+     60,
+     0.0,
+     0.06,
+     0.88,
+     1.0
+    ],
+    [
+     0.25,
+     38,
+     55,
+     0.06,
+     0.16,
+     0.88,
+     1.0
+    ],
+    [
+     0.15,
+     340,
+     360,
+     0.2,
+     0.3,
+     0.88,
+     1.0
+    ],
+    [
+     0.2,
+     30,
+     60,
+     0.0,
+     0.08,
+     0.2,
+     0.55
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Vulcanite",
+   "displayName": "Vulcanite",
+   "description": "Un telluride de cuivre rare (CuTe), d'un jaune bronze métallique, opaque, très tendre (dureté 1 à 2) et sectile : un couteau en détache des copeaux. C'est un minéral de collection, pas une gemme. Il a été décrit en 1961 dans le district de Vulcan, au Colorado, d'où son nom. À ne pas confondre avec l'ébonite, qu'on appelle aussi « vulcanite ».",
+   "iconColor": "#C79E52",
+   "iconFacetColor": "#EBCC85",
+   "refractiveIndex": 0.0,
+   "density": 7.1,
+   "hardness": 1.5,
+   "lengthMm": 6.0,
+   "widthMm": 5.0,
+   "depthMm": 3.0,
+   "weightCarats": 1.0,
+   "luster": "Métallique",
+   "color": "Bronze clair à jaune bronze",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Opaque",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Opaque : aucune lecture en lumière transmise ; en lumière réfléchie, très forte bi-réflectance (du jaune vif au gris bleuté).",
+   "opticalCharacterClassName": "Opaque",
+   "opticalCharacterClass": 3,
+   "birefringence": 0.0,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Agrégats lamellaires ou grenus, cristaux souvent maclés ; cassure sectile (copeaux courbes) ; associée au tellure natif, à la rickardite, à la pétzite et à la sylvanite.",
+   "interferenceFigure": "Aucune figure d'interférence exploitable (pierre opaque).",
+   "chelseaFilterReaction": "Non applicable (minéral opaque).",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 30,
+   "origins": [
+    {
+     "name": "États-Unis (Colorado, district de Vulcan)",
+     "rarityWeight": 100,
+     "valueMultiplier": 1.0,
+     "inclusionOverride": "Gisement type : la mine Mammoth Good Hope, décrite en 1961."
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    35,
+    55,
+    0.25,
+    0.65,
+    0.55,
+    0.9
+   ],
+   "colorModes": [
+    [
+     0.55,
+     40,
+     50,
+     0.35,
+     0.6,
+     0.62,
+     0.85
+    ],
+    [
+     0.3,
+     35,
+     45,
+     0.25,
+     0.45,
+     0.6,
+     0.8
+    ],
+    [
+     0.15,
+     45,
+     55,
+     0.4,
+     0.65,
+     0.55,
+     0.75
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Perle_Conque",
+   "displayName": "Perle de conque",
+   "description": "Une perle sans nacre, formée dans le grand lambi (Strombus gigas) des Caraïbes. Rose à orangée, porcelanée, elle montre à la surface un dessin de « flammes » ondulées. Très rare, elle est recherchée pour sa couleur.",
+   "iconColor": "#F2A694",
+   "iconFacetColor": "#FCD4C7",
+   "refractiveIndex": 1.55,
+   "density": 2.85,
+   "hardness": 3.75,
+   "lengthMm": 9.0,
+   "widthMm": 7.0,
+   "depthMm": 6.0,
+   "weightCarats": 3.0,
+   "luster": "Porcelané",
+   "color": "Rose à rose orangé, parfois brun ou blanc, à « flammes »",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide à opaque",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.155,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Structure en flammes : des lignes ondulées claires qui chatoient et bougent quand on tourne la perle ; pas de nacre ni d'irisation.",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Non applicable (matériau opaque).",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 200,
+   "origins": [
+    {
+     "name": "Bahamas",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Floride (États-Unis)",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Cuba",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    340,
+    40,
+    0.1,
+    0.6,
+    0.6,
+    1.0
+   ],
+   "colorModes": [
+    [
+     0.4,
+     350,
+     15,
+     0.25,
+     0.5,
+     0.8,
+     0.97
+    ],
+    [
+     0.25,
+     10,
+     30,
+     0.3,
+     0.6,
+     0.78,
+     0.95
+    ],
+    [
+     0.2,
+     0,
+     360,
+     0.0,
+     0.06,
+     0.88,
+     1.0
+    ],
+    [
+     0.15,
+     25,
+     40,
+     0.25,
+     0.55,
+     0.5,
+     0.75
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Marbre",
+   "displayName": "Marbre",
+   "description": "Un calcaire recristallisé par la chaleur et la pression : un agrégat de petits cristaux de calcite. Blanc, crème, gris, rose, vert ou noir, souvent veiné, il se sculpte et se polit ; il est tendre et réagit à l'acide.",
+   "iconColor": "#EDEBE6",
+   "iconFacetColor": "#FAFAF7",
+   "refractiveIndex": 1.6,
+   "density": 2.7,
+   "hardness": 3.0,
+   "lengthMm": 14.0,
+   "widthMm": 10.0,
+   "depthMm": 5.0,
+   "weightCarats": 6.0,
+   "luster": "Vitreux à mat",
+   "color": "Blanc, crème, gris, rose, vert ou noir, souvent veiné",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide à opaque",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Variable : nulle, ou rose à rouge faible (manganèse), ou blanc bleuté faible.",
+   "fluorescenceShortWave": "Variable : nulle, ou rose à rouge faible (manganèse), ou blanc bleuté faible.",
+   "opticalCharacter": "Agrégat de calcite : lecture diffuse, uniaxe négatif en lumière polarisée.",
+   "opticalCharacterClassName": "Uniaxe",
+   "opticalCharacterClass": 1,
+   "birefringence": 0.172,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Grain de calcite visible à la loupe, veines de couleur (oxydes de fer, graphite, argile) ; effervescence vive à l'acide dilué.",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 2,
+   "origins": [
+    {
+     "name": "Italie (Carrare)",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.2
+    },
+    {
+     "name": "Grèce",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "Turquie",
+     "rarityWeight": 20,
+     "valueMultiplier": 0.9
+    },
+    {
+     "name": "États-Unis (Vermont)",
+     "rarityWeight": 15,
+     "valueMultiplier": 0.9
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    0,
+    160,
+    0.0,
+    0.45,
+    0.1,
+    1.0
+   ],
+   "colorModes": [
+    [
+     0.4,
+     30,
+     60,
+     0.0,
+     0.06,
+     0.88,
+     1.0
+    ],
+    [
+     0.15,
+     38,
+     55,
+     0.06,
+     0.16,
+     0.85,
+     1.0
+    ],
+    [
+     0.15,
+     30,
+     60,
+     0.0,
+     0.08,
+     0.45,
+     0.7
+    ],
+    [
+     0.12,
+     345,
+     360,
+     0.2,
+     0.35,
+     0.85,
+     0.98
+    ],
+    [
+     0.12,
+     100,
+     150,
+     0.2,
+     0.45,
+     0.8,
+     0.97
+    ],
+    [
+     0.1,
+     30,
+     60,
+     0.0,
+     0.08,
+     0.1,
+     0.25
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Bakelite",
+   "displayName": "Bakélite",
+   "description": "Une résine de phénol et de formol, le premier plastique entièrement synthétique (1907). Jaune miel, rouge, brun ou noire, elle a imité l'ambre et le jais ; ses bijoux des années 1920-1940 sont recherchés.",
+   "iconColor": "#D98C26",
+   "iconFacetColor": "#F7CC73",
+   "refractiveIndex": 1.63,
+   "density": 1.3,
+   "hardness": 2.25,
+   "lengthMm": 14.0,
+   "widthMm": 10.0,
+   "depthMm": 5.0,
+   "weightCarats": 5.0,
+   "luster": "Résineux",
+   "color": "Jaune miel, rouge, brun, vert ou noir",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Variable : nulle, ou jaune verdâtre ou bleutée faible.",
+   "fluorescenceShortWave": "Variable : nulle, ou jaune verdâtre ou bleutée faible.",
+   "opticalCharacter": "Isotrope (monoréfringent) : matière sans structure cristalline, parfois anisotrope par contrainte.",
+   "opticalCharacterClassName": "Isotrope",
+   "opticalCharacterClass": 0,
+   "birefringence": 0.0,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Bulles rondes, traces de moulage et de tournage, couleur uniforme ; l'aiguille chaude dégage une odeur de phénol (carbolique) ; plus lourde que l'ambre (elle coule dans l'eau salée).",
+   "interferenceFigure": "Aucune figure d'interférence (matériau isotrope).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 4,
+   "origins": [
+    {
+     "name": "Fabrication industrielle",
+     "rarityWeight": 100,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    0,
+    40,
+    0.2,
+    0.95,
+    0.05,
+    0.9
+   ],
+   "colorModes": [
+    [
+     0.45,
+     28,
+     42,
+     0.6,
+     0.92,
+     0.55,
+     0.85
+    ],
+    [
+     0.15,
+     15,
+     30,
+     0.5,
+     0.8,
+     0.25,
+     0.5
+    ],
+    [
+     0.15,
+     20,
+     40,
+     0.0,
+     0.1,
+     0.05,
+     0.2
+    ],
+    [
+     0.15,
+     0,
+     15,
+     0.65,
+     0.95,
+     0.4,
+     0.65
+    ],
+    [
+     0.1,
+     20,
+     40,
+     0.4,
+     0.7,
+     0.6,
+     0.85
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Swiss_Lapis",
+   "displayName": "Swiss lapis",
+   "description": "Du jaspe teint en bleu pour imiter le lapis-lazuli. Malgré son nom, il vient d'Allemagne (Idar-Oberstein), pas de Suisse. Plus dur que le vrai lapis, il n'a ni la pyrite ni le blanc de la calcite.",
+   "iconColor": "#264CB2",
+   "iconFacetColor": "#668CE0",
+   "refractiveIndex": 1.54,
+   "density": 2.62,
+   "hardness": 6.75,
+   "lengthMm": 12.0,
+   "widthMm": 9.0,
+   "depthMm": 4.0,
+   "weightCarats": 5.0,
+   "luster": "Vitreux à terne",
+   "color": "Bleu uniforme (imitation du lapis-lazuli)",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Opaque",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Opaque : aucune lecture optique en lumière transmise.",
+   "opticalCharacterClassName": "Opaque",
+   "opticalCharacterClass": 3,
+   "birefringence": 0.0,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Grain très fin de quartz teint, sans pyrite ni calcite blanche (contrairement au lapis) ; la teinture se concentre dans les fissures et entre les grains.",
+   "interferenceFigure": "Aucune figure d'interférence exploitable (pierre opaque).",
+   "chelseaFilterReaction": "Non applicable (matériau opaque).",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 3,
+   "origins": [
+    {
+     "name": "Allemagne (Idar-Oberstein)",
+     "rarityWeight": 100,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    210,
+    240,
+    0.5,
+    0.9,
+    0.3,
+    0.7
+   ],
+   "colorModes": [
+    [
+     0.5,
+     218,
+     232,
+     0.6,
+     0.85,
+     0.35,
+     0.6
+    ],
+    [
+     0.3,
+     225,
+     238,
+     0.65,
+     0.9,
+     0.3,
+     0.5
+    ],
+    [
+     0.2,
+     212,
+     226,
+     0.5,
+     0.75,
+     0.45,
+     0.7
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Rutile_Synthetique",
+   "displayName": "Rutile synthétique",
+   "description": "De l'oxyde de titane fondu à la flamme (méthode Verneuil), vendu dans les années 1950 sous le nom de « Titania ». Incolore à jaune pâle (la couleur de base), jaune franc, orange, ou bleu foncé à noir après réduction, il a un feu énorme (sept fois celui du diamant) et une double réfraction si forte que les arêtes se dédoublent.",
+   "iconColor": "#F5EBB8",
+   "iconFacetColor": "#FCF7E0",
+   "refractiveIndex": 2.76,
+   "density": 4.26,
+   "hardness": 6.25,
+   "lengthMm": 6.0,
+   "widthMm": 6.0,
+   "depthMm": 3.8,
+   "weightCarats": 1.2,
+   "luster": "Adamantin",
+   "color": "Incolore à jaune pâle ; aussi jaune, orange, ou bleu foncé à noir (réduit)",
+   "shape": "Rond",
+   "cutStyle": "Brillant",
+   "transparency": "Transparent",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+   "opticalCharacterClassName": "Uniaxe",
+   "opticalCharacterClass": 1,
+   "birefringence": 0.287,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Bulles de gaz, stries de croissance courbes (méthode Verneuil) ; très forte double réfraction : l'arête des facettes arrière est dédoublée à la loupe.",
+   "interferenceFigure": "Figure d'interférence uniaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 3,
+   "origins": [
+    {
+     "name": "Fabrication industrielle",
+     "rarityWeight": 100,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    0,
+    240,
+    0.0,
+    0.85,
+    0.05,
+    1.0
+   ],
+   "colorModes": [
+    [
+     0.3,
+     45,
+     65,
+     0.0,
+     0.05,
+     0.92,
+     1.0
+    ],
+    [
+     0.3,
+     50,
+     65,
+     0.2,
+     0.5,
+     0.85,
+     0.98
+    ],
+    [
+     0.12,
+     48,
+     60,
+     0.5,
+     0.8,
+     0.8,
+     0.98
+    ],
+    [
+     0.1,
+     25,
+     40,
+     0.55,
+     0.85,
+     0.75,
+     0.95
+    ],
+    [
+     0.12,
+     205,
+     235,
+     0.3,
+     0.7,
+     0.45,
+     0.8
+    ],
+    [
+     0.06,
+     215,
+     240,
+     0.1,
+     0.4,
+     0.05,
+     0.22
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Anatase",
+   "displayName": "Anatase",
+   "description": "Un des trois minéraux de formule TiO₂ (avec le rutile et la brookite). Ses petits cristaux bipyramidés, brun, bleu foncé à noir ou jaunes, brillent d'un éclat presque métallique. C'est une pierre de collection, très rare en pierre taillée.",
+   "iconColor": "#263366",
+   "iconFacetColor": "#667AB2",
+   "refractiveIndex": 2.52,
+   "density": 3.9,
+   "hardness": 5.75,
+   "lengthMm": 4.0,
+   "widthMm": 3.5,
+   "depthMm": 2.5,
+   "weightCarats": 0.6,
+   "luster": "Adamantin à métallique",
+   "color": "Brun, bleu foncé à noir, jaune ou olive",
+   "shape": "Coussin",
+   "cutStyle": "Brillant",
+   "transparency": "Transparent à translucide",
+   "pleochroic": true,
+   "pleochroicDescription": "Bleu foncé / Jaune pâle selon l'axe (fort, cristaux bleus ; les bruns vont du brun foncé au jaune).",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+   "opticalCharacterClassName": "Uniaxe",
+   "opticalCharacterClass": 1,
+   "birefringence": 0.073,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Cristaux bipyramidés souvent striés, clivage parfait dans deux directions ({001} et {011}) ; peu d'inclusions visibles dans les cristaux taillés.",
+   "interferenceFigure": "Figure d'interférence uniaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 80,
+   "origins": [
+    {
+     "name": "Brésil (Minas Gerais)",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Suisse (Alpes)",
+     "rarityWeight": 20,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "France (Bourg-d'Oisans)",
+     "rarityWeight": 15,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "Norvège",
+     "rarityWeight": 15,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Pakistan",
+     "rarityWeight": 10,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Russie (Oural)",
+     "rarityWeight": 10,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [
+    {
+     "habit": "tetragonal_prism",
+     "weight": 100
+    }
+   ],
+   "colorLimits": [
+    15,
+    245,
+    0.2,
+    0.9,
+    0.1,
+    0.8
+   ],
+   "colorModes": [
+    [
+     0.35,
+     215,
+     242,
+     0.5,
+     0.9,
+     0.1,
+     0.4
+    ],
+    [
+     0.3,
+     20,
+     40,
+     0.5,
+     0.8,
+     0.25,
+     0.5
+    ],
+    [
+     0.2,
+     50,
+     80,
+     0.4,
+     0.75,
+     0.4,
+     0.75
+    ],
+    [
+     0.15,
+     40,
+     60,
+     0.45,
+     0.8,
+     0.55,
+     0.8
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Brookite",
+   "displayName": "Brookite",
+   "description": "Le troisième minéral de formule TiO₂, orthorhombique, brun, brun rougeâtre ou jaune, parfois noir (l'arkansite, de l'Arkansas). Très réfringent, avec un éclat presque métallique, il est rare en cristaux assez nets pour être taillés.",
+   "iconColor": "#73471F",
+   "iconFacetColor": "#B8854C",
+   "refractiveIndex": 2.65,
+   "density": 4.12,
+   "hardness": 5.75,
+   "lengthMm": 4.0,
+   "widthMm": 3.5,
+   "depthMm": 2.5,
+   "weightCarats": 0.6,
+   "luster": "Adamantin à métallique",
+   "color": "Brun, brun rougeâtre, jaune ; noir et opaque (arkansite)",
+   "shape": "Coussin",
+   "cutStyle": "Brillant",
+   "transparency": "Transparent à opaque",
+   "pleochroic": true,
+   "pleochroicDescription": "Jaune-brun / Brun rougeâtre selon les trois axes (faible à modéré).",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.12,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Cristaux tabulaires striés, clivage médiocre ; souvent des fissures et des zones de couleur.",
+   "interferenceFigure": "Figure d'interférence biaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 100,
+   "origins": [
+    {
+     "name": "États-Unis (Arkansas)",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "Pakistan",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "France (Alpes)",
+     "rarityWeight": 15,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "Russie (Oural)",
+     "rarityWeight": 10,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Maroc",
+     "rarityWeight": 8,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Suisse (Alpes)",
+     "rarityWeight": 7,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "Norvège",
+     "rarityWeight": 5,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [
+    {
+     "habit": "ortho_prism",
+     "weight": 100
+    }
+   ],
+   "colorLimits": [
+    10,
+    70,
+    0.3,
+    0.9,
+    0.1,
+    0.7
+   ],
+   "colorModes": [
+    [
+     0.4,
+     20,
+     38,
+     0.5,
+     0.85,
+     0.3,
+     0.55
+    ],
+    [
+     0.25,
+     5,
+     25,
+     0.5,
+     0.8,
+     0.25,
+     0.5
+    ],
+    [
+     0.2,
+     40,
+     60,
+     0.45,
+     0.8,
+     0.5,
+     0.8
+    ],
+    [
+     0.15,
+     20,
+     50,
+     0.2,
+     0.5,
+     0.1,
+     0.25
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Ebonite",
+   "displayName": "Ébonite",
+   "description": "Du caoutchouc durci par le soufre (on dit aussi « vulcanite », ce qui prête à confusion avec le minéral du même nom). Noire ou brun très foncé, elle a imité le jais dans les bijoux de deuil du XIXe siècle. Chauffée ou frottée, elle sent le soufre ; avec le temps, elle verdit ou brunit à la lumière.",
+   "iconColor": "#121214",
+   "iconFacetColor": "#424042",
+   "refractiveIndex": 1.66,
+   "density": 1.25,
+   "hardness": 2.5,
+   "lengthMm": 14.0,
+   "widthMm": 10.0,
+   "depthMm": 5.0,
+   "weightCarats": 4.0,
+   "luster": "Résineux à cireux",
+   "color": "Noir à brun très foncé (vire au vert ou au brun en vieillissant)",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Opaque",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Opaque : aucune lecture optique en lumière transmise.",
+   "opticalCharacterClassName": "Isotrope",
+   "opticalCharacterClass": 0,
+   "birefringence": 0.0,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Aucune inclusion visible ; traces de moulage et de polissage, parfois des cassures conchoïdales ; l'aiguille chaude dégage une odeur de soufre (de caoutchouc brûlé) ; frottée, elle se charge d'électricité statique ; elle ne se fend pas comme le jais.",
+   "interferenceFigure": "Aucune figure d'interférence exploitable (pierre opaque).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 3,
+   "origins": [
+    {
+     "name": "Fabrication industrielle",
+     "rarityWeight": 100,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    0,
+    120,
+    0.0,
+    0.6,
+    0.03,
+    0.4
+   ],
+   "colorModes": [
+    [
+     0.55,
+     20,
+     40,
+     0.0,
+     0.1,
+     0.05,
+     0.18
+    ],
+    [
+     0.3,
+     15,
+     35,
+     0.3,
+     0.6,
+     0.15,
+     0.35
+    ],
+    [
+     0.15,
+     70,
+     110,
+     0.15,
+     0.35,
+     0.15,
+     0.3
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
   }
  ]
 }

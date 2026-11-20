@@ -261,6 +261,9 @@ def main():
         by_id = {x["id"]: x for x in doc[name]}
         for sp in SPECIES:
             groups = [sp[key]] if key == "cls" else sp[key]
+            for gid, item in by_id.items():                              # leave the groups the species no longer belongs to
+                if gid not in groups and sp["id"] in item["species"]:
+                    item["species"].remove(sp["id"])
             for g in groups:
                 if sp["id"] not in by_id[g]["species"]:
                     by_id[g]["species"].append(sp["id"])

@@ -1,0 +1,28 @@
+{
+ "Saphir": [
+  {
+   "label": "Saphir bleu",
+   "text": "Bleu / Bleu-vert selon l'axe d'observation (marqué)."
+  },
+  {
+   "label": "Saphir vert",
+   "text": "Vert / Jaune-vert selon l'axe d'observation (marqué)."
+  },
+  {
+   "label": "Saphir violet",
+   "text": "Violet-bleu / Violet-rouge selon l'axe d'observation (modéré)."
+  },
+  {
+   "label": "Saphir rose",
+   "text": "Rose clair / Rose plus soutenu selon l'axe (modéré)."
+  },
+  {
+   "label": "Saphir orange",
+   "text": "Orange clair / Orangé plus soutenu selon l'axe (faible)."
+  },
+  {
+   "label": "Saphir jaune",
+   "text": "Jaune pâle / Jaune plus soutenu selon l'axe (faible)."
+  }
+ ]
+}

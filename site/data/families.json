@@ -3,7 +3,7 @@
  "families": [
   {
    "id": "quartz",
-   "visible": false,
+   "visible": true,
    "species": [
     "Quartz",
     "Amethyste",
@@ -26,7 +26,7 @@
   },
   {
    "id": "calcedoines",
-   "visible": false,
+   "visible": true,
    "species": [
     "Agate",
     "Cornaline",
@@ -123,7 +123,7 @@
   },
   {
    "id": "tourmalines",
-   "visible": false,
+   "visible": true,
    "species": [
     "Tourmaline_Indicolite",
     "Tourmaline_Melon_Eau",
@@ -145,7 +145,7 @@
   },
   {
    "id": "feldspaths",
-   "visible": false,
+   "visible": true,
    "species": [
     "Labradorite",
     "Orthose",
@@ -181,7 +181,7 @@
   },
   {
    "id": "cordierites",
-   "visible": false,
+   "visible": true,
    "species": [
     "Iolite",
     "Iolite_Bloodshot"
@@ -214,7 +214,7 @@
   },
   {
    "id": "jades",
-   "visible": false,
+   "visible": true,
    "species": [
     "Jade_Jadeite",
     "Jade_Nephrite"
@@ -231,7 +231,7 @@
   },
   {
    "id": "serpentines-talc",
-   "visible": false,
+   "visible": true,
    "species": [
     "Serpentine_Bowenite",
     "Steatite"
@@ -248,7 +248,7 @@
   },
   {
    "id": "ivoires",
-   "visible": false,
+   "visible": true,
    "species": [
     "Ivoire_Elephant",
     "Ivoire_Hippopotame",
@@ -269,7 +269,7 @@
   },
   {
    "id": "cornes-ecailles",
-   "visible": false,
+   "visible": true,
    "species": [
     "Corne_Rhinoceros",
     "Ecaille_Tortue"
@@ -286,7 +286,7 @@
   },
   {
    "id": "ambre-jais",
-   "visible": false,
+   "visible": true,
    "species": [
     "Ambre",
     "Jais"
@@ -303,7 +303,7 @@
   },
   {
    "id": "zoisites",
-   "visible": false,
+   "visible": true,
    "species": [
     "Zoisite",
     "Tanzanite"
@@ -320,7 +320,7 @@
   },
   {
    "id": "opales",
-   "visible": false,
+   "visible": true,
    "species": [
     "Opale_Noble",
     "Opale_De_Feu"
@@ -337,10 +337,12 @@
   },
   {
    "id": "perles",
-   "visible": false,
+   "visible": true,
    "species": [
     "Perle",
-    "Perle_Tahiti"
+    "Perle_Tahiti",
+    "Nacre",
+    "Perle_Conque"
    ],
    "name": "Perles",
    "chem": "Nacre : carbonate de calcium (aragonite) et matière organique",
@@ -370,7 +372,7 @@
   },
   {
    "id": "spinelles",
-   "visible": false,
+   "visible": true,
    "species": [
     "Spinelle",
     "Spinelle_Bleu",
@@ -388,7 +390,7 @@
   },
   {
    "id": "chrysoberyls",
-   "visible": false,
+   "visible": true,
    "species": [
     "Chrysoberyl",
     "Chrysoberyl_Alexandrite"
@@ -405,7 +407,7 @@
   },
   {
    "id": "diamants",
-   "visible": false,
+   "visible": true,
    "species": [
     "Diamant",
     "Diamant_Synthetique_CVD",
@@ -423,7 +425,7 @@
   },
   {
    "id": "fluorites",
-   "visible": false,
+   "visible": true,
    "species": [
     "Fluorite",
     "Fluorite_Bandee",
@@ -441,7 +443,7 @@
   },
   {
    "id": "pyroxenes",
-   "visible": false,
+   "visible": true,
    "species": [
     "Diopside_Chromifere",
     "Kunzite",
@@ -461,12 +463,13 @@
   },
   {
    "id": "carbonates",
-   "visible": false,
+   "visible": true,
    "species": [
     "Calcite",
     "Rhodocrosite",
     "Malachite",
-    "Azurite"
+    "Azurite",
+    "Marbre"
    ],
    "name": "Carbonates",
    "chem": "Calcite : carbonate de calcium. Rhodocrosite : de manganèse. Malachite : de cuivre",
@@ -480,7 +483,7 @@
   },
   {
    "id": "sulfates",
-   "visible": false,
+   "visible": true,
    "species": [
     "Celestine",
     "Gypse",
@@ -498,7 +501,7 @@
   },
   {
    "id": "aluminosilicates",
-   "visible": false,
+   "visible": true,
    "species": [
     "Andalousite",
     "Kyanite"
@@ -515,7 +518,7 @@
   },
   {
    "id": "feldspathoides",
-   "visible": false,
+   "visible": true,
    "species": [
     "Sodalite",
     "Lapis_Lazuli"
@@ -532,7 +535,7 @@
   },
   {
    "id": "metalliques",
-   "visible": false,
+   "visible": true,
    "species": [
     "Hematite",
     "Pyrite",
@@ -550,7 +553,7 @@
   },
   {
    "id": "phosphates",
-   "visible": false,
+   "visible": true,
    "species": [
     "Apatite",
     "Turquoise",
@@ -569,7 +572,7 @@
   },
   {
    "id": "borates",
-   "visible": false,
+   "visible": true,
    "species": [
     "Painite",
     "Sinhalite"
@@ -586,7 +589,7 @@
   },
   {
    "id": "verres",
-   "visible": false,
+   "visible": true,
    "species": [
     "Obsidienne",
     "Obsidienne_Flocons",
@@ -605,13 +608,17 @@
   },
   {
    "id": "simulants",
-   "visible": false,
+   "visible": true,
    "species": [
     "CZ",
     "GGG",
     "YAG",
     "Titanate_Strontium",
-    "Moissanite_Synthetique"
+    "Moissanite_Synthetique",
+    "Bakelite",
+    "Swiss_Lapis",
+    "Rutile_Synthetique",
+    "Ebonite"
    ],
    "name": "Simulants du diamant",
    "chem": "Cristaux fabriqués par l'homme",

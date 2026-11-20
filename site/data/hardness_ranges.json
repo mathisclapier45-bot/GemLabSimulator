@@ -1,0 +1,642 @@
+{
+"Agate": [
+6.5,
+7.0
+],
+"Aigue_Marine": [
+7.5,
+8.0
+],
+"Albatre": [
+1.5,
+2.0
+],
+"Amazonite": [
+6.0,
+6.5
+],
+"Ambre": [
+2.0,
+2.5
+],
+"Amethyste": [
+7.0,
+7.0
+],
+"Ametrine": [
+7.0,
+7.0
+],
+"Anatase": [
+5.5,
+6.0
+],
+"Andalousite": [
+6.5,
+7.5
+],
+"Apatite": [
+5.0,
+5.0
+],
+"Aventurine": [
+6.5,
+7.0
+],
+"Azurite": [
+3.5,
+4.0
+],
+"Bakelite": [
+2.0,
+3.0
+],
+"Benitoite": [
+6.0,
+6.5
+],
+"Beryl_Bleu": [
+7.5,
+8.0
+],
+"Beryl_Rouge": [
+7.5,
+8.0
+],
+"Beryl_Vert": [
+7.5,
+8.0
+],
+"Bezoard": [
+2.0,
+3.0
+],
+"Brookite": [
+5.5,
+6.0
+],
+"CZ": [
+8.0,
+8.5
+],
+"Calcite": [
+3.0,
+3.0
+],
+"Celestine": [
+3.0,
+3.5
+],
+"Charoite": [
+5.0,
+6.0
+],
+"Chrysoberyl": [
+8.0,
+8.5
+],
+"Chrysoberyl_Alexandrite": [
+8.0,
+8.5
+],
+"Chrysocolle": [
+2.0,
+4.0
+],
+"Chrysoprase": [
+6.5,
+7.0
+],
+"Citrine": [
+7.0,
+7.0
+],
+"Corail": [
+3.0,
+4.0
+],
+"Corindon_Rubis": [
+9.0,
+9.0
+],
+"Corindon_Synthetique_Rubis": [
+9.0,
+9.0
+],
+"Corindon_Synthetique_Saphir": [
+9.0,
+9.0
+],
+"Cornaline": [
+6.5,
+7.0
+],
+"Corne_Rhinoceros": [
+2.0,
+3.0
+],
+"Danburite": [
+7.0,
+7.5
+],
+"Defense_Narval": [
+2.0,
+3.0
+],
+"Diamant": [
+10.0,
+10.0
+],
+"Diamant_Synthetique_CVD": [
+10.0,
+10.0
+],
+"Diamant_Synthetique_HPHT": [
+10.0,
+10.0
+],
+"Diaspore_Zultanite": [
+6.5,
+7.0
+],
+"Diopside_Chromifere": [
+5.5,
+6.5
+],
+"Ebonite": [
+2.0,
+3.0
+],
+"Ecaille_Tortue": [
+2.0,
+3.0
+],
+"Emeraude": [
+7.5,
+8.0
+],
+"Enstatite": [
+5.0,
+6.0
+],
+"Euclase": [
+7.0,
+7.5
+],
+"Fluorite": [
+4.0,
+4.0
+],
+"Fluorite_Bandee": [
+4.0,
+4.0
+],
+"Fluorite_Blue_John": [
+4.0,
+4.0
+],
+"GGG": [
+6.0,
+7.0
+],
+"Goshenite": [
+7.5,
+8.0
+],
+"Grandidierite": [
+7.0,
+7.5
+],
+"Grenat_Almandin": [
+7.0,
+7.5
+],
+"Grenat_Andradite": [
+6.5,
+7.0
+],
+"Grenat_Change_Couleur": [
+7.0,
+7.5
+],
+"Grenat_Demantoide": [
+6.5,
+7.0
+],
+"Grenat_Grossulaire": [
+6.5,
+7.5
+],
+"Grenat_Hessonite": [
+6.5,
+7.5
+],
+"Grenat_Hydrogrossulaire": [
+6.5,
+7.0
+],
+"Grenat_Malaya": [
+7.0,
+7.5
+],
+"Grenat_Mali": [
+6.5,
+7.0
+],
+"Grenat_Pyrope": [
+7.0,
+7.5
+],
+"Grenat_Pyrope_Chromifere": [
+7.0,
+7.5
+],
+"Grenat_Rhodolite": [
+7.0,
+7.5
+],
+"Grenat_Spessartite": [
+7.0,
+7.5
+],
+"Grenat_Topazolite": [
+6.5,
+7.0
+],
+"Grenat_Tsavorite": [
+7.0,
+7.5
+],
+"Grenat_Uvarovite": [
+6.5,
+7.5
+],
+"Gypse": [
+2.0,
+2.0
+],
+"Heliodore": [
+7.5,
+8.0
+],
+"Hematite": [
+5.0,
+6.5
+],
+"Hiddenite": [
+6.5,
+7.0
+],
+"Iolite": [
+7.0,
+7.5
+],
+"Iolite_Bloodshot": [
+7.0,
+7.5
+],
+"Ivoire_Elephant": [
+2.0,
+3.0
+],
+"Ivoire_Hippopotame": [
+2.0,
+3.0
+],
+"Ivoire_Mammouth": [
+2.0,
+3.0
+],
+"Ivoire_Morse": [
+2.0,
+3.0
+],
+"Ivoire_Vegetal": [
+2.5,
+3.0
+],
+"Jade_Jadeite": [
+6.5,
+7.0
+],
+"Jade_Nephrite": [
+6.0,
+6.5
+],
+"Jais": [
+2.5,
+4.0
+],
+"Jaspe": [
+6.5,
+7.0
+],
+"Kornerupine": [
+6.0,
+7.0
+],
+"Kunzite": [
+6.5,
+7.0
+],
+"Kyanite": [
+4.0,
+7.5
+],
+"Labradorite": [
+6.0,
+6.5
+],
+"Lapis_Lazuli": [
+5.0,
+5.5
+],
+"Larimar": [
+4.5,
+5.0
+],
+"Lepidolite": [
+2.5,
+3.0
+],
+"Malachite": [
+3.5,
+4.0
+],
+"Marbre": [
+3.0,
+3.5
+],
+"Moissanite_Synthetique": [
+9.25,
+9.5
+],
+"Moldavite": [
+5.5,
+6.0
+],
+"Morganite": [
+7.5,
+8.0
+],
+"Nacre": [
+2.5,
+4.5
+],
+"Obsidienne": [
+5.0,
+5.5
+],
+"Obsidienne_Flocons": [
+5.0,
+5.5
+],
+"Odontolite": [
+5.0,
+5.0
+],
+"Oeil_de_Tigre": [
+6.5,
+7.0
+],
+"Onyx": [
+6.5,
+7.0
+],
+"Opale_De_Feu": [
+5.5,
+6.5
+],
+"Opale_Noble": [
+5.5,
+6.5
+],
+"Orthose": [
+6.0,
+6.5
+],
+"Padparadscha": [
+9.0,
+9.0
+],
+"Painite": [
+8.0,
+8.0
+],
+"Peridot": [
+6.5,
+7.0
+],
+"Perle": [
+2.5,
+4.5
+],
+"Perle_Conque": [
+3.5,
+4.0
+],
+"Perle_Tahiti": [
+2.5,
+4.5
+],
+"Pezzottaite": [
+8.0,
+8.0
+],
+"Pierre_De_Lune": [
+6.0,
+6.5
+],
+"Pierre_Soleil": [
+6.0,
+6.5
+],
+"Prasiolite": [
+7.0,
+7.0
+],
+"Prehnite": [
+6.0,
+6.5
+],
+"Pyrite": [
+6.0,
+6.5
+],
+"Quartz": [
+7.0,
+7.0
+],
+"Quartz_Fume": [
+7.0,
+7.0
+],
+"Quartz_Rose": [
+7.0,
+7.0
+],
+"Rhodocrosite": [
+3.5,
+4.0
+],
+"Rhodonite": [
+5.5,
+6.5
+],
+"Rutile_Synthetique": [
+6.0,
+6.5
+],
+"Saphir": [
+9.0,
+9.0
+],
+"Saphir_Change_Couleur": [
+9.0,
+9.0
+],
+"Saussurite": [
+6.5,
+7.0
+],
+"Scapolite": [
+5.5,
+6.5
+],
+"Scheelite": [
+4.5,
+5.0
+],
+"Selenite": [
+2.0,
+2.0
+],
+"Sepiolite": [
+2.0,
+2.5
+],
+"Serpentine_Bowenite": [
+2.5,
+6.0
+],
+"Sinhalite": [
+6.5,
+7.0
+],
+"Sodalite": [
+5.5,
+6.0
+],
+"Sphalerite": [
+3.5,
+4.0
+],
+"Sphene": [
+5.0,
+5.5
+],
+"Spinelle": [
+8.0,
+8.0
+],
+"Spinelle_Bleu": [
+8.0,
+8.0
+],
+"Spodumene": [
+6.5,
+7.0
+],
+"Steatite": [
+1.0,
+1.0
+],
+"Sugilite": [
+5.5,
+6.5
+],
+"Swiss_Lapis": [
+6.5,
+7.0
+],
+"Taaffeite": [
+8.0,
+8.5
+],
+"Tanzanite": [
+6.5,
+7.0
+],
+"Titanate_Strontium": [
+5.5,
+6.0
+],
+"Topaze": [
+8.0,
+8.0
+],
+"Tourmaline_Dravite": [
+7.0,
+7.5
+],
+"Tourmaline_Indicolite": [
+7.0,
+7.5
+],
+"Tourmaline_Melon_Eau": [
+7.0,
+7.5
+],
+"Tourmaline_Paraiba": [
+7.0,
+7.5
+],
+"Tourmaline_Rose": [
+7.0,
+7.5
+],
+"Tourmaline_Schorl": [
+7.0,
+7.5
+],
+"Tourmaline_Verdelite": [
+7.0,
+7.5
+],
+"Turquoise": [
+5.0,
+6.0
+],
+"Turquoise_Stabilisee": [
+4.5,
+6.0
+],
+"Variscite": [
+3.5,
+5.0
+],
+"Verre": [
+5.0,
+6.0
+],
+"Vulcanite": [
+1.0,
+2.0
+],
+"YAG": [
+8.0,
+8.5
+],
+"Zircon": [
+7.0,
+7.5
+],
+"Zircon_Bas": [
+6.0,
+6.5
+],
+"Zoisite": [
+6.0,
+7.0
+]
+}

@@ -148,6 +148,15 @@ def _build(lang="fr"):
     if extra_path.exists():
         with open(extra_path, encoding="utf-8") as f:
             extra = json.load(f)
+    prop_ranges = {name: (_read_json(config.DATA_DIR / (name + "_ranges.json")) if (config.DATA_DIR / (name + "_ranges.json")).exists() else {}) for name in ("density", "hardness")}
+    bir_path = config.DATA_DIR / "birefringence_ranges.json"           # lowest and highest birefringence of each species
+    bir_ranges = _read_json(bir_path) if bir_path.exists() else {}
+    pv_path = config.DATA_DIR / "pleochroism_variants.json"                # several pleochroism values for one species (a line per variety)
+    pleo_variants = _read_json(pv_path) if pv_path.exists() else {}
+    ranges_path = config.DATA_DIR / "refractive_ranges.json"           # lowest and highest refractive index of each species (tools/build_refractive_ranges.py)
+    ranges = _read_json(ranges_path) if ranges_path.exists() else {}
+    care_path = config.DATA_DIR / "care.json"                              # toughness and stability of each species (tools/build_care.py)
+    care = _read_json(care_path) if care_path.exists() else {}
     credits_path = config.DATA_DIR / "photo_credits.json"
     credits = {}
     if credits_path.exists():
@@ -160,6 +169,16 @@ def _build(lang="fr"):
             palettes = json.load(f)
     from . import gem_icons
     for s in species:
+        c = care.get(s["id"])
+        s["care"] = {"toughness": c["toughness"], "stability": c["stability"], "text": c["en" if lang == "en" else "fr"]} if c else None
+        low, high = ranges.get(s["id"]) or [s.get("refractiveIndex"), s.get("refractiveIndex")]
+        s["ri_min"], s["ri_max"] = low, high
+        s["bir_min"], s["bir_max"] = bir_ranges.get(s["id"]) or [s.get("birefringence") or 0.0] * 2
+        s["tr_levels"] = transparency_levels(fr(s, "transparency") if tr else s.get("transparency"))
+        s["colors_fold"] = fold(" ".join(cell[6] for cell in (palettes.get(s["id"]) or {}).get("natural", []) if isinstance(cell, list) and len(cell) > 6 and isinstance(cell[6], str)))
+        s["pleo_variants"] = [{"label": t_(v["label"]), "text": t_(v["text"])} for v in pleo_variants.get(s["id"], [])]
+        s["density_min"], s["density_max"] = prop_ranges["density"].get(s["id"]) or [s.get("density")] * 2
+        s["hardness_min"], s["hardness_max"] = prop_ranges["hardness"].get(s["id"]) or [s.get("hardness")] * 2
         s["iconStyle"] = gem_icons.style_for(s)               # the logo of the species: its shape and its cut
         s["palette"] = _translate_deep(palettes.get(s["id"]), tr) if tr else palettes.get(s["id"])
         s["extra"] = t_entry(extra.get(s["id"], {}), ("note",))
@@ -304,7 +323,7 @@ def lesson(lesson_id):
 # Dispersion of the game (GemLook.DispersionOf): half the spread of the index between red and blue light, known for the fiery stones,
 # otherwise estimated from the refractive index. The site shows the whole spread (twice that), as the tables of gemmology do.
 FIERY_HALF = {"Diamant": .022, "Diamant_Synthetique_CVD": .022, "Diamant_Synthetique_HPHT": .022, "CZ": .030, "Moissanite_Synthetique": .052,
-              "YAG": .014, "GGG": .022, "Zircon": .020, "Grenat_Demantoide": .036, "Sphene": .026, "Sphalerite": .078, "Titanate_Strontium": .095}
+              "YAG": .014, "GGG": .022, "Zircon": .020, "Grenat_Demantoide": .036, "Sphene": .026, "Sphalerite": .078, "Titanate_Strontium": .095, "Rutile_Synthetique": .165, "Benitoite": .023, "Scheelite": .013}
 
 
 def dispersion(species):
@@ -381,6 +400,13 @@ def quiz(lesson_id):
 
 # ------------------------------------------------------------------ search by data (identification)
 
+def transparency_levels(french_text):
+    """The levels a species can have, from its transparency in French: 0 transparent, 1 semi-transparent (translucent), 2 opaque. "A to B" means every level from A to B."""
+    words = [w for w in re.split(r"[^a-z]+", fold(french_text or "")) if w]
+    found = [{"transparent": 0, "translucide": 1, "opaque": 2}[w] for w in words if w in ("transparent", "translucide", "opaque")]
+    return list(range(min(found), max(found) + 1)) if found else [0]
+
+
 COLOR_FAMILIES = {
     "red": r"rouge|rubis", "pink": r"rose", "orange": r"orang", "yellow": r"jaun|dor", "green": r"vert",
     "blue": r"bleu", "violet": r"violet|pourpr|mauve|lavande", "brown": r"brun|marron|cafe|beige", "black": r"noir",
@@ -409,6 +435,12 @@ def identify(q):
             tol = _num(q.get(key + "_tol", "")) or default_tol
             wanted[key] = (v, tol, field)
     h_from, h_to = _num(q.get("hardness_from", "")), _num(q.get("hardness_to", ""))
+    spans = {}                                                        # a range asked for: every species whose range overlaps it matches
+    for key, _, _ in NUMERIC:
+        lo, hi = _num(q.get(key + "_from", "")), _num(q.get(key + "_to", ""))
+        if lo is not None or hi is not None:
+            spans[key] = (lo if lo is not None else float("-inf"), hi if hi is not None else float("inf"))
+    wanted_levels = {i for i in (0, 1, 2) if q.get("tr%d" % i)}                # the transparency levels ticked
     results = []
     for s in d["species"]:
         score, notes, ok = 0.0, [], True
@@ -417,16 +449,29 @@ def identify(q):
             if have is None or (key == "birefringence" and not have and v > tol):
                 ok = False
                 break
-            gap = abs(have - v)
+            if key in ("ri", "birefringence"):                                # the reading can fall anywhere between the lowest and the highest value of the species
+                lo, hi = (s["ri_min"], s["ri_max"]) if key == "ri" else (s["bir_min"], s["bir_max"])
+                gap = 0.0 if lo - 1e-9 <= v <= hi + 1e-9 else min(abs(lo - v), abs(hi - v))
+            else:
+                gap = abs(have - v)
             if gap > tol + 1e-9:
                 ok = False
                 break
             score += gap / tol
             notes.append(key)
+        for key, (lo, hi) in spans.items():
+            smin, smax = ((s["ri_min"], s["ri_max"]) if key == "ri" else (s["density_min"], s["density_max"]) if key == "density" else (s["bir_min"], s["bir_max"]))
+            if smax < lo - 1e-9 or smin > hi + 1e-9:
+                ok = False
+                break
+            notes.append(key)
         if not ok:
             continue
-        h = s.get("hardness") or 0
-        if (h_from is not None and h < h_from) or (h_to is not None and h > h_to):
+        if h_from is not None and s["hardness_max"] < h_from:               # the Mohs range of the species overlaps the range asked for
+            continue
+        if h_to is not None and s["hardness_min"] > h_to:
+            continue
+        if wanted_levels and not wanted_levels & set(s["tr_levels"]):
             continue
         if q.get("optic") and s.get("opticalCharacterClassName") != q["optic"]:
             continue
@@ -438,8 +483,8 @@ def identify(q):
         if q.get("transparency") and s["transparency_group"] != q["transparency"]:
             continue
         fam = q.get("color")
-        if fam in COLOR_FAMILIES and not re.search(COLOR_FAMILIES[fam], fold(fr(s, "color") or "")):
-            continue
+        if fam in COLOR_FAMILIES and not (re.search(COLOR_FAMILIES[fam], fold(fr(s, "color") or "")) or re.search(COLOR_FAMILIES[fam], s.get("colors_fold") or "")):
+            continue                                                        # the colour text of the species, or any colour of its chart
         lus = q.get("luster")
         if lus in LUSTER_FAMILIES and LUSTER_FAMILIES[lus] not in fold(fr(s, "luster") or ""):
             continue

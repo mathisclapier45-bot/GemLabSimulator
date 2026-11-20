@@ -1,0 +1,962 @@
+{
+ "Agate": {
+  "en": "Tight, tough grain, stable to light and ordinary products; withstands ultrasonic cleaners.",
+  "fr": "Grain très serré et tenace, stable à la lumière et aux produits courants ; supporte les ultrasons.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Aigue_Marine": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners if the stone is clean. Heat changes the color (heating of aquamarine).",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons si la pierre est propre. La chaleur modifie la couleur (chauffage de l'aigue-marine).",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Albatre": {
+  "en": "Very soft: scratches with a fingernail and fears water, which dulls it, and acids; no ultrasonic cleaner or steam.",
+  "fr": "Très tendre : se raye à l'ongle et craint l'eau, qui la ternit, et les acides ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Amazonite": {
+  "en": "Perfect cleavage in two directions: fears knocks, ultrasonic cleaners and steam; amazonite fades in strong light and heat.",
+  "fr": "Clivage parfait dans deux directions : craint les chocs, les ultrasons et la vapeur ; l'amazonite pâlit à la lumière vive et à la chaleur.",
+  "stability": "moyenne",
+  "toughness": "faible"
+ },
+ "Ambre": {
+  "en": "Scratches and softens around 150 °C; solvents (alcohol, acetone), perfumes and light dull or darken it with time. No ultrasonic cleaner, steam or solvents.",
+  "fr": "Se raye et ramollit vers 150 °C ; les solvants (alcool, acétone), les parfums et la lumière la ternissent ou la brunissent avec le temps. Ni ultrasons, ni vapeur, ni solvants.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Amethyste": {
+  "en": "The color fades in strong light and disappears or turns yellow with heat; withstands the ultrasonic cleaner when cold.",
+  "fr": "La couleur pâlit à la lumière vive et s'efface ou vire au jaune à la chaleur ; supporte les ultrasons à froid.",
+  "stability": "moyenne",
+  "toughness": "forte"
+ },
+ "Ametrine": {
+  "en": "The color fades in strong light and disappears or turns yellow with heat; withstands the ultrasonic cleaner when cold.",
+  "fr": "La couleur pâlit à la lumière vive et s'efface ou vire au jaune à la chaleur ; supporte les ultrasons à froid.",
+  "stability": "moyenne",
+  "toughness": "forte"
+ },
+ "Anatase": {
+  "en": "Brittle small crystal: a collector's mineral, fragile to knocks; stable to light and ordinary products.",
+  "fr": "Cristal cassant et petit : minéral de collection, fragile aux chocs ; stable à la lumière et aux produits courants.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Andalousite": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners and steam.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte ultrasons et vapeur.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Apatite": {
+  "en": "Soft and brittle: scratches and chips; sensitive to acids and heat; avoid ultrasonic cleaners and steam.",
+  "fr": "Tendre et cassante : se raye, s'écaille ; sensible aux acides et à la chaleur ; éviter ultrasons et vapeur.",
+  "stability": "moyenne",
+  "toughness": "faible"
+ },
+ "Aventurine": {
+  "en": "Massive quartz with mica flakes: tough, stable to light and ordinary products; withstands ultrasonic cleaners.",
+  "fr": "Quartz massif à paillettes de mica : tenace, stable à la lumière et aux produits courants ; supporte les ultrasons.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Azurite": {
+  "en": "Very sensitive to acids (vinegar, lemon, perfumes, acidic sweat): the surface dissolves and dulls; fears heat; no ultrasonic cleaner or steam.",
+  "fr": "Très sensible aux acides (vinaigre, citron, parfums, sueur acide) : la surface se dissout et se ternit ; craint la chaleur ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Bakelite": {
+  "en": "Fears solvents (alcohol, acetone), heat and chemicals; can crack and yellow with age. No ultrasonic cleaner.",
+  "fr": "Craint les solvants (alcool, acétone), la chaleur et les produits chimiques ; peut se fissurer et jaunir avec l'âge. Pas d'ultrasons.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Benitoite": {
+  "en": "Brittle at the edges; stable to light and ordinary products; avoid ultrasonic cleaners and knocks.",
+  "fr": "Cassante aux arêtes ; stable à la lumière et aux produits courants ; éviter ultrasons et chocs.",
+  "stability": "forte",
+  "toughness": "moyenne"
+ },
+ "Beryl_Bleu": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners if the stone is clean. Heat changes the color (heating of aquamarine).",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons si la pierre est propre. La chaleur modifie la couleur (chauffage de l'aigue-marine).",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Beryl_Rouge": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners if the stone is clean. Heat changes the color (heating of aquamarine).",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons si la pierre est propre. La chaleur modifie la couleur (chauffage de l'aigue-marine).",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Beryl_Vert": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners if the stone is clean. Heat changes the color (heating of aquamarine).",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons si la pierre est propre. La chaleur modifie la couleur (chauffage de l'aigue-marine).",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Bezoard": {
+  "en": "Organic concretion: fragile, absorbs water and fats; fears heat, acids and knocks. No ultrasonic cleaner or steam.",
+  "fr": "Concrétion organique : fragile, absorbe l'eau et les graisses ; craint la chaleur, les acides et les chocs. Pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Brookite": {
+  "en": "Brittle small crystal: a collector's mineral, fragile to knocks; stable to light and ordinary products.",
+  "fr": "Cristal cassant et petit : minéral de collection, fragile aux chocs ; stable à la lumière et aux produits courants.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "CZ": {
+  "en": "No cleavage, stable to light and ordinary products; can scratch with time; withstands ultrasonic cleaners.",
+  "fr": "Sans clivage, stable à la lumière et aux produits courants ; peut se rayer avec le temps ; supporte les ultrasons.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Calcite": {
+  "en": "Very sensitive to acids (vinegar, lemon, perfumes, acidic sweat): the surface dissolves and dulls; fears heat; no ultrasonic cleaner or steam.",
+  "fr": "Très sensible aux acides (vinaigre, citron, parfums, sueur acide) : la surface se dissout et se ternit ; craint la chaleur ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Celestine": {
+  "en": "Perfect cleavage and soft: fears knocks, thermal shock and ultrasonic cleaners.",
+  "fr": "Clivage parfait et tendre : craint les chocs, les chocs thermiques et les ultrasons.",
+  "stability": "moyenne",
+  "toughness": "faible"
+ },
+ "Charoite": {
+  "en": "Silky and rather soft: scratches; fears acids and heat; avoid ultrasonic cleaners.",
+  "fr": "Soyeuse et assez tendre : se raye ; craint les acides et la chaleur ; éviter les ultrasons.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Chrysoberyl": {
+  "en": "Unaffected by light, acids and heat; withstands ultrasonic cleaners and steam.",
+  "fr": "Insensible à la lumière, aux acides et à la chaleur ; supporte ultrasons et vapeur.",
+  "stability": "tres-forte",
+  "toughness": "tres-forte"
+ },
+ "Chrysoberyl_Alexandrite": {
+  "en": "Unaffected by light, acids and heat; withstands ultrasonic cleaners and steam.",
+  "fr": "Insensible à la lumière, aux acides et à la chaleur ; supporte ultrasons et vapeur.",
+  "stability": "tres-forte",
+  "toughness": "tres-forte"
+ },
+ "Chrysocolle": {
+  "en": "Soft, porous and fragile: fears prolonged water, acids, heat, sun and knocks; no ultrasonic cleaner or steam.",
+  "fr": "Tendre, poreuse et fragile : craint l'eau prolongée, les acides, la chaleur, le soleil et les chocs ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Chrysoprase": {
+  "en": "Colored by nickel: it fades if it dries out in the sun or with heat; keep it away from strong light and do not let it dry for long.",
+  "fr": "Colorée par le nickel : elle pâlit si elle se déshydrate au soleil ou à la chaleur ; garder à l'abri de la lumière vive et ne pas la laisser sécher longtemps.",
+  "stability": "moyenne",
+  "toughness": "forte"
+ },
+ "Citrine": {
+  "en": "Stable to light; the color does not change, whether natural or from heating; withstands ultrasonic cleaners and steam.",
+  "fr": "Stable à la lumière ; la couleur ne bouge pas, qu'elle soit naturelle ou issue d'un chauffage ; supporte ultrasons et vapeur.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Corail": {
+  "en": "Dissolves in acids, scratches, dulls with perfumes and household products, and fades in the sun; no ultrasonic cleaner or steam.",
+  "fr": "Se dissout dans les acides, se raye, se ternit avec les parfums et les produits ménagers, et pâlit au soleil ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Corindon_Rubis": {
+  "en": "Unaffected by light, acids and heat; withstands ultrasonic cleaners and steam. Only stones whose fissures are filled with lead glass fear acids and strong heat.",
+  "fr": "Insensible à la lumière, aux acides et à la chaleur ; supporte ultrasons et vapeur. Seules les pierres dont les fissures sont remplies de verre au plomb craignent les acides et la chaleur vive.",
+  "stability": "tres-forte",
+  "toughness": "tres-forte"
+ },
+ "Corindon_Synthetique_Rubis": {
+  "en": "Unaffected by light, acids and heat; withstands ultrasonic cleaners and steam.",
+  "fr": "Insensible à la lumière, aux acides et à la chaleur ; supporte ultrasons et vapeur.",
+  "stability": "tres-forte",
+  "toughness": "tres-forte"
+ },
+ "Corindon_Synthetique_Saphir": {
+  "en": "Unaffected by light, acids and heat; withstands ultrasonic cleaners and steam.",
+  "fr": "Insensible à la lumière, aux acides et à la chaleur ; supporte ultrasons et vapeur.",
+  "stability": "tres-forte",
+  "toughness": "tres-forte"
+ },
+ "Cornaline": {
+  "en": "Tight, tough grain, stable to light and ordinary products; withstands ultrasonic cleaners.",
+  "fr": "Grain très serré et tenace, stable à la lumière et aux produits courants ; supporte les ultrasons.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Corne_Rhinoceros": {
+  "en": "Organic material: fears humidity and dryness, heat, acids and solvents; the color changes with light. No ultrasonic cleaner or steam.",
+  "fr": "Matière organique : craint l'humidité et la sécheresse, la chaleur, les acides et les solvants ; la couleur change avec la lumière. Pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Danburite": {
+  "en": "Poor cleavage: fears knocks on the edges; stable to light and ordinary products.",
+  "fr": "Clivage médiocre : craint les chocs sur les arêtes ; stable à la lumière et aux produits courants.",
+  "stability": "forte",
+  "toughness": "moyenne"
+ },
+ "Defense_Narval": {
+  "en": "Narwhal ivory: splits as it dries or with humidity, yellows in light, fears acids and heat. No ultrasonic cleaner or steam.",
+  "fr": "Ivoire de narval : se fend en séchant ou avec l'humidité, jaunit à la lumière, craint les acides et la chaleur. Pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Diamant": {
+  "en": "Unaffected by light, acids and ordinary heat; withstands ultrasonic cleaners and steam. Its perfect cleavage makes it vulnerable to a sharp knock on the edge.",
+  "fr": "Insensible à la lumière, aux acides et à la chaleur ordinaire ; supporte les ultrasons et la vapeur. Son clivage parfait le rend sensible à un coup sec sur l'arête.",
+  "stability": "tres-forte",
+  "toughness": "forte"
+ },
+ "Diamant_Synthetique_CVD": {
+  "en": "Unaffected by light, acids and ordinary heat; withstands ultrasonic cleaners and steam. Its perfect cleavage makes it vulnerable to a sharp knock on the edge.",
+  "fr": "Insensible à la lumière, aux acides et à la chaleur ordinaire ; supporte les ultrasons et la vapeur. Son clivage parfait le rend sensible à un coup sec sur l'arête.",
+  "stability": "tres-forte",
+  "toughness": "forte"
+ },
+ "Diamant_Synthetique_HPHT": {
+  "en": "Unaffected by light, acids and ordinary heat; withstands ultrasonic cleaners and steam. Its perfect cleavage makes it vulnerable to a sharp knock on the edge.",
+  "fr": "Insensible à la lumière, aux acides et à la chaleur ordinaire ; supporte les ultrasons et la vapeur. Son clivage parfait le rend sensible à un coup sec sur l'arête.",
+  "stability": "tres-forte",
+  "toughness": "forte"
+ },
+ "Diaspore_Zultanite": {
+  "en": "Perfect cleavage: fears knocks; the color changes with the lighting but stays stable in light; withstands water and ordinary products. Avoid ultrasonic cleaners.",
+  "fr": "Clivage parfait : craint les chocs ; la couleur change avec l'éclairage mais reste stable à la lumière ; supporte l'eau et les produits courants. Éviter les ultrasons.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Diopside_Chromifere": {
+  "en": "Distinct cleavage in two directions: fears knocks; stable to light and ordinary products.",
+  "fr": "Clivage net dans deux directions : craint les chocs ; stable à la lumière et aux produits courants.",
+  "stability": "forte",
+  "toughness": "moyenne"
+ },
+ "Ebonite": {
+  "en": "Scratches and turns green or brown in sunlight; fears heat (it softens around 60 – 80 °C), solvents and oils. No ultrasonic cleaner or steam.",
+  "fr": "Se raye et verdit ou brunit à la lumière du soleil ; craint la chaleur (elle ramollit vers 60 – 80 °C), les solvants et les huiles. Pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Ecaille_Tortue": {
+  "en": "Organic material: fears humidity and dryness, heat, acids and solvents; the color changes with light. No ultrasonic cleaner or steam.",
+  "fr": "Matière organique : craint l'humidité et la sécheresse, la chaleur, les acides et les solvants ; la couleur change avec la lumière. Pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Emeraude": {
+  "en": "Almost always fractured and filled with oil or resin: ultrasonic cleaners, steam, solvents and heat remove the filling and can split it. Clean with lukewarm soapy water.",
+  "fr": "Presque toujours fissurée et imprégnée d'huile ou de résine : les ultrasons, la vapeur, les solvants et la chaleur chassent le remplissage et peuvent la fendre. Nettoyer à l'eau tiède savonneuse.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Enstatite": {
+  "en": "Distinct cleavage in two directions: fears knocks; stable to light and ordinary products.",
+  "fr": "Clivage net dans deux directions : craint les chocs ; stable à la lumière et aux produits courants.",
+  "stability": "forte",
+  "toughness": "moyenne"
+ },
+ "Euclase": {
+  "en": "Perfect cleavage: very fragile when cut and worn; stable to light and ordinary products; avoid knocks and ultrasonic cleaners.",
+  "fr": "Clivage parfait : très fragile à la taille et au port ; stable à la lumière et aux produits courants ; éviter chocs et ultrasons.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Fluorite": {
+  "en": "Perfect cleavage in four directions: a knock or a sudden change of temperature splits it. Sensitive to heat, acids and solvents; no ultrasonic cleaner or steam.",
+  "fr": "Clivage parfait dans quatre directions : un choc ou un changement brusque de température la fend. Sensible à la chaleur, aux acides et aux solvants ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Fluorite_Bandee": {
+  "en": "Perfect cleavage in four directions: a knock or a sudden change of temperature splits it. Sensitive to heat, acids and solvents; no ultrasonic cleaner or steam.",
+  "fr": "Clivage parfait dans quatre directions : un choc ou un changement brusque de température la fend. Sensible à la chaleur, aux acides et aux solvants ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Fluorite_Blue_John": {
+  "en": "Perfect cleavage in four directions: a knock or a sudden change of temperature splits it. Sensitive to heat, acids and solvents; no ultrasonic cleaner or steam.",
+  "fr": "Clivage parfait dans quatre directions : un choc ou un changement brusque de température la fend. Sensible à la chaleur, aux acides et aux solvants ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "GGG": {
+  "en": "No cleavage, stable to light and ordinary products; can scratch with time; withstands ultrasonic cleaners.",
+  "fr": "Sans clivage, stable à la lumière et aux produits courants ; peut se rayer avec le temps ; supporte les ultrasons.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Goshenite": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners if the stone is clean. Heat changes the color (heating of aquamarine).",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons si la pierre est propre. La chaleur modifie la couleur (chauffage de l'aigue-marine).",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grandidierite": {
+  "en": "Stable to light and ordinary products; brittle at the edges, avoid knocks.",
+  "fr": "Stable à la lumière et aux produits courants ; fragile aux arêtes, éviter les chocs.",
+  "stability": "forte",
+  "toughness": "moyenne"
+ },
+ "Grenat_Almandin": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Andradite": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Change_Couleur": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Demantoide": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Grossulaire": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Hessonite": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Hydrogrossulaire": {
+  "en": "Fine-grained aggregate: very tough, stable to light and ordinary products; withstands ultrasonic cleaners.",
+  "fr": "Agrégat de grain fin : très tenace, stable à la lumière et aux produits courants ; supporte les ultrasons.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Malaya": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Mali": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Pyrope": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Pyrope_Chromifere": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Rhodolite": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Spessartite": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Topazolite": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Tsavorite": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners. Avoid violent thermal shock, which can crack included stones.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte les ultrasons. Évite un choc thermique violent, qui peut fissurer les pierres incluses.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Grenat_Uvarovite": {
+  "en": "Tiny crystals in a druse: stable to light and ordinary products; rarely cut.",
+  "fr": "Cristaux minuscules en druse : stable à la lumière et aux produits courants ; rarement taillée.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Gypse": {
+  "en": "Very soft: scratches with a fingernail and fears water, which dulls it, and acids; no ultrasonic cleaner or steam.",
+  "fr": "Très tendre : se raye à l'ongle et craint l'eau, qui la ternit, et les acides ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Heliodore": {
+  "en": "The golden-yellow color can fade in strong light and heat; withstands ultrasonic cleaners if the stone is clean.",
+  "fr": "La couleur jaune dorée peut pâlir à la lumière vive et à la chaleur ; supporte les ultrasons si la pierre est propre.",
+  "stability": "moyenne",
+  "toughness": "forte"
+ },
+ "Hematite": {
+  "en": "Brittle despite its hardness, it chips; stable to light and ordinary products.",
+  "fr": "Cassante malgré sa dureté, elle s'écaille ; stable à la lumière et aux produits courants.",
+  "stability": "forte",
+  "toughness": "moyenne"
+ },
+ "Hiddenite": {
+  "en": "Perfect cleavage: fears knocks; the color can fade in strong light; avoid ultrasonic cleaners and steam.",
+  "fr": "Clivage parfait : craint les chocs ; la couleur peut pâlir à la lumière vive ; éviter ultrasons et vapeur.",
+  "stability": "moyenne",
+  "toughness": "faible"
+ },
+ "Iolite": {
+  "en": "Stable to light and ordinary products; poor cleavage, avoid knocks.",
+  "fr": "Stable à la lumière et aux produits courants ; clivage médiocre, éviter les chocs.",
+  "stability": "forte",
+  "toughness": "moyenne"
+ },
+ "Iolite_Bloodshot": {
+  "en": "Stable to light and ordinary products; poor cleavage, avoid knocks.",
+  "fr": "Stable à la lumière et aux produits courants ; clivage médiocre, éviter les chocs.",
+  "stability": "forte",
+  "toughness": "moyenne"
+ },
+ "Ivoire_Elephant": {
+  "en": "Organic material: splits as it dries or with humidity, yellows in light, fears acids and heat. No ultrasonic cleaner, steam or prolonged soaking.",
+  "fr": "Matière organique : se fend en séchant ou avec l'humidité, jaunit à la lumière, craint les acides et la chaleur. Pas d'ultrasons ni de vapeur ni d'immersion prolongée.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Ivoire_Hippopotame": {
+  "en": "Organic material: splits as it dries or with humidity, yellows in light, fears acids and heat. No ultrasonic cleaner, steam or prolonged soaking.",
+  "fr": "Matière organique : se fend en séchant ou avec l'humidité, jaunit à la lumière, craint les acides et la chaleur. Pas d'ultrasons ni de vapeur ni d'immersion prolongée.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Ivoire_Mammouth": {
+  "en": "Organic material: splits as it dries or with humidity, yellows in light, fears acids and heat. No ultrasonic cleaner, steam or prolonged soaking.",
+  "fr": "Matière organique : se fend en séchant ou avec l'humidité, jaunit à la lumière, craint les acides et la chaleur. Pas d'ultrasons ni de vapeur ni d'immersion prolongée.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Ivoire_Morse": {
+  "en": "Organic material: splits as it dries or with humidity, yellows in light, fears acids and heat. No ultrasonic cleaner, steam or prolonged soaking.",
+  "fr": "Matière organique : se fend en séchant ou avec l'humidité, jaunit à la lumière, craint les acides et la chaleur. Pas d'ultrasons ni de vapeur ni d'immersion prolongée.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Ivoire_Vegetal": {
+  "en": "Harder and more stable than animal ivory, but fears prolonged humidity, heat and acids; no ultrasonic cleaner.",
+  "fr": "Plus dur et plus stable que l'ivoire animal, mais craint l'humidité prolongée, la chaleur et les acides ; pas d'ultrasons.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Jade_Jadeite": {
+  "en": "Interlocked fibers of exceptional toughness; stable to light and ordinary products. Treated jade (polymer, bleaching) fears acids, solvents, heat and ultrasonic cleaners.",
+  "fr": "Fibres enchevêtrées d'une ténacité exceptionnelle ; stable à la lumière et aux produits courants. Le jade traité (polymère, blanchiment) craint les acides, les solvants, la chaleur et les ultrasons.",
+  "stability": "forte",
+  "toughness": "tres-forte"
+ },
+ "Jade_Nephrite": {
+  "en": "Interlocked fibers of exceptional toughness; stable to light and ordinary products. Treated jade (polymer, bleaching) fears acids, solvents, heat and ultrasonic cleaners.",
+  "fr": "Fibres enchevêtrées d'une ténacité exceptionnelle ; stable à la lumière et aux produits courants. Le jade traité (polymère, blanchiment) craint les acides, les solvants, la chaleur et les ultrasons.",
+  "stability": "forte",
+  "toughness": "tres-forte"
+ },
+ "Jais": {
+  "en": "Soft and rather brittle; fears heat, acids and solvents; can crack as it dries. No ultrasonic cleaner.",
+  "fr": "Tendre et assez cassant ; craint la chaleur, les acides et les solvants ; peut se craqueler en séchant. Pas d'ultrasons.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Jaspe": {
+  "en": "Tight, tough grain, stable to light and ordinary products; withstands ultrasonic cleaners.",
+  "fr": "Grain très serré et tenace, stable à la lumière et aux produits courants ; supporte les ultrasons.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Kornerupine": {
+  "en": "Stable to light and ordinary products; brittle at the edges, avoid knocks.",
+  "fr": "Stable à la lumière et aux produits courants ; fragile aux arêtes, éviter les chocs.",
+  "stability": "forte",
+  "toughness": "moyenne"
+ },
+ "Kunzite": {
+  "en": "Perfect cleavage and a color that fades in sunlight: keep it out of the light; avoid knocks, ultrasonic cleaners and steam.",
+  "fr": "Clivage parfait et couleur qui pâlit à la lumière du soleil : garder à l'abri de la lumière ; éviter chocs, ultrasons et vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Kyanite": {
+  "en": "Hardness differs with direction and it cleaves easily: it scratches and splits; stable to light and ordinary products. Best for jewelry that is not exposed.",
+  "fr": "Dureté différente selon la direction et clivage facile : se raye et se fend ; stable à la lumière et aux produits courants. À réserver aux bijoux peu exposés.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Labradorite": {
+  "en": "Perfect cleavage: fears knocks; stable to light and ordinary products; avoid ultrasonic cleaners and steam.",
+  "fr": "Clivage parfait : craint les chocs ; stable à la lumière et aux produits courants ; éviter ultrasons et vapeur.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Lapis_Lazuli": {
+  "en": "Contains calcite and pyrite: sensitive to acids, heat and solvents; often treated with wax or resin. No ultrasonic cleaner or steam.",
+  "fr": "Contient de la calcite et de la pyrite : sensible aux acides, à la chaleur et aux solvants ; souvent traité à la cire ou à la résine. Pas d'ultrasons ni de vapeur.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Larimar": {
+  "en": "Not very hard and porous: fades in prolonged sun, fears heat and acids; avoid ultrasonic cleaners and steam.",
+  "fr": "Peu dure et poreuse : pâlit au soleil prolongé, craint la chaleur et les acides ; éviter ultrasons et vapeur.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Lepidolite": {
+  "en": "Flakes into sheets and scratches easily; stable to light and ordinary products. Not for exposed jewelry.",
+  "fr": "Se délite en paillettes et se raye facilement ; stable à la lumière et aux produits courants. Pas de bijou exposé.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Malachite": {
+  "en": "Very sensitive to acids (vinegar, lemon, perfumes, acidic sweat): the surface dissolves and dulls; fears heat; no ultrasonic cleaner or steam.",
+  "fr": "Très sensible aux acides (vinaigre, citron, parfums, sueur acide) : la surface se dissout et se ternit ; craint la chaleur ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Marbre": {
+  "en": "Very sensitive to acids (vinegar, lemon, perfumes, acidic sweat): the surface dissolves and dulls; no ultrasonic cleaner or steam. Less fragile to knocks than a crystal, thanks to its grain.",
+  "fr": "Très sensible aux acides (vinaigre, citron, parfums, sueur acide) : la surface se dissout et se ternit ; pas d'ultrasons ni de vapeur. Moins fragile aux chocs qu'un cristal, grâce à son grain.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Moissanite_Synthetique": {
+  "en": "Very stable: withstands ultrasonic cleaners, steam, acids and heat. No cleavage.",
+  "fr": "Très stable : supporte ultrasons, vapeur, acides et chaleur. Aucun clivage.",
+  "stability": "tres-forte",
+  "toughness": "tres-forte"
+ },
+ "Moldavite": {
+  "en": "Natural glass: the conchoidal fracture chips at the slightest knock; stable to light and ordinary products; avoid thermal shock.",
+  "fr": "Verre naturel : la cassure conchoïdale s'écaille au moindre choc ; stable à la lumière et aux produits courants ; éviter le choc thermique.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Morganite": {
+  "en": "The pink color can fade in strong light and heat (most morganites have been heated); withstands ultrasonic cleaners if the stone is clean.",
+  "fr": "La couleur rose peut pâlir à la lumière vive et à la chaleur (la plupart des morganites ont été chauffées) ; supporte les ultrasons si la pierre est propre.",
+  "stability": "moyenne",
+  "toughness": "forte"
+ },
+ "Nacre": {
+  "en": "Scratches and wears; the nacre dissolves in acids (vinegar, lemon, perfumes, sweat) and dulls with hairspray, heat and dryness. Clean with a soft cloth; no ultrasonic cleaner, steam or solvents.",
+  "fr": "Se raye et s'use ; la nacre se dissout dans les acides (vinaigre, citron, parfums, sueur) et se ternit avec les laques, la chaleur et la sécheresse. Nettoyer au chiffon doux ; ni ultrasons, ni vapeur, ni solvants.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Obsidienne": {
+  "en": "Conchoidal fracture: chips at the slightest knock and scratches; stable to light and ordinary products, but fears thermal shock.",
+  "fr": "Cassure conchoïdale : s'écaille au moindre choc et se raye ; stable à la lumière et aux produits courants, mais craint le choc thermique.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Obsidienne_Flocons": {
+  "en": "Conchoidal fracture: chips at the slightest knock and scratches; stable to light and ordinary products, but fears thermal shock.",
+  "fr": "Cassure conchoïdale : s'écaille au moindre choc et se raye ; stable à la lumière et aux produits courants, mais craint le choc thermique.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Odontolite": {
+  "en": "Colored (treated) fossil bone: porous; fears acids, heat and prolonged humidity; no ultrasonic cleaner.",
+  "fr": "Os fossile coloré (traité) : poreux ; craint les acides, la chaleur et l'humidité prolongée ; pas d'ultrasons.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Oeil_de_Tigre": {
+  "en": "Tight quartz fibers: tough, stable to light and ordinary products; the color can change in strong heat.",
+  "fr": "Fibres de quartz serrées : tenace, stable à la lumière et aux produits courants ; la couleur peut changer à la chaleur forte.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Onyx": {
+  "en": "The dyes can fade in light and come off with solvents or heat; no ultrasonic cleaner, no solvents.",
+  "fr": "Les teintures peuvent pâlir à la lumière et partir au solvant ou à la chaleur ; ni ultrasons ni solvants.",
+  "stability": "moyenne",
+  "toughness": "forte"
+ },
+ "Opale_De_Feu": {
+  "en": "Contains water: dryness, heat and thermal shock make it craze; prolonged water dulls porous opals; fears acids. No ultrasonic cleaner or steam.",
+  "fr": "Contient de l'eau : la sécheresse, la chaleur et les chocs thermiques la font craqueler ; l'eau prolongée ternit les opales poreuses ; craint les acides. Pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Opale_Noble": {
+  "en": "Contains water: dryness, heat and thermal shock make it craze; prolonged water dulls porous opals; fears acids. No ultrasonic cleaner or steam.",
+  "fr": "Contient de l'eau : la sécheresse, la chaleur et les chocs thermiques la font craqueler ; l'eau prolongée ternit les opales poreuses ; craint les acides. Pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Orthose": {
+  "en": "Perfect cleavage: fears knocks; stable to light and ordinary products; avoid ultrasonic cleaners and steam.",
+  "fr": "Clivage parfait : craint les chocs ; stable à la lumière et aux produits courants ; éviter ultrasons et vapeur.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Padparadscha": {
+  "en": "Unaffected by light, acids and heat; withstands ultrasonic cleaners and steam. Only stones whose fissures are filled with lead glass fear acids and strong heat.",
+  "fr": "Insensible à la lumière, aux acides et à la chaleur ; supporte ultrasons et vapeur. Seules les pierres dont les fissures sont remplies de verre au plomb craignent les acides et la chaleur vive.",
+  "stability": "tres-forte",
+  "toughness": "tres-forte"
+ },
+ "Painite": {
+  "en": "Very hard and rare; stable to light and ordinary products; withstands ultrasonic cleaners.",
+  "fr": "Très dure et rare ; stable à la lumière et aux produits courants ; supporte les ultrasons.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Peridot": {
+  "en": "Sensitive to acids (even diluted), strong heat and knocks on the edges; avoid ultrasonic cleaners if the stone is included.",
+  "fr": "Sensible aux acides (même dilués), à la chaleur vive et aux chocs sur les arêtes ; éviter les ultrasons si la pierre est incluse.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Perle": {
+  "en": "Scratches and wears; the nacre dissolves in acids (vinegar, lemon, perfumes, sweat) and dulls with hairspray, heat and dryness. Clean with a soft cloth; no ultrasonic cleaner, steam or solvents.",
+  "fr": "Se raye et s'use ; la nacre se dissout dans les acides (vinaigre, citron, parfums, sueur) et se ternit avec les laques, la chaleur et la sécheresse. Nettoyer au chiffon doux ; ni ultrasons, ni vapeur, ni solvants.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Perle_Conque": {
+  "en": "Scratches and wears; sensitive to acids (vinegar, lemon, perfumes, sweat), heat and prolonged sun, which fade the pink. Soft cloth; no ultrasonic cleaner or steam.",
+  "fr": "Se raye et s'use ; sensible aux acides (vinaigre, citron, parfums, sueur), à la chaleur et au soleil prolongé, qui font pâlir le rose. Chiffon doux ; ni ultrasons, ni vapeur.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Perle_Tahiti": {
+  "en": "Scratches and wears; the nacre dissolves in acids (vinegar, lemon, perfumes, sweat) and dulls with hairspray, heat and dryness. Clean with a soft cloth; no ultrasonic cleaner, steam or solvents.",
+  "fr": "Se raye et s'use ; la nacre se dissout dans les acides (vinaigre, citron, parfums, sueur) et se ternit avec les laques, la chaleur et la sécheresse. Nettoyer au chiffon doux ; ni ultrasons, ni vapeur, ni solvants.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Pezzottaite": {
+  "en": "Very rare and rather brittle; stable to light; avoid knocks and ultrasonic cleaners.",
+  "fr": "Très rare et assez cassante ; stable à la lumière ; éviter chocs et ultrasons.",
+  "stability": "forte",
+  "toughness": "moyenne"
+ },
+ "Pierre_De_Lune": {
+  "en": "Perfect cleavage and perthite lamellae: fears knocks, ultrasonic cleaners and steam; stable to light.",
+  "fr": "Clivage parfait et lamelles de perthite : craint les chocs, les ultrasons et la vapeur ; stable à la lumière.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Pierre_Soleil": {
+  "en": "Perfect cleavage in two directions: fears knocks, ultrasonic cleaners and steam; amazonite fades in strong light and heat.",
+  "fr": "Clivage parfait dans deux directions : craint les chocs, les ultrasons et la vapeur ; l'amazonite pâlit à la lumière vive et à la chaleur.",
+  "stability": "moyenne",
+  "toughness": "faible"
+ },
+ "Prasiolite": {
+  "en": "Often made by heating amethyst: the green color can fade in strong light; withstands ultrasonic cleaners when cold.",
+  "fr": "Souvent obtenue en chauffant une améthyste : la couleur verte peut pâlir à la lumière vive ; supporte les ultrasons à froid.",
+  "stability": "moyenne",
+  "toughness": "forte"
+ },
+ "Prehnite": {
+  "en": "Fine-grained rock: scratches more or less depending on its minerals, fears strong acids and heat; avoid ultrasonic cleaners.",
+  "fr": "Roche à grain fin : se raye plus ou moins selon ses minéraux, craint les acides forts et la chaleur ; éviter ultrasons.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Pyrite": {
+  "en": "Oxidizes in damp air and with heat, scratches and breaks easily; fears water, acids and ultrasonic cleaners. Keep it dry.",
+  "fr": "S'oxyde à l'air humide et à la chaleur, se raye et se brise facilement ; craint l'eau, les acides et les ultrasons. À garder au sec.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Quartz": {
+  "en": "Stable to light and ordinary products; withstands ultrasonic cleaners and steam.",
+  "fr": "Stable à la lumière et aux produits courants ; supporte ultrasons et vapeur.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Quartz_Fume": {
+  "en": "The color fades in strong light and disappears or turns yellow with heat; withstands the ultrasonic cleaner when cold.",
+  "fr": "La couleur pâlit à la lumière vive et s'efface ou vire au jaune à la chaleur ; supporte les ultrasons à froid.",
+  "stability": "moyenne",
+  "toughness": "forte"
+ },
+ "Quartz_Rose": {
+  "en": "The pink color fades markedly in sunlight: keep it away from light; avoid heat.",
+  "fr": "La couleur rose pâlit nettement à la lumière du soleil : garder à l'abri ; éviter la chaleur.",
+  "stability": "faible",
+  "toughness": "forte"
+ },
+ "Rhodocrosite": {
+  "en": "Very sensitive to acids (vinegar, lemon, perfumes, acidic sweat): the surface dissolves and dulls; fears heat; no ultrasonic cleaner or steam.",
+  "fr": "Très sensible aux acides (vinaigre, citron, parfums, sueur acide) : la surface se dissout et se ternit ; craint la chaleur ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Rhodonite": {
+  "en": "Fairly tough; the surface blackens in contact with air and chemicals (manganese oxidation); avoid acids and ultrasonic cleaners.",
+  "fr": "Assez tenace ; la surface noircit au contact de l'air et des produits chimiques (oxydation du manganèse) ; éviter acides et ultrasons.",
+  "stability": "moyenne",
+  "toughness": "forte"
+ },
+ "Rutile_Synthetique": {
+  "en": "Soft and brittle: the facets wear quickly; stable to light and ordinary products.",
+  "fr": "Tendre et cassant : les facettes s'abîment vite ; stable à la lumière et aux produits courants.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Saphir": {
+  "en": "Unaffected by light, acids and heat; withstands ultrasonic cleaners and steam. Only stones whose fissures are filled with lead glass fear acids and strong heat.",
+  "fr": "Insensible à la lumière, aux acides et à la chaleur ; supporte ultrasons et vapeur. Seules les pierres dont les fissures sont remplies de verre au plomb craignent les acides et la chaleur vive.",
+  "stability": "tres-forte",
+  "toughness": "tres-forte"
+ },
+ "Saphir_Change_Couleur": {
+  "en": "Unaffected by light, acids and heat; withstands ultrasonic cleaners and steam. Only stones whose fissures are filled with lead glass fear acids and strong heat.",
+  "fr": "Insensible à la lumière, aux acides et à la chaleur ; supporte ultrasons et vapeur. Seules les pierres dont les fissures sont remplies de verre au plomb craignent les acides et la chaleur vive.",
+  "stability": "tres-forte",
+  "toughness": "tres-forte"
+ },
+ "Saussurite": {
+  "en": "Fine-grained rock: less fragile than a crystal, stable to light and ordinary products; avoid knocks and ultrasonic cleaners.",
+  "fr": "Roche à grain fin : moins fragile qu'un cristal, stable à la lumière et aux produits courants ; éviter les chocs et les ultrasons.",
+  "stability": "forte",
+  "toughness": "moyenne"
+ },
+ "Scapolite": {
+  "en": "Distinct cleavage: fears knocks; pink to violet scapolites fade in strong light; avoid ultrasonic cleaners and steam.",
+  "fr": "Clivage net : craint les chocs ; les scapolites roses à violettes pâlissent à la lumière vive ; éviter ultrasons et vapeur.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Scheelite": {
+  "en": "Perfect cleavage and soft: fears knocks, thermal shock and ultrasonic cleaners.",
+  "fr": "Clivage parfait et tendre : craint les chocs, les chocs thermiques et les ultrasons.",
+  "stability": "moyenne",
+  "toughness": "faible"
+ },
+ "Selenite": {
+  "en": "Very soft: scratches with a fingernail and fears water, which dulls it, and acids; no ultrasonic cleaner or steam.",
+  "fr": "Très tendre : se raye à l'ongle et craint l'eau, qui la ternit, et les acides ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Sepiolite": {
+  "en": "Very soft: scratches with a fingernail and fears water, which dulls it, and acids; no ultrasonic cleaner or steam.",
+  "fr": "Très tendre : se raye à l'ongle et craint l'eau, qui la ternit, et les acides ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Serpentine_Bowenite": {
+  "en": "Scratches fairly easily and fears acids; stable to light. No ultrasonic cleaner.",
+  "fr": "Se raye assez facilement et craint les acides ; stable à la lumière. Pas d'ultrasons.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Sinhalite": {
+  "en": "Stable to light, acids and ordinary heat; withstands ultrasonic cleaners.",
+  "fr": "Stable à la lumière, aux acides et à la chaleur ordinaire ; supporte les ultrasons.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Sodalite": {
+  "en": "Poor cleavage: fears knocks; the color can fade in strong light; sensitive to acids.",
+  "fr": "Clivage médiocre : craint les chocs ; la couleur peut pâlir à la lumière vive ; sensible aux acides.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Sphalerite": {
+  "en": "Oxidizes in damp air and with heat, scratches and breaks easily; fears water, acids and ultrasonic cleaners. Keep it dry.",
+  "fr": "S'oxyde à l'air humide et à la chaleur, se raye et se brise facilement ; craint l'eau, les acides et les ultrasons. À garder au sec.",
+  "stability": "faible",
+  "toughness": "faible"
+ },
+ "Sphene": {
+  "en": "Rather soft for so brilliant a crystal: wears and chips easily, but stable to light and ordinary products. Avoid knocks.",
+  "fr": "Assez tendre pour un cristal si brillant : s'use et s'écaille facilement, mais stable à la lumière et aux produits courants. Éviter les chocs.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Spinelle": {
+  "en": "Stable to light, acids and heat; withstands ultrasonic cleaners and steam.",
+  "fr": "Stable à la lumière, aux acides et à la chaleur ; supporte les ultrasons et la vapeur.",
+  "stability": "tres-forte",
+  "toughness": "forte"
+ },
+ "Spinelle_Bleu": {
+  "en": "Stable to light, acids and heat; withstands ultrasonic cleaners and steam.",
+  "fr": "Stable à la lumière, aux acides et à la chaleur ; supporte les ultrasons et la vapeur.",
+  "stability": "tres-forte",
+  "toughness": "forte"
+ },
+ "Spodumene": {
+  "en": "Perfect cleavage: fears knocks; the color can fade in strong light; avoid ultrasonic cleaners and steam.",
+  "fr": "Clivage parfait : craint les chocs ; la couleur peut pâlir à la lumière vive ; éviter ultrasons et vapeur.",
+  "stability": "moyenne",
+  "toughness": "faible"
+ },
+ "Steatite": {
+  "en": "Very soft: scratches with a fingernail and chips; chemically inert, stable to light and heat. Not for exposed jewelry.",
+  "fr": "Très tendre : se raye à l'ongle et s'écaille ; chimiquement inerte, stable à la lumière et à la chaleur. Pas de bijou exposé.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Sugilite": {
+  "en": "Fairly tough; the purple color can fade in strong light; fears acids; avoid ultrasonic cleaners.",
+  "fr": "Assez tenace ; la couleur violette peut pâlir à la lumière vive ; craint les acides ; éviter les ultrasons.",
+  "stability": "moyenne",
+  "toughness": "forte"
+ },
+ "Swiss_Lapis": {
+  "en": "The dyes can fade in light and come off with solvents or heat; no ultrasonic cleaner, no solvents.",
+  "fr": "Les teintures peuvent pâlir à la lumière et partir au solvant ou à la chaleur ; ni ultrasons ni solvants.",
+  "stability": "moyenne",
+  "toughness": "forte"
+ },
+ "Taaffeite": {
+  "en": "Hard with no cleavage: stable to light and ordinary products; withstands ultrasonic cleaners.",
+  "fr": "Dure et sans clivage : stable à la lumière et aux produits courants ; supporte les ultrasons.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Tanzanite": {
+  "en": "Distinct cleavage and a stone often heated: fears thermal shock, ultrasonic cleaners and steam; avoid exposed everyday jewelry.",
+  "fr": "Clivage net et pierre souvent chauffée : craint les chocs thermiques, les ultrasons et la vapeur ; éviter les bijoux de tous les jours exposés.",
+  "stability": "moyenne",
+  "toughness": "faible"
+ },
+ "Titanate_Strontium": {
+  "en": "Very soft for a diamond simulant: scratches quickly; stable to light and ordinary products; avoid knocks.",
+  "fr": "Très tendre pour un simulant de diamant : se raye vite ; stable à la lumière et aux produits courants ; éviter les chocs.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Topaze": {
+  "en": "Perfect cleavage: a sharp knock or a thermal shock splits it. Yellow or brown topaz can fade in light; avoid ultrasonic cleaners and steam.",
+  "fr": "Clivage parfait : un coup sec ou un choc thermique la fend. Les topazes jaunes ou brunes peuvent pâlir à la lumière ; éviter ultrasons et vapeur.",
+  "stability": "moyenne",
+  "toughness": "faible"
+ },
+ "Tourmaline_Dravite": {
+  "en": "Stable to light and acids. Heavily fractured stones (red, pink) fear ultrasonic cleaners and thermal shock; the stone attracts dust when rubbed (pyroelectricity).",
+  "fr": "Stable à la lumière et aux acides. Les pierres très fissurées (rouges, roses) craignent les ultrasons et les chocs thermiques ; la pierre attire la poussière quand on la frotte (pyroélectricité).",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Tourmaline_Indicolite": {
+  "en": "Stable to light and acids. Heavily fractured stones (red, pink) fear ultrasonic cleaners and thermal shock; the stone attracts dust when rubbed (pyroelectricity).",
+  "fr": "Stable à la lumière et aux acides. Les pierres très fissurées (rouges, roses) craignent les ultrasons et les chocs thermiques ; la pierre attire la poussière quand on la frotte (pyroélectricité).",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Tourmaline_Melon_Eau": {
+  "en": "Stable to light and acids. Heavily fractured stones (red, pink) fear ultrasonic cleaners and thermal shock; the stone attracts dust when rubbed (pyroelectricity).",
+  "fr": "Stable à la lumière et aux acides. Les pierres très fissurées (rouges, roses) craignent les ultrasons et les chocs thermiques ; la pierre attire la poussière quand on la frotte (pyroélectricité).",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Tourmaline_Paraiba": {
+  "en": "Often heated: the neon color does not tolerate additional heating; avoid ultrasonic cleaners and thermal shock (stones often included).",
+  "fr": "Souvent chauffée : la couleur néon ne supporte pas un chauffage supplémentaire ; éviter ultrasons et chocs thermiques (pierres souvent incluses).",
+  "stability": "moyenne",
+  "toughness": "forte"
+ },
+ "Tourmaline_Rose": {
+  "en": "Stable to light and acids. Heavily fractured stones (red, pink) fear ultrasonic cleaners and thermal shock; the stone attracts dust when rubbed (pyroelectricity).",
+  "fr": "Stable à la lumière et aux acides. Les pierres très fissurées (rouges, roses) craignent les ultrasons et les chocs thermiques ; la pierre attire la poussière quand on la frotte (pyroélectricité).",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Tourmaline_Schorl": {
+  "en": "Stable to light and acids. Heavily fractured stones (red, pink) fear ultrasonic cleaners and thermal shock; the stone attracts dust when rubbed (pyroelectricity).",
+  "fr": "Stable à la lumière et aux acides. Les pierres très fissurées (rouges, roses) craignent les ultrasons et les chocs thermiques ; la pierre attire la poussière quand on la frotte (pyroélectricité).",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Tourmaline_Verdelite": {
+  "en": "Stable to light and acids. Heavily fractured stones (red, pink) fear ultrasonic cleaners and thermal shock; the stone attracts dust when rubbed (pyroelectricity).",
+  "fr": "Stable à la lumière et aux acides. Les pierres très fissurées (rouges, roses) craignent les ultrasons et les chocs thermiques ; la pierre attire la poussière quand on la frotte (pyroélectricité).",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Turquoise": {
+  "en": "Porous: absorbs sweat, oils, cosmetics and household products, and changes color (turns green); fears prolonged sun, acids and heat; no ultrasonic cleaner or steam.",
+  "fr": "Poreuse : absorbe la sueur, les huiles, les cosmétiques et les produits ménagers, et change de couleur (verdit) ; craint le soleil prolongé, les acides et la chaleur ; pas d'ultrasons ni de vapeur.",
+  "stability": "faible",
+  "toughness": "moyenne"
+ },
+ "Turquoise_Stabilisee": {
+  "en": "The resin impregnation protects it from sweat and oils, but acids, solvents, heat and ultrasonic cleaners can damage it.",
+  "fr": "L'imprégnation de résine la protège de la sueur et des huiles, mais les acides, les solvants, la chaleur et les ultrasons peuvent l'abîmer.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Variscite": {
+  "en": "Porous: absorbs oils and sweat, fears heat and acids; avoid ultrasonic cleaners and steam.",
+  "fr": "Poreuse : absorbe les huiles et la sueur, craint la chaleur et les acides ; éviter ultrasons et vapeur.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Verre": {
+  "en": "Conchoidal fracture: chips at the slightest knock and scratches; stable to light and ordinary products, but fears thermal shock.",
+  "fr": "Cassure conchoïdale : s'écaille au moindre choc et se raye ; stable à la lumière et aux produits courants, mais craint le choc thermique.",
+  "stability": "forte",
+  "toughness": "faible"
+ },
+ "Vulcanite": {
+  "en": "Soft and fragile: a collector's mineral rather than a jewelry stone; keep it away from humidity, knocks and heat.",
+  "fr": "Tendre et fragile : minéral de collection plutôt que pierre de bijou ; à garder à l'abri de l'humidité, des chocs et de la chaleur.",
+  "stability": "moyenne",
+  "toughness": "faible"
+ },
+ "YAG": {
+  "en": "No cleavage, stable to light and ordinary products; can scratch with time; withstands ultrasonic cleaners.",
+  "fr": "Sans clivage, stable à la lumière et aux produits courants ; peut se rayer avec le temps ; supporte les ultrasons.",
+  "stability": "forte",
+  "toughness": "forte"
+ },
+ "Zircon": {
+  "en": "Fragile at the edges, which wear quickly; heated blue or colorless zircons can fade in light or heat; brown and red ones are more stable. Avoid knocks and heat.",
+  "fr": "Fragile aux arêtes, qui s'usent vite ; les zircons bleus ou incolores chauffés peuvent pâlir à la lumière ou à la chaleur ; les bruns et les rouges sont plus stables. Éviter les chocs et la chaleur.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Zircon_Bas": {
+  "en": "Crystal lattice damaged by radioactivity: a more fragile stone whose color can change; avoid knocks and heat.",
+  "fr": "Réseau cristallin abîmé par la radioactivité : pierre plus fragile, couleur pouvant évoluer ; éviter les chocs et la chaleur.",
+  "stability": "moyenne",
+  "toughness": "moyenne"
+ },
+ "Zoisite": {
+  "en": "Distinct cleavage and a stone often heated: fears thermal shock, ultrasonic cleaners and steam; avoid exposed everyday jewelry.",
+  "fr": "Clivage net et pierre souvent chauffée : craint les chocs thermiques, les ultrasons et la vapeur ; éviter les bijoux de tous les jours exposés.",
+  "stability": "moyenne",
+  "toughness": "faible"
+ }
+}

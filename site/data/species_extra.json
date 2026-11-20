@@ -34,6 +34,11 @@
   "formula": "SiO₂ (Fe)",
   "note": "Quartz bicolore : zones violettes et jaunes"
  },
+ "Anatase": {
+  "system": "tetragonal",
+  "formula": "TiO₂",
+  "note": "Oxyde de titane (anatase)"
+ },
  "Andalousite": {
   "system": "orthorhombic",
   "formula": "Al₂SiO₅",
@@ -54,6 +59,11 @@
   "formula": "Cu₃(CO₃)₂(OH)₂",
   "note": "Carbonate basique de cuivre"
  },
+ "Bakelite": {
+  "system": "amorphous",
+  "formula": "Résine phénol-formol",
+  "note": "Résine thermodurcissable de phénol et de formol"
+ },
  "Benitoite": {
   "system": "hexagonal",
   "formula": "BaTiSi₃O₉",
@@ -73,6 +83,16 @@
   "system": "hexagonal",
   "formula": "Be₃Al₂Si₆O₁₈ (Fe)",
   "note": "Béryl coloré par le fer"
+ },
+ "Bezoard": {
+  "system": "organic",
+  "formula": "Poils et fibres + phosphates de calcium",
+  "note": "Concrétion organique de l'estomac des ruminants"
+ },
+ "Brookite": {
+  "system": "orthorhombic",
+  "formula": "TiO₂",
+  "note": "Oxyde de titane (brookite)"
  },
  "CZ": {
   "system": "cubic",
@@ -183,6 +203,11 @@
   "system": "monoclinic",
   "formula": "CaMgSi₂O₆ (Cr)",
   "note": "Silicate de calcium et de magnésium coloré par le chrome"
+ },
+ "Ebonite": {
+  "system": "amorphous",
+  "formula": "Caoutchouc vulcanisé (polyisoprène et soufre)",
+  "note": "Caoutchouc durci par le soufre"
  },
  "Ecaille_Tortue": {
   "system": "organic",
@@ -429,6 +454,11 @@
   "formula": "Cu₂CO₃(OH)₂",
   "note": "Carbonate de cuivre"
  },
+ "Marbre": {
+  "system": "trigonal",
+  "formula": "CaCO₃",
+  "note": "Calcaire recristallisé : agrégat de calcite"
+ },
  "Moissanite_Synthetique": {
   "system": "hexagonal",
   "formula": "SiC",
@@ -444,6 +474,11 @@
   "formula": "Be₃Al₂Si₆O₁₈ (Mn)",
   "note": "Béryl rose coloré par le manganèse"
  },
+ "Nacre": {
+  "system": "organic",
+  "formula": "CaCO₃ (aragonite) + conchyoline",
+  "note": "Aragonite en lamelles collées par de la conchyoline"
+ },
  "Obsidienne": {
   "system": "amorphous",
   "formula": "SiO₂ (≈ 70 %) + Al₂O₃, K₂O, Na₂O",
@@ -453,6 +488,11 @@
   "system": "amorphous",
   "formula": "SiO₂ (≈ 70 %) + cristobalite",
   "note": "Verre volcanique avec des flocons de cristobalite"
+ },
+ "Odontolite": {
+  "system": "organic",
+  "formula": "Ca₅(PO₄)₃(OH) + Fe₃(PO₄)₂·8H₂O",
+  "note": "Dent ou os fossile coloré en bleu par la vivianite"
  },
  "Oeil_de_Tigre": {
   "system": "trigonal",
@@ -498,6 +538,11 @@
   "system": "organic",
   "formula": "CaCO₃ (aragonite) + conchioline",
   "note": "Couches de nacre sécrétées par un mollusque"
+ },
+ "Perle_Conque": {
+  "system": "organic",
+  "formula": "CaCO₃ (aragonite) + matière organique",
+  "note": "Aragonite sans nacre (perle porcelanée)"
  },
  "Perle_Tahiti": {
   "system": "organic",
@@ -558,6 +603,11 @@
   "system": "triclinic",
   "formula": "(Mn,Fe,Ca)SiO₃",
   "note": "Silicate de manganèse"
+ },
+ "Rutile_Synthetique": {
+  "system": "tetragonal",
+  "formula": "TiO₂",
+  "note": "Oxyde de titane synthétique (rutile)"
  },
  "Saphir": {
   "system": "trigonal",
@@ -644,6 +694,11 @@
   "formula": "KNa₂(Fe,Mn,Al)₂Li₃Si₁₂O₃₀",
   "note": "Silicate de potassium, de lithium et de manganèse (sugilite)"
  },
+ "Swiss_Lapis": {
+  "system": "trigonal",
+  "formula": "SiO₂ (teint)",
+  "note": "Jaspe (quartz microcristallin) teint en bleu"
+ },
  "Taaffeite": {
   "system": "hexagonal",
   "formula": "BeMgAl₄O₈",
@@ -718,6 +773,11 @@
   "system": "amorphous",
   "formula": "SiO₂ + Na₂O + CaO (variable)",
   "note": "Verre : silice et fondants, sans structure cristalline"
+ },
+ "Vulcanite": {
+  "system": "orthorhombic",
+  "formula": "CuTe",
+  "note": "Telluride de cuivre"
  },
  "YAG": {
   "system": "cubic",

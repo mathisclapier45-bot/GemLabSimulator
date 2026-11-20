@@ -2,8 +2,8 @@
 import json
 import re
 
-from . import catalog, chelsea, config, diagrams, home, i18n, markup, routes_learn, views
-from .views import esc, fmt_num, gem_svg, page
+from . import catalog, chelsea, config, cut_styles, diagrams, home, i18n, markup, routes_learn, views
+from .views import esc, fmt_num, gem_svg, page, fmt_ri, fmt_bir, transparency_cell, fmt_density, fmt_hardness
 from .web import HTTPError, Response, Router, redirect
 
 router = Router()
@@ -59,7 +59,7 @@ def encyclopedia(req):
             '<li><a class="tile" style="--gem:{gc}" href="/encyclopedie/{slug}">{gem}<span class="name">{name}</span>'
             '<span class="sub">{sub}</span></a></li>'.format(
                 gc=esc(s["iconColor"]), slug=s["slug"], gem=gem_svg(s["iconColor"], s["iconFacetColor"], 44, s.get("iconStyle")), name=esc(s["displayName"]),
-                sub=esc(t("enc.tile.sub", hardness=fmt_num(s.get("hardness"), 1), ri=fmt_num(s.get("refractiveIndex"), 3))))
+                sub=esc(t("enc.tile.sub", hardness=fmt_hardness(s), ri=fmt_ri(s))))
             for s in shown)
         body = '<ul class="tiles">{}</ul>'.format(tiles)
     else:
@@ -79,6 +79,24 @@ def _row(label, value, gloss=None):
         return ""
     head = '<a class="gloss" href="/glossaire#{}">{}</a>'.format(gloss, esc(label)) if gloss else esc(label)
     return "<tr><th scope=\"row\">{}</th><td>{}</td></tr>".format(head, value)
+
+
+LEVELS = ("faible", "moyenne", "forte", "tres-forte")
+
+
+def _care_cell(t, s, field):
+    """A level (weak ... very strong) as four dots and a word; under the stability line, the sentence on what the stone is sensitive to."""
+    care = s.get("care")
+    if not care:
+        return ""
+    level = care[field]
+    n = LEVELS.index(level) + 1
+    dots = "".join('<span class="cdot{}"></span>'.format(" on" if i < n else "") for i in range(4))
+    html = '<span class="care care{}" title="{}"><span class="cdots" aria-hidden="true">{}</span> <strong>{}</strong></span>'.format(
+        n, esc(t("care.of", level=t("care.level." + level), n=n)), dots, esc(t("care.level." + level)))
+    if field == "stability" and care.get("text"):
+        html += '<br><span class="small">{}</span>'.format(esc(care["text"]))
+    return html
 
 
 def _wavelength_rgb(nm):
@@ -136,6 +154,22 @@ def habits(req):
     content = '<nav class="crumbs"><a href="/encyclopedie">{back}</a></nav><h1>{h1}</h1><p class="lead">{lead}</p>{items}'.format(
         back=esc(t("sp.back")), h1=esc(t("hab.title")), lead=esc(t("hab.lead")), items="".join(items))
     return page(req, t("hab.title"), content, section="encyclopedia")
+
+
+def _pleo_cell(t, s):
+    """The pleochroism: one line, or one line per variety when the species has several (a blue, a green, a pink sapphire...)."""
+    if s.get("pleo_variants"):
+        return "<ul class=\"pleo-list\">{}</ul>".format("".join("<li><strong>{}</strong> : {}</li>".format(esc(v["label"]), esc(v["text"])) for v in s["pleo_variants"]))
+    return esc(s.get("pleochroicDescription") or "") if s.get("pleochroic") else esc(t("sp.none"))
+
+
+def _ri_cell(t, s):
+    """The refractive index as "lowest - highest", with what the two ends are: both rays of a uniaxial stone, the extremes of a biaxial one."""
+    if (s.get("ri_max") or 0) <= 0:
+        return ""                                                                    # no index: the row is left out
+    note = {"Uniaxe": "sp.ri.uniaxial", "Biaxe": "sp.ri.biaxial"}.get(s.get("opticalCharacterClassName"))
+    text = esc(fmt_ri(s))
+    return text + (' <span class="small">({})</span>'.format(esc(t(note))) if note and s.get("ri_min") != s.get("ri_max") else "")
 
 
 def _dispersion_cell(t, s):
@@ -220,12 +254,8 @@ def _colors_section(req, s):
     if len(variants) > 1:
         toggle = ('<div class="seg" role="group"><button type="button" class="on" data-variant="natural">{}</button>'
                   '<button type="button" data-variant="synthetic">{}</button></div>').format(esc(t("col.natural")), esc(t("col.synthetic")))
-    shape_ids = ["Rond", "Ovale", "Coussin", "Carre", "Rectangle", "Emeraude", "Octogone", "Baguette", "Poire", "Marquise", "Shield", "Triangle", "Coeur"]
-    shape_btns = "".join('<button type="button" data-shape="{k}">{l}</button>'.format(k=k, l=esc(t("shape." + k))) for k in shape_ids)
-    cut_ids = ["brillant", "mixte", "a-degres", "ascher", "princesse", "ciseaux", "radiant", "cabochon"]
-    cut_btns = "".join('<button type="button" data-cut="{k}">{l}</button>'.format(k=k, l=esc(t("cut." + k))) for k in cut_ids)
     shape_map = {"rectangle a pans coupes": "Emeraude", "carre": "Carre", "coeur": "Coeur"}
-    cut_map = {"brillant": "brillant", "cabochon": "cabochon", "mixte": "mixte", "a degres": "a-degres",
+    cut_map = {"brillant": "brillant", "cabochon": "cabochon-moyen", "mixte": "mixte", "a degres": "a-degres",
                "emeraude": "a-degres", "emeraude (a degres)": "a-degres", "princesse": "princesse"}
     shape_key = catalog.fold(s.get("shape") or "ovale")
     shape = shape_map.get(shape_key, shape_key[:1].upper() + shape_key[1:])
@@ -241,7 +271,7 @@ def _colors_section(req, s):
             "milky": milky, "dims": [s.get("lengthMm") or 10, s.get("widthMm") or 8, s.get("depthMm") or 5], "cabonly": bool(cab_only)}
     n = sum(len(v[1]) for v in variants[:1])
     note = t("col.diamond") if pal.get("diamond") else (t("col.count", n=n) + (" " + t("col.any") if pal.get("any") else ""))
-    labels = {"info": t("col.info"), "share": t("col.share"), "neutral": t("col.neutral"), "preview": t("col.preview"), "phys": phys, "torch": t("col.change.info")}
+    labels = {"approx": t("col.approx"), "info": t("col.info"), "share": t("col.share"), "neutral": t("col.neutral"), "preview": t("col.preview"), "phys": phys, "torch": t("col.change.info")}
     stones = '<div class="stone" role="img" aria-label="{pv}"></div>'.format(pv=esc(t("col.preview")))
     if change:                                       # two stones: by daylight and under an incandescent light
         stones = ('<div class="stonepair"><figure><div class="stone" role="img" aria-label="{pv} ({d})"></div><figcaption>{d}</figcaption></figure>'
@@ -251,14 +281,15 @@ def _colors_section(req, s):
         '<section class="colors{changecls}" data-shape="{shape}" data-cut="{cut}" data-labels="{labels}"><h2>{title}</h2><p class="lead small">{lead}</p>{changenote}'
         '<p class="small">{note}</p>{toggle}<div class="colors-body"><div class="cpreview">{stones}'
         '<p class="small drag">{drag}</p><p class="cinfo" aria-live="polite"></p></div><div class="cgrids">{grids}</div></div>'
-        '<div class="pick"><div><strong>{ls}</strong><div class="seg wrap" data-kind="shape">{shapes}</div></div>'
-        '<div><strong>{lc}</strong><div class="seg" data-kind="cut">{cuts}</div></div></div>'
+        '<div class="pick"><label>{ls}<select name="shape" data-kind="shape" aria-label="{lsl}">{shapes}</select></label>'
+        '<label>{lc}<select name="cut" data-kind="cut" aria-label="{lcl}">{cuts}</select></label>'
+        '<p class="small approx" hidden></p></div>'
         '<script type="application/json" id="pal-data">{data}</script>'
         '<script src="/static/js/gem3d.js" defer></script><script src="/static/js/palette.js" defer></script></section>').format(
         changecls=" change" if change else "", stones=stones, changenote='<p class="banner ok changenote">{}</p>'.format(esc(t("col.change.lead"))) if change else "",
         shape=esc(shape), cut=cut, labels=esc(json.dumps(labels, ensure_ascii=False)), title=esc(t("col.title")), lead=esc(t("col.lead")),
-        note=esc(note), toggle=toggle, drag=esc(t("col.drag")), grids="".join(grids), ls=esc(t("col.shape")), shapes=shape_btns,
-        lc=esc(t("col.cut")), cuts=cut_btns, data=json.dumps(data, ensure_ascii=False).replace("</", "<\\/"))
+        note=esc(note), toggle=toggle, drag=esc(t("col.drag")), grids="".join(grids), ls=esc(t("col.shape")), shapes=cut_styles.shape_options(t, shape),
+        lsl=esc(t("col.shape.label")), lcl=esc(t("col.cut.label")), lc=esc(t("col.cut")), cuts=cut_styles.options(t, cut), data=json.dumps(data, ensure_ascii=False).replace("</", "<\\/"))
 
 
 def _fig(svg, caption, extra_class=""):
@@ -325,16 +356,18 @@ def species_page(req):
     props = "".join([
         _row(t("sp.system"), esc(t("sys." + system)) if system else ""),
         _row(t("sp.formula"), '<span class="formula">{}</span> <span class="small">{}</span>'.format(esc(ex.get("formula", "")), esc(ex.get("note", ""))) if ex else ""),
-        _row(t("sp.ri"), esc(fmt_num(s.get("refractiveIndex"), 3)), "indice-de-refraction"),
-        _row(t("sp.birefringence"), esc(fmt_num(s.get("birefringence"), 3)) if s.get("birefringence") else "", "birefringence"),
+        _row(t("sp.ri"), _ri_cell(t, s), "indice-de-refraction"),
+        _row(t("sp.birefringence"), esc(fmt_bir(s)), "birefringence"),
         _row(t("sp.dispersion"), _dispersion_cell(t, s), "dispersion"),
-        _row(t("sp.density"), esc(fmt_num(s.get("density"), 2)), "densite"),
-        _row(t("sp.hardness"), esc(fmt_num(s.get("hardness"), 1)), "durete"),
+        _row(t("sp.density"), esc(fmt_density(s)), "densite"),
+        _row(t("sp.hardness"), esc(fmt_hardness(s)), "durete"),
+        _row(t("sp.toughness"), _care_cell(t, s, "toughness"), "tenacite"),
+        _row(t("sp.stability"), _care_cell(t, s, "stability"), "stabilite"),
         _row(t("sp.luster"), esc(s.get("luster", "")), "eclat"),
         _row(t("sp.color"), esc(s.get("color", ""))),
-        _row(t("sp.transparency"), esc(s.get("transparency", "")), "transparence"),
+        _row(t("sp.transparency"), transparency_cell(s, s.get("transparency", "")), "transparence"),
         _row(t("sp.optic"), esc(s.get("opticalCharacter", ""))),
-        _row(t("sp.pleochroism"), esc(s.get("pleochroicDescription") or "") if s.get("pleochroic") else esc(t("sp.none")), "pleochroisme"),
+        _row(t("sp.pleochroism"), _pleo_cell(t, s), "pleochroisme"),
         _row(t("sp.interference"), esc(s.get("interferenceFigure", "")), "figure-d-interference"),
         _row(t("sp.magnetism"), esc(s.get("magnetism", ""))),
         _row(t("sp.thermal"), esc(t("sp.yes")) if s.get("isThermallyConductiveLikeDiamond") else "", "conductivite-thermique"),
@@ -416,8 +449,8 @@ def species_page(req):
 @router.route("GET", "/identification")
 def identification(req):
     t = req.t
-    keys = ("ri", "ri_tol", "density", "density_tol", "birefringence", "birefringence_tol", "hardness_from", "hardness_to", "optic",
-            "pleo", "color", "transparency", "luster", "uv", "chelsea", "spectrum", "thermal", "magnet", "synthetic")
+    keys = ("ri", "ri_tol", "ri_from", "ri_to", "density", "density_tol", "density_from", "density_to", "birefringence", "birefringence_tol", "birefringence_from", "birefringence_to",
+            "hardness_from", "hardness_to", "optic", "pleo", "color", "transparency", "tr0", "tr1", "tr2", "luster", "uv", "chelsea", "spectrum", "thermal", "magnet", "synthetic")
     q = {k: req.query.get(k, "").strip()[:20] for k in keys}
     searched = any(q[k] for k in keys if not k.endswith("_tol"))
     any_label = t("idt.any")
@@ -430,8 +463,18 @@ def identification(req):
     def num(name, label, step, tols):
         topts = "".join('<option value="{0}"{1}>±{0}</option>'.format(v, " selected" if q[name + "_tol"] == v else "") for v in tols)
         return ('<fieldset class="numrow"><legend>{l}</legend><input type="text" inputmode="decimal" name="{n}" value="{v}" placeholder="{ph}" aria-label="{l}">'
-                '<span>{tol}</span><select name="{n}_tol" aria-label="{tol}">{o}</select></fieldset>').format(
-            l=esc(label), n=name, v=esc(q[name]), ph=step, tol=esc(t("idt.tol")), o=topts)
+                '<span>{tol}</span><select name="{n}_tol" aria-label="{tol}">{o}</select>'
+                '<span class="rangebox"><span class="orrange">{orr}</span><span>{fr}</span><input type="text" inputmode="decimal" name="{n}_from" value="{vf}" aria-label="{l} {fr}">'
+                '<span>{to}</span><input type="text" inputmode="decimal" name="{n}_to" value="{vt}" aria-label="{l} {to}"></span></fieldset>').format(
+            l=esc(label), n=name, v=esc(q[name]), ph=step, tol=esc(t("idt.tol")), o=topts, orr=esc(t("idt.or_range")), fr=esc(t("idt.from")), to=esc(t("idt.to")),
+            vf=esc(q[name + "_from"]), vt=esc(q[name + "_to"]))
+
+    def transparency_boxes():
+        """Three boxes with their dots: white for transparent, gray for semi-transparent, black for opaque; tick one or several."""
+        labels = (t("enc.transparency.transparent"), t("enc.transparency.translucent"), t("enc.transparency.opaque"))
+        boxes = "".join('<label class="trbox"><input type="checkbox" name="tr{i}" value="1"{c}><span class="tdot t{i}" aria-hidden="true"></span> {l}</label>'.format(
+            i=i, c=" checked" if q["tr%d" % i] else "", l=esc(labels[i])) for i in range(3))
+        return '<fieldset class="trgroup"><legend>{}</legend>{}</fieldset>'.format(esc(t("idt.transparency")), boxes)
 
     yes_no = [("yes", t("idt.yes")), ("no", t("idt.no"))]
     form = (
@@ -449,7 +492,7 @@ def identification(req):
         optic=sel("optic", t("idt.optic"), [("Isotrope", t("enc.optic.isotropic")), ("Uniaxe", t("enc.optic.uniaxial")), ("Biaxe", t("enc.optic.biaxial")), ("Opaque", t("enc.optic.opaque"))]),
         pleo=sel("pleo", t("idt.pleo"), yes_no),
         color=sel("color", t("idt.color"), [(k, t("color." + k)) for k in catalog.COLOR_FAMILIES]),
-        transp=sel("transparency", t("idt.transparency"), [("transparent", t("enc.transparency.transparent")), ("translucide", t("enc.transparency.translucent")), ("opaque", t("enc.transparency.opaque"))]),
+        transp=transparency_boxes(),
         luster=sel("luster", t("idt.luster"), [(k, t("luster." + k)) for k in catalog.LUSTER_FAMILIES]),
         uv=sel("uv", t("idt.uv"), yes_no),
         chel=sel("chelsea", t("idt.chelsea"), [("red", t("idt.chelsea.red")), ("none", t("idt.chelsea.none"))]),
@@ -470,8 +513,8 @@ def identification(req):
                 tiles.append(
                     '<li><a class="tile" style="--gem:{gc}" href="/encyclopedie/{slug}">{gem}<span class="name">{name}</span><span class="sub">{sub}</span></a></li>'.format(
                         gc=esc(sp["iconColor"]), slug=sp["slug"], gem=gem_svg(sp["iconColor"], sp["iconFacetColor"], 44, sp.get("iconStyle")), name=esc(sp["displayName"]),
-                        sub=esc(t("idt.result.sub", ri=fmt_num(sp.get("refractiveIndex"), 3), density=fmt_num(sp.get("density"), 2),
-                                  hardness=fmt_num(sp.get("hardness"), 1)))))
+                        sub=esc(t("idt.result.sub", ri=fmt_ri(sp), density=fmt_density(sp),
+                                  hardness=fmt_hardness(sp))) + '<span class="tdots" aria-hidden="true">{}</span>'.format("".join('<span class="tdot t{}"></span>'.format(i) for i in sp["tr_levels"]))))
             body = '<p class="count">{}</p><ul class="tiles">{}</ul>'.format(esc(t("idt.count", n=len(found))), "".join(tiles))
     content = '<h1>{}</h1><p class="lead">{}</p>{}{}'.format(esc(t("idt.title")), esc(t("idt.lead")), form, body)
     return page(req, t("idt.title"), content, section="identify")

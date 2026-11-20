@@ -4,7 +4,7 @@ import re
 
 from . import catalog
 from .db import now
-from .views import csrf_field, esc, fmt_num, gem_svg, page
+from .views import csrf_field, esc, fmt_num, gem_svg, page, fmt_ri, fmt_bir, fmt_density, fmt_hardness
 from .web import HTTPError, Router, redirect
 
 router = Router()
@@ -255,15 +255,17 @@ def _verdicts(req, a, b, d):
     def add(lesson_id, key, **kw):
         out.append((lesson_id, t("cmp.sep." + key, **kw)))
 
-    ra, rb = _num(a.get("refractiveIndex")), _num(b.get("refractiveIndex"))
-    if ra and rb and ra <= 1.81 and rb <= 1.81 and abs(ra - rb) >= 0.02:
-        add("refractometre", "ri", a=fmt_num(ra, 3), b=fmt_num(rb, 3))
-    ba, bb = _num(a.get("birefringence")) or 0.0, _num(b.get("birefringence")) or 0.0
-    if ra and rb and ra <= 1.81 and rb <= 1.81 and abs(ba - bb) >= 0.01:
-        add("refractometre", "bire", a=fmt_num(ba, 3), b=fmt_num(bb, 3))
-    da, db_ = _num(a.get("density")), _num(b.get("density"))
-    if da and db_ and abs(da - db_) >= 0.15:
-        add("balance_hydrostatique", "density", a=fmt_num(da, 2), b=fmt_num(db_, 2))
+    # two species are told apart by a property only when their RANGES do not overlap (a species has a lowest and a highest value, not one)
+    def gap(lo_a, hi_a, lo_b, hi_b):
+        return max(lo_a - hi_b, lo_b - hi_a)
+
+    reads = a["ri_max"] <= 1.81 and b["ri_max"] <= 1.81                       # the refractometer stops at about 1.81
+    if reads and gap(a["ri_min"], a["ri_max"], b["ri_min"], b["ri_max"]) >= 0.005:
+        add("refractometre", "ri", a=fmt_ri(a), b=fmt_ri(b))
+    if reads and gap(a["bir_min"], a["bir_max"], b["bir_min"], b["bir_max"]) >= 0.005:
+        add("refractometre", "bire", a=fmt_bir(a) or t("cmp.zero"), b=fmt_bir(b) or t("cmp.zero"))
+    if gap(a["density_min"], a["density_max"], b["density_min"], b["density_max"]) >= 0.05:
+        add("balance_hydrostatique", "density", a=fmt_density(a), b=fmt_density(b))
     if a.get("opticalCharacterClassName") != b.get("opticalCharacterClassName"):
         add("polariscope", "optic", a=a.get("opticalCharacterClassName") or "", b=b.get("opticalCharacterClassName") or "")
     if bool(a.get("pleochroic")) != bool(b.get("pleochroic")):
@@ -281,9 +283,8 @@ def _verdicts(req, a, b, d):
         add("testeurs_diamant", "electric", who=A if a.get("isElectricallyConductive") else B)
     if _magnetic(a) != _magnetic(b):
         add("aimant", "magnet", who=A if _magnetic(a) else B)
-    ha, hb = _num(a.get("hardness")), _num(b.get("hardness"))
-    if ha and hb and abs(ha - hb) >= 1.0:
-        add("durete", "hardness", a=fmt_num(ha, 1), b=fmt_num(hb, 1))
+    if gap(a["hardness_min"], a["hardness_max"], b["hardness_min"], b["hardness_max"]) >= 0.5:
+        add("durete", "hardness", a=fmt_hardness(a), b=fmt_hardness(b))
     return out
 
 
@@ -307,12 +308,11 @@ def _compare_rows(req, a, b):
 
     row(t("sp.system"), system(a), system(b))
     row(t("sp.formula"), (a.get("extra") or {}).get("formula", ""), (b.get("extra") or {}).get("formula", ""))
-    row(t("sp.ri"), fmt_num(a.get("refractiveIndex"), 3), fmt_num(b.get("refractiveIndex"), 3), "indice-de-refraction")
-    row(t("sp.birefringence"), fmt_num(a.get("birefringence"), 3) if a.get("birefringence") else t("cmp.zero"),
-        fmt_num(b.get("birefringence"), 3) if b.get("birefringence") else t("cmp.zero"), "birefringence")
+    row(t("sp.ri"), fmt_ri(a), fmt_ri(b), "indice-de-refraction")
+    row(t("sp.birefringence"), fmt_bir(a) or t("cmp.zero"), fmt_bir(b) or t("cmp.zero"), "birefringence")
     row(t("sp.dispersion"), disp(a), disp(b), "dispersion")
-    row(t("sp.density"), fmt_num(a.get("density"), 2), fmt_num(b.get("density"), 2), "densite")
-    row(t("sp.hardness"), fmt_num(a.get("hardness"), 1), fmt_num(b.get("hardness"), 1), "durete")
+    row(t("sp.density"), fmt_density(a), fmt_density(b), "densite")
+    row(t("sp.hardness"), fmt_hardness(a), fmt_hardness(b), "durete")
     row(t("sp.luster"), a.get("luster", ""), b.get("luster", ""), "eclat")
     row(t("sp.color"), a.get("color", ""), b.get("color", ""))
     row(t("sp.transparency"), a.get("transparency", ""), b.get("transparency", ""), "transparence")
@@ -483,7 +483,7 @@ def search_page(req):
             '<li><a class="tile" style="--gem:{gc}" href="/encyclopedie/{slug}">{gem}<span class="name">{name}</span>'
             '<span class="sub">{sub}</span></a></li>'.format(
                 gc=esc(s["iconColor"]), slug=esc(s["slug"]), gem=gem_svg(s["iconColor"], s["iconFacetColor"], 44, s.get("iconStyle")), name=esc(s["displayName"]),
-                sub=esc(t("enc.tile.sub", hardness=fmt_num(s.get("hardness"), 1), ri=fmt_num(s.get("refractiveIndex"), 3)))) for s in species[:24])
+                sub=esc(t("enc.tile.sub", hardness=fmt_hardness(s), ri=fmt_ri(s)))) for s in species[:24])
         more = ('<p class="side-link"><a href="/encyclopedie?q={}">{}</a></p>'.format(esc(q), esc(t("search.more", n=len(species)))) if len(species) > 24 else "")
         parts.append('<section><h2>{} <span class="count">({})</span></h2><ul class="tiles">{}</ul>{}</section>'.format(
             esc(t("search.species")), len(species), tiles, more))

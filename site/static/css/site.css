@@ -363,3 +363,43 @@ table.gtable th, table.gtable td { white-space: normal; }
 
 .spec-variant { margin: 0.6rem 0 1rem; }
 .spec-variant h4 { margin: 0 0 0.2rem; font-size: 1rem; }
+
+/* transparency: white dot = transparent, gray = semi-transparent, black = opaque (several dots when a species can be several) */
+.tdots { display: inline-flex; gap: 0.25rem; vertical-align: -0.1rem; margin-right: 0.3rem; }
+.tdot { width: 0.85rem; height: 0.85rem; border-radius: 50%; border: 1.5px solid var(--muted); box-sizing: border-box; display: inline-block; }
+.tdot.t0 { background: #ffffff; }
+.tdot.t1 { background: #9aa0aa; }
+.tdot.t2 { background: #111318; }
+
+.pleo-list { margin: 0; padding-left: 1.1rem; }
+.pleo-list li { margin: 0.1rem 0; }
+
+.numrow .orrange { margin-left: 0.8rem; color: var(--muted); }
+.trgroup { border: 1px solid var(--line); border-radius: var(--radius); padding: 0.4rem 0.7rem; }
+.trgroup legend { font-weight: 600; padding: 0 0.3rem; }
+.trbox { display: inline-flex; align-items: center; gap: 0.35rem; margin-right: 1rem; }
+.tile .tdots { margin-top: 0.2rem; }
+.fgrid .trgroup { grid-column: span 1; }
+.fgrid .trbox, .trbox { display: flex; flex-direction: row; align-items: center; gap: 0.4rem; margin: 0.2rem 0; }
+.trbox input[type="checkbox"] { width: auto; margin: 0; }
+
+/* small screens: a wide table scrolls inside its own box instead of widening the page */
+@media (max-width: 640px) {
+  table.props.gtable, table.props.cmp { display: block; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .gfigure figure { flex-basis: 100%; min-width: 0; }
+}
+
+.numrow .rangebox { display: flex; flex-wrap: nowrap; align-items: center; gap: 0.4rem; flex-basis: 100%; margin-top: 0.4rem; }
+.numrow .rangebox input { width: 5.5rem; min-width: 0; }
+.numrow .rangebox .orrange { margin-left: 0; }
+
+.pick { display: flex; flex-wrap: wrap; gap: 0.8rem 1.4rem; align-items: flex-end; }
+.pick label { display: flex; flex-direction: column; gap: 0.25rem; font-weight: 600; }
+.pick select { font: inherit; min-width: 12rem; padding: 0.35rem 0.6rem; }
+.pick .approx { flex-basis: 100%; margin: 0; }
+
+/* toughness and stability: four dots, filled up to the level */
+.care { display: inline-flex; align-items: center; gap: 0.35rem; }
+.cdots { display: inline-flex; gap: 0.2rem; }
+.cdot { width: 0.7rem; height: 0.7rem; border-radius: 50%; border: 1.5px solid var(--muted); box-sizing: border-box; display: inline-block; }
+.cdot.on { background: var(--accent); border-color: var(--accent); }

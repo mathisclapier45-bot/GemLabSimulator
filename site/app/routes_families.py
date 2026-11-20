@@ -1,6 +1,6 @@
 """The families of gems in the encyclopedia: the classes of minerals (and the synthetics), then the great families, each with its page."""
-from . import catalog, class_icons, garnet_diagram, markup, scapolite_diagram
-from .views import esc, fmt_num, gem_svg, page
+from . import catalog, class_icons, feldspar_diagram, garnet_diagram, markup, scapolite_diagram
+from .views import esc, fmt_num, gem_svg, page, fmt_ri, fmt_density, fmt_hardness
 from .web import HTTPError, Router
 
 router = Router()
@@ -18,7 +18,7 @@ def _tile(t, s, note=""):
     return ('<li><a class="tile" style="--gem:{gc}" href="/encyclopedie/{slug}">{gem}<span class="name">{name}</span>'
             '<span class="sub">{sub}</span></a></li>').format(
         gc=esc(s["iconColor"]), slug=s["slug"], gem=gem_svg(s["iconColor"], s["iconFacetColor"], 44, s.get("iconStyle")), name=esc(s["displayName"]),
-        sub=esc(note or t("enc.tile.sub", hardness=fmt_num(s.get("hardness"), 1), ri=fmt_num(s.get("refractiveIndex"), 3))))
+        sub=esc(note or t("enc.tile.sub", hardness=fmt_hardness(s), ri=fmt_ri(s))))
 
 
 def _count(t, n):
@@ -58,7 +58,7 @@ def index(req):
 
 
 # Figures that belong to one family: the diagrams of the garnets and of the scapolites sit under the introduction.
-FIGURES = {"grenats": garnet_diagram.section, "scapolites": scapolite_diagram.section}
+FIGURES = {"grenats": garnet_diagram.section, "scapolites": scapolite_diagram.section, "feldspaths": feldspar_diagram.section}
 
 
 def _group_page(req, item, items, base, back_label, is_class=False):
@@ -95,7 +95,7 @@ def _group_page(req, item, items, base, back_label, is_class=False):
     points = "".join("<li>{}</li>".format(markup.link_terms(esc(p), seen)) for p in item["points"])
     tiles = []
     for s in members:
-        note = t("fam.synthetic.sub", sub=t("enc.tile.sub", hardness=fmt_num(s.get("hardness"), 1), ri=fmt_num(s.get("refractiveIndex"), 3))) if s["synthetic"] else ""
+        note = t("fam.synthetic.sub", sub=t("enc.tile.sub", hardness=fmt_hardness(s), ri=fmt_ri(s))) if s["synthetic"] else ""
         tiles.append(_tile(t, s, note))
     idx = items.index(item)
     prev_i = items[idx - 1] if idx > 0 else None

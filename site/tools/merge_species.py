@@ -160,6 +160,17 @@ def main():
             cand = {("Saphir" if k == "Saphir_Bleu" else k): v for k, v in cand.items() if k not in SAPPHIRES[1:] and k not in FLUORITES}
             pc.write_text(json.dumps(cand, ensure_ascii=False, indent=1), encoding="utf-8")
             print("photo_candidates.json : mis à jour")
+    # several pleochroism values for one species
+    from new_species_spec import PLEO_VARIANTS
+    pv = {sid: [{"label": label[0], "text": text[0]} for label, text in rows] for sid, rows in PLEO_VARIANTS.items()}
+    pv_path = SITE / "data" / "pleochroism_variants.json"
+    if not pv_path.exists() or json.loads(pv_path.read_text(encoding="utf-8")) != pv:
+        pv_path.write_text(json.dumps(pv, ensure_ascii=False, indent=1), encoding="utf-8")
+        print("pleochroism_variants.json : écrit")
+    for rows in PLEO_VARIANTS.values():
+        for label, text in rows:
+            EN[label[0]] = label[1]
+            EN[text[0]] = text[1]
     # English texts
     path = SITE / "data" / "en" / "species.json"
     en = json.loads(path.read_text(encoding="utf-8"))

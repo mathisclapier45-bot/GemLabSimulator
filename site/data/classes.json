@@ -18,7 +18,8 @@
    "id": "sulfures",
    "species": [
     "Pyrite",
-    "Sphalerite"
+    "Sphalerite",
+    "Vulcanite"
    ],
    "name": "Sulfures et sulfosels",
    "chem": "Un métal combiné au soufre",
@@ -76,7 +77,9 @@
     "Jaspe",
     "Onyx",
     "Diaspore_Zultanite",
-    "Chrysoprase"
+    "Chrysoprase",
+    "Anatase",
+    "Brookite"
    ],
    "name": "Oxydes et hydroxydes",
    "chem": "Un métal (ou le silicium) combiné à l'oxygène ou au groupe OH",
@@ -94,7 +97,8 @@
     "Calcite",
     "Rhodocrosite",
     "Malachite",
-    "Azurite"
+    "Azurite",
+    "Marbre"
    ],
    "name": "Carbonates",
    "chem": "Minéraux contenant le groupe CO₃",
@@ -262,7 +266,11 @@
     "Jais",
     "Perle",
     "Perle_Tahiti",
-    "Corail"
+    "Corail",
+    "Odontolite",
+    "Bezoard",
+    "Nacre",
+    "Perle_Conque"
    ],
    "name": "Composés organiques",
    "chem": "Matières fabriquées par des êtres vivants",
@@ -286,7 +294,11 @@
     "YAG",
     "Titanate_Strontium",
     "Moissanite_Synthetique",
-    "Verre"
+    "Verre",
+    "Bakelite",
+    "Swiss_Lapis",
+    "Rutile_Synthetique",
+    "Ebonite"
    ],
    "name": "Synthèses et imitations",
    "chem": "Pierres fabriquées par l'homme",
