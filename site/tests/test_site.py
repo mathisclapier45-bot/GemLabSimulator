@@ -1724,7 +1724,7 @@ class TestNewSpecies(SiteTestCase):
         from new_species_spec import SPECIES
         c = Client()
         words = re.compile(r"\b(?:les|des|une|est|avec|selon|très|pierre|couleur|toujours)\b")
-        self.assertEqual(len(SPECIES), 24)                                              # 22 + the low (metamict) zircon + the green beryl
+        self.assertEqual(len(SPECIES), 30)                                              # 22 + the low (metamict) zircon + the green beryl + the six of the site
         for sp in SPECIES:
             slug = sp["id"].lower().replace("_", "-")
             fr = c.get("/encyclopedie/" + slug)

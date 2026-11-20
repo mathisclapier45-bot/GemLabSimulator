@@ -75,7 +75,8 @@
     "Aventurine",
     "Jaspe",
     "Onyx",
-    "Diaspore_Zultanite"
+    "Diaspore_Zultanite",
+    "Chrysoprase"
    ],
    "name": "Oxydes et hydroxydes",
    "chem": "Un métal (ou le silicium) combiné à l'oxygène ou au groupe OH",
@@ -125,7 +126,9 @@
    "species": [
     "Celestine",
     "Gypse",
-    "Selenite"
+    "Selenite",
+    "Albatre",
+    "Scheelite"
    ],
    "name": "Sulfates",
    "chem": "Minéraux contenant le groupe SO₄",
@@ -229,7 +232,10 @@
     "Danburite",
     "Kornerupine",
     "Zircon_Bas",
-    "Beryl_Vert"
+    "Beryl_Vert",
+    "Sepiolite",
+    "Saussurite",
+    "Spodumene"
    ],
    "name": "Silicates",
    "chem": "Minéraux construits sur le groupe SiO₄ (silicium et oxygène)",

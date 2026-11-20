@@ -140,7 +140,8 @@ def _build(lang="fr"):
 
     def by_key(block):
         fields = {"spectra": ("description", "label"), "fluorescence": ("longText", "shortText"), "chelsea": ("reaction",)}[block]
-        return {e["key"]: t_entry(e, fields) for e in raw[block]["entries"] if not e.get("variant")}
+        ids = {s["id"] for s in raw["species"]}
+        return {e["key"]: t_entry(e, fields) for e in raw[block]["entries"] if not e.get("variant") or e["key"] in ids}
 
     extra_path = config.DATA_DIR / "species_extra.json"
     extra = {}

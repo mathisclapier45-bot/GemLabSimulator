@@ -2313,6 +2313,89 @@
     ],
     "label": "Zircon bas partiellement abîmé"
    },
+   "colorModes": [
+    [
+     0.26,
+     95,
+     140,
+     0.3,
+     0.7,
+     0.35,
+     0.75
+    ],
+    [
+     0.2,
+     62,
+     95,
+     0.3,
+     0.65,
+     0.35,
+     0.72
+    ],
+    [
+     0.12,
+     55,
+     80,
+     0.3,
+     0.55,
+     0.3,
+     0.55
+    ],
+    [
+     0.12,
+     35,
+     55,
+     0.35,
+     0.7,
+     0.4,
+     0.7
+    ],
+    [
+     0.06,
+     18,
+     35,
+     0.4,
+     0.7,
+     0.35,
+     0.6
+    ],
+    [
+     0.06,
+     85,
+     140,
+     0.15,
+     0.3,
+     0.65,
+     0.9
+    ],
+    [
+     0.1,
+     85,
+     140,
+     0.18,
+     0.45,
+     0.3,
+     0.6
+    ],
+    [
+     0.06,
+     25,
+     45,
+     0.25,
+     0.55,
+     0.22,
+     0.5
+    ],
+    [
+     0.02,
+     30,
+     80,
+     0.1,
+     0.3,
+     0.12,
+     0.28
+    ]
+   ],
    "spectraVariants": [
     {
      "key": "Zircon_Bas_Metamicte",
@@ -2433,12 +2516,735 @@
     0.6,
     1.0
    ],
+   "colorModes": [
+    [
+     0.3,
+     70,
+     95,
+     0.2,
+     0.5,
+     0.75,
+     0.95
+    ],
+    [
+     0.3,
+     95,
+     140,
+     0.2,
+     0.5,
+     0.75,
+     0.95
+    ],
+    [
+     0.22,
+     140,
+     175,
+     0.15,
+     0.45,
+     0.8,
+     0.98
+    ],
+    [
+     0.18,
+     95,
+     150,
+     0.1,
+     0.22,
+     0.9,
+     1.0
+    ]
+   ],
    "chelseaEntry": {
     "reaction": "Aucune réaction rouge : vert terne.",
     "color": "#F7141A",
     "intensity": 0.0,
     "dull": "#2F6B3C"
    },
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Chrysoprase",
+   "displayName": "Chrysoprase",
+   "description": "La calcédoine vert pomme, colorée par le nickel : le plus précieux des quartz microcristallins. Translucide, d'un vert vif et uniforme, elle se polit en cabochons et en perles.",
+   "iconColor": "#61BD6B",
+   "iconFacetColor": "#A8E6AD",
+   "refractiveIndex": 1.535,
+   "density": 2.6,
+   "hardness": 6.75,
+   "lengthMm": 10.0,
+   "widthMm": 8.0,
+   "depthMm": 4.5,
+   "weightCarats": 4.0,
+   "luster": "Vitreux à cireux",
+   "color": "Vert pomme",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Agrégat microcristallin de quartz : lecture diffuse, uniaxe positif en lumière polarisée.",
+   "opticalCharacterClassName": "Uniaxe",
+   "opticalCharacterClass": 1,
+   "birefringence": 0.004,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net ; le nickel colore en vert.",
+   "spectrumLines": [],
+   "inclusions": "Grain microcristallin très fin, sans inclusion visible ; la couleur peut pâlir si la pierre sèche ou chauffe.",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Vert.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 14,
+   "origins": [
+    {
+     "name": "Australie (Queensland)",
+     "rarityWeight": 45,
+     "valueMultiplier": 1.2
+    },
+    {
+     "name": "Tanzanie",
+     "rarityWeight": 25,
+     "valueMultiplier": 0.9
+    },
+    {
+     "name": "Pologne (Szklary)",
+     "rarityWeight": 15,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Brésil",
+     "rarityWeight": 15,
+     "valueMultiplier": 0.9
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    85,
+    150,
+    0.3,
+    0.75,
+    0.4,
+    0.9
+   ],
+   "colorModes": [
+    [
+     0.4,
+     100,
+     125,
+     0.45,
+     0.7,
+     0.55,
+     0.85
+    ],
+    [
+     0.3,
+     125,
+     150,
+     0.4,
+     0.65,
+     0.5,
+     0.8
+    ],
+    [
+     0.2,
+     85,
+     105,
+     0.35,
+     0.55,
+     0.6,
+     0.85
+    ],
+    [
+     0.1,
+     100,
+     140,
+     0.3,
+     0.45,
+     0.4,
+     0.6
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Albatre",
+   "displayName": "Albâtre",
+   "description": "Du gypse à grain fin, blanc, crème ou rosé, translucide, tendre au point de se rayer à l'ongle. On le sculpte depuis l'Antiquité en vases, en statuettes et en lampes. (En archéologie, on appelle aussi albâtre une calcite rubanée.)",
+   "iconColor": "#EBE3D1",
+   "iconFacetColor": "#FAF5EB",
+   "refractiveIndex": 1.525,
+   "density": 2.3,
+   "hardness": 2.0,
+   "lengthMm": 12.0,
+   "widthMm": 9.0,
+   "depthMm": 5.0,
+   "weightCarats": 8.0,
+   "luster": "Vitreux à soyeux",
+   "color": "Blanc, crème ou rosé, parfois veiné",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.01,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Grain fin et régulier, veines plus sombres ou plus claires ; très tendre : il se raye à l'ongle et craint l'eau.",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 3,
+   "origins": [
+    {
+     "name": "Italie (Volterra)",
+     "rarityWeight": 45,
+     "valueMultiplier": 1.2
+    },
+    {
+     "name": "Espagne (Aragon)",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Angleterre (Midlands)",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    5,
+    60,
+    0.0,
+    0.45,
+    0.6,
+    1.0
+   ],
+   "colorModes": [
+    [
+     0.4,
+     38,
+     55,
+     0.1,
+     0.22,
+     0.88,
+     1.0
+    ],
+    [
+     0.3,
+     0,
+     360,
+     0.0,
+     0.06,
+     0.9,
+     1.0
+    ],
+    [
+     0.12,
+     8,
+     22,
+     0.1,
+     0.22,
+     0.88,
+     1.0
+    ],
+    [
+     0.12,
+     35,
+     48,
+     0.3,
+     0.45,
+     0.75,
+     0.92
+    ],
+    [
+     0.06,
+     0,
+     360,
+     0.0,
+     0.08,
+     0.6,
+     0.72
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Sepiolite",
+   "displayName": "Sépiolite",
+   "description": "L'écume de mer (« meerschaum ») : un silicate de magnésium hydraté, blanc à crème, opaque et très léger, qui flotte une fois sec. Poreuse et tendre, elle se sculpte facilement : c'est la matière des pipes en écume.",
+   "iconColor": "#EDE6D1",
+   "iconFacetColor": "#FAF5EB",
+   "refractiveIndex": 1.52,
+   "density": 2.0,
+   "hardness": 2.25,
+   "lengthMm": 12.0,
+   "widthMm": 9.0,
+   "depthMm": 5.0,
+   "weightCarats": 6.0,
+   "luster": "Terne à mat",
+   "color": "Blanc à crème, parfois grisâtre",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Opaque",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Opaque : aucune lecture optique en lumière transmise.",
+   "opticalCharacterClassName": "Opaque",
+   "opticalCharacterClass": 3,
+   "birefringence": 0.0,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Masse fibreuse très fine, poreuse, sans cristaux visibles ; elle happe la langue (collante) et se raye à l'ongle.",
+   "interferenceFigure": "Aucune figure d'interférence exploitable (pierre opaque).",
+   "chelseaFilterReaction": "Non applicable (matériau opaque).",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 5,
+   "origins": [
+    {
+     "name": "Turquie (Eskişehir)",
+     "rarityWeight": 80,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Tanzanie",
+     "rarityWeight": 12,
+     "valueMultiplier": 0.9
+    },
+    {
+     "name": "Espagne",
+     "rarityWeight": 8,
+     "valueMultiplier": 0.9
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    5,
+    60,
+    0.0,
+    0.3,
+    0.5,
+    1.0
+   ],
+   "colorModes": [
+    [
+     0.45,
+     0,
+     360,
+     0.0,
+     0.06,
+     0.88,
+     1.0
+    ],
+    [
+     0.35,
+     38,
+     55,
+     0.08,
+     0.2,
+     0.85,
+     0.98
+    ],
+    [
+     0.2,
+     0,
+     360,
+     0.0,
+     0.08,
+     0.55,
+     0.7
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Saussurite",
+   "displayName": "Saussurite",
+   "description": "Une roche, pas un minéral : un fin mélange de zoïsite, d'épidote, d'albite et de séricite, né de l'altération d'un feldspath plagioclase. Vert à gris-vert ou blanchâtre, translucide, dure et tenace, elle passe pour du jade.",
+   "iconColor": "#85A880",
+   "iconFacetColor": "#C2DBBD",
+   "refractiveIndex": 1.7,
+   "density": 3.3,
+   "hardness": 6.75,
+   "lengthMm": 10.0,
+   "widthMm": 8.0,
+   "depthMm": 4.5,
+   "weightCarats": 5.0,
+   "luster": "Vitreux à gras",
+   "color": "Vert à gris-vert, jaunâtre ou blanchâtre",
+   "shape": "Ovale",
+   "cutStyle": "Cabochon",
+   "transparency": "Translucide",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent), lecture diffuse typique d'un agrégat polycristallin.",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.0,
+   "isPolycrystalline": true,
+   "absorptionSpectrum": "Pas de spectre net.",
+   "spectrumLines": [],
+   "inclusions": "Agrégat très fin de grains de zoïsite et d'épidote, avec des plages blanches d'albite ; grain visible à la loupe, sans cristal net.",
+   "interferenceFigure": "Figure diffuse, non exploitable (agrégat polycristallin).",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 8,
+   "origins": [
+    {
+     "name": "Italie (Piémont)",
+     "rarityWeight": 45,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "France (Alpes)",
+     "rarityWeight": 30,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Suisse (Valais)",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.0
+    }
+   ],
+   "habits": [],
+   "colorLimits": [
+    65,
+    140,
+    0.0,
+    0.55,
+    0.35,
+    1.0
+   ],
+   "colorModes": [
+    [
+     0.35,
+     95,
+     130,
+     0.2,
+     0.5,
+     0.45,
+     0.75
+    ],
+    [
+     0.3,
+     90,
+     140,
+     0.08,
+     0.2,
+     0.45,
+     0.7
+    ],
+    [
+     0.2,
+     0,
+     360,
+     0.0,
+     0.06,
+     0.8,
+     0.95
+    ],
+    [
+     0.15,
+     70,
+     95,
+     0.2,
+     0.45,
+     0.55,
+     0.8
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Scheelite",
+   "displayName": "Scheelite",
+   "description": "Un tungstate de calcium très brillant, incolore, jaune, orange ou brun, au feu proche de celui du diamant. Tendre et fragile, c'est une pierre de collection ; elle brille en bleu-blanc vif aux UV courts, ce qui la fait chercher à la lampe.",
+   "iconColor": "#F2CC73",
+   "iconFacetColor": "#FCEBB8",
+   "refractiveIndex": 1.925,
+   "density": 6.05,
+   "hardness": 4.75,
+   "lengthMm": 6.0,
+   "widthMm": 5.0,
+   "depthMm": 3.4,
+   "weightCarats": 1.2,
+   "luster": "Adamantin à vitreux",
+   "color": "Incolore, jaune, orange ou brun",
+   "shape": "Coussin",
+   "cutStyle": "Brillant",
+   "transparency": "Transparent",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Inerte ou faible.",
+   "fluorescenceShortWave": "Bleu-blanc vif, très intense (parfois jaunâtre).",
+   "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+   "opticalCharacterClassName": "Uniaxe",
+   "opticalCharacterClass": 1,
+   "birefringence": 0.016,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de spectre net ; parfois de fines raies des terres rares (néodyme).",
+   "spectrumLines": [],
+   "inclusions": "Clivages nets, fissures ; souvent propre, parfois des inclusions liquides ; très dense (plus de deux fois le quartz).",
+   "interferenceFigure": "Figure d'interférence uniaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 150,
+   "origins": [
+    {
+     "name": "Chine",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Brésil",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Myanmar",
+     "rarityWeight": 20,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "États-Unis (Californie)",
+     "rarityWeight": 15,
+     "valueMultiplier": 1.2
+    }
+   ],
+   "habits": [
+    {
+     "habit": "tetragonal_prism",
+     "weight": 100
+    }
+   ],
+   "colorLimits": [
+    20,
+    75,
+    0.0,
+    0.85,
+    0.3,
+    1.0
+   ],
+   "fluoEntry": {
+    "longText": "Inerte ou faible.",
+    "longColor": "#FFFFFF",
+    "longIntensity": 0.05,
+    "shortText": "Bleu-blanc vif, très intense (parfois jaunâtre).",
+    "shortColor": "#A8CCFF",
+    "shortIntensity": 0.9,
+    "phosphorescent": false
+   },
+   "colorModes": [
+    [
+     0.25,
+     0,
+     360,
+     0.0,
+     0.05,
+     0.92,
+     1.0
+    ],
+    [
+     0.28,
+     45,
+     60,
+     0.25,
+     0.7,
+     0.75,
+     1.0
+    ],
+    [
+     0.2,
+     25,
+     40,
+     0.45,
+     0.85,
+     0.65,
+     0.95
+    ],
+    [
+     0.15,
+     20,
+     40,
+     0.4,
+     0.7,
+     0.3,
+     0.55
+    ],
+    [
+     0.07,
+     62,
+     75,
+     0.2,
+     0.45,
+     0.7,
+     0.95
+    ]
+   ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Spodumene",
+   "displayName": "Spodumène",
+   "description": "Le silicate de lithium et d'aluminium dont la kunzite (rose) et l'hiddénite (verte) sont deux variétés célèbres. La pierre sans nom de variété est incolore, jaune (« triphane ») ou vert pâle. Elle a un clivage parfait : très fragile aux chocs.",
+   "iconColor": "#F2E08C",
+   "iconFacetColor": "#FCF2C7",
+   "refractiveIndex": 1.665,
+   "density": 3.18,
+   "hardness": 6.75,
+   "lengthMm": 8.0,
+   "widthMm": 6.0,
+   "depthMm": 3.8,
+   "weightCarats": 2.0,
+   "luster": "Vitreux",
+   "color": "Incolore, jaune ou vert pâle",
+   "shape": "Rectangle à pans coupés",
+   "cutStyle": "À degrés",
+   "transparency": "Transparent",
+   "pleochroic": true,
+   "pleochroicDescription": "Jaune / Jaune pâle / Incolore selon les trois axes (faible à modéré).",
+   "fluorescenceLongWave": "Orange à jaune faible, ou inerte.",
+   "fluorescenceShortWave": "Faible ou inerte.",
+   "opticalCharacter": "Anisotrope, biaxial (biréfringent).",
+   "opticalCharacterClassName": "Biaxe",
+   "opticalCharacterClass": 2,
+   "birefringence": 0.015,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Pas de spectre net ; fines raies du fer dans le violet pour les jaunes.",
+   "spectrumLines": [],
+   "inclusions": "Clivage parfait dans deux directions, tubes et cavités à deux phases, fissures ; pierre fragile aux chocs.",
+   "interferenceFigure": "Figure d'interférence biaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction particulière.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 25,
+   "origins": [
+    {
+     "name": "Brésil (Minas Gerais)",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Afghanistan",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Madagascar",
+     "rarityWeight": 20,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "États-Unis (Californie)",
+     "rarityWeight": 15,
+     "valueMultiplier": 1.1
+    }
+   ],
+   "habits": [
+    {
+     "habit": "monoclinic_prism",
+     "weight": 100
+    }
+   ],
+   "colorLimits": [
+    40,
+    110,
+    0.0,
+    0.55,
+    0.7,
+    1.0
+   ],
+   "colorModes": [
+    [
+     0.3,
+     0,
+     360,
+     0.0,
+     0.05,
+     0.92,
+     1.0
+    ],
+    [
+     0.35,
+     48,
+     62,
+     0.2,
+     0.55,
+     0.8,
+     1.0
+    ],
+    [
+     0.2,
+     70,
+     100,
+     0.1,
+     0.3,
+     0.82,
+     0.98
+    ],
+    [
+     0.15,
+     62,
+     80,
+     0.18,
+     0.4,
+     0.78,
+     0.96
+    ]
+   ],
    "isQuartzFamily": false,
    "isThermallyConductiveLikeDiamond": false,
    "isElectricallyConductive": false,

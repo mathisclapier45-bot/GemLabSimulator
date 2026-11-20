@@ -170,6 +170,8 @@ def from_spec(sp):
         out["spectraEntry"] = {"description": e["description"], "lines": [{"wavelengthNm": w, "widthNm": wd, "depth": dp, "edgeNm": 0.0} for w, wd, dp in e["lines"]]}
         if sp["id"] in SPECTRA_META:
             out["spectraEntry"]["label"] = SPECTRA_META[sp["id"]][1][0]
+    if sp.get("modes"):                                           # the characteristic colours (the site draws the colour chart from them)
+        out["colorModes"] = [list(m) for m in sp["modes"]]
     if sp.get("spectra_extra"):                                   # the other spectra of the species (variants)
         out["spectraVariants"] = [{"key": e["key"], "label": SPECTRA_META[e["key"]][1][0], "description": e["description"], "lines": [{"wavelengthNm": w, "widthNm": wd, "depth": dp, "edgeNm": 0.0} for w, wd, dp in e["lines"]]}
                                   for e in sp["spectra_extra"]]

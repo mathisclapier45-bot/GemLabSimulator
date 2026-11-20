@@ -19,7 +19,9 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from new_species_spec import SPECIES, ZIRCON_HIGH, PATCHES, SPECTRA_META, SPECTRA_NEW  # noqa: E402
+from new_species_spec import SPECIES as ALL_SPECIES, ZIRCON_HIGH, PATCHES, SPECTRA_META, SPECTRA_NEW  # noqa: E402
+
+SPECIES = [s for s in ALL_SPECIES if not s.get("site_only")]       # the species marked site_only are on the site, not (yet) in the game code
 
 REPO = Path(__file__).resolve().parent.parent.parent
 ASSETS = REPO / "GemLabSimulator" / "Assets"
@@ -183,7 +185,7 @@ def main():
     text = out[path]
     for old, new, chk in (('"Grenat_Mali", "Sphene"', '"Grenat_Mali", "Benitoite", "Sphene"', '"Benitoite", "Sphene"'),
                           ('            case "Grenat_Mali": return 0.028f;\n', '            case "Grenat_Mali": return 0.028f;\n            case "Benitoite": return 0.023f;\n', 'case "Benitoite"'),
-                          ('def.name == "Grenat_Change_Couleur");', 'def.name == "Grenat_Change_Couleur" || def.name == "Diaspore_Zultanite");', '"Diaspore_Zultanite");')):
+                          ('def.name == "Grenat_Change_Couleur");', 'def.name == "Grenat_Change_Couleur" || def.name == "Diaspore_Zultanite");', 'def.name == "Diaspore_Zultanite"')):
         if chk not in text:
             assert text.count(old) == 1, old
             text = text.replace(old, new, 1)

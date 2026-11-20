@@ -396,6 +396,8 @@ def main():
         for e in json.load(open(extra_path, encoding="utf-8"))["species"]:
             if e["id"] not in known:
                 data["species"].append(e)
+                if e.get("colorModes") and e["id"] not in pal.overrides:      # its own characteristic colours (a species the game code does not have)
+                    pal.overrides[e["id"]] = [mode(*row) for row in e["colorModes"]]
                 if e.get("colorLimits") and e["id"] not in pal.limits:
                     pal.limits[e["id"]] = [float(v) for v in e["colorLimits"]]
     out = {"_rows": ROW_LABELS}

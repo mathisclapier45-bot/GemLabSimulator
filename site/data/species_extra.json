@@ -9,6 +9,11 @@
   "formula": "Be₃Al₂Si₆O₁₈",
   "note": "Silicate de béryllium et d'aluminium"
  },
+ "Albatre": {
+  "system": "monoclinic",
+  "formula": "CaSO₄·2H₂O",
+  "note": "Sulfate de calcium hydraté (gypse à grain fin)"
+ },
  "Amazonite": {
   "system": "triclinic",
   "formula": "KAlSi₃O₈ (Pb)",
@@ -103,6 +108,11 @@
   "system": "amorphous",
   "formula": "(Cu,Al)₂H₂Si₂O₅(OH)₄·nH₂O",
   "note": "Silicate hydraté de cuivre, presque amorphe"
+ },
+ "Chrysoprase": {
+  "system": "trigonal",
+  "formula": "SiO₂ (Ni)",
+  "note": "Calcédoine (quartz microcristallin) colorée par le nickel"
  },
  "Citrine": {
   "system": "trigonal",
@@ -559,15 +569,30 @@
   "formula": "Al₂O₃ (Cr,V)",
   "note": "Oxyde d'aluminium (corindon) coloré par le chrome et le vanadium"
  },
+ "Saussurite": {
+  "system": "orthorhombic",
+  "formula": "Ca₂Al₃(SiO₄)₃(OH) + NaAlSi₃O₈ (agrégat)",
+  "note": "Roche : agrégat de zoïsite, d'épidote et d'albite"
+ },
  "Scapolite": {
   "system": "tetragonal",
   "formula": "(Na,Ca)₄Al₃(Al,Si)₃Si₆O₂₄(Cl,CO₃,SO₄)",
   "note": "Silicate complexe"
  },
+ "Scheelite": {
+  "system": "tetragonal",
+  "formula": "CaWO₄",
+  "note": "Tungstate de calcium"
+ },
  "Selenite": {
   "system": "monoclinic",
   "formula": "CaSO₄·2H₂O",
   "note": "Gypse transparent, sulfate de calcium hydraté"
+ },
+ "Sepiolite": {
+  "system": "orthorhombic",
+  "formula": "Mg₄Si₆O₁₅(OH)₂·6H₂O",
+  "note": "Silicate de magnésium hydraté, fibreux et poreux"
  },
  "Serpentine_Bowenite": {
   "system": "monoclinic",
@@ -603,6 +628,11 @@
   "system": "cubic",
   "formula": "MgAl₂O₄ (Co, Fe)",
   "note": "Spinelle coloré par le cobalt ou le fer"
+ },
+ "Spodumene": {
+  "system": "monoclinic",
+  "formula": "LiAlSi₂O₆",
+  "note": "Silicate de lithium et d'aluminium (pyroxène)"
  },
  "Steatite": {
   "system": "monoclinic",
