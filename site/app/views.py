@@ -3,7 +3,7 @@ import html
 import re
 import time
 
-from . import catalog, config
+from . import catalog, config, gem_icons
 from .web import Response
 
 esc = html.escape
@@ -71,18 +71,9 @@ def fmt_num(value, digits=3):
     return text.replace(".", ",") if catalog.current_lang() == "fr" else text   # decimal comma in French, point in English
 
 
-def gem_svg(color, facet, size=48):
-    """A small faceted gem drawn from two colours (an original drawing, not a game image)."""
-    c = esc(color or "#888888")
-    f = esc(facet or "#dddddd")
-    return (
-        '<svg class="gem" viewBox="0 0 48 48" width="{s}" height="{s}" aria-hidden="true" focusable="false">'
-        '<polygon points="12,6 36,6 45,18 24,43 3,18" fill="{c}" stroke="rgba(0,0,0,.35)" stroke-width="1"/>'
-        '<polygon points="12,6 24,18 3,18" fill="{f}" opacity=".55"/>'
-        '<polygon points="36,6 24,18 45,18" fill="{f}" opacity=".30"/>'
-        '<polygon points="12,6 36,6 24,18" fill="{f}" opacity=".80"/>'
-        '<polygon points="3,18 24,18 24,43" fill="#000" opacity=".12"/>'
-        '</svg>').format(s=size, c=c, f=f)
+def gem_svg(color, facet, size=48, style=None):
+    """A small gem drawn from two colours, in the shape and the cut of the species when `style` (shape, cut, habit) is given (see gem_icons.py)."""
+    return gem_icons.draw(color, facet, size, style)
 
 
 BRAND_MARK = ('<svg class="mark" viewBox="0 0 48 48" width="28" height="28" aria-hidden="true"><defs><linearGradient id="bm" x1="0" y1="0" x2="1" y2="1">'

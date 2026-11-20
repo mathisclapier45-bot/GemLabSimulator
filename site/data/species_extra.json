@@ -64,6 +64,11 @@
   "formula": "Be₃Al₂Si₆O₁₈ (Mn)",
   "note": "Béryl coloré par le manganèse"
  },
+ "Beryl_Vert": {
+  "system": "hexagonal",
+  "formula": "Be₃Al₂Si₆O₁₈ (Fe)",
+  "note": "Béryl coloré par le fer"
+ },
  "CZ": {
   "system": "cubic",
   "formula": "ZrO₂ (+ Y₂O₃)",
@@ -693,6 +698,11 @@
   "system": "tetragonal",
   "formula": "ZrSiO₄",
   "note": "Silicate de zirconium"
+ },
+ "Zircon_Bas": {
+  "system": "tetragonal",
+  "formula": "ZrSiO₄ (en partie amorphe)",
+  "note": "Silicate de zirconium, réseau détruit en partie ou presque entièrement par la radioactivité"
  },
  "Zoisite": {
   "system": "orthorhombic",

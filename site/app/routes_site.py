@@ -2,7 +2,7 @@
 import json
 import re
 
-from . import catalog, config, diagrams, home, i18n, markup, routes_learn, views
+from . import catalog, chelsea, config, diagrams, home, i18n, markup, routes_learn, views
 from .views import esc, fmt_num, gem_svg, page
 from .web import HTTPError, Response, Router, redirect
 
@@ -58,7 +58,7 @@ def encyclopedia(req):
         tiles = "".join(
             '<li><a class="tile" style="--gem:{gc}" href="/encyclopedie/{slug}">{gem}<span class="name">{name}</span>'
             '<span class="sub">{sub}</span></a></li>'.format(
-                gc=esc(s["iconColor"]), slug=s["slug"], gem=gem_svg(s["iconColor"], s["iconFacetColor"], 44), name=esc(s["displayName"]),
+                gc=esc(s["iconColor"]), slug=s["slug"], gem=gem_svg(s["iconColor"], s["iconFacetColor"], 44, s.get("iconStyle")), name=esc(s["displayName"]),
                 sub=esc(t("enc.tile.sub", hardness=fmt_num(s.get("hardness"), 1), ri=fmt_num(s.get("refractiveIndex"), 3))))
             for s in shown)
         body = '<ul class="tiles">{}</ul>'.format(tiles)
@@ -345,10 +345,16 @@ def species_page(req):
         sections.append("<h2>{}</h2><p>{}</p>".format(esc(t("sp.inclusions")), markup.link_terms(esc(s["inclusions"]), set())))
     inst = []
     spec_text = s.get("absorptionSpectrum")
-    entry = d["spectra"].get(s["id"])
-    # always the whole spectrum: with dark bands when the stone has a typical absorption spectrum, plain when it has none
-    text = (entry or {}).get("description") or spec_text or t("sp.spectrum.none")
-    inst.append("<h3>{}</h3><p>{}</p>{}".format(esc(t("sp.spectrum")), esc(text), spectrum_svg(entry or {"lines": []}, t)))
+    entries = d["spectra_all"].get(s["id"]) or [None]
+    # always the whole spectrum: with dark bands when the stone has a typical absorption spectrum, plain when it has none.
+    # A species can have several spectra (a blue and a green sapphire, a heated zircon...): each one with its label.
+    if len(entries) == 1:
+        entry = entries[0]
+        text = (entry or {}).get("description") or spec_text or t("sp.spectrum.none")
+        inst.append("<h3>{}</h3><p>{}</p>{}".format(esc(t("sp.spectrum")), esc(text), spectrum_svg(entry or {"lines": []}, t)))
+    else:
+        parts = "".join('<div class="spec-variant"><h4>{}</h4><p>{}</p>{}</div>'.format(esc(e.get("label") or ""), esc(e.get("description") or ""), spectrum_svg(e, t)) for e in entries)
+        inst.append("<h3>{}</h3>{}".format(esc(t("sp.spectrum.several", n=len(entries))), parts))
     fl = d["fluorescence"].get(s["id"])
     uv_cards = []
     for uid, label, text, color, inten in (
@@ -365,9 +371,10 @@ def species_page(req):
             '<p class="small">{}</p>'.format(esc(t("sp.phospho"))) if fl and fl.get("phosphorescent") else ""))
     ch = d["chelsea"].get(s["id"])
     if ch or s.get("chelseaFilterReaction"):
+        seen = chelsea.seen_color(ch, catalog.fr(s, "chelseaFilterReaction"))
         inst.append("<h3>{}</h3><p>{}{}</p>".format(
             esc(t("sp.chelsea")),
-            '<span class="glow" style="background:{}"></span>'.format(esc(ch["color"])) if ch and ch.get("color") else "",
+            '<span class="glow" style="background:{c};color:{c}" aria-hidden="true"></span>'.format(c=esc(seen)) if seen else "",
             esc((ch or {}).get("reaction") or s["chelseaFilterReaction"])))
     if inst:
         sections.append("<h2>{}</h2>{}".format(esc(t("sp.instruments")), "".join(inst)))
@@ -397,7 +404,7 @@ def species_page(req):
         '{gallery}{colors}<h2>{ph}</h2><table class="props">{props}</table>{sections}{nav}').format(
         siteonly='<div class="banner warn">{}</div>'.format(esc(t("sp.siteonly"))) if s.get("siteOnly") else "",
         family=_groups_line(t, s),
-        back=esc(t("sp.back")), gem=gem_svg(s["iconColor"], s["iconFacetColor"], 96), name=esc(s["displayName"]),
+        back=esc(t("sp.back")), gem=gem_svg(s["iconColor"], s["iconFacetColor"], 96, s.get("iconStyle")), name=esc(s["displayName"]),
         gemc=esc(s["iconColor"]), gemf=esc(s["iconFacetColor"]), formula=esc(ex.get("formula", "")),
         badge=badge, desc=markup.link_terms(esc(s.get("description", "")), seen_terms), gallery=gallery, colors=_colors_section(req, s), ph=esc(t("sp.properties")), props=props,
         sections="".join(sections), nav=nav)
@@ -462,7 +469,7 @@ def identification(req):
             for sp, score, notes in found[:120]:
                 tiles.append(
                     '<li><a class="tile" style="--gem:{gc}" href="/encyclopedie/{slug}">{gem}<span class="name">{name}</span><span class="sub">{sub}</span></a></li>'.format(
-                        gc=esc(sp["iconColor"]), slug=sp["slug"], gem=gem_svg(sp["iconColor"], sp["iconFacetColor"], 44), name=esc(sp["displayName"]),
+                        gc=esc(sp["iconColor"]), slug=sp["slug"], gem=gem_svg(sp["iconColor"], sp["iconFacetColor"], 44, sp.get("iconStyle")), name=esc(sp["displayName"]),
                         sub=esc(t("idt.result.sub", ri=fmt_num(sp.get("refractiveIndex"), 3), density=fmt_num(sp.get("density"), 2),
                                   hardness=fmt_num(sp.get("hardness"), 1)))))
             body = '<p class="count">{}</p><ul class="tiles">{}</ul>'.format(esc(t("idt.count", n=len(found))), "".join(tiles))

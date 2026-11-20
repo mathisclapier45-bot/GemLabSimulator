@@ -899,6 +899,7 @@ public class StoryDirector : MonoBehaviour
         {
             var candidate = new GemInstance(species);
             best = candidate;
+            if (speciesName == GemVariants.Sapphire && GemVariants.SapphireGroup(candidate.ColorHue, candidate.ColorSaturation) != "Bleu") continue;   // the reference sapphire is a blue one
             if (candidate.IsDonation || (candidate.IsSynthetic && !synthetic) || candidate.IsRough || candidate.TreatmentGrade != "Non traité") continue;
             if (!diamond && candidate.ClarityGrade != "Eye-clean" && candidate.ClarityGrade != "Inclus") continue;
             if (candidate.CaratWeight < minCarat || candidate.CaratWeight > maxCarat) continue;
@@ -1872,7 +1873,7 @@ public class StoryDirector : MonoBehaviour
 
     // The two cases: the species of the client's stone (what it really is) and of the reference stone (what the client believes).
     private static readonly string[] UvClientSpecies = { "Corindon_Synthetique_Saphir", "Diamant_Synthetique_HPHT" };
-    private static readonly string[] UvReferenceSpecies = { "Saphir_Bleu", "Diamant" };
+    private static readonly string[] UvReferenceSpecies = { "Saphir", "Diamant" };
 
     private IEnumerator TalkUv(GameObject npc, StoryState state)
     {

@@ -930,7 +930,7 @@ public static class BookContents
         foreach (var color in colors)
         {
             var c = color;
-            var def = GemDatabase.Instance != null ? GemDatabase.Instance.FindByAssetName(c.Species) : null;
+            var def = GemDatabase.Instance != null ? GemDatabase.Instance.FindByAssetName(c.Species.StartsWith("Saphir_") ? GemVariants.Sapphire : c.Species) : null;
             book.Entries.Add(new BookEntry
             {
                 Title = c.Title, Subtitle = c.English + "  ·  " + c.Hue,

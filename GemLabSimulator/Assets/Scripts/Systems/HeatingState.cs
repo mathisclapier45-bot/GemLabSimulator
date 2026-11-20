@@ -27,7 +27,7 @@ public class HeatingState : MonoBehaviour
 
     // The technician gives one sample of each of these materials, once, to start with.
     public bool SamplesGiven { get; private set; }
-    private static readonly string[] SampleAssets = { "Saphir_Incolore", "Corindon_Rubis", "Heliodore", "Amethyste", "Topaze", "Zircon", "Agate", "Ambre" };
+    private static readonly string[] SampleAssets = { "Saphir", "Corindon_Rubis", "Heliodore", "Amethyste", "Topaze", "Zircon", "Agate", "Ambre" };
 
     public event Action OnJobChanged;
 
@@ -138,7 +138,7 @@ public class HeatingState : MonoBehaviour
         {
             var definition = database.FindByAssetName(asset);
             if (definition == null) continue;
-            var stone = new GemInstance(definition);
+            var stone = GemVariants.NewSample(definition, "Incolore");      // the sapphire sample is a colourless one
             stone.MarkIdentified();
             stone.ClearTreatment();
             inventory.TryAddGem(stone);

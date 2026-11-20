@@ -556,11 +556,11 @@
     {
       "id": "Beryl_Bleu",
       "displayName": "Béryl bleu (maxixe)",
-      "description": "Un béryl d'un bleu profond, de type maxixe : sa couleur vient de centres colorés naturels et fane à la lumière. Bien plus soutenu que l'aigue-marine.",
+      "description": "Un béryl d'un bleu profond, de type maxixe : sa couleur vient de centres colorés, créés par une irradiation naturelle ou artificielle, et fane à la lumière forte ou à la chaleur. Bien plus soutenu que l'aigue-marine. Aucun test ne dit si l'irradiation est naturelle : le laboratoire écrit seulement « maxixe ».",
       "iconColor": "#1F4CC7",
       "iconFacetColor": "#6694F2",
-      "refractiveIndex": 1.58,
-      "density": 2.72,
+      "refractiveIndex": 1.588,
+      "density": 2.78,
       "hardness": 7.5,
       "lengthMm": 8,
       "widthMm": 6,
@@ -572,18 +572,18 @@
       "cutStyle": "Brillant",
       "transparency": "Transparent",
       "pleochroic": true,
-      "pleochroicDescription": "Bleu profond / Incolore à bleu très pâle selon l'axe (très marqué).",
+      "pleochroicDescription": "Bleu profond (rayon ordinaire) / Incolore (rayon extraordinaire) : dichroïsme très marqué.",
       "fluorescenceLongWave": "Aucune fluorescence notable.",
       "fluorescenceShortWave": "Aucune fluorescence notable.",
       "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
       "opticalCharacterClassName": "Uniaxe",
       "opticalCharacterClass": 1,
-      "birefringence": 0.007,
+      "birefringence": 0.009,
       "isQuartzFamily": false,
       "isPolycrystalline": false,
       "isThermallyConductiveLikeDiamond": false,
       "isElectricallyConductive": false,
-      "absorptionSpectrum": "Bandes dans le rouge et l'orangé vers 695 nm et 628 nm, plus faible vers 550 nm.",
+      "absorptionSpectrum": "Plusieurs bandes entre 500 et 700 nm et une large bande vers 690 nm dans le rayon ordinaire ; seule la large bande vers 690 nm dans le rayon extraordinaire.",
       "spectrumLines": [
         {
           "wavelengthNm": 695,
@@ -5935,7 +5935,7 @@
     },
     {
       "id": "Quartz",
-      "displayName": "Quartz",
+      "displayName": "Cristal de roche",
       "description": "Un cristal de quartz incolore, courant, envoyé pour un premier examen.",
       "iconColor": "#D9DEE0",
       "iconFacetColor": "#F7FAFC",
@@ -6384,7 +6384,7 @@
     {
       "id": "Scapolite",
       "displayName": "Scapolite",
-      "description": "Silicate d'aluminium de la série marialite-méionite, au port cristallin allongé et prismatique caractéristique.",
+      "description": "Silicate d'aluminium de la série marialite-méionite, au port cristallin allongé et prismatique caractéristique. Les pierres taillées sont jaunes, incolores, roses ou violettes.",
       "iconColor": "#D9BF40",
       "iconFacetColor": "#F5E080",
       "refractiveIndex": 1.555,
@@ -6395,7 +6395,7 @@
       "depthMm": 4,
       "weightCarats": 1.6,
       "luster": "Vitreux à résineux",
-      "color": "Jaune",
+      "color": "Jaune, incolore, rose à violet",
       "shape": "Baguette",
       "cutStyle": "À degrés",
       "transparency": "Transparent",
@@ -8142,8 +8142,8 @@
     },
     {
       "id": "Zircon",
-      "displayName": "Zircon",
-      "description": "Un zircon bleu, souvent confondu avec le saphir ou le spinelle bleu.",
+      "displayName": "Zircon (haut)",
+      "description": "Le zircon cristallin, ou zircon de type haut : très réfringent, très dispersif, brillant presque comme le diamant. Il est incolore, bleu, jaune doré, orange, rouge ou brun ; le bleu et l'incolore viennent presque toujours d'un chauffage.",
       "iconColor": "#338CBF",
       "iconFacetColor": "#73C7EB",
       "refractiveIndex": 1.95,
@@ -8154,7 +8154,7 @@
       "depthMm": 4.5,
       "weightCarats": 1.6,
       "luster": "Adamantin à sub-adamantin",
-      "color": "Bleu",
+      "color": "Incolore, bleu, jaune doré, orange, rouge ou brun",
       "shape": "Carré",
       "cutStyle": "Princesse",
       "transparency": "Transparent",
@@ -8791,7 +8791,9 @@
             "edgeNm": 0.0
           }
         ],
-        "variant": false
+        "variant": false,
+        "of": "Saphir",
+        "label": "Saphir bleu"
       },
       {
         "key": "Saphir_Vert",
@@ -8817,7 +8819,9 @@
             "edgeNm": 0.0
           }
         ],
-        "variant": false
+        "variant": false,
+        "of": "Saphir",
+        "label": "Saphir vert"
       },
       {
         "key": "Chrysoberyl",
@@ -8909,7 +8913,9 @@
             "edgeNm": 0.0
           }
         ],
-        "variant": false
+        "variant": false,
+        "of": "Jade_Jadeite",
+        "label": "Jadéite naturelle"
       },
       {
         "key": "Jade_Jadeite_Teinte",
@@ -8929,7 +8935,9 @@
             "edgeNm": 7
           }
         ],
-        "variant": true
+        "variant": true,
+        "of": "Jade_Jadeite",
+        "label": "Jadéite teintée (fer et chrome)"
       },
       {
         "key": "Spinelle_Bleu",
@@ -8981,7 +8989,9 @@
             "edgeNm": 8
           }
         ],
-        "variant": true
+        "variant": true,
+        "of": "Verre",
+        "label": "Verre bleu (cobalt)"
       },
       {
         "key": "Apatite",
@@ -9051,7 +9061,9 @@
             "edgeNm": 0.0
           }
         ],
-        "variant": false
+        "variant": false,
+        "of": "Zircon",
+        "label": "Zircon naturel"
       },
       {
         "key": "Zircon_Chauffe",
@@ -9065,7 +9077,9 @@
             "edgeNm": 0.0
           }
         ],
-        "variant": true
+        "variant": true,
+        "of": "Zircon",
+        "label": "Zircon chauffé"
       },
       {
         "key": "Verre_Rouge_Au",
@@ -9079,7 +9093,9 @@
             "edgeNm": 6
           }
         ],
-        "variant": true
+        "variant": true,
+        "of": "Verre",
+        "label": "Verre rouge (or)"
       },
       {
         "key": "Verre_Rouge_Se",
@@ -9093,7 +9109,9 @@
             "edgeNm": 6
           }
         ],
-        "variant": true
+        "variant": true,
+        "of": "Verre",
+        "label": "Verre rouge (sélénium)"
       },
       {
         "key": "Verre_Rouge_TR",
@@ -9131,7 +9149,9 @@
             "edgeNm": 0.0
           }
         ],
-        "variant": true
+        "variant": true,
+        "of": "Verre",
+        "label": "Verre rouge (terres rares)"
       },
       {
         "key": "Corindon_Synthetique_CC",
@@ -9190,6 +9210,50 @@
           }
         ],
         "variant": false
+      },
+      {
+        "key": "Beryl_Bleu",
+        "source": "site",
+        "description": "Rayon ordinaire (direction du bleu profond) : plusieurs bandes entre 500 et 700 nm et une large bande vers 690 nm.",
+        "variant": false,
+        "lines": [
+          {
+            "wavelengthNm": 690.0,
+            "widthNm": 40.0,
+            "depth": 0.8,
+            "edgeNm": 0.0
+          },
+          {
+            "wavelengthNm": 628.0,
+            "widthNm": 20.0,
+            "depth": 0.6,
+            "edgeNm": 0.0
+          },
+          {
+            "wavelengthNm": 550.0,
+            "widthNm": 14.0,
+            "depth": 0.35,
+            "edgeNm": 0.0
+          }
+        ],
+        "of": "Beryl_Bleu",
+        "label": "Rayon ordinaire (bleu)"
+      },
+      {
+        "key": "Beryl_Bleu_Rayon_E",
+        "source": "site",
+        "description": "Rayon extraordinaire (direction presque incolore) : seule la large bande vers 690 nm reste.",
+        "variant": true,
+        "lines": [
+          {
+            "wavelengthNm": 690.0,
+            "widthNm": 40.0,
+            "depth": 0.5,
+            "edgeNm": 0.0
+          }
+        ],
+        "of": "Beryl_Bleu",
+        "label": "Rayon extraordinaire (incolore)"
       }
     ]
   },

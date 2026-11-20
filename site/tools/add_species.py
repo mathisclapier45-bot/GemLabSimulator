@@ -19,12 +19,14 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from new_species_spec import SPECIES  # noqa: E402
+from new_species_spec import SPECIES, ZIRCON_HIGH, PATCHES, SPECTRA_META, SPECTRA_NEW  # noqa: E402
 
 REPO = Path(__file__).resolve().parent.parent.parent
 ASSETS = REPO / "GemLabSimulator" / "Assets"
 SIM = ASSETS / "Scripts" / "Simulation"
 TAG = "new-species-2026-11-20"
+TAG_MODES = "new-species-modes-2026-11-20"          # the colour modes of the zircons (a second region in GemColorSystem.cs)
+TAG_REPORT = "new-species-report-2026-11-20"        # the names of the species in the answers of the report
 OPTIC_ENUM = {"Uniaxial": "Uniaxial", "Biaxial": "Biaxial", "Opaque": "Opaque", "Isotropic": "Isotropic"}
 
 
@@ -99,10 +101,11 @@ def gem_block(sp):
            value=sp["value"], origins=origins)
 
 
-def region(path, anchor, body, comment="//"):
+def region(path, anchor, body, comment="//", tag=None, text=None):
     """Puts `body` before the line that contains `anchor`, between two marker lines; replaces the region when it is already there."""
-    text = path.read_text(encoding="utf-8")
-    begin, end = "{} <{}>".format(comment, TAG), "{} </{}>".format(comment, TAG)
+    tag = tag or TAG
+    text = text if text is not None else path.read_text(encoding="utf-8")
+    begin, end = "{} <{}>".format(comment, tag), "{} </{}>".format(comment, tag)
     if begin in text:
         a = text.index(begin)
         a = text.rfind("\n", 0, a) + 1                      # start of the line of the begin marker
@@ -140,7 +143,16 @@ def main():
     out[ASSETS / "Editor" / "SceneBootstrap.cs"] = region(ASSETS / "Editor" / "SceneBootstrap.cs", '            BuildGem("Grenat_Rhodolite", g =>', "".join(gem_block(s) for s in SPECIES))
     # ---- colour windows
     body = "".join('        {{ "{}", new[] {{ {}f, {}f, {}f, {}f, {}f, {}f }} }},\n'.format(s["id"], *[("%g" % v) for v in s["limits"]]) for s in SPECIES)
+    body += "".join('        {{ "{}", new[] {{ {}f, {}f, {}f, {}f, {}f, {}f }} }},\n'.format(name, *[("%g" % v) for v in patch["limits"]]) for name, patch in PATCHES.items() if patch.get("limits"))
     out[SIM / "GemColorSystem.cs"] = region(SIM / "GemColorSystem.cs", "        // Quartz and other transparent stones.", body)
+    # the characteristic colours of the zircons (high, low, metamict): modes of the colour system, before the fluorite's
+    modes = [(name, patch["modes"]) for name, patch in PATCHES.items() if patch.get("modes")] + [(sp["id"], sp["modes"]) for sp in SPECIES if sp.get("modes")]
+    body = ""
+    for name, rows in modes:
+        body += '            case "{}":\n                return new[]\n                {{\n'.format(name)
+        body += "".join("                    M({}f, {}f, {}f, {}f, {}f, {}f, {}f),\n".format(*[("%g" % v) for v in row]) for row in rows)
+        body += "                };\n"
+    out[SIM / "GemColorSystem.cs"] = region(SIM / "GemColorSystem.cs", '            case "Fluorite":', body, tag=TAG_MODES, text=out[SIM / "GemColorSystem.cs"])
     # ---- Raman: which reference spectrum a species is read against
     by_ref = {}
     for s in SPECIES:
@@ -182,8 +194,42 @@ def main():
     keys = {e["key"] for e in table["entries"]}
     for s in SPECIES:
         if s.get("fluo_entry") and s["id"] not in keys:
-            table["entries"].append(dict(key=s["id"], source="Ajout 2026 : fluorescence de la bénitoïte (UV courts, bleu-blanc vif)", **s["fluo_entry"]))
+            table["entries"].append(dict(key=s["id"], source="Ajout 2026 : fluorescence de {} (valeurs à faire relire)".format(s["name"][0]), **s["fluo_entry"]))
     out[path] = json.dumps(table, indent=1, ensure_ascii=False)
+    # spectra and Chelsea filter of the new species (the diploma course tables)
+    path = ASSETS / "Resources" / "Spectra" / "spectra.json"
+    table = json.loads(path.read_text(encoding="utf-8"))
+    keys = {e["key"] for e in table["entries"]}
+    for s in SPECIES:
+        if s.get("spectra_entry") and s["id"] not in keys:
+            e = s["spectra_entry"]
+            table["entries"].append({"key": s["id"], "source": "Ajout 2026 (valeurs à faire relire)", "description": e["description"],
+                                     "lines": [{"wavelengthNm": w, "widthNm": wd, "depth": dp, "edgeNm": 0.0} for w, wd, dp in e["lines"]]})
+        for e in s.get("spectra_extra", []):                       # the other spectra a species can show
+            if e["key"] not in keys:
+                table["entries"].append({"key": e["key"], "source": "Ajout 2026 (valeurs à faire relire)", "description": e["description"],
+                                         "lines": [{"wavelengthNm": w, "widthNm": wd, "depth": dp, "edgeNm": 0.0} for w, wd, dp in e["lines"]]})
+    for e in SPECTRA_NEW:                                          # the new spectra of species that already exist
+        if e["key"] not in {x["key"] for x in table["entries"]}:
+            table["entries"].append({"key": e["key"], "source": "Ajout 2026 (valeurs à faire relire)", "description": e["description"],
+                                     "lines": [{"wavelengthNm": w, "widthNm": wd, "depth": dp, "edgeNm": 0.0} for w, wd, dp in e["lines"]]})
+    for e in table["entries"]:                                     # which species a spectrum belongs to, and what makes it different
+        if e["key"] in SPECTRA_META:
+            species, (label, _) = SPECTRA_META[e["key"]]
+            e.update({"of": species, "label": label})
+    out[path] = json.dumps(table, indent=1, ensure_ascii=False)
+    path = ASSETS / "Resources" / "Chelsea" / "chelsea.json"
+    table = json.loads(path.read_text(encoding="utf-8"))
+    keys = {e["key"] for e in table["entries"]}
+    for s in SPECIES:
+        if s.get("chelsea_entry") and s["id"] not in keys:
+            table["entries"].append(dict(key=s["id"], source="Ajout 2026 (valeurs à faire relire)", **s["chelsea_entry"]))
+    out[path] = json.dumps(table, indent=1, ensure_ascii=False)
+    # the names of the species among the answers of the report (the player names the species of a stone)
+    path = ASSETS / "Editor" / "SceneBootstrap.cs"
+    names = ["Zircon (haut)"] + [sp["name"][0] for sp in SPECIES]
+    body = "".join('        "{}",\n'.format(cs(n)) for n in names)
+    out[path] = region(path, '        "YAG", "GGG", "Grenat Malaya", "Grenat Rhodolite",', body, tag=TAG_REPORT, text=out[path])
     changed = 0
     for path, new in out.items():
         old = path.read_text(encoding="utf-8")

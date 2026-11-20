@@ -152,6 +152,7 @@ public static class PhotoluminescenceSpectrum
 
     private static void NonDiamond(PlResult result, float[] clean, GemInstance gem, string name)
     {
+        name = GemVariants.Key(name, gem.ColorHue, gem.ColorSaturation);                       // a sapphire is read by its colour group
         var ruby = name == "Corindon_Rubis" || name == "Corindon_Synthetique_Rubis" || name == "Saphir_Rose";
         if (ruby)
         {

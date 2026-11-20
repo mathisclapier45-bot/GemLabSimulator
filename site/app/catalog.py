@@ -101,6 +101,13 @@ def _build(lang="fr"):
         have = {e["key"] for e in raw["fluorescence"]["entries"]}
         raw["fluorescence"] = dict(raw["fluorescence"], entries=list(raw["fluorescence"]["entries"]) + [   # the fluorescence of a species the game data does not have
             dict(e["fluoEntry"], key=e["id"], source="site") for e in added if e.get("fluoEntry") and e["id"] not in have])
+        for table, field in (("spectra", "spectraEntry"), ("chelsea", "chelseaEntry")):             # the same for its spectrum and its Chelsea filter reaction
+            have = {e["key"] for e in raw[table]["entries"]}
+            raw[table] = dict(raw[table], entries=list(raw[table]["entries"]) + [
+                dict(e[field], key=e["id"], source="site") for e in added if e.get(field) and e["id"] not in have])
+        have = {e["key"] for e in raw["spectra"]["entries"]}                                         # a species can show several spectra: the variants of an added species
+        raw["spectra"] = dict(raw["spectra"], entries=list(raw["spectra"]["entries"]) + [
+            dict(v, source="site", of=e["id"], variant=True) for e in added for v in e.get("spectraVariants", []) if v["key"] not in have])
 
     def t_(text):
         return tr.get(text, text) if isinstance(text, str) else text
@@ -132,7 +139,7 @@ def _build(lang="fr"):
     species.sort(key=lambda s: s["name_key"])
 
     def by_key(block):
-        fields = {"spectra": ("description",), "fluorescence": ("longText", "shortText"), "chelsea": ("reaction",)}[block]
+        fields = {"spectra": ("description", "label"), "fluorescence": ("longText", "shortText"), "chelsea": ("reaction",)}[block]
         return {e["key"]: t_entry(e, fields) for e in raw[block]["entries"] if not e.get("variant")}
 
     extra_path = config.DATA_DIR / "species_extra.json"
@@ -150,7 +157,9 @@ def _build(lang="fr"):
     if pal_path.exists():
         with open(pal_path, encoding="utf-8") as f:
             palettes = json.load(f)
+    from . import gem_icons
     for s in species:
+        s["iconStyle"] = gem_icons.style_for(s)               # the logo of the species: its shape and its cut
         s["palette"] = _translate_deep(palettes.get(s["id"]), tr) if tr else palettes.get(s["id"])
         s["extra"] = t_entry(extra.get(s["id"], {}), ("note",))
         photo = credits.get(s["slug"])
@@ -161,8 +170,16 @@ def _build(lang="fr"):
         s["habit_list"] = [habits[h["habit"]] for h in s.get("habits", []) if h["habit"] in habits]
         s["has_spectrum"] = False
     spectra = by_key("spectra")
+    # Several spectra for one species: the main one (the entry of the species) first, then its variants (entries with "of": <species>).
+    all_spectra = {}
+    for e in raw["spectra"]["entries"]:
+        owner = e.get("of") or (e["key"] if not e.get("variant") else None)
+        if owner:
+            all_spectra.setdefault(owner, []).append(t_entry(e, ("description", "label")))
+    for owner, items in all_spectra.items():
+        items.sort(key=lambda e: e["key"] != owner)             # the main spectrum first
     for s in species:
-        s["has_spectrum"] = s["id"] in spectra and bool(spectra[s["id"]].get("lines"))
+        s["has_spectrum"] = any(e.get("lines") for e in all_spectra.get(s["id"], []))
     habit_species = {}
     for s in species:
         for h in s["habit_list"]:
@@ -175,6 +192,7 @@ def _build(lang="fr"):
         "habits": list(habits.values()),
         "habit_species": habit_species,
         "spectra": spectra,
+        "spectra_all": all_spectra,
         "scale_bands": raw["spectra"].get("scale_bands", []),
         "chelsea": by_key("chelsea"),
         "fluorescence": by_key("fluorescence"),

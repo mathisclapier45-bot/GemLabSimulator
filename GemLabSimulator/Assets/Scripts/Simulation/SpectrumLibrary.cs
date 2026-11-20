@@ -8,6 +8,8 @@ public class SpectrumEntry
     public string key;               // the name of the species, or of a variant (Zircon_Chauffe, Verre_Rouge_Se...)
     public string source;            // where the spectrum was drawn from (a note, not used by the game)
     public string description;
+    public string of;                // the species the spectrum belongs to (a species can have several spectra), empty for a main spectrum
+    public string label;             // what makes this spectrum different (blue or green sapphire, heated zircon...)
     public List<SpectrumLine> lines = new List<SpectrumLine>();
 }
 
@@ -71,7 +73,10 @@ public static class SpectrumLibrary
 
         var name = gem.Definition.name ?? "";
         string key = name;
-        if (name == "Zircon" && gem.HasTreatment(TreatmentKind.Heated)) key = "Zircon_Chauffe";
+        if (name == GemVariants.Sapphire && GemVariants.Key(gem) == "Saphir_Vert") key = "Saphir_Vert";      // a green sapphire shows the three iron bands
+        else if (name == "Beryl_Bleu" && StoneOptics.StableHash((gem.SpecimenId ?? "") + "|rayon e") % 2 == 0) key = "Beryl_Bleu_Rayon_E";      // the extraordinary ray of a maxixe shows only the broad band
+        else if (name == "Zircon" && gem.HasTreatment(TreatmentKind.Heated)) key = "Zircon_Chauffe";
+        else if (name == "Zircon_Bas" && StoneOptics.StableHash((gem.SpecimenId ?? "") + "|metamicte") % 2 == 0) key = "Zircon_Bas_Metamicte";      // a low zircon is more or less damaged
         else if (name == "Jade_Jadeite" && gem.HasTreatment(TreatmentKind.Dyed) && gem.DyeName == "Vert chrome") key = "Jade_Jadeite_Teinte";
         else if (name == "Verre" && gem.HasColor)
         {

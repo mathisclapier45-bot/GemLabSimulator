@@ -116,7 +116,7 @@ public static class FtirSpectrum
     private static HostGroup GroupOf(string name)
     {
         if (name.StartsWith("Corindon") || name.StartsWith("Saphir") || name == "Padparadscha") return HostGroup.Corundum;
-        if (name == "Emeraude" || name == "Goshenite" || name == "Morganite" || name == "Heliodore" || name == "Beryl_Rouge" || name == "Pezzottaite" || name == "Aigue_Marine" || name == "Beryl_Bleu") return HostGroup.Beryl;
+        if (name == "Emeraude" || name == "Goshenite" || name == "Morganite" || name == "Heliodore" || name == "Beryl_Rouge" || name == "Pezzottaite" || name == "Aigue_Marine" || name == "Beryl_Bleu" || name == "Beryl_Vert") return HostGroup.Beryl;
         if (name.StartsWith("Quartz") || name == "Amethyste" || name == "Ametrine" || name == "Citrine" || name == "Prasiolite") return HostGroup.Quartz;
         if (name.StartsWith("Diamant")) return HostGroup.Diamond;
         if (name == "CZ" || name == "Moissanite_Synthetique" || name == "YAG" || name == "GGG" || name == "Titanate_Strontium") return HostGroup.DiamondImitation;
@@ -216,7 +216,7 @@ public static class FtirSpectrum
     {
         var n = c.Name;
         float cut = 2050f;
-        if (n == "Zircon" || n == "Spinelle" || n == "Spinelle_Bleu") cut = 1900f;
+        if (n.StartsWith("Zircon") || n == "Spinelle" || n == "Spinelle_Bleu") cut = 1900f;
         else if (n == "Peridot") cut = 1950f;
         else if (n.StartsWith("Fluorite")) cut = 1200f;
         c.Cutoff(cut, 25f);

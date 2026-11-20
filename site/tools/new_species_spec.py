@@ -346,6 +346,121 @@ SPECIES = [
          cls="silicates", fams=[], system="orthorhombic", formula="Mg₃Al₆(Si,Al,B)₅O₂₁(OH)", note=("Silicate de magnésium et d'aluminium contenant du bore", "Magnesium aluminum silicate containing boron"),
          limits=(70, 130, 0.30, 0.85, 0.25, 0.75), habits=[("ortho_prism", 100)], pattern=None, raman=None, sign="-",
          edxrf=[("Fe", 0.5), ("Ca", 0.1), ("Ti", 0.05)], meb=[("O", 0.6), ("Si", 0.7), ("Al", 0.8), ("Mg", 0.6), ("Fe", 0.3)]),
+
+    # ======================================================================== the zircons (2026-11-20): two sheets: high, and low (metamict)
+    # "Zircon" (high type) already exists in the game: see ZIRCON_HIGH below. The low zircon, also called metamict, is new.
+    dict(id="Zircon_Bas", name=("Zircon (bas, métamicte)", "Zircon (low, metamict)"),
+         desc=("Le zircon de type bas, dit aussi métamicte : son réseau cristallin a été détruit, en partie ou presque entièrement, par la radioactivité de l'uranium et du thorium qu'il contient (« métamicte » veut dire « mélangé »). Il est plus vert et plus terne que le zircon haut, moins réfringent, moins dense et plus mou ; il double peu la lumière, parfois pas du tout, et ses raies d'absorption s'effacent.",
+               "The low-type zircon, also called metamict: its crystal lattice has been destroyed, partly or almost entirely, by the radioactivity of the uranium and thorium it contains (\"metamict\" means \"mixed\"). It is greener and duller than high zircon, less refractive, less dense and softer; it doubles the light little, sometimes not at all, and its absorption lines fade."),
+         icon=((0.42, 0.52, 0.25), (0.65, 0.74, 0.45)), shape="Rond", cut="Brillant", ri=1.81, sg=4.0, h=6.5, dims=(6.0, 6.0, 4.0), ct=1.5,
+         luster=("Vitreux à sub-adamantin", "Vitreous to sub-adamantine"), color=("Vert, vert jaunâtre ou brun verdâtre, brun, jaune-brun", "Green, yellowish green or brownish green, brown, yellow-brown"), transp="Transparent",
+         pleo=None,
+         fluL=("Jaune-brunâtre, faible.", "Brownish yellow, weak."), fluS=("Variable : nulle, ou jaune moutarde à orangé faible.", "Variable: none, or weak mustard yellow to orange."),
+         optic=U, biref=0.003, opt=("Isotrope à faiblement anisotrope : la double réfraction est très réduite, parfois nulle, selon le degré de destruction du réseau.", "Isotropic to weakly anisotropic: the double refraction is much reduced, sometimes absent, depending on how far the lattice is destroyed."),
+         fig=("Figure d'interférence uniaxiale faible, souvent absente.", "Weak uniaxial interference figure, often absent."),
+         spec=("Raie à 653,5 nm affaiblie ou absente, avec des bandes diffuses ; parfois une bande vers 691 nm.", "Weakened or missing 653.5 nm line, with diffuse bands; sometimes a band near 691 nm."),
+         lines=[(653.5, 4.0), (691.0, 8.0)],
+         incl=("Souvent fissuré, parfois à cassures conchoïdales ; zonage de couleur, halos de tension autour de petits cristaux radioactifs.", "Often cracked, sometimes with conchoidal fractures; color zoning, tension halos around small radioactive crystals."),
+         chelsea=("Rose à rouge.", "Pink to red."), magn=NO_MAG, value=9,
+         origins=[origin("Sri Lanka (Ratnapura)", "Sri Lanka (Ratnapura)", 65, 1.0), origin("Myanmar (Mogok)", "Myanmar (Mogok)", 25, 1.1), origin("Madagascar", "Madagascar", 10, 0.9)],
+         cls="silicates", fams=[], system="tetragonal", formula="ZrSiO₄ (en partie amorphe)", note=("Silicate de zirconium, réseau détruit en partie ou presque entièrement par la radioactivité", "Zirconium silicate, lattice partly or almost entirely destroyed by radioactivity"),
+         limits=(18, 150, 0.08, 0.85, 0.12, 0.92), habits=[("tetragonal_prism", 100)], pattern=None, raman="Zircon_Bas", sign="+",
+         modes=[(0.26, 95, 140, 0.30, 0.70, 0.35, 0.75), (0.20, 62, 95, 0.30, 0.65, 0.35, 0.72), (0.12, 55, 80, 0.30, 0.55, 0.30, 0.55), (0.12, 35, 55, 0.35, 0.70, 0.40, 0.70),
+                (0.06, 18, 35, 0.40, 0.70, 0.35, 0.60), (0.06, 85, 140, 0.15, 0.30, 0.65, 0.90), (0.10, 85, 140, 0.18, 0.45, 0.30, 0.60), (0.06, 25, 45, 0.25, 0.55, 0.22, 0.50),
+                (0.02, 30, 80, 0.10, 0.30, 0.12, 0.28)],
+         fluo_entry=dict(longText="Jaune-brunâtre, faible.", longColor="#C89A3C", longIntensity=0.3, shortText="Variable : nulle, ou jaune moutarde à orangé faible.", shortColor="#D9A030", shortIntensity=0.2, phosphorescent=False),
+         spectra_entry=dict(description="Spectre presque effacé : la raie de l'uranium à 653,5 nm est faible ou absente, et il ne reste que des bandes diffuses, parfois une bande vers 691 nm.",
+                            en="Nearly erased spectrum: the uranium line at 653.5 nm is weak or missing, and only diffuse bands remain, sometimes a band near 691 nm.",
+                            lines=[(653.5, 4.0, 0.3), (691.0, 8.0, 0.5)]),
+         spectra_extra=[dict(key="Zircon_Bas_Metamicte", description="Pas de raies nettes : l'absorption est diffuse, avec au plus une raie très faible à 653,5 nm. Un chauffage peut faire réapparaître les raies fines.",
+                             en="No sharp lines: the absorption is diffuse, with at most a very faint line at 653.5 nm. Heating can bring the fine lines back.",
+                             lines=[(653.5, 10.0, 0.15)])],
+         chelsea_entry=dict(reaction="Rose à rouge.", color="#EB4059", intensity=0.7),
+         edxrf=[("Zr", 1.0), ("Hf", 0.08), ("Fe", 0.05)], meb=[("Zr", 1.0), ("Si", 0.5), ("O", 0.4)]),
+    # ======================================================================== the green beryl (2026-11-20): colored by iron, not by chromium: not an emerald
+    dict(id="Beryl_Vert", name=("Béryl vert", "Green beryl"),
+         desc=("Un béryl d'un vert pâle à moyen, jaunâtre ou bleuâtre, coloré par le fer et non par le chrome ou le vanadium : ce n'est pas une émeraude. Il ne réagit pas au filtre Chelsea et vaut bien moins. Chauffé, il devient bleu, comme une aigue-marine.",
+               "A pale to medium green beryl, yellowish or bluish, colored by iron and not by chromium or vanadium: it is not an emerald. It does not react to the Chelsea filter and is worth much less. Heated, it turns blue, like an aquamarine."),
+         icon=((0.52, 0.76, 0.50), (0.78, 0.92, 0.74)), shape="Rectangle à pans coupés", cut="À degrés", ri=1.575, sg=2.72, h=7.5, dims=(9.0, 7.0, 4.5), ct=2.2,
+         luster=("Vitreux", "Vitreous"), color=("Vert pâle à moyen, jaunâtre ou bleuâtre", "Pale to medium green, yellowish or bluish"), transp="Transparent",
+         pleo=("Vert jaunâtre / Vert bleuâtre selon l'axe (faible à modéré).", "Yellowish green / Bluish green depending on the axis (weak to moderate)."),
+         fluL=INERT, fluS=INERT, optic=U, biref=0.006, opt=UNI, fig=FIG_U,
+         spec=("Spectre du fer, souvent peu net : bande faible vers 537 nm et vers 456 nm ; pas les raies du chrome de l'émeraude.", "Iron spectrum, often not sharp: weak band near 537 nm and near 456 nm; not the chromium lines of emerald."),
+         lines=[(537.0, 10.0), (456.0, 12.0)],
+         incl=("Presque toujours très propre. Fins tubes parallèles à l'axe (aspect de pluie), parfois cavités liquides, plumes et fissures.", "Almost always very clean. Fine tubes parallel to the axis (rain-like), sometimes liquid cavities, feathers and fissures."),
+         chelsea=("Aucune réaction rouge : vert terne.", "No red reaction: dull green."), magn=NO_MAG, value=30,
+         origins=[origin("Brésil (Minas Gerais)", "Brazil (Minas Gerais)", 40, 1.0), origin("Madagascar", "Madagascar", 25, 1.0), origin("Mozambique", "Mozambique", 20, 1.0), origin("Nigeria", "Nigeria", 15, 0.9)],
+         cls="silicates", fams=["beryls"], system="hexagonal", formula="Be₃Al₂Si₆O₁₈ (Fe)", note=("Béryl coloré par le fer", "Beryl colored by iron"),
+         limits=(65, 175, 0.10, 0.60, 0.60, 1.00), habits=[("beryl_prism", 50), ("beryl_long", 30), ("beryl_short", 20)], pattern=None, raman="Béryl", sign="-",
+         modes=[(0.30, 70, 95, 0.20, 0.50, 0.75, 0.95), (0.30, 95, 140, 0.20, 0.50, 0.75, 0.95), (0.22, 140, 175, 0.15, 0.45, 0.80, 0.98), (0.18, 95, 150, 0.10, 0.22, 0.90, 1.00)],
+         chelsea_entry=dict(reaction="Aucune réaction rouge : vert terne.", color="#F7141A", intensity=0.0, dull="#2F6B3C"),
+         edxrf=[("Fe", 0.06)], meb=[("O", 0.6), ("Si", 0.8), ("Al", 0.5), ("Fe", 0.05)]),
 ]
 
+# ---- Several spectra for one species (user, 2026-11-20): a species can have a main spectrum and variants, each with a label.
+# In spectra.json (game) and in the data of the site an entry has  "of": <id of the species>  and  "label": <what makes this spectrum different>.
+# key -> (species, (French label, English label)); the keys that are species themselves are the main spectra (they only get a label).
+SPECTRA_META = {
+    "Saphir": ("Saphir", ("Saphir bleu", "Blue sapphire")),
+    "Saphir_Vert": ("Saphir", ("Saphir vert", "Green sapphire")),
+    "Zircon": ("Zircon", ("Zircon naturel", "Natural zircon")),
+    "Zircon_Chauffe": ("Zircon", ("Zircon chauffé", "Heated zircon")),
+    "Jade_Jadeite": ("Jade_Jadeite", ("Jadéite naturelle", "Natural jadeite")),
+    "Jade_Jadeite_Teinte": ("Jade_Jadeite", ("Jadéite teintée (fer et chrome)", "Dyed jadeite (iron and chromium)")),
+    "Verre_Rouge_Au": ("Verre", ("Verre rouge (or)", "Red glass (gold)")),
+    "Verre_Rouge_Se": ("Verre", ("Verre rouge (sélénium)", "Red glass (selenium)")),
+    "Verre_Rouge_TR": ("Verre", ("Verre rouge (terres rares)", "Red glass (rare earths)")),
+    "Verre_Bleu_Cobalt": ("Verre", ("Verre bleu (cobalt)", "Blue glass (cobalt)")),
+    "Zircon_Bas": ("Zircon_Bas", ("Zircon bas partiellement abîmé", "Partly damaged low zircon")),
+    "Zircon_Bas_Metamicte": ("Zircon_Bas", ("Zircon bas très abîmé (métamicte)", "Heavily damaged low zircon (metamict)")),
+}
+
+# ---- the zircon that was already in the game becomes "Zircon (haut)" (the high, crystalline type); its colours, a window of the game's colour system
+ZIRCON_HIGH = dict(
+    name=("Zircon (haut)", "Zircon (high)"),
+    desc=("Le zircon cristallin, ou zircon de type haut : très réfringent, très dispersif, brillant presque comme le diamant. Il est incolore, bleu, jaune doré, orange, rouge ou brun ; le bleu et l'incolore viennent presque toujours d'un chauffage.",
+          "Crystalline zircon, or high-type zircon: very refractive, very dispersive, nearly as brilliant as diamond. It is colorless, blue, golden yellow, orange, red or brown; the blue and the colorless almost always come from heating."),
+    color=("Incolore, bleu, jaune doré, orange, rouge ou brun", "Colorless, blue, golden yellow, orange, red or brown"),
+    limits=(0, 220, 0.00, 0.90, 0.28, 1.00),
+    modes=[(0.30, 192, 215, 0.35, 0.80, 0.55, 0.95), (0.18, 0, 360, 0.00, 0.05, 0.90, 1.00), (0.14, 38, 52, 0.40, 0.85, 0.70, 1.00), (0.10, 20, 36, 0.50, 0.90, 0.65, 0.95),
+           (0.12, 5, 20, 0.55, 0.90, 0.40, 0.75), (0.10, 22, 40, 0.40, 0.75, 0.30, 0.55), (0.04, 70, 100, 0.25, 0.55, 0.70, 0.95)],
+)
+
+
 # Class and family assignments are in the species above; these are the ones of the garnets and of the color-change sapphire, written in add_new_garnets.py.
+
+# ---- Species of the game whose colours were widened afterwards (the text and the colour modes change, nothing else): id -> patch
+SCAPOLITE = dict(
+    name=("Scapolite", "Scapolite"),
+    desc=("Silicate d'aluminium de la série marialite-méionite, au port cristallin allongé et prismatique caractéristique. Les pierres taillées sont jaunes, incolores, roses ou violettes.",
+          "Aluminum silicate of the marialite-meionite series, with a characteristic elongated, prismatic crystal habit. Cut stones are yellow, colorless, pink or violet."),
+    color=("Jaune, incolore, rose à violet", "Yellow, colorless, pink to violet"),
+    limits=(270, 65, 0.00, 0.85, 0.30, 1.00),
+    modes=[(0.38, 42, 62, 0.30, 0.85, 0.60, 1.00), (0.14, 0, 360, 0.00, 0.05, 0.90, 1.00), (0.05, 14, 36, 0.35, 0.80, 0.60, 0.95), (0.16, 315, 350, 0.20, 0.60, 0.70, 1.00),
+           (0.18, 270, 312, 0.20, 0.65, 0.55, 0.95), (0.09, 330, 360, 0.30, 0.60, 0.55, 0.85)],
+)
+# The blue beryl (maxixe), checked against what the laboratories observe (GIA, Gems & Gemology 2018 and 2020): index 1.583-1.592, density 2.78, strongest color along the
+# optic axis (deep blue ordinary ray, colorless extraordinary ray), several bands between 500 and 700 nm with a broad band near 690 nm, color that fades with strong light or mild heat.
+# No test tells a natural irradiation from an artificial one: the laboratory writes "maxixe". Its colour window, and the aquamarine's, are in GemColorSystem.cs.
+BERYL_BLEU = dict(
+    name=("Béryl bleu (maxixe)", "Blue beryl (maxixe)"),
+    desc=("Un béryl d'un bleu profond, de type maxixe : sa couleur vient de centres colorés, créés par une irradiation naturelle ou artificielle, et fane à la lumière forte ou à la chaleur. Bien plus soutenu que l'aigue-marine. Aucun test ne dit si l'irradiation est naturelle : le laboratoire écrit seulement « maxixe ».",
+          "A deep blue beryl of the maxixe type: its color comes from color centers, created by natural or artificial irradiation, and fades with strong light or heat. Much deeper than aquamarine. No test tells whether the irradiation is natural: the laboratory simply writes \"maxixe\"."),
+    color=("Bleu royal", "Royal blue"),
+    extra=dict(refractiveIndex=1.588, density=2.78, birefringence=0.009,
+               pleochroicDescription="Bleu profond (rayon ordinaire) / Incolore (rayon extraordinaire) : dichroïsme très marqué.",
+               absorptionSpectrum="Plusieurs bandes entre 500 et 700 nm et une large bande vers 690 nm dans le rayon ordinaire ; seule la large bande vers 690 nm dans le rayon extraordinaire."),
+    extra_en=dict(pleochroicDescription="Deep blue (ordinary ray) / Colorless (extraordinary ray): very strong dichroism.",
+                  absorptionSpectrum="Several bands between 500 and 700 nm and a broad band near 690 nm in the ordinary ray; only the broad band near 690 nm in the extraordinary ray."),
+    lines=[(690.0, 40.0, 0.8), (628.0, 20.0, 0.6), (550.0, 14.0, 0.35)],
+)
+# the new spectra of species of the game (key, label in SPECTRA_META): the ordinary and the extraordinary ray of the maxixe
+SPECTRA_NEW = [
+    dict(key="Beryl_Bleu", description="Rayon ordinaire (direction du bleu profond) : plusieurs bandes entre 500 et 700 nm et une large bande vers 690 nm.",
+         en="Ordinary ray (the deep blue direction): several bands between 500 and 700 nm and a broad band near 690 nm.", lines=[(690.0, 40.0, 0.8), (628.0, 20.0, 0.6), (550.0, 14.0, 0.35)]),
+    dict(key="Beryl_Bleu_Rayon_E", description="Rayon extraordinaire (direction presque incolore) : seule la large bande vers 690 nm reste.",
+         en="Extraordinary ray (the nearly colorless direction): only the broad band near 690 nm remains.", lines=[(690.0, 40.0, 0.5)]),
+]
+SPECTRA_META["Beryl_Bleu"] = ("Beryl_Bleu", ("Rayon ordinaire (bleu)", "Ordinary ray (blue)"))
+SPECTRA_META["Beryl_Bleu_Rayon_E"] = ("Beryl_Bleu", ("Rayon extraordinaire (incolore)", "Extraordinary ray (colorless)"))
+PATCHES = {"Zircon": ZIRCON_HIGH, "Scapolite": SCAPOLITE, "Beryl_Bleu": BERYL_BLEU}

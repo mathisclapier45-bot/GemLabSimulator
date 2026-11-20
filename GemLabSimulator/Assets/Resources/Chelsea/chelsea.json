@@ -50,7 +50,7 @@
    "intensity": 0.4
   },
   {
-   "key": "Saphir_Bleu",
+   "key": "Saphir",
    "source": "Diplôme en gemmologie 2019, filtres de couleur (p. 43-45)",
    "reaction": "Généralement vert foncé.",
    "color": "#F7141A",
@@ -182,6 +182,21 @@
    "reaction": "Parfois rose pâle.",
    "color": "#E9A9B8",
    "intensity": 0.3
+  },
+  {
+   "key": "Zircon_Bas",
+   "source": "Ajout 2026 (valeurs à faire relire)",
+   "reaction": "Rose à rouge.",
+   "color": "#EB4059",
+   "intensity": 0.7
+  },
+  {
+   "key": "Beryl_Vert",
+   "source": "Ajout 2026 (valeurs à faire relire)",
+   "reaction": "Aucune réaction rouge : vert terne.",
+   "color": "#F7141A",
+   "intensity": 0.0,
+   "dull": "#2F6B3C"
   }
  ]
 }

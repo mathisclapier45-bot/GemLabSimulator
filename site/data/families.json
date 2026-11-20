@@ -55,7 +55,8 @@
     "Goshenite",
     "Heliodore",
     "Morganite",
-    "Pezzottaite"
+    "Pezzottaite",
+    "Beryl_Vert"
    ],
    "name": "Béryls",
    "chem": "Silicate de béryllium et d'aluminium, Be₃Al₂Si₆O₁₈ (hexagonal)",
@@ -163,7 +164,7 @@
   },
   {
    "id": "scapolites",
-   "visible": false,
+   "visible": true,
    "species": [
     "Scapolite"
    ],

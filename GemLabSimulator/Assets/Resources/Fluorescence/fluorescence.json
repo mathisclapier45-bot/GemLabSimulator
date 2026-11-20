@@ -89,6 +89,17 @@
    "phosphorescent": false
   },
   {
+   "key": "Saphir",
+   "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
+   "longText": "Généralement aucune réaction (le fer inhibe la fluorescence). Les saphirs roses et orange (chrome) peuvent être rouges, certains jaunes abricot.",
+   "longColor": "#FFFFFF",
+   "longIntensity": 0,
+   "shortText": "Généralement aucune réaction, parfois un vert faible.",
+   "shortColor": "#5CFF8A",
+   "shortIntensity": 0.12,
+   "phosphorescent": false
+  },
+  {
    "key": "Saphir_Bleu",
    "source": "Diplôme en gemmologie 2019, réactions observées aux UV (p. 48-49)",
    "longText": "Aucune réaction.",
@@ -287,39 +298,6 @@
    "phosphorescent": false
   },
   {
-   "key": "Fluorite_Verte",
-   "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
-   "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
-   "longColor": "#5A78FF",
-   "longIntensity": 0.7,
-   "shortText": "Moins marquée. Peut ne présenter aucune réaction.",
-   "shortColor": "#5A78FF",
-   "shortIntensity": 0.35,
-   "phosphorescent": false
-  },
-  {
-   "key": "Fluorite_Bleue",
-   "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
-   "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
-   "longColor": "#5A78FF",
-   "longIntensity": 0.7,
-   "shortText": "Moins marquée. Peut ne présenter aucune réaction.",
-   "shortColor": "#5A78FF",
-   "shortIntensity": 0.35,
-   "phosphorescent": false
-  },
-  {
-   "key": "Fluorite_Jaune",
-   "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
-   "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
-   "longColor": "#5A78FF",
-   "longIntensity": 0.7,
-   "shortText": "Moins marquée. Peut ne présenter aucune réaction.",
-   "shortColor": "#5A78FF",
-   "shortIntensity": 0.35,
-   "phosphorescent": false
-  },
-  {
    "key": "Fluorite_Bandee",
    "source": "Diplôme en gemmologie 2019, fluorite (p. 121)",
    "longText": "Bleue ou verte, parfois marquée. Peut ne présenter aucune réaction.",
@@ -405,6 +383,17 @@
    "shortText": "Bleu-blanc vif, très intense.",
    "shortColor": "#9CC8FF",
    "shortIntensity": 0.9,
+   "phosphorescent": false
+  },
+  {
+   "key": "Zircon_Bas",
+   "source": "Ajout 2026 : fluorescence de Zircon (bas, métamicte) (valeurs à faire relire)",
+   "longText": "Jaune-brunâtre, faible.",
+   "longColor": "#C89A3C",
+   "longIntensity": 0.3,
+   "shortText": "Variable : nulle, ou jaune moutarde à orangé faible.",
+   "shortColor": "#D9A030",
+   "shortIntensity": 0.2,
    "phosphorescent": false
   }
  ]

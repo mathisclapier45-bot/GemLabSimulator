@@ -351,7 +351,7 @@ def compare(req):
     elif a and b:
         head = "".join(
             '<th scope="col"><a class="cmphead" href="/encyclopedie/{slug}">{gem}<span>{name}</span></a></th>'.format(
-                slug=esc(s["slug"]), gem=gem_svg(s["iconColor"], s["iconFacetColor"], 52), name=esc(s["displayName"])) for s in (a, b))
+                slug=esc(s["slug"]), gem=gem_svg(s["iconColor"], s["iconFacetColor"], 52, s.get("iconStyle")), name=esc(s["displayName"])) for s in (a, b))
         rows = []
         ndiff = 0
         for label, va, vb, gloss, differs in _compare_rows(req, a, b):
@@ -482,7 +482,7 @@ def search_page(req):
         tiles = "".join(
             '<li><a class="tile" style="--gem:{gc}" href="/encyclopedie/{slug}">{gem}<span class="name">{name}</span>'
             '<span class="sub">{sub}</span></a></li>'.format(
-                gc=esc(s["iconColor"]), slug=esc(s["slug"]), gem=gem_svg(s["iconColor"], s["iconFacetColor"], 44), name=esc(s["displayName"]),
+                gc=esc(s["iconColor"]), slug=esc(s["slug"]), gem=gem_svg(s["iconColor"], s["iconFacetColor"], 44, s.get("iconStyle")), name=esc(s["displayName"]),
                 sub=esc(t("enc.tile.sub", hardness=fmt_num(s.get("hardness"), 1), ri=fmt_num(s.get("refractiveIndex"), 3)))) for s in species[:24])
         more = ('<p class="side-link"><a href="/encyclopedie?q={}">{}</a></p>'.format(esc(q), esc(t("search.more", n=len(species)))) if len(species) > 24 else "")
         parts.append('<section><h2>{} <span class="count">({})</span></h2><ul class="tiles">{}</ul>{}</section>'.format(

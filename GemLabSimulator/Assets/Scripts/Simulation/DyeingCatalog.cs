@@ -119,11 +119,12 @@ public static class DyeingCatalog
             case "Heliodore":
             case "Aigue_Marine":
             case "Beryl_Bleu":
+            case "Beryl_Vert":
             case "Morganite":
                 material = new Stuff { Porosity = 0.15f, Days = 5 };
                 return true;
         }
-        if (name.StartsWith("Saphir_") && name != "Saphir_Incolore")
+        if (name.StartsWith("Saphir"))
         {
             material = new Stuff { Porosity = 0.15f, Days = 5 };
             return true;

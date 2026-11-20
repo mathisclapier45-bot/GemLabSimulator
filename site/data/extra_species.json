@@ -537,7 +537,7 @@
    "opticalCharacterClass": 1,
    "birefringence": 0.008,
    "interferenceFigure": "Figure d'interférence uniaxiale nette.",
-   "magnetism": "Légère réaction possible avec un aimant très puissant (traces de fer).",
+   "magnetism": "Légère réaction possible avec un aimant très puissant (traces de fer), nulle dans l'incolore.",
    "habits": [
     {
      "habit": "corundum_barrel",
@@ -2199,6 +2199,246 @@
     0.25,
     0.75
    ],
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Zircon_Bas",
+   "displayName": "Zircon (bas, métamicte)",
+   "description": "Le zircon de type bas, dit aussi métamicte : son réseau cristallin a été détruit, en partie ou presque entièrement, par la radioactivité de l'uranium et du thorium qu'il contient (« métamicte » veut dire « mélangé »). Il est plus vert et plus terne que le zircon haut, moins réfringent, moins dense et plus mou ; il double peu la lumière, parfois pas du tout, et ses raies d'absorption s'effacent.",
+   "iconColor": "#6B8540",
+   "iconFacetColor": "#A6BD73",
+   "refractiveIndex": 1.81,
+   "density": 4.0,
+   "hardness": 6.5,
+   "lengthMm": 6.0,
+   "widthMm": 6.0,
+   "depthMm": 4.0,
+   "weightCarats": 1.5,
+   "luster": "Vitreux à sub-adamantin",
+   "color": "Vert, vert jaunâtre ou brun verdâtre, brun, jaune-brun",
+   "shape": "Rond",
+   "cutStyle": "Brillant",
+   "transparency": "Transparent",
+   "pleochroic": false,
+   "pleochroicDescription": "",
+   "fluorescenceLongWave": "Jaune-brunâtre, faible.",
+   "fluorescenceShortWave": "Variable : nulle, ou jaune moutarde à orangé faible.",
+   "opticalCharacter": "Isotrope à faiblement anisotrope : la double réfraction est très réduite, parfois nulle, selon le degré de destruction du réseau.",
+   "opticalCharacterClassName": "Uniaxe",
+   "opticalCharacterClass": 1,
+   "birefringence": 0.003,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Raie à 653,5 nm affaiblie ou absente, avec des bandes diffuses ; parfois une bande vers 691 nm.",
+   "spectrumLines": [
+    {
+     "wavelengthNm": 653.5,
+     "widthNm": 4.0,
+     "depth": 1,
+     "edgeNm": 0
+    },
+    {
+     "wavelengthNm": 691.0,
+     "widthNm": 8.0,
+     "depth": 1,
+     "edgeNm": 0
+    }
+   ],
+   "inclusions": "Souvent fissuré, parfois à cassures conchoïdales ; zonage de couleur, halos de tension autour de petits cristaux radioactifs.",
+   "interferenceFigure": "Figure d'interférence uniaxiale faible, souvent absente.",
+   "chelseaFilterReaction": "Rose à rouge.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 9,
+   "origins": [
+    {
+     "name": "Sri Lanka (Ratnapura)",
+     "rarityWeight": 65,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Myanmar (Mogok)",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.1
+    },
+    {
+     "name": "Madagascar",
+     "rarityWeight": 10,
+     "valueMultiplier": 0.9
+    }
+   ],
+   "habits": [
+    {
+     "habit": "tetragonal_prism",
+     "weight": 100
+    }
+   ],
+   "colorLimits": [
+    18,
+    150,
+    0.08,
+    0.85,
+    0.12,
+    0.92
+   ],
+   "fluoEntry": {
+    "longText": "Jaune-brunâtre, faible.",
+    "longColor": "#C89A3C",
+    "longIntensity": 0.3,
+    "shortText": "Variable : nulle, ou jaune moutarde à orangé faible.",
+    "shortColor": "#D9A030",
+    "shortIntensity": 0.2,
+    "phosphorescent": false
+   },
+   "spectraEntry": {
+    "description": "Spectre presque effacé : la raie de l'uranium à 653,5 nm est faible ou absente, et il ne reste que des bandes diffuses, parfois une bande vers 691 nm.",
+    "lines": [
+     {
+      "wavelengthNm": 653.5,
+      "widthNm": 4.0,
+      "depth": 0.3,
+      "edgeNm": 0.0
+     },
+     {
+      "wavelengthNm": 691.0,
+      "widthNm": 8.0,
+      "depth": 0.5,
+      "edgeNm": 0.0
+     }
+    ],
+    "label": "Zircon bas partiellement abîmé"
+   },
+   "spectraVariants": [
+    {
+     "key": "Zircon_Bas_Metamicte",
+     "label": "Zircon bas très abîmé (métamicte)",
+     "description": "Pas de raies nettes : l'absorption est diffuse, avec au plus une raie très faible à 653,5 nm. Un chauffage peut faire réapparaître les raies fines.",
+     "lines": [
+      {
+       "wavelengthNm": 653.5,
+       "widthNm": 10.0,
+       "depth": 0.15,
+       "edgeNm": 0.0
+      }
+     ]
+    }
+   ],
+   "chelseaEntry": {
+    "reaction": "Rose à rouge.",
+    "color": "#EB4059",
+    "intensity": 0.7
+   },
+   "isQuartzFamily": false,
+   "isThermallyConductiveLikeDiamond": false,
+   "isElectricallyConductive": false,
+   "forcedSynthetic": false,
+   "forcedTreatment": false,
+   "roughOnly": 0,
+   "isTunnelExclusive": false,
+   "tunnelMinPrice": 0
+  },
+  {
+   "id": "Beryl_Vert",
+   "displayName": "Béryl vert",
+   "description": "Un béryl d'un vert pâle à moyen, jaunâtre ou bleuâtre, coloré par le fer et non par le chrome ou le vanadium : ce n'est pas une émeraude. Il ne réagit pas au filtre Chelsea et vaut bien moins. Chauffé, il devient bleu, comme une aigue-marine.",
+   "iconColor": "#85C280",
+   "iconFacetColor": "#C7EBBD",
+   "refractiveIndex": 1.575,
+   "density": 2.72,
+   "hardness": 7.5,
+   "lengthMm": 9.0,
+   "widthMm": 7.0,
+   "depthMm": 4.5,
+   "weightCarats": 2.2,
+   "luster": "Vitreux",
+   "color": "Vert pâle à moyen, jaunâtre ou bleuâtre",
+   "shape": "Rectangle à pans coupés",
+   "cutStyle": "À degrés",
+   "transparency": "Transparent",
+   "pleochroic": true,
+   "pleochroicDescription": "Vert jaunâtre / Vert bleuâtre selon l'axe (faible à modéré).",
+   "fluorescenceLongWave": "Aucune fluorescence notable.",
+   "fluorescenceShortWave": "Aucune fluorescence notable.",
+   "opticalCharacter": "Anisotrope, uniaxial (biréfringent).",
+   "opticalCharacterClassName": "Uniaxe",
+   "opticalCharacterClass": 1,
+   "birefringence": 0.006,
+   "isPolycrystalline": false,
+   "absorptionSpectrum": "Spectre du fer, souvent peu net : bande faible vers 537 nm et vers 456 nm ; pas les raies du chrome de l'émeraude.",
+   "spectrumLines": [
+    {
+     "wavelengthNm": 537.0,
+     "widthNm": 10.0,
+     "depth": 1,
+     "edgeNm": 0
+    },
+    {
+     "wavelengthNm": 456.0,
+     "widthNm": 12.0,
+     "depth": 1,
+     "edgeNm": 0
+    }
+   ],
+   "inclusions": "Presque toujours très propre. Fins tubes parallèles à l'axe (aspect de pluie), parfois cavités liquides, plumes et fissures.",
+   "interferenceFigure": "Figure d'interférence uniaxiale nette.",
+   "chelseaFilterReaction": "Aucune réaction rouge : vert terne.",
+   "magnetism": "Aucune réaction à l'aimant.",
+   "baseValue": 30,
+   "origins": [
+    {
+     "name": "Brésil (Minas Gerais)",
+     "rarityWeight": 40,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Madagascar",
+     "rarityWeight": 25,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Mozambique",
+     "rarityWeight": 20,
+     "valueMultiplier": 1.0
+    },
+    {
+     "name": "Nigeria",
+     "rarityWeight": 15,
+     "valueMultiplier": 0.9
+    }
+   ],
+   "habits": [
+    {
+     "habit": "beryl_prism",
+     "weight": 50
+    },
+    {
+     "habit": "beryl_long",
+     "weight": 30
+    },
+    {
+     "habit": "beryl_short",
+     "weight": 20
+    }
+   ],
+   "colorLimits": [
+    65,
+    175,
+    0.1,
+    0.6,
+    0.6,
+    1.0
+   ],
+   "chelseaEntry": {
+    "reaction": "Aucune réaction rouge : vert terne.",
+    "color": "#F7141A",
+    "intensity": 0.0,
+    "dull": "#2F6B3C"
+   },
    "isQuartzFamily": false,
    "isThermallyConductiveLikeDiamond": false,
    "isElectricallyConductive": false,

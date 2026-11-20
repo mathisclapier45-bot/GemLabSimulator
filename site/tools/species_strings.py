@@ -31,7 +31,10 @@ def collect():
     extra_path = DATA / "extra_species.json"
     if extra_path.exists():                       # species of the site that the game data does not have (yet)
         known = {s["id"] for s in raw["species"]}
-        raw["species"] = list(raw["species"]) + [e for e in _load(extra_path)["species"] if e["id"] not in known]
+        added = [e for e in _load(extra_path)["species"] if e["id"] not in known]
+        raw["species"] = list(raw["species"]) + added
+        for table, field in (("fluorescence", "fluoEntry"), ("spectra", "spectraEntry"), ("chelsea", "chelseaEntry")):     # their own tables
+            raw[table]["entries"] = list(raw[table]["entries"]) + [dict(e[field], key=e["id"]) for e in added if e.get(field)]
     for s in raw["species"]:
         for f in SPECIES_FIELDS:
             add(s.get(f), f)
@@ -39,6 +42,12 @@ def collect():
             add(o.get("name"), "origin")
     for e in raw["spectra"]["entries"]:
         add(e.get("description"), "spectrum")
+        add(e.get("label"), "spectrum")
+    for e in added if extra_path.exists() else []:
+        add((e.get("spectraEntry") or {}).get("label"), "spectrum")
+        for v in e.get("spectraVariants", []):
+            add(v.get("description"), "spectrum")
+            add(v.get("label"), "spectrum")
     for e in raw["fluorescence"]["entries"]:
         add(e.get("longText"), "fluorescence")
         add(e.get("shortText"), "fluorescence")

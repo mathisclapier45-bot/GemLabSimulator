@@ -42,9 +42,9 @@ public class SpectroscopeUI : MonoBehaviour
     private static readonly (string group, string[] keys)[] IndexGroups =
     {
         ("Chrome", new[] { "Corindon_Rubis", "Corindon_Synthetique_Rubis", "Emeraude", "Spinelle", "Chrysoberyl_Alexandrite", "Corindon_Synthetique_CC" }),
-        ("Fer", new[] { "Saphir_Bleu", "Saphir_Vert", "Chrysoberyl", "Peridot", "Grenat_Almandin", "Jade_Jadeite", "Jade_Jadeite_Teinte" }),
+        ("Fer", new[] { "Saphir", "Chrysoberyl", "Peridot", "Grenat_Almandin", "Jade_Jadeite", "Jade_Jadeite_Teinte" }),
         ("Cobalt", new[] { "Spinelle_Bleu", "Verre_Bleu_Cobalt" }),
-        ("Uranium et terres rares", new[] { "Zircon", "Zircon_Chauffe", "Apatite" }),
+        ("Uranium et terres rares", new[] { "Zircon", "Zircon_Bas", "Zircon_Chauffe", "Apatite" }),
         ("Verres rouges", new[] { "Verre_Rouge_Au", "Verre_Rouge_Se", "Verre_Rouge_TR" }),
     };
 
@@ -52,10 +52,10 @@ public class SpectroscopeUI : MonoBehaviour
     {
         { "Corindon_Rubis", "Rubis" }, { "Corindon_Synthetique_Rubis", "Rubis de synthèse" }, { "Emeraude", "Émeraude" }, { "Spinelle", "Spinelle rouge" },
         { "Chrysoberyl_Alexandrite", "Alexandrite" }, { "Corindon_Synthetique_CC", "Saphir synth. changement de couleur" },
-        { "Saphir_Bleu", "Saphir bleu" }, { "Saphir_Vert", "Saphir vert" }, { "Chrysoberyl", "Chrysobéryl" }, { "Peridot", "Péridot" },
+        { "Saphir", "Saphir" }, { "Chrysoberyl", "Chrysobéryl" }, { "Peridot", "Péridot" },
         { "Grenat_Almandin", "Grenat almandin" }, { "Jade_Jadeite", "Jadéite" }, { "Jade_Jadeite_Teinte", "Jadéite teintée (Fe + Cr)" },
         { "Spinelle_Bleu", "Spinelle bleu (cobalt)" }, { "Verre_Bleu_Cobalt", "Verre bleu (cobalt)" },
-        { "Zircon", "Zircon" }, { "Zircon_Chauffe", "Zircon chauffé" }, { "Apatite", "Apatite (terres rares)" },
+        { "Zircon", "Zircon (haut)" }, { "Zircon_Bas", "Zircon (bas, métamicte)" }, { "Zircon_Chauffe", "Zircon chauffé" }, { "Apatite", "Apatite (terres rares)" },
         { "Verre_Rouge_Au", "Verre rouge (or)" }, { "Verre_Rouge_Se", "Verre rouge (sélénium)" }, { "Verre_Rouge_TR", "Verre rouge (terres rares)" },
     };
 

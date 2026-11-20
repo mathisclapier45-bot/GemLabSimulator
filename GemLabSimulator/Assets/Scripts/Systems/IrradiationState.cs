@@ -25,7 +25,7 @@ public class IrradiationState : MonoBehaviour
 
     // The technician gives one sample of each of these materials, once, to start with.
     public bool SamplesGiven { get; private set; }
-    private static readonly string[] SampleAssets = { "Quartz", "Citrine", "Goshenite", "Morganite", "Topaze", "Tourmaline_Rose", "Perle", "Saphir_Incolore" };
+    private static readonly string[] SampleAssets = { "Quartz", "Citrine", "Goshenite", "Morganite", "Topaze", "Tourmaline_Rose", "Perle", "Saphir" };
 
     public event Action OnJobChanged;
 
@@ -153,7 +153,7 @@ public class IrradiationState : MonoBehaviour
         {
             var definition = database.FindByAssetName(asset);
             if (definition == null) continue;
-            var stone = new GemInstance(definition);
+            var stone = GemVariants.NewSample(definition, "Incolore");      // the sapphire sample is a colourless one
             stone.MarkIdentified();
             stone.ClearTreatment();
             inventory.TryAddGem(stone);

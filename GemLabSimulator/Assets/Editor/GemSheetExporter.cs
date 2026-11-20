@@ -99,7 +99,7 @@ public static class GemSheetExporter
     // The cabochons with their effects: a plain dome, a six-rayed star, a four-rayed star, a cat's eye, for a few species.
     private static void ExportEffects(GemDatabase database, string folder, StringBuilder index)
     {
-        var names = new[] { "Corindon_Rubis", "Saphir_Bleu", "Saphir_Rose", "Grenat_Almandin", "Diopside_Chromifere", "Chrysoberyl", "Quartz", "Tourmaline_Rose", "Apatite", "Emeraude", "Diamant", "Zircon" };
+        var names = new[] { "Corindon_Rubis", "Saphir", "Grenat_Almandin", "Diopside_Chromifere", "Chrysoberyl", "Quartz", "Tourmaline_Rose", "Apatite", "Emeraude", "Diamant", "Zircon" };
         var labels = new[] { "Dôme lisse", "Étoile à 6 branches", "Étoile à 4 branches", "Œil-de-chat", "Taille ronde" };
         var width = labels.Length * (Cell + Gap) + Gap;
         var height = names.Length * (Cell + Gap) + Gap;

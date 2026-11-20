@@ -152,7 +152,7 @@ def prices_page(req):
     if not result:
         if ranked:
             tiles = "".join('<li><a class="tile" style="--gem:{gc}" href="/prix?s={slug}&amp;w=1">{gem}<span class="name">{name}</span><span class="sub">{n}</span></a></li>'.format(
-                gc=esc(s["iconColor"]), slug=esc(s["slug"]), gem=gem_svg(s["iconColor"], s["iconFacetColor"], 44), name=esc(s["displayName"]),
+                gc=esc(s["iconColor"]), slug=esc(s["slug"]), gem=gem_svg(s["iconColor"], s["iconFacetColor"], 44, s.get("iconStyle")), name=esc(s["displayName"]),
                 n=esc(t("price.top.count", n=n))) for n, s in ranked)
             top = '<h2>{}</h2><ul class="tiles">{}</ul>'.format(esc(t("price.top.title")), tiles)
         else:

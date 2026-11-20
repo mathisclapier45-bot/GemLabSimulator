@@ -87,7 +87,7 @@ public static class DiffusionCatalog
     public static bool IsCorundum(GemDefinition definition)
     {
         var name = definition != null ? definition.name : "";
-        return name == "Corindon_Rubis" || name == "Padparadscha" || name.StartsWith("Saphir_");
+        return name == "Corindon_Rubis" || name == "Padparadscha" || name.StartsWith("Saphir");
     }
 
     public static bool IsDiffused(GemInstance gem) => gem != null && gem.DiffusionDepthMm > 0f;
@@ -230,7 +230,7 @@ public static class DiffusionCatalog
         var item = Dopants[dopant];
         if (dopant != Beryllium) return new Vector3(item.Hue, item.Saturation, item.Brightness);
 
-        var name = gem.Definition.name;
+        var name = GemVariants.Key(gem);
         if (name == "Saphir_Bleu") return new Vector3(gem.ColorHue, Mathf.Clamp01(gem.ColorSaturation + 0.12f), Mathf.Max(0.3f, gem.ColorBrightness - 0.05f));
         if (name == "Saphir_Rose" || name == "Padparadscha") return new Vector3(24f, 0.90f, 0.95f);
         if (name == "Saphir_Incolore") return new Vector3(20f, 0.62f, 0.96f);

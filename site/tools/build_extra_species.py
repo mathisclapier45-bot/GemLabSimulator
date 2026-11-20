@@ -15,6 +15,7 @@ from pathlib import Path
 
 SITE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from new_species_spec import SPECTRA_META  # noqa: E402
 REPO = SITE.parent
 SRC = REPO / "GemLabSimulator" / "Assets" / "Editor" / "SceneBootstrap.cs"
 OUT = SITE / "data" / "extra_species.json"
@@ -135,7 +136,7 @@ COLOR_CHANGE_SAPPHIRE = {
     "chelseaFilterReaction": "Réaction rougeâtre faible possible (chrome et vanadium).", "baseValue": 160,
     "origins": [{"name": "Sri Lanka (Ceylan)", "rarityWeight": 40, "valueMultiplier": 1.2}, {"name": "Tanzanie (Umba)", "rarityWeight": 30, "valueMultiplier": 1.0},
                 {"name": "Madagascar", "rarityWeight": 30, "valueMultiplier": 0.9}],
-    "copyFrom": "Saphir_Bleu", "copy": ["opticalCharacter", "opticalCharacterClassName", "opticalCharacterClass", "birefringence", "interferenceFigure", "magnetism", "habits"],
+    "copyFrom": "Saphir", "copy": ["opticalCharacter", "opticalCharacterClassName", "opticalCharacterClass", "birefringence", "interferenceFigure", "magnetism", "habits"],
 }
 
 # Colour windows (hue from, hue to, saturation from, to, brightness from, to) of the species that are not in GemColorSystem.cs.
@@ -164,6 +165,16 @@ def from_spec(sp):
     }
     if sp.get("fluo_entry"):
         out["fluoEntry"] = sp["fluo_entry"]
+    if sp.get("spectra_entry"):
+        e = sp["spectra_entry"]
+        out["spectraEntry"] = {"description": e["description"], "lines": [{"wavelengthNm": w, "widthNm": wd, "depth": dp, "edgeNm": 0.0} for w, wd, dp in e["lines"]]}
+        if sp["id"] in SPECTRA_META:
+            out["spectraEntry"]["label"] = SPECTRA_META[sp["id"]][1][0]
+    if sp.get("spectra_extra"):                                   # the other spectra of the species (variants)
+        out["spectraVariants"] = [{"key": e["key"], "label": SPECTRA_META[e["key"]][1][0], "description": e["description"], "lines": [{"wavelengthNm": w, "widthNm": wd, "depth": dp, "edgeNm": 0.0} for w, wd, dp in e["lines"]]}
+                                  for e in sp["spectra_extra"]]
+    if sp.get("chelsea_entry"):
+        out["chelseaEntry"] = sp["chelsea_entry"]
     return finish(out)
 
 
@@ -177,7 +188,7 @@ def main():
     species = [parse_block(text, i) for i in FROM_GAME_CODE] + [finish(dict(s)) for s in BY_HAND] + [finish(sapphire)]
     for s in species:
         s["colorLimits"] = COLOR_LIMITS.get(s["id"])
-    from new_species_spec import SPECIES            # the 22 species written for both the game and the site
+    from new_species_spec import SPECIES            # the species written for both the game and the site
     species += [from_spec(s) for s in SPECIES]
     OUT.write_text(json.dumps({"note": "Espèces du site absentes des données du jeu. Fichier fabriqué par site/tools/build_extra_species.py : ne pas modifier à la main.",
                                "species": species}, ensure_ascii=False, indent=1), encoding="utf-8")

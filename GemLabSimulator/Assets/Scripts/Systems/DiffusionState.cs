@@ -26,7 +26,7 @@ public class DiffusionState : MonoBehaviour
 
     // The technician gives one sample of each of these materials, once, to start with.
     public bool SamplesGiven { get; private set; }
-    private static readonly string[] SampleAssets = { "Saphir_Incolore", "Saphir_Rose", "Saphir_Bleu", "Saphir_Jaune", "Corindon_Rubis" };
+    private static readonly string[] SampleAssets = { "Saphir:Incolore", "Saphir:Rose", "Saphir:Bleu", "Saphir:Jaune", "Corindon_Rubis" };
 
     public event Action OnJobChanged;
 
@@ -133,9 +133,10 @@ public class DiffusionState : MonoBehaviour
 
         foreach (var asset in SampleAssets)
         {
-            var definition = database.FindByAssetName(asset);
+            var colon = asset.IndexOf(':');                                   // "Saphir:Rose" = a sapphire of that colour group
+            var definition = database.FindByAssetName(colon >= 0 ? asset.Substring(0, colon) : asset);
             if (definition == null) continue;
-            var stone = new GemInstance(definition);
+            var stone = GemVariants.NewSample(definition, colon >= 0 ? asset.Substring(colon + 1) : null);
             stone.MarkIdentified();
             stone.ClearTreatment();
             inventory.TryAddGem(stone);

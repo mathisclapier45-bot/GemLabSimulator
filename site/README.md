@@ -358,7 +358,8 @@ Chaque fiche d'espèce indique sa classe, et sa famille quand elle est montrée.
 
 `data/extra_species.json` contient des espèces que l'encyclopédie montre mais que les données du jeu n'ont pas (encore) : les quatre nouveaux grenats écrits dans le code du jeu (mais pas encore générés dans Unity), et le grossulaire et l'andradite purs (deux pôles du schéma des grenats).
 Le fichier est fabriqué par `python3 site/tools/build_extra_species.py` (les quatre variétés sont lues dans `SceneBootstrap.cs`, les deux pôles sont écrits dans le script). Le catalogue les ajoute aux espèces du jeu, sauf si le jeu a déjà une espèce du même nom : la version du jeu gagne.
-Leur fiche porte un bandeau qui dit que ce n'est pas (encore) une pierre du jeu. Pour en ajouter une : l'écrire dans `build_extra_species.py`, puis lancer `build_extra_species.py`, `export_palettes.py`, `build_species_extra.py` (formule), puis `add_new_garnets.py` (classe, famille, anglais : on adapte la liste `NEW` et le dictionnaire `EN`).
+Leur fiche porte un bandeau qui dit que ce n'est pas (encore) une pierre du jeu.
+Depuis le 2026-11-20, les trois espèces qui n'existaient que sur le site (grossulaire et andradite purs, saphir à changement de couleur) sont aussi écrites dans le code du jeu (`SceneBootstrap.cs`, couleurs, instruments, changement de couleur) : après « Rebuild Gem Data » dans Unity (lancé tout seul par `GemDataAutoRebuild.cs` quand une espèce manque) et `sync_data.py --export`, la version du jeu prend le dessus. Pour en ajouter une : l'écrire dans `build_extra_species.py`, puis lancer `build_extra_species.py`, `export_palettes.py`, `build_species_extra.py` (formule), puis `add_new_garnets.py` (classe, famille, anglais : on adapte la liste `NEW` et le dictionnaire `EN`).
 
 ## 14. Les pierres qui changent de couleur : deux grilles
 
@@ -386,3 +387,56 @@ Une pierre qui change seulement de couleur reste **la même espèce** (demande d
 - **Dans le jeu** (code C#, non compilé ici) : `GemColorSystem.cs` (la fenêtre de couleur « Saphir » est la réunion de celles des six couleurs, chacune pondérée par sa part du commerce ; la fluorite a ses huit modes de couleur), nouvelle classe `GemVariants.cs` (le groupe de couleur d'un saphir, le facteur de prix par couleur, les échantillons de couleur voulue), et les catalogues qui pensaient « une espèce par couleur » (chauffage, irradiation, diffusion, teinture, remplissage, fluorescence, spectres, EDXRF, MEB, photoluminescence, UV-Vis) lisent maintenant la couleur de la pierre. Les dix anciens fichiers `.asset` sont supprimés ; **Unity doit être relancé** (GemLab > Rebuild Gem Data) pour créer `Saphir.asset`.
 - **Sur le site** : `python3 site/tools/merge_species.py` fait la même fusion dans la copie des données du jeu (mêmes textes que `SceneBootstrap.cs`), les classes et les familles, les photos candidates et les textes anglais ; il ne fait rien quand les données du jeu ont déjà l'espèce fusionnée, et `sync_data.py` le relance après avoir copié les données. `export_palettes.py` porte la même fusion des couleurs (`Palettes.sapphire`).
 - Le prix : la valeur de base du saphir est celle du bleu (140) ; `GemVariants.ColorValueFactor` donne le facteur des autres couleurs (rose 0,79, orange 0,64, violet 0,46, jaune 0,39, vert 0,29, incolore 0,16 : les valeurs qu'elles avaient comme espèces).
+
+## 17. Les scapolites : le triangle des trois pôles
+
+La famille des **scapolites** est visible (`"visible": true` dans `data/families.json`). Sa page a, sous l'introduction, un triangle de mélanges dessiné pour ce site (`app/scapolite_diagram.py`, sur le modèle de celui des grenats) : la méionite en haut, la marialite en bas à gauche, la silvialite en bas à droite, avec leurs formules ; une graduation de 20 en 20 % sur chaque côté (méionite à gauche, silvialite à droite, marialite en bas) et les trois traits qui partent du centre vers le milieu des côtés, qui partagent le triangle en trois zones (celle où chaque pôle domine). Pas de points de mesure : le triangle est vide. Un tableau dit la même chose avec des mots (accessibilité). Les textes sont dans `i18n/*.json` (clés `scap.*`).
+
+## 18. Les logos des pierres : une forme et une taille par groupe
+
+Le logo d'une espèce (la petite pierre des listes, des cartes et des fiches) a maintenant la **forme et la taille** de son groupe (demande du 2026-11-20). Ce ne sont que les logos : les pierres du jeu gardent leur propre forme.
+
+- Béryls : taille émeraude, de la couleur de la variété (la pezzottaite : cabochon) · corindons : ovale · grenats : octogone · diamants, zircon, moissanite, YAG, GGG, CZ, titanate : rond brillant · scapolites : trilliant · quartz : marquise (taille hollandaise), cabochon pour les polycristallins (agate, jaspe, onyx, cornaline, œil-de-tigre, aventurine) · fluorites : un cube · chrysobéryl et zoïsite (tanzanite) : coussin · pierres opaques : cabochon. Les autres espèces gardent la forme et la taille des données du jeu.
+- **Sur le site** : `app/gem_icons.py` (les règles dans `style_for`, les dessins SVG dans `draw`) ; le catalogue met le style de chaque espèce dans `iconStyle`, et `gem_svg(couleur, facette, taille, style)` dessine le logo.
+- **Dans le jeu** : `GemIconStyle.cs` donne la forme, la taille et, pour la fluorite, le cube (un cristal brut), et `GemDefinition.GetIcon()` l'utilise. Les règles sont les mêmes que sur le site : si l'on change l'une, changer l'autre. Les anciennes icônes pixel du fichier `SceneBootstrap.cs` ne servent plus que de secours.
+- **Cristal de roche** : l'espèce « Quartz » s'appelle maintenant « Cristal de roche » (en anglais « Rock crystal »), dans le jeu (nom affiché et liste des réponses du rapport) et sur le site (`merge_species.py`, `RENAMES`) ; son adresse reste `/encyclopedie/quartz`.
+
+## 19. Les zircons : haut et bas (métamicte)
+
+Le zircon a **deux fiches**, selon l'état de son réseau cristallin, détruit plus ou moins par la radioactivité de l'uranium et du thorium. Le zircon « bas » et le zircon « métamicte » sont la même chose en gemmologie (le type bas est aussi dit métamicte) : ils ont donc une fiche commune (une première version en avait trois, réunies le 2026-11-20 sur demande).
+
+| Fiche | Identifiant | Indice | Densité | Dureté | Biréfringence | Spectre | Couleurs |
+|---|---|---|---|---|---|---|---|
+| Zircon (haut) | `Zircon` (l'ancienne espèce) | 1,95 | 4,65 | 7,5 | 0,059 | raies nettes de l'uranium (653,5 nm…) | incolore, bleu (chauffé), jaune doré, orange, rouge, brun |
+| Zircon (bas, métamicte) | `Zircon_Bas` | 1,81 | 4,0 | 6,5 | 0,003 (parfois 0) | raie à 653,5 nm affaiblie, bande vers 691 nm | vert, vert jaunâtre, brun verdâtre, brun, jaune-brun |
+
+- **Source unique** : `site/tools/new_species_spec.py` (`Zircon_Bas` et `ZIRCON_HIGH`, avec les *modes* de couleur). `python3 site/tools/add_species.py` écrit le code du jeu (bloc `SceneBootstrap.cs`, fenêtres et modes de couleur, Raman, EDXRF, MEB, habitus, signe optique, tables de spectres, de fluorescence et du filtre Chelsea, noms dans les réponses du rapport) ; puis `build_extra_species.py`, `merge_species.py` (le zircon du jeu devient « Zircon (haut) »), `export_palettes.py`, `build_species_extra.py` et `add_new_species.py` pour le site.
+- **Dans le jeu** (non compilé) : le chauffage garde ses recettes (bleu, jaune or, incolore) pour le zircon haut, et une recette « Zircon vert plus pâle » pour le bas ; les logos sont ronds brillants ; le spectroscope, l'UV-Vis, le Raman et la fluorescence X les distinguent.
+- Les valeurs sont des valeurs typiques dans les plages de la littérature ; celles de la fluorescence, du filtre Chelsea (« rose à rouge », repris de la table du cours pour le zircon vert) et du spectre du zircon bas (la bande vers 691 nm est le « spectre anormal » décrit pour les zircons bas de Ceylan) sont **à faire relire** par un gemmologue (« Ajout 2026 (valeurs à faire relire) » dans les tables du jeu).
+
+## 20. Plusieurs spectres pour une même espèce
+
+Une espèce peut avoir **plusieurs spectres** quand la littérature en connaît plusieurs (demande du 2026-11-20, pour toutes les espèces) : un spectre principal et des variantes, chacun avec une **étiquette** qui dit ce qui le distingue (saphir bleu / vert, zircon naturel / chauffé, jadéite naturelle / teintée, les quatre verres, zircon bas peu / très abîmé).
+
+- **Données** : dans `Resources/Spectra/spectra.json` (jeu) et dans les données du site, une entrée a la clé du spectre, et deux champs facultatifs : `"of": "<identifiant de l'espèce>"` et `"label": "<étiquette>"`. L'entrée dont la clé est l'identifiant de l'espèce est le spectre principal ; les autres portent `"of"`. Le tableau `SPECTRA_META` de `site/tools/new_species_spec.py` est la source de ces deux champs (français et anglais) : `add_species.py` les écrit dans le jeu, `merge_species.py` dans la copie du site. Pour une espèce du lot (`new_species_spec.py`), les autres spectres s'écrivent dans `spectra_extra` (liste) à côté de `spectra_entry`.
+- **Sur le site** : quand une espèce a plusieurs spectres, la fiche montre « Spectres d'absorption (N possibles) » avec une bande et un texte par spectre ; avec un seul, rien ne change. Le catalogue les range dans `catalog.data()["spectra_all"][<espèce>]` (le principal d'abord).
+- **Dans le jeu** : `SpectrumLibrary.EntryFor` choisit le spectre d'une pierre (couleur, traitement, ou un tirage fixe par pierre) ; les deux champs sont lus mais ne servent pas encore à l'affichage. Zircon bas : une pierre sur deux montre le spectre « très abîmé ».
+- **Pour ajouter un spectre à une espèce** : l'ajouter au JSON avec `of` et `label` (ou dans `SPECTRA_META` + les tables), puis lancer `merge_species.py` et `add_new_species.py` (traductions) ; si le jeu doit le choisir, ajouter la règle dans `SpectrumLibrary.EntryFor`.
+
+## 21. La couleur du filtre Chelsea
+
+La pastille de la rubrique « Filtre Chelsea » montre ce que la pierre devient **sous le filtre** (qui ne laisse passer que le rouge profond et le jaune-vert) : la teinte terne de la pierre (champ `dull` de l'entrée, un vert terne par défaut), rapprochée de la couleur de la réaction autant que la réaction est forte. Une pierre sans réaction est donc verte ou vert-gris (l'aigue-marine : bleu-vert), jamais rouge ; le rubis est rouge vif, l'émeraude un rouge-brun, le zircon bas rose à rouge. Une espèce sans entrée dans la table du cours est lue dans sa description (comme `ChelseaInfo.ForGem` dans le jeu) ; une pierre opaque (« non applicable ») n'a pas de pastille. Code : `app/chelsea.py`, le même calcul que le jeu (`ChelseaFilterUI.ReactionChip`).
+
+## 22. Aigue-marine et béryl bleu (maxixe)
+
+Les deux restent deux espèces. Vérifiées contre ce que les laboratoires observent (GIA, *Gems & Gemology* 2018 et 2020) : le **maxixe** a un indice de 1,583 à 1,592 (1,588 dans le jeu), une densité de 2,78, un dichroïsme très marqué (bleu profond au rayon ordinaire, presque incolore au rayon extraordinaire), plusieurs bandes entre 500 et 700 nm avec une large bande vers 690 nm, et une couleur qui fane à la lumière forte ou à la chaleur douce ; aucun test ne distingue une irradiation naturelle d'une artificielle (le laboratoire écrit « maxixe »). L'**aigue-marine** (fer, stable) reste à 1,577 / 2,72. Deux spectres pour le maxixe (rayon ordinaire, rayon extraordinaire : section 20), des couleurs mieux séparées (le maxixe descend jusqu'au bleu de Prusse ; une pierre décolorée devient pâle ; l'aigue-marine n'est jamais aussi sombre). La bande à 628 nm de l'ancienne fiche n'est confirmée par aucune des sources trouvées : elle est gardée, à faire relire. Source : `BERYL_BLEU` dans `site/tools/new_species_spec.py`.
+
+## 23. Le béryl vert (fer) à côté de l'émeraude
+
+Le **béryl vert** (`Beryl_Vert`) est une espèce à part de la famille des béryls : un vert pâle à moyen, jaunâtre ou bleuâtre, coloré par le **fer** et non par le chrome ou le vanadium, donc pas une émeraude. Il ne réagit pas au filtre Chelsea (vert terne), ses couleurs sont plus pâles que celles de l'émeraude, et il vaut bien moins. Chauffé, il devient bleu (recette « Aigue-marine (bleu stable) » du jeu, comme l'héliodore). Source : `Beryl_Vert` dans `site/tools/new_species_spec.py` ; il a été ajouté à toutes les listes de béryls du jeu (traitements, instruments, logo en taille émeraude, enchères). Valeurs typiques dans les plages de la littérature, à faire relire (spectre du fer repris de l'aigue-marine, origines, valeur).
+
+## 24. Ce que le jeu reprend du site
+
+- **Les classes et les familles** : `python3 site/tools/push_to_game.py` copie `data/classes.json` et `data/families.json` dans `GemLabSimulator/Assets/Resources/Encyclopedia/`. L'encyclopédie du jeu montre, sur la fiche d'une espèce, sa classe de minéraux et sa famille (seulement les familles visibles du site), avec l'introduction et les points à retenir (`GemFamilies.cs`). À relancer après chaque changement de ces deux fichiers.
+- **Les couleurs sous lampe** des pierres qui changent de couleur : les tables `COLOR_CHANGE` de `export_palettes.py` sont recopiées dans `GemLook.Incandescent(couleur, espèce)` (la loupe avec la lampe) : si l'on change l'une, changer l'autre.
+- **Les espèces** : `add_species.py` (section 15) et, pour les trois anciennes espèces propres au site, les blocs écrits à la main dans `SceneBootstrap.cs`.

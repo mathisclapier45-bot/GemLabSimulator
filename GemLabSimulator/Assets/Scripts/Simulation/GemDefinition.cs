@@ -16,7 +16,14 @@ public class GemDefinition : ScriptableObject
     // Default look of the species, drawn at runtime ("3D pixel" art); falls back on the baked sprites.
     public Sprite GetIcon()
     {
-        return iconColor.a > 0f ? GemIconFactory.Get(this, shape, cutStyle) : icon;
+        if (iconColor.a <= 0f) return icon;
+        var style = GemIconStyle.For(this);                     // the logo of the species: see GemIconStyle (not the shape of the stones)
+        if (style.Habit != null)
+        {
+            var crystal = GemIconFactory.GetHabit(this, style.Habit, iconColor, iconFacetColor);
+            if (crystal != null) return crystal;
+        }
+        return GemIconFactory.Get(this, style.Shape, style.Cut);
     }
 
     // The long name of the species, where there is room (the grimoire, the sheets): the short name ("CZ") stays in the lists and the reports.

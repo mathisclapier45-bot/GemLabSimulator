@@ -1,5 +1,5 @@
 """The families of gems in the encyclopedia: the classes of minerals (and the synthetics), then the great families, each with its page."""
-from . import catalog, class_icons, garnet_diagram, markup
+from . import catalog, class_icons, garnet_diagram, markup, scapolite_diagram
 from .views import esc, fmt_num, gem_svg, page
 from .web import HTTPError, Router
 
@@ -17,7 +17,7 @@ def _range(values, digits):
 def _tile(t, s, note=""):
     return ('<li><a class="tile" style="--gem:{gc}" href="/encyclopedie/{slug}">{gem}<span class="name">{name}</span>'
             '<span class="sub">{sub}</span></a></li>').format(
-        gc=esc(s["iconColor"]), slug=s["slug"], gem=gem_svg(s["iconColor"], s["iconFacetColor"], 44), name=esc(s["displayName"]),
+        gc=esc(s["iconColor"]), slug=s["slug"], gem=gem_svg(s["iconColor"], s["iconFacetColor"], 44, s.get("iconStyle")), name=esc(s["displayName"]),
         sub=esc(note or t("enc.tile.sub", hardness=fmt_num(s.get("hardness"), 1), ri=fmt_num(s.get("refractiveIndex"), 3))))
 
 
@@ -30,7 +30,7 @@ def _picture(item, size, is_class):
     if is_class and class_icons.icon(item["id"], size):
         return class_icons.icon(item["id"], size)
     first = item["species"][0]
-    return gem_svg(first["iconColor"], first["iconFacetColor"], size)
+    return gem_svg(first["iconColor"], first["iconFacetColor"], size, first.get("iconStyle"))
 
 
 def _card(t, base, item, is_class=False):
@@ -57,8 +57,8 @@ def index(req):
     return page(req, t("fam.title"), content, section="encyclopedia", description=t("fam.desc"))
 
 
-# Figures that belong to one family: the diagram of the garnets sits under their introduction.
-FIGURES = {"grenats": garnet_diagram.section}
+# Figures that belong to one family: the diagrams of the garnets and of the scapolites sit under the introduction.
+FIGURES = {"grenats": garnet_diagram.section, "scapolites": scapolite_diagram.section}
 
 
 def _group_page(req, item, items, base, back_label, is_class=False):

@@ -11,7 +11,7 @@ public static class RealGemExporter
     {
         var rows = new (string name, int rays, bool eye)[]
         {
-            ("Corindon_Rubis", 6, false), ("Corindon_Rubis", 0, false), ("Saphir_Bleu", 6, false), ("Saphir_Rose", 6, false), ("Grenat_Almandin", 4, false),
+            ("Corindon_Rubis", 6, false), ("Corindon_Rubis", 0, false), ("Saphir", 6, false), ("Grenat_Almandin", 4, false),
             ("Chrysoberyl", 0, true), ("Quartz", 0, true), ("Emeraude", 0, false),
         };
         var angles = new[] { new Vector3(0f, 0f, 0f), new Vector3(22f, 0f, 0f), new Vector3(0f, 28f, 0f), new Vector3(-26f, -22f, 12f) };
@@ -56,7 +56,7 @@ public static class RealGemExporter
     private static void ExportRough(GemDatabase database, string folder)
     {
         var habits = new[] { "corundum_barrel", "corundum_bipyramid", "corundum_prism", "corundum_plate", "corundum_pebble", "corundum_fragment" };
-        var species = new[] { "Corindon_Rubis", "Saphir_Bleu" };
+        var species = new[] { "Corindon_Rubis", "Saphir" };
         var angles = new[] { new Vector3(-28f, 24f, 8f), new Vector3(40f, -35f, 20f) };
         var width = habits.Length * (Cell + Gap) + Gap;
         var height = species.Length * angles.Length * (Cell + Gap) + Gap;
@@ -217,7 +217,7 @@ public static class RealGemExporter
         var database = GemDatabase.Instance;
         if (database == null) { Debug.LogError("GemDatabase introuvable."); return; }
 
-        var names = new[] { "Diamant", "CZ", "Moissanite_Synthetique", "Corindon_Rubis", "Saphir_Bleu", "Emeraude", "Amethyste", "Citrine", "Tanzanite", "Spinelle", "Peridot", "Grenat_Almandin", "Heliodore", "Grenat_Demantoide", "Spinelle_Bleu" };
+        var names = new[] { "Diamant", "CZ", "Moissanite_Synthetique", "Corindon_Rubis", "Saphir", "Emeraude", "Amethyste", "Citrine", "Tanzanite", "Spinelle", "Peridot", "Grenat_Almandin", "Heliodore", "Grenat_Demantoide", "Spinelle_Bleu" };
         var views = new (string shape, string style, Vector3 euler, string label)[]
         {
             ("Rond", "Brillant", new Vector3(0f, 0f, 0f), "Rond, de face"),

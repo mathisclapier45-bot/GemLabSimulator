@@ -1496,7 +1496,7 @@ class TestPrices(SiteTestCase):
 
 
 class TestFamilies(SiteTestCase):
-    SHOWN = ("beryls", "corindons", "grenats")          # the families shown on the site for now
+    SHOWN = ("beryls", "corindons", "grenats", "scapolites")          # the families shown on the site for now
 
     def test_data_files_are_consistent_and_translated(self):
         import json as _json
@@ -1617,6 +1617,23 @@ class TestFamilies(SiteTestCase):
         self.assertIn('href="/encyclopedie/grenat-andradite"', c.get("/encyclopedie/classes/silicates").text)
         self.assertIn("grenat-change-couleur", c.get("/identification?color=blue&optic=Isotrope").text)
 
+    def test_scapolite_triangle(self):
+        c = Client()
+        fr = c.get("/encyclopedie/familles/scapolites").text
+        self.assertEqual(fr.count('class="gdia sdia"'), 1)
+        for word in ("Méionite", "Marialite", "Silvialite", "Na₄Al₃Si₉O₂₄Cl", "Ca₄Al₆Si₆O₂₄(CO₃)", "Ca₄Al₆Si₆O₂₄(SO₄)"):
+            self.assertIn(word, fr, word)
+        self.assertEqual(fr.count('class="gd-zone"'), 3)                               # the three lines of the center
+        self.assertEqual(fr.count('class="gd-num"'), 12)                               # four graduations on each side
+        self.assertIn('role="img"', fr)
+        self.assertIn("<table", fr)                                                    # the same content in words
+        self.assertNotIn("<circle", fr.split('class="gdia sdia"')[1].split("</svg>")[0])   # no data points: only the empty triangle
+        en = c.get("/en/encyclopedie/familles/scapolites").text
+        for word in ("Scapolites at a glance", "Meionite", "Silvialite", "meionite (%)", "Sulfate"):
+            self.assertIn(word, en, word)
+        self.assertEqual(sorted(set(re.findall(r"\b(?:les|des|une|est|avec|selon|très|couleur|pierre)\b", re.sub(r"<[^>]+>", " ", en)))), [])
+        self.assertIn('href="/encyclopedie/familles/scapolites"', c.get("/encyclopedie/familles").text)
+
     def test_every_class_has_an_icon(self):
         from app import catalog, class_icons
         for c in catalog.classes()["items"]:
@@ -1707,7 +1724,7 @@ class TestNewSpecies(SiteTestCase):
         from new_species_spec import SPECIES
         c = Client()
         words = re.compile(r"\b(?:les|des|une|est|avec|selon|très|pierre|couleur|toujours)\b")
-        self.assertEqual(len(SPECIES), 22)
+        self.assertEqual(len(SPECIES), 24)                                              # 22 + the low (metamict) zircon + the green beryl
         for sp in SPECIES:
             slug = sp["id"].lower().replace("_", "-")
             fr = c.get("/encyclopedie/" + slug)
@@ -1745,6 +1762,91 @@ class TestNewSpecies(SiteTestCase):
         fluo = c.get("/encyclopedie/benitoite").text
         self.assertIn("Bleu-blanc vif", fluo)
         self.assertIn("Bénitoïte", fluo)
+
+    def test_two_zircons(self):
+        """Zircon (high) and Zircon (low, metamict): one sheet each, with its own data, colours and spectra."""
+        import json as _json
+        c = Client()
+        names = {"zircon": "Zircon (haut)", "zircon-bas": "Zircon (bas, métamicte)"}
+        for slug, name in names.items():
+            r = c.get("/encyclopedie/" + slug)
+            self.assertEqual(r.status, 200, slug)
+            self.assertIn(name, r.text, slug)
+            self.assertIn("Couleurs possibles", r.text, slug)
+            self.assertIn('href="/encyclopedie/classes/silicates"', r.text, slug)
+        self.assertEqual(c.get("/encyclopedie/zircon-metamicte").status, 404)               # the same thing as the low zircon: no sheet of its own
+        self.assertIn("Zircon (high)", c.get("/en/encyclopedie/zircon").text)
+        self.assertIn("Zircon (low, metamict)", c.get("/en/encyclopedie/zircon-bas").text)
+        from app import catalog
+        by = catalog.data()["by_slug"]
+        high, low = by["zircon"], by["zircon-bas"]
+        # properties fall from the high type to the low one: index, density, hardness, birefringence
+        self.assertGreater(high["refractiveIndex"], low["refractiveIndex"])
+        self.assertGreater(high["density"], low["density"])
+        self.assertGreater(high["hardness"], low["hardness"])
+        self.assertGreater(high["birefringence"], low["birefringence"])
+        spectra = catalog.data()["spectra"]
+        self.assertGreater(len(spectra["Zircon"]["lines"]), len(spectra["Zircon_Bas"]["lines"]))     # the sharp uranium lines fade
+        pal = _json.loads((SITE / "data" / "palettes.json").read_text(encoding="utf-8"))
+        hues = lambda key: [cell[0] for cell in pal[key]["natural"]]
+        self.assertTrue(any(190 <= h <= 220 for h in hues("Zircon")))                         # blue (heated)
+        self.assertTrue(all(10 <= h <= 160 for h in hues("Zircon_Bas")))                      # greens and browns
+        self.assertGreater(max(cell[2] for cell in pal["Zircon"]["natural"]), max(cell[2] for cell in pal["Zircon_Bas"]["natural"]))   # the low one is duller
+
+    def test_scapolite_colours(self):
+        """The scapolites are yellow, colorless, pink or violet (user, 2026-11-20)."""
+        import json as _json
+        pal = _json.loads((SITE / "data" / "palettes.json").read_text(encoding="utf-8"))["Scapolite"]["natural"]
+        names = " ".join(cell[6] for cell in pal)
+        for word in ("Jaune", "Rose"):
+            self.assertIn(word, names, word)
+        hues = [cell[0] for cell in pal]
+        self.assertTrue(any(270 <= h <= 315 for h in hues))                                # violet
+        self.assertTrue(any(315 <= h <= 355 for h in hues))                                # pink
+        self.assertTrue(any(40 <= h <= 65 for h in hues))                                  # yellow
+        text = Client().get("/encyclopedie/scapolite").text
+        self.assertIn("roses ou violettes", text)
+        self.assertIn("pink or violet", Client().get("/en/encyclopedie/scapolite").text)
+
+    def test_blue_beryl_is_not_aquamarine(self):
+        """Aquamarine and the blue beryl (maxixe): two species, the maxixe deeper, denser, more dichroic, with its own spectra (two rays)."""
+        import json as _json
+        from app import catalog
+        by = catalog.data()["by_slug"]
+        aqua, maxixe = by["aigue-marine"], by["beryl-bleu"]
+        self.assertGreater(maxixe["refractiveIndex"], aqua["refractiveIndex"])
+        self.assertGreater(maxixe["density"], aqua["density"])
+        self.assertGreater(maxixe["birefringence"], aqua["birefringence"])
+        self.assertIn("rayon ordinaire", maxixe["pleochroicDescription"])
+        keys = [e["key"] for e in catalog.data()["spectra_all"]["Beryl_Bleu"]]
+        self.assertEqual(keys, ["Beryl_Bleu", "Beryl_Bleu_Rayon_E"])
+        self.assertEqual([len(e["lines"]) for e in catalog.data()["spectra_all"]["Beryl_Bleu"]], [3, 1])      # the e-ray keeps only the broad band
+        pal = _json.loads((SITE / "data" / "palettes.json").read_text(encoding="utf-8"))
+        deepest = lambda key: min(cell[2] for cell in pal[key]["natural"] if cell[1] > 0.6)
+        self.assertLess(deepest("Beryl_Bleu"), deepest("Aigue_Marine"))                       # the maxixe goes darker than any aquamarine
+        text = Client().get("/encyclopedie/beryl-bleu").text
+        self.assertIn("Rayon ordinaire (bleu)", text)
+        self.assertIn("Rayon extraordinaire (incolore)", text)
+        self.assertIn("Blue beryl (maxixe)", Client().get("/en/encyclopedie/beryl-bleu").text)
+
+    def test_green_beryl_is_not_emerald(self):
+        """The green beryl (colored by iron) is a species of its own, in the family of the beryls: paler than the emerald, no red under the Chelsea filter."""
+        import json as _json
+        from app import catalog
+        c = Client()
+        text = c.get("/encyclopedie/beryl-vert").text
+        self.assertIn("Béryl vert", text)
+        self.assertIn('href="/encyclopedie/familles/beryls"', text)
+        self.assertIn("Green beryl", c.get("/en/encyclopedie/beryl-vert").text)
+        self.assertIn('href="/encyclopedie/beryl-vert"', c.get("/encyclopedie/familles/beryls").text)
+        by = catalog.data()["by_slug"]
+        green, emerald = by["beryl-vert"], by["emeraude"]
+        self.assertEqual(catalog.data()["chelsea"]["Beryl_Vert"]["intensity"], 0)                      # no red reaction
+        self.assertGreater(catalog.data()["chelsea"]["Emeraude"]["intensity"], 0.5)
+        pal = _json.loads((SITE / "data" / "palettes.json").read_text(encoding="utf-8"))
+        sat = lambda key: max(cell[1] for cell in pal[key]["natural"])
+        self.assertLess(sat("Beryl_Vert"), sat("Emeraude"))                                           # never as saturated as an emerald
+        self.assertTrue(all(60 <= cell[0] <= 180 for cell in pal["Beryl_Vert"]["natural"]))
 
     def test_search_finds_a_new_species(self):
         self.assertIn('href="/encyclopedie/charoite"', Client().get("/encyclopedie?q=charo%C3%AFte").text)
@@ -1800,6 +1902,122 @@ class TestMergedSpecies(SiteTestCase):
         self.assertFalse(merge_species.apply(data))                                      # already merged: nothing to do
         self.assertEqual([s["id"] for s in data["species"]].count("Saphir"), 1)
 
+
+class TestLogos(SiteTestCase):
+    """The logo of each species: its shape and its cut (user, 2026-11-20)."""
+
+    def style(self, species_id):
+        from app import catalog, gem_icons
+        return gem_icons.style_for(catalog.data()["by_slug"][species_id.lower().replace("_", "-")])
+
+    def test_rules(self):
+        emerald = ("rectangle a pans coupes", "a degres", None)
+        for i in ("Emeraude", "Aigue_Marine", "Heliodore", "Morganite", "Goshenite", "Beryl_Rouge"):
+            self.assertEqual(self.style(i), emerald, i)
+        self.assertEqual(self.style("Pezzottaite")[:2], ("ovale", "cabochon"))                   # the exception among the beryls
+        for i in ("Corindon_Rubis", "Saphir", "Padparadscha", "Corindon_Synthetique_Saphir"):
+            self.assertEqual(self.style(i)[0], "ovale", i)
+        for i in ("Grenat_Almandin", "Grenat_Pyrope", "Grenat_Grossulaire", "Grenat_Hydrogrossulaire"):
+            self.assertEqual(self.style(i)[0], "octogone", i)
+        for i in ("Diamant", "Diamant_Synthetique_CVD", "Zircon", "Moissanite_Synthetique", "YAG", "GGG", "CZ"):
+            self.assertEqual(self.style(i)[:2], ("rond", "brillant"), i)
+        self.assertEqual(self.style("Scapolite")[0], "triangle")
+        for i in ("Quartz", "Amethyste", "Citrine", "Quartz_Fume", "Prasiolite"):
+            self.assertEqual(self.style(i)[:2], ("marquise", "brillant"), i)
+        for i in ("Agate", "Aventurine", "Jaspe", "Onyx", "Cornaline"):                          # polycrystalline quartz: cabochon
+            self.assertEqual(self.style(i)[1], "cabochon", i)
+        for i in ("Fluorite", "Fluorite_Bandee", "Fluorite_Blue_John"):
+            self.assertEqual(self.style(i)[2], "cube", i)
+        for i in ("Chrysoberyl", "Chrysoberyl_Alexandrite", "Zoisite", "Tanzanite"):
+            self.assertEqual(self.style(i)[0], "coussin", i)
+        for i in ("Hematite", "Pyrite", "Turquoise", "Malachite", "Tourmaline_Schorl", "Jais", "Azurite"):   # opaque: cabochon
+            self.assertEqual(self.style(i)[1], "cabochon", i)
+
+    def test_every_logo_is_drawn(self):
+        from app import catalog, gem_icons
+        shapes = set()
+        for s in catalog.data()["species"]:
+            svg = gem_icons.draw(s["iconColor"], s["iconFacetColor"], 44, s["iconStyle"])
+            self.assertTrue(svg.startswith("<svg") and svg.endswith("</svg>"), s["id"])
+            self.assertIn(s["iconColor"], svg, s["id"])
+            shapes.add(str(s["iconStyle"][:2]))
+        self.assertGreater(len(shapes), 8)                                                       # not one shape for all
+
+    def test_logos_show_in_the_pages(self):
+        c = Client()
+        grenats = c.get("/encyclopedie/familles/grenats").text
+        self.assertIn('points="16,4 32,4 44,16 44,32 32,44 16,44 4,32 4,16"', grenats)           # the octagon
+        self.assertIn('points="16,4 32,4 39,11 39,37 32,44 16,44 9,37 9,11"', c.get("/encyclopedie/familles/beryls").text)   # the emerald cut
+        self.assertIn("M24 4 Q38 26", c.get("/encyclopedie/familles/scapolites").text)              # the trilliant
+
+    def test_rock_crystal(self):
+        c = Client()
+        self.assertIn("Cristal de roche", c.get("/encyclopedie/quartz").text)
+        self.assertIn("Rock crystal", c.get("/en/encyclopedie/quartz").text)
+        self.assertIn('href="/encyclopedie/quartz"', c.get("/encyclopedie?q=cristal").text)        # the page keeps its address
+
+
+class TestSeveralSpectra(SiteTestCase):
+    """A species can have several spectra (user, 2026-11-20): the main one and variants, each with a label."""
+
+    def test_species_with_several_spectra(self):
+        c = Client()
+        for slug, labels in (("saphir", ("Saphir bleu", "Saphir vert")), ("zircon", ("Zircon naturel", "Zircon chauffé")),
+                             ("zircon-bas", ("Zircon bas partiellement abîmé", "Zircon bas très abîmé (métamicte)")),
+                             ("jade-jadeite", ("Jadéite naturelle", "Jadéite teintée (fer et chrome)"))):
+            text = c.get("/encyclopedie/" + slug).text
+            self.assertIn("Spectres d&#x27;absorption (", text, slug)
+            self.assertEqual(text.count('class="spec-variant"'), len(labels), slug)
+            for label in labels:
+                self.assertIn(label, text.replace("&#x27;", "'"), slug)
+        en = c.get("/en/encyclopedie/saphir").text
+        self.assertIn("Absorption spectra (2 possible)", en)
+        self.assertIn("Green sapphire", en)
+        # a species with one spectrum keeps the single block
+        emerald = c.get("/encyclopedie/emeraude").text
+        self.assertNotIn('class="spec-variant"', emerald)
+
+    def test_the_data_say_which_species_a_spectrum_belongs_to(self):
+        from app import catalog
+        data = catalog.data()
+        keys = [e["key"] for e in data["spectra_all"]["Zircon"]]
+        self.assertEqual(keys, ["Zircon", "Zircon_Chauffe"])                       # the main spectrum first
+        self.assertEqual([e["key"] for e in data["spectra_all"]["Saphir"]], ["Saphir", "Saphir_Vert"])
+        self.assertTrue(by_slug_has_spectrum("verre"))                              # a species with variants only
+
+
+def by_slug_has_spectrum(slug):
+    from app import catalog
+    return catalog.data()["by_slug"][slug]["has_spectrum"]
+
+
+class TestChelsea(SiteTestCase):
+    """The dot of the Chelsea filter shows what the stone looks like through it (user, 2026-11-20): green when nothing red, red or pink when it reacts."""
+
+    def test_color_seen_through_the_filter(self):
+        from app import chelsea
+        def rgb(hex_color):
+            return tuple(int(hex_color[i:i + 2], 16) for i in (1, 3, 5))
+        green = rgb(chelsea.seen_color({"intensity": 0.0, "color": "#F7141A"}, ""))
+        self.assertGreater(green[1], green[0])                                           # no reaction: green, never red
+        aquamarine = rgb(chelsea.seen_color({"intensity": 0.0, "color": "#F7141A", "dull": "#1F5A55"}, ""))
+        self.assertEqual(aquamarine, (0x1F, 0x5A, 0x55))                               # the dull tint of the entry
+        ruby = rgb(chelsea.seen_color({"intensity": 1.0, "color": "#F7141A"}, ""))
+        self.assertGreater(ruby[0], 200)
+        self.assertLess(ruby[1], 60)
+        pink = rgb(chelsea.seen_color({"intensity": 0.7, "color": "#EB4059"}, ""))
+        self.assertGreater(pink[0], pink[1])                                             # a reaction: toward red
+        self.assertGreater(rgb(chelsea.seen_color(None, "Réaction rougeâtre possible (chrome)."))[0], rgb(chelsea.seen_color(None, "Aucune réaction."))[0])
+        self.assertIsNone(chelsea.seen_color(None, "Non applicable (minéral opaque)."))
+
+    def test_the_page_shows_it(self):
+        c = Client()
+        import re as _re
+        def dot(slug):
+            return _re.search(r'class="glow" style="background:(#[0-9A-F]{6})', c.get("/encyclopedie/" + slug).text.split("Filtre Chelsea")[1]).group(1)
+        self.assertEqual(dot("aigue-marine"), "#1F5A55")                                 # the stone that said "Bleu-verdâtre" had a red dot
+        self.assertTrue(dot("corindon-rubis").startswith("#F7"))
+        self.assertNotIn("Filtre Chelsea</h3><p><span", c.get("/encyclopedie/hematite").text)    # opaque: no dot
 
 class TestCode(unittest.TestCase):
     def test_all_translation_keys_exist(self):

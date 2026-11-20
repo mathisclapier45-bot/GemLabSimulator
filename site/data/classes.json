@@ -227,7 +227,9 @@
     "Grandidierite",
     "Euclase",
     "Danburite",
-    "Kornerupine"
+    "Kornerupine",
+    "Zircon_Bas",
+    "Beryl_Vert"
    ],
    "name": "Silicates",
    "chem": "Minéraux construits sur le groupe SiO₄ (silicium et oxygène)",

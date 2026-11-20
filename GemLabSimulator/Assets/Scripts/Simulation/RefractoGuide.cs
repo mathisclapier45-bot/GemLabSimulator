@@ -35,10 +35,12 @@ public static class OpticalSigns
         { "Euclase", '+' },
         { "Danburite", '-' },
         { "Kornerupine", '-' },
+        { "Zircon_Bas", '+' },
+        { "Beryl_Vert", '-' },
         // </new-species-2026-11-20>
         // Uniaxial negative: corundum, beryl, tourmaline, apatite, scapolite...
         { "Apatite", '-' }, { "Corindon_Rubis", '-' }, { "Corindon_Synthetique_Rubis", '-' }, { "Corindon_Synthetique_Saphir", '-' }, { "Padparadscha", '-' },
-        { "Saphir_Bleu", '-' }, { "Saphir_Incolore", '-' }, { "Saphir_Jaune", '-' }, { "Saphir_Orange", '-' }, { "Saphir_Rose", '-' }, { "Saphir_Vert", '-' }, { "Saphir_Violet", '-' },
+        { "Saphir", '-' }, { "Saphir_Change_Couleur", '-' },
         { "Emeraude", '-' }, { "Goshenite", '-' }, { "Heliodore", '-' }, { "Aigue_Marine", '-' }, { "Beryl_Bleu", '-' }, { "Morganite", '-' }, { "Pezzottaite", '-' }, { "Rhodocrosite", '-' }, { "Scapolite", '-' },
         { "Tourmaline_Paraiba", '-' }, { "Tourmaline_Rose", '-' }, { "Tourmaline_Melon_Eau", '-' }, { "Tourmaline_Indicolite", '-' }, { "Tourmaline_Schorl", '-' }, { "Taaffeite", '-' }, { "Calcite", '-' },
         // Biaxial positive.

@@ -55,7 +55,16 @@ EN = {
     FLUORITE["description"]: "A soft, fragile mineral whose name gave the word \"fluorescence\". Most often violet, blue, green or yellow, it also comes in orange, pink, reddish or colorless: it is always the same species, only the color changes.",
     FLUORITE["color"]: "Violet, blue, green, yellow, orange, pink, reddish or colorless",
     "Oxyde d'aluminium (corindon) coloré par le fer, le titane, le chrome ou le vanadium selon la couleur": "Aluminum oxide (corundum) colored by iron, titanium, chromium or vanadium depending on the color",
+    "Cristal de roche": "Rock crystal",
 }
+
+
+RENAMES = {"Quartz": ("Cristal de roche", "Rock crystal")}          # the plain quartz is called rock crystal (user, 2026-11-20)
+
+# The zircon of the game is the high type (crystalline): "Zircon (haut)", with its colours. The low and the metamict zircons are two more species (new_species_spec.py).
+sys.path.insert(0, str(SITE / "tools"))
+from new_species_spec import ZIRCON_HIGH, PATCHES  # noqa: E402
+PATCHED = {name: dict({"displayName": p["name"][0], "description": p["desc"][0], "color": p["color"][0]}, **p.get("extra", {})) for name, p in PATCHES.items()}
 
 
 def apply(data):
@@ -63,6 +72,13 @@ def apply(data):
     species = data["species"]
     ids = [s["id"] for s in species]
     changed = False
+    for s in species:
+        if s["id"] in PATCHED and any(s.get(k) != v for k, v in PATCHED[s["id"]].items()):          # colours and texts widened afterwards (zircon, scapolite)
+            s.update(PATCHED[s["id"]])
+            changed = True
+        if s["id"] in RENAMES and s["displayName"] != RENAMES[s["id"]][0]:
+            s["displayName"] = RENAMES[s["id"]][0]
+            changed = True
     if "Saphir" not in ids and "Saphir_Bleu" in ids:
         i = ids.index("Saphir_Bleu")
         merged = dict(species[i], **SAPPHIRE, id="Saphir")
@@ -94,6 +110,17 @@ def apply(data):
                 if e["key"] == "Saphir_Bleu":
                     e["key"] = "Saphir"
                     changed = True
+    from new_species_spec import SPECTRA_META, SPECTRA_NEW          # several spectra for one species: which species a spectrum belongs to, and its label
+    have_keys = {e["key"] for e in data["spectra"]["entries"]}
+    for n in SPECTRA_NEW:                                           # the new spectra of species of the game
+        if n["key"] not in have_keys:
+            data["spectra"]["entries"].append({"key": n["key"], "source": "site", "description": n["description"], "variant": n["key"] != SPECTRA_META[n["key"]][0],
+                                               "lines": [{"wavelengthNm": w, "widthNm": wd, "depth": dp, "edgeNm": 0.0} for w, wd, dp in n["lines"]]})
+            changed = True
+    for e in data["spectra"]["entries"]:
+        if e["key"] in SPECTRA_META and e.get("label") != SPECTRA_META[e["key"]][1][0]:
+            e["of"], e["label"] = SPECTRA_META[e["key"]][0], SPECTRA_META[e["key"]][1][0]
+            changed = True
     return changed
 
 
@@ -136,6 +163,9 @@ def main():
     # English texts
     path = SITE / "data" / "en" / "species.json"
     en = json.loads(path.read_text(encoding="utf-8"))
+    for p in PATCHES.values():
+        EN.update({p["name"][0]: p["name"][1], p["desc"][0]: p["desc"][1], p["color"][0]: p["color"][1]})
+        EN.update({p["extra"][k]: v for k, v in p.get("extra_en", {}).items()})
     added = {k: v for k, v in EN.items() if k not in en}
     if added:
         en.update(added)

@@ -14,7 +14,7 @@ from pathlib import Path
 SITE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SITE / "tools"))
 import species_strings  # noqa: E402
-from new_species_spec import SPECIES  # noqa: E402
+from new_species_spec import SPECIES, ZIRCON_HIGH, PATCHES, SPECTRA_META, SPECTRA_NEW  # noqa: E402
 
 # French text -> English text
 EN = {
@@ -183,6 +183,9 @@ EN = {
     "Absorption du bleu (fer), sans raie nette.": "Absorption of the blue (iron), without a sharp line.",
     "Aiguilles parallèles (parfois en œil-de-chat), fissures, cristaux.": "Parallel needles (sometimes in a cat's-eye), fissures, crystals.",
     "Orange grisâtre": "Grayish orange",
+    "Vert jaunâtre grisâtre sombre": "Dark grayish yellowish green",
+    "Vert grisâtre sombre": "Dark grayish green",
+    "Jaune grisâtre sombre": "Dark grayish yellow",
     "Rouge orangé": "Orange-red",
     "Violet grisâtre": "Grayish violet",
     "Jaune grisâtre": "Grayish yellow",
@@ -214,7 +217,37 @@ EN = {
 }
 
 
+def spec_pairs():
+    """French -> English for every text written as a pair in new_species_spec.py (the species added after the first batch need no hand-written line here)."""
+    pairs = {}
+
+    def add(pair):
+        if isinstance(pair, (tuple, list)) and len(pair) == 2 and all(isinstance(x, str) for x in pair):
+            pairs[pair[0]] = pair[1]
+
+    for sp in SPECIES + list(PATCHES.values()):
+        for key in ("name", "desc", "luster", "color", "pleo", "fluL", "fluS", "opt", "fig", "spec", "incl", "chelsea", "magn", "note"):
+            add(sp.get(key))
+        if sp.get("spectra_entry") and sp["spectra_entry"].get("en"):
+            pairs[sp["spectra_entry"]["description"]] = sp["spectra_entry"]["en"]
+        for e in sp.get("spectra_extra", []):
+            pairs[e["description"]] = e["en"]
+        for o in sp.get("origins", []):
+            pairs[o["fr"]] = o["en"]
+            if o.get("over"):
+                add(o["over"])
+    for _, (fr, en) in SPECTRA_META.values():                      # the labels of the spectra
+        pairs[fr] = en
+    for n in SPECTRA_NEW:
+        pairs[n["description"]] = n["en"]
+    for p in PATCHES.values():
+        for k, v in p.get("extra_en", {}).items():
+            pairs[p["extra"][k]] = v
+    return pairs
+
+
 def main():
+    EN.update({k: v for k, v in spec_pairs().items() if k not in EN})
     data = json.loads((SITE / "data" / "extra_species.json").read_text(encoding="utf-8"))
     have = {s["id"] for s in data["species"]}
     missing = [s["id"] for s in SPECIES if s["id"] not in have]

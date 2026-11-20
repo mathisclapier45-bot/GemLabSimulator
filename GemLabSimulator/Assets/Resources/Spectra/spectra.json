@@ -210,7 +210,7 @@
    ]
   },
   {
-   "key": "Saphir_Bleu",
+   "key": "Saphir",
    "source": "Spectroscope à réseau, Diplôme en gemmologie 2019 (p. 27-31)",
    "description": "Spectre du fer : une raie fine ou une mince bande dans le bleu, vers 450 nm. Certains saphirs bleus pâles en montrent plus d'une ; les saphirs de synthèse (Verneuil) n'en montrent aucune.",
    "lines": [
@@ -220,7 +220,9 @@
      "depth": 1,
      "edgeNm": 0.0
     }
-   ]
+   ],
+   "of": "Saphir",
+   "label": "Saphir bleu"
   },
   {
    "key": "Saphir_Vert",
@@ -245,7 +247,9 @@
      "depth": 0.9,
      "edgeNm": 0.0
     }
-   ]
+   ],
+   "of": "Saphir",
+   "label": "Saphir vert"
   },
   {
    "key": "Chrysoberyl",
@@ -333,7 +337,9 @@
      "depth": 1,
      "edgeNm": 0.0
     }
-   ]
+   ],
+   "of": "Jade_Jadeite",
+   "label": "Jadéite naturelle"
   },
   {
    "key": "Jade_Jadeite_Teinte",
@@ -352,7 +358,9 @@
      "depth": 0.5,
      "edgeNm": 7
     }
-   ]
+   ],
+   "of": "Jade_Jadeite",
+   "label": "Jadéite teintée (fer et chrome)"
   },
   {
    "key": "Spinelle_Bleu",
@@ -402,7 +410,9 @@
      "depth": 0.95,
      "edgeNm": 8
     }
-   ]
+   ],
+   "of": "Verre",
+   "label": "Verre bleu (cobalt)"
   },
   {
    "key": "Apatite",
@@ -470,7 +480,9 @@
      "depth": 0.3,
      "edgeNm": 0.0
     }
-   ]
+   ],
+   "of": "Zircon",
+   "label": "Zircon naturel"
   },
   {
    "key": "Zircon_Chauffe",
@@ -483,7 +495,9 @@
      "depth": 1,
      "edgeNm": 0.0
     }
-   ]
+   ],
+   "of": "Zircon",
+   "label": "Zircon chauffé"
   },
   {
    "key": "Verre_Rouge_Au",
@@ -496,7 +510,9 @@
      "depth": 0.95,
      "edgeNm": 6
     }
-   ]
+   ],
+   "of": "Verre",
+   "label": "Verre rouge (or)"
   },
   {
    "key": "Verre_Rouge_Se",
@@ -509,7 +525,9 @@
      "depth": 1,
      "edgeNm": 6
     }
-   ]
+   ],
+   "of": "Verre",
+   "label": "Verre rouge (sélénium)"
   },
   {
    "key": "Verre_Rouge_TR",
@@ -546,7 +564,9 @@
      "depth": 1,
      "edgeNm": 0.0
     }
-   ]
+   ],
+   "of": "Verre",
+   "label": "Verre rouge (terres rares)"
   },
   {
    "key": "Corindon_Synthetique_CC",
@@ -603,6 +623,84 @@
      "edgeNm": 5
     }
    ]
+  },
+  {
+   "key": "Zircon_Bas",
+   "source": "Ajout 2026 (valeurs à faire relire)",
+   "description": "Spectre presque effacé : la raie de l'uranium à 653,5 nm est faible ou absente, et il ne reste que des bandes diffuses, parfois une bande vers 691 nm.",
+   "lines": [
+    {
+     "wavelengthNm": 653.5,
+     "widthNm": 4.0,
+     "depth": 0.3,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 691.0,
+     "widthNm": 8.0,
+     "depth": 0.5,
+     "edgeNm": 0.0
+    }
+   ],
+   "of": "Zircon_Bas",
+   "label": "Zircon bas partiellement abîmé"
+  },
+  {
+   "key": "Zircon_Bas_Metamicte",
+   "source": "Ajout 2026 (valeurs à faire relire)",
+   "description": "Pas de raies nettes : l'absorption est diffuse, avec au plus une raie très faible à 653,5 nm. Un chauffage peut faire réapparaître les raies fines.",
+   "lines": [
+    {
+     "wavelengthNm": 653.5,
+     "widthNm": 10.0,
+     "depth": 0.15,
+     "edgeNm": 0.0
+    }
+   ],
+   "of": "Zircon_Bas",
+   "label": "Zircon bas très abîmé (métamicte)"
+  },
+  {
+   "key": "Beryl_Bleu",
+   "source": "Ajout 2026 (valeurs à faire relire)",
+   "description": "Rayon ordinaire (direction du bleu profond) : plusieurs bandes entre 500 et 700 nm et une large bande vers 690 nm.",
+   "lines": [
+    {
+     "wavelengthNm": 690.0,
+     "widthNm": 40.0,
+     "depth": 0.8,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 628.0,
+     "widthNm": 20.0,
+     "depth": 0.6,
+     "edgeNm": 0.0
+    },
+    {
+     "wavelengthNm": 550.0,
+     "widthNm": 14.0,
+     "depth": 0.35,
+     "edgeNm": 0.0
+    }
+   ],
+   "of": "Beryl_Bleu",
+   "label": "Rayon ordinaire (bleu)"
+  },
+  {
+   "key": "Beryl_Bleu_Rayon_E",
+   "source": "Ajout 2026 (valeurs à faire relire)",
+   "description": "Rayon extraordinaire (direction presque incolore) : seule la large bande vers 690 nm reste.",
+   "lines": [
+    {
+     "wavelengthNm": 690.0,
+     "widthNm": 40.0,
+     "depth": 0.5,
+     "edgeNm": 0.0
+    }
+   ],
+   "of": "Beryl_Bleu",
+   "label": "Rayon extraordinaire (incolore)"
   }
  ]
 }

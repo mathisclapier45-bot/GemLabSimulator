@@ -85,10 +85,7 @@ public static class CrystalHabits
             case "Diamant_Synthetique_CVD": return Chance(("cube", 100));
             case "Zircon":
             case "Scapolite": return Chance(("tetragonal_prism", 100));
-            case "Fluorite":
-            case "Fluorite_Verte":
-            case "Fluorite_Bleue":
-            case "Fluorite_Jaune": return Chance(("cube", 40), ("octahedron", 28), ("cleaved_octahedron", 28), ("rhombic_dodecahedron", 4));
+            case "Fluorite": return Chance(("cube", 40), ("octahedron", 28), ("cleaved_octahedron", 28), ("rhombic_dodecahedron", 4));
             case "Fluorite_Bandee":
             case "Fluorite_Blue_John": return new List<HabitChance>();   // massive: nodules and veins, no crystal faces
             case "Iolite":
@@ -139,13 +136,15 @@ public static class CrystalHabits
             case "Euclase": return Chance(("monoclinic_prism", 100));
             case "Danburite": return Chance(("ortho_prism", 100));
             case "Kornerupine": return Chance(("ortho_prism", 100));
+            case "Zircon_Bas": return Chance(("tetragonal_prism", 100));
+            case "Beryl_Vert": return Chance(("beryl_prism", 50), ("beryl_long", 30), ("beryl_short", 20));
             // </new-species-2026-11-20>
             case "Taaffeite": return Chance(("hex_prism", 60), ("hex_bipyramid", 40));
         }
 
         // The rhombic dodecahedron is the habit of the garnets; the icositetrahedron is a rarer one.
         if (name.StartsWith("Grenat_")) return Chance(("rhombic_dodecahedron", 90), ("trapezohedron", 10));
-        if (name.StartsWith("Saphir_")) return Chance(("corundum_barrel", 35), ("corundum_bipyramid", 20), ("corundum_pebble", 20), ("corundum_prism", 15), ("corundum_fragment", 10));
+        if (name.StartsWith("Saphir")) return Chance(("corundum_barrel", 35), ("corundum_bipyramid", 20), ("corundum_pebble", 20), ("corundum_prism", 15), ("corundum_fragment", 10));
         if (name == "Tourmaline_Melon_Eau") return Chance(("trigonal_pencil", 40), ("tourmaline_slice", 35), ("trigonal_prism", 25));
         if (name.StartsWith("Tourmaline_")) return Chance(("trigonal_prism", 55), ("trigonal_pencil", 45));
 
